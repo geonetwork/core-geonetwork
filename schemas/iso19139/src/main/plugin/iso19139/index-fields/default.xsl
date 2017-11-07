@@ -111,6 +111,19 @@
         <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true"/>
       </xsl:if>
 
+
+      <xsl:variable name="_defaultAbstract">
+        <xsl:call-template name="defaultAbstract">
+          <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
+        </xsl:call-template>
+      </xsl:variable>
+
+      <Field name="_defaultAbstract"
+             string="{string($_defaultAbstract)}"
+             store="true"
+             index="true"/>
+
+
       <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"
                            mode="metadata"/>
 

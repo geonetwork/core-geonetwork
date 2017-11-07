@@ -728,6 +728,10 @@
 
   /**
    * Use to initialize bootstrap datepicker
+   * Can handle two pickers to select a range
+   * The change callback will be called when the value is updated from the
+   * calendar component. When modified from outside, the internal value of the
+   * picker will be updated accordingly so that the calendar stays in sync.
    */
   module.directive('gnBootstrapDatepicker', ['$timeout', 'gnLangs',
     function($timeout, gnLangs) {
@@ -785,6 +789,11 @@
         };
       };
 
+      // check that the date is in dd-mm-yyyy string format
+      function isDateValid(date) {
+        return moment(date, 'DD-MM-YYYY', true).isValid();
+      }
+
       return {
         restrict: 'A',
         scope: {
@@ -799,13 +808,10 @@
           var isRange = ($(element).find('input').length == 2);
           var highlight = attrs['dateOnlyHighlight'] === 'true';
 
-          if (isRange && ! scope.date) {
-            scope.date = {};
-          }
+          // TODO: handle available dates change?
+          // scope.$watch('dates', function(dates, old) {
+          // });
 
-          scope.$watch('dates', function(dates, old) {
-
-          });
           var init = function() {
             if (scope.dates) {
               // Time epoch
@@ -875,11 +881,32 @@
               // view -> model
               scope.$apply(function() {
                 if (!isRange) {
-                  scope.date = $(element).find('input')[0].value;
+                  var date = $(element).find('input')[0].value;
+                  scope.date = date !== '' ? date : undefined;
                 }
                 else {
-                  scope.date.from = $(element).find('input')[0].value;
-                  scope.date.to = $(element).find('input')[1].value;
+                  var target = ev.target;
+                  var pickers = $(element).find('input');
+                  var dateFrom = pickers[0].value;
+                  var dateTo = pickers[1].value;
+                  var changed = false;
+
+                  // only apply the date which was modified if it is valid
+                  // (or cleared)
+                  if (target === pickers[0] &&
+                    (isDateValid(dateFrom) || dateFrom == '')) {
+                    scope.date.from = dateFrom !== '' ? dateFrom : undefined;
+                    changed = true;
+                  } else if (target === pickers[1] &&
+                    (isDateValid(dateTo) || dateTo == '')) {
+                    scope.date.to = dateTo !== '' ? dateTo : undefined;
+                    changed = true;
+                  }
+
+                  // call the change function if the value was changed
+                  if (changed) {
+                    scope.onChangeFn();
+                  }
                 }
               });
             });
@@ -911,20 +938,27 @@
               }
               if (v != o) {
                 $(element).find('input')[0].value = v || '';
-
               }
             });
           }
           else {
-            scope.$watchCollection('date', function(v, o) {
-              if (angular.isUndefined(v)) {
+            scope.$watchCollection('date', function(newValue, oldValue) {
+              if (!scope.date) {
                 scope.date = {};
                 return;
               }
-              if (v != o) {
-                scope.onChangeFn();
-                $(element).find('input')[0].value = (v && v.from) || '';
-                $(element).find('input')[1].value = (v && v.to) || '';
+              var dateFrom = (newValue && newValue.from) || '';
+              var dateTo = (newValue && newValue.to) || '';
+              var previousFrom = (oldValue && oldValue.from) || '';
+              var previousTo = (oldValue && oldValue.to) || '';
+              if (dateFrom != previousFrom || dateTo != previousTo) {
+                $timeout(function() {
+                  var picker = $(element).data('datepicker');
+                  $(element).find('input')[0].value = dateFrom;
+                  $(element).find('input')[1].value = dateTo;
+                  picker.pickers[0].update();
+                  picker.pickers[1].update();
+                });
               }
             });
           }

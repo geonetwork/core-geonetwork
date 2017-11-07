@@ -807,7 +807,7 @@
 
                     If only one choice, make a simple button
               -->
-              <xsl:when test="count($childEditInfo/gn:choose) = 1 and not($addDirective)">
+              <xsl:when test="count($childEditInfo/gn:choose) = 1">
                 <xsl:for-each select="$childEditInfo/gn:choose">
                   <xsl:variable name="label"
                                 select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
@@ -829,7 +829,7 @@
               </xsl:when>
               <!--
                     If many choices, make a dropdown button -->
-              <xsl:when test="count($childEditInfo/gn:choose) > 1 and not($addDirective)">
+              <xsl:when test="count($childEditInfo/gn:choose) > 1">
                 <div class="btn-group">
                   <button type="button"
                           class="btn btn-default dropdown-toggle {if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
@@ -1555,6 +1555,27 @@
                                               else concat('_', */gn:element/@ref)"/>
 
                         <xsl:choose>
+                          <xsl:when test="@type = 'select'">
+                            <select class="form-control"
+                                      name="{$name}">
+                              <xsl:variable name="value"
+                                            select="*/text()"/>
+                              <option></option>
+                              <xsl:for-each select="options/option">
+                                <option value="{@value}">
+                                  <xsl:if test="@value = $value">
+                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                  </xsl:if>
+                                  <xsl:value-of select="."/>
+                                </option>
+                              </xsl:for-each>
+                              <xsl:if test="count(options/option[@value = $value]) = 0">
+                                <option value="{$value}">
+                                  <xsl:value-of select="$value"/>
+                                </option>
+                              </xsl:if>
+                            </select>
+                          </xsl:when>
                           <xsl:when test="@type = 'textarea'">
                             <!-- TODO: Multilingual, codelist, date ... -->
                             <textarea class="form-control"

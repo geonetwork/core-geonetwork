@@ -247,8 +247,11 @@
       </xsl:if>
     </xsl:variable>
 
+
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
+        <xsl:variable name="text"
+                      select="normalize-space(gco:CharacterString)"/>
 
         <values>
           <!--
@@ -271,13 +274,28 @@
 
           <!-- and create field for none translated language -->
           <xsl:for-each select="$metadataOtherLanguages/lang">
+            <xsl:variable name="code" select="@code"/>
             <xsl:variable name="currentLanguageId" select="@id"/>
-            <xsl:if test="count($theElement/parent::node()/
-                gmd:PT_FreeText/gmd:textGroup/
-                gmd:LocalisedCharacterString[@locale = concat('#',$currentLanguageId)]) = 0">
-              <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
-                     lang="{@id}"></value>
-            </xsl:if>
+            <xsl:variable name="ptFreeElementDoesNotExist"
+                          select="count($theElement/parent::node()/
+                                        gmd:PT_FreeText/*/
+                                        gmd:LocalisedCharacterString[
+                                          @locale = concat('#', $currentLanguageId)]) = 0"/>
+
+            <xsl:choose>
+              <xsl:when test="$ptFreeElementDoesNotExist and
+                              $text != '' and
+                              $code = $metadataLanguage">
+                <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
+                       lang="{@id}">
+                  <xsl:value-of select="$text"/>
+                </value>
+              </xsl:when>
+              <xsl:when test="$ptFreeElementDoesNotExist">
+                <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
+                       lang="{@id}"></value>
+              </xsl:when>
+            </xsl:choose>
           </xsl:for-each>
         </values>
       </xsl:if>

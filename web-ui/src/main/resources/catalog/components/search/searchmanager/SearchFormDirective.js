@@ -362,6 +362,11 @@
     'gnSearchLocation'
   ];
 
+  /**
+   * Possible attributes:
+   *  * runSearch: run search inmediately after the  directive is loaded.
+   *  * waitForUser: wait until a user id is available to trigger the search.
+   */
   module.directive('ngSearchForm', [
     'gnSearchLocation',
     function(gnSearchLocation) {
@@ -381,6 +386,20 @@
             }
           };
 
+          var waitForPagination = function() {
+            // wait for pagination to be set before triggering search
+            if (element.find('[data-gn-pagination]').length > 0) {
+              var unregisterFn = scope.$watch('hasPagination', function () {
+                if (scope.hasPagination) {
+                  scope.triggerSearch(true);
+                  unregisterFn();
+                }
+              });
+            } else {
+              scope.triggerSearch(false);
+            }
+          };
+
           // Run a first search on directive rendering if attr is specified
           // Don't run it on page load if the permalink is 'on' and the
           // $location is not set to 'search'
@@ -393,16 +412,17 @@
                   gnSearchLocation.getParams());
             }
 
-            // wait for pagination to be set before triggering search
-            if (element.find('[data-gn-pagination]').length > 0) {
-              var unregisterFn = scope.$watch('hasPagination', function() {
-                if (scope.hasPagination) {
-                  scope.triggerSearch(true);
-                  unregisterFn();
+            if (attrs.waitForUser === true) {
+              var userUnwatch = scope.$watch('user.id', function (userNewVal) {
+                // Don't trigger the search until the user id has been loaded
+                // Unregister the watch once we have the user id.
+                if (angular.isDefined(userNewVal)) {
+                  waitForPagination();
+                  userUnwatch();
                 }
               });
             } else {
-              scope.triggerSearch(false);
+              waitForPagination();
             }
           }
         }

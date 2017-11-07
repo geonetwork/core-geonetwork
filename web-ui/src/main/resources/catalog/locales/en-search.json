@@ -409,5 +409,7 @@
   "wpsByUrl": "Search processes",
   "wpsRecent": "Recent Processes",
   "selection.indexing.count": "Indexing started for the {{count}} record(s) selected.",
-  "selection.indexing.error": "Error during selection indexing."
+  "selection.indexing.error": "Error during selection indexing.",
+  "showLegend": "Show legend",
+  "hideLegend": "Hide legend"
 }

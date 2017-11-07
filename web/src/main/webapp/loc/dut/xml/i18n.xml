@@ -4,7 +4,7 @@
   <warning>Waarschuwing!</warning>
   <nojs>Javascript is niet beschikbaar. Activeer javascript of klik
     <a
-      href="catalog.search.nojs">hier
+      href="../search">hier
     </a>
     voor een versie zonder javascript.
   </nojs>

@@ -115,18 +115,20 @@
             link: function(scope, element, attrs, controller) {
               var promise;
               scope.updateRelations = function() {
-                scope.relations = [];
+                scope.relations = null;
                 if (scope.uuid) {
                   scope.relationFound = false;
                   (promise = gnRelatedService.get(
                      scope.uuid, scope.types)
                   ).then(function(data) {
-                       scope.relations = {};
                        angular.forEach(data, function(value, idx) {
-                         if (value) {
-                           scope.relationFound = true;
-                           scope.hasResults = true;
-                         }
+                         if (!value) { return; }
+
+                         // init object if required
+                         scope.relations = scope.relations || {};
+                         scope.relationFound = true;
+                         scope.hasResults = true;
+
                          if (!scope.relations[idx]) {
                            scope.relations[idx] = [];
                          }

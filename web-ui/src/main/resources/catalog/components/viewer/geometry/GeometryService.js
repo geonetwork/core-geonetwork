@@ -206,7 +206,8 @@
             format = new ol.format.GML({
               featureNS: options.gmlFeatureNS ||
                   'http://mapserver.gis.umn.edu/mapserver',
-              featureType: options.gmlFeatureElement || 'features'
+              featureType: options.gmlFeatureElement || 'features',
+              srsName: options.crs
             });
 
             if (options.outputAsWFSFeaturesCollection) {
@@ -307,6 +308,7 @@
                 '<gml:feature xmlns:gml="http://www.opengis.net/gml">' +
                 '<geometry>' +
                 input + '</geometry></gml:feature></featureMembers>';
+
             var feature = format.readFeatures(fullXml, {
               dataProjection: options.crs,
               featureProjection: outputProjection

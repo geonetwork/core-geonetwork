@@ -271,6 +271,8 @@
             if (attrs.profile) {
               url = '../api/groups?profile=' + attrs.profile;
             }
+            var optional = attrs.hasOwnProperty('optional');
+
             $http.get(url, {cache: true}).
                 success(function(data) {
                   //data-ng-if is not correctly updating groups.
@@ -284,6 +286,12 @@
                     });
                   } else {
                     scope.groups = data;
+                  }
+                  if(optional) {
+                    scope.groups.unshift({
+                      id: 'undefined',
+                      name: ''
+                    });
                   }
 
                   // Select by default the first group.
@@ -332,8 +340,6 @@
               values: '=gnSortbyValues'
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.params.sortBy = scope.params.sortBy ||
-                  scope.values[0].sortBy;
               scope.sortBy = function(v) {
                 angular.extend(scope.params, v);
                 searchFormCtrl.triggerSearch(true);

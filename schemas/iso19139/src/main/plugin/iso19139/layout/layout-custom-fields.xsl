@@ -41,7 +41,7 @@
   <xsl:include href="layout-custom-fields-sds.xsl"/>
 
   <!-- Readonly elements -->
-  <xsl:template mode="mode-iso19139" priority="2000" match="gmd:fileIdentifier|gmd:dateStamp">
+  <xsl:template mode="mode-iso19139" priority="2100" match="gmd:fileIdentifier|gmd:dateStamp">
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -281,7 +281,11 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
 
-        <xsl:variable name="geometry" select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString"/>
+        <xsl:variable name="geometry">
+          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString"
+                               mode="gn-element-cleaner"/>
+        </xsl:variable>
+
         <xsl:variable name="identifier"
                       select="concat('_X', gmd:polygon/gn:element/@ref, '_replace')"/>
         <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
@@ -302,5 +306,14 @@
                        gmd:geographicElement[
                           $isFlatMode and
                           preceding-sibling::gmd:geographicElement/gmd:EX_GeographicBoundingBox
-                        ]/gmd:EX_GeographicDescription" priority="2000"/>
+                        ]/gmd:EX_GeographicDescription"
+                priority="2000"/>
+
+
+  <!-- Do not display other local declaring also the main language
+  which is added automatically by update-fixed-info. -->
+  <xsl:template mode="mode-iso19139"
+                match="gmd:locale[*/gmd:languageCode/*/@codeListValue =
+                                  ../gmd:language/*/@codeListValue]"
+                priority="2000"/>
 </xsl:stylesheet>

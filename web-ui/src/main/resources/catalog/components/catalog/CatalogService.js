@@ -545,6 +545,22 @@
         if (angular.isDefined(record[field])) {
           try {
             record[field] = angular.fromJson(record[field]);
+            
+            // Combine all document keywordGroup fields
+            // in one object. Applies to multilingual records
+            // which may have multiple values after combining
+            // documents from all index
+            if (field === 'keywordGroup' &&
+                angular.isArray(record[field])) {
+              var thesaurusList = {};
+              for (var i = 0; i < record[field].length; i ++) {
+                var thesauri = record[field][i];
+                $.each(thesauri, function (key) {
+                  thesaurusList[key] = thesauri[key];
+                });
+              }
+              record[field] = thesaurusList;
+            }
           } catch (e) {}
         }
       });

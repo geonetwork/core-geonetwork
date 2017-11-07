@@ -1645,7 +1645,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         // Check if the schema is allowed by settings
         String mdImportSetting = getSettingManager().getValue(Settings.METADATA_IMPORT_RESTRICT);
         if(mdImportSetting != null && !mdImportSetting.equals("")) {
-            if(!Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
+            if(!newMetadata.getHarvestInfo().isHarvested() &&
+                    newMetadata.getDataInfo().getType() == MetadataType.METADATA &&
+                    !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
                 throw new IllegalArgumentException(schema+" is not permitted in the database as a non-harvested metadata.  " +
                         "Apply a import stylesheet to convert file to allowed schemas");
             }
@@ -2883,7 +2885,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             Metadata metadata = null;
             if (metadataId.isPresent()) {
                 metadata = getMetadataRepository().findOne(metadataId.get());
-                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() != MetadataType.METADATA;
+                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() == MetadataType.TEMPLATE;
 
                 // don't process templates
                 if (isTemplate) {
@@ -2944,6 +2946,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             result.addContent(md);
             // add 'environment' to result
             env.addContent(new Element("siteURL").setText(getSettingManager().getSiteURL(context)));
+            env.addContent(new Element("nodeURL").setText(getSettingManager().getNodeURL()));
             env.addContent(new Element("node").setText(context.getNodeId()));
 
             // Settings were defined as an XML starting with root named config
@@ -2956,7 +2959,11 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             result.addContent(env);
             // apply update-fixed-info.xsl
-            Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
+            Path styleSheet = getSchemaDir(schema).resolve(
+                                metadata != null && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ?
+                                Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
+                                Geonet.File.UPDATE_FIXED_INFO);
+
             result = Xml.transform(result, styleSheet);
             return result;
         } else {

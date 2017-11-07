@@ -92,6 +92,10 @@ public class MetadataUtils {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
         Element relatedRecords = new Element("relations");
+
+        if(type == null || type.length == 0) {
+            type = RelatedItemType.class.getEnumConstants();
+        }
         List<RelatedItemType> listOfTypes = new ArrayList<RelatedItemType>(Arrays.asList(type));
 
         // Get the cached version (use by classic GUI)

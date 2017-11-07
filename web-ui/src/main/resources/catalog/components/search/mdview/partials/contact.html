@@ -89,37 +89,41 @@
 
 
   <!-- Group by organisation/role -->
-  <div class="gn-contact" data-ng-if="mode == 'org-role'"
+  <div class="gn-contact flex-row" data-ng-if="mode == 'org-role'"
        data-ng-repeat="(org, contactByOrgRole) in mdContactsByOrgRole">
 
-    <h3>
+    <div class="flex-noshrink">
       <i class="fa fa-envelope"></i>
-      {{org}}
-    </h3>
+    </div>
+    <div class="flex-spacer"></div>
+    <div>
+      <div>
+        <strong>{{org}}</strong>
+      </div>
 
-    <div ng-repeat="(key, contactGroupByAddress) in contactByOrgRole | groupBy:'address'">
-      <strong data-ng-if="key != ''">
-        {{key}}<br/>
-      </strong>
-
-      <ul>
-        <li ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'">
-          {{roles }} :
-          <span data-ng-repeat="c in contactGroupByRole track by $index">
-            <span data-ng-if="c.email != ''">
-              <a href="mailto:{{c.email}}">
-                <span data-ng-hide="c.name">{{c.email}}</span>
-                <span data-ng-show="c.name">{{c.name}}</span>
+      <div ng-repeat="(key, contactGroupByAddress) in contactByOrgRole | groupBy:'address'">
+        <span class="text-muted" data-ng-if="key != ''">
+          {{key}}<br/>
+        </span>
+        <ul>
+          <li ng-repeat="(roles, contactGroupByRole) in contactGroupByAddress | groupBy:'roles'">
+            {{roles }} :
+            <span data-ng-repeat="c in contactGroupByRole track by $index">
+              <span data-ng-if="c.email != ''">
+                <a href="mailto:{{c.email}}">
+                  <span data-ng-hide="c.name">{{c.email}}</span>
+                  <span data-ng-show="c.name">{{c.name}}</span>
+                  <span data-ng-show="c.position">({{c.position}})</span>
+                </a>
+              </span>
+              <span data-ng-if="c.email === ''">{{c.name}}
                 <span data-ng-show="c.position">({{c.position}})</span>
-              </a>
+              </span>
+              <span data-ng-if="!$last">,</span>
             </span>
-            <span data-ng-if="c.email === ''">{{c.name}}
-              <span data-ng-show="c.position">({{c.position}})</span>
-            </span>
-            <span data-ng-if="!$last">,</span>
-          </span>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 

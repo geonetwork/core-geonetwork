@@ -518,7 +518,7 @@
     <dependency>
       <groupId>org.mitre.dsmiley.httpproxy</groupId>
       <artifactId>smiley-http-proxy-servlet</artifactId>
-      <version>1.8</version>
+      <version>1.9</version>
     </dependency>
 
     <!--Detect urls in String and transform to html format-->
@@ -532,6 +532,82 @@
 
   <build>
     <plugins>
+    
+      <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
+	    <plugin>
+	        <groupId>pl.project13.maven</groupId>
+	        <artifactId>git-commit-id-plugin</artifactId>
+	        <version>2.2.1</version>
+	        <executions>
+	            <execution>
+	                <id>get-the-git-infos</id>
+	                <goals>
+	                    <goal>revision</goal>
+	                </goals>
+	            </execution>
+	        </executions>
+	
+	        <configuration>
+	            <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+	            <prefix>git</prefix>
+	            <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+	            <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+	            <verbose>false</verbose>
+	            <generateGitPropertiesFile>true</generateGitPropertiesFile>
+	            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+	            <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json". Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
+	            <format>properties</format>
+	            <skipPoms>true</skipPoms>
+	            <injectAllReactorProjects>false</injectAllReactorProjects>
+	            <failOnNoGitDirectory>false</failOnNoGitDirectory>
+	            <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+	            <skip>false</skip>
+	            <runOnlyOnce>true</runOnlyOnce>
+	            <excludeProperties>
+	            </excludeProperties>
+	            <includeOnlyProperties>
+	            </includeOnlyProperties>
+	            <replacementProperties>
+	            </replacementProperties>
+	            <useNativeGit>false</useNativeGit>
+	            <abbrevLength>7</abbrevLength>
+	            <commitIdGenerationMode>flat</commitIdGenerationMode>
+	            <gitDescribe>
+	                <skip>false</skip>
+	                <always>false</always>
+	                <abbrev>7</abbrev>
+	                <dirty>-dirty</dirty>
+	                <match>*</match>
+	                <tags>true</tags>
+	                <forceLongFormat>false</forceLongFormat>
+	            </gitDescribe>
+	            <!-- @since 2.2.2 -->
+	            <!-- 
+	                Since version **2.2.2** the maven-git-commit-id-plugin comes equipped with an additional validation utility which can be used to verify if your project properties are set as you would like to have them set.
+	                *Note*: This configuration will only be taken into account when the additional goal `validateRevision` is configured inside an execution.
+	            -->
+	            <validationProperties>
+	                <validationProperty>
+	                    <!--
+	                         A descriptive name that will be used to be able to identify the validation that does not match up (will be displayed in the error message).
+	                    -->
+	                    <name>validating project version</name>
+	                    <!-- 
+	                         the value that needs the validation
+	                         *Note* : In order to be able to validate the generated git-properties inside the pom itself you may need to set the configuration `<injectAllReactorProjects>true</injectAllReactorProjects>`. 
+	                    -->
+	                    <value>${project.version}</value>
+	                    <!--
+	                        the expected value
+	                    -->
+	                    <shouldMatchTo><![CDATA[^.*(?<!-SNAPSHOT)$]]></shouldMatchTo>
+	                </validationProperty>
+	                <!-- the next validationProperty you would like to validate -->
+	            </validationProperties>
+	            <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
+	        </configuration>
+	
+	    </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -795,6 +871,7 @@
         <es.spring.profile>es</es.spring.profile>
       </properties>
     </profile>
+   
   </profiles>
 
   <properties>

@@ -20,7 +20,7 @@ l=(
     'ge::de'
     'it::it'
     'ko::ko'
-    'du::nl'
+    'nl::nl'
     'cz::cs_CZ'
     'ca::ca'
     'fi::fi'

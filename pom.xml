@@ -1274,13 +1274,14 @@
     <es.url>http://${es.host}:${es.port}</es.url>
     <es.index.features>features</es.index.features>
     <es.index.records>records</es.index.records>
+    <es.index.searchlogs>searchlogs</es.index.searchlogs>
+
     <!-- to load spring configurations related to es and camel,
     you should use maven "es" profile (defined in web).
     Devs may note that normally (not in this case), many spring profiles can
     be defined at the same time: "active.profiles.spring" is overriden
     in web.xml. -->
     <es.spring.profile></es.spring.profile>
-    <es.index.searchlogs>searchlogs</es.index.searchlogs>
     <es.username></es.username>
     <es.password></es.password>
 

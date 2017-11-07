@@ -26,20 +26,15 @@ package org.fao.geonet.kernel.search.log;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
 import javax.annotation.Nonnull;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -339,14 +334,10 @@ public class QueryRequest {
 //        return true;
 //    }
 
-
-    @Value("${es.index.searchlogs}")
-    private String index = "searchlogs";
-
     @Autowired
     private EsClient client;
 
-    public boolean storeToEs() {
+    public boolean storeToEs(String index) {
         if (client == null) {
           Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
           return false;

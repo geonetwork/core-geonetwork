@@ -149,6 +149,8 @@
             searchGeometry: undefined
           };
 
+          scope.output = {};  // initialize object as it is not supposed to be undefined
+
           // if true, the "apply filters" button will be available
           scope.filtersChanged = false;
           scope.previousFilterState = {
@@ -413,40 +415,19 @@
             }
           };
 
-          scope.onUpdateDate = function(field) {
-            var output = scope.output;
-            var fieldName = field.name;
-            var date;
+          // this returns a callback with the fieldname & type available
+          // the callback is called when the date range is updated, with
+          // 'from' and 'to' properties as arguments
+          scope.onUpdateDateRange = function(field, dateFrom, dateTo) {
+            scope.output[field.name] = {
+              type: field.type || 'date',
+              values: {
+                from: dateFrom,
+                to: dateTo
+              }
+            };
 
-            // mapping from field (timelineZoomable)
-            if (field.model) {
-              date = field.model;
-              if ((angular.isObject(date) && date.from && date.to) ||
-                  angular.isString(date)) {
-                output[fieldName] = {
-                  type: field.type || 'date',
-                  value: date
-                };
-              }
-              else {
-                delete output[fieldName];
-              }
-            }
-            // Direct mapping (datepicker)
-            else {
-              date = output[fieldName].values;
-
-              if ((angular.isObject(date) && date.from && date.to) ||
-                  angular.isString(date)) {
-                output[fieldName].type = 'date';
-              }
-              else {
-                output[fieldName].type = undefined;
-              }
-            }
-            if (output[fieldName].type) {
-              scope.filterFacets();
-            }
+            scope.filterFacets();
           };
 
           /**
@@ -513,7 +494,6 @@
            * to the output structure to generate the ui.
            */
           scope.resetFacets = function() {
-
             scope.output = {};
             scope.searchInput = '';
 
@@ -535,7 +515,6 @@
                   scope.count = resp.count;
                   refreshHeatmap();
                 });
-
           };
 
           /**
@@ -632,8 +611,8 @@
                     SLD: sldURL
                   });
                 }
-                scope.filtersChanged = false;   // reset 'apply filters' button
               }).finally(function() {
+                scope.filtersChanged = false;   // reset 'apply filters' button
                 defer.resolve();
               });
             } else {
