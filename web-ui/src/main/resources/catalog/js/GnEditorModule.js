@@ -54,10 +54,13 @@
 
   module.constant('gnViewerSettings', {});
 
-  module.config(['$LOCALES',
+  module.config(['$LOCALES','gnGlobalSettings', 
     function($LOCALES) {
       $LOCALES.push('search');
       $LOCALES.push('editor');
+      //searchView is defined on base-layout-cssjs-loader.xsl
+      $LOCALES.push('/../../catalog/views/'+searchView+
+          '/locales/'+gnGlobalSettings.lang+'-core.json');
       $LOCALES.push('/../api/0.1/tools/i18n/db?' +
           'type=StatusValue&type=Operation&type=Group');
 

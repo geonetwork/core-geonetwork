@@ -60,8 +60,8 @@
 
 
   <xsl:template name="javascript-load">
-
-
+    <!-- notify js of the current view -->
+    <script>var searchView = '<xsl:value-of select="$searchView"/>';</script>
     <xsl:if test="$is3DModeAllowed">
       <script>var CESIUM_BASE_URL = '<xsl:value-of select="$uiResourcesPath"/>lib/ol3cesium/Cesium/';
       </script>
