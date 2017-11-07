@@ -34,6 +34,9 @@
       var me = this;
       var CELL_SIZE = 12;     // pixels
       var BUFFER_RATIO = 1.5;
+      var CELL_LOW_COLOR = [255, 241, 92];
+      var CELL_HIGH_COLOR = [255, 81, 40];
+      var CELLS_OPACITY = 0.7;
 
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'heatmap');
 
@@ -46,14 +49,18 @@
        * @return {Promise}
        */
       this.requestHeatmapData = function(featureType, map) {
-        var extent = map.getView().calculateExtent(map.getSize());
+        var bufferedSize = map.getSize().map(function(value) {
+          return value * BUFFER_RATIO;
+        });
+        var extent = map.getView().calculateExtent(bufferedSize);
         var zoom = map.getView().getZoom();
 
         // data precision is deduced from current zoom view
-        var geohashLength = Math.min(Math.max(Math.ceil((zoom + 1) / 2), 1), 12);
+        var geohashLength = 2;
+        if (zoom > 3) { geohashLength = 3; }
+        if (zoom > 5) { geohashLength = 4; }
 
         // viewbox filter
-        ol.extent.buffer(extent, BUFFER_RATIO, extent);
         var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
         var bottomRight = ol.proj.toLonLat(ol.extent.getBottomRight(extent));
 
@@ -97,6 +104,9 @@
         }).then(function(response) {
           var buckets = response.data.aggregations.cells.buckets;
 
+          // get max cell count
+          me.maxCellCount = buckets[0].doc_count;
+
           // compute cells array based on received data from ES
           return buckets.map(function(cell) {
             var hash = cell.key;
@@ -133,31 +143,26 @@
       };
 
       // this will generate styles with a color gradient
-      var startColor = [241, 215, 142];
-      var endColor = [250, 150, 150];
       var cellStyles = [];
-      var stepCount = 10;
+      var stepCount = 6;
       for (var i = 0; i < stepCount; i++) {
         var ratio = i / (stepCount - 1);
-        var c = startColor.map(function(value, index) {
-          return value + ratio * (endColor[index] - value);
+        var c = CELL_LOW_COLOR.map(function(value, index) {
+          return Math.floor(value + ratio * (CELL_HIGH_COLOR[index] - value));
         });
-        var cssFillColor = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ', 0.6)';
-        var cssColor = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+        var cssFillColor =
+          'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + CELLS_OPACITY + ')';
         cellStyles.push(new ol.style.Style({
-          fill: new ol.style.Fill({ color: cssFillColor }),
-          stroke: new ol.style.Stroke({
-            color: cssColor,
-            width: 2
-          })
+          fill: new ol.style.Fill({ color: cssFillColor })
         }));
       }
 
       // this function returns the correct style according to the 'count'
       // attribute on the feature
+      me.maxCellCount = 1;
       var cellStyleFunction = function(feature) {
-        var densityRatio = 0;
-        return cellStyles[Math.floor(densityRatio * stepCount)];
+        var densityRatio = (feature.get('count') || 0) / me.maxCellCount;
+        return cellStyles[Math.floor(densityRatio * (stepCount - 1))];
       };
 
       /**
@@ -167,6 +172,13 @@
        */
       this.getCellStyle = function() {
         return cellStyleFunction;
+      };
+
+      /**
+       * @return {number}
+       */
+      this.getCellOpacity = function() {
+        return CELLS_OPACITY;
       };
     }]);
 })();
