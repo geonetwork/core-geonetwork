@@ -103,6 +103,7 @@
   <format>Format</format>
   <indeterminatePosition>Position indéterminée</indeterminatePosition>
   <format_version>Version</format_version>
+  <format_specification>Specification</format_specification>
   <inspireTheme>Thème INSPIRE</inspireTheme>
   <inspireThemeURI>Thème INSPIRE</inspireThemeURI>
   <temporalRangeSection>Étendue temporelle</temporalRangeSection>

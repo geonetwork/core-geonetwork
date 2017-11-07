@@ -778,3 +778,15 @@ input.ng-invalid {
 .text-ellipsis { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .width-100 { width: 100%; } .width-75 { width: 75%; } .width-50 { width: 50%; }
 .width-25 { width: 25%; } .width-33 { width: 33%; } .width-66 { width: 66%; }
+
+
+html {
+  // As a side-effect of setting the @viewport in bootstrap,
+  // IE11 & Edge make the scrollbar overlap the content and automatically hide itself when not in use.
+  // Unfortunately, the auto-showing of the scrollbar is sometimes too sensitive,
+  // thus making it hard to click on stuff near the right edge of the page.
+  // So we add this style to force IE11 & Edge to use a "normal", non-overlapping, non-auto-hiding scrollbar.
+  // See https://github.com/twbs/bootstrap/issues/18543
+  // TODO Remove this if Bootstrap version is >= 4.0.0
+  -ms-overflow-style: scrollbar;
+}
