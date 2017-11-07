@@ -62,21 +62,61 @@
           });
           ctrl.map.addLayer(ctrl.layer);
 
+          // add an interaction for cell hovering
+          ctrl.hoverInteration = new ol.interaction.Select({
+            condition: ol.events.condition.pointerMove,
+            style: gnHeatmapService.getCellHoverStyle(),
+            layers: [ctrl.layer]
+          });
+          ctrl.map.addInteraction(ctrl.hoverInteration);
+
+          // add popover for feature info
+          ctrl.overlay = new ol.Overlay({
+            element: $('<div class="sxt-heatmap-overlay"></div>')[0],
+            positioning: 'bottom-center',
+            stopEvent: false,
+            offset: [0, -2]
+          });
+          ctrl.map.addOverlay(ctrl.overlay);
+          ctrl.hoverInteration.on('select', function(event) {
+            var selected = event.selected[0];
+
+            // hide if no feature selected
+            if (!selected) {
+              ctrl.overlay.setPosition();
+            } else {
+              var center =
+                ol.extent.getCenter(selected.getGeometry().getExtent());
+              var topleft =
+                ol.extent.getTopLeft(selected.getGeometry().getExtent());
+              ctrl.overlay.setPosition([center[0], topleft[1]]);
+              ctrl.overlay.getElement().innerText =
+                'Count: ' + selected.get('count');
+            }
+          });
+
           // this will refresh the heatmap
           ctrl.refresh = function() {
             gnHeatmapService.requestHeatmapData(ctrl.featureType, ctrl.map)
               .then(function(cells) {
                 // add cells as features
                 ctrl.source.clear();
+                ctrl.hoverInteration.getFeatures().clear();
                 ctrl.source.addFeatures(cells);
               });
-          }
+          };
 
           // watch "enabled" param to show/hide layer
           $scope.$watch("ctrl.enabled", function(newValue, oldValue) {
             ctrl.layer.setVisible(!!newValue);
+            ctrl.hoverInteration.setActive(!!newValue);
+
+            // the heatmap was enabled: refresh data
+            // else: clear select interaction
             if (newValue) {
               ctrl.refresh();
+            } else {
+              ctrl.hoverInteration.getFeatures().clear();
             }
           });
 

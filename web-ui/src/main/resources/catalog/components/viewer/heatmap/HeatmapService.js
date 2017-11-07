@@ -33,7 +33,7 @@
     function(gnIndexRequestManager, $http) {
       var me = this;
       var CELL_SIZE = 12;     // pixels
-      var BUFFER_RATIO = 1.5;
+      var BUFFER_RATIO = 1;
       var CELL_LOW_COLOR = [255, 241, 92];
       var CELL_HIGH_COLOR = [255, 81, 40];
       var CELLS_OPACITY = 0.7;
@@ -157,12 +157,33 @@
         }));
       }
 
+      // this is for hovered cells
+      var hoveredCellStyle = new ol.style.Style({
+        fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.2)' }),
+        stroke: new ol.style.Stroke({
+          color: 'rgba(255, 255, 255, 0.6)',
+          width: 3
+        }),
+      });
+
       // this function returns the correct style according to the 'count'
       // attribute on the feature
       me.maxCellCount = 1;
-      var cellStyleFunction = function(feature) {
-        var densityRatio = (feature.get('count') || 0) / me.maxCellCount;
-        return cellStyles[Math.floor(densityRatio * (stepCount - 1))];
+      var getCellStyleFunction = function(hovered) {
+        return function(feature) {
+          var densityRatio = (feature.get('count') || 0) / me.maxCellCount;
+          var style = cellStyles[Math.floor(densityRatio * (stepCount - 1))];
+
+          // handle hovered case
+          if (hovered) {
+            return [
+              style,
+              hoveredCellStyle
+            ];
+          } else {
+            return style;
+          }
+        };
       };
 
       /**
@@ -171,7 +192,16 @@
        * @return {ol.style}
        */
       this.getCellStyle = function() {
-        return cellStyleFunction;
+        return getCellStyleFunction();
+      };
+
+      /**
+       * Returns the style function to use for selected/hovered cells.
+       *
+       * @return {ol.style}
+       */
+      this.getCellHoverStyle = function() {
+        return getCellStyleFunction(true);
       };
 
       /**
