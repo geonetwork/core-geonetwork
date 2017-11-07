@@ -3,7 +3,8 @@
   <div class="row" data-ng-controller="GnEditorBoardSearchController">
     <div class="col-sm-9"
          data-ng-search-form=""
-         data-runSearch="true">
+         data-runSearch="true"
+         data-wait-for-user="true" >
 
       <form class="form-horizontal"
             role="form">
@@ -14,8 +15,8 @@
 
               <span class="input-group-addon">
                 <label>
-                  <input type="checkbox" data-ng-model="onlyMyRecord"
-                         data-ng-click="toggleOnlyMyRecord();triggerSearch();">
+                  <input type="checkbox" data-ng-model="onlyMyRecord.is"
+                         data-ng-change="toggleOnlyMyRecord(triggerSearch);">
                   <span data-translate="">onlyMyRecord</span>
                 </label>
               </span>

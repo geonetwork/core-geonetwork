@@ -1115,6 +1115,8 @@
     "ui-isExportMapAsImageEnabled-help": "This requires CORS to be enabled on the WMS services used in the map application. If not sure, you should disable that option that may cause trouble displaying WMS layers.",
     "ui-is3DModeAllowed": "Allow 3D mode",
     "ui-is3DModeAllowed-help": "If enabled, user can switch the map to 3D mode. The map viewer need to be enabled also. If you don't want to enable the 3D mode for all users, adding 'catalog.search?with3d' in the URL will also load 3D mode.",
+    "ui-isUserRecordsOnly": "Only my records ",
+    "ui-isUserRecordsOnly-help": "If enabled, the checkbox \"Only my records\" will be ckecked by default in the editor dashboard",
     "map/isMapViewerEnabled": "Enable Map Viewer",
     "map/isMapViewerEnabled-help": "If unselected, the map tab will be disabled and will not be used.",
     "ui-isSaveMapInCatalogAllowed": "Allow users to save maps as metadata record",
