@@ -101,11 +101,12 @@
       };
 
       var init = function() {
-        $http.get('../api/users', {cache: true}).
+        $http.get('../api/groups?profile=Editor', {cache: true}).
             success(function(data) {
               $scope.groups = data;
-
-              // Select by default the first group.
+              // Select first user group with editor privileges.
+              // TODO: User should be able to select the group to put
+              // the entry in.
               if ($scope.ownerGroup === null && data) {
                 $scope.ownerGroup = data[0]['id'];
               }
@@ -348,7 +349,7 @@
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
         gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
             fullPrivileges,
-            's').then(searchEntries);
+            'SUB_TEMPLATE').then(searchEntries);
       };
 
       init();
