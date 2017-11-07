@@ -87,6 +87,38 @@ div[gn-transfer-ownership] * .list-group {
   }
 }
 
+.gn-sub-bar {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-top: 0;
+  z-index: 1;
+}
+[ng-app="gn_editor"] {
+  .gn-top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: 55px;
+  }
+  .gn-sub-bar {
+    position: fixed;
+    top: 56px;
+    left: 20px;
+    right: 20px;
+    height: 55px;
+  }
+  .gn-editor-board {
+    padding-top: 120px;
+  }
+  .gn-editor-container {
+    padding-top: 60px;
+  }
+}
+
 a {
   word-wrap: break-word;
 }
