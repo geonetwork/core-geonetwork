@@ -38,7 +38,6 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
@@ -50,10 +49,10 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryCustom;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -182,7 +181,7 @@ public class AccessManager {
         return hs;
     }
 
-    public Set<Integer> getReviewerGroups(UserSession usrSess) throws Exception {
+    public Set<Integer> getReviewerGroups(UserSession usrSess) {
         Set<Integer> hs = new HashSet<Integer>();
         UserGroupRepository _userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
@@ -238,7 +237,7 @@ public class AccessManager {
      *
      * @param id The metadata internal identifier
      */
-    public boolean canEdit(final ServiceContext context, final String id) throws Exception {
+    public boolean canEdit(final ServiceContext context, final String id) {
         return isOwner(context, id) || hasEditPermission(context, id);
     }
 
@@ -253,10 +252,10 @@ public class AccessManager {
      *
      * @param id The metadata internal identifier
      */
-    public boolean isOwner(final ServiceContext context, final String id) throws Exception {
+    public boolean isOwner(final ServiceContext context, final String id) {
 
         //--- retrieve metadata info
-        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
 
         if (info == null)
             return false;
@@ -275,7 +274,7 @@ public class AccessManager {
      *
      * @param sourceInfo The metadata source/owner information
      */
-    public boolean isOwner(ServiceContext context, MetadataSourceInfo sourceInfo) throws Exception {
+    public boolean isOwner(ServiceContext context, MetadataSourceInfo sourceInfo) {
 
         UserSession us = context.getUserSession();
         if (us == null || !us.isAuthenticated()) {
@@ -348,7 +347,11 @@ public class AccessManager {
      * @param metadataId the id of the metadata
      */
     public boolean isVisibleToAll(final String metadataId) throws Exception {
+<<<<<<< HEAD
         AbstractMetadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOne(metadataId);
+=======
+        IMetadata metadata = ApplicationContextHolder.get().getBean(IMetadataUtils.class).findOne(metadataId);
+>>>>>>> Metadata Draft added. Pending: redirect editor when trying to edit
         if (metadata == null) {
             return false;
         } else {
@@ -408,7 +411,7 @@ public class AccessManager {
      *
      * @param id The metadata internal identifier
      */
-    public boolean hasEditPermission(final ServiceContext context, final String id) throws Exception {
+    public boolean hasEditPermission(final ServiceContext context, final String id) {
         UserSession us = context.getUserSession();
         if (us == null || !us.isAuthenticated())
             return false;

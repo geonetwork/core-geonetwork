@@ -90,7 +90,7 @@ public abstract class BaseAligner {
                 }
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
-                    metadata.getMetadataCategories().add(metadataCategory);
+                    metadata.getCategories().add(metadataCategory);
                 } else {
                     log.warning("Unable to map category: " + catId + " (" + name + ") to a category in Geonetwork");
                 }
@@ -105,7 +105,7 @@ public abstract class BaseAligner {
             } else {
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
-                    metadata.getMetadataCategories().add(metadataCategory);
+                    metadata.getCategories().add(metadataCategory);
                 } else {
                     log.warning("Unable to map category: " + catId + " to a category in Geonetwork");
                 }

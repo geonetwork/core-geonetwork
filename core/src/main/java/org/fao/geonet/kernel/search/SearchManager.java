@@ -656,11 +656,13 @@ public class SearchManager implements ISearchManager {
      * the latest data.
      */
     public void forceIndexChanges() throws IOException {
+        Log.info(Geonet.DATA_MANAGER, "forceIndexChanges");
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
 
         tracker.commit();
         tracker.maybeRefreshBlocking();
+        Log.info(Geonet.DATA_MANAGER, "index refreshed");
     }
 
     /**

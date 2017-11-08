@@ -42,7 +42,7 @@ public class DraftMetadataCategory extends BaseMetadataCategory implements IMeta
             @Override
             public void apply(@Nonnull MetadataDraft entity) {
                 changed[0] = !entity.getMetadataCategories().contains(newCategory);
-                entity.getMetadataCategories().add(newCategory);
+                entity.getCategories().add(newCategory);
             }
         });
 

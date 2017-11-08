@@ -46,7 +46,6 @@ import java.util.Set;
 @EntityListeners(MetadataCategoryEntityListenerManager.class)
 @SequenceGenerator(name = MetadataCategory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataCategory extends Localized implements Serializable {
-    private static final long serialVersionUID = -3273509524520368629L;
     static final String ID_SEQ_NAME = "metadata_category_id_seq";
     private int _id;
     private String _name;

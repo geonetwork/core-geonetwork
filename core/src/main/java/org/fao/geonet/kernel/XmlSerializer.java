@@ -44,6 +44,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.springframework.transaction.annotation.Transactional;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -267,6 +268,7 @@ public abstract class XmlSerializer {
     /**
      * Deletes an xml element given its id.
      */
+
     protected void deleteDb(String id) throws Exception {
         IMetadataManager _metadataManager = ApplicationContextHolder.get().getBean(IMetadataManager.class);
 

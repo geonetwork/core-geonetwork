@@ -27,9 +27,9 @@ import com.google.common.collect.Maps;
 
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataDraft_;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.springframework.data.domain.Page;
@@ -92,7 +92,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
 
         cbQuery.multiselect(cb.count(root));
         Long total = (Long) _entityManager.createQuery(cbQuery).getSingleResult().get(0);
-        cbQuery.multiselect(root.get(Metadata_.id), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate));
+        cbQuery.multiselect(root.get(MetadataDraft_.id), root.get(MetadataDraft_.dataInfo).get(MetadataDataInfo_.changeDate));
 
         if (pageable != null && pageable.getSort() != null) {
             final Sort sort = pageable.getSort();
@@ -122,7 +122,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Integer> cbQuery = cb.createQuery(Integer.class);
         Root<MetadataDraft> root = cbQuery.from(MetadataDraft.class);
-        cbQuery.select(root.get(Metadata_.id));
+        cbQuery.select(root.get(MetadataDraft_.id));
 
         cbQuery.where(spec.toPredicate(root, cbQuery, cb));
         return _entityManager.createQuery(cbQuery).getResultList();
@@ -134,7 +134,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<MetadataDraft> query = cb.createQuery(MetadataDraft.class);
         final Root<MetadataDraft> metadataRoot = query.from(MetadataDraft.class);
-        final Path<ISODate> changeDate = metadataRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
+        final Path<ISODate> changeDate = metadataRoot.get(MetadataDraft_.dataInfo).get(MetadataDataInfo_.changeDate);
         query.orderBy(cb.asc(changeDate));
         return _entityManager.createQuery(query).setMaxResults(1).getSingleResult();
     }
@@ -144,7 +144,7 @@ public class MetadataDraftRepositoryImpl implements MetadataRepositoryCustom<Met
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> cbQuery = cb.createQuery(Object[].class);
         Root<MetadataDraft> root = cbQuery.from(MetadataDraft.class);
-        cbQuery.select(cb.array(root.get(Metadata_.id), root.get(Metadata_.sourceInfo)));
+        cbQuery.select(cb.array(root.get(MetadataDraft_.id), root.get(MetadataDraft_.sourceInfo)));
 
         cbQuery.where(spec.toPredicate(root, cbQuery, cb));
         Map<Integer, MetadataSourceInfo> results = Maps.newHashMap();

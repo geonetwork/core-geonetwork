@@ -286,7 +286,7 @@ public class Aligner {
             log.debug("    - Setting categories : " + categories);
         }
 
-        metadata.getMetadataCategories().addAll(categories);
+        metadata.getCategories().addAll(categories);
     }
 
     private void addPrivileges(String id) throws Exception {
@@ -348,7 +348,7 @@ public class Aligner {
         //--- remove old categories
 
         @SuppressWarnings("unchecked")
-        Collection<MetadataCategory> locCateg = dataMan.getCategories(id);
+        Collection<? extends MetadataCategory> locCateg = dataMan.getCategories(id);
 
         for (MetadataCategory el : locCateg) {
             int catId = el.getId();

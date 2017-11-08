@@ -96,11 +96,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -326,10 +330,11 @@ public class BaseMetadataManager implements IMetadataManager {
         return applicationContext == null ? _applicationContext : applicationContext;
     }
 
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
     private void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
         AbstractMetadata metadata = metadataUtils.findOne(Integer.valueOf(id));
-        if (! settingManager.getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION) &&
-                metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+        if (!settingManager.getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION)
+                && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
             Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
             if (result.size() > 0) {
@@ -363,7 +368,7 @@ public class BaseMetadataManager implements IMetadataManager {
     
     private MetaSearcher searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
         MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-        Element parameters =  new Element(Jeeves.Elem.REQUEST);
+        Element parameters = new Element(Jeeves.Elem.REQUEST);
         parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
         parameters.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
         parameters.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
@@ -372,7 +377,6 @@ public class BaseMetadataManager implements IMetadataManager {
         searcher.search(context, parameters, config);
         return searcher;
     }
-        
 
     // --------------------------------------------------------------------------
     // ---
@@ -466,7 +470,7 @@ public class BaseMetadataManager implements IMetadataManager {
         if (group.getDefaultCategory() != null) {
             newMetadata.getMetadataCategories().add(group.getDefaultCategory());
         }
-        Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getMetadataCategories(),
+        Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
                 new Predicate<MetadataCategory>() {
                     @Override
                     public boolean apply(@Nullable MetadataCategory input) {
@@ -474,7 +478,7 @@ public class BaseMetadataManager implements IMetadataManager {
                     }
                 });
 
-        newMetadata.getMetadataCategories().addAll(filteredCategories);
+        newMetadata.getCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES, fullRightsForGroup, true).getId();
 
@@ -690,6 +694,9 @@ public class BaseMetadataManager implements IMetadataManager {
     public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
             final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
             final boolean updateDateStamp) throws Exception {
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            Log.debug(Geonet.DATA_MANAGER, "updateMetadata(" + metadataId + ")");
+        }
         Element metadataXml = md;
 
         // when invoked from harvesters, session is null?
@@ -728,8 +735,14 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // --- write metadata to dbms
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            Log.debug(Geonet.DATA_MANAGER, "Write record (" + metadataId + ") to dbms");
+        }
         getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
         // Notifies the metadata change to metatada notifier service
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            Log.debug(Geonet.DATA_MANAGER, "Notifies change of record (" + metadataId + ") to md notifier service");
+        }
         metadataUtils.notifyMetadataChange(metadataXml, metadataId);
 
         try {
@@ -815,7 +828,7 @@ public class BaseMetadataManager implements IMetadataManager {
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
         }
 
-        for (MetadataCategory category : metadata.getMetadataCategories()) {
+        for (MetadataCategory category : metadata.getCategories()) {
             addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
         }
 
@@ -1077,8 +1090,7 @@ public class BaseMetadataManager implements IMetadataManager {
         final Set<Integer> downloadableByGuest = loadOperationsAllowed(context,
                 where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
                         .and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
-        final Map<Integer, MetadataSourceInfo> allSourceInfo = metadataUtils
-                .findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
+        final Map<Integer, MetadataSourceInfo> allSourceInfo = metadataUtils.findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
 
         for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
             addbasicFieldsPrivileges(context, operationsPerMetadata, visibleToAll, downloadableByGuest, allSourceInfo, entry);
@@ -1195,6 +1207,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     @Override
+    @Transactional(readOnly=false, isolation=Isolation.READ_COMMITTED, propagation=Propagation.REQUIRES_NEW)
     public AbstractMetadata save(AbstractMetadata info) {
         if (info instanceof Metadata) {
             return metadataRepository.save((Metadata) info);
@@ -1211,6 +1224,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, noRollbackFor = { EmptyResultDataAccessException.class })
     public void deleteAll(Specification<? extends AbstractMetadata> specs) {
         try {
             metadataRepository.deleteAll((Specification<Metadata>) specs);
@@ -1221,8 +1235,11 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     @Override
+    @Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED, noRollbackFor = { EmptyResultDataAccessException.class })
     public void delete(Integer id) {
-        metadataRepository.delete(id);
+        if (metadataRepository.exists(id)) {
+            metadataRepository.delete(id);
+        }
     }
 
     @SuppressWarnings("unchecked")

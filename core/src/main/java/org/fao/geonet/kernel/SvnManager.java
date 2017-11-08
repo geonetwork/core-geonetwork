@@ -583,7 +583,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     private void commitMetadataCategories(ISVNEditor editor, String id, DataManager dataMan) throws Exception {
 
         // get categories from the database
-        Collection<MetadataCategory> categs = dataMan.getCategories(id);
+        Collection<? extends MetadataCategory> categs = dataMan.getCategories(id);
         Element catXml = new Element("results");
         for (MetadataCategory categ : categs) {
             catXml.addContent(

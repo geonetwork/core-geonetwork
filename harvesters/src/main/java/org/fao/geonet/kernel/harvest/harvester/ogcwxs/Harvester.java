@@ -745,7 +745,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 if (metadataCategory == null) {
                     throw new IllegalArgumentException("No category found with name: " + params.datasetCategory);
                 }
-                metadata.getMetadataCategories().add(metadataCategory);
+                metadata.getCategories().add(metadataCategory);
             }
             if (!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;

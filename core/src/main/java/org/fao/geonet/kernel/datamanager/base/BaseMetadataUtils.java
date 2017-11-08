@@ -55,6 +55,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Optional;
 
@@ -842,6 +845,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     }
 
     @Override
+    @Transactional(readOnly=true, isolation=Isolation.READ_COMMITTED)
     public AbstractMetadata findOne(String id) {
         return metadataRepository.findOne(id);
     }
@@ -873,8 +877,12 @@ public class BaseMetadataUtils implements IMetadataUtils {
     }
 
     @Override
+    @Transactional(readOnly=true, isolation=Isolation.READ_COMMITTED, propagation=Propagation.REQUIRES_NEW, timeout=500)
     public boolean exists(Integer iId) {
-        return metadataRepository.exists(iId);
+        Log.info(Geonet.DATA_MANAGER, "exists(" + iId + ")");
+        Boolean exist = metadataRepository.exists(iId);
+        Log.info(Geonet.DATA_MANAGER, "exists(" + iId + ") -> " + exist);
+        return exist;
     }
 
     @SuppressWarnings("unchecked")
@@ -927,4 +935,17 @@ public class BaseMetadataUtils implements IMetadataUtils {
     protected SchemaManager getSchemaManager() {
         return schemaManager;
     }
+
+    protected IMetadataSchemaUtils getMetadataSchemaUtils() {
+        return metadataSchemaUtils;
+    }
+    
+    protected IMetadataManager getMetadataManager() {
+        return metadataManager;
+    }
+    
+    protected IMetadataIndexer getMetadataIndexer() {
+        return metadataIndexer;
+    }
+
 }

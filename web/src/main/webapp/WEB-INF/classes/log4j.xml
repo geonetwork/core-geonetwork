@@ -113,6 +113,9 @@
   <logger name="geonetwork.data.directory">
     <level value="WARN"/>
   </logger>
+  <logger name="geonetwork.datamanager">
+    <level value="DEBUG"/>
+  </logger>
   <logger name="geonetwork.wro4j">
     <level value="WARN"/>
   </logger>
@@ -230,7 +233,7 @@
 
   <!-- Turn off logging except when explicitly declared below -->
   <root>
-    <level value="OFF"></level>
+    <level value="WARN"></level>
     <appender-ref ref="consoleAppender"/>
   </root>
 </log4j:configuration>

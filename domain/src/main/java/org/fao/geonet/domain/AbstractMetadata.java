@@ -23,6 +23,7 @@
 package org.fao.geonet.domain;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,14 +51,19 @@ import org.jdom.output.XMLOutputter;
 import com.vividsolutions.jts.util.Assert;
 
 /**
- * An entity representing a metadata object in the database. The xml, groups and operations are lazily loaded so accessing then will need to
- * be done in a thread that has a bound EntityManager.
+ * An entity representing a metadata object in the database. 
+ * The xml, groups and operations are lazily loaded so 
+ * accessing then will need to be done in a thread that has a bound 
+ * EntityManager. 
  * 
- * Also they can trigger database access if they have not been cached and therefore can cause slowdowns so they should only be accessed in
- * need.
+ * Also they can trigger database access if they have not 
+ * been cached and therefore can cause slowdowns so they should 
+ * only be accessed in need.
  *
- * All classes/tables implemented will share by default the same sequence for the ID. So you can have different kinds of metadata (like
- * original and draft versioning) and the id will be unique on all the tables at the same time.
+ * All classes/tables implemented will share by default the same
+ * sequence for the ID. So you can have different kinds of metadata
+ * (like original and draft versioning) and the id will be unique
+ * on all the tables at the same time.
  *
  * @author María Arias de Reyna
  */
@@ -74,21 +80,23 @@ public abstract class AbstractMetadata extends GeonetEntity {
     private MetadataHarvestInfo _harvestInfo = new MetadataHarvestInfo();
 
     /**
-     * Get the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * Get the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored
      * and could result in reduced performance.
      *
      * @return the id of the metadata
      */
     @Id
-    @SequenceGenerator(name = Metadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = AbstractMetadata.ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be ignored
+     * Set the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be
+     * ignored
      * and could result in reduced performance.
      *
      * @param _id the id of the metadata
@@ -122,7 +130,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
         this._uuid = uuid;
         return this;
     }
-
+    
     /**
      * Get the metadata data as a string (typically XML)
      *
@@ -131,7 +139,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
     @Column(nullable = false)
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Type(type = "org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
     public String getData() {
         return _data;
     }
@@ -141,9 +149,13 @@ public abstract class AbstractMetadata extends GeonetEntity {
      *
      * Warning: Do not use it when the user is not authenticated.
      *
-     * When using this method be sure that the data to be persisted are the complete metadata record. For example, if the current user in
-     * session is not authenticated and element filters are applied (eg. withheld), do not set the data with the response of
-     * {@link org.fao.geonet.kernel.DataManager#getMetadata} in such case as the original content may be altered.
+     * When using this method be sure that
+     * the data to be persisted are the complete metadata
+     * record. For example, if the current user in session
+     * is not authenticated and element filters are applied
+     * (eg. withheld), do not set the data with the response
+     * of {@link org.fao.geonet.kernel.DataManager#getMetadata}
+     * in such case as the original content may be altered.
      *
      * Use XmlSerializer instead in an authenticated session.
      *
@@ -214,6 +226,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
         result.append(remainingString);
         return result.toString();
     }
+
 
     /**
      * Get the object representing metadata about the metadata (metadata creation date, etc...)
@@ -292,7 +305,8 @@ public abstract class AbstractMetadata extends GeonetEntity {
 
         String tmpIsHarvest = in.get("_isHarvested");
         if (tmpIsHarvest != null) {
-            out.getHarvestInfo().setHarvested(in.get("_isHarvested").equals("y"));
+            out.getHarvestInfo()
+                    .setHarvested(in.get("_isHarvested").equals("y"));
 
         }
         final MetadataSourceInfo sourceInfo = out.getSourceInfo();
@@ -309,8 +323,12 @@ public abstract class AbstractMetadata extends GeonetEntity {
     }
 
     @Transient
-    public abstract Set<MetadataCategory> getMetadataCategories();
-
-    public abstract void setMetadataCategories(@Nonnull Set<MetadataCategory> categories);
+    protected Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
+    
+    @SuppressWarnings("unchecked")
+    @Transient
+    public Set<MetadataCategory> getCategories() {
+        return (Set<MetadataCategory>) metadataCategories;
+    }
 
 }
