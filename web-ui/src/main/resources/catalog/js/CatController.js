@@ -141,7 +141,8 @@
             'downloads': ['DOWNLOAD'],
             'layers': ['OGC'],
             'maps': ['ows']
-          }
+          },
+          "isFilterTagsDisplayedInSearch":false
         },
         'map': {
           'enabled': true,
@@ -190,6 +191,7 @@
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
+          'isFilterTagsDisplayed': false,
           'createPageTpl': '../../catalog/templates/editor/new-metadata-horizontal.html'
         },
         'admin': {

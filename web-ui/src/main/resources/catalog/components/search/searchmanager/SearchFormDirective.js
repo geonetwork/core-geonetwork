@@ -37,12 +37,14 @@
   goog.require('gn_facets');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
+  goog.require('search_filter_tags_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
     'gn_facets',
     'gn_selection_directive',
-    'gn_search_form_results_directive'
+    'gn_search_form_results_directive',
+    'search_filter_tags_directive'
   ]);
 
   /**
@@ -70,9 +72,25 @@
           $scope.searchObj.selectionBucket ||
           (Math.random() + '').replace('.', '')
     };
+        $scope.finalParams = {};
 
     $scope.searching = 0;
     $scope.paginationInfo = $scope.paginationInfo || {};
+
+    /**
+     * Return the current search parameters.
+     **/
+    this.getSearchParams = function() {
+      return $scope.searchObj.params;
+    };
+
+    this.getFinalParams = function() {
+      return $scope.finalParams;
+    };
+
+    this.getSearchResults = function() {
+      return $scope.searchResults;
+    };
 
     /**
      * Tells if there is a pagination directive nested to this one.
@@ -88,6 +106,8 @@
         self.resetPagination();
       }
     };
+
+
 
     /**
      * Reset pagination 'from' and 'to' params and merge them
@@ -171,6 +191,7 @@
       params.bucket = $scope.searchResults.selectionBucket || 'metadata';
 
       var finalParams = angular.extend(params, hiddenParams);
+      $scope.finalParams = finalParams;
       gnSearchManagerService.gnSearch(finalParams).then(
           function(data) {
             $scope.searching--;
