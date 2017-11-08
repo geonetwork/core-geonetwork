@@ -17,12 +17,14 @@
       <br><a class="main_link" href="{{url}}">{{url}}</a></br>
     </p>
 
-    <p fmt-if="mainPublicationDescription">
-      <em translate="">mainPublicationIntroduction</em>
-    </p>
-    <p fmt-if="mainPublicationDescription">
-      {{mainPublicationDescription}}
-    </p>
+    <div fmt-if="mainPublicationDescription">
+      <p>
+        <em translate="">mainPublicationIntroduction</em>
+      </p>
+      <p fmt-repeat="desc in mainPublicationDescription">
+        {{desc}}
+      </p>
+    </div>
 
   </article>
 </div>

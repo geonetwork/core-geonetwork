@@ -174,8 +174,12 @@ class SxtSummaryFactory {
 
     def mainPublicationDescription = null
     if (mainPublicationElts.size() >= 1) {
-      mainPublicationDescription =
-        mainPublicationElts[0].'gmd:description'.'gco:CharacterString'.text()
+      mainPublicationDescription = []
+      mainPublicationElts.forEach{it ->
+        def text = it.'gmd:description'.'gco:CharacterString'.text()
+        mainPublicationDescription.push(
+          isoHandlers.commonHandlers.func.urlToHtml(text))
+      }
     }
 
     def el = doiElts[0]
@@ -249,8 +253,7 @@ class SxtSummaryFactory {
       citationPOContent: this.f.translate('citationPOContent'),
       contacts: String.join(', ', contacts),
       publishers: publishers,
-      mainPublicationDescription: mainPublicationDescription != null ?
-        isoHandlers.commonHandlers.func.urlToHtml(mainPublicationDescription) : null
+      mainPublicationDescription: mainPublicationDescription
     ]
 
     summary.citation = this.handlers.fileResult("html/sxt-citation.html", replacements)
