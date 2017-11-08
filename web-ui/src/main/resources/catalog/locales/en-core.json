@@ -73,6 +73,7 @@
     "city": "City",
     "cl_status": "Status",
     "associatedResources": "Associated resources",
+    "moreInfoOnRecord": " more ...",
     "comments": "Comment",
     "country": "Country",
     "validateSelectedRecordConfirm": "Do you really want to validate the {{selectedCount}} selected record(s)?",

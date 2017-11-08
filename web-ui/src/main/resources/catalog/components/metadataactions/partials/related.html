@@ -145,7 +145,7 @@
               <a href="#/metadata/{{r.id}}">
                 {{(r.title | gnLocalized: lang) }}
               </a> ({{(config.getLabel(mainType, type)) | translate}})<br/>
-              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">Meer...</a>
+              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}" data-translate="">moreInfoOnRecord</a>
             </p>
 
             <p class="text-muted"
