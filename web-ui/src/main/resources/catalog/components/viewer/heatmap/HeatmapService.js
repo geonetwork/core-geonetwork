@@ -163,7 +163,7 @@
         stroke: new ol.style.Stroke({
           color: 'rgba(255, 255, 255, 0.6)',
           width: 3
-        }),
+        })
       });
 
       // this function returns the correct style according to the 'count'

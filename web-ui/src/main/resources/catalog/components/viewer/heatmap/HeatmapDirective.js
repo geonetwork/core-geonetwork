@@ -121,16 +121,26 @@
           });
 
           // refresh features on map move
-          ctrl.map.on('moveend', function() {
+          var mapEventKey = ctrl.map.on('moveend', function() {
             if (!ctrl.enabled) {
               return;
             }
-            // console.log('refresh heatmap, features: ' + ctrl.featureType);
             ctrl.refresh();
+          });
+
+          // unbind event & remove layer on destroy
+          $scope.$on('$destroy', function() {
+            ctrl.map.un(mapEventKey);
+            ctrl.map.removeLayer(ctrl.layer);
+            ctrl.map.removeInteraction(ctrl.hoverInteration);
+            ctrl.map.removeInteraction(ctrl.overlay);
           });
         }],
         link: function(scope, element, attrs) {
-
+          // destroy scope on element removal
+          element.on('$destroy', function() {
+            scope.$destroy();
+          });
         }
       };
     }]);
