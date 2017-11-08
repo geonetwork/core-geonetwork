@@ -48,7 +48,8 @@
       $scope.onlyMyRecord = {
         is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
       };
-      $scope.isFilterTagsDisplayed = gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
+      $scope.isFilterTagsDisplayed =
+          gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.defaultSearchObj = {
         permalink: false,

@@ -142,7 +142,7 @@
             'layers': ['OGC'],
             'maps': ['ows']
           },
-          "isFilterTagsDisplayedInSearch":false
+          'isFilterTagsDisplayedInSearch': false
         },
         'map': {
           'enabled': true,

@@ -72,7 +72,7 @@
           $scope.searchObj.selectionBucket ||
           (Math.random() + '').replace('.', '')
     };
-        $scope.finalParams = {};
+    $scope.finalParams = {};
 
     $scope.searching = 0;
     $scope.paginationInfo = $scope.paginationInfo || {};
