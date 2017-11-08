@@ -57,8 +57,8 @@
 
   var tplFolder = '../../catalog/templates/editor/';
 
-  module.config(['$routeProvider',
-    function($routeProvider) {
+  module.config(['$routeProvider', 'gnGlobalSettings',
+    function($routeProvider, gnGlobalSettings) {
 
 
       $routeProvider.
@@ -72,7 +72,7 @@
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnEditorController'}).
           when('/create', {
-            templateUrl: tplFolder + 'new-metadata.html',
+            templateUrl: gnGlobalSettings.gnCfg.mods.editor.createPageTpl,
             controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group', {
             templateUrl: tplFolder + 'editor.html',

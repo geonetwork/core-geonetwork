@@ -189,7 +189,8 @@
         'editor': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.edit',
-          'isUserRecordsOnly': false
+          'isUserRecordsOnly': false,
+          'createPageTpl': '../../catalog/templates/editor/new-metadata-horizontal.html'
         },
         'admin': {
           'enabled': true,
