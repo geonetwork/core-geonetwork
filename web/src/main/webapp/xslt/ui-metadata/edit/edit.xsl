@@ -134,6 +134,9 @@
               </xsl:apply-templates>
             </xsl:when>
             <xsl:when test="$tab = 'xml'">
+              <xsl:apply-templates mode="form-builder" select="$viewConfig/text|$viewConfig/directive">
+                <xsl:with-param name="base" select="$metadata"/>
+              </xsl:apply-templates>
               <xsl:apply-templates mode="render-xml" select="$metadata"/>
             </xsl:when>
             <xsl:otherwise>
