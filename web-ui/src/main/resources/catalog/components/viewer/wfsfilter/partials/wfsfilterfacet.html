@@ -159,13 +159,14 @@
 -->
     </div>
 
-    <div data-ng-show="hmActive">
-      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
+    <div ng-if="hmActive">
+      <label ng-show="map" ng-show="source.getFeatures().length > 0">
         <input type="checkbox"
-               data-ng-model="isHeatMapVisible"/>
-        <span data-translate="">displayHeatMap</span>
+               ng-model="isHeatMapVisible"/>
+        <span translate>displayHeatMap</span>
       </label>
-      <gn-heatmap ng-if="map" map="map" feature-type="wfsUrl + '#' + featureTypeName"
+      <gn-heatmap ng-if="map" map="map"
+        feature-type="wfsUrl + '#' + featureTypeName"
         enabled="isHeatMapVisible"/>
     </div>
 

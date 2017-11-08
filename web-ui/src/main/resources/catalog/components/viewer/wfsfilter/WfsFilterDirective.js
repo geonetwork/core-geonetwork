@@ -127,8 +127,7 @@
           featureTypeName: '@',
           wfsUrl: '@',
           displayCount: '@',
-          layer: '=',
-          heatmapConfig: '@'
+          layer: '='
         },
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
@@ -142,8 +141,6 @@
 
           // Display or not the results count
           scope.showCount = angular.isDefined(attrs['showcount']);
-
-          scope.heatmapConfig = angular.fromJson(scope.heatmapConfig);
 
           scope.ctrl = {
             searchGeometry: undefined
@@ -161,63 +158,6 @@
 
           // Get an instance of index object
           var indexObject, geometry, extentFilter;
-
-          var heatmapsRequest =
-              gnIndexRequestManager.register('WfsFilter', 'heatmaps');
-          var defaultHeatmapConfig = {
-            radius: 30,
-            blur: 55,
-            opacity: .7,
-            //gradient: ['#0f0', '#ff0', '#f00', '#fff'],
-            visible: false
-          };
-          var hmEventKeys = [];
-
-          scope.isHeatMapVisible = false;
-          scope.heatmapLayer = null;
-          scope.source = null;
-          if (scope.map) {
-            scope.source = new ol.source.Vector();
-            scope.heatmapLayer = new ol.layer.Heatmap(
-                angular.extend({
-                  source: scope.source,
-                  visible: scope.isHeatMapVisible
-                }, defaultHeatmapConfig, scope.heatmapConfig));
-            scope.map.addLayer(scope.heatmapLayer);
-
-            $('body').append('<div id="heatmap-info" data-content=""' +
-                'style="position: absolute; z-index: 100;"/>');
-            var info = $('#heatmap-info');
-            var displayFeatureInfo = function(pixel) {
-              var feature = scope.map.forEachFeatureAtPixel(pixel,
-                  function(feature, layer) {
-                    if (layer == scope.heatmapLayer) {
-                      return feature;
-                    }
-                  }, undefined, function(layer) {
-                    return layer instanceof ol.layer.Vector;
-                  });
-              if (feature) {
-                var mapTop = scope.map.getTarget().getBoundingClientRect().top;
-                info.css({
-                  left: pixel[0] + 'px',
-                  top: (pixel[1] + mapTop) + 'px'
-                });
-                info.attr('data-original-title', feature.get('count'))
-                    .tooltip('show');
-              } else {
-                info.tooltip('hide');
-              }
-            };
-
-            scope.map.on('pointermove', ngeoDebounce(function(evt) {
-              if (evt.dragging) {
-                info.tooltip('hide');
-                return;
-              }
-              displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
-            }, 300));
-          }
 
           /**
            * Init the directive when the scope.layer has changed.
@@ -268,11 +208,6 @@
 
             scope.checkWFSServerUrl();
             scope.initIndexRequest();
-
-            if (scope.map) {
-              resetHeatMap();
-              hmEventKeys.push(map.on('moveend', refreshHeatmap));
-            }
           };
 
           /**
@@ -333,7 +268,6 @@
             var docFields = [];
             scope.countTotal = null;
 
-            heatmapsRequest.init(config);
             indexObject.getDocTypeInfo(config).then(function() {
               scope.isFeaturesIndexed = true;
               scope.status = null;
@@ -462,25 +396,8 @@
                       f.expanded = true;
                     }
                   });
-                  refreshHeatmap();
                 });
           };
-
-          function refreshHeatmap() {
-            return;
-            if (scope.isFeaturesIndexed && scope.isHeatMapVisible) {
-              heatmapsRequest.searchWithFacets({
-                params: scope.output,
-                any: scope.searchInput
-              },
-              gnIndexService.getHeatmapParams(scope.map)).
-                  then(function(resp) {
-                    scope.heatmaps = resp.aggs;
-                    // resp.indexData.facet_counts.facet_heatmaps;
-                  });
-            }
-          }
-
 
           scope.getMore = function(field) {
             indexObject.getFacetMoreResults(field).then(function(response) {
@@ -513,7 +430,6 @@
                   indexObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  refreshHeatmap();
                 });
           };
 
@@ -558,7 +474,6 @@
               });
 
               scope.$broadcast('FiltersChanged');
-              refreshHeatmap();
             });
           };
 
@@ -656,9 +571,7 @@
           }
           else {
             scope.$watch('layer', function(n, o) {
-              if (n === null && scope.map) {
-                resetHeatMap();
-              } else if (n !== o) {
+              if (n !== o) {
                 init();
               }
             });
@@ -689,38 +602,6 @@
             scope.$broadcast('FiltersChanged');
           });
 
-          function resetHeatMap() {
-            if (scope.source) {
-              scope.source.clear();
-            }
-            while (hmEventKeys.length) {
-              map.unByKey(hmEventKeys.pop());
-            }
-          }
-
-          scope.$watch('isHeatMapVisible', function(n, o) {
-            if (n != o) {
-              refreshHeatmap();
-              scope.heatmapLayer.setVisible(n);
-            }
-          });
-
-          // Update heatmap layers from index response
-          scope.$watch('heatmaps', function(n, o) {
-            if (n != o) {
-              // TODO: May contains multiple heatmaps
-              if (angular.isArray(n.geom)) {
-                scope.source.clear();
-                scope.source.addFeatures(
-                    gnIndexService.heatmapToFeatures(
-                    n.geom,
-                    scope.map.getView().getProjection())
-                );
-              }
-            }
-          });
-
-
           scope.showTable = function() {
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
@@ -735,7 +616,6 @@
 
           element.on('$destroy', function() {
             scope.$destroy();
-            resetHeatMap();
           });
 
           scope.toSqlOgr = function() {
