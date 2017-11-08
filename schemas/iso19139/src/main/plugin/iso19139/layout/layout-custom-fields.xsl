@@ -93,7 +93,7 @@
     </xsl:variable>
 
 
-    <div class="form-group gn-field gn-title {if ($isRequired) then 'gn-required' else ''}"
+    <div class="form-group gn-field gn-title {if ($isRequired) then 'gn-required' else ''} {if ($labelConfig/condition) then concat('gn-', $labelConfig/condition) else ''}"
          id="gn-el-{*/gn:element/@ref}"
          data-gn-field-highlight="">
       <label class="col-sm-2 control-label">
