@@ -86,9 +86,9 @@
           var getFlatLayers = function(node, parentCrs) {
             // current inherited crs (w/o dupes)
             var crs = (parentCrs || []).concat(node.CRS || [])
-              .filter(function(value, index, array) {
-                return array.indexOf(value) === index;
-              });
+                .filter(function(value, index, array) {
+                  return array.indexOf(value) === index;
+                });
 
             // add to flat layer array if we're on a leave (layer w/o child)
             if (!node.Layer) {

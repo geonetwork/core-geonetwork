@@ -150,10 +150,10 @@
              var defer = $q.defer();
              var scope = this;
              $http.get(url,
-               {
-                 headers: {'Content-Type':
-                   'application/x-www-form-urlencoded'}
-               }).success(function(data) {
+             {
+               headers: {'Content-Type':
+                 'application/x-www-form-urlencoded'}
+             }).success(function(data) {
 
                var snippet = $(cleanData(data));
                scope.refreshEditorForm(snippet);

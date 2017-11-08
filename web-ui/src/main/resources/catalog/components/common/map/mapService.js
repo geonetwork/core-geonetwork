@@ -147,16 +147,16 @@
               case 'osm':
                 defer.resolve(new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: layerInfo.title ||  'OpenStreetMap'
+                  title: layerInfo.title || 'OpenStreetMap'
                 }));
                 break;
 
               case 'tms':
                 defer.resolve(new ol.layer.Tile({
-                    source: new ol.source.XYZ({
+                  source: new ol.source.XYZ({
                         url: layerInfo.url
-                    }),
-                    title: layerInfo.title ||  'TMS Layer'
+                  }),
+                  title: layerInfo.title || 'TMS Layer'
                 }));
                 break;
 
@@ -167,7 +167,7 @@
                     key: layerInfo.key,
                     imagerySet: 'Aerial'
                   }),
-                  title: layerInfo.title ||  'Bing Aerial'
+                  title: layerInfo.title || 'Bing Aerial'
                 }));
                 break;
 
@@ -180,7 +180,7 @@
                 source.set('type', type);
                 defer.resolve(new ol.layer.Tile({
                   source: source,
-                  title: layerInfo.title ||  'Stamen'
+                  title: layerInfo.title || 'Stamen'
                 }));
                 break;
 
@@ -192,7 +192,8 @@
                   defer.reject();
                   break;
                 }
-                this.addWmtsFromScratch(map, layerInfo.url, layerInfo.name, true)
+                this.addWmtsFromScratch(
+                    map, layerInfo.url, layerInfo.name, true)
                     .then(function(layer) {
                       if (layerInfo.title) {
                         layer.set('title', layerInfo.title);
@@ -378,9 +379,9 @@
                 for (var j = 0; j < extent.length; j++) {
                   // TODO: Point will not be supported in multi geometry
                   var projectedExtent = ol.extent.getIntersection(
-                    ol.proj.transformExtent(extent[j], 'EPSG:4326', proj),
-                    projExtent
-                  );
+                      ol.proj.transformExtent(extent[j], 'EPSG:4326', proj),
+                      projExtent
+                      );
                   var coords = this.getPolygonFromExtent(projectedExtent);
                   geometry.appendPolygon(new ol.geom.Polygon(coords));
                 }
@@ -449,7 +450,7 @@
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#getLayersFromConfig
-           * @deprecated
+           * @deprecated When creating a new map, use createMap(<TYPE>) instead
            *
            * @description
            * get the DB config of the layers list that should be in the map
@@ -838,11 +839,11 @@
                     layer.set('elevation', {
                       units: dimension.units,
                       values: dimension.values.split(',')
-                  });
+                    });
                   }
                   if (dimension.name == 'time') {
                     layer.set('time',
-                      dimension.values.split(','));
+                        dimension.values.split(','));
                   }
                 }
               }
@@ -1192,21 +1193,21 @@
                   var finishCreation = function() {
 
                     $q.resolve(olL).
-                    then(gnViewerSettings.getPreAddLayerPromise).
-                    finally(
-                      function(){
-                        if (!createOnly) {
-                          map.addLayer(olL);
-                        }
-                        gnWmsQueue.removeFromQueue(url, name);
-                        defer.resolve(olL);
-                      });
+                        then(gnViewerSettings.getPreAddLayerPromise).
+                        finally(
+                        function() {
+                          if (!createOnly) {
+                            map.addLayer(olL);
+                          }
+                          gnWmsQueue.removeFromQueue(url, name);
+                          defer.resolve(olL);
+                        });
                   };
 
                   var feedMdPromise = md ?
-                    $q.resolve(md).then(function(md) {
-                      olL.set('md', md);
-                    }) : $this.feedLayerMd(olL);
+                      $q.resolve(md).then(function(md) {
+                        olL.set('md', md);
+                      }) : $this.feedLayerMd(olL);
 
                   feedMdPromise.then(finishCreation);
                 }
@@ -1891,7 +1892,7 @@
   // isInteger polyfill for IE
   Number.isInteger = Number.isInteger || function(value) {
     return typeof value === 'number' &&
-      isFinite(value) &&
-      Math.floor(value) === value;
+        isFinite(value) &&
+        Math.floor(value) === value;
   };
 })();

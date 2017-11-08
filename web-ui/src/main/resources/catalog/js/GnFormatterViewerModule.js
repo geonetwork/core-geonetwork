@@ -44,15 +44,27 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn');
   goog.require('gn_alert');
   goog.require('gn_catalog_service');
   goog.require('gn_formatter_lib');
   goog.require('gn_mdactions_service');
-  goog.require('gn_related_directive');
   goog.require('gn_mdview');
   goog.require('gn_popup_directive');
   goog.require('gn_popup_service');
+  goog.require('gn_related_directive');
   goog.require('gn_search_default_directive');
   goog.require('gn_utility');
   goog.require('gn_viewer');
@@ -105,11 +117,11 @@
     var tpls = '../../catalog/templates/';
 
     $routeProvider
-      .when(
+        .when(
         '/:mdId/formatters/:formatter', {
           templateUrl: tpls + 'formatter-viewer.html',
           controller: 'GnFormatterViewer'})
-      .when(
+        .when(
         '/:mdId', {
           templateUrl: tpls + 'formatter-viewer.html',
           controller: 'GnFormatterViewer'});

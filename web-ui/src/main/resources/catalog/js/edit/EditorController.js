@@ -146,7 +146,7 @@
           var button = $('#gn-view-menu-' + gnCurrentEdit.id);
           if (button) {
             menu.append(button);
-            $compile(button)($scope)
+            $compile(button)($scope);
           }
         }
       };
@@ -258,7 +258,7 @@
                   editorFormUrl += '&displayTooltips=true';
                 }
 
-                gnEditor.load(editorFormUrl).then(function () {
+                gnEditor.load(editorFormUrl).then(function() {
                   // $scope.onFormLoad();
                 });
 
@@ -500,8 +500,8 @@
       function parseXmlError(error) {
         if (error.indexOf('<?xml') === 0) {
           var x = jQuery.parseXML(error),
-            d = x.getElementsByTagName('description'),
-            m = d[0].textContent;
+              d = x.getElementsByTagName('description'),
+              m = d[0].textContent;
           return m;
         }
         return null;
@@ -518,7 +518,7 @@
 
               $rootScope.$broadcast('StatusUpdated', {
                 title: message ?
-                  message : $translate.instant('saveMetadataError'),
+                message : $translate.instant('saveMetadataError'),
                 error: message ? undefined : error,
                 timeout: 0,
                 type: 'danger'});

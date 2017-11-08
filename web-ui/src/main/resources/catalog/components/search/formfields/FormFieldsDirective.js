@@ -287,7 +287,7 @@
                   } else {
                     scope.groups = data;
                   }
-                  if(optional) {
+                  if (optional) {
                     scope.groups.unshift({
                       id: 'undefined',
                       name: ''

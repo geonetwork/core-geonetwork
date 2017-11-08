@@ -192,7 +192,8 @@
           'appUrl': '../../srv/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
           'isFilterTagsDisplayed': false,
-          'createPageTpl': '../../catalog/templates/editor/new-metadata-horizontal.html'
+          'createPageTpl':
+              '../../catalog/templates/editor/new-metadata-horizontal.html'
         },
         'admin': {
           'enabled': true,

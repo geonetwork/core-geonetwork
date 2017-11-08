@@ -132,7 +132,7 @@
               }
               catch (e) {
                 console.warn('Error while loading application profile.',
-                  applicationProfile);
+                    applicationProfile);
               }
             }
 
@@ -320,7 +320,7 @@
 
                     // if there is a mimeType containing WMS: use it instead
                     var wmsOutput = gnWpsService.getProcessOutputWMSMimeType(
-                      scope.processDescription);
+                    scope.processDescription);
                     if (wmsOutput) {
                       defaultOutput = wmsOutput.outputIdentifier;
                       defaultMimeType = wmsOutput.mimeType;
@@ -332,7 +332,7 @@
 
                     // use output as reference unless doing a profile graph
                     scope.wpsLink.output.asReference = scope.outputAsGraph ?
-                      false : true;
+                    false : true;
 
                     scope.outputsVisible = true;
 

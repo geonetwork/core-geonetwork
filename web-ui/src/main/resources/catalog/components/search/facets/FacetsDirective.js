@@ -36,7 +36,7 @@
         replace: true,
         templateUrl: function(elem, attrs) {
           return attrs.template || '../../catalog/components/search/facets/' +
-            'partials/facet-item.html';
+              'partials/facet-item.html';
         },
         scope: {
           facetResults: '=gnFacet',
@@ -84,7 +84,7 @@
         replace: true,
         templateUrl: function(elem, attrs) {
           return attrs.template || '../../catalog/components/search/facets/' +
-            'partials/facet-list.html';
+              'partials/facet-list.html';
         },
         scope: {
           facets: '=gnFacetList',
@@ -119,7 +119,7 @@
         require: '^ngSearchForm',
         templateUrl: function(elem, attrs) {
           return attrs.template || '../../catalog/components/search/facets/' +
-            'partials/facet-breadcrumb.html';
+              'partials/facet-breadcrumb.html';
         },
         link: function(scope, element, attrs, controller) {
           scope.remove = function(f) {
@@ -156,7 +156,7 @@
         replace: true,
         templateUrl: function(elem, attrs) {
           return attrs.template || '../../catalog/components/search/facets/' +
-            'partials/facet-multiselect.html';
+              'partials/facet-multiselect.html';
         },
         scope: true,
         compile: function compile(tElement, tAttrs, transclude) {
@@ -282,21 +282,27 @@
       replace: true,
       templateUrl: function(elem, attrs) {
         return attrs.template || '../../catalog/components/search/facets/' +
-          'partials/facet-daterange.html';
+            'partials/facet-daterange.html';
       },
       scope: {
-        values: '<gnFacetDaterange',  // object with 'from' and 'to' properties as DD-MM-YYYY
-        dates: '<availableDates',   // array of avalable dates as epoch (sorted asc)
-        datesCount: '<datesCount',  // an object with keys as epoch date & values as counts (sorted asc)
-        updateCallback: '&callback',  // called when values are updated: arguments are 'from' and 'to' as DD-MM-YYYY
-        expanded: '<graphExpanded'  // true means the graph size will be recomputed (first opening)
+        values: '<gnFacetDaterange',
+        // object with 'from' and 'to' properties as DD-MM-YYYY
+        dates: '<availableDates',
+        // array of avalable dates as epoch (sorted asc)
+        datesCount: '<datesCount',
+        // an object with keys as epoch date & values as counts (sorted asc)
+        updateCallback: '&callback',
+        // called when values are updated:
+        // arguments are 'from' and 'to' as DD-MM-YYYY
+        expanded: '<graphExpanded'
+        // true means the graph size will be recomputed (first opening)
       },
       link: function(scope, element, attrs, controller) {
         // save initial min/max dates
         if (scope.dates) {
           scope.minDate = moment(scope.dates[0]).format('DD-MM-YYYY');
           scope.maxDate = moment(scope.dates[scope.dates.length - 1])
-            .format('DD-MM-YYYY');
+              .format('DD-MM-YYYY');
         }
 
         // this object will be used for the datepickers
@@ -318,19 +324,21 @@
         scope.showGraph = scope.$eval(attrs.showGraph);
         if (scope.$eval(attrs.showGraph)) {
           scope.graph = new TimeLine(element.find('.ui-timeline')[0],
-            scope.graphCallback, {
-              showAsHistogram: true
-            });
+              scope.graphCallback, {
+                showAsHistogram: true
+              });
 
-          // this updates the graph view to be in sync with the current values
-          // if no value available the graph will show the entire range of dates
+          // this updates the graph view to be
+          // in sync with the current values
+          // if no value available the graph
+          // will show the entire range of dates
           var refreshGraphRange = function() {
             if (!scope.values) {
               scope.graph.setDateRange(null, null);
               return;
             }
             scope.graph.setDateRange(scope.values.from || null,
-              scope.values.to || null);
+                scope.values.to || null);
           };
 
           // dates must be sorted ASC
@@ -379,10 +387,12 @@
           }
 
           // refresh datepicker (use initial min/max as fallback)
-          scope.pickerValues.from = (scope.values && scope.values.from)
-            || scope.minDate || '';
-          scope.pickerValues.to = (scope.values && scope.values.to)
-            || scope.maxDate || '';
+          scope.pickerValues.from =
+              (scope.values && scope.values.from) ||
+              scope.minDate || '';
+          scope.pickerValues.to =
+              (scope.values && scope.values.to) ||
+              scope.maxDate || '';
         });
       }
     };

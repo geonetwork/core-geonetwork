@@ -410,7 +410,7 @@
           var waitForPagination = function() {
             // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {
-              var unregisterFn = scope.$watch('hasPagination', function () {
+              var unregisterFn = scope.$watch('hasPagination', function() {
                 if (scope.hasPagination) {
                   scope.triggerSearch(true);
                   unregisterFn();
@@ -434,7 +434,7 @@
             }
 
             if (attrs.waitForUser === true) {
-              var userUnwatch = scope.$watch('user.id', function (userNewVal) {
+              var userUnwatch = scope.$watch('user.id', function(userNewVal) {
                 // Don't trigger the search until the user id has been loaded
                 // Unregister the watch once we have the user id.
                 if (angular.isDefined(userNewVal)) {

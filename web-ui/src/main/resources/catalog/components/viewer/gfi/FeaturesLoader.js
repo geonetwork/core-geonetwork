@@ -151,7 +151,7 @@
               obj[key] = $filter('linky')(obj[key], '_blank');
               if (obj[key]) {
                 obj[key] = obj[key].replace(/>(.)*</, ' ' +
-                  'target="_blank">' + linkTpl + '<');
+                    'target="_blank">' + linkTpl + '<');
               }
             } else {
               // Exclude objects which will not be displayed properly
@@ -333,7 +333,7 @@
       method: 'POST',
       queryParams: function(p) {
         var queryObject = this.indexObject.buildESParams(state, {},
-          p.offset || 0, p.limit || 10000);
+            p.offset || 0, p.limit || 10000);
         if (p.sort) {
           queryObject.sort = [];
           var sort = {};

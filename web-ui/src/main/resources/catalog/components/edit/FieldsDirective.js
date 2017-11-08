@@ -140,16 +140,18 @@
        function(gnSchemaManagerService, gnCurrentEdit, $compile) {
 
          var iconTemplate =
-           "<a class='btn field-tooltip' " +
-           "data-ng-show='gnCurrentEdit.displayTooltips'>" +
-           "<span class='fa fa-question-circle'></span></a>";
+         "<a class='btn field-tooltip' " +
+         "data-ng-show='gnCurrentEdit.displayTooltips'>" +
+         "<span class='fa fa-question-circle'></span></a>";
 
          return {
            restrict: 'A',
            link: function(scope, element, attrs) {
              var isInitialized = false;
              var isField =
-               element.is('input') || element.is('textarea') || element.is('select');
+             element.is('input') ||
+             element.is('textarea') ||
+             element.is('select');
              var tooltipTarget = element;
              var iconMode = gnCurrentEdit.displayTooltipsMode === 'icon';
 
@@ -169,7 +171,8 @@
                    // is before this element in the DOM and append the tooltip
                    // button to it.
                    //
-                   //  If it's not found, place the button just before the element
+                   //  If it's not found,
+                   // place the button just before the element
                    asideCol = element.parent('div').prev();
 
                    if (asideCol.hasClass('control-label')) {
@@ -178,26 +181,30 @@
                      element.before(tooltipIconCompiled);
                    }
                  } else {
-                   // if element div parent has another div width gn-control class,
+                   // if element div parent has another
+                   // div width gn-control class,
                    // put the tooltip there.
-                   asideCol = element.closest('.col-sm-11').next('div.gn-control');
+                   asideCol = element.closest('.col-sm-11')
+                   .next('div.gn-control');
                    if (asideCol.length > 0) {
                      asideCol.append(tooltipIconCompiled);
                    } else {
 
-                     asideCol = element.closest('.col-sm-9').next('div.gn-control');
+                     asideCol = element.closest('.col-sm-9')
+                     .next('div.gn-control');
 
                      if (asideCol.length > 0) {
                        asideCol.append(tooltipIconCompiled);
                      } else {
-                       // if element is part of a template snippet, look for the
+                       // if element is part of a template snippet,
+                       // look for the
                        // previous label and add the icon after it
                        var id = element.attr('id');
                        var re = /^_X[0-9]+_replace_.+$/;
                        if (id && id.match(re)) {
                          var label = element.closest('div')
-                           .children('label[for=' + id + ']')
-                           .after(tooltipIconCompiled);
+                         .children('label[for=' + id + ']')
+                         .after(tooltipIconCompiled);
                        } else {
                          // Add tooltip after the input element
                          element.after(tooltipIconCompiled);
@@ -209,7 +216,8 @@
                  element.contents().first().after(tooltipIconCompiled);
                } else if (element.is('label')) {
                  if (tooltipAfterLabel) {
-                   element.parent().children('div').append(tooltipIconCompiled);
+                   element.parent().children('div')
+                   .append(tooltipIconCompiled);
                  } else {
                    element.after(tooltipIconCompiled);
                  }
@@ -217,10 +225,10 @@
 
 
                // close tooltips on click in editor container
-               $('.gn-editor-container').on('mousedown', function (e) {
+               $('.gn-editor-container').on('mousedown', function(e) {
                  //did not click a popover toggle or popover
                  if ($(e.target).data('toggle') !== 'popover' &&
-                   $(e.target).parents('.popover.in').length === 0) {
+                 $(e.target).parents('.popover.in').length === 0) {
                    closeTooltips();
                  }
                });
@@ -236,7 +244,8 @@
 
 
              var closeTooltips = function() {
-               // Close all tooltips/popovers (there still might be some open)
+               // Close all tooltips/popovers
+               // (there still might be some open)
                $('.popover').popover('hide');
                // Less official way to hide
                $('.popover').hide();
@@ -247,7 +256,8 @@
                if (!isInitialized && gnCurrentEdit.displayTooltips) {
                  // Retrieve field information (there is a cache)
                  gnSchemaManagerService
-                  .getElementInfo(attrs.gnFieldTooltip).then(function(data) {
+                  .getElementInfo(attrs.gnFieldTooltip)
+                 .then(function(data) {
                    var info = data;
                    if (info.description && info.description.length > 0) {
                      // Initialize tooltip when description returned
@@ -267,8 +277,8 @@
                      }
 
                      // Only one tooltip visible at a time
-                     if(iconMode) {
-                      closeTooltips();
+                     if (iconMode) {
+                       closeTooltips();
                      }
 
                      // Add description to the body html
@@ -283,8 +293,8 @@
                      // to the remaining space between the element
                      // and the right window border.
                      var width = ($(window).width() -
-                       tooltipTarget.offset().left -
-                       tooltipTarget.outerWidth()) * .95;
+                     tooltipTarget.offset().left -
+                     tooltipTarget.outerWidth()) * .95;
 
                      var closeBtn = '<button onclick="$(this).' +
                      'closest(\'div.popover\').remove();" type="button" ' +
@@ -355,11 +365,11 @@
                });
              } else {
                if (isField) {
-                 tooltipTarget.focus(function () {
+                 tooltipTarget.focus(function() {
                    initTooltip('focus');
                  });
                } else {
-                 tooltipTarget.click(function () {
+                 tooltipTarget.click(function() {
                    initTooltip('hover');
                  });
                }

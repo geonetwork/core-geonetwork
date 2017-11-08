@@ -821,17 +821,17 @@
                       // FIXME : only first extent is took into account
                       var projectedExtent;
                       var extent = scope.gnCurrentEdit.extent &&
-                        scope.gnCurrentEdit.extent[0];
+                          scope.gnCurrentEdit.extent[0];
                       var proj = ol.proj.get(gnMap.getMapConfig().projection);
 
-                      if(!extent || !ol.extent.containsExtent(
+                      if (!extent || !ol.extent.containsExtent(
                           proj.getWorldExtent(),
                           extent)) {
                         projectedExtent = proj.getExtent();
                       }
                       else {
                         projectedExtent =
-                          gnMap.reprojExtent(extent, 'EPSG:4326', proj)
+                            gnMap.reprojExtent(extent, 'EPSG:4326', proj);
                       }
                       scope.map.getView().fit(
                           projectedExtent,
@@ -1010,7 +1010,7 @@
                       }
                       else {
                         fields[field] =
-                          $filter('gnLocalized')(linkToEdit[fields[field]]);
+                            $filter('gnLocalized')(linkToEdit[fields[field]]);
                       }
                     });
 

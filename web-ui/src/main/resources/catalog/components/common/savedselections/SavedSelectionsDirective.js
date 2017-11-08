@@ -322,7 +322,7 @@
             window[selection.storage].setItem(key, angular.toJson(records));
           }
         }
-        if(selection.records) {
+        if (selection.records) {
           var idx = selection.records.indexOf(uuid);
           if (idx > -1) {
             selection.records.splice(idx, 1);
