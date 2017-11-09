@@ -87,6 +87,37 @@ div[gn-transfer-ownership] * .list-group {
   }
 }
 
+.gn-sub-bar {
+  background-color: #fff;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  border: 1px solid #e7e7e7;
+  border-top: 0;
+  z-index: 1;
+}
+[ng-app="gn_editor"] {
+  .gn-top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: 52px;
+  }
+  .gn-sub-bar {
+    position: fixed;
+    top: 52px;
+    left: 20px;
+    right: 20px;
+  }
+  .gn-editor-board {
+    padding-top: 120px;
+  }
+  .gn-editor-container, .gn-batch-editor, #gn-directory-container {
+    padding-top: 65px;
+  }
+}
+
 a {
   word-wrap: break-word;
 }
