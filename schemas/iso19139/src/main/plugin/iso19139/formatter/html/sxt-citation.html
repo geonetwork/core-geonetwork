@@ -13,13 +13,18 @@
         <span class="fa fa-info-circle"></span>
       </a></h2>
 
-    <p fmt-if="mainPublicationDescription">
-      {{mainPublicationDescription}}
-    </p>
-    <p fmt-if="!mainPublicationDescription">
-      {{contacts}} ({{year}}). {{title}}. {{publishers}}
+    <p>{{contacts}} ({{year}}). {{title}}. {{publishers}}
       <br><a class="main_link" href="{{url}}">{{url}}</a></br>
     </p>
+
+    <div fmt-if="mainPublicationDescription">
+      <p>
+        <em translate="">mainPublicationIntroduction</em>
+      </p>
+      <p fmt-repeat="desc in mainPublicationDescription">
+        {{desc}}
+      </p>
+    </div>
 
   </article>
 </div>
