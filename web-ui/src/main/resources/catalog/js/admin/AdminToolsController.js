@@ -546,19 +546,19 @@
 
       gnConfigService.loadPromise.then(function(settings) {
         $scope.isBackupArchiveEnabled =
-          settings['metadata.backuparchive.enable'];
+            settings['metadata.backuparchive.enable'];
       });
 
       $scope.triggerBackupArchive = function() {
         return $http({method: 'PUT', url: '../api/records/backups'}).
-        then(function(data) {
-          $rootScope.$broadcast('StatusUpdated', {
-            title: $translate.instant('generatingArchiveBackup'),
-            error: data,
-            timeout: 2,
-            type: 'success'
-          });
-        });
+            then(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('generatingArchiveBackup'),
+                error: data,
+                timeout: 2,
+                type: 'success'
+              });
+            });
 
       };
 

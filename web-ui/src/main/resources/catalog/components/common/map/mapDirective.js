@@ -182,7 +182,7 @@
 
              scope.$watch('projs.form', function(newValue, oldValue) {
                var extent = gnMap.reprojExtent(
-                 scope.extent.form, oldValue, newValue
+               scope.extent.form, oldValue, newValue
                );
                if (extent && extent.map) {
                  var decimals = getDigitNumber(scope.projs.form);
@@ -226,7 +226,7 @@
              element.data('map', map);
 
              // initialize extent & bbox on map load
-             map.get('creationPromise').then(function () {
+             map.get('creationPromise').then(function() {
                drawBbox();
 
                if (gnMap.isValidExtent(scope.extent.map)) {

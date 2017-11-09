@@ -360,8 +360,8 @@
             var escaped = k.replace(/'/g, '\\\'');
             clause.push(
                 (config.isTokenized) ?
-                "(" + paramName + " LIKE '%" + escaped + "%')" :
-                "(" + paramName + " = '" + escaped + "')"
+                '(' + paramName + " LIKE '%" + escaped + "%')" :
+                '(' + paramName + " = '" + escaped + "')"
             );
           });
           if (clause.length == 0) return;

@@ -35,7 +35,7 @@
         restrict: 'A',
         templateUrl: function(elem, attrs) {
           return attrs.template || '../../catalog/components/search/facets/' +
-            'partials/dimension-facet-list.html';
+              'partials/dimension-facet-list.html';
         },
         scope: {
           dimension: '=gnFacetDimensionList',
@@ -183,7 +183,7 @@
         restrict: 'A',
         templateUrl: function(elem, attrs) {
           return attrs.template || '../../catalog/components/search/facets/' +
-            'partials/dimension-facet-category.html';
+              'partials/dimension-facet-category.html';
         },
         scope: {
           category: '=gnFacetDimensionCategory',

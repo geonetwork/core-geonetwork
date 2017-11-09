@@ -79,7 +79,7 @@
 
             // init map
             ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
-            ctrl.map.get('creationPromise').then(function () {
+            ctrl.map.get('creationPromise').then(function() {
               ctrl.initValue();
             });
 
@@ -163,7 +163,7 @@
             ctrl.currentFormat = ctrl.formats[0];
 
             function isProjAvailable(code) {
-              for(var i = 0; i < ctrl.projections.length; i++) {
+              for (var i = 0; i < ctrl.projections.length; i++) {
                 if (ctrl.projections[i].code === code) {
                   return true;
                 }
@@ -175,9 +175,9 @@
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
                 var srsName = ctrl.polygonXml.match(
-                  new RegExp("srsName=\"(EPSG:[0-9]*)\""));
+                    new RegExp('srsName=\"(EPSG:[0-9]*)\"'));
                 ctrl.dataProjection = srsName && srsName.length === 2 ?
-                  srsName[1] : 'EPSG:4326';
+                    srsName[1] : 'EPSG:4326';
 
                 if (!isProjAvailable(ctrl.dataProjection)) {
                   ctrl.projections.push({
@@ -197,8 +197,8 @@
                         crs: ctrl.currentProjection,
                         format: 'gml'
                       }
-                    );
-                } catch(e) {
+                      );
+                } catch (e) {
                   console.warn('Could not parse geometry');
                   console.warn(e);
                 }

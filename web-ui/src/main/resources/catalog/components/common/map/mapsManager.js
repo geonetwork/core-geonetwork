@@ -107,23 +107,23 @@
 
           // config found: load context if any, and apply extent & layers
           // (this is done through a promise anyway)
-          var promise = $q(function (resolve, reject) {
+          var promise = $q(function(resolve, reject) {
             if (config.context) {
               gnOwsContextService.loadContextFromUrl(config.context, map)
-                .then(function () {
-                  resolve();
-                });
+                  .then(function() {
+                    resolve();
+                  });
             } else {
               // force async resolution
               setTimeout(resolve, 0);
             }
-          }).then(function () {
+          }).then(function() {
             // do a render of the map
             map.renderSync();
 
             // extent
             if (config.extent && ol.extent.getWidth(config.extent) &&
-              ol.extent.getHeight(config.extent) && map.getSize()) {
+                ol.extent.getHeight(config.extent) && map.getSize()) {
               map.getView().fit(config.extent, map.getSize());
             }
 
@@ -131,11 +131,11 @@
             if (config.layers && config.layers.length) {
               config.layers.forEach(function(layerInfo) {
                 gnMap.createLayerFromProperties(layerInfo, map)
-                  .then(function(layer) {
-                    if (layer) {
-                      map.addLayer(layer);
-                    }
-                  })
+                    .then(function(layer) {
+                      if (layer) {
+                        map.addLayer(layer);
+                      }
+                    });
               });
             }
           });

@@ -48,9 +48,9 @@
           return {
             request: function(config) {
               var isGnUrl =
-                config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
-                (config.url.indexOf('http') !== 0 &&
-                config.url.indexOf('//') !== 0);
+                  config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
+                  (config.url.indexOf('http') !== 0 &&
+                  config.url.indexOf('//') !== 0);
               if (isGnUrl && gnLangs.current &&
                   !config.headers['Accept-Language']) {
                 config.headers['Accept-Language'] = gnLangs.current;

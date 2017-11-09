@@ -149,7 +149,8 @@
             searchGeometry: undefined
           };
 
-          scope.output = {};  // initialize object as it is not supposed to be undefined
+          scope.output = {};
+          // initialize object as it is not supposed to be undefined
 
           // if true, the "apply filters" button will be available
           scope.filtersChanged = false;

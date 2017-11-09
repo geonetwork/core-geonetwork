@@ -90,8 +90,8 @@
         restrict: 'A',
         templateUrl: function(elem, attrs) {
           return attrs.template ||
-            '../../catalog/components/viewer/owscontext/' +
-            'partials/owscontext.html';
+              '../../catalog/components/viewer/owscontext/' +
+              'partials/owscontext.html';
         },
         scope: {
           user: '=',
@@ -152,9 +152,11 @@
 
 
           scope.isSaveMapInCatalogAllowed =
-              gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed === true;
+              gnGlobalSettings.gnCfg.mods.map.
+              isSaveMapInCatalogAllowed === true;
           scope.isExportMapAsImageEnabled =
-              gnGlobalSettings.gnCfg.mods.map.isExportMapAsImageEnabled === true;
+              gnGlobalSettings.gnCfg.mods.map.
+              isExportMapAsImageEnabled === true;
 
           scope.mapUuid = null;
 
@@ -181,7 +183,7 @@
               if (scope.isExportMapAsImageEnabled) {
                 scope.mapProps.overviewFilename = getMapFileName() + '.png';
                 scope.mapProps.overview =
-                  data.replace('data:image/png;base64,', '');
+                    data.replace('data:image/png;base64,', '');
               }
 
               return $http.post('../api/records/importfrommap',

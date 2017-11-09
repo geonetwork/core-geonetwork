@@ -141,6 +141,27 @@
       if (!features || features.length == 0) {
         return;
       }
+
+      var data = features.map(function(f) {
+        var obj = f.getProperties();
+        Object.keys(obj).forEach(function(key) {
+          if (exclude.indexOf(key) == -1) {
+            var value = obj[key];
+            if (!(obj[key] instanceof Object)) {
+              obj[key] = $filter('linky')(obj[key], '_blank');
+              if (obj[key]) {
+                obj[key] = obj[key].replace(/>(.)*</, ' ' +
+                    'target="_blank">' + linkTpl + '<');
+              }
+            } else {
+              // Exclude objects which will not be displayed properly
+              exclude.push(key);
+            }
+          }
+        });
+        return obj;
+      });
+
       var columns = Object.keys(features[0].getProperties()).map(function(x) {
         return {
           field: x,
@@ -153,19 +174,7 @@
 
       return {
         columns: columns,
-        data: features.map(function(f) {
-          var obj = f.getProperties();
-          Object.keys(obj).forEach(function(key) {
-            if (exclude.indexOf(key) == -1) {
-              obj[key] = $filter('linky')(obj[key], '_blank');
-              if (obj[key]) {
-                obj[key] = obj[key].replace(/>(.)*</, ' ' +
-                    'target="_blank">' + linkTpl + '<');
-              }
-            }
-          });
-          return obj;
-        }),
+        data: data,
         pagination: true,
         pageSize: pageList[1],
         pageList: pageList
@@ -324,7 +333,7 @@
       method: 'POST',
       queryParams: function(p) {
         var queryObject = this.indexObject.buildESParams(state, {},
-          p.offset || 0, p.limit || 10000);
+            p.offset || 0, p.limit || 10000);
         if (p.sort) {
           queryObject.sort = [];
           var sort = {};
