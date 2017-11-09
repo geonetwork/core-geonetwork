@@ -169,9 +169,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
      *
      * Note: Only the metadata record is stored in session. If the editing session upload new documents or thumbnails, those documents will
      * not be cancelled. This needs improvements.
+     * @return 
      */
     @Override
-    public void startEditingSession(ServiceContext context, String id) throws Exception {
+    public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
             Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
         }
@@ -182,6 +183,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         Element metadataBeforeAnyChanges = context.getBean(IMetadataManager.class).getMetadata(context, id, forEditing,
                 withValidationErrors, keepXlinkAttributes);
         context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
+        
+        return Integer.valueOf(id);
     }
 
     /**

@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FilenameUtils;
@@ -128,8 +129,9 @@ public class MetadataEditingApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "The editor form."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+            @ApiResponse(code = 200, message = "The editor form."),
+//            @ApiResponse(code = 307, message = "Redirecting to another editor."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseBody
     public Element startEditing(
@@ -155,7 +157,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
         @RequestParam
             Map<String,String> allRequestParams,
-        HttpServletRequest request
+        HttpServletRequest request,
+        HttpServletResponse response
         ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
@@ -166,7 +169,21 @@ public class MetadataEditingApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         if (starteditingsession) {
             IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
-            dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            
+            if(id2 != metadata.getId()) {
+//                StringBuilder sb = new StringBuilder();
+//                sb.append(request.getContextPath());
+//                sb.append(request.getServletPath());
+//                sb.append("/catalog.edit#").append(id2);
+//                sb.append("/editor/").append("?");
+//                sb.append(request.getQueryString());
+//                response.sendRedirect(sb.toString());
+                
+                Element el = new Element("script");
+                el.setText("window.location.hash = \"#/metadata/" + id2 + "\"");
+                return el;
+            }
         }
 
         Element elMd = new AjaxEditUtils(context)

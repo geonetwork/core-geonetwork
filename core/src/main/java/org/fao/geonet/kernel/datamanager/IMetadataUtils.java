@@ -70,8 +70,9 @@ public interface IMetadataUtils {
      *
      * Note: Only the metadata record is stored in session. If the editing session upload new documents or thumbnails, those documents will
      * not be cancelled. This needs improvements.
+     * @return id of the record to edit
      */
-    void startEditingSession(ServiceContext context, String id) throws Exception;
+    Integer startEditingSession(ServiceContext context, String id) throws Exception;
 
     /**
      * Rollback to the record in the state it was when the editing session started (See

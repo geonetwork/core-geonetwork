@@ -109,7 +109,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
      * not be cancelled. This needs improvements.
      */
     @Override
-    public void startEditingSession(ServiceContext context, String id) throws Exception {
+    public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         // Check id
         IMetadata md = super.getMetadataRepository().findOne(Integer.valueOf(id));
 
@@ -119,7 +119,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
                             .contains(Integer.valueOf(id));
 
             // We need to create a draft to avoid modifying the published
-            // metadata
+            // metadatanull
             if (isPublished && metadataDraftRepository.findOneByUuid(md.getUuid()) == null) {
 
                 // Get parent record from this record
@@ -160,7 +160,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
             }
         }
 
-        super.startEditingSession(context, id);
+        return super.startEditingSession(context, id);
     }
 
     protected SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(ServiceContext context,
