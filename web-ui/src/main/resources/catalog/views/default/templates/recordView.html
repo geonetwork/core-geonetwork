@@ -111,18 +111,19 @@
              class="gn-status gn-status-mdview gn-status-{{mdView.current.record.status[0]}}">
           {{mdView.current.record.status_text[0]}}
         </div>
+        <div data-gn-related-observer>
+          <div data-gn-related="mdView.current.record"
+               data-user="user"
+               data-types="onlines"
+               data-has-results="hasRelations.onlines"
+               data-title="{{'downloadsAndResources' | translate}}">
+          </div>
 
-        <div data-gn-related="mdView.current.record"
-             data-user="user"
-             data-types="onlines"
-             data-has-results="hasRelations.onlines"
-             data-title="{{'downloadsAndResources' | translate}}">
-        </div>
-
-        <div data-gn-related="mdView.current.record"
-             data-user="user"
-             data-types="parent|children|services|datasets"
-             data-title="{{'associatedResources' | translate}}">
+          <div data-gn-related="mdView.current.record"
+               data-user="user"
+               data-types="parent|children|services|datasets"
+               data-title="{{'associatedResources' | translate}}">
+          </div>
         </div>
 
         <h2 data-translate="">aboutThisResource</h2>
@@ -313,35 +314,38 @@
           <tr>
             <th></th>
             <td>
-              <div data-gn-related="mdView.current.record"
-                   data-user="user"
-                   data-types="sources"
-                   data-has-results="hasRelations.sources"
-                   data-title="{{'sourceDatasets' | translate}}">
-              </div>
+              <div data-gn-related-observer>
+                <div data-gn-related="mdView.current.record"
+                     data-user="user"
+                     data-types="sources"
+                     data-has-results="hasRelations.sources"
+                     data-title="{{'sourceDatasets' | translate}}">
+                </div>
 
 
-              <div data-gn-related="mdView.current.record"
-                   data-user="user"
-                   data-types="hassources"
-                   data-has-results="hasRelations.hassources"
-                   data-title="{{'isSourceOfDatasets' | translate}}">
+                <div data-gn-related="mdView.current.record"
+                     data-user="user"
+                     data-types="hassources"
+                     data-has-results="hasRelations.hassources"
+                     data-title="{{'isSourceOfDatasets' | translate}}">
+                </div>
               </div>
             </td>
           </tr>
           </tbody>
         </table>
 
-
-        <div data-gn-related="mdView.current.record"
-             data-user="user"
-             data-types="fcats|related"
-             data-title="{{'featureCatalog' | translate}}">
-        </div>
-        <div data-gn-related="mdView.current.record"
-             data-user="user"
-             data-types="siblings|associated|related"
-             data-title="{{'siblings' | translate}}">
+        <div data-gn-related-observer>
+          <div data-gn-related="mdView.current.record"
+               data-user="user"
+               data-types="fcats|related"
+               data-title="{{'featureCatalog' | translate}}">
+          </div>
+          <div data-gn-related="mdView.current.record"
+               data-user="user"
+               data-types="siblings|associated|related"
+               data-title="{{'siblings' | translate}}">
+          </div>
         </div>
 
         <h2 data-translate="">metadataInformation</h2>
