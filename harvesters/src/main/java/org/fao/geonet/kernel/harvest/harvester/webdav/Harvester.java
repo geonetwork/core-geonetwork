@@ -166,7 +166,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
         }
         try {
-            Log.info(Log.SERVICE, "webdav harvest subtype : " + params.subtype);
+            Log.trace(Log.SERVICE, "webdav harvest subtype : " + params.subtype);
             rr.init(cancelMonitor, log, context, params);
             List<RemoteFile> files = rr.retrieve();
             if (log.isDebugEnabled()) log.debug("Remote files found : " + files.size());

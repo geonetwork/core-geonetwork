@@ -69,15 +69,15 @@ public class DraftPublish implements ApplicationListener<MetadataPublished> {
         ServiceContext serviceContext = ServiceContext.get();
         
         try {
-            Log.debug(Geonet.DATA_MANAGER, "Copy the draft content to the published metadata");
+            Log.trace(Geonet.DATA_MANAGER, "Copy the draft content to the published metadata");
             manager.updateMetadata(serviceContext, Integer.toString(md.getId()),
                     draft.getXmlData(false), false, false, false, "",
                     draft.getDataInfo().getChangeDate().getDateAndTime(), false);
             
-            Log.debug(Geonet.DATA_MANAGER, "Removing draft " + draft.getId());
+            Log.trace(Geonet.DATA_MANAGER, "Removing draft " + draft.getId());
             manager.deleteMetadata(serviceContext, Integer.toString(draft.getId()));
 
-            Log.debug(Geonet.DATA_MANAGER, "Indexing metadata");
+            Log.trace(Geonet.DATA_MANAGER, "Indexing metadata");
             indexer.indexMetadata(Integer.toString(md.getId()), false, null);
         } catch (Exception e) {
             Log.error(Geonet.DATA_MANAGER, e, e);

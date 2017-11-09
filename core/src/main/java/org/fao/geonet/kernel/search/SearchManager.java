@@ -263,7 +263,7 @@ public class SearchManager implements ISearchManager {
                     final String fileName = stopwordsFile.getFileName().toString();
                     String language = fileName.substring(0, fileName.indexOf('.'));
                     if (language.length() != 2) {
-                        Log.info(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
+                        Log.debug(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
                     }
                     // look up stopwords for that language
                     Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.toAbsolutePath());
@@ -656,13 +656,13 @@ public class SearchManager implements ISearchManager {
      * the latest data.
      */
     public void forceIndexChanges() throws IOException {
-        Log.info(Geonet.DATA_MANAGER, "forceIndexChanges");
+        Log.debug(Geonet.DATA_MANAGER, "forceIndexChanges");
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
 
         tracker.commit();
         tracker.maybeRefreshBlocking();
-        Log.info(Geonet.DATA_MANAGER, "index refreshed");
+        Log.trace(Geonet.DATA_MANAGER, "index refreshed");
     }
 
     /**

@@ -222,7 +222,7 @@ public class XmlResolver extends XMLCatalogResolver {
         JeevesJCS xmlCache = JeevesJCS.getInstance(XMLRESOLVER_JCS);
         Element cachedXml = (Element) xmlCache.get(uri.toLowerCase());
         if (cachedXml == null) {
-            Log.info(Log.XML_RESOLVER, "Caching " + uri.toLowerCase());
+            Log.debug(Log.XML_RESOLVER, "Caching " + uri.toLowerCase());
             xmlCache.put(uri.toLowerCase(), xml);
         }
     }
@@ -237,9 +237,9 @@ public class XmlResolver extends XMLCatalogResolver {
         Element xml = (Element) xmlCache.get(uri.toLowerCase());
 
         if (xml == null) {
-            Log.info(Log.XML_RESOLVER, "cache MISS on " + uri.toLowerCase());
+            Log.trace(Log.XML_RESOLVER, "cache MISS on " + uri.toLowerCase());
         } else {
-            Log.info(Log.XML_RESOLVER, "cache HIT on " + uri.toLowerCase());
+            Log.trace(Log.XML_RESOLVER, "cache HIT on " + uri.toLowerCase());
         }
         return xml;
     }

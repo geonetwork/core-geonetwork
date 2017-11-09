@@ -40,11 +40,11 @@ public class SpringScheduledThreadPoolExecutor extends ScheduledThreadPoolExecut
 
     @PreDestroy
     public void stop() {
-        Log.info(Log.RESOURCES, "Stopping the ScheduledThreadPoolExecutor");
+        Log.debug(Log.RESOURCES, "Stopping the ScheduledThreadPoolExecutor");
         shutdown();
         try {
             awaitTermination(60, TimeUnit.SECONDS);
-            Log.info(Log.RESOURCES, "Stopped the ScheduledThreadPoolExecutor");
+            Log.debug(Log.RESOURCES, "Stopped the ScheduledThreadPoolExecutor");
         } catch (InterruptedException e) {
             Log.warning(Log.RESOURCES, "Error stopping the ScheduledThreadPoolExecutor", e);
         }

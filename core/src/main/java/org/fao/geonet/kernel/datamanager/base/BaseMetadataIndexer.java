@@ -336,8 +336,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             indexing.add(metadataId);
         }
         AbstractMetadata fullMd;
-        Log.info(Geonet.DATA_MANAGER, "Indexing record " + metadataId);
-
+        Log.trace(Geonet.DATA_MANAGER, "Indexing record " + metadataId);
         try {
 
             try {
@@ -345,13 +344,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 int id$ = Integer.parseInt(metadataId);
 
                 // get metadata, extracting and indexing any xlinks
-                Log.info(Geonet.DATA_MANAGER, "Getting xlinks from " + metadataId);
+                Log.trace(Geonet.DATA_MANAGER, "Getting xlinks from " + metadataId);
                 Element md = getXmlSerializer().selectNoXLinkResolver(metadataId, true, false);
 
-                Log.info(Geonet.DATA_MANAGER, "Adding fields to record" + metadataId + " from the database");
+                Log.trace(Geonet.DATA_MANAGER, "Adding fields to record" + metadataId + " from the database");
                 addXLinks(moreFields, md);
 
-                Log.info(Geonet.DATA_MANAGER, "Getting record" + metadataId + " from the database");
+                Log.trace(Geonet.DATA_MANAGER, "Getting record" + metadataId + " from the database");
 
                 fullMd = metadataUtils.findOne(id$);
 
@@ -376,7 +375,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")");
                 }
 
-                Log.info(Geonet.DATA_MANAGER, "Generating index for record " + metadataId);
+                Log.trace(Geonet.DATA_MANAGER, "Generating index for record " + metadataId);
 
                 addBasicFields(moreFields, schema, createDate, changeDate, source, metadataType, root, uuid, extra, isHarvested, owner,
                         popularity, rating, displayOrder);
@@ -392,13 +391,13 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     }
                 }
                 
-                Log.info(Geonet.DATA_MANAGER, "Add Thumbnails to record" + metadataId);
+                Log.trace(Geonet.DATA_MANAGER, "Add Thumbnails to record" + metadataId);
 
                 addThumbnail(moreFields, source, groupOwner);
 
                 addPrivileges(moreFields, id$);
 
-                Log.info(Geonet.DATA_MANAGER, "Add Categories to record" + metadataId);
+                Log.trace(Geonet.DATA_MANAGER, "Add Categories to record" + metadataId);
                 
                 addCategories(fullMd, moreFields);
 
@@ -408,7 +407,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                 addExtraFields(fullMd, moreFields);
 
-                Log.info(Geonet.DATA_MANAGER, "Sending record " + metadataId + " to search manager");
+                Log.trace(Geonet.DATA_MANAGER, "Sending record " + metadataId + " to search manager");
 
                 ISearchManager searchM = searchManager;
 
@@ -416,7 +415,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     searchM = servContext.getBean(SearchManager.class);
                 }
 
-                Log.info(Geonet.DATA_MANAGER, "Send record " + metadataId + " to searchmanager.");
+                Log.trace(Geonet.DATA_MANAGER, "Send record " + metadataId + " to searchmanager.");
                 searchM.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
             } catch (Throwable x) {
                 Log.error(Geonet.DATA_MANAGER,
@@ -429,7 +428,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
         } finally {
-            Log.info(Geonet.DATA_MANAGER, "Finished indexing of record " + metadataId);
+            Log.trace(Geonet.DATA_MANAGER, "Finished indexing of record " + metadataId);
             indexing.remove(metadataId);
         }
 

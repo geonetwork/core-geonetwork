@@ -879,9 +879,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     @Transactional(readOnly=true, isolation=Isolation.READ_COMMITTED, propagation=Propagation.REQUIRES_NEW, timeout=500)
     public boolean exists(Integer iId) {
-        Log.info(Geonet.DATA_MANAGER, "exists(" + iId + ")");
         Boolean exist = metadataRepository.exists(iId);
-        Log.info(Geonet.DATA_MANAGER, "exists(" + iId + ") -> " + exist);
+        Log.trace(Geonet.DATA_MANAGER, "exists(" + iId + ") -> " + exist);
         return exist;
     }
 

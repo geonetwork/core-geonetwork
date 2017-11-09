@@ -245,7 +245,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 String id = String.valueOf(result.one());
 
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")");
+                    Log.trace(Geonet.DATA_MANAGER, "- record (" + id + ")");
                 }
 
                 String idxLastChange = docs.get(id);
