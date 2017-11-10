@@ -157,7 +157,8 @@
           };
 
           // Get an instance of index object
-          var indexObject, geometry, extentFilter;
+          var indexObject, extentFilter;
+          scope.filterGeometry = undefined;
 
           /**
            * Init the directive when the scope.layer has changed.
@@ -385,7 +386,7 @@
             indexObject.searchWithFacets({
               params: scope.output,
               any: scope.searchInput,
-              geometry: geometry
+              geometry: scope.filterGeometry
             }).
                 then(function(resp) {
                   indexObject.pushState();
@@ -580,22 +581,19 @@
           //Manage geographic search
           scope.$watch('ctrl.searchGeometry', function(geom, old) {
             extentFilter = undefined;
+            scope.filterGeometry = undefined;
             if (geom && geom != ',,,') {
               extentFilter = geom.split(',').map(function(val) {
                 return parseFloat(val);
               });
-              geometry = [
+              scope.filterGeometry = [
                 [extentFilter[0], extentFilter[3]],
                 [extentFilter[2], extentFilter[1]]
               ];
               scope.filterFacets();
             }
             // when reset from gnBbox directive
-            else if (old && geom != '') {
-              scope.filterFacets();
-            }
-            else if (!old && geom === ',,,') {
-              geometry = undefined;
+            else {
               scope.filterFacets();
             }
             // reset from wfsFilter directive: only signal change of filter
@@ -617,34 +615,6 @@
           element.on('$destroy', function() {
             scope.$destroy();
           });
-
-          scope.toSqlOgr = function() {
-            indexObject.pushState();
-            var state = indexObject.getState();
-
-            if (!state.any) {
-              var where = [];
-              angular.forEach(state.qParams, function(fObj, fName) {
-                var clause = [];
-                angular.forEach(fObj.values, function(v, k) {
-                  clause.push(fName + '=' + k);
-                });
-                where.push('(' + clause.join(' OR ') + ')');
-              });
-              console.log(where.join(' AND '));
-            }
-            else {
-              indexObject.search_es({
-                size: scope.count || 10000,
-                aggs: {}
-              }).then(function(data) {
-                var where = data.hits.hits.map(function(res) {
-                  return res._id;
-                });
-                console.log(where.join(' OR '));
-              });
-            }
-          };
 
           // triggered when the filter state is changed
           // (compares with previous state)
@@ -673,8 +643,7 @@
           scope.isFilterActive = function(facetName, field) {
             // special case for geometry
             if (facetName == 'geometry') {
-              return scope.ctrl.searchGeometry &&
-                scope.ctrl.searchGeometry !== ',,,';
+              return !!scope.filterGeometry;
             }
 
             // no available value: return false

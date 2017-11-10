@@ -137,26 +137,12 @@
           </a>
         </li>
       </ul>
-      <!--<button class="btn btn-default btn-xs"
-              data-ng-if="isFeaturesIndexed"
-              data-gn-click-and-spin="filterWMS()">
-        <i class="fa fa-filter"></i>&nbsp;
-        <span data-translate="">filter</span>
-      </button>-->
       <button class="btn btn-default btn-xs"
               data-ng-if="isFeaturesIndexed"
               ng-click="showTable()">
         <i class="fa fa-table"></i>&nbsp;
         <span data-translate="">Table</span>
       </button>
-<!--
-      <button data-gn-click-and-spin="toSqlOgr()"
-              data-ng-if="isFeaturesIndexed"
-              class="btn btn-default btn-xs gn-reset-facets">
-        <i class="fa fa-eraser"></i>&nbsp;
-        <span translate>SQL</span>
-      </button>
--->
     </div>
 
     <div ng-if="hmActive">
@@ -167,6 +153,7 @@
       </label>
       <gn-heatmap ng-if="map" map="map"
         feature-type="wfsUrl + '#' + featureTypeName"
+        filter="{ params: output, geometry: filterGeometry, any: searchInput}"
         enabled="isHeatMapVisible"/>
     </div>
 

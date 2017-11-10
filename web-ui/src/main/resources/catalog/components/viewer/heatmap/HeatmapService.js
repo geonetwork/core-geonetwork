@@ -36,6 +36,7 @@
       var BUFFER_RATIO = 1;
       var CELL_LOW_COLOR = [255, 241, 92];
       var CELL_HIGH_COLOR = [255, 81, 40];
+      var COLOR_STEP_COUNT = 6;
       var CELLS_OPACITY = 0.7;
 
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'heatmap');
@@ -46,9 +47,12 @@
        *
        * @param {string} feature type
        * @param {ol.Map} map
+       * @param {object} query params
+       * @param {object} bounding box
+       * @param {string} text filter
        * @return {Promise}
        */
-      this.requestHeatmapData = function(featureType, map) {
+      this.requestHeatmapData = function(featureType, map, params, geometry, any) {
         var bufferedSize = map.getSize().map(function(value) {
           return value * BUFFER_RATIO;
         });
@@ -70,39 +74,61 @@
         bottomRight[0] = Math.min(Math.max(bottomRight[0], -180), 180);
         bottomRight[1] = Math.min(Math.max(bottomRight[1], -90), 90);
 
-        // trigger search on ES
-        return $http.post(indexObject.ES_URL, {
-          "query": {
-            "bool": {
-              "must": [{
-                "match_all": {}
+        // define base params (without filter)
+        var reqParams = {
+          query: {
+            bool: {
+              must: [{
+                match_all: {}
               }, {
-                "match_phrase": {
-                  "featureTypeId": {
-                    "query": featureType
+                match_phrase: {
+                  featureTypeId: {
+                    query: featureType
                   }
                 }
               }, {
-                "geo_bounding_box": {
-                    "location" : {
-                      "top_left" : topLeft,
-                      "bottom_right" : bottomRight
+                geo_bounding_box: {
+                    location : {
+                      top_left : topLeft,
+                      bottom_right : bottomRight
                     }
                 }
               }]
             }
           },
-          "size": 0,
-          "aggs": {
-            "cells": {
-              "geohash_grid": {
-                "field": "location",
-                "precision": geohashLength
+          size: 0,
+          aggs: {
+            cells: {
+              geohash_grid: {
+                field: 'location',
+                precision: geohashLength
               }
             }
           }
-        }).then(function(response) {
+        };
+
+        // apply filter to params
+        // note: merging with the base request is done manually: not ideal but
+        // currently no better way available
+        var filterParams = indexObject.buildESParams({
+          params: params,
+          geometry: geometry,
+          any: any
+        });
+        Array.prototype.push.apply(reqParams.query.bool.must,
+          filterParams.query.bool.must);
+        if (geometry) {
+          reqParams.query.bool.filter = filterParams.query.bool.filter;
+        }
+
+        // trigger search on ES
+        return $http.post(indexObject.ES_URL, reqParams).then(function(response) {
           var buckets = response.data.aggregations.cells.buckets;
+
+          // no data with the current filter
+          if (!buckets.length) {
+            return [];
+          }
 
           // get max cell count
           me.maxCellCount = buckets[0].doc_count;
@@ -144,9 +170,8 @@
 
       // this will generate styles with a color gradient
       var cellStyles = [];
-      var stepCount = 6;
-      for (var i = 0; i < stepCount; i++) {
-        var ratio = i / (stepCount - 1);
+      for (var i = 0; i < COLOR_STEP_COUNT; i++) {
+        var ratio = i / (COLOR_STEP_COUNT - 1);
         var c = CELL_LOW_COLOR.map(function(value, index) {
           return Math.floor(value + ratio * (CELL_HIGH_COLOR[index] - value));
         });
@@ -172,7 +197,7 @@
       var getCellStyleFunction = function(hovered) {
         return function(feature) {
           var densityRatio = (feature.get('count') || 0) / me.maxCellCount;
-          var style = cellStyles[Math.floor(densityRatio * (stepCount - 1))];
+          var style = cellStyles[Math.floor(densityRatio * (COLOR_STEP_COUNT - 1))];
 
           // handle hovered case
           if (hovered) {

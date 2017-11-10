@@ -38,14 +38,15 @@
    * hovered (feature count, etc.). These features are redrawn on every map
    * move.
    */
-  module.directive('gnHeatmap', ['gnHeatmapService',
-    function(gnHeatmapService) {
+  module.directive('gnHeatmap', ['gnHeatmapService', '$translate',
+    function(gnHeatmapService, $translate) {
       return {
         restrict: 'E',
         scope: {
           map: '<',
           featureType: '<',
-          enabled: '<'
+          enabled: '<',
+          filter: '<'
         },
         bindToController: true,
         controllerAs: 'ctrl',
@@ -81,7 +82,7 @@
           ctrl.hoverInteration.on('select', function(event) {
             var selected = event.selected[0];
 
-            // hide if no feature selected
+            // hide if no feature hovered; else move overlay on hovered feature
             if (!selected) {
               ctrl.overlay.setPosition();
             } else {
@@ -91,17 +92,20 @@
                 ol.extent.getTopLeft(selected.getGeometry().getExtent());
               ctrl.overlay.setPosition([center[0], topleft[1]]);
               ctrl.overlay.getElement().innerText =
-                'Count: ' + selected.get('count');
+                $translate.instant('featureCount') + ': '
+                + selected.get('count');
             }
           });
 
           // this will refresh the heatmap
           ctrl.refresh = function() {
-            gnHeatmapService.requestHeatmapData(ctrl.featureType, ctrl.map)
+            gnHeatmapService.requestHeatmapData(ctrl.featureType, ctrl.map,
+              ctrl.filter.params, ctrl.filter.geometry, ctrl.filter.any)
               .then(function(cells) {
                 // add cells as features
                 ctrl.source.clear();
                 ctrl.hoverInteration.getFeatures().clear();
+                ctrl.overlay.setPosition();
                 ctrl.source.addFeatures(cells);
               });
           };
@@ -135,6 +139,15 @@
             ctrl.map.removeInteraction(ctrl.hoverInteration);
             ctrl.map.removeInteraction(ctrl.overlay);
           });
+
+          // adjust ES request based on current filters
+          // (skip the initial watch trigger)
+          $scope.$watch('ctrl.filter', function(newValue, oldValue) {
+            if (!ctrl.enabled || oldValue === undefined) {
+              return;
+            }
+            ctrl.refresh();
+          }, true);
         }],
         link: function(scope, element, attrs) {
           // destroy scope on element removal
