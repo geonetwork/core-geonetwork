@@ -25,6 +25,13 @@
                 </a>
               </li>
 
+              <li>
+                <div data-gn-layer-styles="layer.get('style')"
+                     data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
+                     data-gn-layer-styles-current="layer.get('currentStyle')"
+                     data-gn-layer-styles-layout="select"/>
+              </li>
+
               <!--Opacity slide-->
               <li class="" title="{{'opacity' | translate}}">
                 <input class="" type="range"
@@ -94,7 +101,10 @@
             title="{{'layerMoveDown'|translate}}"></a>
         </span>
         <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
-          {{layer.get('label')}}
+          {{layer.get('label')}}&nbsp;
+          <small><em>
+            {{layer.get('currentStyle') ? '(' + layer.get('currentStyle').Title || layer.get('currentStyle').Name + ')' : ''}}
+          </em></small>
         </span>
       </div>
       <a href class="width-100 text-right small"

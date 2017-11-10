@@ -1,0 +1,36 @@
+<li class="list-group-item"
+    data-ng-class='::!isParentNode ? "leaf" : ""'>
+
+  <div class="flex-col">
+    <div class="flex-row width-100 flex-align-stretch">
+      <div class="flex-col flex-grow">
+        <a data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)">
+          <i class='fa'
+             data-ng-class='::isParentNode ? "fa-folder-o" : ""'></i>
+          {{member.Title || member.title}}
+          <span data-ng-if="member.Style.length === 1">
+            &nbsp;({{member.Style[0].Title}})
+          </span>
+        </a>
+      </div>
+      <div class="flex-spacer"></div>
+      <div class="flex-col">
+        <div class="gn-layer-actions"
+             data-ng-if="member.Style.length > 1">
+          <div ngeo-popover
+               ngeo-popover-placement="bottom">
+            <a ngeo-popover-anchor role="button"
+               tabindex="0"
+               class="fa fa-paint-brush">
+            </a>
+            <div ngeo-popover-content
+                 class="layermanager-item-menu">
+              <div data-gn-layer-styles="member.Style"
+                   data-gn-layer-styles-on-click="addLayer(style)"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</li>
