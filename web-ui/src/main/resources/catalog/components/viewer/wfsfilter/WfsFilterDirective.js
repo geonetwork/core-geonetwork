@@ -792,6 +792,12 @@
           // returns true if there is an active filter for this field
           // field object is optional
           scope.isFilterActive = function(facetName, field) {
+            // special case for geometry
+            if (facetName == 'geometry') {
+              return scope.ctrl.searchGeometry &&
+                scope.ctrl.searchGeometry !== ',,,';
+            }
+
             // no available value: return false
             if (!scope.output[facetName]) {
               return false;
@@ -818,12 +824,6 @@
                   moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
                   upperBound;
               return lowerActive || upperActive;
-            }
-
-            // special case for geometry
-            if (facetName == 'geometry') {
-              return scope.ctrl.searchGeometry &&
-                  scope.ctrl.searchGeometry !== ',,,';
             }
 
             // other fields: the filter must be active
