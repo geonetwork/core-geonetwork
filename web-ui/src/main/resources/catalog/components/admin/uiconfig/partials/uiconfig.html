@@ -533,14 +533,17 @@
 
       <div data-ng-switch-when="disabledTools">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <div>
-          <input type="checkbox"
-               id="{{key}}-processes-checkbox"
-               data-ng-model="mCfg[key].processes"
-               ng-true-value="false" ng-false-value="true"/>&nbsp;
-          <label class="control-label"
-                 for="{{key}}-processes-checkbox" data-translate>
-            processesTool</label>
+        <div data-ng-repeat="(t, value) in mCfg[key]">
+          <div>
+            <input type="checkbox"
+                 id="{{key}}-{{t}}-checkbox"
+                 data-ng-model="mCfg[key][t]"
+                 ng-true-value="false" ng-false-value="true"/>&nbsp;
+            <label class="control-label"
+                   for="{{key}}-{{t}}-checkbox">
+              {{(t + 'Tool') | translate}}
+            </label>
+          </div>
         </div>
         <p class="help-block"
           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
