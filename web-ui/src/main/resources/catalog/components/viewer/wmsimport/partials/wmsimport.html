@@ -1,6 +1,6 @@
 <div class="layerTree">
   <form role="form">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+    <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="form-group">
       <div data-ng-show="catServicesList.length > 0">
         <div class="dropdown">
@@ -30,6 +30,7 @@
         <input class="form-control input-sm" type="text" data-toggle="dropdown"
                data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
                placeholder="{{'serviceUrl' | translate}}"/>
+
         <ul class="dropdown-menu" role="menu" data-ng-show="servicesList.length > 0">
           <li data-ng-repeat="srv in servicesList">
             <a href="" data-ng-click="setUrl(srv)" title="{{srv.url}}">
@@ -40,9 +41,15 @@
       </div>
     </div>
   </form>
+
   <p class="text-center" ng-show="loading">
     <i class="fa fa-spinner fa-spin"></i>
   </p>
+
+  <div class="alert alert-danger" role="alert" ng-show="error[format] !== null">
+    {{ error[format] }}
+  </div>
+
   <gn-cap-tree-col collection='capability.Layer' selection="selection"></gn-cap-tree-col>
   <gn-cap-tree-col collection='capability.featureTypeList.featureType' selection="selection"></gn-cap-tree-col>
 </div>

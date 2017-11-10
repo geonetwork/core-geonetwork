@@ -69,9 +69,10 @@
 
 
   module.provider('gnOwsCapabilities', function() {
-    this.$get = ['$http', '$q',
+    this.$get = ['$http', '$q', '$translate',
       'gnUrlUtils', 'gnGlobalSettings',
-      function($http, $q, gnUrlUtils, gnGlobalSettings) {
+      function($http, $q, $translate,
+               gnUrlUtils, gnGlobalSettings) {
 
         var displayFileContent = function(data) {
           var parser = new ol.format.WMSCapabilities();
@@ -81,19 +82,14 @@
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
 
+
           // Push all leaves into a flat array of Layers
           // Also adjust crs (by inheritance) and url
-          var getFlatLayers = function(node, parentCrs) {
-            // current inherited crs (w/o dupes)
-            var crs = (parentCrs || []).concat(node.CRS || [])
-                .filter(function(value, index, array) {
-                  return array.indexOf(value) === index;
-                });
-
+          var getFlatLayers = function(node) {
             // add to flat layer array if we're on a leave (layer w/o child)
             if (!node.Layer) {
               node.url = url;
-              node.CRS = crs;
+              node.CRS = node.CRS || [];
               layers.push(node);
               return;
             }
@@ -105,7 +101,7 @@
 
             // process children recursively
             for (var i = 0, len = node.Layer.length; i < len; i++) {
-              getFlatLayers(node.Layer[i], crs);
+              getFlatLayers(node.Layer[i]);
             }
           };
 
@@ -174,7 +170,7 @@
         };
 
         var mergeParams = function(url, Params) {
-          //merge URL parameters with indeicated ones
+          //merge URL parameters with indicated ones
           var parts = url.split('?');
           var urlParams = angular.isDefined(parts[1]) ?
               gnUrlUtils.parseKeyValue(parts[1]) : {};
@@ -214,10 +210,6 @@
                 request: 'GetCapabilities'
               });
 
-              if (url.indexOf('http://sextant-test.ifremer.fr/' +
-                  'cgi-bin/sextant/qgis-server/ows/surval') >= 0) {
-                url = '../../catalog/qgis.xml';
-              }
               //send request and decode result
               if (true) {
                 $http.get(url, {
@@ -227,11 +219,14 @@
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
-                        defer.reject('capabilitiesParseError');
+                        defer.reject(
+                        $translate.instant('failedToParseCapabilities'));
                       }
                     })
                     .error(function(data, status) {
-                      defer.reject(status);
+                      defer.reject(
+                      $translate.instant('checkCapabilityUrl',
+                      {url: url, status: status}));
                     });
               }
             }
