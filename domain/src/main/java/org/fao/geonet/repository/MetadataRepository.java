@@ -57,7 +57,7 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      * @return all metadata harvested by the identified harvester.
      */
     @Nonnull
-    List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);    
+    List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
 
     /**
      * Increment popularity of metadata by 1.
