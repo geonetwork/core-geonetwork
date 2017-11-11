@@ -28,6 +28,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
+import org.jdom.Element;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -106,5 +107,24 @@ public interface MetadataRepositoryCustom {
      * Load only the basic info for a metadata. Used in harvesters, mostly.
      */
     List<SimpleMetadata> findAllSimple(String harvestUuid);
-
+    
+    
+    /**
+     * Find all metadata on specified page. It returns only the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable);
+    
+    /**
+     * Find all metadata. It returns only the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids);
+    
 }
