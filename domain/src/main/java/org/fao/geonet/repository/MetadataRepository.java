@@ -24,6 +24,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Metadata;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -58,6 +59,7 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      */
     @Nonnull
     List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
+    
 
     /**
      * Increment popularity of metadata by 1.
