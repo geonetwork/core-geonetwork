@@ -23,17 +23,16 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Metadata;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.fao.geonet.domain.Metadata;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Data Access object for the {@link Metadata} entities.
@@ -58,8 +57,7 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      * @return all metadata harvested by the identified harvester.
      */
     @Nonnull
-    List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
-    
+    List<Metadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);    
 
     /**
      * Increment popularity of metadata by 1.

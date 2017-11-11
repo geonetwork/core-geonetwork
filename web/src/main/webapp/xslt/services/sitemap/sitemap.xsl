@@ -72,7 +72,7 @@
     <xsl:if test="not($pStart > $pEnd)">
       <xsl:choose>
         <xsl:when test="$pStart = $pEnd">
-          <sitemap xmlns="http://www.sitemaps.org/schemas/sitemap/0.19">
+          <sitemap xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
             <xsl:variable name="formatParam">
               <xsl:if test="string($format)"><xsl:value-of select="$format"/>/
               </xsl:if>
