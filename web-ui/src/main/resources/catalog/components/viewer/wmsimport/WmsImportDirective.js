@@ -61,6 +61,7 @@
          * and add it to the map.
          *
          * @param {Object} getCapLayer
+         * @param {string} name of the style to use
          * @return {*}
          */
           this.addLayer = function(getCapLayer, style) {
@@ -425,7 +426,7 @@
           };
 
           scope.addLayer = function(c) {
-            controller.addLayer(scope.member, c);
+            controller.addLayer(scope.member, c.Name);
           };
 
           scope.isParentNode = angular.isDefined(scope.member.Layer);

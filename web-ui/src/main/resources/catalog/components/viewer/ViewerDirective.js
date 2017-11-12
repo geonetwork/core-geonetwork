@@ -37,13 +37,13 @@
     'gnMap',
     'gnConfig',
     'gnSearchLocation',
-    'gnSearchManagerService',
+    'gnMetadataManager',
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMeasure',
     'gnViewerService',
     '$location', '$q', '$translate',
-    function(gnMap, gnConfig, gnSearchLocation, gnSearchManagerService,
+    function(gnMap, gnConfig, gnSearchLocation, gnMetadataManager,
              gnSearchSettings, gnViewerSettings, gnMeasure,
              gnViewerService, $location, $q, $translate) {
       return {
@@ -161,9 +161,6 @@
                     scope.is3dEnabled = !scope.ol3d.getEnabled());
               };
 
-
-
-
               function addLayerFromLocation(config) {
                 if (angular.isUndefined(config.layer)) {
                   // This is a service without a layer name
@@ -221,8 +218,8 @@
 
                     // Collect the md info from a search
                     if (config.uuid) {
-                      gnSearchManagerService.
-                          getMetadataByUuid(config.uuid).then(function(md) {
+                      gnMetadataManager.
+                          getMdObjByUuid(config.uuid).then(function(md) {
                             config.md = md;
                             // TODO : If there is no config.layer
                             // try to extract them from the md and
@@ -250,11 +247,10 @@
                 }
 
                 // Define which tool is active
-                if ($location.search()['activeTools']) {
-                  scope.activeTools[$location.search()['activeTools']] = true;
+                if ($location.search()['tool']) {
+                  scope.activeTools[$location.search()['tool']] = true;
                 }
               };
-
 
               // Turn off 3D mode when not using it because
               // it slow down the application.
@@ -269,7 +265,7 @@
                 initFromLocation();
               });
 
-                  var div = document.createElement('div');
+              var div = document.createElement('div');
               div.className = 'overlay';
               var overlay = new ol.Overlay({
                 element: div,
