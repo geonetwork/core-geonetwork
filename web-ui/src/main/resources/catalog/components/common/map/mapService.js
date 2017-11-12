@@ -740,6 +740,7 @@
            * @param {Object} getCapLayer object to convert
            * @param {string} url of the wms service (we want this one instead
            *  of the one from the capabilities to be sure its persistent)
+           * @param {string} name of the style to use
            * @return {ol.Layer} the created layer
            */
           createOlWMSFromCap: function(map, getCapLayer, url, style) {
@@ -772,16 +773,29 @@
               */
 
               // TODO: parse better legend & attribution
+              var requestedStyle = null;
               var legendUrl;
-              if (style) {
-                legendUrl = style.LegendURL[0];
-              } else if (angular.isArray(getCapLayer.Style) &&
+              if (style && angular.isArray(getCapLayer.Style) &&
+                  getCapLayer.Style.length > 0) {
+                for (var i = 0; i < getCapLayer.Style.length; i++) {
+                  var s = getCapLayer.Style[i];
+                  if (s.Name === style.Name) {
+                    requestedStyle = s;
+                    legendUrl = s.LegendURL[0];
+                    break;
+                  }
+                }
+              }
+
+              if (!requestedStyle &&
+                  angular.isArray(getCapLayer.Style) &&
                   getCapLayer.Style.length > 0) {
                 legendUrl = (getCapLayer.Style[getCapLayer.
                     Style.length - 1].LegendURL) ?
                     getCapLayer.Style[getCapLayer.
                         Style.length - 1].LegendURL[0] : undefined;
               }
+
               if (legendUrl) {
                 legend = legendUrl.OnlineResource;
               }
@@ -804,8 +818,8 @@
               if (getCapLayer.version) {
                 layerParam.VERSION = getCapLayer.version;
               }
-              if (style) {
-                layerParam.STYLES = style.Name;
+              if (requestedStyle) {
+                layerParam.STYLES = requestedStyle.Name;
               }
 
               var projCode = map.getView().getProjection().getCode();
@@ -858,8 +872,8 @@
                   getCapLayer.Style.length > 1) {
                 layer.set('style', getCapLayer.Style);
               }
-              if (style) {
-                layer.set('currentStyle', style);
+              if (requestedStyle) {
+                layer.set('currentStyle', requestedStyle);
               }
 
               layer.set('advanced', !!(layer.get('elevation') ||
@@ -1076,6 +1090,7 @@
            *
            * @param {ol.map} map to add the layer
            * @param {Object} getCapLayer object to convert
+           * @param {string} name of the style to use
            */
           addWmsToMapFromCap: function(map, getCapLayer, style) {
             var layer = this.createOlWMSFromCap(map, getCapLayer, null, style);
