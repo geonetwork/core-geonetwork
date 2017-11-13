@@ -164,6 +164,7 @@
           };
           scope.setLayerStyle = function(layer, style) {
             layer.getSource().updateParams({'STYLES': style.Name});
+            layer.set('legend', style.LegendURL[0].OnlineResource);
             layer.set('currentStyle', style);
           };
           scope.zoomToExtent = function(layer, map) {

@@ -108,8 +108,9 @@
         </span>
       </div>
       <a href class="width-100 text-right small"
-         ng-if="::layer.get('legend') && layer.get('attribution')"
-         data-ng-click="showInfo(layer)" title="{{'Legend'|translate}}">
+         ng-if="layer.get('legend') || layer.get('attribution')"
+         data-ng-click="showInfo(layer)"
+         title="{{'Legend'|translate}}">
         <i class="fa fa-caret-down" ng-if="!layer.showInfo"/>
         <i class="fa fa-caret-up" ng-if="layer.showInfo"/>
         <span translate ng-if="!layer.showInfo">{{'showLegend' | translate}}</span>
