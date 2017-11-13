@@ -30,7 +30,8 @@
   module.service('gnHeatmapService', [
     'gnIndexRequestManager',
     '$http',
-    function(gnIndexRequestManager, $http) {
+    '$q',
+    function(gnIndexRequestManager, $http, $q) {
       var me = this;
       var CELL_SIZE = 12;     // pixels
       var BUFFER_RATIO = 1;
@@ -68,10 +69,12 @@
         var topLeft = ol.proj.toLonLat(ol.extent.getTopLeft(extent));
         var bottomRight = ol.proj.toLonLat(ol.extent.getBottomRight(extent));
 
-        // cap extent values
-        topLeft[0] = Math.min(Math.max(topLeft[0], -180), 180);
+        // cap extent values to world map
+        if (bottomRight[0] < topLeft[0]) { bottomRight[0] += 360; }
+        var viewWidth = Math.min(360, bottomRight[0] - topLeft[0]);
+        topLeft[0] = Math.min(Math.max(topLeft[0], -180), 180 - viewWidth);
         topLeft[1] = Math.min(Math.max(topLeft[1], -90), 90);
-        bottomRight[0] = Math.min(Math.max(bottomRight[0], -180), 180);
+        bottomRight[0] = topLeft[0] + viewWidth;
         bottomRight[1] = Math.min(Math.max(bottomRight[1], -90), 90);
 
         // define base params (without filter)
@@ -121,8 +124,18 @@
           reqParams.query.bool.filter = filterParams.query.bool.filter;
         }
 
+        // cancel previous request
+        if (me.requestCanceller) {
+          me.requestCanceller.resolve();
+        }
+
+        // this promise will be used to cancel the data request
+        me.requestCanceller = $q.defer();
+
         // trigger search on ES
-        return $http.post(indexObject.ES_URL, reqParams).then(function(response) {
+        return $http.post(indexObject.ES_URL, reqParams, {
+          timeout: me.requestCanceller.promise
+        }).then(function(response) {
           var buckets = response.data.aggregations.cells.buckets;
 
           // no data with the current filter
