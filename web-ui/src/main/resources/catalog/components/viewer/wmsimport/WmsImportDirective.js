@@ -426,7 +426,7 @@
           };
 
           scope.addLayer = function(c) {
-            controller.addLayer(scope.member, c.Name);
+            controller.addLayer(scope.member, c ? c.Name : null);
           };
 
           scope.isParentNode = angular.isDefined(scope.member.Layer);
