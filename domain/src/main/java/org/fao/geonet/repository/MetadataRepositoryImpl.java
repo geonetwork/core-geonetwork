@@ -180,8 +180,8 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
 
         cbQuery.multiselect(root.get(Metadata_.uuid), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId));
 
-        cbQuery.where(root.get(Metadata_.id).in(ids));
-        
+        cbQuery.where(root.get(Metadata_.id).in(ids), cb.equal(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround), 'n'));
+
         if (pageable != null && pageable.getSort() != null) {
             final Sort sort = pageable.getSort();
             List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, root);
@@ -225,8 +225,8 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
         
         cbQuery.multiselect(root.get(Metadata_.uuid), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId));
 
-        cbQuery.where(root.get(Metadata_.id).in(ids));
-        
+        cbQuery.where(root.get(Metadata_.id).in(ids), cb.equal(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround), 'n'));
+
         TypedQuery<Tuple> query = _entityManager.createQuery(cbQuery);
 
         Element result = new Element("metadata");
