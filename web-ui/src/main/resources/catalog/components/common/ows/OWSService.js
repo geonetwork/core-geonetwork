@@ -83,17 +83,16 @@
 
           // Push all leaves into a flat array of Layers
           // Also adjust crs (by inheritance) and url
-          var getFlatLayers = function(node, parentCrs) {
-            // current inherited crs (w/o dupes)
-            var crs = (parentCrs || []).concat(node.CRS || [])
-                .filter(function(value, index, array) {
-                  return array.indexOf(value) === index;
-                });
+          var getFlatLayers = function(node, inheritedCrs) {
+            // replace with complete CRS list if available
+            if (node.CRS && node.CRS.length > inheritedCrs.length) {
+              inheritedCrs = node.CRS;
+            }
 
             // add to flat layer array if we're on a leave (layer w/o child)
             if (!node.Layer) {
               node.url = url;
-              node.CRS = crs;
+              node.CRS = inheritedCrs;
               layers.push(node);
               return;
             }
@@ -105,11 +104,11 @@
 
             // process children recursively
             for (var i = 0, len = node.Layer.length; i < len; i++) {
-              getFlatLayers(node.Layer[i], crs);
+              getFlatLayers(node.Layer[i], inheritedCrs);
             }
           };
 
-          getFlatLayers(result.Capability);
+          getFlatLayers(result.Capability, []);
           result.Capability.layers = layers;
           result.Capability.version = result.version;
           return result.Capability;
@@ -214,10 +213,6 @@
                 request: 'GetCapabilities'
               });
 
-              if (url.indexOf('http://sextant-test.ifremer.fr/' +
-                  'cgi-bin/sextant/qgis-server/ows/surval') >= 0) {
-                url = '../../catalog/qgis.xml';
-              }
               //send request and decode result
               if (true) {
                 $http.get(url, {
