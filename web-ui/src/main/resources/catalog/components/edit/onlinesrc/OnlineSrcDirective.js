@@ -1353,25 +1353,22 @@
                   }
                 });
 
-                scope.resource = null;
-
                 /**
                  * Update url and name from uploaded resource.
                  * Triggered on file store selection change.
                  */
-                scope.$watch('resource', function(rsrc) {
-
-                  if (rsrc && rsrc.url) {
+                scope.selectUploadedResource = function(res) {
+                  if (res && res.url) {
                     var o = {
-                      name: rsrc.id.split('/').splice(2).join('/'),
-                      url: rsrc.url
+                      name: res.id.split('/').splice(2).join('/'),
+                      url: res.url
                     };
                     ['url', 'name'].forEach(function(pName) {
                       setParameterValue(pName, o[pName]);
                     });
                     scope.params.protocol = 'WWW:DOWNLOAD-1.0-http--download';
                   }
-                });
+                };
 
                 scope.$watchCollection('stateObj.selectRecords',
                     function(n, o) {
