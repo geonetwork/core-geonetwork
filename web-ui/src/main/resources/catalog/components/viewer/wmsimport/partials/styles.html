@@ -27,6 +27,8 @@
           data-ng-model="data.currentStyle"
           data-ng-options="(s.Title || s.Name) for s in styles track by s.Name"
           title="{{styles.length + ('layerStylesAvailable' | translate)}}">
-    <option value="" disabled selected>{{styles.length + ('layerStylesAvailable' | translate)}}</option>
+    <option value="" disabled="disabled">
+      {{styles.length + ('layerStylesAvailable' | translate)}}
+    </option>
   </select>
 </div>
