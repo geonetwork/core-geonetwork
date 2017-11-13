@@ -139,6 +139,7 @@
       <field name="revisionDate" tagName="revisionDate"/>
       <field name="publicationDate" tagName="publicationDate"/>
       <field name="abstract" tagName="abstract" multilingualSortField="true"/>
+      <field name="_defaultAbstract" tagName="defaultAbstract"/>
       <field name="keyword" tagName="keyword"/>
       <field name="keywordGroup" tagName="keywordGroup"/>
       <field name="parentUuid" tagName="parentId"/>
