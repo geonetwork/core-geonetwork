@@ -81,7 +81,9 @@
                 <xsl:value-of select="$title"/>
               </h1>
 
-              <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+              <xsl:if test="$view != 'emodnetHydrography'">
+                <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+              </xsl:if>
 
               <div gn-related="md"
                    data-user="user"
@@ -110,7 +112,8 @@
             </section>
 
             <br/>
-            <xsl:if test="$css != 'checkpoint'">
+            <xsl:if test="$css != 'checkpoint' and
+                          $view != 'emodnetHydrography'">
 
               <section>
                 <h4>
