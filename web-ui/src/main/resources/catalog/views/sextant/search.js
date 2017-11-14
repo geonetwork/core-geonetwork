@@ -585,6 +585,10 @@
               if (attrs['sxtSizeDiff']) {
                 height -= parseInt(attrs['sxtSizeDiff'], 10);
               }
+
+              // use an arbitrary minimal height
+              height = Math.max(600, height);
+
               element.css('height', height+'px');
             };
             $(window).on('resize', fitHeight);
