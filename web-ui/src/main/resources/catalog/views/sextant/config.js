@@ -245,7 +245,7 @@
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
-              url = 'md.format.xml?root=div&xsl=xsl-view&view=emodnetHydrography&uuid=' + md.getUuid();
+              url = 'md.format.xml?root=div&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + md.getUuid();
             } else {
               url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
             }
