@@ -1,40 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/"
-         xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-         xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#"
-         xmlns:void="http://rdfs.org/ns/void#">
-  <!-- This is a subset of L05 with concept starting with POS
-  ie. positioning instruments. -->
-  <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS">
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/VocabV2/skosrdf2html.xsl" type="text/xsl" media="screen"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
+  <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/">
     <skos:prefLabel>Measuring devices</skos:prefLabel>
     <dc:title>Positioning devices</dc:title>
     <skos:altLabel>SDN devices</skos:altLabel>
     <dc:alternative>SDN devices</dc:alternative>
-    <dc:description>Terms used to classify groups of sensors, instruments, sources of
-      algorithmically computed data (numerical models) or samplers (collectors of water, SPM,
-      sediment, rock, air or biota samples).
-    </dc:description>
-    <dc:date>2017-03-10 02:00:03.0</dc:date>
-    <owl:versionInfo>58</owl:versionInfo>
+    <dc:description>Terms used to classify groups of sensors, instruments, sources of algorithmically computed data (numerical models) or samplers (collectors of water, SPM, sediment, rock, air or biota samples).</dc:description>
+    <dc:date>2017-11-08 02:00:02.0</dc:date>
+    <owl:versionInfo>61</owl:versionInfo>
     <grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
     <dc:publisher>Natural Environment Research Council</dc:publisher>
     <dc:creator>SeaDataNet</dc:creator>
     <grg:RE_RegisterOwner>SeaDataNet</grg:RE_RegisterOwner>
-    <rdfs:comment>Governance for vocabularies used in the EU SeaDataNet project implemented as
-      consultation between BODC and the members of the SeaDataNet Technical Task Team
-    </rdfs:comment>
-
-
-    <skos:member>
+    <rdfs:comment>Governance for vocabularies used in the EU SeaDataNet project implemented as consultation between BODC and the members of the SeaDataNet Technical Task Team</rdfs:comment>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS16/">
         <dc:identifier>SDN:L05::POS16</dc:identifier>
         <dce:identifier>SDN:L05::POS16</dce:identifier>
         <skos:notation>SDN:L05::POS16</skos:notation>
         <skos:prefLabel xml:lang="en">Argos GPS-localised transmitters</skos:prefLabel>
         <skos:altLabel>Argos GPS</skos:altLabel>
-        <skos:definition xml:lang="en">{ "mode": "GPS localisation", "accuracy": "better than 100m"}
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "mode": "GPS localisation",
+          "accuracy": "better than 100m"
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:26:24.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -54,35 +41,39 @@
         <skos:notation>SDN:L05::POS17</skos:notation>
         <skos:prefLabel xml:lang="en">Argos doppler-localised transmitters</skos:prefLabel>
         <skos:altLabel>Argos Doppler</skos:altLabel>
-        <skos:definition xml:lang="en">{ "mode": "Doppler-derived Argos localisation", "accuracy":"better than 250m (class 3) to worse than 1500m (class 0)" }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "mode": "Doppler-derived Argos localisation",
+          "accuracy": "better than 250m (class 3) to worse than 1500m (class 0)"
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:26:24.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
         <owl:deprecated>false</owl:deprecated>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0720/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0719/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0446/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0719/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L05/current/301/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS10/">
         <dc:identifier>SDN:L05::POS10</dc:identifier>
         <dce:identifier>SDN:L05::POS10</dce:identifier>
         <skos:notation>SDN:L05::POS10</skos:notation>
-        <skos:prefLabel xml:lang="en">Automatic Ranging Grid Overlay DM 54receivers
-        </skos:prefLabel>
+        <skos:prefLabel xml:lang="en">Automatic Ranging Grid Overlay DM 54 receivers</skos:prefLabel>
         <skos:altLabel>Argo DM54</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "1.6-2MHz", "mode": "hyperbolic", "range":"450km", "accuracy": "4-7m down to 20m at maximum range", "operational": "from 1977(mid-80s in Europe)", "notes": "Survey positioning system." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "1.6-2MHz",
+          "mode": "hyperbolic",
+          "range": "450km",
+          "accuracy": "4-7m down to 20m at maximum range",
+          "operational": "from 1977 (mid-80s in Europe)",
+          "notes": "Survey positioning system."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -93,18 +84,21 @@
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS08/">
         <dc:identifier>SDN:L05::POS08</dc:identifier>
         <dce:identifier>SDN:L05::POS08</dce:identifier>
         <skos:notation>SDN:L05::POS08</skos:notation>
         <skos:prefLabel xml:lang="en">Decca Navigator System HiFix receivers</skos:prefLabel>
         <skos:altLabel>Decca HiFix</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "1.6MHz", "mode": "hyperbolic", "range":"under 100km", "accuracy": "better than 10m: maximum accuracy at 50km range is 1.5m","operating": "1962 to 2000", "notes": "Not for general navigation. Chains usually set upfor specific surveys." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "1.6MHz",
+          "mode": "hyperbolic",
+          "range": "under 100km",
+          "accuracy": "better than 10m: maximum accuracy at 50km range is 1.5m",
+          "operating": "1962 to 2000",
+          "notes": "Not for general navigation.  Chains usually set up for specific surveys."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -123,8 +117,14 @@
         <skos:notation>SDN:L05::POS01</skos:notation>
         <skos:prefLabel xml:lang="en">Decca Navigator System main chain receivers</skos:prefLabel>
         <skos:altLabel>Decca main chain</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "70 and 130kHz", "mode": "hyperbolic","range": "450km (day) to 750km (night)", "accuracy": "50m(day) to 200m (night) in goodconditions down to 2km near range limit", "operating": "WWII to 2001-03 (2000-03-31 inUK)", "notes": " Transmitter groups, each with a master and three slaves" }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "70 and 130kHz",
+          "mode": "hyperbolic",
+          "range": "450km (day) to 750km (night)",
+          "accuracy": "50m(day) to 200m (night) in good conditions down to 2km near range limit",
+          "operating": "WWII to 2001-03 (2000-03-31 in UK)",
+          "notes": " Transmitter groups, each with a master and three slaves"
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -144,87 +144,89 @@
         <skos:notation>SDN:L05::POS04</skos:notation>
         <skos:prefLabel xml:lang="en">Differential Global Positioning System receivers</skos:prefLabel>
         <skos:altLabel>DGPS</skos:altLabel>
-        <skos:definition xml:lang="en">{ "accuracy": "better than 100m to better than 10m", "notes":"GPS augmented by a network of fixed ground stations that continuously broadcast thedifference between their true locations and the location determined from the satellites."}
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "accuracy": "better than 100m to better than 10m",
+          "notes": "GPS augmented by a network of fixed ground stations that continuously broadcast the difference between their true locations and the location determined from the satellites."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
         <owl:deprecated>false</owl:deprecated>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0798/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0792/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0801/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0802/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0803/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0799/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0767/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0766/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0765/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0764/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0524/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0623/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0348/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0349/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0389/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0391/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0456/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0524/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0623/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0936/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0937/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0841/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0882/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0899/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0926/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0936/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0937/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0742/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0743/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0751/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0762/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0763/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0764/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0765/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0766/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0767/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0792/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0798/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0799/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L05/current/301/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS02/">
         <dc:identifier>SDN:L05::POS02</dc:identifier>
         <dce:identifier>SDN:L05::POS02</dce:identifier>
         <skos:notation>SDN:L05::POS02</skos:notation>
         <skos:prefLabel xml:lang="en">Global Navigation Satellite System receivers</skos:prefLabel>
         <skos:altLabel>GLONASS</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Based on a network of satellites deployed by theformer Soviet Union. The network was initiated in 1976 but fell into disrepair before fullglobal coverage was reached during the political upheaval of the early 90s"}
-        </skos:definition>
+        <skos:definition xml:lang="en">{"notes": "Based on a network of satellites deployed by the former Soviet Union.  The network was initiated in 1976 but fell into disrepair before full global coverage was reached during the political upheaval of the early 90s"}</skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
         <owl:deprecated>false</owl:deprecated>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0388/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L05/current/301/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS21/">
         <dc:identifier>SDN:L05::POS21</dc:identifier>
         <dce:identifier>SDN:L05::POS21</dce:identifier>
         <skos:notation>SDN:L05::POS21</skos:notation>
         <skos:prefLabel xml:lang="en">Hyperfix receivers</skos:prefLabel>
         <skos:altLabel>Hyperfix</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "1.6-3.4MHz", "mode": "hyperbolic (usual),circular or combined", "range": "250km (night) to 700km (day)", "accuracy": "up to0.5-1m", "operating": "until 2000", "notes": "Racal positioning system similar to DeccaHiFix based on temporary or permanent transmitter chains comprising a master plus at leasttwo slaves." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "1.6-3.4MHz",
+          "mode": "hyperbolic (usual), circular or combined",
+          "range": "250km (night) to 700km (day)",
+          "accuracy": "up to 0.5-1m",
+          "operating": "until 2000",
+          "notes": "Racal positioning system similar to Decca HiFix based on temporary or permanent transmitter chains comprising a master plus at least two slaves."
+          }</skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -243,30 +245,37 @@
         <skos:notation>SDN:L05::POS25</skos:notation>
         <skos:prefLabel xml:lang="en">Kinematic Global Positioning System receivers</skos:prefLabel>
         <skos:altLabel>KGPS</skos:altLabel>
-        <skos:definition xml:lang="en">{ "accuracy": "Horizontal Accuracy: Fixed RTK mode: 1-5cm,Float RTK mode: 20cm-1m. Vertical accuracy : twice the horizontal accuracy", "operating":"Since the mid-1990s", "notes": "Real Time Kinematic (RTK) satellite navigation techniquebased on the use of carrier phase measurements of the GPS signals where a single referencestation or a network of reference stations provides the real-time corrections." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "accuracy": "Horizontal Accuracy: Fixed RTK mode: 1-5cm, Float RTK mode: 20cm-1m. Vertical accuracy : twice the horizontal accuracy",
+          "operating": "Since the mid-1990s",
+          "notes": "Real Time Kinematic (RTK) satellite navigation technique based on the use of carrier phase measurements of the GPS signals where a single reference station or a network of reference stations provides the real-time corrections."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
         <owl:deprecated>false</owl:deprecated>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0880/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS05/">
         <dc:identifier>SDN:L05::POS05</dc:identifier>
         <dce:identifier>SDN:L05::POS05</dce:identifier>
         <skos:notation>SDN:L05::POS05</skos:notation>
         <skos:prefLabel xml:lang="en">Long Range Navigation version C receivers</skos:prefLabel>
         <skos:altLabel>LORAN C</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "70-130kHz", "mode": "hyperbolic", "range":"950kmto 1700km (day): 650km to 1250km (day)", "operational": "1947 to 2010. Maintained asGPS backup in the EU.", "notes": "Global navigation based on transmitters in severalEuropean countries, Japan, Canada (until 2002-10) and USA (until 2010-02-08)." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "70-130kHz",
+          "mode": "hyperbolic",
+          "range": "950kmto 1700km (day): 650km to 1250km (day)",
+          "operational": "1947 to 2010. Maintained as GPS backup in the EU.",
+          "notes": "Global navigation based on transmitters in several European countries, Japan, Canada (until 2002-10) and USA (until 2010-02-08)."
+          }</skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -285,8 +294,7 @@
         <skos:notation>SDN:L05::POS06</skos:notation>
         <skos:prefLabel xml:lang="en">Marine chronometers</skos:prefLabel>
         <skos:altLabel>Clock</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Timepieces of sufficient precision to allow theiruse of portable time standards."}
-        </skos:definition>
+        <skos:definition xml:lang="en">{"notes": "Timepieces of sufficient precision to allow their use of portable time standards."}</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -297,17 +305,19 @@
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS20/">
         <dc:identifier>SDN:L05::POS20</dc:identifier>
         <dce:identifier>SDN:L05::POS20</dce:identifier>
         <skos:notation>SDN:L05::POS20</skos:notation>
         <skos:prefLabel xml:lang="en">Motorola Mini-Ranger receivers</skos:prefLabel>
         <skos:altLabel>Mini-Ranger</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "5410-5890MHz", "range": "up to 75km","accuracy": "up to 2m", "notes": "A family of short-wave receivers that determine positionby determining the line-of-sight distance from 3 or more transmitters set up for thesurvey." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "5410-5890MHz",
+          "range": "up to 75km",
+          "accuracy": "up to 2m",
+          "notes": "A family of short-wave receivers that determine position by determining the line-of-sight distance from 3 or more transmitters set up for the survey."
+          }</skos:definition>
         <owl:versionInfo>5</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -326,34 +336,32 @@
         <skos:notation>SDN:L05::POS03</skos:notation>
         <skos:prefLabel xml:lang="en">NAVSTAR Global Positioning System receivers</skos:prefLabel>
         <skos:altLabel>GPS</skos:altLabel>
-        <skos:definition xml:lang="en">{ "accuracy": "better than 100m", "notes": "Global navigationbased on a network of satellites deployed and maintained by the USA." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "accuracy": "better than 100m",
+          "notes": "Global navigation based on a network of satellites deployed and maintained by the USA."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
         <owl:deprecated>false</owl:deprecated>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0798/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0799/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0800/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0801/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0802/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0803/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0524/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0601/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0801/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0313/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0199/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0388/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0390/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0457/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0524/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0601/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0934/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0935/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0937/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0862/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0873/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0878/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0899/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0933/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0934/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0935/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0937/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0735/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0758/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0759/"/>
@@ -362,6 +370,10 @@
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0768/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0769/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0792/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0798/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0799/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0800/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0803/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
@@ -377,8 +389,10 @@
         <skos:notation>SDN:L05::POS18</skos:notation>
         <skos:prefLabel xml:lang="en">Navy Navigation Satellite System receivers</skos:prefLabel>
         <skos:altLabel>Navsat</skos:altLabel>
-        <skos:definition xml:lang="en">{ "mode": "Doppler-derived localisation", "accuracy": "betterthan 10km or 2km if combined with relative water velocity em-log" }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "mode": "Doppler-derived localisation",
+          "accuracy": "better than 10km or 2km if combined with relative water velocity em-log"
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:26:24.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -390,17 +404,21 @@
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS15/">
         <dc:identifier>SDN:L05::POS15</dc:identifier>
         <dce:identifier>SDN:L05::POS15</dce:identifier>
         <skos:notation>SDN:L05::POS15</skos:notation>
         <skos:prefLabel xml:lang="en">Omega receivers</skos:prefLabel>
         <skos:altLabel>Omega</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "10-14kHz", "mode": "hyperbolic", "range": "upto 15000km", "accuracy": "better than 7.4km", "operational": "1968-1997", "notes": "Globallong-range but low accuracy navigation system" }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "10-14kHz",
+          "mode": "hyperbolic",
+          "range": "up to 15000km",
+          "accuracy": "better than 7.4km",
+          "operational": "1968-1997",
+          "notes": "Global long-range but low accuracy navigation system"
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -412,8 +430,6 @@
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
     </skos:member>
-
-
     <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS14/">
         <dc:identifier>SDN:L05::POS14</dc:identifier>
@@ -421,8 +437,13 @@
         <skos:notation>SDN:L05::POS14</skos:notation>
         <skos:prefLabel xml:lang="en">Pulse8 receivers</skos:prefLabel>
         <skos:altLabel>Pulse8</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "100kHz", "mode": "hyperbolic", "range":"250km to 750km", "accuracy": "30m to 500m", "operational": "1970s to late 1990s" }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "100kHz",
+          "mode": "hyperbolic",
+          "range": "250km to 750km",
+          "accuracy": "30m to 500m",
+          "operational": "1970s to late 1990s"
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:27:24.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -441,7 +462,10 @@
         <skos:notation>SDN:L05::POS13</skos:notation>
         <skos:prefLabel xml:lang="en">Rana receivers</skos:prefLabel>
         <skos:altLabel>Rana</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "around 300-400kHz", "mode": "hyperbolic" }</skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "around 300-400kHz",
+          "mode": "hyperbolic"
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:27:02.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -453,8 +477,6 @@
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
     </skos:member>
-
-
     <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS07/">
         <dc:identifier>SDN:L05::POS07</dc:identifier>
@@ -462,8 +484,7 @@
         <skos:notation>SDN:L05::POS07</skos:notation>
         <skos:prefLabel xml:lang="en">Sextants</skos:prefLabel>
         <skos:altLabel>Sextant</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Optical instruments that accurately measure theangle between pairs of visible celestial bodies such as the sun, moon or stars. "}
-        </skos:definition>
+        <skos:definition xml:lang="en">{"notes": "Optical instruments that accurately measure the angle between pairs of visible celestial bodies such as the sun, moon or stars. "}</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -474,18 +495,21 @@
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS12/">
         <dc:identifier>SDN:L05::POS12</dc:identifier>
         <dce:identifier>SDN:L05::POS12</dce:identifier>
         <skos:notation>SDN:L05::POS12</skos:notation>
-        <skos:prefLabel xml:lang="en">Système leger de measure de distancereceivers
-        </skos:prefLabel>
+        <skos:prefLabel xml:lang="en">Système leger de measure de distance receivers</skos:prefLabel>
         <skos:altLabel>Syledis</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "420-450MHz", "mode": "hyperbolic orcircular", "range": "400km hyperbolic; 75-100km circular", "accuracy": "better than 2mbelow horizon (10m above horizon)", "operational": "1980s to 1995", "notes": "Navigationand positioning system for the North Sea petroleum industry." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "420-450MHz",
+          "mode": "hyperbolic or circular",
+          "range": "400km hyperbolic; 75-100km circular",
+          "accuracy": "better than 2m below horizon (10m above horizon)",
+          "operational": "1980s to 1995",
+          "notes": "Navigation and positioning system for the North Sea petroleum industry."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -504,8 +528,13 @@
         <skos:notation>SDN:L05::POS09</skos:notation>
         <skos:prefLabel xml:lang="en">Toran receivers</skos:prefLabel>
         <skos:altLabel>Toran</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "around 2MHz", "mode": "hyperbolic", "range":"150-200km", "accuracy": "better than 20m", "notes": "Mostly used for aircraft." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "around 2MHz",
+          "mode": "hyperbolic",
+          "range": "150-200km",
+          "accuracy": "better than 20m",
+          "notes": "Mostly used for aircraft."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -524,8 +553,13 @@
         <skos:notation>SDN:L05::POS11</skos:notation>
         <skos:prefLabel xml:lang="en">Trident receivers</skos:prefLabel>
         <skos:altLabel>Trident</skos:altLabel>
-        <skos:definition xml:lang="en">{ "frequency": "420-450MHz", "mode": "circular", "range":"150km", "accuracy": "better than 3m", "notes": "Survey positioning system." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "frequency": "420-450MHz",
+          "mode": "circular",
+          "range": "150km",
+          "accuracy": "better than 3m",
+          "notes": "Survey positioning system."
+          }</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -544,8 +578,11 @@
         <skos:notation>SDN:L05::POS22</skos:notation>
         <skos:prefLabel xml:lang="en">Trisponder navigation systems</skos:prefLabel>
         <skos:altLabel>Trisponder</skos:altLabel>
-        <skos:definition xml:lang="en">{ "range": "80km", "accuracy": "1m (resolution 0.1m)","notes": "Family of microwave short-range positioning systems with vessel equipment andthree shore transponders (master and two slaves) set up specifically for surveys." }
-        </skos:definition>
+        <skos:definition xml:lang="en">{
+          "range": "80km",
+          "accuracy": "1m (resolution 0.1m)",
+          "notes": "Family of microwave short-range positioning systems with vessel equipment and three shore transponders (master and two slaves) set up specifically for surveys."
+          }</skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -564,8 +601,7 @@
         <skos:notation>SDN:L05::POS26</skos:notation>
         <skos:prefLabel xml:lang="en">Ultra Short Baseline Positioning Systems</skos:prefLabel>
         <skos:altLabel>USBL</skos:altLabel>
-        <skos:definition xml:lang="en">Systems dedicated to the positioning of subsea vehicles suchas ROV and AUV. They are based on acoustic transmitted signals between one or severaltransponders and one acoustic antenna installed on a surface vessel. The transponders aremounted on the underwater vehicle or are fixed on the seafloor. These underwater acousticpositioning systems are coupled with inertial navigation systems.
-        </skos:definition>
+        <skos:definition xml:lang="en">Systems dedicated to the positioning of subsea vehicles such as ROV and AUV. They are based on acoustic transmitted signals between one or several transponders and one acoustic antenna installed on a surface vessel. The transponders are mounted on the underwater vehicle or are fixed on the seafloor. These underwater acoustic positioning systems are coupled with inertial navigation systems.</skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-11-13 13:38:20.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -576,18 +612,14 @@
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
-    </skos:member>
-
-
-    <skos:member>
+    </skos:member>    <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS24/">
         <dc:identifier>SDN:L05::POS24</dc:identifier>
         <dce:identifier>SDN:L05::POS24</dce:identifier>
         <skos:notation>SDN:L05::POS24</skos:notation>
         <skos:prefLabel xml:lang="en">dead reckoning</skos:prefLabel>
         <skos:altLabel>deadReckoning</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "The process of estimating current position basedupon a previously determined position, or fix, and advancing that position based uponknown or estimated speeds over elapsed time, and course."}
-        </skos:definition>
+        <skos:definition xml:lang="en">{"notes": "The process of estimating current position based upon a previously determined position, or fix, and advancing that position based upon known or estimated speeds over elapsed time, and course."}</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -599,8 +631,6 @@
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
     </skos:member>
-
-
     <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS19/">
         <dc:identifier>SDN:L05::POS19</dc:identifier>
@@ -608,30 +638,27 @@
         <skos:notation>SDN:L05::POS19</skos:notation>
         <skos:prefLabel xml:lang="en">inertial navigation systems</skos:prefLabel>
         <skos:altLabel>INS</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Systems that determine spatial position usinghigh-accuracy inertial measurements plus input from other sensors such as doppler currentsensors to determine platform 3-D location by interpolation between satellite networkfixes."}
-        </skos:definition>
+        <skos:definition xml:lang="en">{"notes": "Systems that determine spatial position using high-accuracy inertial measurements plus input from other sensors such as doppler current sensors to determine platform 3-D location by interpolation between satellite network fixes."}</skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
         <owl:deprecated>false</owl:deprecated>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0304/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0753/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0754/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
+        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0900/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0885/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0833/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0482/"/>
         <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/W01/current/003/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0900/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0698/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0491/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0754/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0753/"/>
-        <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L22/current/TOOL0304/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L19/current/SDNKG01/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L21/current/ICAT06/"/>
         <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/W06/current/CLSS0002/"/>
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
     </skos:member>
-
-
     <skos:member>
       <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS23/">
         <dc:identifier>SDN:L05::POS23</dc:identifier>
@@ -639,8 +666,7 @@
         <skos:notation>SDN:L05::POS23</skos:notation>
         <skos:prefLabel xml:lang="en">radio tracking systems</skos:prefLabel>
         <skos:altLabel>radioTracking</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Directional radio receivers that determine thelocation of a mobile radio transmitter (such as a bird or animal tag) by triangulation."}
-        </skos:definition>
+        <skos:definition xml:lang="en">{"notes": "Directional radio receivers that determine the location of a mobile radio transmitter (such as a bird or animal tag) by triangulation."}</skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
         <skos:note xml:lang="en">accepted</skos:note>
@@ -652,7 +678,5 @@
         <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
       </skos:Concept>
     </skos:member>
-
-
   </skos:Collection>
 </rdf:RDF>

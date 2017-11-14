@@ -41,6 +41,8 @@ wget --output-document=NVS.L11.rdf http://vocab.nerc.ac.uk/collection/L11/curren
 wget --output-document=NVS.L23.rdf http://vocab.nerc.ac.uk/collection/L23/current/
 wget --output-document=NVS.L05.rdf http://vocab.nerc.ac.uk/collection/L05/current/
 # TODO: LO5POS is derived from L05
+
+
 cd ../../../..
 
 
