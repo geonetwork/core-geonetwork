@@ -731,7 +731,7 @@
           <field xpath="/gmd:MD_Metadata/gmd:language"/>
 
           <field name="locale"
-                 xpath="/gmd:MD_Metadata/gmd:locale"
+                 xpath="/gmd:MD_Metadata/gmd:locale[*/gmd:languageCode/*/@codeListValue != ancestor::gmd:MD_Metadata/gmd:language/*/@codeListValue]" or="locale" in="/gmd:MD_Metadata"
                  templateModeOnly="true"
                  notDisplayedIfMissing="true"
                  del=".">
@@ -807,6 +807,7 @@
         <section name="gmd:MD_Metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale[*/gmd:languageCode/*/@codeListValue != ancestor::gmd:MD_Metadata/gmd:language/*/@codeListValue]" or="locale" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
           <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
                  in="/gmd:MD_Metadata"/>
@@ -819,7 +820,6 @@
           <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
           <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:series"/>
           <field xpath="/gmd:MD_Metadata/gmd:describes"/>
           <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>
