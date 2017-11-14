@@ -23,19 +23,9 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusFinder;
@@ -45,7 +35,14 @@ import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
-import jeeves.server.context.ServiceContext;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Select entries from SKOS thesauri.

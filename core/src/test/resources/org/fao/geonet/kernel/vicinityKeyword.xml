@@ -1,23 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmd:MD_Keywords xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
-    <gmd:keyword>
-        <gco:CharacterString>biologie</gco:CharacterString>
-    </gmd:keyword>
-    <gmd:keyword>
-        <gco:CharacterString>Soziale Aspekte, Bevölkerung</gco:CharacterString>
-    </gmd:keyword>
-    <gmd:keyword>
-        <gco:CharacterString>aspetti militari</gco:CharacterString>
-    </gmd:keyword>
-    <gmd:type>
-        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
-    </gmd:type>
-    <gmd:thesaurusName>
-        <gmd:CI_Citation>
-            <gmd:title>
-                <gco:CharacterString>external.theme.gemet-theme</gco:CharacterString>
-            </gmd:title>
-            <gmd:date gco:nilReason="unknown"/>
-        </gmd:CI_Citation>
-    </gmd:thesaurusName>
-</gmd:MD_Keywords>
+<gmd:MD_Metadata  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+       xmlns:gco="http://www.isotc211.org/2005/gco">
+    <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+            <gmd:keyword>
+                <gco:CharacterString>biologie</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:keyword>
+                <gco:CharacterString>Soziale Aspekte, Bevölkerung</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:keyword>
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#EN">only it translation does have a meaning</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#IT">aspetti militari</gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:keyword>
+            <gmd:type>
+                <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+            </gmd:type>
+            <gmd:thesaurusName>
+                <gmd:CI_Citation>
+                    <gmd:title>
+                        <gco:CharacterString>external.theme.gemet-theme</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date gco:nilReason="unknown"/>
+                </gmd:CI_Citation>
+            </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+    </gmd:descriptiveKeywords>
+    <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+            <gmd:keyword>
+                <gco:CharacterString>Ecuador</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:keyword>
+                <gco:CharacterString>Central African Republic</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:type>
+                <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+            </gmd:type>
+            <gmd:thesaurusName>
+                <gmd:CI_Citation>
+                    <gmd:title>
+                        <gco:CharacterString>external.theme.regions</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date gco:nilReason="unknown"/>
+                </gmd:CI_Citation>
+            </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+    </gmd:descriptiveKeywords>
+</gmd:MD_Metadata>

@@ -29,10 +29,11 @@ import org.jdom.filter.Filter;
 
 public class ElementFinder implements Filter
 {
-    private static final long serialVersionUID = 1L;
-    private final String            elemName;
-    private final transient Namespace         ns;
-    private final String            parentName;
+    static private final long serialVersionUID = 1L;
+
+    private String elemName;
+    private Namespace ns;
+    private String parentName;
 
     public ElementFinder(String name, Namespace ns, String parent)
     {
@@ -59,5 +60,4 @@ public class ElementFinder implements Filter
     {
         return true;
     }
-
 }

@@ -1,3 +1,26 @@
+//==============================================================================
+//===	Copyright (C) 2001-2008 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.xlink;
 
 import com.google.common.collect.Lists;
@@ -44,21 +67,12 @@ public class ISO19139KeywordReplacer {
     static final Pair<Collection<Element>, Boolean> NULL = Pair.read((Collection<Element>) Collections.<Element>emptySet(), false);
 
     @Autowired
-    private IsoLanguagesMapper isoLanguagesMapper;
+    protected IsoLanguagesMapper isoLanguagesMapper;
 
     @Autowired
     private ThesaurusManager thesaurusManager;
 
     public ISO19139KeywordReplacer() {}
-
-
-    public Element replaceKeywordsByLocalXLinks (Element md) {
-        Status status = this.replaceAll(md);
-        if (status.isError()) {
-            throw new RuntimeException(status.getMsg());
-        }
-        return md;
-    }
 
     public Status replaceAll(Element md) {
         List<Element> nodes = null;
@@ -77,9 +91,6 @@ public class ISO19139KeywordReplacer {
                     status.add(new Status.Failure(String.format("No replacer for keyword %s", Xml.getString(node))));
                 }
                 if (xlinks.one() != null && !xlinks.one().isEmpty()) {
-                    for (Element element : xlinks.one()) {
-                        element.detach();
-                    }
                     Element parent = node.getParentElement();
                     int index = parent.indexOf(node);
                     if (xlinks.two()) {
@@ -99,9 +110,9 @@ public class ISO19139KeywordReplacer {
                 .collect(Status.STATUS_COLLECTOR);
     }
 
-    public Pair<Collection<Element>, Boolean> replace(Element keywordElt) throws Exception {
+    private Pair<Collection<Element>, Boolean> replace(Element keywordElt) throws Exception {
 
-        if (XLink.isXLink(keywordElt))
+        if (Utils.isXLink(keywordElt))
             return NULL;
 
         Collection<Element> results = new ArrayList<>();
@@ -110,16 +121,8 @@ public class ISO19139KeywordReplacer {
         List<Pair<Element, String>> allKeywords = getAllKeywords(keywordElt);
         java.util.Set<String> addedIds = new HashSet<>();
         for (Pair<Element, String> elem : allKeywords) {
-
-            if (elem.one().getParent() == null || elem.two() == null || elem.two().trim().isEmpty()) {
-                // already processed by another translation.
-                continue;
-            }
-            // Find the keywords in any thesaurus
-            KeywordsSearcher searcher = search(elem.two());
-            List<KeywordBean> keywords = searcher.getResults();
-            if (!keywords.isEmpty()) {
-                KeywordBean keyword = keywords.get(0);
+            KeywordBean keyword = searchInAnyThesaurus(elem.two());
+            if (keyword != null) {
                 elem.one().detach();
                 String thesaurus = keyword.getThesaurusKey();
                 String uriCode = keyword.getUriCode();
@@ -148,7 +151,7 @@ public class ISO19139KeywordReplacer {
         return Pair.read(results, done);
     }
 
-    public List<Pair<Element, String>> getAllKeywords(Element originalElem) {
+    protected List<Pair<Element, String>> getAllKeywords(Element originalElem) {
         List<Element> allKeywords1 = Utils.convertToList(originalElem.getDescendants(new ElementFinder(
                 "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
         List<Pair<Element, String>> allKeywords = new ArrayList<>();
@@ -169,14 +172,9 @@ public class ISO19139KeywordReplacer {
         return zipped;
     }
 
-    /**
-     * Search in all thesauri the given keyword
-     * @param keyword
-     * @return
-     * @throws Exception
-     */
-    private KeywordsSearcher search(String keyword) throws Exception {
+    protected KeywordBean searchInAnyThesaurus(String keyword) throws Exception {
         KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this.isoLanguagesMapper);
+        builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         builder.addLang("eng")
                 .addLang("ger")
                 .addLang("fre")
@@ -184,34 +182,25 @@ public class ISO19139KeywordReplacer {
                 .maxResults(1)
                 .keyword(keyword, KeywordSearchType.MATCH, true);
 
-        Collection<Thesaurus> thesauri = new ArrayList<>(thesaurusManager.getThesauriMap().values());
-        for (Iterator<Thesaurus> iterator = thesauri.iterator(); iterator.hasNext(); ) {
-            Thesaurus thesaurus = iterator.next();
-            if (!(thesaurus instanceof AllThesaurus)) {
-                builder.addThesaurus(thesaurus.getKey());
-            }
-        }
-
-        for (Thesaurus thesaurus : thesauri) {
-            if (thesaurus instanceof AllThesaurus) {
-                continue;
-            }
-            builder.addThesaurus(thesaurus.getKey());
-        }
+        thesaurusManager.getThesauriMap().values().stream()
+            .filter(thesaurus -> {return !(thesaurus instanceof AllThesaurus);})
+            .forEach(thesaurus -> { builder.addThesaurus(thesaurus.getKey());});
 
         KeywordsSearcher searcher = new KeywordsSearcher(this.isoLanguagesMapper, thesaurusManager);
-        builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         searcher.search(builder.build());
-        return searcher;
+        List<KeywordBean> results = searcher.getResults();
+        if (results.isEmpty()) return null;
+        else return results.get(0);
     }
 
-    public Element xlinkIt(String thesaurus, String keywordUris) {
+    private Element xlinkIt(String thesaurus, String keywordUris) {
         String[] keywords = keywordUris.split(",");
         Element descriptiveKeywords = new Element("descriptiveKeywords", Geonet.Namespaces.GMD);
         descriptiveKeywords.setAttribute(XLink.SHOW, XLink.SHOW_EMBED, XLink.NAMESPACE_XLINK);
         descriptiveKeywords.setAttribute(XLink.HREF,
                 localXlinkUrlPrefix + "thesaurus=" + thesaurus +
-                        "&id=" + StringUtils.join(keywords, ",") + "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords");
+                        "&id=" + StringUtils.join(keywords, ",") +
+                        "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords");
 
         return descriptiveKeywords;
     }
