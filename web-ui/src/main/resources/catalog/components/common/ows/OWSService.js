@@ -83,33 +83,36 @@
 
           // Push all leaves into a flat array of Layers
           // Also adjust crs (by inheritance) and url
-          var getFlatLayers = function(node, parentCrs) {
-            // current inherited crs (w/o dupes)
-            var crs = (parentCrs || []).concat(node.CRS || [])
-              .filter(function(value, index, array) {
-                return array.indexOf(value) === index;
-              });
+          var getFlatLayers = function(layer, inheritedCrs) {
+            if (angular.isArray(layer)) {
+              for (var i = 0, len = layer.length; i < len; i++) {
+                getFlatLayers(layer[i], inheritedCrs);
+              }
+            } else if (angular.isDefined(layer)) {
+              // replace with complete CRS list if available
+              if (layer.CRS && layer.CRS.length > inheritedCrs.length) {
+                inheritedCrs = layer.CRS;
+              }
 
-            // add to flat layer array if we're on a leave (layer w/o child)
-            if (!node.Layer) {
-              node.url = url;
-              node.CRS = crs;
-              layers.push(node);
-              return;
-            }
+              // add to flat layer array if we're on a leave (layer w/o child)
+              layer.url = url;
+              layer.CRS = inheritedCrs;
+              layers.push(layer);
 
-            // make sure Layer element is an array
-            if (node.Layer && !angular.isArray(node.Layer)) {
-              node.Layer = [node.Layer];
-            }
+              // make sure Layer element is an array
+              if (layer.Layer && !angular.isArray(layer.Layer)) {
+                layer.Layer = [layer.Layer];
+              }
 
-            // process children recursively
-            for (var i = 0, len = node.Layer.length; i < len; i++) {
-              getFlatLayers(node.Layer[i], crs);
+              // process recursively on child layers
+              getFlatLayers(layer.Layer, inheritedCrs);
             }
           };
 
-          getFlatLayers(result.Capability);
+          getFlatLayers(result.Capability.Layer, []);
+          if (!angular.isArray(result.Capability.Layer)) {
+            result.Capability.Layer = [result.Capability.Layer];
+          }
           result.Capability.layers = layers;
           result.Capability.version = result.version;
           return result.Capability;
