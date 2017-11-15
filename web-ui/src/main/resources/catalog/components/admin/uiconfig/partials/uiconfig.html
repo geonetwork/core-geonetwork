@@ -550,6 +550,17 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="defaultSearchString">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <div>
+          <input type="text"
+               class="form-control"
+               data-ng-model="mCfg[key]"/>&nbsp;<p class="help-block"
+               data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+            {{('ui-' + key + '-help') | translate}} </p>
+        </div>        
+      </div>
+
       <div data-ng-switch-when="graticuleOgcService">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
         <div class="input-group">
