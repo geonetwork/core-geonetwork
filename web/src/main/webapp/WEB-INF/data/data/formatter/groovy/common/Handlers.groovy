@@ -154,11 +154,12 @@ public class Handlers {
 
         related.getChildren().each { rel ->
             def type = rel.name
-            def direction = Direction.CHILD
-            def association = rel.getAttributeValue("association")
 
             rel.getChildren("item").each { item ->
+                def direction = Direction.CHILD
+                def association
                 if (type == "siblings") {
+                    association = item.getChildText("associationType")
                     if (association != null && association != '') {
                         type = association;
                         direction = Direction.PARENT
@@ -179,21 +180,24 @@ public class Handlers {
                 if (relatedIdInfo != null && direction == Direction.PARENT) {
                     def parentUUID = relatedIdInfo['uuid'] as String
                     def report = getRelatedReport(relatedIdInfo['id'] as int, parentUUID)
-                    report.getChildren("relation").each { potentialSiblingRel ->
-                         def relType = potentialSiblingRel.getAttributeValue("type")
-                        if (association != null) {
-                            boolean isAggSibling = potentialSiblingRel.getChildren("agg_$association").any {
-                                it.getTextTrim() == parentUUID
-                            }
-                            if (isAggSibling) {
-                                addRelation(hierarchy, parentUUID, potentialSiblingRel, association, Direction.SIBLING)
-                            }
-                        } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
-                            addRelation(hierarchy, parentUUID, potentialSiblingRel, relType, Direction.SIBLING)
-                        } else if (relType == 'children') {
-                            addRelation(hierarchy, parentUUID, potentialSiblingRel, "siblings", Direction.SIBLING)
-                        }
 
+                    report.getChildren().each { potentialSiblingRel ->
+                        def relType = potentialSiblingRel.name
+                        potentialSiblingRel.getChildren("item").each { potentialSiblingItem ->
+                            if (association != null) {
+                                boolean isAggSibling = potentialSiblingItem.getChildren("agg_$association").any {
+                                    it.getTextTrim() == parentUUID
+                                }
+                                if (isAggSibling) {
+                                    addRelation(hierarchy, parentUUID, potentialSiblingItem, association, Direction.SIBLING)
+                                }
+                            } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
+                                addRelation(hierarchy, parentUUID, potentialSiblingItem, relType, Direction.SIBLING)
+                            } else if (relType == 'children') {
+                                addRelation(hierarchy, parentUUID, potentialSiblingItem, "siblings", Direction.SIBLING)
+                            }
+
+                        }
                     }
                 }
             }
@@ -247,6 +251,7 @@ public class Handlers {
       def link = new AssociatedLink(href, title, cls)
       link.setAbstract(desc);
       link.metadataId = relUuid;
+      link.setLogo(rel.getChildText('logo'));
 
       hierarchy.put(linkType, link)
 

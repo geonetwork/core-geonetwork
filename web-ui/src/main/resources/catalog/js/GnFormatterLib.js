@@ -132,7 +132,7 @@
       parentParam = '&parentUuid=' + parentUuid;
     }
 
-    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&id=' +
+    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&uuid=' +
         metadataId + parentParam, {
           dataType: 'text',
           success: function(html) {
