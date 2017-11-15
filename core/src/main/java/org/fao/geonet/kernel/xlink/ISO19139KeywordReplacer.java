@@ -47,7 +47,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -67,8 +66,6 @@ public class ISO19139KeywordReplacer {
     String localXlinkUrlPrefix = "local://srv/api/registries/vocabularies/keyword?";
     //local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.gemet&amp;id=http://www.eionet.europa.eu/gemet/concept/4577&amp;lang=eng,ger,fre,ita
 
-    static final Pair<Collection<Element>, Boolean> NULL = Pair.read((Collection<Element>) Collections.<Element>emptySet(), false);
-
     @Autowired
     protected IsoLanguagesMapper isoLanguagesMapper;
 
@@ -78,33 +75,17 @@ public class ISO19139KeywordReplacer {
     public ISO19139KeywordReplacer() {}
 
     public Status replaceAll(Element md) {
-        List<Element> nodes = null;
-        List<Status> status = new ArrayList<Status>();
-
         try {
-            nodes = (List<Element>)Xml.selectNodes(md, ROOT_XML_PATH, NAMESPACES);
+            List<Element> nodes = (List<Element>) Xml.selectNodes(md, ROOT_XML_PATH, NAMESPACES);
+            return nodes.stream()
+                    .map(node -> {return this.replace(node);})
+                    .collect(Status.STATUS_COLLECTOR);
         } catch (JDOMException e) {
             return new Status.Failure(String.format("%s- selectNodes JDOMEx: %s", "keyword", ROOT_XML_PATH));
         }
-        for (Element node : nodes) {
-            try {
-                Pair<Collection<Element>, Boolean> xlinks = this.replace(node);
-                if(xlinks == null) {
-                    status.add(new Status.Failure(String.format("No replacer for keyword %s", Xml.getString(node))));
-                } else {
-                    status.add(xlinks.two() ?
-                            new Status() : new Status.Failure(String.format("Incomplete match for keyword %s", Xml.getString(node))));
-                }
-            } catch (Exception e) {
-                status.add(new Status.Failure(String.format("Error during match for keyword %s", Xml.getString(node))));
-            }
-
-        }
-        return status.stream()
-                .collect(Status.STATUS_COLLECTOR);
     }
 
-    private Pair<Collection<Element>, Boolean> replace(Element keywordElt) throws Exception {
+    private Status replace(Element keywordElt) {
         Collection<Element> results = new ArrayList<>();
 
         // get all keywords from the gmd:descripteKeyword block
@@ -129,20 +110,17 @@ public class ISO19139KeywordReplacer {
             }
         }
 
-        // need to return null if not matche are found so the calling class
-        // knows there is not changes made
         if (results.isEmpty()) {
-            return NULL;
+            new Status.Failure(String.format("No replacer for keyword %s", Xml.getString(keywordElt)));
         }
 
-        boolean done = true;
         List<Element> allKeywords1 = Utils.convertToList(keywordElt.getDescendants(new ElementFinder(
                 "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
         if (allKeywords1.size() > 0) {
             // still have some elements that need to be made re-usable
-            done = false;
+            return new Status.Failure(String.format("Incomplete match for keyword %s", Xml.getString(keywordElt)));
         }
-        return Pair.read(results, done);
+        return new Status();
     }
 
     protected List<Pair<Element, String>> getAllKeywords(Element originalElem) {
@@ -166,7 +144,7 @@ public class ISO19139KeywordReplacer {
         return zipped;
     }
 
-    protected KeywordBean searchInAnyThesaurus(String keyword) throws Exception {
+    protected KeywordBean searchInAnyThesaurus(String keyword) {
         KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this.isoLanguagesMapper);
         builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
         builder.addLang("eng")
@@ -181,10 +159,14 @@ public class ISO19139KeywordReplacer {
             .forEach(thesaurus -> { builder.addThesaurus(thesaurus.getKey());});
 
         KeywordsSearcher searcher = new KeywordsSearcher(this.isoLanguagesMapper, thesaurusManager);
-        searcher.search(builder.build());
-        List<KeywordBean> results = searcher.getResults();
-        if (results.isEmpty()) return null;
-        else return results.get(0);
+        try {
+            searcher.search(builder.build());
+            List<KeywordBean> results = searcher.getResults();
+            if (!results.isEmpty()) return results.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private Element xlinkIt(String thesaurus, String keywordUris) {
