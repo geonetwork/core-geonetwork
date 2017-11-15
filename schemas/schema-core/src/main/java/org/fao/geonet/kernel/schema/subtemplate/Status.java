@@ -27,7 +27,7 @@ import java.util.stream.Collector;
 
 public class Status {
     protected String msg = "";
-    private boolean error = false;
+    protected boolean error = false;
 
     public Status() {
     }
@@ -59,8 +59,35 @@ public class Status {
         }
     }
 
+    static public class LookingForOne extends Status {
+
+        public LookingForOne(String msg) {
+            this.msg = msg;
+            this.error = true;
+        }
+
+        public Status add(Status status) {
+            if (!status.isError()) {
+                this.error = false;
+                msg = "";
+            } else {
+                msg = msg + "|" + status.msg;
+            }
+            return this;
+        }
+    }
+
     public static Collector<Status, Status, Status> STATUS_COLLECTOR = Collector.of(
             () -> new Status(),
             (result, status) -> result.add(status),
             (st1, st2) -> {return st1.add(st2);});
+
+    public static Collector<Status, Status, Status> getOneSufficientCollector(String msg) {
+        return Collector.of(
+                () -> new LookingForOne(msg),
+                (result, status) -> result.add(status),
+                (st1, st2) -> {
+                    return st1.add(st2);
+                });
+    }
 }

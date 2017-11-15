@@ -71,16 +71,16 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         toTest.isoLanguagesMapper = isoLangMapper;
     }
 
-    @Test
-    public void list() throws Exception {
-        Element keywordElt = getSubtemplateXml(KEYWORD_RESOURCE);
-        Element root = new Element("descriptiveKeywords", GMD);
-        root.addContent(keywordElt);
-
-        List<Pair<Element, String>> allKeywords = toTest.getAllKeywords(root);
-
-        assertEquals(6, allKeywords.size());
-    }
+//    @Test
+//    public void list() throws Exception {
+//        Element keywordElt = getSubtemplateXml(KEYWORD_RESOURCE);
+//        Element root = new Element("descriptiveKeywords", GMD);
+//        root.addContent(keywordElt);
+//
+//        List<Pair<Element, String>> allKeywords = toTest.getAllKeywords(root);
+//
+//        assertEquals(6, allKeywords.size());
+//    }
 
     @Test
     public void replaceAll() throws IOException, JDOMException {
@@ -187,11 +187,15 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
-    public void oneFailureMeansNoReplacementAtAll() throws IOException, JDOMException {
+    public void statusFailure() throws IOException, JDOMException {
         Element md = getSubtemplateXml(KEYWORD_RESOURCE);
         Xml.selectElement(md,
                 "*//child::gco:CharacterString[text()='Soziale Aspekte, Bevölkerung']")
                 .setText("I don't exist");
+        Xml.selectElement(md,
+                "*//child::gco:CharacterString[text()='Ecuador']")
+                .setText("Nowhereland");
+
         String initial = Xml.getString(md);
 
         Status status = toTest.replaceAll(md);
@@ -199,6 +203,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         String replaced = Xml.getString(md);
         assertFalse(initial.equals(replaced));
         assertTrue(status.isError());
+        assertEquals("||Incomplete match for keyword |I don't exist||Incomplete match for keyword |Nowhereland", status.getMsg());
     }
 
     @Test

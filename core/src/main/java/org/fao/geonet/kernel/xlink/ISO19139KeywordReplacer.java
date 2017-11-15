@@ -26,8 +26,6 @@ package org.fao.geonet.kernel.xlink;
 import com.google.common.collect.Lists;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -46,9 +44,18 @@ import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.fao.geonet.kernel.schema.subtemplate.Status.STATUS_COLLECTOR;
 
 /**
  * Created by fgravin on 10/26/17.
@@ -86,62 +93,45 @@ public class ISO19139KeywordReplacer {
     }
 
     private Status replace(Element keywordElt) {
-        Collection<Element> results = new ArrayList<>();
-
-        // get all keywords from the gmd:descripteKeyword block
-        List<Pair<Element, String>> allKeywords = getAllKeywords(keywordElt);
+        // get all keywords from the gmd:descripveKeyword block
+        Map<Element, Stream<String>> allKeywords = getAllKeywords(keywordElt);
         Element parent = keywordElt.getParentElement();
         int index = parent.indexOf(keywordElt);
         keywordElt.detach();
         java.util.Set<String> addedIds = new HashSet<>();
-        for (Pair<Element, String> elem : allKeywords) {
-            KeywordBean keyword = searchInAnyThesaurus(elem.two());
-            if (keyword != null) {
-                elem.one().detach();
-                String thesaurus = keyword.getThesaurusKey();
-                String uriCode = keyword.getUriCode();
+        return allKeywords.keySet().stream().map(elem -> {
+            return allKeywords.get(elem).map(keyword -> {
+                KeywordBean keywordBean = searchInAnyThesaurus(keyword);
+                if (keywordBean != null) {
+                    elem.detach();
+                    String thesaurus = keywordBean.getThesaurusKey();
+                    String uriCode = keywordBean.getUriCode();
 
-                // do not add if a keyword with the same ID and thesaurus has previously been added
-                if (addedIds.add(thesaurus + "@@" + uriCode)) {
-                    Element descriptiveKeywords = xlinkIt(thesaurus, uriCode);
-                    results.add(descriptiveKeywords);
-                    parent.addContent(index, descriptiveKeywords);
+                    // do not add if a keyword with the same ID and thesaurus has previously been added
+                    if (addedIds.add(thesaurus + "@@" + uriCode)) {
+                        Element descriptiveKeywords = xlinkIt(thesaurus, uriCode);
+                        parent.addContent(index, descriptiveKeywords);
+                    }
+                    return new Status();
+                } else {
+                    return new Status.Failure(keyword);
                 }
-            }
-        }
-
-        if (results.isEmpty()) {
-            new Status.Failure(String.format("No replacer for keyword %s", Xml.getString(keywordElt)));
-        }
-
-        List<Element> allKeywords1 = Utils.convertToList(keywordElt.getDescendants(new ElementFinder(
-                "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
-        if (allKeywords1.size() > 0) {
-            // still have some elements that need to be made re-usable
-            return new Status.Failure(String.format("Incomplete match for keyword %s", Xml.getString(keywordElt)));
-        }
-        return new Status();
+            }).collect(Status.getOneSufficientCollector(String.format("Incomplete match for keyword ")));
+        }).collect(STATUS_COLLECTOR);
     }
 
-    protected List<Pair<Element, String>> getAllKeywords(Element originalElem) {
-        List<Element> allKeywords1 = Utils.convertToList(originalElem.getDescendants(new ElementFinder(
-                "keyword", Geonet.Namespaces.GMD, "MD_Keywords")), Element.class);
-        List<Pair<Element, String>> allKeywords = new ArrayList<>();
-        for (Element element : allKeywords1) {
-            allKeywords.addAll(zip(element, Utils.convertToList(element.getDescendants(new ElementFinder(
-                    "CharacterString", Geonet.Namespaces.GCO, "keyword")), Element.class)));
-            allKeywords.addAll(zip(element, Utils.convertToList(element.getDescendants(new ElementFinder(
-                    "LocalisedCharacterString", Geonet.Namespaces.GMD, "textGroup")), Element.class)));
-        }
+    protected Map<Element, Stream<String>> getAllKeywords(Element originalElem) {
+        Map<Element, Stream<String>> allKeywords = new HashMap<>();
+        Iterator<Element> originalElemsIt = originalElem.getDescendants(new ElementFinder("keyword", GMD, "MD_Keywords"));
+        streamFromIterator(originalElemsIt).forEach(element -> {
+            Iterator<Element> charStringElemIt = element.getDescendants(new ElementFinder("CharacterString", GCO, "keyword"));
+            Iterator<Element> localisedStringElemIt = element.getDescendants(new ElementFinder("LocalisedCharacterString", GMD, "textGroup"));
+            Stream<String> bothKindOfString = Stream.concat(
+                    streamFromIterator(charStringElemIt), streamFromIterator(localisedStringElemIt)).
+                    map(elem -> {return elem.getTextTrim();});
+            allKeywords.put(element, bothKindOfString);
+        });
         return allKeywords;
-    }
-
-    private Collection<? extends Pair<Element, String>> zip(Element keywordElem, List<Element> convertToList) {
-        List<Pair<Element, String>> zipped = new ArrayList<>();
-        for (Element word : convertToList) {
-            zipped.add(Pair.read(keywordElem, word.getTextTrim()));
-        }
-        return zipped;
     }
 
     protected KeywordBean searchInAnyThesaurus(String keyword) {
@@ -171,7 +161,7 @@ public class ISO19139KeywordReplacer {
 
     private Element xlinkIt(String thesaurus, String keywordUris) {
         String[] keywords = keywordUris.split(",");
-        Element descriptiveKeywords = new Element("descriptiveKeywords", Geonet.Namespaces.GMD);
+        Element descriptiveKeywords = new Element("descriptiveKeywords", GMD);
         descriptiveKeywords.setAttribute(XLink.SHOW, XLink.SHOW_EMBED, XLink.NAMESPACE_XLINK);
         descriptiveKeywords.setAttribute(XLink.HREF,
                 localXlinkUrlPrefix + "thesaurus=" + thesaurus +
@@ -179,5 +169,9 @@ public class ISO19139KeywordReplacer {
                         "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords");
 
         return descriptiveKeywords;
+    }
+
+    private <T> Stream<T> streamFromIterator(Iterator<T> iterator) {
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
     }
 }
