@@ -166,6 +166,27 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
     }
 
     @Test
+    public void xlinkHasToBeLetInPlaceNotAnError() throws IOException, JDOMException {
+        Element md = getSubtemplateXml(KEYWORD_RESOURCE);
+        List<Element> descKeywords = (List<Element>) Xml.selectNodes(md, ".//gmd:descriptiveKeywords");
+        descKeywords.get(1).detach();
+        Element xlinkedElem = Xml.loadString(
+                "<gmd:descriptiveKeywords xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" " +
+                        "xmlns:xlink=\"http://www.w3.org/1999/xlink\" " + "" +
+                        "xlink:show=\"embed\" " +
+                        "href=\"local://srv/api/registries/vocabularies/keyword?thesaurus=external.place.regions&amp;" +
+                        "id=http://www.naturalearthdata.com/ne_admin#Country/ECU&amp;multiple=false&amp;" +
+                        "lang=fre,eng,ger,ita,roh&amp;textgroupOnly&amp;skipdescriptivekeywords\" />", false);
+        ((Element)descKeywords.get(0).getParent()).addContent(xlinkedElem);
+        Status status = toTest.replaceAll(md);
+
+        assertFalse(status.isError());
+        Set<String> themes = getXLinkedKeyword(md);
+        assertEquals(4, themes.size());
+        assertTrue(themes.contains("external.place.regions|ECU"));
+    }
+
+    @Test
     public void oneFailureMeansNoReplacementAtAll() throws IOException, JDOMException {
         Element md = getSubtemplateXml(KEYWORD_RESOURCE);
         Xml.selectElement(md,

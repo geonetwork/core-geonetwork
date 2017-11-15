@@ -30,7 +30,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.KeywordBean;
-import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.schema.subtemplate.Status;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
@@ -46,7 +45,11 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by fgravin on 10/26/17.
@@ -102,10 +105,6 @@ public class ISO19139KeywordReplacer {
     }
 
     private Pair<Collection<Element>, Boolean> replace(Element keywordElt) throws Exception {
-
-        if (Utils.isXLink(keywordElt))
-            return NULL;
-
         Collection<Element> results = new ArrayList<>();
 
         // get all keywords from the gmd:descripteKeyword block
