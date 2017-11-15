@@ -84,22 +84,13 @@ public class ISO19139KeywordReplacer {
             return new Status.Failure(String.format("%s- selectNodes JDOMEx: %s", "keyword", ROOT_XML_PATH));
         }
         for (Element node : nodes) {
-
             try {
                 Pair<Collection<Element>, Boolean> xlinks = this.replace(node);
                 if(xlinks == null) {
                     status.add(new Status.Failure(String.format("No replacer for keyword %s", Xml.getString(node))));
-                }
-                if (xlinks.one() != null && !xlinks.one().isEmpty()) {
-                    Element parent = node.getParentElement();
-                    int index = parent.indexOf(node);
-                    if (xlinks.two()) {
-                        parent.setContent(index, xlinks.one());
-                    } else {
-                        parent.addContent(index, xlinks.one());
-                    }
+                } else {
                     status.add(xlinks.two() ?
-                        new Status() : new Status.Failure(String.format("Incomplete match for keyword %s", Xml.getString(node))));
+                            new Status() : new Status.Failure(String.format("Incomplete match for keyword %s", Xml.getString(node))));
                 }
             } catch (Exception e) {
                 status.add(new Status.Failure(String.format("Error during match for keyword %s", Xml.getString(node))));
@@ -119,6 +110,9 @@ public class ISO19139KeywordReplacer {
 
         // get all keywords from the gmd:descripteKeyword block
         List<Pair<Element, String>> allKeywords = getAllKeywords(keywordElt);
+        Element parent = keywordElt.getParentElement();
+        int index = parent.indexOf(keywordElt);
+        keywordElt.detach();
         java.util.Set<String> addedIds = new HashSet<>();
         for (Pair<Element, String> elem : allKeywords) {
             KeywordBean keyword = searchInAnyThesaurus(elem.two());
@@ -131,6 +125,7 @@ public class ISO19139KeywordReplacer {
                 if (addedIds.add(thesaurus + "@@" + uriCode)) {
                     Element descriptiveKeywords = xlinkIt(thesaurus, uriCode);
                     results.add(descriptiveKeywords);
+                    parent.addContent(index, descriptiveKeywords);
                 }
             }
         }
