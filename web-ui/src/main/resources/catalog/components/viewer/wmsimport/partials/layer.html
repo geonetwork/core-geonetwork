@@ -5,7 +5,9 @@
     <div class="flex-row width-100 flex-align-stretch">
       <div class="flex-col flex-grow">
         <a href=""
-           data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)">
+           class="truncate" 
+           data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
+           title="{{member.Title || member.title}}">
           <i class='fa'
              data-ng-class='::isParentNode ? "fa-folder-o" : ""'></i>
           {{member.Title || member.title}}
@@ -15,6 +17,12 @@
         </a>
       </div>
       <div class="flex-spacer"></div>
+      <a href=""
+         data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
+         data-ng-if="!isParentNode" class="btn btn-default btn-xs">
+        <span data-translate="">addToMap</span>
+      </a>
+      <div class="flex-spacer" data-ng-if="member.Style.length > 1></div>
       <div class="flex-col">
         <div class="gn-layer-actions"
              data-ng-if="member.Style.length > 1">
