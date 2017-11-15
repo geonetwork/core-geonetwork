@@ -103,8 +103,9 @@
 
         </h1>
 
-        <div class="alert alert-info" data-ng-bind-html="mdView.current.record.abstract | newlines"/>
-
+        <div class="alert alert-info"
+             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | newlines"/>
+        
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="mdView.current.record.status_text.length > 0"
              title="{{mdView.current.record.status_text[0]}}"
