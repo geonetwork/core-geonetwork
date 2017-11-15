@@ -23,54 +23,21 @@
 
 package org.fao.geonet.kernel.xlink;
 
-import com.google.common.collect.Lists;
-import jeeves.xlink.XLink;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.schema.subtemplate.Status;
-import org.fao.geonet.kernel.search.KeywordsSearcher;
-import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
-import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
-import org.fao.geonet.kernel.search.keyword.KeywordSort;
-import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterators;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
-import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.fao.geonet.kernel.schema.subtemplate.Status.STATUS_COLLECTOR;
 
 /**
  * Created by fgravin on 10/26/17.
  */
 public class ISO19139KeywordReplacer {
 
-    private final String ROOT_XML_PATH = ".//gmd:MD_Keywords/parent::*";
+    protected static final String ROOT_XML_PATH = ".//gmd:MD_Keywords/parent::*";
 
-
-    private static final ArrayList<Namespace> NAMESPACES =
-            Lists.newArrayList(
-                    ISO19139Namespaces.GMD,
-                    ISO19139Namespaces.GCO);
-
-    String localXlinkUrlPrefix = "local://srv/api/registries/vocabularies/keyword?";
+    protected static final String localXlinkUrlPrefix = "local://srv/api/registries/vocabularies/keyword?";
     //local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.gemet&amp;id=http://www.eionet.europa.eu/gemet/concept/4577&amp;lang=eng,ger,fre,ita
 
     @Autowired
@@ -82,96 +49,16 @@ public class ISO19139KeywordReplacer {
     public ISO19139KeywordReplacer() {}
 
     public Status replaceAll(Element md) {
-        try {
-            List<Element> nodes = (List<Element>) Xml.selectNodes(md, ROOT_XML_PATH, NAMESPACES);
-            return nodes.stream()
-                    .map(node -> {return this.replace(node);})
-                    .collect(Status.STATUS_COLLECTOR);
-        } catch (JDOMException e) {
-            return new Status.Failure(String.format("%s- selectNodes JDOMEx: %s", "keyword", ROOT_XML_PATH));
-        }
+       ReplacerWorker worker = new ReplacerWorker(isoLanguagesMapper, thesaurusManager);
+       return worker.replaceAll(md);
     }
 
-    private Status replace(Element keywordElt) {
-        // get all keywords from the gmd:descripveKeyword block
-        Map<Element, Stream<String>> allKeywords = getAllKeywords(keywordElt);
-        Element parent = keywordElt.getParentElement();
-        int index = parent.indexOf(keywordElt);
-        keywordElt.detach();
-        java.util.Set<String> addedIds = new HashSet<>();
-        return allKeywords.keySet().stream().map(elem -> {
-            return allKeywords.get(elem).map(keyword -> {
-                KeywordBean keywordBean = searchInAnyThesaurus(keyword);
-                if (keywordBean != null) {
-                    elem.detach();
-                    String thesaurus = keywordBean.getThesaurusKey();
-                    String uriCode = keywordBean.getUriCode();
+    /**
+     *      for test purposes, ....
+     **/
+    public KeywordBean searchInAnyThesaurus(String keyword) {
+        ReplacerWorker worker = new ReplacerWorker(isoLanguagesMapper, thesaurusManager);
+        return worker.searchInAnyThesaurus(keyword);
 
-                    // do not add if a keyword with the same ID and thesaurus has previously been added
-                    if (addedIds.add(thesaurus + "@@" + uriCode)) {
-                        Element descriptiveKeywords = xlinkIt(thesaurus, uriCode);
-                        parent.addContent(index, descriptiveKeywords);
-                    }
-                    return new Status();
-                } else {
-                    return new Status.Failure(keyword);
-                }
-            }).collect(Status.getOneSufficientCollector(String.format("Incomplete match for keyword ")));
-        }).collect(STATUS_COLLECTOR);
-    }
-
-    protected Map<Element, Stream<String>> getAllKeywords(Element originalElem) {
-        Map<Element, Stream<String>> allKeywords = new HashMap<>();
-        Iterator<Element> originalElemsIt = originalElem.getDescendants(new ElementFinder("keyword", GMD, "MD_Keywords"));
-        streamFromIterator(originalElemsIt).forEach(element -> {
-            Iterator<Element> charStringElemIt = element.getDescendants(new ElementFinder("CharacterString", GCO, "keyword"));
-            Iterator<Element> localisedStringElemIt = element.getDescendants(new ElementFinder("LocalisedCharacterString", GMD, "textGroup"));
-            Stream<String> bothKindOfString = Stream.concat(
-                    streamFromIterator(charStringElemIt), streamFromIterator(localisedStringElemIt)).
-                    map(elem -> {return elem.getTextTrim();});
-            allKeywords.put(element, bothKindOfString);
-        });
-        return allKeywords;
-    }
-
-    protected KeywordBean searchInAnyThesaurus(String keyword) {
-        KeywordSearchParamsBuilder builder = new KeywordSearchParamsBuilder(this.isoLanguagesMapper);
-        builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-        builder.addLang("eng")
-                .addLang("ger")
-                .addLang("fre")
-                .addLang("ita")
-                .maxResults(1)
-                .keyword(keyword, KeywordSearchType.MATCH, true);
-
-        thesaurusManager.getThesauriMap().values().stream()
-            .filter(thesaurus -> {return !(thesaurus instanceof AllThesaurus);})
-            .forEach(thesaurus -> { builder.addThesaurus(thesaurus.getKey());});
-
-        KeywordsSearcher searcher = new KeywordsSearcher(this.isoLanguagesMapper, thesaurusManager);
-        try {
-            searcher.search(builder.build());
-            List<KeywordBean> results = searcher.getResults();
-            if (!results.isEmpty()) return results.get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private Element xlinkIt(String thesaurus, String keywordUris) {
-        String[] keywords = keywordUris.split(",");
-        Element descriptiveKeywords = new Element("descriptiveKeywords", GMD);
-        descriptiveKeywords.setAttribute(XLink.SHOW, XLink.SHOW_EMBED, XLink.NAMESPACE_XLINK);
-        descriptiveKeywords.setAttribute(XLink.HREF,
-                localXlinkUrlPrefix + "thesaurus=" + thesaurus +
-                        "&id=" + StringUtils.join(keywords, ",") +
-                        "&multiple=false&lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords");
-
-        return descriptiveKeywords;
-    }
-
-    private <T> Stream<T> streamFromIterator(Iterator<T> iterator) {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
     }
 }

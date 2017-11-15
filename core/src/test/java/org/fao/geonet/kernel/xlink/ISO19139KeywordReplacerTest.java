@@ -23,7 +23,6 @@
 package org.fao.geonet.kernel.xlink;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.schema.subtemplate.Status;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -42,11 +41,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by fgravin on 10/26/17.
