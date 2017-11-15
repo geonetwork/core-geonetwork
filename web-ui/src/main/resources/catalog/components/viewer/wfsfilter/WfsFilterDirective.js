@@ -309,7 +309,7 @@
                 indexObject.setFielsdOrder();
               }
             }
-            scope.hmActive = appProfile && appProfile.heatmap || true;
+            scope.hmActive = appProfile ? appProfile.heatmap : true;
 
             scope.resetFacets().then(scope.restoreInitialFilters);
           }
@@ -788,6 +788,45 @@
 
             scope.filtersChanged = inputChanged || paramsChanged || geomChanged;
           });
+
+          // returns true if there is an active filter for this field
+          // field object is optional
+          scope.isFilterActive = function(facetName, field) {
+            // no available value: return false
+            if (!scope.output[facetName]) {
+              return false;
+            }
+
+            // special case for dates
+            if (scope.output[facetName].type == 'date') {
+              var values = scope.output[facetName].values;
+
+              // no dates defined: leave
+              if (!field || !values) {
+                return false;
+              }
+
+              // check if there is a valid "higher than" or "lower than" filter
+              var lowerBound = field.dates && field.dates[0];
+              var upperBound = field.dates && field.dates[field.dates.length-1];
+              var lowerActive = values.from &&
+                moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf()
+                > lowerBound;
+              var upperActive = values.to &&
+                moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf()
+                < upperBound;
+              return lowerActive || upperActive;
+            }
+
+            // special case for geometry
+            if (facetName == 'geometry') {
+              return scope.ctrl.searchGeometry &&
+                scope.ctrl.searchGeometry !== ',,,';
+            }
+
+            // other fields: the filter must be active
+            return true;
+          }
         }
       };
     }]);

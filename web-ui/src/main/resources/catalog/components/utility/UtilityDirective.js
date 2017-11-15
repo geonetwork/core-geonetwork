@@ -907,6 +907,7 @@
 
                       // call the change function if the value was changed
                       if (changed) {
+                        scope.internalChange = true;
                         scope.onChangeFn();
                       }
                     }
@@ -947,6 +948,11 @@
             scope.$watchCollection('date', function(newValue, oldValue) {
               if (!scope.date) {
                 scope.date = {};
+                return;
+              }
+              // skip if internal change
+              if (scope.internalChange) {
+                scope.internalChange = false;
                 return;
               }
               var dateFrom = (newValue && newValue.from) || '';
