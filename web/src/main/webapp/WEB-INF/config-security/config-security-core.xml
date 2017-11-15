@@ -97,7 +97,7 @@
       <list>
         <ref bean="securityContextPersistenceFilter"/>
         <!-- To disable csrf security (not recommended) comment the following line -->
-        <ref bean="csrfFilter" />
+        <!--<ref bean="csrfFilter" />-->
         <!-- To disable csrf security (not recommended) comment the upper line -->
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
@@ -346,7 +346,6 @@
   <bean class="org.fao.geonet.kernel.security.listener.UpdateTimestampListener"
         id="updateTimestampListener">
   </bean>
-
 
   <bean id="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter">
     <constructor-arg>
