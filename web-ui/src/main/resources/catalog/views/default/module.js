@@ -367,7 +367,7 @@
           sortBy: gnSearchSettings.sortBy || 'relevance'
         },
         params: {
-          'facet.q': '',
+          'facet.q': gnSearchSettings.defaultSearchString || '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
           sortBy: gnSearchSettings.sortBy || 'relevance'
         },
