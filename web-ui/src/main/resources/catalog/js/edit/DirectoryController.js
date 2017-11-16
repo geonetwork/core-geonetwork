@@ -504,6 +504,7 @@
         angular.extend(gnCurrentEdit, {
           id: id,
           formId: '#gn-editor-' + id,
+          containerId: '#gn-editor-container-' + id,
           tab: 'simple',
           displayTooltips: false,
           compileScope: $scope,
@@ -512,13 +513,13 @@
         });
 
         $scope.gnCurrentEdit = gnCurrentEdit;
-        $scope.editorFormUrl = '';
 
-        // put this out of the flow to clear the form first
-        setTimeout(function() {
-          $scope.editorFormUrl = gnEditor
-              .buildEditUrlPrefix('editor') +
-              '&starteditingsession=yes&random=' + i++;
+        $scope.editorFormUrl = gnEditor
+            .buildEditUrlPrefix('editor') +
+            '&starteditingsession=yes&random=' + i++;
+
+        gnEditor.load($scope.editorFormUrl).then(function() {
+          // $scope.onFormLoad();
         });
       };
 

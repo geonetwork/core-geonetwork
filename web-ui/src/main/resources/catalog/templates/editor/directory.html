@@ -485,9 +485,9 @@
           </div>
         </div>
         <div class="panel-body">
-          <fieldset data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-            <div data-ng-include="editorFormUrl"
-                 data-onload="onFormLoad()"></div>
+          <fieldset ng-if="activeEntry"
+                    ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+            <div id="gn-editor-container-{{activeEntry['geonet:info'].id}}"></div>
           </fieldset>
         </div>
       </div>
