@@ -83,7 +83,7 @@
               <xsl:value-of select="tokenize(., '=')[1]"/>
             </key>
             <val>
-              <xsl:value-of select="tokenize(., '=')[2]"/>
+              <xsl:value-of select="java:decodeURLParameter(tokenize(., '=')[2])"/>
             </val>
           </param>
         </xsl:for-each>
