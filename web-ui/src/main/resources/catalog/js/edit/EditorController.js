@@ -115,11 +115,13 @@
     'gnEditor', 'gnSearchManagerService', 'gnSchemaManagerService',
     'gnConfigService', 'gnUtilityService', 'gnOnlinesrc',
     'gnCurrentEdit', 'gnConfig', 'gnMetadataActions', 'Metadata',
+    'gnValidation',
     function($q, $scope, $routeParams, $http, $rootScope,
         $translate, $compile, $timeout, $location,
         gnEditor, gnSearchManagerService, gnSchemaManagerService,
         gnConfigService, gnUtilityService, gnOnlinesrc,
-        gnCurrentEdit, gnConfig, gnMetadataActions, Metadata) {
+        gnCurrentEdit, gnConfig, gnMetadataActions, Metadata,
+        gnValidation) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -420,6 +422,7 @@
         $scope.setTemplate(!$scope.isTemplate());
         return $scope.save(refreshForm);
       };
+
       $scope.save = function(refreshForm) {
         $scope.saveError = false;
         var promise = gnEditor.save(refreshForm)
@@ -508,6 +511,27 @@
       };
 
       $scope.close = function() {
+        // if auto unpublish is not set in the settings, or if MD is not
+        // published: close w/o confirmation
+        if (!$scope.gnCurrentEdit.metadata.isPublished() ||
+            !gnConfig['metadata.workflow.automaticUnpublishInvalidMd']) {
+          $scope.confirmClose();
+          return;
+        }
+
+        // else: do a mandatory validation check to ensure that if the MD is
+        // invalid, the user can decide to stay in the editor to fix it
+        gnValidation.errorCheck().then(function (hasErrors) {
+          // if record unpublish on save is enabled: ask for confirmation
+          // before saving and closing the editor
+          if (hasErrors) {
+            $('#confirm-editor-close').modal('show');
+          } else {
+            $scope.confirmClose();
+          }
+        });
+      }
+      $scope.confirmClose = function() {
         var promise = gnEditor.save(false, null, true)
             .then(function(form) {
               closeEditor();

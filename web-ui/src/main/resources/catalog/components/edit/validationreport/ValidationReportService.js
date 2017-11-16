@@ -36,6 +36,14 @@
         get: function() {
           return $http.put(
               '../api/records/' + gnCurrentEdit.uuid + '/validate');
+        },
+        errorCheck: function() {
+          return this.get()
+            .then(function(response) {
+              return response.data.report.some(function(rule) {
+                return rule.error;
+              });
+            });
         }
       };
     }]);
