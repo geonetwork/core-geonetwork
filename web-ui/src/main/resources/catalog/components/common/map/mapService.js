@@ -83,26 +83,9 @@
           if (gnWmsQueue.isPending(url, name)) {
             return true;
           }
-          for (var i = 0; i < map.getLayers().getLength(); i++) {
-            var l = map.getLayers().item(i);
-            var source = l.getSource();
-            if (url && source instanceof ol.source.WMTS &&
-                l.get('url') == url) {
-              if (l.get('name') == name) {
-                return l;
-              }
-            }
-            else if (url && (source instanceof ol.source.TileWMS ||
-                source instanceof ol.source.ImageWMS)) {
-              if (source.getParams().LAYERS == name &&
-                  l.get('url').split('?')[0] == url.split('?')[0]) {
-                return l;
-              }
-            } else if (angular.isUndefined(url)) {
-              if (l.get('name') == name) {
-                return l;
-              }
-            }
+
+          if(getTheLayerFromMap(map, name, url) != null) {
+            return true;
           }
           return null;
         };
