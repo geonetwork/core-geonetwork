@@ -40,7 +40,6 @@
 
 
   <xsl:include href="../process/process-utility.xsl"/>
-  <xsl:variable name="node" select="'srv'"/>
 
 
   <!-- Convert a concept to an ISO19139 fragment with an Anchor
@@ -128,7 +127,7 @@
                         select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
                         select="if ($isLocalXlink = 'true')
-                                then concat('local://', $node, '/')
+                                then concat('local://srv/')
                                 else $serviceUrl"/>
 
           <xsl:attribute name="xlink:href"
