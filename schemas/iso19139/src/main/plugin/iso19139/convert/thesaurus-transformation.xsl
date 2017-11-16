@@ -127,7 +127,7 @@
                         select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
                         select="if ($isLocalXlink = 'true')
-                                then concat('local://srv/')
+                                then 'local://srv/'
                                 else $serviceUrl"/>
 
           <xsl:attribute name="xlink:href"
