@@ -165,18 +165,41 @@
   }
 
 
-  .gn-view-emodnetHydrography .gn-md-view h4,
-  .portlet-layout .gn-view-emodnetHydrography .gn-md-view dt {
-    font-weight: bold !important;
+  .gn-view-emodnetHydrography {
+    .gn-md-view h4,
+    .gn-md-view dt {
+      font-weight: bold !important;
+    }
+    .gn-md-view dd {
+      padding-left: 0px !important;
+    }
+    .gn-md-view img.gn-img-thumbnail {
+      max-width: 100% !important;
+    }
+    .gn-md-view dl dt {
+      float: left;
+      width: 300px;
+      clear: left;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gn-md-view dl dd {
+      margin-left: 320px;
+      border-left: 1px solid #1b75bc;
+      padding-left: 1em !important;
+    }
+    .gn-md-view dl {
+      margin-bottom: 0;
+      padding-bottom: 0px !important;
+    }
+    background-color: #e4eef7 !important;
+    background-image: url("http://sextant.ifremer.fr/geonetwork/apps/sextant/images/schema/emodnet/background.gif") !important;
+    background-repeat: repeat-x !important;
+    background-size: contain;
+    padding: 10px;
   }
-  .gn-view-emodnetHydrography .gn-md-view dd {
-    padding-left: 0px !important;
-  }
-
-  .gn-view-emodnetHydrography .gn-md-view img.gn-img-thumbnail {
-    max-width: 100% !important;
-  }
-
 }
 
 .portlet-borderless-container {
