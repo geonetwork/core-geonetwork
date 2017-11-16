@@ -251,10 +251,16 @@
                     select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
 
 
+      <xsl:variable name="valueInPtFreeTextForMainLanguage"
+                    select="normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)])"/>
+
+      <!-- Add nileason if text is empty -->
       <xsl:variable name="isEmpty"
-                    select="if ($isMultilingual and not($excluded))
-                            then normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
-                                                  @locale = concat('#', $mainLanguageId)]) = ''
+                    select="if ($isMultilingual)
+                            then $valueInPtFreeTextForMainLanguage = ''
+                            else if ($valueInPtFreeTextForMainLanguage != '')
+                            then $valueInPtFreeTextForMainLanguage = ''
                             else normalize-space(gco:CharacterString) = ''"/>
 
 
@@ -283,6 +289,19 @@
 
 
       <xsl:choose>
+        <!-- Check record does not contains multilingual elements
+          matching the main language. This may happen if the main
+          language is declared in locales and only PT_FreeText are set.
+          It should not be possible in GeoNetwork, but record user can
+          import may use this encoding. -->
+        <xsl:when test="not($isMultilingual) and
+                        $valueInPtFreeTextForMainLanguage != '' and
+                        normalize-space(gco:CharacterString) = ''">
+
+          <gco:CharacterString>
+            <xsl:value-of select="$valueInPtFreeTextForMainLanguage"/>
+          </gco:CharacterString>
+        </xsl:when>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
           <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->
