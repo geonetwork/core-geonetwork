@@ -359,8 +359,19 @@
     "usersAndGroups": "Users and groups",
     "settings": "Settings",
     "tools": "Tools",
+    "processesTool": "Use a WPS process",
+    "addLayersTool": "Add layers",
+    "layersTool": "Manager layers",
+    "filterTool": "Search & filter features",
+    "contextsTool": "Manage maps",
+    "printTool": "Print map",
+    "mInteractionTool": "Measures",
+    "graticuleTool": "Display graticules",
+    "syncAllLayersTool": "Synchronize search and main map",
+    "drawVectorTool": "Annotate map",
     "collapseAllFacetLabel": "Collapse",
     "expandAllFacetLabel": "Expand",
     "resultXonY": "on",
-    "resolveCaptcha": "Resolve the captcha"
+    "resolveCaptcha": "Resolve the captcha",
+    "resolutions": "Resolution"
 }

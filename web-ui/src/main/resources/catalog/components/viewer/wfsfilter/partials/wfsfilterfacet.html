@@ -45,7 +45,7 @@
          data-ng-repeat="field in fields track by field.name">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name] || !output[field.name].type || (output[field.name].type == 'date' && !output[field.name].values.from && !output[field.name].values.to)}"></span>
+              data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
         {{field.label}}
       </h5>
       <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
@@ -79,7 +79,7 @@
          ng-if="isFeaturesIndexed && indexObject.geomField">
       <h5 gn-collapsible="indexObject.geomField.expanded">
         <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !ctrl.searchGeometry || ctrl.searchGeometry == ',,,'}"></span>
+              data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !isFilterActive('geometry')}"></span>
         {{'gnbbox' | translate}}
       </h5>
       <div class="list-group"

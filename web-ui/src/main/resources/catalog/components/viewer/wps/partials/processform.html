@@ -80,12 +80,12 @@
 
                   <!-- delete button (disabled for mandatory values) -->
                   <a class="input-group-addon btn btn-default btn-icon"
-                    ng-if="getInputsByName(input.identifier.value).length > input.minOccurs"
+                    ng-if="getInputsByName(input.identifier.value).length > input.minOccurs && !inputWfsOverride[input.identifier.value]"
                     ng-click="removeInputValueByName(input.identifier.value, $index)">
                     <span class="fa fa-trash-o"></span>
                   </a>
                   <a class="input-group-addon btn btn-default btn-icon" disabled
-                    ng-if="getInputsByName(input.identifier.value).length <= input.minOccurs">
+                    ng-if="getInputsByName(input.identifier.value).length <= input.minOccurs || inputWfsOverride[input.identifier.value]">
                     <span class="fa fa-trash-o"></span>
                   </a>
                 </div>
@@ -95,8 +95,8 @@
               <div ng-if="::input.boundingBoxData">
                 <gn-bbox-input
                   ng-repeat="field in getInputsByName(input.identifier.value)"
-                  crs="input._default.crs" value="field.value" map="map"
-                  ng-disabled="inputWfsOverride[input.identifier.value]"
+                  crs="::input._default.crs" value="field.value" map="::map"
+                  read-only="::inputWfsOverride[input.identifier.value]"
                   ng-required="$index < input.minOccurs"
                   watch-value-change="true"/>
               </div>
@@ -112,7 +112,7 @@
               </div>
 
               <!-- add a new value -->
-              <a ng-if="input.maxOccurs > getInputsByName(input.identifier.value).length"
+              <a ng-if="input.maxOccurs > getInputsByName(input.identifier.value).length && !inputWfsOverride[input.identifier.value]"
                 href ng-click="addInputValueByName(input.identifier.value)">
                 <i class="fa fa-plus"/>
                 {{::'insertNewInputValue'|translate}}

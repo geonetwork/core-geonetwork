@@ -17,53 +17,62 @@
   <!--Top right buttons - Tools-->
   <div class="tools" gi-btn-group>
     <button class="btn btn-default" ng-model="activeTools.addLayers"
-            type="submit" gi-btn="active">
+            type="submit" gi-btn="active" ng-hide="disabledTools.addLayers">
       <span class="fa fa-plus"></span>
+      <span class="label" ng-show="showToolLabels" translate="">addLayers</span>
       <span role="tooltip" translate="">addLayers</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.layers"
-            type="submit" gi-btn="active">
+            type="submit" gi-btn="active" ng-hide="disabledTools.layers">
       <span class="fa fa-tasks"></span>
+      <span class="label" ng-show="showToolLabels" translate="">Layers</span>
       <span role="tooltip" translate="">Layers</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.filter"
-            type="submit" gi-btn="active">
+            type="submit" gi-btn="active" ng-hide="disabledTools.filter">
       <span class="fa fa-filter"></span>
+      <span class="label" ng-show="showToolLabels" translate="">filterData</span>
       <span role="tooltip" translate="">filterData</span>
     </button>
 
     <button class="btn btn-default" ng-model="activeTools.processes"
             type="submit" gi-btn="active" ng-hide="disabledTools.processes">
       <span class="fa fa-cogs"></span>
+      <span class="label" ng-show="showToolLabels" translate="">processesTool</span>
       <span role="tooltip" translate="">processesTool</span>
     </button>
 
     <button class="btn btn-default" ng-model="activeTools.contexts"
-            type="submit" gi-btn="active">
+            type="submit" gi-btn="active" ng-hide="disabledTools.contexts">
       <span class="fa fa-map"></span>
+      <span class="label" ng-show="showToolLabels" translate="">Contexts</span>
       <span role="tooltip" translate="">Contexts</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.print"
-            type="submit" gi-btn="active" ng-hide="is3dEnabled">
+            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.print">
       <span class="fa fa-print"></span>
+      <span class="label" ng-show="showToolLabels" translate="">Print</span>
       <span role="tooltip" translate="">Print</span>
     </button>
 
     <button class="btn btn-default" ng-model="mInteraction.active"
-            type="submit" gi-btn="active" ng-hide="is3dEnabled">
+            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.mInteraction">
       <span class="fa fa-expand"></span>
+      <span class="label" ng-show="showToolLabels" translate="">Measure</span>
       <span role="tooltip" translate="">Measure</span>
     </button>
     <button class="btn btn-default" ng-model="drawVector.active"
-            type="submit" gi-btn="active" ng-hide="is3dEnabled">
+            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.drawVector">
       <span class="fa fa-pencil"></span>
+      <span class="label" ng-show="showToolLabels" translate="">Annotations</span>
       <span role="tooltip" translate="">Annotations</span>
     </button>
 
     <div class="tools-spacer"></div>
 
-    <button class="btn btn-default" type="submit" ng-click="syncMod()">
+    <button class="btn btn-default" type="submit" ng-click="syncMod()" ng-hide="disabledTools.syncAllLayers">
       <span class="fa fa-sync" ng-class="synAllLayers ? 'fa-lock' : 'fa-unlock'"/>
+      <span class="label" ng-show="showToolLabels" translate="">syncAllLayers</span>
       <span role="tooltip" translate="">syncAllLayers</span>
     </button>
   </div>
@@ -89,7 +98,8 @@
       <span role="tooltip" data-translate="">switchFrom2DTo3D</span>
     </button>
     <button gn-graticule-btn="map" class="btn btn-default" type="submit"
-      graticule-ogc-service="graticuleOgcService"></button>
+            ng-hide="disabledTools.graticule"
+            graticule-ogc-service="graticuleOgcService"></button>
   </div>
 
 

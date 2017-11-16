@@ -70,7 +70,9 @@
           <div class="col-md-8">
 
             <header>
-              <h1>
+              <h1 itemprop="name"
+                  itemscope="itemscope"
+                  itemtype="http://schema.org/name">
                 <i class="fa gn-icon-{$type}">&#160;</i>
                 <xsl:value-of select="$title"/>
               </h1>
@@ -167,7 +169,16 @@
             <br/>
 
             <div class="well text-center">
-              <a class="btn btn-block btn-primary"
+              <span itemprop="identifier"
+                  itemscope="itemscope"
+                  itemtype="http://schema.org/identifier" 
+                  class="hidden">
+                <xsl:value-of select="$metadataUuid"/>
+              </span>
+              <a itemprop="url"
+                 itemscope="itemscope"
+                 itemtype="http://schema.org/url" 
+                 class="btn btn-block btn-primary"
                  href="{if ($portalLink != '')
                         then replace($portalLink, '\$\{uuid\}', $metadataUuid)
                         else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">

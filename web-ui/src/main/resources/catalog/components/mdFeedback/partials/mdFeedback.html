@@ -1,10 +1,11 @@
-<div class="md-feedback pull-right"
+<div class="md-feedback"
      data-ng-show="isFeedbackEnabled"
      data-ng-controller="gnMdFeedbackController">
   <a href data-ng-click="toggle()"
      title="{{'fbFeedback' | translate}}"
-     class="btn btn-primary pull-right gn-md-feedback-btn">
+     class="gn-md-feedback-btn">
     <i class="fa fa-fw fa-comments-o"></i>
+    <span class="hidden-xs" data-ng-show="showLabel" data-translate="">{{showLabel}}</span>
   </a>
   <div class="modal fade">
     <div class="modal-dialog">
