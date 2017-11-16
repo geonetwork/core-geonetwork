@@ -679,7 +679,8 @@
                 }
               }
               else {
-                if (linkInfo.protocol.indexOf(type) >= 0 &&
+                if (linkInfo.protocol.toLowerCase().indexOf(
+                  type.toLowerCase()) >= 0 &&
                     (!groupId || groupId == linkInfo.group)) {
                   ret.push(linkInfo);
                 }
