@@ -38,7 +38,6 @@ public class ISO19139KeywordReplacer {
     protected static final String ROOT_XML_PATH = ".//gmd:MD_Keywords/parent::*";
 
     protected static final String localXlinkUrlPrefix = "local://srv/api/registries/vocabularies/keyword?";
-    //local://srv/api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=external.theme.gemet&amp;id=http://www.eionet.europa.eu/gemet/concept/4577&amp;lang=eng,ger,fre,ita
 
     @Autowired
     protected IsoLanguagesMapper isoLanguagesMapper;
@@ -53,10 +52,7 @@ public class ISO19139KeywordReplacer {
        return worker.replaceAll(md);
     }
 
-    /**
-     *      for test purposes, ....
-     **/
-    public KeywordBean searchInAnyThesaurus(String keyword) {
+    protected KeywordBean searchInAnyThesaurus(String keyword) {
         ReplacerWorker worker = new ReplacerWorker(isoLanguagesMapper, thesaurusManager);
         return worker.searchInAnyThesaurus(keyword);
 

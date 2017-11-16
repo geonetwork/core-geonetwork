@@ -69,17 +69,6 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         toTest.isoLanguagesMapper = isoLangMapper;
     }
 
-//    @Test
-//    public void list() throws Exception {
-//        Element keywordElt = getSubtemplateXml(KEYWORD_RESOURCE);
-//        Element root = new Element("descriptiveKeywords", GMD);
-//        root.addContent(keywordElt);
-//
-//        List<Pair<Element, String>> allKeywords = toTest.getAllKeywords(root);
-//
-//        assertEquals(6, allKeywords.size());
-//    }
-
     @Test
     public void replaceAllAndTestOneXLinkHRef() throws IOException, JDOMException {
         Element md = getSubtemplateXml(KEYWORD_RESOURCE);

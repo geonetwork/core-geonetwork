@@ -41,6 +41,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.kernel.schema.subtemplate.Status;
 import org.fao.geonet.kernel.xlink.ISO19139KeywordReplacer;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -84,6 +85,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1191,14 +1193,21 @@ public class MetadataInsertDeleteApi {
                 metadataType != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             if (schemaManager.getSchemaPlugin() instanceof SubtemplateAwareSchemaPlugin) {
 
-                // replace matching keywords
-                iso19139KeywordReplacer.replaceAll(xmlElement);
+
+                String templatesToOperateOn = settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT);
+                String KEYWORD = "keyword";
+                if (Arrays.asList(templatesToOperateOn.split(";")).contains(KEYWORD)) {
+                    Status status = iso19139KeywordReplacer.replaceAll(xmlElement);
+                    if (status.isError()) {
+                        throw new RuntimeException(status.getMsg());
+                    }
+                }
 
                 // replace matching subtemplates
                 ((SubtemplateAwareSchemaPlugin) schemaManager.getSchemaPlugin())
                         .replaceSubtemplatesByLocalXLinks(
                                 xmlElement,
-                                settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT));
+                                templatesToOperateOn);
             }
         }
         // Import record
