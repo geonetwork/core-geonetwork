@@ -154,7 +154,6 @@
       var finalParams = angular.extend(params, hiddenParams);
       gnSearchManagerService.gnSearch(finalParams).then(
           function(data) {
-            $scope.searching--;
             $scope.searchResults.records = [];
             for (var i = 0; i < data.metadata.length; i++) {
               $scope.searchResults.records.push(new Metadata(data.metadata[i]));
@@ -186,7 +185,9 @@
                   );
               paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
             }
-          });
+          }).finally(function() {
+        $scope.searching--;
+      });
     };
 
 
