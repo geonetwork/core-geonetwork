@@ -618,15 +618,3 @@ div.help ul li {
   font-weight: normal !important;
   font-size: 100% !important;
 }
-
-.portlet-layout .gn-view-emodnetHydrography .gn-md-view h4,
-.portlet-layout .gn-view-emodnetHydrography .gn-md-view dt {
-  font-weight: bold !important;
-}
-.portlet-layout .gn-view-emodnetHydrography .gn-md-view dd {
-  padding-left: 0px !important;
-}
-
-.gn-view-emodnetHydrography .gn-md-view img.gn-img-thumbnail {
-  max-width: 100% !important;
-}
