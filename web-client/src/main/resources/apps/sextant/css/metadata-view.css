@@ -626,3 +626,7 @@ div.help ul li {
 .portlet-layout .gn-view-emodnetHydrography .gn-md-view dd {
   padding-left: 0px !important;
 }
+
+.gn-view-emodnetHydrography .gn-md-view img.gn-img-thumbnail {
+  max-width: 100% !important;
+}
