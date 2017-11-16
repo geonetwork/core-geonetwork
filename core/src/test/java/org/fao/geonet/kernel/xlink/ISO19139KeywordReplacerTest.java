@@ -81,7 +81,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
 //    }
 
     @Test
-    public void replaceAll() throws IOException, JDOMException {
+    public void replaceAllAndTestOneXLinkHRef() throws IOException, JDOMException {
         Element md = getSubtemplateXml(KEYWORD_RESOURCE);
 
         Status status = toTest.replaceAll(md);
@@ -89,11 +89,17 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
         assertEquals(5, themes.size());
-        assertTrue(themes.contains("external.theme.gemet-theme|4"));
-        assertTrue(themes.contains("external.theme.gemet-theme|34"));
-        assertTrue(themes.contains("external.theme.gemet-theme|22"));
+        assertTrue(themes.contains("external.theme.gemet-theme|881"));
+        assertTrue(themes.contains("external.theme.gemet-theme|7784"));
+        assertTrue(themes.contains("external.theme.gemet-theme|5241"));
         assertTrue(themes.contains("external.place.regions|CAF"));
         assertTrue(themes.contains("external.place.regions|ECU"));
+
+        assertEquals("local://srv/api/registries/vocabularies/keyword?thesaurus=external.theme.gemet-theme&"+
+                        "id=http://www.eionet.europa.eu/gemet/concept/5241&multiple=false&"+
+                        "lang=fre,eng,ger,ita,roh&textgroupOnly&skipdescriptivekeywords",
+                    ((Element)Xml.selectNodes(md, ".//gmd:descriptiveKeywords").get(0))
+                        .getAttribute("href").getValue());
     }
 
     @Test
@@ -103,17 +109,17 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
                 "//parent::*//parent::*//parent::*//parent::gmd:MD_Keywords" +
                 "//child::gmd:keyword//child::gco:CharacterString");
         ((Element) fischerei.get(0)).setText("Fischerei");
-        ((Element) fischerei.get(1)).setText("pêche");
+        ((Element) fischerei.get(1)).setText("pêche (général)");
         Xml.selectElement(md,
                 "*//child::gmd:LocalisedCharacterString[text()='aspetti militari']")
-                .setText("pesca");
+                .setText("pesca (attività)");
 
         Status status = toTest.replaceAll(md);
 
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
         assertEquals(3, themes.size());
-        assertTrue(themes.contains("external.theme.gemet-theme|12"));
+        assertTrue(themes.contains("external.theme.gemet-theme|3237"));
         assertTrue(themes.contains("external.place.regions|CAF"));
         assertTrue(themes.contains("external.place.regions|ECU"));
     }
@@ -130,7 +136,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
         assertEquals(5, themes.size());
-        assertTrue(themes.contains("external.theme.gemet-theme|22"));
+        assertTrue(themes.contains("external.theme.gemet-theme|5241"));
     }
 
     @Test
@@ -145,7 +151,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
         assertEquals(5, themes.size());
-        assertTrue(themes.contains("external.theme.gemet-theme|22"));
+        assertTrue(themes.contains("external.theme.gemet-theme|5241"));
     }
 
     @Test
@@ -160,7 +166,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
         assertFalse(status.isError());
         Set<String> themes = getXLinkedKeyword(md);
         assertEquals(5, themes.size());
-        assertTrue(themes.contains("external.theme.gemet-theme|22"));
+        assertTrue(themes.contains("external.theme.gemet-theme|5241"));
     }
 
     @Test
@@ -188,7 +194,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
     public void statusFailure() throws IOException, JDOMException {
         Element md = getSubtemplateXml(KEYWORD_RESOURCE);
         Xml.selectElement(md,
-                "*//child::gco:CharacterString[text()='Soziale Aspekte, Bevölkerung']")
+                "*//child::gco:CharacterString[text()='Soziale Bedingung']")
                 .setText("I don't exist");
         Xml.selectElement(md,
                 "*//child::gco:CharacterString[text()='Ecuador']")
@@ -212,7 +218,7 @@ public class ISO19139KeywordReplacerTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void searchInAnyTheasurusFre() throws Exception {
-        KeywordBean keyword = toTest.searchInAnyThesaurus("pêche");
+        KeywordBean keyword = toTest.searchInAnyThesaurus("pêche (général)");
         assertNotNull(keyword);
     }
 
