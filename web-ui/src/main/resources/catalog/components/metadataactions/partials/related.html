@@ -26,7 +26,7 @@
         </strong>
       </strong>
       </div>
-      <div class="col-xs-12 col-sm-7">
+      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'" >
         <!-- WMS & WFS contains layer name in title -->
         <h4 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                           mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||

@@ -195,7 +195,7 @@ public class MetadataUtils {
                 
                 
                 for (String fcat_uuid : listOfUUIDs) {
-                	Element metadata = new Element("metadata");
+                    Element metadata = new Element("metadata");
                     Element response = new Element("response");
 					Element current = getRecord(fcat_uuid, context, dm);
 					metadata.addContent(current);
