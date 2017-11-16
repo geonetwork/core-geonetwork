@@ -68,7 +68,7 @@
   <xsl:template match="/">
 
     <xsl:variable name="hasSidePanel"
-                  select="exists($viewConfig/sidePanel)"/>
+                  select="exists($viewConfig/sidePanel) and $isTemplate != 's' and $isTemplate != 't'"/>
     <div id="gn-editor-container-{$metadataId}">
 
       <div class="col-md-{if ($hasSidePanel) then '8' else '12'}">
