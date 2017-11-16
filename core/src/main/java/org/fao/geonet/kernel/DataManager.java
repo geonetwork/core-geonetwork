@@ -607,10 +607,8 @@ public class DataManager implements ApplicationEventPublisherAware {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "1", true, true));
                     StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
-                        sb.append(xlink.getValue());
-                        sb.append(" ");
+                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.XLINK, xlink.getValue(), true, true));
                     }
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.XLINK, sb.toString(), true, true));
                     Processor.detachXLink(md, getServiceContext());
                 } else {
                     moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));

@@ -1062,9 +1062,5 @@
   </xsl:template>
 
   <!-- ========================================================================================= -->
-  <!-- xlinks -->
-  <xsl:template mode="index" match="@xlink:href">
-    <Field name="xlink" string="{string(.)}" store="true" index="true"/>
-  </xsl:template>
 
 </xsl:stylesheet>
