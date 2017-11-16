@@ -3,12 +3,19 @@
     padding: 6px;
   }
   ul ul {
-    margin: 0;
+    margin: 5px 0 0 0;
     padding-left: 10px;
     .list-group-item {
       border-width: 1px 0 0 0;
+      border-radius: 0;
     }
     display: none;
+  }
+  a {
+    line-height: 24px;
+    &:hover, &:active {
+      text-decoration: none;
+    }
   }
   label {
     color: #444;
@@ -63,6 +70,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .popover {
+    max-width: 0;
+    li {
+      padding: 2px 0px;
+    }
   }
 }
 .layers, .layerTree {
