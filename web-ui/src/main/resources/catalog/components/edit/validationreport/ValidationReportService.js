@@ -40,12 +40,9 @@
         errorCheck: function() {
           return this.get()
             .then(function(response) {
-              var rules = response.data.report;
-              var hasErrors = false;
-              rules.forEach(function(rule) {
-                hasErrors = hasErrors || !!rule.error;
+              return response.data.report.some(function(rule) {
+                return rule.error;
               });
-              return hasErrors;
             });
         }
       };
