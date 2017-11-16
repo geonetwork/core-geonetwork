@@ -35,13 +35,13 @@
    * This directive gives the user the possibility to define a bounding polygon,
    * either by drawing it manually on a map or copy-pasting data in the desired
    * format. The user can also select an input projection.
-   * The directive has a hidden output in GML & EPSG:4326.
+   * The directive has a hidden output in GML.
    *
-   * @attribute {string} coordinates list of coordinates
-   * separated with spaces
+   * @attribute {string} polygonXml existing geometry in GML format
    * @attribute {string} identifier id of the hidden input
-   * that will hold
-   *  the value entered by the user
+   * that will hold the value entered by the user
+   * @attribute {string} outputCrs EPSG:XXXX ref to use for geometry output;
+   * if undefined, the current projection selected by the user will be used
    */
   module.directive('gnBoundingPolygon', [
     'gnMap',
@@ -230,6 +230,9 @@
                     ctrl.map.getSize());
               }
 
+              var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :
+                ctrl.currentProjection;
+
               // print output (skip if readonly)
               if (!ctrl.readOnly) {
                 ctrl.outputPolygonXml =
@@ -238,7 +241,7 @@
                     ctrl.map,
                     feature,
                     {
-                      crs: ctrl.currentProjection,
+                      crs: outputCrs,
                       format: 'gml'
                     }
                     ) +
