@@ -252,7 +252,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void metaDataInFrenchButKindOfGermanTranslationAvailable() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName: +orgName:csc +email:");
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName: +orgName:csc +_email:");
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
@@ -286,7 +286,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage(
                 "||format-found no match for query: +_isTemplate:s +_valid:1 +any:shapefile +any:\"grass version 6.1\"" + "" +
-                        "||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:csc +email:\"info csc.org\"");
+                        "||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:csc +_email:\"info csc.org\"");
 
         URL extentResource = AbstractCoreIntegrationTest.class.getResource(EXTENT_RESOURCE);
         Element subtemplateElement = Xml.loadStream(extentResource.openStream());
@@ -313,7 +313,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void insertMetadataCantReplaceContactNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:csc +email:\"info csc.org\"");
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:csc +_email:\"info csc.org\"");
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE,
                 element -> Xml.selectElement(element,
                         "gmd:individualName/gco:CharacterString")
@@ -340,7 +340,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void insertMetadataCantReplaceContactWhenToManyMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found too many matches for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:csc +email:\"info csc.org\"");
+        expectedEx.expectMessage("||contact-found too many matches for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:csc +_email:\"info csc.org\"");
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE);
         Metadata contactClone = insertSubtemplate(CONTACT_RESOURCE);
         Metadata format = insertSubtemplate(FORMAT_RESOURCE);
@@ -403,7 +403,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void contactOrgWithSpacesNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:\"generale d'electricite\" +email:\"info csc.org\"");
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +_valid:1 +individualName:babar +orgName:\"generale d'electricite\" +_email:\"info csc.org\"");
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
         insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,

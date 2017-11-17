@@ -63,7 +63,7 @@ public class ContactReplacer extends AbstractReplacer {
 
         query.add(createSubQuery("individualName", individualName), BooleanClause.Occur.MUST);
         query.add(createSubQuery("orgName", organisationName), BooleanClause.Occur.MUST);
-        query.add(createSubQuery("email", email), BooleanClause.Occur.MUST);
+        query.add(createSubQuery("_email", email), BooleanClause.Occur.MUST);
 
         return query;
     }

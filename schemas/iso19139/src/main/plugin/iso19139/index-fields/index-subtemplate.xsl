@@ -104,9 +104,12 @@
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
-                    <Field name="email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true" analyze="true"/>
+                    <Field name="email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true"/>
                 </xsl:for-each>
-
+                <xsl:for-each
+                        select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
+                    <Field name="_email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true" analyze="true"/>
+                </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="org"
@@ -126,9 +129,12 @@
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
-                    <Field name="email" string="{.}" store="true" index="true" analyze="true"/>
+                    <Field name="email" string="{.}" store="true" index="true"/>
                 </xsl:for-each>
-
+                <xsl:for-each
+                        select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
+                    <Field name="_email" string="{.}" store="true" index="true" analyze="true"/>
+                </xsl:for-each>
             </xsl:otherwise>
         </xsl:choose>
 
