@@ -113,10 +113,10 @@
                               select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
                 <xsl:variable name="name"
                               select="normalize-space(gmd:individualName/gco:CharacterString)"/>
-               <xsl:variable name="mail"
+                <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
-               <Field name="individualName" string="{$name}" store="true" index="true" analyze="true"/>
-               <Field name="_title"
+                <Field name="individualName" string="{$name}" store="true" index="true" analyze="true"/>
+                <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
@@ -169,7 +169,8 @@
                           select="gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]"/>
               <xsl:variable name="nonEmptyDesc"
                           select="(gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[./text()!=''])[1]"/>
-              <Field name="_title" string="{if ($title != '') then $title else if ($localizedDesc != '') then $localizedDesc
+              <Field name="_title"
+                     string="{if ($title != '') then $title else if ($localizedDesc != '') then $localizedDesc
                              else $nonEmptyDesc}"
                      store="true" index="true" analyze="true"/>
             </xsl:when>
@@ -186,11 +187,7 @@
                           else if (normalize-space(gmd:description/gco:CharacterString) != '')
                           then gmd:description/gco:CharacterString
                           else string-join(.//gco:Decimal, ', ')}"
-                 store="true" index="true"
-                 analyze="{if ($title != '') then 'true'
-                          else if (normalize-space(gmd:description/gco:CharacterString) != '')
-                          then 'true'
-                          else 'false'}"/>
+                 store="true" index="true"/>
         </xsl:otherwise>
       </xsl:choose>
 
