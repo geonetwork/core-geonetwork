@@ -207,7 +207,7 @@
               featureNS: options.gmlFeatureNS ||
                   'http://mapserver.gis.umn.edu/mapserver',
               featureType: options.gmlFeatureElement || 'features',
-              srsName: options.crs
+              srsName: options.crs !== 'EPSG:4326' ? options.crs : undefined
             });
 
             if (options.outputAsWFSFeaturesCollection) {
