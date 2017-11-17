@@ -100,15 +100,15 @@
 
             <div class="pos-relative">
               <input class="form-control filter-text" type="search"
-                ng-change="triggerSearch()"
-                ng-model="searchObj.params.any"
+                ng-change="updateParams(); triggerSearch()"
+                ng-model="searchObj.any"
                 ng-model-options="modelOptions"
                 placeholder="{{'filter' | translate}}" autofocus=""/>
             </div>
             &nbsp;
 
             <button type="button"
-                    data-ng-click="resetSearch(defaultSearchObj.params);"
+                    data-ng-click="resetSearch(defaultSearchObj.params); searchObj.any = ''"
                     title="{{'ClearTitle' | translate}}"
                     class="btn btn-link">
               <i class="fa fa-times"></i>
@@ -494,8 +494,7 @@
     </div>
 
     <div class="col-sm-12 col-lg-4"
-      ng-if="::gnConfig[gnConfig.key.isXLinkEnabled]"
-      ng-show="currentEditorAction === 'editEntry'">
+      ng-if="gnConfig[gnConfig.key.isXLinkEnabled] && activeEntry && currentEditorAction === 'editEntry'">
       <div class="panel-default panel">
         <div class="panel-heading">
           <span translate>directoryEntryAssociatedMetadata</span>

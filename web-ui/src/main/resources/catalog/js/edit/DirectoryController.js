@@ -90,6 +90,7 @@
       $scope.ownerGroup = null;
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
+        any: '',
         params: {
           _isTemplate: 's',
           any: '',
@@ -238,6 +239,7 @@
       $scope.getEntries = function(type) {
         if (type) {
           $scope.searchObj.params._root = type;
+          $scope.defaultSearchObj.params._root = type;
         }
         $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
@@ -564,6 +566,12 @@
       };
       $scope.templatesShown = function() {
         return $scope.searchObj.params._isTemplate === 't';
+      };
+
+      // Append * for like search
+      $scope.updateParams = function() {
+        $scope.searchObj.params.any =
+        '*' + $scope.searchObj.any + '*';
       };
 
       init();
