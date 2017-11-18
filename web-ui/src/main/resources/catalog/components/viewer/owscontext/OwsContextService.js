@@ -122,6 +122,14 @@
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
+        
+        // -- check if projection is available in ol
+        if (!ol.proj.get(projection)){
+         console.warn('Projection '+ projection +' is not available, map will be projected in a spherical mercator projection');
+         projection='EPSG:3857';
+         ll=[-10026376,-15048966];
+         ur=[10026376,15048966];
+       }
 
         if (projection == 'EPSG:4326') {
           ll.reverse();
