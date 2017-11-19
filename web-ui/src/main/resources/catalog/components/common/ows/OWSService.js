@@ -59,7 +59,7 @@
       {
         namespacePrefixes: {
           'http://www.w3.org/1999/xlink': 'xlink',
-          'http://www.opengis.net/ows/1.1': 'ows',
+          'http://www.opengis.net/ows': 'ows',
           'http://www.opengis.net/wfs': 'wfs'
         }
       }
@@ -165,11 +165,9 @@
               return xfsCap;
             }*/
           } catch (e) {
-            //alert('WFS version not supported.');
-            //defer.reject({msg: 'wfsGetCapabilitiesFailed',
-            // owsExceptionReport: e.message});
-            //return e.message;
+            return {"exception":{"message":'capabilitiesParseError',"detail":e.message}}         
           }
+        
 
           //result.contents.Layer = result.contents.layers;
           //result.Contents.operationsMetadata = result.OperationsMetadata;
@@ -226,7 +224,7 @@
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
-                        defer.reject('capabilitiesParseError');
+                        defer.reject(e.message);
                       }
                     })
                     .error(function(data, status) {
@@ -286,19 +284,23 @@
                 })
                     .success(function(data, status, headers, config) {
                       var xfsCap = parseWFSCapabilities(data);
-
                       if (!xfsCap || xfsCap.exception != undefined) {
                         defer.reject({msg: 'wfsGetCapabilitiesFailed',
-                          owsExceptionReport: xfsCap});
+                          owsExceptionReport: xfsCap||'undefined'});
                       } else {
                         defer.resolve(xfsCap);
                       }
-
                     })
                     .error(function(data, status, headers, config) {
                       defer.reject(status);
                     });
+              } else {
+                defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                          owsExceptionReport: 'Url '+url+' is not valid'});
               }
+            } else {
+              defer.reject({msg: 'noCapabilitiesUrlAvailable',
+                          owsExceptionReport: 'undefined'});
             }
             return defer.promise;
           },
