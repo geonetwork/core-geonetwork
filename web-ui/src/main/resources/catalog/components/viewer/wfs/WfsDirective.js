@@ -123,7 +123,7 @@
         templateUrl: '../../catalog/components/' +
             'viewer/wfs/partials/download.html',
         link: function(scope, element, attrs, ctrls) {
-          scope.capabilities;
+          scope.capabilities,scope.exceptionDetail,scope.exception;
           scope.isWfsAvailable = false;
 
           function init() {
@@ -131,6 +131,9 @@
             scope.url = attrs['url'];
             scope.typename = attrs['typename'];
             scope.formats = [];
+            scope.capabilities = {};
+            scope.exception = "";
+            scope.exceptionDetail = "";
             scope.checkWFSUrl();
           }
 
@@ -170,6 +173,9 @@
                   scope.featureType =
                       gnWfsService.getTypeName(capabilities, scope.typename);
                   scope.formats = gnWfsService.getOutputFormat(capabilities);
+                }, function(exceptionReport){
+                  scope.exception=exceptionReport.msg;
+                  scope.exceptionDetail = exceptionReport.owsExceptionReport;
                 });
           };
 

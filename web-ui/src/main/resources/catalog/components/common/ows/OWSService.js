@@ -129,10 +129,13 @@
 
         var parseWFSCapabilities = function(data) {
           var version = '1.1.0';
+          var xml = $.parseXML(data);
+          if (!angular.isObject(xml)){
+            return {"exception":"Parsed xml is not an object"};
+          }
 
           try {
             //First cleanup not supported INSPIRE extensions:
-            var xml = $.parseXML(data);
             if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
               var cleanup = function(i, el) {
                 if (el.tagName.endsWith('ExtendedCapabilities')) {
@@ -165,7 +168,7 @@
               return xfsCap;
             }*/
           } catch (e) {
-            return {"exception":{"message":'capabilitiesParseError',"detail":e.message}}         
+            return {"exception":e.message};        
           }
         
 
@@ -283,16 +286,21 @@
                   cache: true
                 })
                     .success(function(data, status, headers, config) {
+                      if (!data) {
+                        defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                          owsExceptionReport: 'No data from '+url+'.'});
+                      }
                       var xfsCap = parseWFSCapabilities(data);
                       if (!xfsCap || xfsCap.exception != undefined) {
                         defer.reject({msg: 'wfsGetCapabilitiesFailed',
-                          owsExceptionReport: xfsCap||'undefined'});
+                          owsExceptionReport: xfsCap.exception||'undefined'});
                       } else {
                         defer.resolve(xfsCap);
                       }
                     })
                     .error(function(data, status, headers, config) {
-                      defer.reject(status);
+                      defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                          owsExceptionReport: 'Unknown error, status '+status});
                     });
               } else {
                 defer.reject({msg: 'wfsGetCapabilitiesFailed',
