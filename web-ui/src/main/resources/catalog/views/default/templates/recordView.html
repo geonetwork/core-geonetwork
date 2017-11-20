@@ -39,11 +39,12 @@
       <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown"
               aria-expanded="false">
-        <i class="fa fa-eye"></i>&nbsp;
+        <i class="fa fa-eye"></i>
+        <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li class="dropdown-header" data-translate="">chooseAView</li>
+        <!-- <li class="dropdown-header" data-translate="">chooseAView</li> -->
         <li data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
           <a href="" data-ng-click="format()">
             <i class="fa fa-fw"></i>
@@ -77,6 +78,7 @@
        title="{{'delete' | translate}}">
 
       <i class="fa fa-times"></i>
+      <span data-translate="" class="hidden-sm hidden-xs">delete</span>
     </a>
 
     <a class="btn btn-primary gn-md-edit-btn pull-right"
@@ -84,6 +86,7 @@
        data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
        title="{{'edit' | translate}}">
       <i class="fa fa-pencil"></i>
+      <span data-translate="" class="hidden-sm hidden-xs">edit</span>
     </a>
 
     <div class="gnMdfeedback"></div>
