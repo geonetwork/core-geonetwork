@@ -8,19 +8,17 @@ import java.util.List;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "associatedSiblingMetadataItem", propOrder = {
-        "agg_isDescriptionOf"
-})
+@XmlType(name = "associatedSiblingMetadataItem")
 public class AssociatedSiblingMetadataItem
         extends RelatedMetadataItem {
 
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     protected List<String> agg_isTemporalStatOf;
 
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     protected List<String> agg_largerWorkCitation;
 
-    @XmlElement(required = true)
+    @XmlElement(required = false)
     protected List<String> agg_isDescriptionOf;
 
     public List<String> getAgg_isDescriptionOf() {
