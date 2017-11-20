@@ -32,6 +32,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.support.HandlerMethodArgumentResolverComposite;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite;
+import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -80,7 +81,7 @@ public class SpringLocalServiceInvoker {
         servletInvocableHandlerMethod.setHandlerMethodReturnValueHandlers(returnValueHandlers);
         servletInvocableHandlerMethod.setDataBinderFactory(webDataBinderFactory);
 
-        Object o = servletInvocableHandlerMethod.invokeForRequest(new ServletWebRequest(request, response), null, new Object[0]);
+        Object o = servletInvocableHandlerMethod.invokeForRequest(new ServletWebRequest(request, response), new ModelAndViewContainer(), new Object[0]);
         // check whether we need to further process a "forward:" response
         if (o instanceof String) {
           String checkForward = (String)o;

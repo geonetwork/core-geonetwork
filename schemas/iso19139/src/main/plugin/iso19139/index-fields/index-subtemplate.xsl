@@ -93,41 +93,48 @@
                 <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
 
+                <Field name="individualName" string="{$name}" store="true" index="true" analyze="true"/>
                 <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
-                <Field name="orgName" string="{$org}" store="true" index="true"/>
+                <Field name="orgName" string="{$org}" store="true" index="true" analyze="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
                     <Field name="email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true"/>
                 </xsl:for-each>
-
+                <xsl:for-each
+                        select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
+                    <Field name="_email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true" analyze="true"/>
+                </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="org"
                               select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
                 <xsl:variable name="name"
                               select="normalize-space(gmd:individualName/gco:CharacterString)"/>
-               <xsl:variable name="mail"
+                <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
-
-              <Field name="_title"
+                <Field name="individualName" string="{$name}" store="true" index="true" analyze="true"/>
+                <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
-                <Field name="orgName" string="{$org}" store="true" index="true"/>
+                <Field name="orgName" string="{$org}" store="true" index="true" analyze="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
                     <Field name="email" string="{.}" store="true" index="true"/>
                 </xsl:for-each>
-
+                <xsl:for-each
+                        select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
+                    <Field name="_email" string="{.}" store="true" index="true" analyze="true"/>
+                </xsl:for-each>
             </xsl:otherwise>
         </xsl:choose>
 
@@ -171,12 +178,12 @@
               <Field name="_title"
                      string="{if ($title != '') then $title else if ($localizedDesc != '') then $localizedDesc
                              else $nonEmptyDesc}"
-                     store="true" index="true"/>
+                     store="true" index="true" analyze="true"/>
             </xsl:when>
             <xsl:otherwise>
               <Field name="_title"
                      string="{if ($title != '') then $title else gmd:description/gco:CharacterString}"
-                     store="true" index="true"/>
+                     store="true" index="true" analyze="true"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>

@@ -25,7 +25,6 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -131,21 +130,6 @@ public abstract class XmlSerializer {
             return isEnabled;
         } else {
             Log.error(Geonet.DATA_MANAGER, "XLink resolver setting does not exist! XLink Resolver disabled.");
-            return false;
-        }
-    }
-
-    public boolean isLoggingEmptyWithHeld() {
-        SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-
-        if (_settingManager == null) {
-            return false;
-        }
-
-        String enableLogging = _settingManager.getValue(Settings.SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING);
-        if (enableLogging != null) {
-            return enableLogging.equals("true");
-        } else {
             return false;
         }
     }

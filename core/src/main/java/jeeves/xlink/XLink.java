@@ -138,5 +138,4 @@ public class XLink {
         this.actuate = actuate;
     }
 
-
 }

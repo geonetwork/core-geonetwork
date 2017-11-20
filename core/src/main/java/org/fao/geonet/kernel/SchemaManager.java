@@ -28,12 +28,12 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
-
+import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.index.IndexReader;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
@@ -46,7 +46,15 @@ import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
+import org.fao.geonet.kernel.schema.subtemplate.Status;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.xlink.ISO19139KeywordReplacer;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
@@ -55,13 +63,22 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.PrefixUrlRewrite;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
-import org.jdom.*;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -152,6 +169,8 @@ public class SchemaManager {
                         get().
                         getBean(schemaBeanIdentifier);
                 }
+
+                lazyInitializePluginIfSubtemplateAware(schemaIdentifier, schemaPlugin);
             }
         } catch (Exception e) {
             // No bean for this schema
@@ -1852,4 +1871,68 @@ public class SchemaManager {
         }
         return listOfTypenames;
     }
+
+    private static void lazyInitializePluginIfSubtemplateAware(String schemaIdentifier, SchemaPlugin schemaPlugin) {
+        if (schemaPlugin instanceof SubtemplateAwareSchemaPlugin && !((SubtemplateAwareSchemaPlugin) schemaPlugin).isInitialised()) {
+            SearchManager searchManager = ApplicationContextHolder.get().getBean(SearchManager.class);
+            SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
+            ISO19139KeywordReplacer keywordReplacer = ApplicationContextHolder.get().getBean(ISO19139KeywordReplacer.class);
+            IsoLanguagesMapper isoLanguagesMapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
+            ((SubtemplateAwareSchemaPlugin) schemaPlugin).init(
+                    new ManagersProxy() {
+                        Map<IndexReader, IndexAndTaxonomy> openedReader = new HashMap<>();
+
+                        @Override
+                        public Path getSchemaDir() {
+                            return schemaManager.getSchemaDir(schemaIdentifier);
+                        }
+
+                        @Override
+                        public IndexReader getIndexReader(String lang) throws IOException {
+                            IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(lang, -1);
+                            openedReader.put(indexAndTaxonomy.indexReader, indexAndTaxonomy);
+                            return indexAndTaxonomy.indexReader;
+                        }
+
+                        @Override
+                        public void releaseIndexReader(IndexReader reader) throws IOException, InterruptedException {
+                            IndexAndTaxonomy indexAndTaxonomy = openedReader.remove(reader);
+                            searchManager.releaseIndexReader(indexAndTaxonomy);
+
+                        }
+
+                        @Override
+                        public String getIso1LangCode(String iso2LangCode) {
+                            return isoLanguagesMapper.iso639_2_to_iso639_1(iso2LangCode);
+                        }
+
+                        @Override
+                        public Status replaceAllKeyword(Element md) {
+                            return keywordReplacer.replaceAll(md);
+                        }
+                    },
+                    CONSTANT_PROXY);
+        }
+    }
+
+    private static final ConstantsProxy CONSTANT_PROXY = new ConstantsProxy() {
+
+        @Override
+        public String getIndexFieldNamesANY() {
+            return Geonet.IndexFieldNames.ANY;
+        }
+
+        @Override
+        public String getIndexFieldNamesIS_TEMPLATE() {
+            return Geonet.IndexFieldNames.IS_TEMPLATE;
+        }
+
+        @Override
+        public String getIndexFieldNamesVALID() { return Geonet.IndexFieldNames.VALID; }
+
+        @Override
+        public Namespace getNAMESPACE_XLINK() {
+            return XLink.NAMESPACE_XLINK;
+        }
+    };
 }

@@ -1168,5 +1168,7 @@
     "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow.",
     "ui-grid": "Search results configuration",
     "gridConfigRelatedTypes": "Related metadata types to query",
-    "gridConfigRelatedTypes-help": "Possible types include children, parent, services, fcats, datasets, sibling."
+    "gridConfigRelatedTypes-help": "Possible types include children, parent, services, fcats, datasets, sibling.",
+    "system/xlinkResolver/templatesToOperateOnAtInsert": "Templates to substitute at import time.",
+    "system/xlinkResolver/templatesToOperateOnAtInsert-help": "When importing a metadata, for each contained template of one of theses types, a xlink targeting the corresponding template in database will be set in place. If the template don't already exist, the insertion fails."
 }

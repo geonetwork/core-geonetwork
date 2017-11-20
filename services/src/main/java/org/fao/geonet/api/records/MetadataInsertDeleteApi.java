@@ -31,8 +31,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -43,12 +41,16 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.kernel.schema.subtemplate.Status;
+import org.fao.geonet.kernel.xlink.ISO19139KeywordReplacer;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -62,8 +64,8 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.IllegalAddException;
 import org.jdom.input.JDOMParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specifications;
@@ -83,6 +85,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +119,9 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
 public class MetadataInsertDeleteApi {
+
+    @Autowired
+    private ISO19139KeywordReplacer iso19139KeywordReplacer;
 
     public static final String API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS = "Report about imported records.";
     public static final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
@@ -1178,9 +1184,26 @@ public class MetadataInsertDeleteApi {
         final List<Element> md = new ArrayList<Element>();
         md.add(xmlElement);
 
+        // Substitute xlinks
+        MetadataSchema schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class)
+                .getSchema(schema);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
+        if (metadataType != MetadataType.SUB_TEMPLATE &&
+                metadataType != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            if (schemaManager.getSchemaPlugin() instanceof SubtemplateAwareSchemaPlugin) {
+
+
+                String templatesToOperateOn = settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT);
+
+                // replace matching subtemplates
+                ((SubtemplateAwareSchemaPlugin) schemaManager.getSchemaPlugin())
+                        .replaceSubtemplatesByLocalXLinks(
+                                xmlElement,
+                                templatesToOperateOn);
+            }
+        }
         // Import record
-        SettingManager settingManager = appContext.getBean(SettingManager.class);
         Map<String, String> sourceTranslations = Maps.newHashMap();
         try {
             Importer.importRecord(uuid, uuidProcessing, md, schema, 0,
