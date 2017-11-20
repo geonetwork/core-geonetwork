@@ -123,7 +123,7 @@
         templateUrl: '../../catalog/components/' +
             'viewer/wfs/partials/download.html',
         link: function(scope, element, attrs, ctrls) {
-          scope.capabilities,scope.exceptionDetail,scope.exception;
+          scope.capabilities;
           scope.isWfsAvailable = false;
 
           function init() {

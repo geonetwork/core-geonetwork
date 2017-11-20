@@ -129,7 +129,11 @@
 
         var parseWFSCapabilities = function(data) {
           var version = '1.1.0';
-          var xml = $.parseXML(data);
+          try {
+            var xml = $.parseXML(data);
+          } catch (e) {
+            return {"exception":e.message};
+          }
           if (!angular.isObject(xml)){
             return {"exception":"Parsed xml is not an object"};
           }
