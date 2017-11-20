@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
@@ -731,6 +730,15 @@ public final class XslUtil {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
+            ex.printStackTrace();
+            return str;
+        }
+    }
+
+    public static String decodeURLParameter(String str) {
+        try {
+            return java.net.URLDecoder.decode(str, "UTF-8");
+        } catch (Exception ex) {
             ex.printStackTrace();
             return str;
         }
