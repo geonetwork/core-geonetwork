@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.schema.ExportablePlugin;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
+import org.fao.geonet.kernel.schema.subtemplate.KeywordReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
@@ -339,6 +340,7 @@ public class ISO19139SchemaPlugin
         subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
         subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new KeywordReplacer(managersProxy));
     }
 
     @Override

@@ -26,18 +26,23 @@ package org.fao.geonet.kernel.schema.subtemplate;
 import org.apache.lucene.index.IndexReader;
 import org.jdom.Element;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import static org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer.KEYWORD;
 
-public interface ManagersProxy {
+public class KeywordReplacer implements Replacer {
 
-    Path getSchemaDir();
+    private ManagersProxy managersProxy;
 
-    IndexReader getIndexReader(String lang) throws IOException;
+    public KeywordReplacer(ManagersProxy managersProxy) {
+        this.managersProxy = managersProxy;
+    }
 
-    void releaseIndexReader(IndexReader reader) throws IOException, InterruptedException;
+    @Override
+    public Status replaceAll(Element dataXml, String localXlinkUrlPrefix, IndexReader indexReader, String localisedCharacterStringLanguageCode) {
+        return managersProxy.replaceAllKeyword(dataXml);
+    }
 
-    String getIso1LangCode(String Iso2LangCode);
-
-    Status replaceAllKeyword(Element md);
+    @Override
+    public String getAlias() {
+        return KEYWORD;
+    }
 }

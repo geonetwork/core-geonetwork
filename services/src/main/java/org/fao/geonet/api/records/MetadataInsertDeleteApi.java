@@ -1195,13 +1195,6 @@ public class MetadataInsertDeleteApi {
 
 
                 String templatesToOperateOn = settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT);
-                String KEYWORD = "keyword";
-                if (Arrays.asList(templatesToOperateOn.split(";")).contains(KEYWORD)) {
-                    Status status = iso19139KeywordReplacer.replaceAll(xmlElement);
-                    if (status.isError()) {
-                        throw new RuntimeException(status.getMsg());
-                    }
-                }
 
                 // replace matching subtemplates
                 ((SubtemplateAwareSchemaPlugin) schemaManager.getSchemaPlugin())

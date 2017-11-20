@@ -48,10 +48,12 @@ import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
+import org.fao.geonet.kernel.schema.subtemplate.Status;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.xlink.ISO19139KeywordReplacer;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
@@ -1874,6 +1876,7 @@ public class SchemaManager {
         if (schemaPlugin instanceof SubtemplateAwareSchemaPlugin && !((SubtemplateAwareSchemaPlugin) schemaPlugin).isInitialised()) {
             SearchManager searchManager = ApplicationContextHolder.get().getBean(SearchManager.class);
             SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
+            ISO19139KeywordReplacer keywordReplacer = ApplicationContextHolder.get().getBean(ISO19139KeywordReplacer.class);
             IsoLanguagesMapper isoLanguagesMapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
             ((SubtemplateAwareSchemaPlugin) schemaPlugin).init(
                     new ManagersProxy() {
@@ -1901,6 +1904,11 @@ public class SchemaManager {
                         @Override
                         public String getIso1LangCode(String iso2LangCode) {
                             return isoLanguagesMapper.iso639_2_to_iso639_1(iso2LangCode);
+                        }
+
+                        @Override
+                        public Status replaceAllKeyword(Element md) {
+                            return keywordReplacer.replaceAll(md);
                         }
                     },
                     CONSTANT_PROXY);

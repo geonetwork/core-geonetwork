@@ -50,7 +50,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
-public abstract class AbstractReplacer {
+public abstract class AbstractReplacer implements Replacer{
 
     private static final QueryParser PHRASE_QUERY_PARSER =
             new QueryParser(Version.LUCENE_4_9, null, new PhraseAnalyzer());

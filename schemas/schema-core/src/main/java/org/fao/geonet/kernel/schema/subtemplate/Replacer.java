@@ -26,18 +26,9 @@ package org.fao.geonet.kernel.schema.subtemplate;
 import org.apache.lucene.index.IndexReader;
 import org.jdom.Element;
 
-import java.io.IOException;
-import java.nio.file.Path;
+public interface Replacer {
 
-public interface ManagersProxy {
+    public Status replaceAll(Element dataXml, String localXlinkUrlPrefix, IndexReader indexReader, String localisedCharacterStringLanguageCode);
 
-    Path getSchemaDir();
-
-    IndexReader getIndexReader(String lang) throws IOException;
-
-    void releaseIndexReader(IndexReader reader) throws IOException, InterruptedException;
-
-    String getIso1LangCode(String Iso2LangCode);
-
-    Status replaceAllKeyword(Element md);
+    public String getAlias();
 }

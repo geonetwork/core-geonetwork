@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class SubtemplatesByLocalXLinksReplacer  {
 
-    private Map<String, AbstractReplacer> replacersDict = new HashMap<>();
+    private Map<String, Replacer> replacersDict = new HashMap<>();
     private ManagersProxy managersProxy;
 
     public SubtemplatesByLocalXLinksReplacer(ManagersProxy managersProxy) {
@@ -45,6 +45,7 @@ public class SubtemplatesByLocalXLinksReplacer  {
     public static String FORMAT = "format";
     public static String CONTACT = "contact";
     public static String EXTENT = "extent";
+    public static String KEYWORD = "keyword";
 
     public Element replaceSubtemplatesByLocalXLinks(Element dataXml,
                                                     String templatesToOperateOn) {
@@ -95,7 +96,7 @@ public class SubtemplatesByLocalXLinksReplacer  {
         }
     }
 
-    public void addReplacer(AbstractReplacer replacer) {
+    public void addReplacer(Replacer replacer) {
         replacersDict.put(replacer.getAlias(), replacer);
     }
 }
