@@ -245,6 +245,14 @@
                   addWpsLayers(l, scope.layerTree.nodes);
                 }
               }
+
+              // adding WPS layers w/o parent layer to the root
+              scope.layers.filter(function(l) {
+                if(l.get('fromWps') && !l.get('wpsParent')) {
+                  scope.layerTree.nodes.push(l);
+                }
+              });
+
               debounce--;
             }, 100);
           };
