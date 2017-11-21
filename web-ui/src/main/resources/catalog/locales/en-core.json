@@ -368,6 +368,6 @@
     "resultXonY": "on",
     "resolveCaptcha": "Resolve the captcha",
     "resolutions": "Resolution",
-    "loginTitle": "Log in",
-    "loginText": "Log in with your username and password to add and edit metadata."
+    "loginTitle": "Sign in",
+    "loginText": "Sign in with your username and password to add and edit metadata."
 }
