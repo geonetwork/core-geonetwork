@@ -338,7 +338,10 @@
         <gn-md-type-widget metadata="activeEntry"></gn-md-type-widget>
         {{activeEntry.title || activeEntry.defaultTitle}}
         &nbsp;
-        <a href ng-click="closeEditor()">({{'close' | translate}})</a>
+        <a href class="btn btn-default" ng-click="closeEditor()">
+          <i class="fa fa-close"/>&nbsp;
+          <span data=translate="">cancel</span>
+        </a>
       </p>
 
       <p ng-show="!activeEntry" class="text-muted" translate>
@@ -349,7 +352,7 @@
 
   <!-- simple editor, used for importing XML-->
   <div class="row" ng-show="currentEditorAction != '' && !activeEntry">
-    <div class="col-md-12 col-lg-8">
+    <div class="col-md-12">
       <div class="panel-default panel entry-editor">
         <div class="panel-heading">
           <span translate class="entry-editor-title">
@@ -402,7 +405,7 @@
 
   <!-- full editor is only used for edition -->
   <div class="row" ng-show="currentEditorAction != '' && activeEntry">
-    <div class="col-sm-12 col-lg-8">
+    <div class="col-sm-12">
       <div class="panel-default panel entry-editor">
         <div class="panel-heading">
 
