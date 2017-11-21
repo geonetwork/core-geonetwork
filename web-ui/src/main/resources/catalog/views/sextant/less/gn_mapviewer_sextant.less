@@ -79,6 +79,7 @@
 
   .sxt-panel-toggle,
   .main-tools button,
+  .main-tools [role="button"],
   .control-tools button {
     background: @sxt-button-color;
     color: white;
@@ -987,14 +988,18 @@
       margin-bottom: 0;
     }
   }
-  button[type="submit"] {
-    padding: 0 1em;
-    width: auto;
-    border-radius: 2px 0 0 2px;
-  }
-  button ~ button {
-    margin-left: -2px;
-    border-radius: 0 2px 2px 0;
+  .gn-execute {
+    [role="button"] {
+      padding: 0.3em 1em;
+      width: auto;
+    }
+    button {
+      padding: 0 1em;
+      width: auto;
+    }
+    button[type="submit"] {
+      border-radius: 2px 0 0 2px;
+    }
   }
 
   .form-group.optional {
@@ -1014,18 +1019,20 @@
       width: auto;
     }
   }
-  .form-group.gn-execute {
-    display: flex;
-    flex-direction: row;
-  }
   .output-selection {
     button {
+      border-radius: 0 2px 2px 0;
+      width: 2.2em;
       padding-left: 0.6em;
       padding-right: 0.2em;
       span:not(.caret) { display: none; }
     }
-    .dropdown-menu li:hover {
-      background-color: transparent;
+    .dropdown-menu {
+      left: 0px;
+      right: auto;
+      li:hover {
+        background-color: transparent;
+      }
     }
   }
 }
