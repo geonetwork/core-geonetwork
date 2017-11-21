@@ -33,6 +33,20 @@
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
         {{field.label}}
       </h5>
+
+      <!-- value filter field -->
+      <div class="filter-input sxt-layertree-filter"
+        ng-if="field.more || facetFilters[field.name]" ng-show="field.expanded">
+        <span class="fa fa-times-circle clear" title="clear"
+          ng-click="facetFilters[field.name] = ''; filterFacets()"
+          ng-show="facetFilters[field.name]"></span>
+        <input type="text" class="form-control input-sm layerfilter"
+          placeholder="{{ 'filter' | translate }}"
+          ng-model="facetFilters[field.name]"
+          ng-model-options="{debounce: 300}"
+          ng-change="filterFacets()">
+      </div>
+
       <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
         <div class="list-group">
           <div class="list-group-item"

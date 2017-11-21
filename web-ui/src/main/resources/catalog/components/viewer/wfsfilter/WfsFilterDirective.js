@@ -155,6 +155,10 @@
             geometry: ''
           };
 
+          // this will hold filters entered by the user for each facet
+          // keys are facet names
+          scope.facetFilters = {};
+
           // Get an instance of index object
           var indexObject, extentFilter;
           scope.filterGeometry = undefined;
@@ -381,10 +385,28 @@
               }
             });
 
+            // use value filters for facets
+            var aggs = {};
+            Object.keys(scope.facetFilters).forEach(function(facetName) {
+              var filter = scope.facetFilters[facetName];
+              if (!filter) { return; }
+
+              // make the filter case insensitive, ie : abc => [aA][bB][cC]
+              filter = filter.replace(/./g, function(match) {
+                return '[' + match.toLowerCase() + match.toUpperCase() + ']';
+              });
+
+              aggs[facetName] = {
+                terms: {
+                  include: '.*' + filter + '.*'
+                }
+              };
+            });
+
             indexObject.searchWithFacets({
               params: scope.output,
               geometry: scope.filterGeometry
-            }).
+            }, aggs).
                 then(function(resp) {
                   indexObject.pushState();
                   scope.fields = resp.facets;
