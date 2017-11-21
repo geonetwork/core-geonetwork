@@ -42,7 +42,7 @@
                 select="count(/root/gmd:EX_Extent) = 1"/>
 
   <xsl:template match="/root">
-    <xsl:apply-templates select="gmd:*"/>
+    <xsl:apply-templates select="gmd:*|*[@gco:isoType]"/>
   </xsl:template>
 
 
@@ -151,7 +151,7 @@
     </xsl:choose>
   </xsl:template>
 
-  
+
 
   <xsl:template name="correct_ns_prefix">
     <xsl:param name="element"/>
