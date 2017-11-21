@@ -367,5 +367,7 @@
     "expandAllFacetLabel": "Expand",
     "resultXonY": "on",
     "resolveCaptcha": "Resolve the captcha",
-    "resolutions": "Resolution"
+    "resolutions": "Resolution",
+    "loginTitle": "Log in",
+    "loginText": "Log in with your username and password to add and edit metadata."
 }
