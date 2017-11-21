@@ -43,6 +43,7 @@
 
             <!-- Inputs: loop on process description to display all inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input"
+              ng-if="!isInputHidden(input.identifier.value)"
               class="form-group">
 
               <!-- Input label & info -->
@@ -67,7 +68,7 @@
                     ng-if="::input.literalData.allowedValues"
                     ng-model="field.value"
                     ng-required="$index < input.minOccurs"
-                    ng-disabled="inputWfsOverride[input.identifier.value]">
+                    ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)">
                     <option ng-repeat="value in input.literalData.allowedValues.valueOrRange"
                       value="{{::value.value}}">{{::value.value}}</option>
                   </select>
@@ -76,16 +77,17 @@
                     type="{{::getInputType(input.literalData.dataType.value)}}"
                     ng-model="field.value"
                     ng-required="$index < input.minOccurs"
-                    ng-disabled="inputWfsOverride[input.identifier.value]"></input>
+                    ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)">
+                  </input>
 
                   <!-- delete button (disabled for mandatory values) -->
                   <a class="input-group-addon btn btn-default btn-icon"
-                    ng-if="getInputsByName(input.identifier.value).length > input.minOccurs && !inputWfsOverride[input.identifier.value]"
+                    ng-if="getInputsByName(input.identifier.value).length > input.minOccurs && !inputWfsOverride[input.identifier.value] && !isInputDisabled(input.identifier.value)"
                     ng-click="removeInputValueByName(input.identifier.value, $index)">
                     <span class="fa fa-trash-o"></span>
                   </a>
                   <a class="input-group-addon btn btn-default btn-icon" disabled
-                    ng-if="getInputsByName(input.identifier.value).length <= input.minOccurs || inputWfsOverride[input.identifier.value]">
+                    ng-if="getInputsByName(input.identifier.value).length <= input.minOccurs || inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)">
                     <span class="fa fa-trash-o"></span>
                   </a>
                 </div>
@@ -96,7 +98,7 @@
                 <gn-bbox-input
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   crs="::input._default.crs" value="field.value" map="::map"
-                  read-only="::inputWfsOverride[input.identifier.value]"
+                  read-only="::inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
                   ng-required="$index < input.minOccurs"
                   watch-value-change="true"/>
               </div>
