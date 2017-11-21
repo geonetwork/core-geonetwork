@@ -152,7 +152,6 @@
           scope.filtersChanged = false;
           scope.previousFilterState = {
             params: {},
-            any: '',
             geometry: ''
           };
 
@@ -335,7 +334,6 @@
               };
               output[fieldName].values[facetKey] = true;
             }
-            scope.searchInput = '';
             scope.filterFacets();
           };
           ctrl.onCheckboxClick = scope.onCheckboxClick;
@@ -385,7 +383,6 @@
 
             indexObject.searchWithFacets({
               params: scope.output,
-              any: scope.searchInput,
               geometry: scope.filterGeometry
             }).
                 then(function(resp) {
@@ -413,7 +410,6 @@
            */
           scope.resetFacets = function() {
             scope.output = {};
-            scope.searchInput = '';
 
             scope.resetSLDFilters();
 
@@ -448,7 +444,6 @@
 
             // apply filters to form
             scope.output = initialFilters.qParams || {};
-            scope.searchInput = initialFilters.any || '';
             if (initialFilters.geometry) {
               scope.ctrl.searchGeometry =
                   initialFilters.geometry[0][0] + ',' +
@@ -460,7 +455,6 @@
             // resend a search with initial filters to alter the facets
             return indexObject.searchWithFacets({
               params: initialFilters.qParams,
-              any: initialFilters.any,
               geometry: initialFilters.geometry
             }).then(function(resp) {
               indexObject.pushState();
@@ -493,7 +487,6 @@
             // save this filter state for future comparison
             scope.previousFilterState.params = angular.merge({}, scope.output);
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
-            scope.previousFilterState.any = scope.searchInput;
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
@@ -557,15 +550,6 @@
             });
           };
 
-          /**
-           * Clear the search input
-           */
-          scope.clearInput = function() {
-            scope.searchInput = '';
-            scope.filterFacets();
-          };
-          scope.searchInput = '';
-
           // Init the directive
           if (scope.layer) {
             init();
@@ -623,19 +607,17 @@
             // or equal to ',,,' or '', which all amount to the same thing
             function normalize(s) { return (s || '').replace(',,,', ''); }
 
-            var inputChanged = scope.searchInput !=
-                scope.previousFilterState.any;
             var geomChanged = normalize(scope.ctrl.searchGeometry) !==
                 normalize(scope.previousFilterState.geometry);
 
             // only compare params object if necessary
             var paramsChanged = false;
-            if (!inputChanged && !geomChanged) {
+            if (!geomChanged) {
               paramsChanged = !angular.equals(
                   scope.previousFilterState.params, scope.output);
             }
 
-            scope.filtersChanged = inputChanged || paramsChanged || geomChanged;
+            scope.filtersChanged = paramsChanged || geomChanged;
           });
 
           // returns true if there is an active filter for this field
