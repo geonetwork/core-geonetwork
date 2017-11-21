@@ -72,7 +72,7 @@
                indexOf(link.protocol) > -1;
 
             if (isServiceLink) {
-              gnMap.addOwsServiceToMap(link.url, 'WMS');
+              gnMap.addOwsServiceToMap(url, 'WMS');
             } else {
               //if this operation is called from search-from-map,
               // the link does not contain title, but contains name directly
