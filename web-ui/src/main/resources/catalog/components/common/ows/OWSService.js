@@ -105,7 +105,6 @@
               if (layer.Layer && !angular.isArray(layer.Layer)) {
                 layer.Layer = [layer.Layer];
               }
-
               // process recursively on child layers
               getFlatLayers(layer.Layer, inheritedCrs);
             }

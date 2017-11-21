@@ -5,17 +5,22 @@
       <li data-ng-repeat="s in styles track by $index"
           class="flex-row width-100">
         <div class="btn-group" role="group">
-          <a class="btn btn-xs btn-link"
-             data-gn-img-modal="{url: s.LegendURL[0].OnlineResource, title: (s.Title || s.Name), id: s.Name}"
-             title="{{'previewLegend' | translate}}">
-            <i class="fa fa-image"/>&nbsp;
-          </a>
-          <a data-ng-click="clickFn(s)"
-             class="btn btn-xs btn-link"
-             data-ng-disabled="current.Name === s.Name"
-             title="{{::s.Abstract}}">
-            {{::s.Title || s.Name}}
-          </a>
+          <div class="flex-row">
+            <div class="flex-col">
+              <a class="btn btn-xs btn-link"
+                 data-gn-img-modal="{url: s.LegendURL[0].OnlineResource, title: (s.Title || s.Name), id: s.Name}"
+                 title="{{'previewLegend' | translate}}">
+                <i class="fa fa-image"/>
+              </a>
+            </div>
+            <div class="flex-col">
+              <a data-ng-click="clickFn(s)"
+                 data-ng-disabled="current.Name === s.Name"
+                 title="{{::s.Abstract}}">
+                {{::s.Title || s.Name}}
+              </a>
+            </div>
+          </div>
         </div>
       </li>
     </ul>

@@ -26,6 +26,8 @@
               </li>
 
               <li>
+
+                <label data-translate="">selectStyle</label>
                 <div data-gn-layer-styles="layer.get('style')"
                      data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
                      data-gn-layer-styles-current="layer.get('currentStyle')"
@@ -34,6 +36,7 @@
 
               <!--Opacity slide-->
               <li class="" title="{{'opacity' | translate}}">
+                <label data-translate="">setOpacity</label>
                 <input class="" type="range"
                       min="0" max="1" step="0.05"
                       ng-model="layer.opacity"/>
@@ -68,7 +71,7 @@
               <!--Remove layer-->
               <li class="">
                 <a href=""
-                  data-ng-click="removeLayer(layer, map)">
+                   data-ng-click="removeLayer(layer, map)">
                   <span translate="">layerDelete</span>
                 </a>
               </li>

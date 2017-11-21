@@ -151,6 +151,15 @@
             }
           };
 
+          // reset a service URL and clear the result list
+          scope.reset = function() {
+            scope.loading = false;
+            scope.capability = null;
+            scope.serviceDesc = null;
+            scope.servicesList = [];
+            scope.url = "";
+          };
+
           // watch url as input
           scope.$watch('url', function(value) {
             if (value) {

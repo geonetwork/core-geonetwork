@@ -23,14 +23,22 @@
       </div>
 
       <label>
-        <span data-translate="" data-ng-show="catServicesList.length > 0">or</span>&nbsp;
+        <span data-ng-show="catServicesList.length > 0">
+          <span data-translate="">or</span>&nbsp;
+        </span>
         <span data-translate="" data-translate-values="{type: '{{format.toUpperCase()}}'}">orTypeAServiceUrl</span>
       </label>
       <div class="dropdown">
-        <input class="form-control input-sm" type="text" data-toggle="dropdown"
-               data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
-               placeholder="{{'serviceUrl' | translate}}"/>
-
+        <div class="input-group">
+          <input class="form-control" type="text" data-toggle="dropdown"
+                 data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
+                 placeholder="{{'serviceUrl' | translate}}"/>
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" data-ng-click="reset()">
+              <i class="fa fa-close"></i>
+            </button>
+          </span>
+        </div>
         <ul class="dropdown-menu" role="menu" data-ng-show="servicesList.length > 0">
           <li data-ng-repeat="srv in servicesList">
             <a href="" data-ng-click="setUrl(srv)" title="{{srv.url}}">
