@@ -541,29 +541,32 @@
       });
       // Note: this step does not seem to be necessary; TODO: remove or refactor
       $.each(listOfJsonFields, function(idx) {
-        var field = listOfJsonFields[idx];
-        if (angular.isDefined(record[field])) {
+        var fieldName = listOfJsonFields[idx];
+        if (angular.isDefined(record[fieldName])) {
           try {
-            record[field] = angular.fromJson(record[field]);
+            record[fieldName] = angular.fromJson(record[fieldName]);
+            var field = record[fieldName];
 
             // Combine all document keywordGroup fields
             // in one object. Applies to multilingual records
             // which may have multiple values after combining
             // documents from all index
-            if (field === 'keywordGroup' &&
-                angular.isArray(record[field])) {
+            // fixme: not sure how to precess this, take first array as main
+            // object or take last arrays when they appear (what is done here)
+            if (fieldName === 'keywordGroup' && angular.isArray(field)) {
               var thesaurusList = {};
-              for (var i = 0; i < record[field].length; i++) {
-                var thesauri = record[field][i];
+              for (var i = 0; i < field.length; i++) {
+                var thesauri = field[i];
                 $.each(thesauri, function(key) {
+                  if(!thesaurusList[key] && thesauri[key].length)
                   thesaurusList[key] = thesauri[key];
                 });
               }
-              record[field] = thesaurusList;
+              record[fieldName] = thesaurusList;
             }
           } catch (e) {}
         }
-      });
+      }.bind(this));
 
       // Create a structure that reflects the transferOption/onlinesrc tree
       var links = [];
