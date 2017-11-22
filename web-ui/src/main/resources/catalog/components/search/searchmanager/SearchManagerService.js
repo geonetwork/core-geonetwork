@@ -188,21 +188,11 @@
         return defer.promise;
       };
 
-      // this will hold a promise when a search is triggered
-      // calling canceller.resolve() will cancel the search
-      var canceller;
-
       // TODO: remove search call to use params instead
       // of url and use gnSearch only (then rename it to search)
-      var gnSearch = function(params, error, cancelPrevious) {
-        // cancel previous search if any
-        if (canceller && cancelPrevious) {
-          canceller.resolve();
-        }
-        canceller = $q.defer();
-
+      var gnSearch = function(params, error) {
         var defer = $q.defer();
-        gnHttp.callService('search', params, { timeout: canceller.promise }).
+        gnHttp.callService('search', params).
             success(function(data, status) {
               defer.resolve(format(data));
             }).
