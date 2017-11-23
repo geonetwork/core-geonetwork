@@ -82,7 +82,7 @@ public class SearchDefaults {
             }
 
             // Add other elements send by the request
-            // It could be extra parameters handle by Lucene in lucene.xsl
+            // It could be extra parameters handled by Lucene in lucene.xsl
             // and not set by default
             @SuppressWarnings("unchecked")
             List<Element> otherEl = request.getChildren();
