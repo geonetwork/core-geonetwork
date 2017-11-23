@@ -224,10 +224,12 @@ input[type=text], input[type=number], select {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    padding: 6px;
-
-    .gn-record-details {
-      padding-left: 38px;
+    padding: 6px 3px;
+    .btn-group {
+      margin-top: 3px;
+      .btn-single {
+        border-radius: 4px;
+      }
     }
   }
 }
@@ -772,7 +774,6 @@ gn-directory-associated-md {
 // md type widget (used only in editor for now)
 gn-md-type-widget {
   display: inline-block;
-
   & > div {
     border-radius: 1000px;
     width: 24px;
@@ -811,6 +812,14 @@ gn-md-type-widget {
     }
   }
 }
+.gn-editor-board {
+  .table.gn-results-editor td {
+    gn-md-type-widget {
+      margin-top: 5px;
+    }
+  }
+}
+
 
 gn-bounding-polygon {
   label {
