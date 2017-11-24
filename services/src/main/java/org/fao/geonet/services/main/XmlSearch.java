@@ -95,19 +95,19 @@ public class XmlSearch implements Service {
             params.removeChildren("from");
             params.removeChildren("to");
             params.addContent(new Element("from").setText("1"));
-            params.addContent(new Element("to").setText(Integer.toString(this.maxRecordValue - 1)));
+            params.addContent(new Element("to").setText(Integer.toString(this.maxRecordValue)));
             boundariesSet = true;
         }
         // from undefined, to defined
         else if (fromUndefined && ! toUndefined) {
             params.removeChildren("from");
-            params.addContent(new Element("from").setText(Integer.toString(to - this.maxRecordValue + 1)));
+            params.addContent(new Element("from").setText(Integer.toString(to - this.maxRecordValue)));
             boundariesSet = true;
         }
         // from defined, to undefined
         else if (! fromUndefined && toUndefined) {
             params.removeChildren("to");
-            params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue - 1)));
+            params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue)));
             boundariesSet = true;
         }
         // from defined, to defined
@@ -115,7 +115,7 @@ public class XmlSearch implements Service {
             // if the range is unacceptable
             if ((to - from) > this.maxRecordValue) {
                 params.removeChildren("to");
-                params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue - 1)));
+                params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue)));
                 boundariesSet = true;
             }
         }
