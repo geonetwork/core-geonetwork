@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +75,20 @@ public class XmlSearchTest {
         assertTrue(params.getChild("from").getText().equals(Integer.toString(150 - xs.getMaxRecordValue())));
         assertTrue(params.getChild("to").getText().equals("150"));        
     }
-    
+
+    @Test
+    public void testFromUndefinedToDefinedButTooSmall() {
+        Element params = new Element("request");
+        int boundaryTo = xs.getMaxRecordValue() / 2;
+        params.addContent(new Element("to").setText(Integer.toString(boundaryTo)));
+
+        boolean ret = (boolean) ReflectionUtils.invokeMethod(setSafeBoundaries, xs, params);
+
+        assertTrue("expected modified passed params", ret);
+        assertTrue(params.getChild("from").getText().equals("1"));
+        assertTrue(params.getChild("to").getText().equals(Integer.toString(boundaryTo)));
+    }
+
     @Test
     public void testFromDefinedToUndefined() {
         Element params = new Element("request");

@@ -92,21 +92,21 @@ public class XmlSearch implements Service {
 
         // from / to undefined
         if (fromUndefined && toUndefined) {
-            params.removeChildren("from");
-            params.removeChildren("to");
             params.addContent(new Element("from").setText("1"));
             params.addContent(new Element("to").setText(Integer.toString(this.maxRecordValue)));
             boundariesSet = true;
         }
         // from undefined, to defined
         else if (fromUndefined && ! toUndefined) {
-            params.removeChildren("from");
-            params.addContent(new Element("from").setText(Integer.toString(to - this.maxRecordValue)));
+            if (to - this.maxRecordValue > 0) {
+                params.addContent(new Element("from").setText(Integer.toString(to - this.maxRecordValue)));
+            } else {
+                params.addContent(new Element("from").setText("1"));
+            }
             boundariesSet = true;
         }
         // from defined, to undefined
         else if (! fromUndefined && toUndefined) {
-            params.removeChildren("to");
             params.addContent(new Element("to").setText(Integer.toString(from + this.maxRecordValue)));
             boundariesSet = true;
         }
