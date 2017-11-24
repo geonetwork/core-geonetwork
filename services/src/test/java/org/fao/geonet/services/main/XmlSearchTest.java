@@ -50,7 +50,7 @@ public class XmlSearchTest {
 
         assertTrue(ret);
         assertTrue(params.getChild("from").getText().equals("324"));
-        assertTrue(params.getChild("to").getText().equals(Integer.toString(324 + xs.getMaxRecordValue() - 1)));
+        assertTrue(params.getChild("to").getText().equals(Integer.toString(324 + xs.getMaxRecordValue())));
     }
     
     @Test
@@ -60,7 +60,7 @@ public class XmlSearchTest {
         
         assertTrue("expected modified passed params", ret);
         assertTrue(params.getChild("from").getText().equals("1"));
-        assertTrue(params.getChild("to").getText().equals(Integer.toString(xs.getMaxRecordValue() - 1)));        
+        assertTrue(params.getChild("to").getText().equals(Integer.toString(xs.getMaxRecordValue())));
     }
     
     @Test
@@ -71,7 +71,7 @@ public class XmlSearchTest {
         boolean ret = (boolean) ReflectionUtils.invokeMethod(setSafeBoundaries, xs, params);
         
         assertTrue("expected modified passed params", ret);
-        assertTrue(params.getChild("from").getText().equals(Integer.toString(150 - xs.getMaxRecordValue() + 1)));
+        assertTrue(params.getChild("from").getText().equals(Integer.toString(150 - xs.getMaxRecordValue())));
         assertTrue(params.getChild("to").getText().equals("150"));        
     }
     
@@ -84,6 +84,6 @@ public class XmlSearchTest {
         
         assertTrue("expected modified passed params", ret);
         assertTrue(params.getChild("from").getText().equals("42"));
-        assertTrue(params.getChild("to").getText().equals(Integer.toString(42 + xs.getMaxRecordValue() -1)));        
+        assertTrue(params.getChild("to").getText().equals(Integer.toString(42 + xs.getMaxRecordValue())));
     }
 }
