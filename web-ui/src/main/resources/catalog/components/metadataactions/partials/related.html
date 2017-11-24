@@ -91,7 +91,13 @@
               data-md="md">
             </div>
           </div>
-
+          
+          <div data-ng-switch-when="TMS">
+            <span data-translate=""
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                  tmsLinkDetails</span>
+          </div>
+          
           <div data-ng-switch-when="SOS">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">

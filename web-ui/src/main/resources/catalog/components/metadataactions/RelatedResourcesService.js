@@ -185,6 +185,14 @@
             }
           };
 
+          var addTMSToMap = function(link, md) {
+            // Link is localized when using associated resource service
+            // and is not when using search
+            var url = $filter('gnLocalized')(link.url) || link.url;
+            gnMap.createLayerFromProperties({type:'tms',url:url},gnSearchSettings.viewerMap);
+            gnSearchLocation.setMap();
+          };
+
           function addKMLToMap(record, md) {
             var url = $filter('gnLocalized')(record.url) || record.url;
             gnMap.addKmlToMap(record.name, url,
@@ -232,6 +240,11 @@
               iconClass: 'fa-globe',
               label: 'addToMap',
               action: addWMTSToMap
+            },
+            'TMS' : {
+              iconClass: 'fa-globe',
+              label: 'addToMap',
+              action: addTMSToMap
             },
             'WFS' : {
               iconClass: 'fa-globe',
@@ -369,6 +382,8 @@
                 return 'WMS';
               } else if (protocolOrType.match(/wmts/i)) {
                 return 'WMTS';
+              } else if (protocolOrType.match(/tms/i)) {
+                return 'TMS';
               } else if (protocolOrType.match(/wfs/i)) {
                 return 'WFS';
               } else if (protocolOrType.match(/wcs/i)) {
