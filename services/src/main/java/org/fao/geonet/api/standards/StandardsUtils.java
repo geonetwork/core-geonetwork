@@ -144,6 +144,11 @@ public class StandardsUtils {
                 // XPath context are supposed to use same namespace prefix
                 if (!currContext.contains("/")) {
                     currContext = findNamespace(currContext, scm, schema);
+
+                    // Use namespace prefix also for context
+                    if ((context != null) && (!context.contains("/"))) {
+                        context = findNamespace(context, scm, schema);
+                    }
                 }
 
                 if ((context != null && context.equals(currContext)) || (isoType != null && isoType.equals(currContext))) {
