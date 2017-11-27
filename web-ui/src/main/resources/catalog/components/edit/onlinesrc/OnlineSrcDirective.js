@@ -1227,7 +1227,7 @@
 
                 function checkIsOgc(protocol) {
 
-                  if (/OGC:WMS-[0-9].[0-9].[0-9]-http-get-map/.exec(protocol)) {
+                  if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
                     return 'WMS';
                   }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
