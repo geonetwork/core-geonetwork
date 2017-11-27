@@ -54,17 +54,17 @@
           <i class="fa fa-times text-danger"></i>
         </a>
         <a class="btn btn-default"
+           data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
+           data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
+           title="{{'createChild' | translate}}">
+          <i class="fa fa-sitemap text-muted"></i>
+        </a>
+        <a class="btn btn-default"
            data-ng-class="user.canEditRecord(md) ? '' : 'btn-single'"
            data-ng-show="md.isTemplate != 's'"
            data-ng-href="#/create?from={{md['geonet:info'].id}}"
            title="{{'duplicate' | translate}}">
           <i class="fa fa-copy text-muted"></i>
-        </a>
-        <a class="btn btn-default"
-           data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-           data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
-           title="{{'createChild' | translate}}">
-          <i class="fa fa-sitemap text-muted"></i>
         </a>
       </div>
     </td>
