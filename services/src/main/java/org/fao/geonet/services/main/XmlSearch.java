@@ -50,7 +50,9 @@ import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 public class XmlSearch implements Service {
     private ServiceConfig _config;
     private String _searchFast; //true, false, index
+    // Initialized here for testing purposes
     private int maxRecordValue = 100;
+    private boolean allowUnboundedQueries = false;
 
     //--------------------------------------------------------------------------
     //---
@@ -61,6 +63,8 @@ public class XmlSearch implements Service {
     public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
         _searchFast = config.getValue(Geonet.SearchResult.FAST, "true");
+        maxRecordValue = Integer.parseInt(config.getValue(Geonet.SearchResult.MAX_RECORDS, "100"));
+        allowUnboundedQueries = Boolean.parseBoolean(config.getValue(Geonet.SearchResult.ALLOW_UNBOUNDED_QUERIES, "false"));
     }
 
     /**
@@ -137,7 +141,10 @@ public class XmlSearch implements Service {
         params.removeChild(SELECTION_BUCKET);
 
         // Sets the boundaries (from/to) if needed
-        boolean boundariesSet = setSafeBoundaries(params);
+        boolean boundariesSet = false;
+        if (! this.allowUnboundedQueries) {
+            setSafeBoundaries(params);
+        }
 
         Element elData = SearchDefaults.getDefaultSearch(context, params);
 

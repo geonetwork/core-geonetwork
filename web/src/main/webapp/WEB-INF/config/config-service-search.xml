@@ -41,7 +41,11 @@
 
         // TODO : improve
         ]]></documentation>
-      <class name=".services.main.XmlSearch"/>
+      <class name=".services.main.XmlSearch">
+        <!-- Note: this parameter will affect the server's response,
+             the parameter client-side is not related to this one. -->
+        <param name="maxRecords" value="100" />
+      </class>
     </service>
 
     <service name="qi">
@@ -52,7 +56,9 @@
       application search in statistics.
       ]]>
       </documentation>
-      <class name=".services.main.XmlSearch"/>
+      <class name=".services.main.XmlSearch">
+        <param name="maxRecords" value="100" />
+      </class>
     </service>
 
     <service name="lang">
