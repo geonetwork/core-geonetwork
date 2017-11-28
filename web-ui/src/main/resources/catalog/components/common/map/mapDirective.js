@@ -170,7 +170,7 @@
                if (extent && extent.map) {
                  var decimals = getDigitNumber(scope.projs.form);
                  scope.extent[to] = extent.map(function(coord) {
-                   return coord.toFixed(decimals) / 1;
+                   return coord === null ? null : coord.toFixed(decimals) / 1;
                  });
                }
              };
