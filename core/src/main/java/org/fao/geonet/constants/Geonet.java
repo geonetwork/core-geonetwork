@@ -419,6 +419,18 @@ public final class Geonet {
         public static final String HITS_PER_PAGE = "hitsPerPage";
 
         /**
+         * Parameter name: {@value #MAX_RECORDS} - Number of maximum results returned by the search
+         * engine, given the from / to user provided parameters. Default is 100 results.
+         */
+        public static final String MAX_RECORDS = "maxRecords";
+
+        /**
+         * Parameter name: {@value #MAX_RECORDS} - Number of maximum results returned by the search
+         * engine, given the from / to user provided parameters. Default is 100 results.
+         */
+        public static final String ALLOW_UNBOUNDED_QUERIES = "allowUnboundedQueries";
+
+        /**
          * Parameter name: {@value #SIMILARITY} - Use the Lucene FuzzyQuery. Values range from 0.0
          * to 1.0 and defaults to 0.8
          */
