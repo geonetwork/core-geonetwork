@@ -81,6 +81,25 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
@@ -259,12 +278,39 @@ public class Aligner extends BaseAligner {
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
                     boolean localRating = settingManager.getValueAsBool(Settings.SYSTEM_LOCALRATING_ENABLE, false);
+                    final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
                     if (id == null) {
-                        addMetadata(ri, localRating);
+                        //record doesn't exist (so it doesn't belong to this harvester)
+                        log.info("Adding record with uuid " + ri.uuid);
+                        addMetadata(ri, localRating, ri.uuid);
+                    }
+                    else if (localUuids.getID(ri.uuid) == null) {
+                        //record doesn't belong to this harvester but exists
+                        result.datasetUuidExist++;
+                        
+                        switch(params.getOverrideUuid()){
+                        case OVERRIDE:
+                            updateMetadata(ri, Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                            log.info("Overriding record with uuid " + ri.uuid);
+                            result.updatedMetadata++;
+                            break;
+                        case RANDOM:
+                            log.info("Generating random uuid for remote record with uuid " + ri.uuid);
+                            addMetadata(ri, localRating, UUID.randomUUID().toString());
+                            break;
+                        case SKIP:
+                            log.info("Skipping record with uuid " + ri.uuid);
+                            result.uuidSkipped++;
+                        default:
+                            break;
+                        }
                     } else {
+                        //record exists and belongs to this harvester
+                        log.info("Updating record with uuid " + ri.uuid);
                         updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
                     }
+                        
                 }
             } catch (Throwable t) {
                 log.error("Couldn't insert or update metadata with uuid " + ri.uuid);
@@ -383,7 +429,7 @@ public class Aligner extends BaseAligner {
 
     //--------------------------------------------------------------------------
 
-    private void addMetadata(final RecordInfo ri, final boolean localRating) throws Exception {
+    private void addMetadata(final RecordInfo ri, final boolean localRating, String uuid) throws Exception {
         final String id[] = {null};
         final Element md[] = {null};
 
@@ -432,7 +478,7 @@ public class Aligner extends BaseAligner {
                         }
                     }
                     if (info != null) {
-                        id[index] = addMetadata(ri, md[index], info, localRating);
+                        id[index] = addMetadata(ri, md[index], info, localRating, uuid);
                     }
                 }
 
@@ -476,7 +522,7 @@ public class Aligner extends BaseAligner {
             if (log.isDebugEnabled())
                 log.debug("  - Skipped unretrievable metadata (maybe has been removed) with uuid:" + ri.uuid);
             result.unretrievable++;
-            e.printStackTrace();
+            log.error(e);
         } finally {
             try {
                 Files.deleteIfExists(mefFile);
@@ -492,7 +538,7 @@ public class Aligner extends BaseAligner {
     //---
     //--------------------------------------------------------------------------
 
-    private String addMetadata(RecordInfo ri, Element md, Element info, boolean localRating) throws Exception {
+    private String addMetadata(RecordInfo ri, Element md, Element info, boolean localRating, String uuid) throws Exception {
         Element general = info.getChild("general");
 
         String createDate = general.getChildText("createDate");
@@ -523,7 +569,7 @@ public class Aligner extends BaseAligner {
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
         IMetadata metadata = new Metadata();
-        metadata.setUuid(ri.uuid);
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).

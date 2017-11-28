@@ -154,18 +154,16 @@
       </h3>
     </div>
     <div class="panel-body layers">
+      <div gn-layermanager="" gn-layermanager-map="map"></div>
+      <br />
+      <div gn-baselayerswitcher=""
+          gn-baselayerswitcher-map="map"
+          data-dropup=""></div>
+      <br data-ng-show="is3dEnabled"/>
+      <div data-gn-terrain-switcher="ol3d"
+          data-dropup=""
+          data-ng-show="is3dEnabled"></div>
     </div>
-
-    <div gn-layermanager="" gn-layermanager-map="map"></div>
-
-    <div gn-baselayerswitcher=""
-         gn-baselayerswitcher-map="map"
-         data-dropup=""></div>
-    <br/>
-    <div data-gn-terrain-switcher="ol3d"
-         data-dropup=""
-         data-ng-show="is3dEnabled"></div>
-    <br/>
   </div>
 
 

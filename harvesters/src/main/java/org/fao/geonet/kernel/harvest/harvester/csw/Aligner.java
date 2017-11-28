@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fao.geonet.GeonetContext;
@@ -60,6 +61,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
@@ -93,6 +95,7 @@ public class Aligner extends BaseAligner {
     //--------------------------------------------------------------------------
     private CswParams params;
     private DataManager dataMan;
+    private MetadataRepository metadataManager;
 
     //--------------------------------------------------------------------------
     //---
@@ -122,7 +125,11 @@ public class Aligner extends BaseAligner {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataManager = gc.getBean(MetadataRepository.class);
         result = new HarvestResult();
+        result.unretrievable = 0;
+        result.uuidSkipped = 0;
+        result.couldNotInsert = 0;
 
         //--- setup get-record-by-id request
 
@@ -221,8 +228,36 @@ public class Aligner extends BaseAligner {
 
                 String id = dataMan.getMetadataId(ri.uuid);
 
-                if (id == null) addMetadata(ri);
-                else updateMetadata(ri, id);
+                if (id == null) {
+                    //record doesn't exist (so it doesn't belong to this harvester)
+                    log.info("Adding record with uuid " + ri.uuid);
+                    addMetadata(ri, ri.uuid);
+                }
+                else if (localUuids.getID(ri.uuid) == null) {
+                    //Record does not belong to this harvester
+                    result.datasetUuidExist++;
+                    
+                    switch(params.getOverrideUuid()){
+                    case OVERRIDE:
+                        updateMetadata(ri, Integer.toString(metadataManager.findOneByUuid(ri.uuid).getId()));
+                        log.debug("Overriding record with uuid " + ri.uuid);
+                        result.updatedMetadata++;
+                        break;
+                    case RANDOM:
+                        log.debug("Generating random uuid for remote record with uuid " + ri.uuid);
+                        addMetadata(ri, UUID.randomUUID().toString());
+                        break;
+                    case SKIP:
+                        log.debug("Skipping record with uuid " + ri.uuid);
+                        result.uuidSkipped++;
+                    default:
+                        break;
+                    }
+                } else {
+                    //record exists and belongs to this harvester
+                    updateMetadata(ri, id);
+                
+                }
                 result.totalMetadata++;
             }catch(Throwable t) {
                 errors.add(new HarvestError(context, t, log));
@@ -239,7 +274,7 @@ public class Aligner extends BaseAligner {
         return result;
     }
 
-    private void addMetadata(RecordInfo ri) throws Exception {
+    private void addMetadata(RecordInfo ri, String uuid) throws Exception {
         if (cancelMonitor.get()) {
             return;
         }
@@ -247,6 +282,7 @@ public class Aligner extends BaseAligner {
         Element md = retrieveMetadata(ri.uuid);
 
         if (md == null) {
+            result.unretrievable++;
             return;
         }
 
@@ -283,7 +319,7 @@ public class Aligner extends BaseAligner {
             ownerId = Integer.parseInt(params.getOwnerId());
         }
         IMetadata metadata = new Metadata();
-        metadata.setUuid(ri.uuid);
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
