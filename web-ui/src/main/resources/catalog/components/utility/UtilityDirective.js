@@ -1239,7 +1239,7 @@
 
       } else if (angular.isString(value)) {
         if (value) {
-          return value.replace(/(\r)?\n/g, '<br/>');
+          return value.replace(/(\r)?\n/g, '<br/>').replace(/(&#13;)?&#10;/g, '<br/>');
         } else {
           return value;
         }

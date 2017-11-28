@@ -107,8 +107,8 @@
         </h1>
 
         <div class="alert alert-info"
-             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | newlines"/>
-        
+             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
+
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="mdView.current.record.status_text.length > 0"
              title="{{mdView.current.record.status_text[0]}}"
@@ -216,7 +216,7 @@
             <th data-translate="">securityConstraints</th>
             <td>
               <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index"
-                 data-ng-bind-html="c | newlines">
+                 data-ng-bind-html="c | linky | newlines">
               </p>
             </td>
           </tr>
@@ -226,7 +226,7 @@
             <th data-translate="">resourceConstraints</th>
             <td>
               <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index"
-                 data-ng-bind-html="c | newlines">
+                 data-ng-bind-html="c | linky | newlines">
               </p>
             </td>
           </tr>
@@ -312,7 +312,7 @@
           <tr data-ng-if="mdView.current.record.lineage">
             <th data-translate="">lineage</th>
             <td>
-              <p data-ng-bind-html="mdView.current.record.lineage | newlines"/>
+              <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
             </td>
           </tr>
           <tr>
