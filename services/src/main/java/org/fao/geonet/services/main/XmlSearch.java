@@ -102,11 +102,7 @@ public class XmlSearch implements Service {
         }
         // from undefined, to defined
         else if (fromUndefined && ! toUndefined) {
-            if (to - this.maxRecordValue > 0) {
-                params.addContent(new Element("from").setText(Integer.toString(to - this.maxRecordValue)));
-            } else {
-                params.addContent(new Element("from").setText("1"));
-            }
+            params.addContent(new Element("from").setText(Integer.toString(Math.max(1,to - this.maxRecordValue))));
             boundariesSet = true;
         }
         // from defined, to undefined
