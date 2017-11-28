@@ -82,17 +82,20 @@
               <div gn-related="md"
                    data-user="user"
                    data-types="onlines">&#160;</div>
-
-              <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
 
-
-            <xsl:for-each select="$viewConfig/*">
-              <xsl:sort select="@formatter-order"
-                        data-type="number"/>
-              <xsl:apply-templates mode="render-view"
-                                   select="."/>
-            </xsl:for-each>
+            <div>
+              <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <xsl:for-each select="$viewConfig/*">
+                  <xsl:sort select="@formatter-order"
+                            data-type="number"/>
+                  <xsl:apply-templates mode="render-view"
+                                       select="."/>
+                </xsl:for-each>
+              </div>
+            </div>
           </div>
           <div class="gn-md-side col-md-4">
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
@@ -225,7 +228,7 @@
   <xsl:template mode="render-toc" match="view">
     <xsl:if test="count(tab) > 1">
       <!-- TODO: Hide tabs which does not contains anything -->
-      <ul class="view-outline nav nav-pills">
+      <ul class="view-outline nav nav-tabs">
         <xsl:for-each select="tab">
           <li>
             <a href="#gn-tab-{@id}">
