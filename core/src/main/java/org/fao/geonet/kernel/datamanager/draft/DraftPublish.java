@@ -4,7 +4,7 @@
 package org.fao.geonet.kernel.datamanager.draft;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.events.md.MetadataPublished;
@@ -49,7 +49,7 @@ public class DraftPublish implements ApplicationListener<MetadataPublished> {
     public void onApplicationEvent(MetadataPublished event) {
 
         if (event.getMd() instanceof MetadataDraft) {
-            IMetadata draft = event.getMd();
+            AbstractMetadata draft = event.getMd();
             Metadata md = mdRepository.findOneByUuid(draft.getUuid());
 
             processDraft(draft, md);
@@ -65,7 +65,7 @@ public class DraftPublish implements ApplicationListener<MetadataPublished> {
 
     }
 
-    private void processDraft(IMetadata draft, IMetadata md) {
+    private void processDraft(AbstractMetadata draft, AbstractMetadata md) {
         ServiceContext serviceContext = ServiceContext.get();
         
         try {

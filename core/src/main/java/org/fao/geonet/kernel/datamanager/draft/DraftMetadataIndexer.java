@@ -3,7 +3,7 @@ package org.fao.geonet.kernel.datamanager.draft;
 import java.util.Vector;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer;
@@ -26,16 +26,16 @@ public class DraftMetadataIndexer extends BaseMetadataIndexer implements IMetada
     }
 
     @Override
-    protected void addExtraFields(IMetadata fullMd, Vector<Element> moreFields) {
+    protected void addExtraFields(AbstractMetadata fullMd, Vector<Element> moreFields) {
         super.addExtraFields(fullMd, moreFields);
 
         if (fullMd instanceof MetadataDraft) {
-            moreFields.addElement(SearchManager.makeField(Geonet.IndexFieldNames.DRAFT, "Y", true, false));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DRAFT, "y", true, true));
         } else {
-            if (metadataDraftRepository.exists(fullMd.getId())) {
-                moreFields.addElement(SearchManager.makeField(Geonet.IndexFieldNames.DRAFT, "E", true, false));
+            if (metadataDraftRepository.findOneByUuid(fullMd.getUuid()) != null) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DRAFT, "e", true, true));
             } else {
-                moreFields.addElement(SearchManager.makeField(Geonet.IndexFieldNames.DRAFT, "N", true, false));
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DRAFT, "n", true, true));
             }
         }
     }

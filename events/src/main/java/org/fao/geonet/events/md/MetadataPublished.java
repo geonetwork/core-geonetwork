@@ -23,7 +23,7 @@
 
 package org.fao.geonet.events.md;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 
 /**
  * Event launched when a metadata is published
@@ -34,7 +34,7 @@ public class MetadataPublished extends MetadataEvent {
 
     private static final long serialVersionUID = 324534556246220509L;
 
-    public MetadataPublished(IMetadata md) {
+    public MetadataPublished(AbstractMetadata md) {
         super(md);
     }
 

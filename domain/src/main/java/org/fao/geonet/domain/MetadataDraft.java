@@ -26,7 +26,7 @@ import org.fao.geonet.entitylistener.MetadataDraftEntityListenerManager;
 @Table(name = MetadataDraft.TABLENAME)
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataDraftEntityListenerManager.class)
-public class MetadataDraft extends IMetadata {
+public class MetadataDraft extends AbstractMetadata {
     public static final String TABLENAME = "MetadataDraft";
 
     public MetadataDraft() {

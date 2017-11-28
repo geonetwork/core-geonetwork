@@ -347,11 +347,7 @@ public class AccessManager {
      * @param metadataId the id of the metadata
      */
     public boolean isVisibleToAll(final String metadataId) throws Exception {
-<<<<<<< HEAD
-        AbstractMetadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOne(metadataId);
-=======
-        IMetadata metadata = ApplicationContextHolder.get().getBean(IMetadataUtils.class).findOne(metadataId);
->>>>>>> Metadata Draft added. Pending: redirect editor when trying to edit
+        AbstractMetadata metadata = ApplicationContextHolder.get().getBean(IMetadataUtils.class).findOne(metadataId);
         if (metadata == null) {
             return false;
         } else {

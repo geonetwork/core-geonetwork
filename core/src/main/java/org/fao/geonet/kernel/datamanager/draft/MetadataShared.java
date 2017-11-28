@@ -4,7 +4,7 @@
 package org.fao.geonet.kernel.datamanager.draft;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.OperationAllowed;
@@ -52,7 +52,7 @@ public class MetadataShared implements ApplicationListener<MetadataShare> {
 
         Integer idmd = event.getOp().getId().getMetadataId();
         try {
-            IMetadata md = manager.findOne(idmd);
+            AbstractMetadata md = manager.findOne(idmd);
             if (md instanceof MetadataDraft) {
                 // Update on original metadata too
                 Metadata original = mdRepository.findOneByUuid(md.getUuid());

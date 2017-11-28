@@ -6,7 +6,7 @@ import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -63,7 +63,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 
     @Override
     @Transactional(readOnly=false, isolation=Isolation.READ_COMMITTED, propagation=Propagation.REQUIRES_NEW)
-    public IMetadata save(IMetadata info) {
+    public AbstractMetadata save(AbstractMetadata info) {
         if (info instanceof Metadata) {
             return super.save((Metadata) info);
         } else if (info instanceof MetadataDraft) {
@@ -80,14 +80,14 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 
     @SuppressWarnings("unchecked")
     @Override
-    public IMetadata update(int id, @Nonnull Updater<? extends IMetadata> updater) {
+    public AbstractMetadata update(int id, @Nonnull Updater<? extends AbstractMetadata> updater) {
         super.update(id, updater);
         return metadataDraftRepository.update(id, (Updater<MetadataDraft>) updater);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void deleteAll(Specification<? extends IMetadata> specs) {
+    public void deleteAll(Specification<? extends AbstractMetadata> specs) {
         super.deleteAll(specs);
         try {
             metadataDraftRepository.deleteAll((Specification<MetadataDraft>) specs);
@@ -107,8 +107,8 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 
     @SuppressWarnings("unchecked")
     @Override
-    public void createBatchUpdateQuery(PathSpec<? extends IMetadata, String> servicesPath, String newUuid,
-            Specification<? extends IMetadata> harvested) {
+    public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
+            Specification<? extends AbstractMetadata> harvested) {
         metadataDraftRepository.createBatchUpdateQuery((PathSpec<MetadataDraft, String>) servicesPath, newUuid,
                 (Specification<MetadataDraft>) harvested);
         super.createBatchUpdateQuery(servicesPath, newUuid, harvested);

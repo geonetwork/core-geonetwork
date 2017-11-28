@@ -14,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -111,7 +111,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
     @Override
     public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         // Check id
-        IMetadata md = super.getMetadataRepository().findOne(Integer.valueOf(id));
+        AbstractMetadata md = super.getMetadataRepository().findOne(Integer.valueOf(id));
 
         if (md != null) {
             boolean isPublished = loadOperationsAllowed(context,
@@ -328,7 +328,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 
     @SuppressWarnings("unchecked")
     @Override
-    public long count(Specification<? extends IMetadata> specs) {
+    public long count(Specification<? extends AbstractMetadata> specs) {
         long tmp = 0;
         try {
             tmp += super.count((Specification<Metadata>) specs);
@@ -349,7 +349,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
     }
 
     @Override
-    public IMetadata findOne(int id) {
+    public AbstractMetadata findOne(int id) {
         if (super.exists(id)) {
             return super.findOne(id);
         }
@@ -360,10 +360,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
      * If the user has permission to see the draft, draft goes first
      */
     @Override
-    public IMetadata findOneByUuid(String uuid) {
-        IMetadata md = super.findOneByUuid(uuid);
+    public AbstractMetadata findOneByUuid(String uuid) {
+        AbstractMetadata md = super.findOneByUuid(uuid);
         if (md != null && am.canEdit(context, Integer.toString(md.getId()))) {
-            IMetadata tmp = metadataDraftRepository.findOneByUuid(uuid);
+            AbstractMetadata tmp = metadataDraftRepository.findOneByUuid(uuid);
             if (tmp != null) {
                 md = tmp;
             }
@@ -380,8 +380,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 
     @SuppressWarnings("unchecked")
     @Override
-    public IMetadata findOne(Specification<? extends IMetadata> spec) {
-        IMetadata md = super.findOne(spec);
+    public AbstractMetadata findOne(Specification<? extends AbstractMetadata> spec) {
+        AbstractMetadata md = super.findOne(spec);
 
         if (md == null) {
             try {
@@ -395,8 +395,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
     }
 
     @Override
-    public IMetadata findOne(String id) {
-        IMetadata md = super.findOne(id);
+    public AbstractMetadata findOne(String id) {
+        AbstractMetadata md = super.findOne(id);
         if (md == null) {
             md = metadataDraftRepository.findOne(id);
         }
@@ -404,17 +404,17 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
     }
 
     @Override
-    public List<? extends IMetadata> findAllByHarvestInfo_Uuid(String uuid) {
-        List<IMetadata> list = new LinkedList<IMetadata>();
+    public List<? extends AbstractMetadata> findAllByHarvestInfo_Uuid(String uuid) {
+        List<AbstractMetadata> list = new LinkedList<AbstractMetadata>();
         list.addAll(metadataDraftRepository.findAllByHarvestInfo_Uuid(uuid));
         list.addAll(super.findAllByHarvestInfo_Uuid(uuid));
         return list;
     }
 
     @Override
-    public Iterable<? extends IMetadata> findAll(Set<Integer> keySet) {
-        List<IMetadata> list = new LinkedList<IMetadata>();
-        for (IMetadata md : super.findAll(keySet)) {
+    public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet) {
+        List<AbstractMetadata> list = new LinkedList<AbstractMetadata>();
+        for (AbstractMetadata md : super.findAll(keySet)) {
             list.add(md);
         }
         list.addAll(metadataDraftRepository.findAll(keySet));
@@ -423,8 +423,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<? extends IMetadata> findAll(Specification<? extends IMetadata> specs) {
-        List<IMetadata> list = new LinkedList<IMetadata>();
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> specs) {
+        List<AbstractMetadata> list = new LinkedList<AbstractMetadata>();
         list.addAll(super.findAll(specs));
         try {
             list.addAll(metadataDraftRepository.findAll((Specification<MetadataDraft>) specs));
@@ -470,13 +470,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 
     @Override
     // TODO maybe we should add drafts here too?
-    public Element findAllAsXml(Specification<? extends IMetadata> specs, Sort sortByChangeDateDesc) {
+    public Element findAllAsXml(Specification<? extends AbstractMetadata> specs, Sort sortByChangeDateDesc) {
         return super.findAllAsXml(specs, sortByChangeDateDesc);
     }
 
     @Override
     // TODO maybe we should add drafts here too?
-    public Element findAllAsXml(@Nullable Specification<? extends IMetadata> specs, @Nullable Pageable pageable) {
+    public Element findAllAsXml(@Nullable Specification<? extends AbstractMetadata> specs, @Nullable Pageable pageable) {
         return super.findAllAsXml(specs, pageable);
     }
 
@@ -493,7 +493,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends IMetadata> spec) {
+    public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec) {
         Map<Integer, MetadataSourceInfo> map = super.findAllSourceInfo(spec);
         try {
             map.putAll(metadataDraftRepository.findAllSourceInfo((Specification<MetadataDraft>) spec));

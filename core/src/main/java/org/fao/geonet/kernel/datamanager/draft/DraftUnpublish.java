@@ -4,7 +4,7 @@
 package org.fao.geonet.kernel.datamanager.draft;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.events.md.MetadataUnpublished;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -44,7 +44,7 @@ public class DraftUnpublish
     @Override
     public void onApplicationEvent(MetadataUnpublished event) {
         // If it has a draft associated
-        IMetadata metadata = event.getMd();
+        AbstractMetadata metadata = event.getMd();
 
         if (!(metadata instanceof MetadataDraft)) {
 
