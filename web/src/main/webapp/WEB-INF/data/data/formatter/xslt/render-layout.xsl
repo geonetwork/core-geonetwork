@@ -98,54 +98,49 @@
             </div>
           </div>
 
-          <div class="gn-md-side col-md-4">
+          <div class="gn-md-side gn-md-side-advanced col-md-4">
+
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
 
-            <br/>
-
-            <section>
+            <section class="gn-md-side-providedby">
               <h4>
-                <i class="fa fa-fw fa-cog">&#160;</i>&#160;
+                <i class="fa fa-fw fa-cog">&#160;</i>
                 <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
               </h4>
               <img class="gn-source-logo"
-                   src="{$nodeUrl}../images/logos/{$source}.png">&#160;</img>
+                   src="{$nodeUrl}../images/logos/{$source}.png" />
             </section>
 
-            <br/>
-
-            <section>
+            <section class="gn-md-side-social">
               <h4>
-                <i class="fa fa-fw fa-share-square-o">&#160;</i>&#160;
+                <i class="fa fa-fw fa-share-square-o">&#160;</i>
                 <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
               </h4>
               <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                  target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-twitter">&#160;</i>&#160;
+                <i class="fa fa-fw fa-twitter">&#160;</i>
               </a>
               <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                  target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-google-plus">&#160;</i>&#160;
+                <i class="fa fa-fw fa-google-plus">&#160;</i>
               </a>
               <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                  target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-facebook">&#160;</i>&#160;
+                <i class="fa fa-fw fa-facebook">&#160;</i>
               </a>
               <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=Hydrological Basins in Africa (Sample record, please remove!)&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                  target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
+                <i class="fa fa-fw fa-linkedin">&#160;</i>
               </a>
               <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                  target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
+                <i class="fa fa-fw fa-envelope-o">&#160;</i>
               </a>
             </section>
 
-            <br/>
-
-            <section>
+            <section class="gn-md-side-viewmode">
               <h4>
-                <i class="fa fa-fw fa-eye">&#160;</i>&#160;
+                <i class="fa fa-fw fa-eye">&#160;</i>
                 <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
               </h4>
               <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
@@ -170,32 +165,31 @@
               </xsl:for-each>
             </section>
 
-            <br/>
+            <section class="gn-md-side-access">
+              <div class="well text-center">
+                <span itemprop="identifier"
+                    itemscope="itemscope"
+                    itemtype="http://schema.org/identifier" 
+                    class="hidden">
+                  <xsl:value-of select="$metadataUuid"/>
+                </span>
+                <a itemprop="url"
+                   itemscope="itemscope"
+                   itemtype="http://schema.org/url" 
+                   class="btn btn-block btn-primary"
+                   href="{if ($portalLink != '')
+                          then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                          else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                  <i class="fa fa-fw fa-link">&#160;</i>
+                  <xsl:value-of select="$schemaStrings/linkToPortal"/>
+                </a>
+                <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
+              </div>
+            </section>
 
-            <div class="well text-center">
-              <span itemprop="identifier"
-                  itemscope="itemscope"
-                  itemtype="http://schema.org/identifier" 
-                  class="hidden">
-                <xsl:value-of select="$metadataUuid"/>
-              </span>
-              <a itemprop="url"
-                 itemscope="itemscope"
-                 itemtype="http://schema.org/url" 
-                 class="btn btn-block btn-primary"
-                 href="{if ($portalLink != '')
-                        then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                        else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                <i class="fa fa-link">&#160;</i>
-                <xsl:value-of select="$schemaStrings/linkToPortal"/>
-              </a>
-              <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
-            </div>
-
-
-            <section>
+            <section class="gn-md-side-associated">
               <h4>
-                <i class="fa fa-fw fa-link">&#160;</i>&#160;
+                <i class="fa fa-fw fa-link">&#160;</i>
                 <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
               </h4>
               <div gn-related="md"

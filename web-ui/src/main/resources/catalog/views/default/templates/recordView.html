@@ -387,7 +387,7 @@
       </div>
 
       <div class="col-md-4 gn-md-side">
-        <section data-ng-if="mdView.current.record.overviews.length > 0">
+        <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overviews.length > 0">
           <h4>
             <i class="fa fa-fw fa-image"></i>
             <span data-translate="">overview</span>
@@ -404,10 +404,8 @@
             </div>
           </div>
         </section>
-        </br>
 
-
-        <section data-ng-if="mdView.current.record.geoBox.length > 0">
+        <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>
             <i class="fa fa-fw fa-map-marker"></i>
             <span data-translate="">extent</span>
@@ -424,9 +422,9 @@
           </p>
 
         </section>
-        </br>
 
-        <section data-ng-if="mdView.current.record.creationDate ||
+        <section class="gn-md-side-dates"
+                 data-ng-if="mdView.current.record.creationDate ||
                              mdView.current.record.publicationDate ||
                              mdView.current.record.revisionDate ||
                              mdView.current.record.tempExtentBegin ||
@@ -457,13 +455,12 @@
             <dt data-translate>tempExtentBegin</dt>
             <dd>
               <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
-              &nbsp;<i class="fa fa-forward"></i>&nbsp;
+              &nbsp;<i class="fa fa-fw fa-forward"></i>
               <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
             </dd>
           </dl>
           </p>
         </section>
-        </br>
 
         <!--<section data-ng-repeat="c in mdView.current.record.getAllContacts().resource track by $index">
           <h4>
@@ -497,8 +494,7 @@
           </div>
         </section></br>-->
 
-
-        <section>
+        <section class="gn-md-side-providedby">
           <h4>
             <i class="fa fa-fw fa-cog"></i>
             <span data-translate="">sourceCatalog</span>
@@ -506,11 +502,10 @@
           <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
                class="gn-source-logo"/>
         </section>
-        </br>
 
-        <section>
+        <section class="gn-md-side-calendar">
           <h4>
-            <i class="fa fa-calendar"></i>&nbsp;
+            <i class="fa fa-fw fa-calendar"></i>
             <span data-translate="">updatedOn</span>
           </h4>
           <p>
@@ -518,9 +513,8 @@
                   data-from-now=""></span>
           </p>
         </section>
-        </br>
 
-        <section>
+        <section class="gn-md-side-social">
           <h4>
             <i class="fa fa-fw fa-share-square-o"></i>
             <span data-translate="">shareOn</span>
@@ -554,11 +548,10 @@
             title="{{'permalink' | translate}}"
             class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
         </section>
-        </br>
 
-        <section>
+        <section class="gn-md-side-rating">
           <h4>
-            <i class="fa fa-fw"></i>
+            <i class="fa fa-fw fa-star-half-o"></i>
             <span data-translate="">rate</span>
           </h4>
           <div data-gn-metadata-rate="mdView.current.record"/>
