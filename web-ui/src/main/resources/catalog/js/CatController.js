@@ -572,8 +572,10 @@
 
 
         // Retrieve user information if catalog is online
+        // append a random number to avoid caching in IE11
         var userLogin = catInfo.then(function(value) {
-          return $http.get('../api/me').
+          return $http.get('../api/me?_random=' +
+            Math.floor(Math.random() * 10000)).
               success(function(me, status) {
                 if (angular.isObject(me)) {
                   angular.extend($scope.user, me);
