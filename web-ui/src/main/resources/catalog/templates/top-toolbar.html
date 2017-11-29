@@ -39,7 +39,8 @@
         </a>
       </li>
       <li class="dropdown dropdown-hover open" data-ng-if="gnCfg.mods.editor.enabled"
-          data-ng-show="authenticated && user.isEditorOrMore()">
+          data-ng-show="authenticated && user.isEditorOrMore()"
+          id="gn-login-dropdown">
         <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}"
            title="{{'editorBoard' | translate}}"
            class="dropdown-toggle"
@@ -139,7 +140,8 @@
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle"
-           data-ng-keypress="$event">
+           data-ng-keypress="$event"
+           data-ng-onmouseover="activateLoginPopup()">
           <i class="fa fa-sign-in"/>&nbsp;
           {{'signIn' | translate}}
         </a>
@@ -156,7 +158,7 @@
               </div>
               <div class="flex-spacer"></div>
               <div class="form-group form-group-sm">
-                <label class="sr-only"for="inputPassword" data-translate="">password</label>
+                <label class="sr-only" for="inputPassword" data-translate="">password</label>
                   <input type="password" class="form-control" id="inputPassword" name="password"
                     autocomplete="off"
                     data-ng-model="signinPassword" placeholder="{{'password' | translate}}"

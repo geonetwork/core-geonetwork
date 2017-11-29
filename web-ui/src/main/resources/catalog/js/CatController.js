@@ -481,6 +481,15 @@
       // login url for inline signin form in top toolbar
       $scope.signInFormAction = '../../signin#' + $location.path();
 
+      $scope.activateLoginPopup = function() {
+        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword').one('focus',function() {
+          $(this).parents('.dropdown-menu').addClass('show');
+        });
+        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword').one('blur',function() {
+          $(this).parents('.dropdown-menu').removeClass('show');
+        });
+      };
+
       /**
        * Catalog facet summary providing
        * a global overview of the catalog content.
