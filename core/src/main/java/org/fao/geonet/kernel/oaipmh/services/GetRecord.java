@@ -29,7 +29,7 @@ import java.nio.file.Path;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -63,7 +63,7 @@ public class GetRecord implements OaiPmhService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager sm = gc.getBean(SchemaManager.class);
 
-        IMetadata metadata = context.getBean(IMetadataUtils.class).findOne(spec);
+        AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(spec);
         if (metadata == null)
             throw new IdDoesNotExistException(spec.toString());
 

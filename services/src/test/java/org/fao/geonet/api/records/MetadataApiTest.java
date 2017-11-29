@@ -65,7 +65,7 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
@@ -117,7 +117,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     
     private String uuid;
     private int id;
-    private IMetadata md;
+    private AbstractMetadata md;
     private ServiceContext context;
 
 

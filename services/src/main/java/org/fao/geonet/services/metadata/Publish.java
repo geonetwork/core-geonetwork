@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -171,7 +171,7 @@ public class Publish {
                             (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
 
                     if (!hasValidation) {
-                        IMetadata metadata = metadataRepository.findOne(mdId);
+                        AbstractMetadata metadata = metadataRepository.findOne(mdId);
 
                         dataManager.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
                                 new Document(metadata.getXmlData(false)), serviceContext.getLanguage());

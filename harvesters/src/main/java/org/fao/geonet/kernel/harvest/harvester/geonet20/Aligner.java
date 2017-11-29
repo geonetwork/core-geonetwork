@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -227,7 +227,7 @@ public class Aligner {
         //
         //  insert metadata
         //
-        IMetadata metadata = new Metadata();
+        AbstractMetadata metadata = new Metadata();
         metadata.setUuid(remoteUuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -264,7 +264,7 @@ public class Aligner {
     //---
     //--------------------------------------------------------------------------
 
-    private void addCategories(IMetadata metadata, List<Element> categ) throws Exception {
+    private void addCategories(AbstractMetadata metadata, List<Element> categ) throws Exception {
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
         Collection<String> catNames = Lists.transform(categ, new Function<Element, String>() {
             @Nullable

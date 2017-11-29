@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
@@ -143,8 +143,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindAllByHarvestInfo_Uuid() throws Exception {
 
-        IMetadata metadata = _repo.save(newMetadata());
-        IMetadata metadata2 = _repo.save(newMetadata());
+        AbstractMetadata metadata = _repo.save(newMetadata());
+        AbstractMetadata metadata2 = _repo.save(newMetadata());
         Metadata metadata3 = newMetadata();
         metadata3.getHarvestInfo().setUuid(metadata2.getHarvestInfo().getUuid());
         _repo.save(metadata3);
@@ -175,7 +175,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(2, _repo.count());
 
-        IMetadata found = _repo.findOneOldestByChangeDate();
+        AbstractMetadata found = _repo.findOneOldestByChangeDate();
         assertNotNull(found);
         assertSameContents(metadata1, found);
     }
@@ -183,9 +183,9 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindAllIdsAndChangeDates() throws Exception {
 
-        IMetadata metadata = _repo.save(updateChangeDate(newMetadata(), "1990-12-13"));
-        IMetadata metadata2 = _repo.save(updateChangeDate(newMetadata(), "1980-12-13"));
-        IMetadata metadata3 = _repo.save(updateChangeDate(newMetadata(), "1995-12-13"));
+        AbstractMetadata metadata = _repo.save(updateChangeDate(newMetadata(), "1990-12-13"));
+        AbstractMetadata metadata2 = _repo.save(updateChangeDate(newMetadata(), "1980-12-13"));
+        AbstractMetadata metadata3 = _repo.save(updateChangeDate(newMetadata(), "1995-12-13"));
 
         final Sort sortByIdAsc = new Sort(Sort.Direction.DESC, Metadata_.id.getName());
         PageRequest page1 = new PageRequest(0, 2, sortByIdAsc);

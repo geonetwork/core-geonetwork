@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
@@ -98,7 +98,7 @@ public class GetLatestUpdated implements Service {
             Log.info(Geonet.SEARCH_ENGINE, "Creating latest updates searcher");
             try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
                 searcher.search(context, _request, _config);
-                Map<Integer, IMetadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, _maxItems);
+                Map<Integer, AbstractMetadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, _maxItems);
                 for (Integer id : allMdInfo.keySet()) {
                     try {
                         boolean forEditing = false;

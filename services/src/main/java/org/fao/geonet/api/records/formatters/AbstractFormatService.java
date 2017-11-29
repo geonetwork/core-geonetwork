@@ -34,7 +34,7 @@ import java.nio.file.Path;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
@@ -79,8 +79,8 @@ abstract class AbstractFormatService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    protected IMetadata loadMetadata(IMetadataUtils metadataUtils, int id) {
-        IMetadata md = metadataUtils.findOne(id);
+    protected AbstractMetadata loadMetadata(IMetadataUtils metadataUtils, int id) {
+        AbstractMetadata md = metadataUtils.findOne(id);
 
         if (md == null) {
             throw new IllegalArgumentException("No metadata found. id = " + id);

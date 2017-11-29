@@ -37,7 +37,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -329,7 +329,7 @@ public class EsSearchManager implements ISearchManager {
                      iter.hasNext(); ) {
                     String uuid = (String) iter.next();
 //                    String id = dataMan.getMetadataId(uuid);
-                    IMetadata metadata = metadataRepository.findOneByUuid(uuid);
+                    AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
                     if (metadata != null) {
                         listOfIdsToIndex.add(metadata.getId() + "");
                     } else {
@@ -543,7 +543,7 @@ public class EsSearchManager implements ISearchManager {
         List<Element> xmlDocs = new ArrayList<>(result.size());
         IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         for (String id : result) {
-            IMetadata metadata = metadataRepository.findOne(id);
+            AbstractMetadata metadata = metadataRepository.findOne(id);
             xmlDocs.add(metadata.getXmlData(false));
         }
         return xmlDocs;

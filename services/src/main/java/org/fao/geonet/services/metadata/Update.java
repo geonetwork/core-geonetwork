@@ -35,7 +35,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -156,7 +156,7 @@ public class Update extends NotInReadOnlyModeService {
 			// Save validation if the forceValidationOnMdSave is enabled
 			if (forceValidationOnMdSave && !showValidationErrors.equals("true")) {
 				final IMetadataUtils metadataRepository = gc.getBean(IMetadataUtils.class);
-				IMetadata metadata = metadataRepository.findOne(id);
+				AbstractMetadata metadata = metadataRepository.findOne(id);
 
 				dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
 						new Document(metadata.getXmlData(false)), context.getLanguage());

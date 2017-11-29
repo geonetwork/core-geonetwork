@@ -30,7 +30,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -93,7 +93,7 @@ public class UpdateGroupOwner extends NotInReadOnlyModeService {
         //--- Update groupOwner
         IMetadataManager metadataRepository = context.getBean(IMetadataManager.class);
         IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        IMetadata metadata = metadataUtils.findOne(iLocalId);
+        AbstractMetadata metadata = metadataUtils.findOne(iLocalId);
         metadata.getSourceInfo().setGroupOwner(iGroupOwner);
         metadataRepository.save(metadata);
 

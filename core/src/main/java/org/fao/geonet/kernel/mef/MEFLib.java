@@ -56,7 +56,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
@@ -177,10 +177,10 @@ public class MEFLib {
      * @return A pair composed of the domain object metadata AND the record to be exported (includes
      * Xlink resolution and filters depending on user session).
      */
-    static Pair<IMetadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+    static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
         throws Exception {
 
-        final IMetadata metadata = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
 
         if (metadata == null) {
             throw new MetadataNotFoundEx("uuid=" + uuid);
@@ -267,7 +267,7 @@ public class MEFLib {
     /**
      * Build an info file.
      */
-    static String buildInfoFile(ServiceContext context, IMetadata md,
+    static String buildInfoFile(ServiceContext context, AbstractMetadata md,
                                 Format format, Path pubDir, Path priDir, boolean skipUUID)
         throws Exception {
         Element info = new Element("info");
@@ -288,7 +288,7 @@ public class MEFLib {
      *
      * @param skipUUID If true, do not add uuid, site identifier and site name.
      */
-    static Element buildInfoGeneral(IMetadata md, Format format,
+    static Element buildInfoGeneral(AbstractMetadata md, Format format,
                                     boolean skipUUID, ServiceContext context) {
         String id = String.valueOf(md.getId());
         String uuid = md.getUuid();
@@ -326,7 +326,7 @@ public class MEFLib {
     /**
      * Build category section of info file.
      */
-    static Element buildInfoCategories(IMetadata md)
+    static Element buildInfoCategories(AbstractMetadata md)
         throws SQLException {
         Element categ = new Element("categories");
 
@@ -346,7 +346,7 @@ public class MEFLib {
     /**
      * Build priviliges section of info file.
      */
-    static Element buildInfoPrivileges(ServiceContext context, IMetadata md)
+    static Element buildInfoPrivileges(ServiceContext context, AbstractMetadata md)
         throws Exception {
 
         int iId = md.getId();

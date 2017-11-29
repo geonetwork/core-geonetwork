@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -113,7 +113,7 @@ public class BatchNewOwner {
             context.info("Attempting to set metadata owner on: " + id);
 
             //--- check existence and access
-            IMetadata info = null;
+            AbstractMetadata info = null;
             if (id != null) {
                 info = context.getBean(MetadataRepository.class).findOne(id);
             }

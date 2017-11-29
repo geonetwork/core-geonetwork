@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -125,7 +125,7 @@ public class ValidationService implements ApplicationContextAware {
 
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         for (String uuid : setOfUuidsToValidate) {
-            IMetadata record = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata record = metadataRepository.findOneByUuid(uuid);
             if (record == null) {
                 this.report.get("notFoundRecords").add(record.getId());
             } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {

@@ -52,7 +52,7 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
@@ -339,7 +339,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
                 
-                final Specifications<? extends IMetadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
+                final Specifications<? extends AbstractMetadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
                 Set<String> sources = new HashSet<String>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
                     sources.add(metadataUtils.findOne(id).getSourceInfo().getSourceId());

@@ -42,14 +42,14 @@ import org.apache.lucene.document.Document;
 import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 
 /**
- * @See {@link IMetadata}
+ * @See {@link AbstractMetadata}
  * @author Jesse
  */
 @Entity
 @Table(name = Metadata.TABLENAME)
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataEntityListenerManager.class)
-public class Metadata extends IMetadata {
+public class Metadata extends AbstractMetadata {
     public static final String TABLENAME = "Metadata";
     private Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
 

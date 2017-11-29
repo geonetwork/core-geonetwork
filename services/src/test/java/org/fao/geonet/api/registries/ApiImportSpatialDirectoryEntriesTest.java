@@ -11,7 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
@@ -103,10 +103,10 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
         assertEquals(200, response.getStatus());
         assertEquals(3, report.getNumberOfRecords());
 
-        List<? extends IMetadata> datas = metadataRepo.findAll(isOwnedByUser(USER_ID));
+        List<? extends AbstractMetadata> datas = metadataRepo.findAll(isOwnedByUser(USER_ID));
         assertEquals(3, datas.size());
 
-        IMetadata data = metadataRepo.findOneByUuid("111");
+        AbstractMetadata data = metadataRepo.findOneByUuid("111");
         BufferedReader expectedBRForFirst = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/" + expectedFileName)));
         BufferedReader BRForFirst = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data.getData().getBytes())));
 

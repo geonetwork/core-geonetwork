@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -56,7 +56,7 @@ public class ReportUpdatedMetadata implements IReport {
             // Retrieve metadata
             final IMetadataUtils metadataRepository =
                     context.getBean(IMetadataUtils.class);
-            final List<? extends IMetadata> records =
+            final List<? extends AbstractMetadata> records =
                     metadataRepository.getMetadataReports().
                             getUpdatedMetadata(
                                     reportFilter.getBeginDate(),
@@ -82,7 +82,7 @@ public class ReportUpdatedMetadata implements IReport {
                     context.getBean(GroupRepository.class).findAll();
 
             // Process the records
-            for (IMetadata metadata : records) {
+            for (AbstractMetadata metadata : records) {
                 String userOwnerUsername = "";
                 String userOwnerName = "";
                 String userOwnerSurname = "";

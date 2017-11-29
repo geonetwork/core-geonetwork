@@ -36,7 +36,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.BatchEditParameter;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.DataManager;
@@ -167,7 +167,7 @@ public class BatchEditsApi implements ApplicationContextAware {
         String changeDate = null;
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         for (String recordUuid : setOfUuidsToEdit) {
-            IMetadata record = metadataRepository.findOneByUuid(recordUuid);
+            AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
                 report.incrementNullRecords();
             } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {

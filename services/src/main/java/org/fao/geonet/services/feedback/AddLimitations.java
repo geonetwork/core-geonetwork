@@ -33,7 +33,7 @@ import java.util.List;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
@@ -103,7 +103,7 @@ public class AddLimitations implements Service {
         Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 
         //--- get metadata info
-        IMetadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
 
         if (info == null)
             throw new IllegalArgumentException("Metadata not found --> " + id);

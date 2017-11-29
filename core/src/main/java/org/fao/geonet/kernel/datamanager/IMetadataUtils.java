@@ -6,7 +6,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.SimpleMetadata;
@@ -328,7 +328,7 @@ public interface IMetadataUtils {
      * @param ownedByUser
      * @return
      */
-    public long count(Specification<? extends IMetadata> ownedByUser);
+    public long count(Specification<? extends AbstractMetadata> ownedByUser);
 
     /**
      * Given an identifier, return the record associated to it
@@ -336,7 +336,7 @@ public interface IMetadataUtils {
      * @param id
      * @return
      */
-    public IMetadata findOne(int id);
+    public AbstractMetadata findOne(int id);
 
     /**
      * Find all the ids of the records that fits the specification
@@ -344,7 +344,7 @@ public interface IMetadataUtils {
      * @param specs
      * @return
      */
-    List<Integer> findAllIdsBy(Specification<? extends IMetadata> specs);
+    List<Integer> findAllIdsBy(Specification<? extends AbstractMetadata> specs);
 
     /**
      * Count the total number of records available on the platform
@@ -359,7 +359,7 @@ public interface IMetadataUtils {
      * @param firstMetadataId
      * @return
      */
-    public IMetadata findOneByUuid(String firstMetadataId);
+    public AbstractMetadata findOneByUuid(String firstMetadataId);
 
     /**
      * Find the record that fits the specification
@@ -367,7 +367,7 @@ public interface IMetadataUtils {
      * @param spec
      * @return
      */
-    public IMetadata findOne(Specification<Metadata> spec);
+    public AbstractMetadata findOne(Specification<Metadata> spec);
 
     /**
      * Find the record that fits the id
@@ -375,7 +375,7 @@ public interface IMetadataUtils {
      * @param id
      * @return
      */
-    public IMetadata findOne(String id);
+    public AbstractMetadata findOne(String id);
 
     /**
      * Find all metadata harvested by the identified harvester.
@@ -384,7 +384,7 @@ public interface IMetadataUtils {
      * @return all metadata harvested by the identified harvester.
      */
     @Nonnull
-    List<? extends IMetadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
+    List<? extends AbstractMetadata> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
 
     /**
      * Find all the metadata with the identifiers
@@ -393,7 +393,7 @@ public interface IMetadataUtils {
      * @param keySet
      * @return
      */
-    public Iterable<? extends IMetadata> findAll(Set<Integer> keySet);
+    public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet);
 
     /**
      * Returns all entities matching the given {@link Specification}.
@@ -401,7 +401,7 @@ public interface IMetadataUtils {
      * @param spec
      * @return
      */
-    public List<? extends IMetadata> findAll(Specification<? extends IMetadata> hasHarvesterUuid);
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> hasHarvesterUuid);
 
     /**
      * Load only the basic info for a metadata. Used in harvesters, mostly.
@@ -433,7 +433,7 @@ public interface IMetadataUtils {
      * @return all entities in XML.
      */
     @Nonnull
-    public Element findAllAsXml(Specification<? extends IMetadata> spec, Sort sortByChangeDateDesc);
+    public Element findAllAsXml(Specification<? extends AbstractMetadata> spec, Sort sortByChangeDateDesc);
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:
@@ -450,7 +450,7 @@ public interface IMetadataUtils {
      * @return all entities in XML.
      */
     @Nonnull
-    Element findAllAsXml(@Nullable Specification<? extends IMetadata> specification, @Nullable Pageable pageable);
+    Element findAllAsXml(@Nullable Specification<? extends AbstractMetadata> specification, @Nullable Pageable pageable);
 
     /**
      * Return an object that contains functions for calculating several different statistical calculations (related to the metadata) based

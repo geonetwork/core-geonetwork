@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.UUID;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -79,7 +79,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                     Element newMd = new Element(sampleMetadataXml.getName(), sampleMetadataXml.getNamespace()).addContent(new Element("fileIdentifier",
                         GMD).addContent(new Element("CharacterString", GCO)));
 
-                    IMetadata updateMd = dm.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
+                    AbstractMetadata updateMd = dm.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
                         new ISODate().getDateAndTime(), false);
                     assertNotNull(updateMd);
                     final boolean hasNext = updateMd.getMetadataCategories().iterator().hasNext();

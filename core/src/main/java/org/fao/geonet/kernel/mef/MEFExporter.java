@@ -33,7 +33,7 @@ import java.nio.file.Path;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -60,9 +60,9 @@ class MEFExporter {
      */
     public static Path doExport(ServiceContext context, String uuid,
                                 Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-        Pair<IMetadata, String> recordAndMetadata =
+        Pair<AbstractMetadata, String> recordAndMetadata =
             MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
-        IMetadata record = recordAndMetadata.one();
+        AbstractMetadata record = recordAndMetadata.one();
         String xmlDocumentAsString = recordAndMetadata.two();
 
         if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ||

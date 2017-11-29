@@ -83,7 +83,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
@@ -1748,9 +1748,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     /**
      * <p> Gets all metadata info as a int Map in current searcher. </p>
      */
-    public Map<Integer, IMetadata> getAllMdInfo(ServiceContext context, int maxHits) throws Exception {
+    public Map<Integer, AbstractMetadata> getAllMdInfo(ServiceContext context, int maxHits) throws Exception {
 
-        Map<Integer, IMetadata> response = new HashMap<Integer, IMetadata>();
+        Map<Integer, AbstractMetadata> response = new HashMap<Integer, AbstractMetadata>();
         TopDocs tdocs = performQuery(context, 0, maxHits, false);
         IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
         _versionToken = indexAndTaxonomy.version;

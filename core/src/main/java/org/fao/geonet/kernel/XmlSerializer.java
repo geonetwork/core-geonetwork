@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -161,7 +161,7 @@ public abstract class XmlSerializer {
     protected Element internalSelect(String id, boolean isIndexingTask, boolean forEditing) throws Exception {
         IMetadataUtils _metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
-        IMetadata metadata = _metadataRepository.findOne(Integer.parseInt(id));
+        AbstractMetadata metadata = _metadataRepository.findOne(Integer.parseInt(id));
 
         if (metadata == null)
             return null;
@@ -169,7 +169,7 @@ public abstract class XmlSerializer {
         return removeHiddenElements(isIndexingTask, metadata, forEditing);
     }
 
-    public Element removeHiddenElements(boolean isIndexingTask, IMetadata metadata, boolean forEditing) throws Exception {
+    public Element removeHiddenElements(boolean isIndexingTask, AbstractMetadata metadata, boolean forEditing) throws Exception {
         AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
         DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
 
@@ -223,7 +223,7 @@ public abstract class XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    protected IMetadata insertDb(final IMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+    protected AbstractMetadata insertDb(final AbstractMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(dataXml);
 
         newMetadata.setData(Xml.getString(dataXml));
@@ -245,7 +245,7 @@ public abstract class XmlSerializer {
         IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
         int metadataId = Integer.valueOf(id);
-        IMetadata md = metadataUtils.findOne(metadataId);
+        AbstractMetadata md = metadataUtils.findOne(metadataId);
 
         md.setDataAndFixCR(xml);
 
@@ -288,7 +288,7 @@ public abstract class XmlSerializer {
                                 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
         throws Exception;
 
-    public abstract IMetadata insert(IMetadata metadata, Element dataXml, ServiceContext context)
+    public abstract AbstractMetadata insert(AbstractMetadata metadata, Element dataXml, ServiceContext context)
         throws Exception;
 
     /**

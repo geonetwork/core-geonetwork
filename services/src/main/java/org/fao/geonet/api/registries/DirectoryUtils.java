@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
@@ -57,7 +57,7 @@ public class DirectoryUtils {
         Table<String, String, Element> entries = collectResults.getEntries();
         Iterator<String> entriesIterator =
             entries.rowKeySet().iterator();
-        IMetadata record = collectResults.getRecord();
+        AbstractMetadata record = collectResults.getRecord();
         boolean validate = false, index = false, ufo = false,
             notify = false, publicForGroup = true, refreshReaders = false;
         Map<String, Exception> errors = new HashMap<>();
@@ -69,9 +69,9 @@ public class DirectoryUtils {
             String uuid = uuidAndEntry.keySet().iterator().next();
             Element entry = uuidAndEntry.values().iterator().next();
 
-            IMetadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
             if (dbSubTemplate == null) {
-                IMetadata subtemplate = new Metadata();
+                AbstractMetadata subtemplate = new Metadata();
                 subtemplate.setUuid(uuid);
                 subtemplate.getDataInfo().
                     setSchemaId(record.getDataInfo().getSchemaId()).
@@ -128,7 +128,7 @@ public class DirectoryUtils {
      * record, and the identifier match, only one is reported (the last one).
      */
     public static CollectResults collectEntries(ServiceContext context,
-                                                IMetadata record,
+                                                AbstractMetadata record,
                                                 String xpath,
                                                 String identifierXpath) throws Exception {
         return collectEntries(context, record, xpath, identifierXpath, null, false, false, null);
@@ -140,7 +140,7 @@ public class DirectoryUtils {
      * propertiesToCopy
      */
     public static CollectResults synchronizeEntries(ServiceContext context,
-                                                    IMetadata record,
+                                                    AbstractMetadata record,
                                                     String xpath,
                                                     String identifierXpath,
                                                     List<String> propertiesToCopy,
@@ -152,7 +152,7 @@ public class DirectoryUtils {
 
 
     private static CollectResults collectEntries(ServiceContext context,
-                                                 IMetadata record,
+                                                 AbstractMetadata record,
                                                  String xpath,
                                                  String identifierXpath,
                                                  List<String> propertiesToCopy,
@@ -269,7 +269,7 @@ public class DirectoryUtils {
                     Element subTemplateElement = null;
                     // Search in DB by UUID matching entry UUID
                     if (StringUtils.isEmpty(searchIndexField)) {
-                        IMetadata subTemplate = metadataRepository.findOneByUuid(uuid);
+                        AbstractMetadata subTemplate = metadataRepository.findOneByUuid(uuid);
                         if (subTemplate != null) {
                             subTemplateElement = subTemplate.getXmlData(false);
                         }
@@ -290,7 +290,7 @@ public class DirectoryUtils {
                         parameters.put(searchIndexField, identifier);
                         String id = search(context, parameters);
                         if (id != null) {
-                            IMetadata subTemplate = metadataRepository.findOne(id);
+                            AbstractMetadata subTemplate = metadataRepository.findOne(id);
                             if (subTemplate != null) {
                                 uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);

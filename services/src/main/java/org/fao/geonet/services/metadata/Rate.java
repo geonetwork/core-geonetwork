@@ -32,7 +32,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -135,7 +135,7 @@ public class Rate extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
 
     private String getHarvestingUuid(ServiceContext context, String id) throws Exception {
-        final IMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        final AbstractMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
         //--- if we don't have any metadata, just return
 

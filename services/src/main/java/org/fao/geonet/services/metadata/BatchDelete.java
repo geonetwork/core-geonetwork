@@ -31,7 +31,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -95,7 +95,7 @@ public class BatchDelete extends BackupFileService {
                 context.debug("Deleting metadata with uuid:" + uuid);
             }
 
-            IMetadata info = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
             if (info == null) {
                 notFound.add(uuid);
             } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {

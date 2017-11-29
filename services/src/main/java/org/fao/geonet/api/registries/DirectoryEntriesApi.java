@@ -37,7 +37,7 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -151,7 +151,7 @@ public class DirectoryEntriesApi {
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
-        final IMetadata metadata = metadataRepository.findOneByUuid(uuid);
+        final AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
 
         if (metadata == null) {
             throw new ResourceNotFoundException(String.format(

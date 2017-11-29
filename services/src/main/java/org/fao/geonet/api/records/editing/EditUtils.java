@@ -33,7 +33,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -175,7 +175,7 @@ class EditUtils {
         // update element and return status
         //
 
-        IMetadata result = null;
+        AbstractMetadata result = null;
         // whether to request automatic changes (update-fixed-info)
         boolean ufo = true;
         // whether to index on update

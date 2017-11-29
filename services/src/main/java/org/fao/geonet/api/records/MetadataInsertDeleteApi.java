@@ -59,7 +59,7 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -173,7 +173,7 @@ public class MetadataInsertDeleteApi {
         HttpServletRequest request
     )
         throws Exception {
-        IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -245,7 +245,7 @@ public class MetadataInsertDeleteApi {
         final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         for (String uuid : records) {
-            IMetadata metadata = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
             if (metadata == null) {
                 report.incrementNullRecords();
             } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
@@ -629,7 +629,7 @@ public class MetadataInsertDeleteApi {
     )
         throws Exception {
 
-        IMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
+        AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
         SettingManager sm = applicationContext.getBean(SettingManager.class);
@@ -645,7 +645,7 @@ public class MetadataInsertDeleteApi {
             } else {
                 // Check if the UUID exists
                 try {
-                    IMetadata checkRecord = ApiUtils.getRecord(targetUuid);
+                    AbstractMetadata checkRecord = ApiUtils.getRecord(targetUuid);
                     if (checkRecord != null) {
                         throw new BadParameterEx(String.format(
                             "You can't create a new record with the UUID '%s' because a record already exist with this UUID.",
@@ -1175,7 +1175,7 @@ public class MetadataInsertDeleteApi {
 
         if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
             IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
-            IMetadata md = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata md = metadataRepository.findOneByUuid(uuid);
             if (md != null) {
                 throw new IllegalArgumentException(String.format(
                     "A record with UUID '%s' already exist and you choose no " +

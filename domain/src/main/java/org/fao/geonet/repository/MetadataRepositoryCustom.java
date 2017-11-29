@@ -29,7 +29,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Pair;
@@ -45,7 +45,7 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @author Jesse
  */
 @NoRepositoryBean
-public interface MetadataRepositoryCustom<T extends IMetadata> {
+public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
 
     /**
      * Return an object that contains functions for calculating several different statistical
@@ -65,7 +65,7 @@ public interface MetadataRepositoryCustom<T extends IMetadata> {
      * @param id the id in string form instead of integer.
      */
     @Nullable
-    IMetadata findOne(@Nonnull String id);
+    AbstractMetadata findOne(@Nonnull String id);
 
     /**
      * Find the list of Metadata Ids and changes dates for the metadata. <p> When constructing sort
@@ -94,7 +94,7 @@ public interface MetadataRepositoryCustom<T extends IMetadata> {
      * @return the metadata with the oldest change date
      */
     @Nullable
-    IMetadata findOneOldestByChangeDate();
+    AbstractMetadata findOneOldestByChangeDate();
 
     /**
      * Load the source info objects for all the metadata selected by the spec.

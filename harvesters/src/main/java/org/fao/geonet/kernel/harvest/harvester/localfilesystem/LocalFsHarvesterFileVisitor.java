@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.commons.lang.time.DateUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -221,7 +221,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                             if (params.checkFileLastModifiedForUpdate) {
                                 Date fileDate = new Date(Files.getLastModifiedTime(file).toMillis());
 
-                                final IMetadata metadata = repo.findOne(id);
+                                final AbstractMetadata metadata = repo.findOne(id);
                                 final ISODate modified;
                                 if (metadata != null && metadata.getDataInfo() != null) {
                                     modified = metadata.getDataInfo().getChangeDate();

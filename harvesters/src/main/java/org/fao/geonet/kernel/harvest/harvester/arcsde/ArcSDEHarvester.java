@@ -41,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -358,7 +358,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             changeDate = new ISODate().toString();
         }
 
-        final IMetadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
             true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
@@ -392,7 +392,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             createDate = new ISODate();
         }
 
-        IMetadata metadata = new Metadata();
+        AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).

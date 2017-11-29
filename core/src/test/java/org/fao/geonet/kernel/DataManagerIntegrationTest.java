@@ -41,7 +41,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -84,7 +84,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     MetadataRepository _metadataRepository;
 
     static void doSetHarvesterDataTest(MetadataRepository metadataRepository, DataManager dataManager, int metadataId) throws Exception {
-        IMetadata metadata = metadataRepository.findOne(metadataId);
+        AbstractMetadata metadata = metadataRepository.findOne(metadataId);
 
         assertNull(metadata.getHarvestInfo().getUuid());
         assertNull(metadata.getHarvestInfo().getUri());
@@ -199,18 +199,18 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         Source source = sourceRepository.save(new Source().setLocal(true).setName("GN").setUuid("sourceuuid"));
 
         final Element sampleMetadataXml = super.getSampleMetadataXml();
-        final IMetadata metadata = new Metadata();
+        final AbstractMetadata metadata = new Metadata();
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
         metadata.getMetadataCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
-        final IMetadata templateMd = metadataManager.save(metadata);
+        final AbstractMetadata templateMd = metadataManager.save(metadata);
         final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
-        IMetadata newMetadata = _metadataRepository.findOne(newMetadataId);
+        AbstractMetadata newMetadata = _metadataRepository.findOne(newMetadataId);
         assertEquals(1, newMetadata.getMetadataCategories().size());
         assertEquals(category, newMetadata.getMetadataCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");

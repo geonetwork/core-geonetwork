@@ -45,7 +45,7 @@ import javax.servlet.http.HttpSession;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -121,11 +121,11 @@ public class ApiUtils {
         }
         return id;
     }
-    public static IMetadata getRecord(String uuidOrInternalId)
+    public static AbstractMetadata getRecord(String uuidOrInternalId)
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
-        IMetadata metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+        AbstractMetadata metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
         if (metadata == null) {
             try {
                 metadata = metadataRepository.findOne(uuidOrInternalId);
@@ -212,9 +212,9 @@ public class ApiUtils {
     /**
      * Check if the current user can edit this record.
      */
-    static public IMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+    static public AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        IMetadata metadata = getRecord(metadataUuid);
+        AbstractMetadata metadata = getRecord(metadataUuid);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
         if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
@@ -226,8 +226,8 @@ public class ApiUtils {
     /**
      * Check if the current user can view this record.
      */
-    public static IMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        IMetadata metadata = getRecord(metadataUuid);
+    public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        AbstractMetadata metadata = getRecord(metadataUuid);
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {

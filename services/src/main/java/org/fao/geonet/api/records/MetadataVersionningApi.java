@@ -39,7 +39,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -97,7 +97,7 @@ public class MetadataVersionningApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -152,7 +152,7 @@ public class MetadataVersionningApi {
             final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
             for (String uuid : records) {
-                IMetadata metadata = metadataRepository.findOneByUuid(uuid);
+                AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(

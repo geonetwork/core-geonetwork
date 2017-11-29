@@ -24,7 +24,7 @@ import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
@@ -161,7 +161,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     }
 
     @Override
-    public int batchDeleteMetadataAndUpdateIndex(Specification<? extends IMetadata> specification) throws Exception {
+    public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification) throws Exception {
         final List<Integer> idsOfMetadataToDelete = metadataUtils.findAllIdsBy(specification);
 
         for (Integer id : idsOfMetadataToDelete) {
@@ -342,7 +342,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         } finally {
             indexLock.unlock();
         }
-        IMetadata fullMd;
+        AbstractMetadata fullMd;
 
         try {
             Vector<Element> moreFields = new Vector<Element>();

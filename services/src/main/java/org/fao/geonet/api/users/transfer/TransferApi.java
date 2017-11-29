@@ -38,7 +38,7 @@ import javax.servlet.http.HttpSession;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -106,7 +106,7 @@ public class TransferApi {
 
         List<OwnerResponse> ownerList = new ArrayList<>();
         for (User u : users) {
-            List<? extends IMetadata> userRecords = metadataRepository.findAll(
+            List<? extends AbstractMetadata> userRecords = metadataRepository.findAll(
                 MetadataSpecs.hasOwner(u.getId())
             );
             if (userRecords.size() > 0) {
@@ -241,7 +241,7 @@ public class TransferApi {
 
         // Set owner for all records to be modified.
         for (Integer i : metadata) {
-            final IMetadata metadata1 = metadataUtils.findOne(i);
+            final AbstractMetadata metadata1 = metadataUtils.findOne(i);
             metadata1.getSourceInfo()
                 .setGroupOwner(transfer.getTargetGroup())
                 .setOwner(transfer.getTargetUser());

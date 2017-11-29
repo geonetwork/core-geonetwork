@@ -39,7 +39,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.kernel.DataManager;
@@ -125,7 +125,7 @@ public class MetadataSocialApi {
         HttpServletRequest request
     )
         throws Exception {
-        IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 

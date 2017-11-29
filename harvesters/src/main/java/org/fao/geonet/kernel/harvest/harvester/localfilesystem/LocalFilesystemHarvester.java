@@ -35,7 +35,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -182,7 +182,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         String language = context.getLanguage();
 
-        final IMetadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
+        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
             true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
@@ -219,7 +219,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        IMetadata metadata = new Metadata();
+        AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).

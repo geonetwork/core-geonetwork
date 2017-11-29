@@ -32,7 +32,7 @@ import java.util.Map;
 import javax.xml.transform.stream.StreamResult;
 
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -81,7 +81,7 @@ public class XslProcessUtils {
         }
 
         int iId = Integer.valueOf(id);
-        IMetadata info = metadataRepository.findOne(id);
+        AbstractMetadata info = metadataRepository.findOne(id);
 
 
         if (info == null) {
@@ -194,7 +194,7 @@ public class XslProcessUtils {
         }
 
         int iId = Integer.valueOf(id);
-        IMetadata info = metadataRepository.findOne(id);
+        AbstractMetadata info = metadataRepository.findOne(id);
 
 
         if (info == null) {

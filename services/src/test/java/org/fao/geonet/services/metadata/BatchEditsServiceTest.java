@@ -35,7 +35,7 @@ import java.util.List;
 
 import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -147,7 +147,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().is(201));
 
-        IMetadata updatedRecord = repository.findOneByUuid(firstMetadataId);
+        AbstractMetadata updatedRecord = repository.findOneByUuid(firstMetadataId);
         Element xml = Xml.loadString(updatedRecord.getData(), false);
 
         for (BatchEditParameter p : listOfupdates) {

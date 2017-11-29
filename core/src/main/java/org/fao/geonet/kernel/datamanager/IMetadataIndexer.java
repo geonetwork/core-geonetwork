@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,7 +40,7 @@ public interface IMetadataIndexer {
      * @return
      * @throws Exception
      */
-    int batchDeleteMetadataAndUpdateIndex(Specification<? extends IMetadata> specification) throws Exception;
+    int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification) throws Exception;
 
     /**
      * Search for all records having XLinks (ie. indexed with _hasxlinks flag), clear the cache and reindex all records found.

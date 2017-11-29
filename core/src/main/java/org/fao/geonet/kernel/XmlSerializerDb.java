@@ -25,7 +25,7 @@ package org.fao.geonet.kernel;
 
 import java.sql.SQLException;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
@@ -64,7 +64,7 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    public IMetadata insert(final IMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+    public AbstractMetadata insert(final AbstractMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
         return insertDb(newMetadata, dataXml, context);
 
     }

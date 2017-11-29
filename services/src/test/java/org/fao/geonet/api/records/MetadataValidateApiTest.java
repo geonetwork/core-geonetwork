@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
@@ -63,7 +63,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsTrue() throws Exception {
-        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -84,7 +84,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsFalse() throws Exception {
-        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -105,7 +105,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsNotSet() throws Exception {
-        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -125,7 +125,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsTrueButNotLoggedAsAdmin() throws Exception {
-        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAnonymous();
@@ -146,7 +146,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidSetButTemplate() throws Exception {
-        IMetadata subTemplate = subTemplateOnLineResourceDbInsertAsMetadata();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsertAsMetadata();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -172,15 +172,15 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         this.context = createServiceContext();
     }
 
-    private IMetadata subTemplateOnLineResourceDbInsert() throws Exception {
+    private AbstractMetadata subTemplateOnLineResourceDbInsert() throws Exception {
         return subTemplateOnLineResourceDbInsert(MetadataType.SUB_TEMPLATE);
     }
 
-    private IMetadata subTemplateOnLineResourceDbInsertAsMetadata() throws Exception {
+    private AbstractMetadata subTemplateOnLineResourceDbInsertAsMetadata() throws Exception {
         return subTemplateOnLineResourceDbInsert(MetadataType.METADATA);
     }
 
-    private IMetadata subTemplateOnLineResourceDbInsert(MetadataType type) throws Exception {
+    private AbstractMetadata subTemplateOnLineResourceDbInsert(MetadataType type) throws Exception {
         loginAsAdmin(context);
 
         URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/sub-OnlineResource.xml");
@@ -201,7 +201,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        IMetadata dbInsertedMetadata = dataManager.insertMetadata(
+        AbstractMetadata dbInsertedMetadata = dataManager.insertMetadata(
                 context,
                 metadata,
                 sampleMetadataXml,

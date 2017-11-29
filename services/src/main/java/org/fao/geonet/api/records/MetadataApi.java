@@ -39,7 +39,7 @@ import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -216,7 +216,7 @@ public class MetadataApi implements ApplicationContextAware {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
-        IMetadata metadata;
+        AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
@@ -347,7 +347,7 @@ public class MetadataApi implements ApplicationContextAware {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
 
-        IMetadata metadata;
+        AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
@@ -455,7 +455,7 @@ public class MetadataApi implements ApplicationContextAware {
         HttpServletRequest request) throws Exception {
 
 
-        IMetadata md;
+        AbstractMetadata md;
         try{
             md = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {

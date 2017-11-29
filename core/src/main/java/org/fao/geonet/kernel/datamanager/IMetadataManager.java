@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -114,7 +114,7 @@ public interface IMetadataManager {
      * @return
      * @throws Exception
      */
-    IMetadata insertMetadata(ServiceContext context, IMetadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
+    AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
             boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
             throws Exception;
 
@@ -143,7 +143,7 @@ public interface IMetadataManager {
      *
      * @return metadata if the that was updated
      */
-    IMetadata updateMetadata(ServiceContext context, String metadataId, Element md, boolean validate, boolean ufo, boolean index,
+    AbstractMetadata updateMetadata(ServiceContext context, String metadataId, Element md, boolean validate, boolean ufo, boolean index,
             String lang, String changeDate, boolean updateDateStamp) throws Exception;
 
     /**
@@ -197,7 +197,7 @@ public interface IMetadataManager {
      * 
      * @param info
      */
-    public IMetadata save(IMetadata info);
+    public AbstractMetadata save(AbstractMetadata info);
 
     /**
      * Load a record, modify it and save it again.
@@ -210,14 +210,14 @@ public interface IMetadataManager {
      * @param updater the function that updates the domain object before saving.
      * @return the saved domain object.
      */
-    public IMetadata update(int id, @Nonnull Updater<? extends IMetadata> md);
+    public AbstractMetadata update(int id, @Nonnull Updater<? extends AbstractMetadata> md);
 
     /**
      * Delete all records that matches the specification
      * 
      * @param specification
      */
-    public void deleteAll(Specification<? extends IMetadata> specification);
+    public void deleteAll(Specification<? extends AbstractMetadata> specification);
 
     /**
      * Remove the record with the identifier id

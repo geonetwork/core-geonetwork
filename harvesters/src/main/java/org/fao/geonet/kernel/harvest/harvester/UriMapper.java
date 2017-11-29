@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 
@@ -51,9 +51,9 @@ public class UriMapper {
 
     public UriMapper(ServiceContext context, String harvestUuid) throws Exception {
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
-        final List<? extends IMetadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
+        final List<? extends AbstractMetadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
 
-        for (IMetadata record : metadataList) {
+        for (AbstractMetadata record : metadataList) {
             String uri = record.getHarvestInfo().getUri();
 
             List<RecordInfo> records = hmUriRecords.get(uri);

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -61,7 +61,7 @@ public class RemoveTest extends AbstractServiceIntegrationTest {
         final MetadataCategory category = _categoryRepository.findAll().get(0);
         assertEquals(beforeCount, _categoryRepository.count());
 
-        IMetadata entity = MetadataRepositoryTest.newMetadata(inc);
+        AbstractMetadata entity = MetadataRepositoryTest.newMetadata(inc);
         entity.getMetadataCategories().add(category);
         entity = metadataManager.save(entity);
 

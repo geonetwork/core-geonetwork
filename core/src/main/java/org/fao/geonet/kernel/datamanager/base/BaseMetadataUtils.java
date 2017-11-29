@@ -19,7 +19,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataHarvestInfo;
@@ -127,7 +127,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void notifyMetadataChange(Element md, String metadataId) throws Exception {
 
-        final IMetadata metadata = findOne(metadataId);
+        final AbstractMetadata metadata = findOne(metadataId);
         if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
             MetadataSchema mds = schemaManager.getSchema(metadata.getDataInfo().getSchemaId());
             Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
@@ -145,7 +145,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      * @throws Exception
      */
     public @Nullable @Override String getMetadataUuid(@Nonnull String id) throws Exception {
-        IMetadata metadata = findOne(id);
+        AbstractMetadata metadata = findOne(id);
 
         if (metadata == null)
             return null;
@@ -341,7 +341,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Integer> findAllIdsBy(Specification<? extends IMetadata> specs) {
+    public List<Integer> findAllIdsBy(Specification<? extends AbstractMetadata> specs) {
         try {
             return metadataRepository.findAllIdsBy((Specification<Metadata>) specs);
         } catch (Throwable t) {
@@ -765,7 +765,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public String getMetadataTitle(String id) throws Exception {
-        IMetadata md = findOne(id);
+        AbstractMetadata md = findOne(id);
 
         if (md == null) {
             throw new IllegalArgumentException("Metadata not found for id : " + id);
@@ -806,7 +806,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @SuppressWarnings("unchecked")
     @Override
-    public long count(Specification<? extends IMetadata> specs) {
+    public long count(Specification<? extends AbstractMetadata> specs) {
         try {
             return metadataRepository.count((Specification<Metadata>) specs);
         } catch (Throwable t) {
@@ -821,38 +821,38 @@ public class BaseMetadataUtils implements IMetadataUtils {
     }
 
     @Override
-    public IMetadata findOne(int id) {
+    public AbstractMetadata findOne(int id) {
         return metadataRepository.findOne(id);
     }
 
     @Override
-    public IMetadata findOneByUuid(String uuid) {
+    public AbstractMetadata findOneByUuid(String uuid) {
         return metadataRepository.findOneByUuid(uuid);
     }
 
     @Override
-    public IMetadata findOne(Specification<Metadata> spec) {
+    public AbstractMetadata findOne(Specification<Metadata> spec) {
         return metadataRepository.findOne(spec);
     }
 
     @Override
-    public IMetadata findOne(String id) {
+    public AbstractMetadata findOne(String id) {
         return metadataRepository.findOne(id);
     }
 
     @Override
-    public List<? extends IMetadata> findAllByHarvestInfo_Uuid(String uuid) {
+    public List<? extends AbstractMetadata> findAllByHarvestInfo_Uuid(String uuid) {
         return metadataRepository.findAllByHarvestInfo_Uuid(uuid);
     }
 
     @Override
-    public Iterable<? extends IMetadata> findAll(Set<Integer> keySet) {
+    public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet) {
         return metadataRepository.findAll(keySet);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<? extends IMetadata> findAll(Specification<? extends IMetadata> specs) {
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> specs) {
         try {
             return metadataRepository.findAll((Specification<Metadata>) specs);
         } catch (Throwable t) {
@@ -873,7 +873,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Element findAllAsXml(Specification<? extends IMetadata> specs, Sort sortByChangeDateDesc) {
+    public Element findAllAsXml(Specification<? extends AbstractMetadata> specs, Sort sortByChangeDateDesc) {
         try {
             return metadataRepository.findAllAsXml((Specification<Metadata>) specs, sortByChangeDateDesc);
         } catch (Throwable t) {
@@ -889,7 +889,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Element findAllAsXml(@Nullable Specification<? extends IMetadata> specs, @Nullable Pageable pageable) {
+    public Element findAllAsXml(@Nullable Specification<? extends AbstractMetadata> specs, @Nullable Pageable pageable) {
         try {
             return metadataRepository.findAllAsXml((Specification<Metadata>) specs, pageable);
         } catch (Throwable t) {

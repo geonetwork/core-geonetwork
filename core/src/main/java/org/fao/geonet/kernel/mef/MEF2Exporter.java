@@ -51,7 +51,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataType;
@@ -234,9 +234,9 @@ class MEF2Exporter {
         final Path metadataRootDir = zipFs.getPath(uuid);
         Files.createDirectories(metadataRootDir);
 
-        Pair<IMetadata, String> recordAndMetadataForExport =
+        Pair<AbstractMetadata, String> recordAndMetadataForExport =
             MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
-        IMetadata record = recordAndMetadataForExport.one();
+        AbstractMetadata record = recordAndMetadataForExport.one();
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
         String id = "" + record.getId();
@@ -262,7 +262,7 @@ class MEF2Exporter {
         // --- save Feature Catalog
         String ftUUID = getFeatureCatalogID(context, record.getId());
         if (!ftUUID.equals("")) {
-            Pair<IMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
+            Pair<AbstractMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));

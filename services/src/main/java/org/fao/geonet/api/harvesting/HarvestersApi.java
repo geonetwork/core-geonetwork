@@ -34,7 +34,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.HarvestHistory;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Source;
@@ -131,7 +131,7 @@ public class HarvestersApi {
 
         final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
         final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
-        final List<? extends IMetadata> allHarvestedRecords = metadataRepository.findAllByHarvestInfo_Uuid(harvesterUuid);
+        final List<? extends AbstractMetadata> allHarvestedRecords = metadataRepository.findAllByHarvestInfo_Uuid(harvesterUuid);
         List<String> records = new ArrayList<>(allHarvestedRecords.size());
 
         if (allHarvestedRecords.size() < 1) {
@@ -141,7 +141,7 @@ public class HarvestersApi {
                 source));
         }
 
-        for (IMetadata record : allHarvestedRecords) {
+        for (AbstractMetadata record : allHarvestedRecords) {
             record.getSourceInfo().setSourceId(source);
             record.getHarvestInfo().setHarvested(false)
                 .setUri(null)

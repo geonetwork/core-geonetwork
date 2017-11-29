@@ -29,7 +29,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -75,7 +75,7 @@ public class Delete extends BackupFileService {
         //-----------------------------------------------------------------------
         //--- check access
 
-        IMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
         if (metadata == null)
             throw new IllegalArgumentException("Metadata with identifier " + id + " not found.");

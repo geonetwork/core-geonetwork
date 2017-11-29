@@ -36,7 +36,7 @@ import java.util.StringTokenizer;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.DataManager;
@@ -138,7 +138,7 @@ public class Transfer extends NotInReadOnlyModeService {
 
         // Set owner for all records to be modified.
         for (Integer i : metadata) {
-            final IMetadata metadata1 = metadataRepository.findOne(i);
+            final AbstractMetadata metadata1 = metadataRepository.findOne(i);
             metadata1.getSourceInfo().setGroupOwner(targetGrp).setOwner(targetUsr);
             metadataManager.save(metadata1);
         }

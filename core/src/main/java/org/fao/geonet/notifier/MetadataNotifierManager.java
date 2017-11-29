@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataNotification;
 import org.fao.geonet.domain.MetadataNotificationAction;
@@ -68,12 +68,12 @@ public class MetadataNotifierManager {
         for (MetadataNotifier notifier : loadNotifiers()) {
 
             try {
-                final Map<IMetadata, MetadataNotification> unregisteredMetadata = getUnnotifiedMetadata(notifier.getId(),
+                final Map<AbstractMetadata, MetadataNotification> unregisteredMetadata = getUnnotifiedMetadata(notifier.getId(),
                     MetadataNotificationAction.UPDATE);
 
                 // process metadata
-                for (Map.Entry<IMetadata, MetadataNotification> entry : unregisteredMetadata.entrySet()) {
-                    IMetadata metadata = entry.getKey();
+                for (Map.Entry<AbstractMetadata, MetadataNotification> entry : unregisteredMetadata.entrySet()) {
+                    AbstractMetadata metadata = entry.getKey();
 
                     // Update/insert notification
                     client.webUpdate(notifier, metadata.getData(), metadata.getUuid());
@@ -82,11 +82,11 @@ public class MetadataNotifierManager {
                     setMetadataNotified(metadata.getId(), notifier, false);
                 }
 
-                Map<IMetadata, MetadataNotification> unregisteredMetadataToDelete = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.DELETE);
+                Map<AbstractMetadata, MetadataNotification> unregisteredMetadataToDelete = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.DELETE);
 
                 // process metadata
-                for (Map.Entry<IMetadata, MetadataNotification> entry : unregisteredMetadataToDelete.entrySet()) {
-                    IMetadata metadata = entry.getKey();
+                for (Map.Entry<AbstractMetadata, MetadataNotification> entry : unregisteredMetadataToDelete.entrySet()) {
+                    AbstractMetadata metadata = entry.getKey();
 
                     String uuid = metadata.getUuid();
 
@@ -145,7 +145,7 @@ public class MetadataNotifierManager {
     /**
      * Retrieves the unnotified metadata to update/insert for a notifier service
      */
-    private Map<IMetadata, MetadataNotification> getUnnotifiedMetadata(int notifierId,
+    private Map<AbstractMetadata, MetadataNotification> getUnnotifiedMetadata(int notifierId,
                                                                       MetadataNotificationAction... actions) throws Exception {
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
             Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata start");
@@ -162,10 +162,10 @@ public class MetadataNotifierManager {
 
         }
 
-        final Iterable<? extends IMetadata> allMetadata = metadataRepository.findAll(idToNotification.keySet());
-        Map<IMetadata, MetadataNotification> notificationMap = new HashMap<IMetadata, MetadataNotification>();
+        final Iterable<? extends AbstractMetadata> allMetadata = metadataRepository.findAll(idToNotification.keySet());
+        Map<AbstractMetadata, MetadataNotification> notificationMap = new HashMap<AbstractMetadata, MetadataNotification>();
 
-        for (IMetadata metadata : allMetadata) {
+        for (AbstractMetadata metadata : allMetadata) {
             notificationMap.put(metadata, idToNotification.get(metadata.getId()));
         }
 

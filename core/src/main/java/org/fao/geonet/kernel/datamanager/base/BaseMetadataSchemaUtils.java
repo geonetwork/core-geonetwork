@@ -6,7 +6,7 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.SchemaManager;
@@ -76,7 +76,7 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
      */
     @Override
     public String getMetadataSchema(String id) throws Exception {
-        IMetadata md = metadataUtils.findOne(id);
+        AbstractMetadata md = metadataUtils.findOne(id);
 
         if (md == null) {
             throw new IllegalArgumentException("Metadata not found for id : " + id);

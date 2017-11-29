@@ -28,7 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -72,7 +72,7 @@ public class GetCategories implements Service {
         //--- check access
         int iLocalId = Integer.parseInt(id);
 
-        final IMetadata metadata = context.getBean(IMetadataUtils.class).findOne(iLocalId);
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(iLocalId);
         if (metadata == null) {
             throw new IllegalArgumentException("Metadata not found --> " + id);
         }

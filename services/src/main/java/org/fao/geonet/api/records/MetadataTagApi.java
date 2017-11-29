@@ -41,7 +41,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -108,7 +108,7 @@ public class MetadataTagApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
-        IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         return metadata.getMetadataCategories();
     }
@@ -151,7 +151,7 @@ public class MetadataTagApi {
             boolean clear,
         HttpServletRequest request
     ) throws Exception {
-        IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
         if (clear) {
@@ -205,7 +205,7 @@ public class MetadataTagApi {
             Integer[] id,
         HttpServletRequest request
     ) throws Exception {
-        IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
         if (id == null || id.length == 0) {
@@ -289,7 +289,7 @@ public class MetadataTagApi {
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                IMetadata info = metadataRepository.findOneByUuid(uuid);
+                AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -382,7 +382,7 @@ public class MetadataTagApi {
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                IMetadata info = metadataRepository.findOneByUuid(uuid);
+                AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(

@@ -38,7 +38,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -130,7 +130,7 @@ public class ValidateApi {
 
             final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
             for (String uuid : records) {
-                IMetadata record = metadataRepository.findOneByUuid(uuid);
+                AbstractMetadata record = metadataRepository.findOneByUuid(uuid);
                 if (record == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {

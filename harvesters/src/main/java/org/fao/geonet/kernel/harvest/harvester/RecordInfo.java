@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.jdom.Element;
 
@@ -88,7 +88,7 @@ public class RecordInfo {
         isTemplate = record.getChildText("istemplate");
         changeDate = record.getChildText("changedate");
     }
-    public RecordInfo(IMetadata record) {
+    public RecordInfo(AbstractMetadata record) {
         id = "" + record.getId();
         uuid = record.getUuid();
         isTemplate = record.getDataInfo().getType().codeString;

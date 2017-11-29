@@ -32,7 +32,7 @@ import java.util.Set;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
@@ -57,7 +57,7 @@ public class ExportFormat implements GeonetworkExtension {
      *
      * @param metadata the metadata to convert to files.
      */
-    public static Iterable<Pair<String, String>> getFormats(ServiceContext context, IMetadata metadata) throws Exception {
+    public static Iterable<Pair<String, String>> getFormats(ServiceContext context, AbstractMetadata metadata) throws Exception {
         String schema = metadata.getDataInfo().getSchemaId();
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
@@ -96,7 +96,7 @@ public class ExportFormat implements GeonetworkExtension {
      *
      * @return ByteArrayInputStream
      */
-    public static String formatData(IMetadata metadata, boolean transform, Path stylePath) throws Exception {
+    public static String formatData(AbstractMetadata metadata, boolean transform, Path stylePath) throws Exception {
         String xmlData = metadata.getData();
 
         Element md = Xml.loadString(xmlData, false);

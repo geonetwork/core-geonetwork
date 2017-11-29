@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -94,7 +94,7 @@ public class ListIdentifiers extends AbstractTokenLister {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager sm = gc.getBean(SchemaManager.class);
 
-        final IMetadata metadata = gc.getBean(IMetadataUtils.class).findOne(id);
+        final AbstractMetadata metadata = gc.getBean(IMetadataUtils.class).findOne(id);
 
         //--- maybe the metadata has been removed
 

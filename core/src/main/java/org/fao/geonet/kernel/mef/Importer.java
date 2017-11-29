@@ -49,7 +49,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -519,7 +519,7 @@ public class Importer {
         return metadataIdMap;
     }
 
-    public static void addCategoriesToMetadata(IMetadata metadata, Element finalCategs, ServiceContext context) {
+    public static void addCategoriesToMetadata(AbstractMetadata metadata, Element finalCategs, ServiceContext context) {
         if (finalCategs != null) {
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             for (Object cat : finalCategs.getChildren()) {

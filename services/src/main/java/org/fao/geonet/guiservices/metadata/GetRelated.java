@@ -36,7 +36,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -161,7 +161,7 @@ public class GetRelated implements Service, RelatedMetadata {
 
         final ServiceContext context = serviceManager.createServiceContext("xml.relation", lang, request);
 
-        IMetadata md;
+        AbstractMetadata md;
         if (id != null) {
             md = metadataRepository.findOne(id);
 

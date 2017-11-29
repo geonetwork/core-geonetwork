@@ -32,7 +32,7 @@ import java.util.Map;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -97,7 +97,7 @@ public class GetSuggestion implements Service {
 
         // Retrieve metadata record
         String id = Utils.getIdentifierFromParameters(params, context);
-        IMetadata mdInfo = gc.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata mdInfo = gc.getBean(MetadataRepository.class).findOne(id);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
         Element md = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 

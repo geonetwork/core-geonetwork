@@ -62,7 +62,7 @@ import com.vividsolutions.jts.util.Assert;
  * @author María Arias de Reyna
  */
 @MappedSuperclass
-public abstract class IMetadata extends GeonetEntity {
+public abstract class AbstractMetadata extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_id_seq";
     public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
@@ -94,7 +94,7 @@ public abstract class IMetadata extends GeonetEntity {
      * @param _id the id of the metadata
      * @return this entity object
      */
-    public IMetadata setId(int _id) {
+    public AbstractMetadata setId(int _id) {
         this._id = _id;
         return this;
     }
@@ -117,7 +117,7 @@ public abstract class IMetadata extends GeonetEntity {
      * @return this eneity object
      */
     @Nonnull
-    public IMetadata setUuid(@Nonnull String uuid) {
+    public AbstractMetadata setUuid(@Nonnull String uuid) {
         Assert.isTrue(uuid != null, "Cannot have null uuid");
         this._uuid = uuid;
         return this;
@@ -150,7 +150,7 @@ public abstract class IMetadata extends GeonetEntity {
      * @param data the data for this metadata record.
      * @return this metadata entity.
      */
-    public IMetadata setData(String data) {
+    public AbstractMetadata setData(String data) {
         this._data = data;
         return this;
     }
@@ -165,7 +165,7 @@ public abstract class IMetadata extends GeonetEntity {
      * @param xml the data as XML.
      * @return this entity.
      */
-    public IMetadata setDataAndFixCR(Element xml) {
+    public AbstractMetadata setDataAndFixCR(Element xml) {
         XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
         String data = outputter.outputString(fixCR(xml));
@@ -272,7 +272,7 @@ public abstract class IMetadata extends GeonetEntity {
         this._harvestInfo = harvestInfo;
     }
 
-    protected static void transform(Document in, IMetadata out) {
+    protected static void transform(Document in, AbstractMetadata out) {
         out.setId(Integer.valueOf(in.get("_id")));
         out.setUuid(in.get("_uuid"));
 

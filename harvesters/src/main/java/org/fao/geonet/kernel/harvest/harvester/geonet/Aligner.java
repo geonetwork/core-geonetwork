@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -72,6 +72,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
@@ -568,7 +569,7 @@ public class Aligner extends BaseAligner {
         // insert metadata
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
-        IMetadata metadata = new Metadata();
+        AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -819,7 +820,7 @@ public class Aligner extends BaseAligner {
 
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
-        IMetadata metadata;
+        AbstractMetadata metadata;
         if (!ri.isMoreRecentThan(date)) {
             if (log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:" + ri.uuid);

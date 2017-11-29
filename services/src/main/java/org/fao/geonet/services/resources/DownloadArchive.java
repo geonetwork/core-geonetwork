@@ -44,7 +44,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
@@ -170,7 +170,7 @@ public class DownloadArchive implements Service {
         }
 
         //--- get metadata info
-        IMetadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
 
         // set up zip output stream
         Path zFile = Files.createTempFile(username + "_" + info.getUuid(), ".zip");

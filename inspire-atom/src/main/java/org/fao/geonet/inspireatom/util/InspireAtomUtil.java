@@ -33,7 +33,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -188,7 +188,7 @@ public class InspireAtomUtil {
 
 
     public static Map<String, String> retrieveServiceMetadataWithAtomFeeds(final DataManager dataManager,
-                                                                           final List<IMetadata> iso19139Metadata,
+                                                                           final List<AbstractMetadata> iso19139Metadata,
                                                                            final String atomProtocol)
         throws Exception {
 
@@ -196,18 +196,18 @@ public class InspireAtomUtil {
     }
 
     public static Map<String, String> retrieveServiceMetadataWithAtomFeed(final DataManager dataManager,
-                                                                          final IMetadata iso19139Metadata,
+                                                                          final AbstractMetadata iso19139Metadata,
                                                                           final String atomProtocol)
         throws Exception {
 
-        List<IMetadata> iso19139MetadataList = new ArrayList<>();
+        List<AbstractMetadata> iso19139MetadataList = new ArrayList<>();
         iso19139MetadataList.add(iso19139Metadata);
 
         return retrieveServiceMetadataWithAtomFeeds(dataManager, iso19139MetadataList, atomProtocol);
     }
 
     public static Map<String, String> retrieveDatasetMetadataWithAtomFeeds(final DataManager dataManager,
-                                                                           final List<IMetadata> iso19139Metadata,
+                                                                           final List<AbstractMetadata> iso19139Metadata,
                                                                            final String atomProtocol)
         throws Exception {
 
@@ -215,12 +215,12 @@ public class InspireAtomUtil {
     }
 
     private static Map<String, String> processAtomFeedsInternal(DataManager dataManager,
-                                                                List<IMetadata> iso19139Metadata, String type,
+                                                                List<AbstractMetadata> iso19139Metadata, String type,
                                                                 String atomProtocol) throws Exception {
 
         Map<String, String> metadataAtomFeeds = new HashMap<String, String>();
 
-        for (IMetadata md : iso19139Metadata) {
+        for (AbstractMetadata md : iso19139Metadata) {
             int id = md.getId();
             String schema = md.getDataInfo().getSchemaId();
             Element mdEl = null;
@@ -264,7 +264,7 @@ public class InspireAtomUtil {
         return atomFeed;
     }
 
-    public static List<IMetadata> searchMetadataByType(ServiceContext context,
+    public static List<AbstractMetadata> searchMetadataByType(ServiceContext context,
                                                       SearchManager searchMan,
                                                       String type) {
 
@@ -278,7 +278,7 @@ public class InspireAtomUtil {
             searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
             searcher.search(context, request, new ServiceConfig());
 
-            Map<Integer, IMetadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
+            Map<Integer, AbstractMetadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
             return new ArrayList<>(allMdInfo.values());
         } catch (Exception ex) {
             ex.printStackTrace();

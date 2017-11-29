@@ -44,7 +44,7 @@ import javax.annotation.Nullable;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.oaipmh.Lib;
@@ -214,7 +214,7 @@ public class ThesaurusManager implements ThesaurusFinder {
      * @param os   OutputStream to write rdf to from XSLT conversion
      */
     private void getRegisterMetadataAsRdf(String uuid, OutputStream os, ServiceContext context) throws Exception {
-        IMetadata mdInfo = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+        AbstractMetadata mdInfo = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
         Integer id = mdInfo.getId();
         final DataManager dataManager = context.getBean(DataManager.class);
         Element md = dataManager.getMetadata("" + id);

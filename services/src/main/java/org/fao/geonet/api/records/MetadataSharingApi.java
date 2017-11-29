@@ -53,7 +53,7 @@ import org.fao.geonet.api.records.model.SharingParameter;
 import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -164,7 +164,7 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -254,7 +254,7 @@ public class MetadataSharingApi {
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                IMetadata metadata = metadataRepository.findOneByUuid(uuid);
+                AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -302,7 +302,7 @@ public class MetadataSharingApi {
         SharingParameter sharing,
         DataManager dataMan,
         ServiceContext context,
-        IMetadata metadata,
+        AbstractMetadata metadata,
         Map<String, Integer> operationMap,
         List<GroupOperations> privileges) throws Exception {
         if (privileges != null) {
@@ -348,7 +348,7 @@ public class MetadataSharingApi {
      * @return
      * @throws Exception
      */
-    private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, IMetadata metadata) throws Exception {
+    private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, AbstractMetadata metadata) throws Exception {
         MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
 
         boolean hasValidation =
@@ -396,7 +396,7 @@ public class MetadataSharingApi {
     )
         throws Exception {
         // TODO: Restrict to user group only in response depending on settings?
-        IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(session);
@@ -501,7 +501,7 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
-        IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -711,7 +711,7 @@ public class MetadataSharingApi {
         throws Exception {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         try {
             report.setTotalRecords(1);
 
@@ -746,7 +746,7 @@ public class MetadataSharingApi {
                                  IMetadataUtils metadataRepository,
                                  ServiceContext serviceContext,
                                  List<String> listOfUpdatedRecords, String uuid) throws Exception {
-        IMetadata metadata = metadataRepository.findOneByUuid(uuid);
+        AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
         } else if (!accessMan.canEdit(

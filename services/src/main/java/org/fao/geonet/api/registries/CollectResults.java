@@ -25,7 +25,7 @@ package org.fao.geonet.api.registries;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.jdom.Element;
 
 import com.google.common.collect.HashBasedTable;
@@ -37,7 +37,7 @@ import com.google.common.collect.Table;
  */
 public class CollectResults {
     boolean recordUpdated = false;
-    private IMetadata record;
+    private AbstractMetadata record;
     private Element updatedRecord;
     /**
      * Table composed of the entry identifier (extracted from the Element),
@@ -53,7 +53,7 @@ public class CollectResults {
     public CollectResults() {
     }
 
-    public CollectResults(IMetadata record) {
+    public CollectResults(AbstractMetadata record) {
         this.record = record;
     }
 
@@ -61,11 +61,11 @@ public class CollectResults {
         return recordUpdated;
     }
 
-    public IMetadata getRecord() {
+    public AbstractMetadata getRecord() {
         return record;
     }
 
-    public CollectResults setRecord(IMetadata record) {
+    public CollectResults setRecord(AbstractMetadata record) {
         this.record = record;
         return this;
     }

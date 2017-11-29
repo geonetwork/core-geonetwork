@@ -32,7 +32,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -98,7 +98,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
         //-----------------------------------------------------------------------
         //--- check access
 
-		IMetadata info = context.getBean(MetadataRepository.class).findOne(id);
+		AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
 
         if (info == null)
             throw new MetadataNotFoundEx(id);
@@ -195,7 +195,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 				(metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
 
 		if (!hasValidation) {
-			IMetadata metadata = metadataUtils.findOne(mdId);
+			AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
 			dm.doValidate(metadata.getDataInfo().getSchemaId(), mdId + "",
 					new Document(metadata.getXmlData(false)), context.getLanguage());

@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.SchemaManager;
@@ -276,7 +276,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
 
-        final IMetadata updatedMetadata = _metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID);
+        final AbstractMetadata updatedMetadata = _metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID);
         assertEquals(1, Xml.selectNodes(updatedMetadata.getXmlData(false), TITLE_XPATH, Arrays.asList(GCO, GMD)).size());
     }
 
@@ -316,7 +316,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     private void assertMetadataIsUpdated(String updateXPath, String newValue) throws IOException, JDOMException {
-        final IMetadata updatedMetadata = _metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID);
+        final AbstractMetadata updatedMetadata = _metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID);
         assertNotNull(updatedMetadata);
 
         assertEqualsText(newValue, updatedMetadata.getXmlData(false), updateXPath);
@@ -351,7 +351,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     private void addPhotographicMetadataToRepository(int ownerId) throws Exception {
-        IMetadata metadata = MetadataRepositoryTest.newMetadata(_inc);
+        AbstractMetadata metadata = MetadataRepositoryTest.newMetadata(_inc);
         metadata.getSourceInfo().setOwner(ownerId);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.setUuid(PHOTOGRAPHIC_UUID);

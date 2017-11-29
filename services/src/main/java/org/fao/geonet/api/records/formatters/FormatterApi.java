@@ -65,7 +65,7 @@ import org.fao.geonet.api.records.formatters.cache.Validator;
 import org.fao.geonet.api.records.formatters.groovy.ParamValue;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -268,7 +268,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         final ServiceContext context = createServiceContext(locale.getISO3Language(),
             formatType, request.getNativeRequest(HttpServletRequest.class));
-        IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
 
         Boolean hideWithheld = true;
 //        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
@@ -559,9 +559,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(ServiceContext context, Key key, final NativeWebRequest request) throws Exception {
-        final Pair<Element, IMetadata> elementMetadataPair = getMetadata(context, key.mdId, key.hideWithheld);
+        final Pair<Element, AbstractMetadata> elementMetadataPair = getMetadata(context, key.mdId, key.hideWithheld);
         Element metadata = elementMetadataPair.one();
-        IMetadata metadataInfo = elementMetadataPair.two();
+        AbstractMetadata metadataInfo = elementMetadataPair.two();
 
         return createFormatterAndParams(key.lang, key.formatType, key.formatterId, key.width, request, context, metadata, metadataInfo);
     }
@@ -577,7 +577,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                                                                           NativeWebRequest request,
                                                                           ServiceContext context,
                                                                           Element metadata,
-                                                                          IMetadata metadataInfo) throws Exception {
+                                                                          AbstractMetadata metadataInfo) throws Exception {
         final String schema = metadataInfo.getDataInfo().getSchemaId();
         Path schemaDir = null;
         if (schema != null) {
@@ -642,10 +642,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return isInSchemaPlugin;
     }
 
-    public Pair<Element, IMetadata> getMetadata(ServiceContext context, int id,
+    public Pair<Element, AbstractMetadata> getMetadata(ServiceContext context, int id,
                                                Boolean hide_withheld) throws Exception {
 
-        IMetadata md = loadMetadata(context.getBean(IMetadataUtils.class), id);
+        AbstractMetadata md = loadMetadata(context.getBean(IMetadataUtils.class), id);
         Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md, false);
 
 

@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
@@ -91,7 +91,7 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 
                 //--- check access
 
-                IMetadata info = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+                AbstractMetadata info = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
                 if (info == null) {
                     notFound.add(uuid);
                 } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {

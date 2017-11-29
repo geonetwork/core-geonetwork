@@ -35,7 +35,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.kernel.AccessManager;
@@ -153,7 +153,7 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
         int iId = Integer.valueOf(id);
 
         IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
-        IMetadata metadataEntity = metadataRepository.findOne(iId);
+        AbstractMetadata metadataEntity = metadataRepository.findOne(iId);
         MetadataDataInfo info = metadataEntity.getDataInfo();
 
         // Get metadata title from the index

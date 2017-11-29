@@ -25,7 +25,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
@@ -89,8 +89,8 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     public void updateHasToTriggerIndexation() throws Exception {
         URL contactResource = AbstractCoreIntegrationTest.class.getResource("kernel/babarContact.xml");
         Element contactElement = Xml.loadStream(contactResource.openStream());
-        IMetadata contactMetadata = insertContact(contactElement);
-        IMetadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
+        AbstractMetadata contactMetadata = insertContact(contactElement);
+        AbstractMetadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
         Document document = searchForMetadataTagged("babar");
         assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
@@ -116,8 +116,8 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Test
     public void deleteAllowedWhenRefNotExists() throws Exception {
         settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, false);
-        IMetadata contactMetadata = insertContact();
-        IMetadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
+        AbstractMetadata contactMetadata = insertContact();
+        AbstractMetadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
         dataManager.deleteMetadata(context, Integer.toString(vicinityMapMetadata.getId()));
         dataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
@@ -127,7 +127,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Test
     public void deleteHasToBeForbiddenWhenRefExistsAndSettingsSaySo() throws Exception {
         settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, false);
-        IMetadata contactMetadata = insertContact();
+        AbstractMetadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
         try {
@@ -142,14 +142,14 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Test
     public void deleteHasToBeAllowedWhenRefExistsAndSettingsSaySo() throws Exception {
         settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
-        IMetadata contactMetadata = insertContact();
+        AbstractMetadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
         dataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
         assertNull(dataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
-    private IMetadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
+    private AbstractMetadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
         loginAsAdmin(context);
 
         Metadata metadata = new Metadata();
@@ -167,7 +167,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        IMetadata dbInsertedMetadata = dataManager.insertMetadata(
+        AbstractMetadata dbInsertedMetadata = dataManager.insertMetadata(
                 context,
                 metadata,
                 element,
@@ -181,7 +181,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         return dbInsertedMetadata;
     }
 
-    private IMetadata insertVicinityMap(IMetadata contactMetadata) throws Exception {
+    private AbstractMetadata insertVicinityMap(AbstractMetadata contactMetadata) throws Exception {
         URL vicinityMapResource = AbstractCoreIntegrationTest.class.getResource("kernel/vicinityMap.xml");
         Element vicinityMapElement = Xml.loadStream(vicinityMapResource.openStream());
         Attribute href = (Attribute) Xml.selectElement(vicinityMapElement, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact").getAttributes().get(0);
@@ -189,14 +189,14 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         return insertTemplateResourceInDb(vicinityMapElement, TEMPLATE);
     }
 
-    private IMetadata insertContact() throws Exception {
+    private AbstractMetadata insertContact() throws Exception {
         URL contactResource = AbstractCoreIntegrationTest.class.getResource("kernel/babarContact.xml");
         Element contactElement = Xml.loadStream(contactResource.openStream());
         return insertContact(contactElement);
     }
 
-    private IMetadata insertContact( Element contactElement) throws Exception {
-        IMetadata contactMetadata = insertTemplateResourceInDb(contactElement, SUB_TEMPLATE);
+    private AbstractMetadata insertContact( Element contactElement) throws Exception {
+        AbstractMetadata contactMetadata = insertTemplateResourceInDb(contactElement, SUB_TEMPLATE);
 
         SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
         when(mockInvoker.invoke(any(String.class))).thenReturn(contactElement);

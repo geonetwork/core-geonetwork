@@ -55,7 +55,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
@@ -274,7 +274,7 @@ public class DirectoryApi {
         final String siteId = context.getBean(SettingManager.class).getSiteId();
 
         for (String recordUuid : setOfUuidsToEdit) {
-            IMetadata record = metadataRepository.findOneByUuid(recordUuid);
+            AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
                 report.incrementNullRecords();
             } else if (!accessMan.canEdit(context, String.valueOf(record.getId()))) {
@@ -465,7 +465,7 @@ public class DirectoryApi {
         boolean validate = false, ufo = false, index = false;
         report.setTotalRecords(setOfUuidsToEdit.size());
         for (String recordUuid : setOfUuidsToEdit) {
-            IMetadata record = metadataRepository.findOneByUuid(recordUuid);
+            AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
                 report.incrementNullRecords();
             } else if (!accessMan.canEdit(context, String.valueOf(record.getId()))) {

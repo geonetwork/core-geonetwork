@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -335,7 +335,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 date = rf.getChangeDate();
             }
         }
-        IMetadata metadata = new Metadata();
+        AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -500,7 +500,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean index = false;
             String language = context.getLanguage();
 
-            final IMetadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
+            final AbstractMetadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
                 date, false);
 
             //--- the administrator could change privileges and categories using the

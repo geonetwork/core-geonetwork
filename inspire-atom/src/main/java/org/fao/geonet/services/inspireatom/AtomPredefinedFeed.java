@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
@@ -143,7 +143,7 @@ public class AtomPredefinedFeed {
         SearchManager searchMan = context.getBean(SearchManager.class);
 
         // Search for the dataset identified by spIdentifier
-        IMetadata datasetMd = null;
+        AbstractMetadata datasetMd = null;
         Document dsLuceneSearchParams = createDefaultLuceneSearcherParams();
         dsLuceneSearchParams.getRootElement().addContent(new Element("identifier").setText(spIdentifier));
         dsLuceneSearchParams.getRootElement().addContent(new Element("type").setText("dataset"));

@@ -32,7 +32,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Selection;
 import org.fao.geonet.domain.User;
@@ -354,7 +354,7 @@ public class UserSelectionsApi {
         IMetadataUtils mdRepository = appContext.getBean(IMetadataUtils.class);
         for (String u : uuid) {
             // Check record exist
-            IMetadata md = mdRepository.findOneByUuid(u);
+            AbstractMetadata md = mdRepository.findOneByUuid(u);
             if (md != null) {
                 UserSavedSelection e = new UserSavedSelection(selection, user, u);
                 try {

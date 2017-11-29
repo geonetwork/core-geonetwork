@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
@@ -410,7 +410,7 @@ public class FragmentHarvester extends BaseAligner {
         //
         // insert metadata
         //
-        IMetadata metadata = new Metadata();
+        AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -601,7 +601,7 @@ public class FragmentHarvester extends BaseAligner {
         int iId = Integer.parseInt(id);
 
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
-        IMetadata metadata = metadataRepository.findOne(iId);
+        AbstractMetadata metadata = metadataRepository.findOne(iId);
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, iId);
 
@@ -640,7 +640,7 @@ public class FragmentHarvester extends BaseAligner {
         //
         // insert metadata
         //
-        IMetadata metadata = new Metadata();
+        AbstractMetadata metadata = new Metadata();
         metadata.setUuid(recUuid);
         metadata.getDataInfo().
             setSchemaId(params.outputSchema).

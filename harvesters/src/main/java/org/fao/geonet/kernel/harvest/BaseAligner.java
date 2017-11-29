@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -69,7 +69,7 @@ public abstract class BaseAligner {
      * @param saveMetadata
      * @throws Exception
      */
-    public void addCategories(IMetadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
+    public void addCategories(AbstractMetadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
                               Logger log, String serverCategory, boolean saveMetadata) {
 
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);

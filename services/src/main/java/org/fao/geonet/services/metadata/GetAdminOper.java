@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.UserGroup;
@@ -83,7 +83,7 @@ public class GetAdminOper implements Service {
         //-----------------------------------------------------------------------
         //--- check access
 
-        IMetadata info = context.getBean(MetadataRepository.class).findOne(metadataId);
+        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(metadataId);
 
         if (info == null)
             throw new MetadataNotFoundEx(metadataId);

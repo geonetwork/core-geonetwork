@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -70,7 +70,7 @@ public class Identify implements OaiPmhService {
     //---------------------------------------------------------------------------
 
     private ISODate getEarliestDS(ServiceContext context) throws Exception {
-        final IMetadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
+        final AbstractMetadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
 
         //--- if we don't have metadata, just return 'now'
         if (oldestByChangeDate == null)
