@@ -546,18 +546,7 @@
       $scope.$on('PrivilegesUpdated', function() {
         $('#gn-share').modal('hide');
       });
-
-      // UI utils
-      $scope.getOwnerName = function(e) {
-        return e.userinfo.split('|')[0];
-      };
-      $scope.getCreateDate = function(e) {
-        return moment(e['geonet:info'].createDate).format('LLL');
-      };
-      $scope.getChangeDate = function(e) {
-        return moment(e['geonet:info'].changeDate).format('LLL');
-      };
-
+      
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function(b) {
         $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
