@@ -83,7 +83,7 @@
         tabs:
             [{
               type: 'index',
-              label: 'indexAdmin',
+              label: 'catalogueAdminTools',
               icon: 'fa-search',
               href: '#/tools/index'
             },{
