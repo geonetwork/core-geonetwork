@@ -481,7 +481,8 @@
       // login url for inline signin form in top toolbar
       $scope.signInFormAction = '../../signin#' + $location.path();
 
-      $scope.activateLoginPopup = function() {
+      // when the login input have focus, do not close the dropdown/popup
+      $scope.focusLoginPopup = function() {
         $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword').one('focus',function() {
           $(this).parents('.dropdown-menu').addClass('show');
         });
