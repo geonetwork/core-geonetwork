@@ -300,6 +300,9 @@
                             data-ng-model="s.value"
                             data-ng-change="processRecommended('siteIdChange', s['name'])"/>
                     </div>
+                    
+                    <input data-ng-switch-when="system/inspire/remotevalidation/url" type="text" class="form-control"
+                          id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}" placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}" />
 
                     <!-- Default -->
                     <input data-ng-switch-default="" type="text" class="form-control"

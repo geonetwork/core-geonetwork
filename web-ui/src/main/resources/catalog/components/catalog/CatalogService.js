@@ -81,7 +81,7 @@
          * @return {HttpPromise} Future object
          */
         validate: function(id) {
-          return $http.put('../api/records/' + id + '/validate');
+          return $http.put('../api/records/' + id + '/validate/internal');
         },
 
         /**
@@ -98,7 +98,7 @@
          */
         validateDirectoryEntry: function(id, newState) {
           var param = '?isvalid=' + (newState ? 'true' : 'false');
-          return $http.put('../api/records/' + id + '/validate' + param);
+          return $http.put('../api/records/' + id + '/validate/internal' + param);
         },
 
         /**
@@ -421,6 +421,7 @@
           isXLinkEnabled: 'system.xlinkResolver.enable',
           isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
           isFeedbackEnabled: 'system.userFeedback.enable',
+          isInspireEnabled: 'system.inspireValidation.enable',
           isSearchStatEnabled: 'system.searchStats.enable',
           isHideWithHelEnabled: 'system.hidewithheldelements.enable'
         },
@@ -436,6 +437,7 @@
       isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
+      isInspireEnabled: 'system.inspire.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
     },
