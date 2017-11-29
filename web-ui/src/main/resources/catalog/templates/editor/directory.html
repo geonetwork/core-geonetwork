@@ -194,10 +194,15 @@
                 </div>
 
                 <div class="entry-info flex-row flex-align-center" ng-if="!templatesShown()">
-                  <small class="text-muted" translate
-                    translate-values="{ownerName: getOwnerName(md), updateDate: getChangeDate(md)}">
-                    directoryEntryInfo
-                  </small>
+                  <div class="text-muted">
+                    <small><span data-translate="">owner</span>:</small>
+                    <small>{{::md.getOwnername()}}</small>
+                    &nbsp;
+                    <small data-translate="">updatedOn</small>
+                    <small class="text-muted"
+                           data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+                           data-from-now=""></small>
+                  </div>
 
                   <div class="flex-spacer flex-grow"></div>
 
