@@ -11,8 +11,15 @@
          title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
       <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>
       <br/>
-      <div class="gn-record-details">
-        <span title="{{'metadataAuthor' | translate}}">{{md.getOwnername()}}</span>
+      <div class="gn-record-details text-muted">
+        <small><span data-translate="">owner</span>:</small>
+        <small>{{::md.getOwnername()}}</small>
+        &nbsp;
+        <small data-translate="">updatedOn</small>
+        <small class="text-muted"
+               data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+               data-from-now=""></small>
+
         <span class="pull-right text-muted"
               data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
               data-ng-show="md.mdStatus">{{('status-' + md.mdStatus) | translate}}</span>
