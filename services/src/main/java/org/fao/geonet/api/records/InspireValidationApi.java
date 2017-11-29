@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.api.records;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -22,13 +45,16 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.editing.InspireValidatorUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
+import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
@@ -47,13 +73,14 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javassist.NotFoundException;
+import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-        "/api/inspire",
+        "/api/records",
         "/api/" + API.VERSION_0_1 +
-        "/inspire"
+        "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
 tags = API_CLASS_RECORD_TAG)
@@ -69,7 +96,7 @@ public class InspireValidationApi {
                     + "This activates an asyncronous process, this method does not return any report. "
                     + "This method returns an id to be used to get the report.",
                     nickname = "submitValidate")
-    @RequestMapping(value = "/{metadataUuid}/validate/submit",
+    @RequestMapping(value = "/{metadataUuid}/validate/inspire",
     method = RequestMethod.PUT,
     produces = {
             MediaType.TEXT_PLAIN_VALUE
@@ -105,7 +132,12 @@ public class InspireValidationApi {
 
         if(metadata==null) {
             response.setStatus(HttpStatus.SC_NOT_FOUND);
-            return null;
+            return "";
+        }
+
+        if(!metadata.getDataInfo().getSchemaId().startsWith("iso19139")) {
+            response.setStatus(HttpStatus.SC_NOT_ACCEPTABLE);
+            return "";
         }
 
         String id = String.valueOf(metadata.getId());
@@ -115,10 +147,30 @@ public class InspireValidationApi {
         try {
             Element md = (Element) ApiUtils.getUserSession(session).getProperty(Geonet.Session.METADATA_EDITING + id);
             if (md == null) {
-                throw new ResourceNotFoundException(String.format("Requested metadata with id '%s' is not available in current session. "
-                        + "Open an editing session on this record first.", id));
+                response.setStatus(HttpStatus.SC_NOT_FOUND);
+                return "";
             }
             md.detach();
+            ServiceContext context = ApiUtils.createServiceContext(request);
+            Attribute schemaLocAtt =  appContext.getBean(SchemaManager.class).getSchemaLocation(
+                    metadata.getDataInfo().getSchemaId(), context);
+
+            if (schemaLocAtt != null) {
+                if (md.getAttribute(
+                        schemaLocAtt.getName(),
+                        schemaLocAtt.getNamespace()) == null) {
+                    md.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                }
+            }
+
+            EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
+
+            editLib.removeEditingInfo(md);
+            editLib.contractElements(md);
 
             InputStream metadataToTest = convertElement2InputStream(md);
 
@@ -127,7 +179,7 @@ public class InspireValidationApi {
             return testId;
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            return null;
+            return "";
         }
     }
 
@@ -149,7 +201,7 @@ public class InspireValidationApi {
                     + "An INSPIRE endpoint must be configured in Settings. "
                     + "If the process is complete an object with status is returned. ",
                     nickname = "checkValidateStatus")
-    @RequestMapping(value = "/{testId}/validate/check",
+    @RequestMapping(value = "/{testId}/validate/inspire",
     method = RequestMethod.GET,
     produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -195,18 +247,17 @@ public class InspireValidationApi {
             }
         } catch (NotFoundException e) {
             response.setStatus(HttpStatus.SC_NOT_FOUND);
-            return null;
+            return new HashMap<>();
         } catch (Exception e) {
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-            return null;
+            return new HashMap<>();
         }
 
         response.setStatus(HttpStatus.SC_CREATED);
-        return null;
+        return new HashMap<>();
     }
 
 
 
 
 }
-
