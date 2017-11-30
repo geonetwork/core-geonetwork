@@ -540,7 +540,8 @@
 	        <artifactId>git-commit-id-plugin</artifactId>
 	        <version>2.2.1</version>
 	        <executions>
-	            <execution>
+                  <execution>
+                    <phase>initialize</phase>
 	                <id>get-the-git-infos</id>
 	                <goals>
 	                    <goal>revision</goal>
