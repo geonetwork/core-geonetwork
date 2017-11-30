@@ -564,7 +564,7 @@
 	            <failOnNoGitDirectory>false</failOnNoGitDirectory>
 	            <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
 	            <skip>false</skip>
-	            <runOnlyOnce>true</runOnlyOnce>
+	            <runOnlyOnce>false</runOnlyOnce>
 	            <excludeProperties>
 	            </excludeProperties>
 							<includeOnlyProperties>
