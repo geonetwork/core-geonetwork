@@ -29,7 +29,8 @@
 	<bean id="gitproperties" 
 	  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
 	    <property name="ignoreUnresolvablePlaceholders" value="true" />
-	    <property name="location" value="classpath:git.properties" />
+      <property name="ignoreResourceNotFound" value="true" />
+	    <property name="location" value="classpath*:git.properties" />
 	</bean> 
 
   <bean id="systemInfo" class="org.fao.geonet.SystemInfo">
