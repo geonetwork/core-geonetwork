@@ -67,5 +67,9 @@
   "inputIsOverloaded": "Cette valeur provient d'un filtre WFS",
   "fullTextSearch": "Filtre",
   "sxtBack": "Retour",
-  "mainPublicationIntroduction": "Pour toute utilisation de cette donnée dans une publication, merci de citer également les travaux suivants :"
+  "mainPublicationIntroduction": "Pour toute utilisation de cette donnée dans une publication, merci de citer également les travaux suivants :",
+  "mdActions": "Visualisable/téléchargeable",
+  "mdActions-view": "Visualisable",
+  "mdActions-download": "Téléchargeable",
+  "mdActions-process": "Traitement WPS"
 }

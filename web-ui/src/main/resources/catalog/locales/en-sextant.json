@@ -68,5 +68,9 @@
   "inputIsOverloaded": "This value is set in a WFS filter",
   "fullTextSearch": "Full Text Search",
   "sxtBack": "Back",
-  "mainPublicationIntroduction": "In addition to properly cite this dataset, it would be appreciated that the following work(s) be cited too, when using this dataset in a publication:"
+  "mainPublicationIntroduction": "In addition to properly cite this dataset, it would be appreciated that the following work(s) be cited too, when using this dataset in a publication:",
+  "mdActions": "Viewable/downloadable",
+  "mdActions-view": "Viewable",
+  "mdActions-download": "Downloadable",
+  "mdActions-process": "Has WPS process"
 }

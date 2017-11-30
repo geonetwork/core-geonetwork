@@ -11,7 +11,7 @@
   <div class="list-group" ng-class="{'collapse': contentCollapsed}">
     <div class="checkbox list-group-item" data-ng-repeat="f in facetObj | filter:filterInputs"
          data-ng-click="updateSearch(f['@name'], $event)" data-ng-class="{'selected': isInSearch(f['@name'])}">
-      <i class="fa" data-ng-class="isInSearch(f['@name']) ? 'fa-check-square' : 'fa-square-o'"></i>{{f['@label'] || f['@name']}}&nbsp;({{f['@count']}})
+      <i class="fa" data-ng-class="isInSearch(f['@name']) ? 'fa-check-square' : 'fa-square-o'"></i>{{(f['@label'] || f['@name']) | translate}}&nbsp;({{f['@count']}})
     </div>
   </div>
 </div>

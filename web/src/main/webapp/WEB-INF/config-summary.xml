@@ -304,6 +304,7 @@
       <item facet="odatis_variables" max="300"/>
       <item facet="odatis_centre_donnees" max="300"/>
       <item facet="odatis_type_jeux_donnee" max="300"/>
+      <item facet="mdActions"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
     <summaryType name="subtemplates">

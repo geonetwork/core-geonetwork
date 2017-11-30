@@ -388,6 +388,8 @@
         key: 'orgName'
       }, {
         key: 'createDateYear'
+      }, {
+        key: 'mdActions'
       }];
 
       if(typeof sxtSettings != 'undefined') {
