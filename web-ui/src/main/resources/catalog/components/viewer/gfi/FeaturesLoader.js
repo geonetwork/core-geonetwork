@@ -50,7 +50,6 @@
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
     this.urlUtils = this.$injector.get('gnUrlUtils');
-    this.gnProxyUrl = this.$injector.get('gnGlobalSettings').proxyUrl;
 
     this.layer = config.layer;
     this.map = config.map;
@@ -65,9 +64,6 @@
     return this.loading;
   };
 
-  geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url) {
-    return this.gnProxyUrl + encodeURIComponent(url);
-  };
 
   /**
    *
@@ -99,9 +95,7 @@
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
-    this.promise = this.$http.get(
-        this.proxyfyUrl(uri)).then(function(response) {
-
+    this.promise = this.$http.get(uri).then(function(response) {
           this.loading = false;
           if (layer.ncInfo) {
             var doc = ol.xml.parse(response.data);
