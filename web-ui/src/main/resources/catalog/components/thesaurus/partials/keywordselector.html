@@ -7,8 +7,8 @@
     </button>
   </div>
 
-  <span data-ng-show="!invalidKeywordMatch" ng-switch="mode">
-    <div class="row" data-ng-switch-when="tagsinput">
+  <span data-ng-show="!invalidKeywordMatch">
+    <div class="row">
       <label class="col-sm-2 control-label">
         {{thesaurusTitle}}
       </label>
@@ -37,33 +37,6 @@
           </ul>
         </div>
       </div>
-    </div>
-    <!-- TODO: Deprecate this mode ? - only tagsinput is used. -->
-    <div class="row" data-ng-switch-default="">
-      <div class="col-md-4 col-md-offset-2">
-        <input type="text" class="form-control" placeholder="{{'keywordFilter' | translate}}"
-               data-ng-model="filter"/>
-      </div>
-      <div class="col-md-4 col-md-offset-1">
-        <div class="btn-group pull-right">
-          <button type="button" class="btn btn-link dropdown-toggle pull-right"
-                  data-toggle="dropdown">
-            <i class="fa fa-cog"/>
-            <span class="caret"/>
-          </button>
-          <ul class="dropdown-menu">
-            <li role="presentation" class="dropdown-header" data-translate="">keywordInsertMode</li>
-            <li data-ng-repeat="tr in transformationLists"
-                data-ng-class="isCurrent(tr) ? 'disabled' : ''">
-              <a href="" data-ng-click="setTransformation(tr)"
-                 title="{{(tr + '-help') | translate}}">{{tr | translate}}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div data-gn-multiselect="selected" data-choices="results"
-           data-label-prop="getLabel" data-sort-fn="sortKeyword"></div>
     </div>
 
 		<div class="row" ng-show="concept && thesaurusKey != 'external.none.allThesaurus'">
