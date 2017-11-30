@@ -24,21 +24,6 @@
       {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
     </div>
 
-    <!--search input-->
-    <div data-ng-show="isFeaturesIndexed"
-         class="gn-layertree-filter">
-      <span class="fa fa-times-circle clear"
-            data-ng-click="clearInput()"
-            title="{{'clear' | translate}}"></span>
-      <input type="text"
-             data-gn-focus-on="isFeaturesIndexed"
-             data-ng-model="searchInput"
-             data-ng-change="filterFacets()"
-             data-ng-model-options="{ debounce: 400 }"
-             class="layerfilter form-control input-sm"
-             placeholder="{{'filter'|translate}}..."/>
-    </div>
-
     <!--Facet fields-->
     <div data-ng-if="isFeaturesIndexed"
          class="gn-facet"
@@ -48,6 +33,20 @@
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
         {{field.label}}
       </h5>
+
+      <!-- value filter field -->
+      <div class="filter-input sxt-layertree-filter"
+        ng-if="field.more || facetFilters[field.name]" ng-show="field.expanded">
+        <span class="fa fa-times-circle clear" title="clear"
+          ng-click="facetFilters[field.name] = ''; filterFacets()"
+          ng-show="facetFilters[field.name]"></span>
+        <input type="text" class="form-control input-sm layerfilter"
+          placeholder="{{ 'filter' | translate }}"
+          ng-model="facetFilters[field.name]"
+          ng-model-options="{debounce: 300}"
+          ng-change="filterFacets()">
+      </div>
+
       <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
         <div class="list-group">
           <div class="list-group-item"

@@ -251,7 +251,7 @@
     else {
       return this.search(
           qParams,
-          angular.extend({}, this.initialParams.facets, aggs));
+          angular.merge({}, this.initialParams.facets, aggs));
     }
   };
 
