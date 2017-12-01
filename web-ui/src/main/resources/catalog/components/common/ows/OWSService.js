@@ -59,7 +59,7 @@
       {
         namespacePrefixes: {
           'http://www.w3.org/1999/xlink': 'xlink',
-          'http://www.opengis.net/ows/1.1': 'ows',
+          'http://www.opengis.net/ows': 'ows',
           'http://www.opengis.net/wfs': 'wfs'
         }
       }
@@ -129,10 +129,17 @@
 
         var parseWFSCapabilities = function(data) {
           var version = '1.1.0';
+          try {
+            var xml = $.parseXML(data);
+          } catch (e) {
+            return {"exception":e.message};
+          }
+          if (!angular.isObject(xml)){
+            return {"exception":"Parsed xml is not an object"};
+          }
 
           try {
             //First cleanup not supported INSPIRE extensions:
-            var xml = $.parseXML(data);
             if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
               var cleanup = function(i, el) {
                 if (el.tagName.endsWith('ExtendedCapabilities')) {
@@ -165,11 +172,9 @@
               return xfsCap;
             }*/
           } catch (e) {
-            //alert('WFS version not supported.');
-            //defer.reject({msg: 'wfsGetCapabilitiesFailed',
-            // owsExceptionReport: e.message});
-            //return e.message;
+            return {"exception":e.message};        
           }
+        
 
           //result.contents.Layer = result.contents.layers;
           //result.Contents.operationsMetadata = result.OperationsMetadata;
@@ -226,7 +231,7 @@
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
-                        defer.reject('capabilitiesParseError');
+                        defer.reject(e.message);
                       }
                     })
                     .error(function(data, status) {
@@ -285,20 +290,29 @@
                   cache: true
                 })
                     .success(function(data, status, headers, config) {
+                      if (!data) {
+                        defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                          owsExceptionReport: 'No data from '+url+'.'});
+                      }
                       var xfsCap = parseWFSCapabilities(data);
-
                       if (!xfsCap || xfsCap.exception != undefined) {
                         defer.reject({msg: 'wfsGetCapabilitiesFailed',
-                          owsExceptionReport: xfsCap});
+                          owsExceptionReport: xfsCap.exception||'undefined'});
                       } else {
                         defer.resolve(xfsCap);
                       }
-
                     })
                     .error(function(data, status, headers, config) {
-                      defer.reject(status);
+                      defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                          owsExceptionReport: 'Unknown error, status '+status});
                     });
+              } else {
+                defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                          owsExceptionReport: 'Url '+url+' is not valid'});
               }
+            } else {
+              defer.reject({msg: 'noCapabilitiesUrlAvailable',
+                          owsExceptionReport: 'undefined'});
             }
             return defer.promise;
           },
