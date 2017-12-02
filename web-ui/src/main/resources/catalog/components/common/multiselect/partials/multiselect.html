@@ -15,15 +15,16 @@
   <div class="col-md-1">
     <br/>
     <div class="btn-group-vertical">
-      <button class="btn btn-link fa fa-angle-right" data-ng-click="select()"/>
-      <button class="btn btn-link fa fa-angle-left" data-ng-click="unselect()"/>
+      <button class="btn btn-default fa fa-angle-right" data-ng-click="select()"/>
+      <button class="btn btn-default fa fa-angle-left" data-ng-click="unselect()"/>
     </div>
   </div>
   <div class="col-md-5">
     <input class="form-control"
            data-ng-model="selectedSearch.$"
            placeholder="{{'filter' | translate}}"/>
-    <select multiple="" class="form-control"
+    <select multiple=""
+            class="form-control"
             data-ng-model="currentSelectionRight">
       <option data-ng-repeat="e in selected | filter:selectedSearch"
               value="{{e.id}}"

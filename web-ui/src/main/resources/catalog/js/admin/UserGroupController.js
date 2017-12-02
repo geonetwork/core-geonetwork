@@ -327,12 +327,13 @@
         return g.label[$scope.lang] || g.name;
       };
 
+      var profiles = ['Administrator',
+        'UserAdmin', 'Reviewer',
+        'Editor', 'RegisteredUser',
+        'Guest'];
       $scope.$watch('userGroups', function(groups) {
         var res = [];
-        angular.forEach(['Administrator',
-                         'UserAdmin', 'Reviewer',
-                         'Editor', 'RegisteredUser',
-                         'Guest'], function(profile) {
+        angular.forEach(profiles, function(profile) {
           res[profile] = [];
           if (groups != null) {
             for (var i = 0; i < groups.length; i++) {
@@ -368,6 +369,9 @@
         // Switch the profile (AFA a watch on userIsAdmin does not work).
         if (checked) {
           $scope.userIsAdmin = !$scope.userIsAdmin;
+          angular.forEach(profiles, function(p) {
+            $scope.groupsByProfile[p] = [];
+          });
         }
         $scope.userUpdated = true;
         if ($scope.userIsAdmin) {
@@ -393,9 +397,13 @@
       };
 
 
-      $scope.$watchCollection('groupsByProfile.RegisteredUser', $scope.setUserProfile);
-      $scope.$watchCollection('groupsByProfile.Editor', $scope.setUserProfile);
-      $scope.$watchCollection('groupsByProfile.UserAdmin', $scope.setUserProfile);
+      function updateProfileRules() {
+        $scope.setUserProfile();
+      };
+
+      $scope.$watchCollection('groupsByProfile.RegisteredUser', updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.Editor', updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.UserAdmin', updateProfileRules);
       $scope.$watchCollection('groupsByProfile.Reviewer', function (n, o) {
         if (n !== o) {
           for (var j = 0; j < n.length; j++) {
