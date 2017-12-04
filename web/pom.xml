@@ -531,6 +531,7 @@
 
 
   <build>
+  
     <plugins>
     
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
@@ -554,19 +555,24 @@
 	            <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
 	            <verbose>false</verbose>
 	            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-	            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+	            <generateGitPropertiesFilename>src/main/webResources/WEB-INF/classes/git.properties</generateGitPropertiesFilename>
 	            <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json". Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
 	            <format>properties</format>
 	            <skipPoms>true</skipPoms>
-	            <injectAllReactorProjects>false</injectAllReactorProjects>
+	            <injectAllReactorProjects>true</injectAllReactorProjects>
 	            <failOnNoGitDirectory>false</failOnNoGitDirectory>
 	            <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
 	            <skip>false</skip>
 	            <runOnlyOnce>true</runOnlyOnce>
 	            <excludeProperties>
 	            </excludeProperties>
-	            <includeOnlyProperties>
-	            </includeOnlyProperties>
+							<includeOnlyProperties>
+								<includeOnlyProperty>^git.tags$</includeOnlyProperty>
+								<includeOnlyProperty>^git.branch$</includeOnlyProperty>
+								<includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
+								<includeOnlyProperty>^git.commit.id.describe.short$</includeOnlyProperty>
+								<includeOnlyProperty>^git.build.time$</includeOnlyProperty>
+							</includeOnlyProperties>
 	            <replacementProperties>
 	            </replacementProperties>
 	            <useNativeGit>false</useNativeGit>
@@ -791,25 +797,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-          <revisionOnScmFailure>true</revisionOnScmFailure>
-        </configuration>
-      </plugin>
 
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
@@ -819,7 +806,7 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
             <manifestEntries>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
+              <Implementation-Build>${git.commit.id}</Implementation-Build>
             </manifestEntries>
           </archive>
           <archiveClasses>true</archiveClasses>

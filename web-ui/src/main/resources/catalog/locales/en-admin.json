@@ -1168,5 +1168,12 @@
     "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow.",
     "ui-grid": "Search results configuration",
     "gridConfigRelatedTypes": "Related metadata types to query",
-    "gridConfigRelatedTypes-help": "Possible types include children, parent, services, fcats, datasets, sibling."
+    "gridConfigRelatedTypes-help": "Possible types include children, parent, services, fcats, datasets, sibling.",
+    "metadata/editor/schemaConfig": "Standard configuration",
+    "versionInformation": "Version Information",
+    "git.tags": "Current git tag (if any)",
+    "git.commit.id": "Commit hash",
+    "git.branch": "Branch base for the build",
+    "git.commit.id.describe-short": "Inferred version",
+    "git.build.time": "Timestamp of the build"
 }
