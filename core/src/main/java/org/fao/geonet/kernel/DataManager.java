@@ -53,39 +53,7 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataDataInfo_;
-import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.domain.MetadataFileUpload_;
-import org.fao.geonet.domain.MetadataHarvestInfo;
-import org.fao.geonet.domain.MetadataRatingByIp;
-import org.fao.geonet.domain.MetadataRatingByIpId;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.MetadataStatusId_;
-import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.MetadataValidationId;
-import org.fao.geonet.domain.MetadataValidationStatus;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
@@ -139,6 +107,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
+import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
@@ -247,23 +216,65 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- Note we have to use uuid here instead of id because we don't have
         //--- an id...
 
-        Element schemaTronXml = dataMan.doSchemaTronForEditor(schema, xml, context.getLanguage());
+        Element schemaTronReport = dataMan.doSchemaTronForEditor(schema,xml,context.getLanguage());
         xml.detach();
-        if (schemaTronXml != null && schemaTronXml.getContent().size() > 0) {
-            Element schemaTronReport = dataMan.doSchemaTronForEditor(schema, xml, context.getLanguage());
-
+        if (schemaTronReport != null && schemaTronReport.getContent().size() > 0) {
             List<Namespace> theNSs = new ArrayList<Namespace>();
             theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
             theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
 
-            Element failedAssert = Xml.selectElement(schemaTronReport, "geonet:report/svrl:schematron-output/svrl:failed-assert", theNSs);
-
-            Element failedSchematronVerification = Xml.selectElement(schemaTronReport, "geonet:report/geonet:schematronVerificationError", theNSs);
-
-            if ((failedAssert != null) || (failedSchematronVerification != null)) {
-                throw new SchematronValidationErrorEx("Schematron errors detected for file " + fileName + " - "
-                    + Xml.getString(schemaTronReport) + " for more details", schemaTronReport);
+            List<?> informationalReports = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required != '" + SchematronRequirement.REQUIRED + "']", theNSs);
+            for (Object informationalReport : informationalReports) {
+                ((Element)informationalReport).detach();
             }
+            List<?> failedAssert = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED +
+                            "']/svrl:schematron-output/svrl:failed-assert", theNSs);
+
+            List<?> failedSchematronVerification = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError", theNSs);
+
+            if ((!failedAssert.isEmpty()) || (!failedSchematronVerification.isEmpty())) {
+                StringBuilder errorReport = new StringBuilder();
+
+                Iterator reports = schemaTronReport.getDescendants(DataManager.ReportFinder);
+                while(reports.hasNext()) {
+                    Element report = (Element) reports.next();
+
+                    Iterator errors = report.getDescendants(DataManager.ErrorFinder);
+                    while(errors.hasNext()) {
+                        Element err = (Element) errors.next();
+
+                        StringBuilder msg = new StringBuilder();
+                        String reportType;
+                        if (err.getName().equals("failed-assert")) {
+                            reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
+                            reportType = reportType == null ? "No name for rule" : reportType;
+
+                            Iterator descendants = err.getDescendants();
+                            while (descendants.hasNext()) {
+                                Object node = descendants.next();
+                                if (node instanceof Element) {
+                                    String textTrim = ((Element) node).getTextTrim();
+                                    msg.append(textTrim).append(" \n");
+                                }
+                            }
+                        } else {
+                            reportType = "Xsd Error";
+                            msg.append(err.getChildText("message", Edit.NAMESPACE));
+                        }
+
+                        if (msg.length() > 0) {
+                            errorReport.append(reportType).append(':').append(msg);
+                        }
+                    }
+                }
+
+                throw new SchematronValidationErrorEx("Schematron errors detected for file "+fileName+" - "
+                        + errorReport + " for more details",schemaTronReport);
+            }
+
         }
 
     }
@@ -869,6 +880,9 @@ public class DataManager implements ApplicationEventPublisherAware {
      * Use this validate method for XML documents with xsd validation.
      */
     public void validate(String schema, Element md) throws Exception {
+        if(getSettingManager().getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
+            md.removeAttribute("schemaLocation", Namespaces.XSI);
+        }
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of " + schemaLoc);
@@ -892,6 +906,11 @@ public class DataManager implements ApplicationEventPublisherAware {
      * TODO javadoc.
      */
     public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
+
+        if(getSettingManager().getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
+            md.removeAttribute("schemaLocation", Namespaces.XSI);
+        }
+
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of " + schemaLoc);
@@ -3409,4 +3428,41 @@ public class DataManager implements ApplicationEventPublisherAware {
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
     }
+
+    /**
+     * Filter to find errors in schematron response (error on REQUIRED elements)
+     */
+    public static final Filter ErrorFinder  = new Filter() {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public boolean matches(Object obj) {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                String name = element.getName();
+                if (name.equals("error")) {
+                    return true;
+                } else if (name.equals("failed-assert")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+    public static final Filter ReportFinder = new Filter() {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public boolean matches(Object obj) {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                String name = element.getName();
+                if (name.equals("report") || name.equals("xsderrors")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
 }
