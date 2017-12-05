@@ -35,11 +35,11 @@
         'gnSearchSettings',
         'gnViewerSettings',
         'gnOwsContextService',
-        'gnMap',
+        'gnMap', 'gnMapsManager',
         'gnGlobalSettings',
         '$location',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnGlobalSettings, $location) {
+                 gnMap, gnMapsManager, gnGlobalSettings, $location) {
 
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
@@ -115,9 +115,6 @@
 
           };
 
-          // Object to store the current Map context
-          viewerSettings.storage = 'sessionStorage';
-
           // Start location. This is usually overriden
           // by context for large map and search records
           // extent for minimap
@@ -131,27 +128,7 @@
             view: new ol.View(mapsConfig)
           });
 
-          var searchMap = new ol.Map({
-            controls:[],
-            layers: [],
-            view: new ol.View(angular.extend({}, mapsConfig))
-          });
-
-          // initialize search map layers according to settings
-          // (default is OSM)
-          var searchMapLayers = viewerSettings.mapConfig.searchMapLayers;
-          if (!searchMapLayers || !searchMapLayers.length) {
-            searchMap.addLayer(new ol.layer.Tile({
-              source: new ol.source.OSM()
-            }));
-          } else {
-            searchMapLayers.forEach(function (layerInfo) {
-              gnMap.createLayerForType(layerInfo.type, {
-                name: layerInfo.name,
-                url: layerInfo.url
-              }, layerInfo.title, searchMap);
-            });
-          }
+          var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
 
           // Map protocols used to load layers/services in the map viewer
           searchSettings.mapProtocols = {
