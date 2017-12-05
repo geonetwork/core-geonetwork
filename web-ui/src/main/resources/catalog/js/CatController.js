@@ -181,18 +181,14 @@
             'layers': []
           },
           'map-search': {
-            'context': '',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
-            'layers': [
-              { type: 'osm' }
-            ]
+            'layers': []
           },
           'map-editor': {
-            'context': '',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
-            'layers': [
-              { type: 'osm' }
-            ]
+            'layers': []
           }
         },
         'geocoder': 'https://secure.geonames.org/searchJSON',

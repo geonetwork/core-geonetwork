@@ -1122,7 +1122,7 @@
     "ui-listOfServices": "List of preferred OGC services",
     "ui-listOfServices-help": "If none defined, service metadata records are proposed to the users",
     "ui-storage": "User preference persistence",
-    "ui-storage-help": "sessionStorage or localStorage",
+    "ui-storage-help": "'' or 'sessionStorage' or 'localStorage'. An empty value means that the viewer map will not be saved when leaving the application and restored when coming back.",
     "ui-isExportMapAsImageEnabled": "Export map as image",
     "ui-isExportMapAsImageEnabled-help": "This requires CORS to be enabled on the WMS services used in the map application. If not sure, you should disable that option that may cause trouble displaying WMS layers.",
     "ui-is3DModeAllowed": "Allow 3D mode",
