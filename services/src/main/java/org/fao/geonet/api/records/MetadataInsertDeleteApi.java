@@ -80,6 +80,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -596,6 +597,16 @@ public class MetadataInsertDeleteApi {
         )
         final String[] category,
         @ApiParam(
+            value = "Copy categories from source?",
+            required = false,
+            defaultValue = "false"
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+        final boolean hasCategoryOfSource,
+        @ApiParam(
         value = "Is child of the record to copy?",
         required = false,
         defaultValue = "false"
@@ -681,6 +692,33 @@ public class MetadataInsertDeleteApi {
                 "Error while copying metadata resources. Error is %s. " +
                     "Metadata is created but without resources from the source record with id '%d':",
                     e.getMessage(), newId));
+        }
+        if (hasCategoryOfSource) {
+            final Collection<MetadataCategory> categories =
+                dataManager.getCategories(sourceMetadata.getId() + "");
+            try {
+                for (MetadataCategory c : categories) {
+                    dataManager.setCategory(context, newId, c.getId() + "");
+                }
+            } catch (Exception e) {
+                Log.warning(Geonet.DATA_MANAGER, String.format(
+                    "Error while copying source record category to new record. Error is %s. " +
+                        "Metadata is created but without the categories from the source record with id '%d':",
+                    e.getMessage(), newId));
+            }
+        }
+
+        if (category != null && category.length > 0) {
+            try {
+                for (String c : category) {
+                    dataManager.setCategory(context, newId, c);
+                }
+            } catch (Exception e) {
+                Log.warning(Geonet.DATA_MANAGER, String.format(
+                    "Error while setting record category to new record. Error is %s. " +
+                        "Metadata is created but without the requested categories.",
+                    e.getMessage(), newId));
+            }
         }
 
         return newId;
