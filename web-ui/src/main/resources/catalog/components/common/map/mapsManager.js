@@ -92,10 +92,9 @@
               projection: gnMap.getMapConfig().projection,
               zoom: 2
             }),
-            // apply default controls if not in editor map
+            // show zoom control in editor maps only
             controls: type !== this.EDITOR_MAP ? [] : [
-              new ol.control.Zoom(),
-              new ol.control.Rotate()
+              new ol.control.Zoom()
             ]
           });
 
