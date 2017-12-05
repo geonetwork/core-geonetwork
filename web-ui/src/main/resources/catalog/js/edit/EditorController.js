@@ -498,6 +498,7 @@
                   type: 'danger'});
               });
         }
+
       };
 
       function parseXmlError(error) {
