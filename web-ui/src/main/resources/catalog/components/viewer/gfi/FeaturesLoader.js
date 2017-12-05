@@ -127,16 +127,20 @@
 
     }.bind(this));
 
-        this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
-        .then(function(response) {  
-        	if(response.data['decodeMap']!=null) {
-            	return response.data['decodeMap'];
-        	} else {
-        		return null;
+        this.dictionary = null;
+
+        if(!angular.isUndefined(uuid)) {
+          this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
+          .then(function(response) {
+            if(response.data['decodeMap']!=null) {
+              return response.data['decodeMap'];
+            } else {
+              return null;
         	}
-        }.bind(this), function(err) {
+          }.bind(this), function(err) {
         	return null;
-        }.bind(this));
+          }.bind(this));
+        }
 
   };
 
