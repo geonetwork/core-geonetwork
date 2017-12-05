@@ -95,7 +95,8 @@
               fullPrivileges,
               $routeParams.template,
               false,
-              $routeParams.tab);
+              $routeParams.tab,
+              true);
         } else {
 
           // Metadata creation could be on a template
@@ -226,7 +227,8 @@
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,
-            metadataUuid
+            metadataUuid,
+            true
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('createMetadataError'),

@@ -120,10 +120,11 @@
            * @param {boolean} isChild is child of a parent metadata
            * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
+           * @param {boolean} hasCategoryOfSource copy categories from source
            * @return {HttpPromise} Future object
            */
         copy: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, metadataUuid) {
+            isTemplate, isChild, metadataUuid, hasCategoryOfSource) {
           // new md type determination
           var mdType;
           switch (isTemplate) {
@@ -149,7 +150,8 @@
             isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
             isVisibleByAllGroupMembers: withFullPrivileges,
-            targetUuid: metadataUuid || ''
+            targetUuid: metadataUuid || '',
+            hasCategoryOfSource: hasCategoryOfSource ? 'true' : 'false'
           });
           return $http.put('../api/records/duplicate?' + url, {
             headers: {
@@ -194,13 +196,15 @@
            * @param {string} tab is the metadata editor tab to open
            * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
+           * @param {boolean} hasCategoryOfSource copy categories from source
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, tab, metadataUuid) {
+            isTemplate, isChild, tab, metadataUuid, hasCategoryOfSource) {
 
           return this.copy(id, groupId, withFullPrivileges,
-              isTemplate, isChild, metadataUuid).success(function(id) {
+              isTemplate, isChild, metadataUuid, hasCategoryOfSource)
+            .success(function(id) {
             var path = '/metadata/' + id;
             if (tab) {
               path += '/tab/' + tab;
