@@ -818,7 +818,7 @@
                     <xsl:variable name="name" select="'gco:CharacterString'"/>
                     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
                     <li title="{$label/description}">
-                      <a data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
+                      <a data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{$name}', '{$id}', 'replaceWith');">
                         <xsl:value-of select="$label/label"/>
                       </a>
                     </li>
