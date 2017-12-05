@@ -83,7 +83,10 @@
           e.preventDefault();
           $(this).tab('show');
         });
-        // hide empty tab     
+        // hide empty tabs
+        // 
+        // search for the tab-pane connected to the tab,
+        // check if it's in the DOM, if not, hide the tab
         $('.nav-tabs-advanced a').each(function() {
 
           var tabLink = $(this).attr('href');
