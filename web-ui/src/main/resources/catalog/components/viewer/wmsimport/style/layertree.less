@@ -1,21 +1,27 @@
 .layerTree {
-  min-height: 10em;
   li {
-    padding: 0;
+    padding: 6px;
   }
   ul ul {
-    margin: 0;
+    margin: 5px 0 0 0;
     padding-left: 10px;
     .list-group-item {
       border-width: 1px 0 0 0;
+      border-radius: 0;
     }
     display: none;
+  }
+  a {
+    line-height: 24px;
+    &:hover, &:active {
+      text-decoration: none;
+    }
   }
   label {
     color: #444;
     font-weight: normal;
     display: block;
-    padding: 10px 0 10px 15px;
+    padding: 10px 0 10px 0px;
     margin-bottom: 0;
     &:hover {
       color: #000;
@@ -40,8 +46,15 @@
       }
     }
   }
+  .form-group {
+    margin-bottom: 0;
+  }
+  .list-group {
+    background-color: #fff;
+    margin-bottom: 10px;
+  }
   .list-group-item {
-    padding-right: 0;
+    padding-left: 7px;
   }
   .dropdown-menu {
     width: 100%;
@@ -52,8 +65,37 @@
       overflow-x: hidden;
     }
   }
+  .truncate {
+    width: 12em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .popover {
+    max-width: 0;
+    li {
+      padding: 2px 0px;
+    }
+  }
 }
 .layers, .layerTree {
   max-height: 50em;
   transition: max-height .25s ease;
+}
+[gn-wms-import="wms"], [gn-wms-import="wfs"] {
+  .list-group {
+    .list-group {
+      max-height: 250px;
+      overflow: auto;
+    }
+  }
+}
+[gn-wms-import="wmts"] {
+  .list-group {
+    max-height: 250px;
+    overflow: auto;
+  }
+  .truncate {
+    width: 15em;
+  }
 }

@@ -47,13 +47,14 @@
         'gnMap',
         'gnOwsCapabilities',
         'gnSearchSettings',
+        'gnViewerSettings',
         'ngeoDecorateLayer',
         'gnSearchLocation',
         'gnOwsContextService',
         'gnWfsService',
         'gnAlertService',
         '$filter',
-        function(gnMap, gnOwsCapabilities, gnSearchSettings,
+        function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
             ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
             gnWfsService, gnAlertService, $filter) {
 
@@ -61,33 +62,23 @@
             angular.extend(this.map, options);
           };
 
-
-          var addWMSToMap = function(link, md) {
-            // Link is localized when using associated resource service
-            // and is not when using search
-            var url = $filter('gnLocalized')(link.url) || link.url;
-
-            var isServiceLink =
-               gnSearchSettings.mapProtocols.services.
+          /**
+           * Check if the link contains a valid layer protocol
+           * as configured in gnSearchSettings and check if it
+           * has a layer name.
+           *
+           * If not, then only service information is displayed.
+           *
+           * @param {object} link
+           * @return {boolean}
+           */
+          this.isLayerProtocol = function(link) {
+            return Object.keys(link.title).length > 0 &&
+               gnSearchSettings.mapProtocols.layers.
                indexOf(link.protocol) > -1;
-
-            if (isServiceLink) {
-              gnMap.addOwsServiceToMap(url, 'WMS');
-            } else {
-              //if this operation is called from search-from-map,
-              // the link does not contain title, but contains name directly
-              var layerName = link.name ? link.name :
-                 $filter('gnLocalized')(link.title) || link.title;
-              if (layerName) {
-                gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
-                   url, layerName, false, md);
-              } else {
-                gnMap.addOwsServiceToMap(url, 'WMS');
-              }
-            }
-
-            gnSearchLocation.setMap();
           };
+
+          var addWMSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
 
 
           var addWFSToMap = function(link, md) {
@@ -228,6 +219,11 @@
               label: 'addToMap',
               action: addWMSToMap
             },
+            'WMSSERVICE' : {
+              iconClass: 'fa-globe',
+              label: 'addServiceLayersToMap',
+              action: addWMSToMap
+            },
             'WMTS' : {
               iconClass: 'fa-globe',
               label: 'addToMap',
@@ -366,7 +362,11 @@
             if (angular.isString(protocolOrType) &&
                 angular.isUndefined(resource['geonet:info'])) {
               if (protocolOrType.match(/wms/i)) {
-                return 'WMS';
+                if (this.isLayerProtocol(resource)) {
+                  return 'WMS';
+                } else {
+                  return 'WMSSERVICE';
+                }
               } else if (protocolOrType.match(/wmts/i)) {
                 return 'WMTS';
               } else if (protocolOrType.match(/wfs/i)) {
