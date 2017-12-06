@@ -257,7 +257,7 @@
 
       <!-- Add nileason if text is empty -->
       <xsl:variable name="isEmpty"
-                    select="if ($isMultilingual)
+                    select="if ($isMultilingual and not($excluded))
                             then $valueInPtFreeTextForMainLanguage = ''
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
