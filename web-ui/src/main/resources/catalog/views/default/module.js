@@ -94,6 +94,7 @@
   module.controller('gnsDefault', [
     '$scope',
     '$location',
+    '$filter',
     'suggestService',
     '$http',
     '$translate',
@@ -108,7 +109,8 @@
     'gnOwsContextService',
     'hotkeys',
     'gnGlobalSettings',
-    function($scope, $location, suggestService, $http, $translate,
+    function($scope, $location, $filter,
+             suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
@@ -252,50 +254,26 @@
       });
 
       $scope.resultviewFns = {
-        addMdLayerToMapSimple: function (link, md) {
-          if (gnMap.isLayerInMap(viewerMap,
-              link.name, link.url)) {
-            return;
-          }
-          var loadLayerPromise;
-
-          // handle WMTS layer info
-          if (link.protocol.indexOf('WMTS') > -1) {
-            loadLayerPromise = gnMap.addWmtsFromScratch(
-              viewerMap, link.url, link.name, undefined, md);
-          } else {
-            loadLayerPromise = gnMap.addWmsFromScratch(
-              viewerMap, link.url, link.name, undefined, md);
-          }
-
-          loadLayerPromise.then(function (layer) {
-            if (layer) {
-              gnMap.feedLayerWithRelated(layer, link.group);
-            }
-          });
-        },
-        // Add to basket first and then trigger add to map
         addMdLayerToMap: function (link, md) {
-          if (gnMap.isLayerInMap(viewerMap,
-              link.name, link.url)) {
-            return;
-          }
-          var loadLayerPromise;
+          var config = {
+            uuid: md ? md.getUuid() : null,
+            type: link.protocol.indexOf('WMTS') > -1 ? 'wmts' : 'wms',
+            url: $filter('gnLocalized')(link.url) || link.url
+          };
 
-          // handle WMTS layer info
-          if (link.protocol.indexOf('WMTS') > -1) {
-            loadLayerPromise = gnMap.addWmtsFromScratch(
-              viewerMap, link.url, link.name, undefined, md);
-          } else {
-            loadLayerPromise = gnMap.addWmsFromScratch(
-              viewerMap, link.url, link.name, undefined, md);
+          if (link.name && link.name !== '') {
+            config.name = link.name;
+            config.group = link.group;
+            // Related service return a property title for the name
+          } else if (link.title) {
+            config.name = $filter('gnLocalized')(link.title) || link.title;
           }
 
-          loadLayerPromise.then(function(layer) {
-            if(layer) {
-              gnMap.feedLayerWithRelated(layer, link.group);
-            }
-          });
+          // This is probably only a service
+          // Open the add service layer tab
+          $location.path('map').search({
+            add: encodeURIComponent(angular.toJson([config]))});
+          return;
       },
         addAllMdLayersToMap: function (layers, md) {
           angular.forEach(layers, function (layer) {
@@ -306,6 +284,10 @@
           gnOwsContextService.loadContextFromUrl(map.url, viewerMap);
         }
       };
+
+      // Share map loading functions
+      gnViewerSettings.resultviewFns = $scope.resultviewFns;
+
 
       // Manage route at start and on $location change
       // depending on configuration

@@ -69,9 +69,10 @@
 
 
   module.provider('gnOwsCapabilities', function() {
-    this.$get = ['$http', '$q',
+    this.$get = ['$http', '$q', '$translate',
       'gnUrlUtils', 'gnGlobalSettings',
-      function($http, $q, gnUrlUtils, gnGlobalSettings) {
+      function($http, $q, $translate,
+               gnUrlUtils, gnGlobalSettings) {
 
         var displayFileContent = function(data) {
           var parser = new ol.format.WMSCapabilities();
@@ -80,6 +81,7 @@
           var layers = [];
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
+
 
           // Push all leaves into a flat array of Layers
           // Also adjust crs (by inheritance) and url
@@ -103,7 +105,6 @@
               if (layer.Layer && !angular.isArray(layer.Layer)) {
                 layer.Layer = [layer.Layer];
               }
-
               // process recursively on child layers
               getFlatLayers(layer.Layer, inheritedCrs);
             }
@@ -177,7 +178,7 @@
         };
 
         var mergeParams = function(url, Params) {
-          //merge URL parameters with indeicated ones
+          //merge URL parameters with indicated ones
           var parts = url.split('?');
           var urlParams = angular.isDefined(parts[1]) ?
               gnUrlUtils.parseKeyValue(parts[1]) : {};
@@ -226,11 +227,14 @@
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
-                        defer.reject('capabilitiesParseError');
+                        defer.reject(
+                        $translate.instant('failedToParseCapabilities'));
                       }
                     })
                     .error(function(data, status) {
-                      defer.reject(status);
+                      defer.reject(
+                      $translate.instant('checkCapabilityUrl',
+                      {url: url, status: status}));
                     });
               }
             }

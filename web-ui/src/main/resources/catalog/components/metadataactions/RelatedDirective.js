@@ -192,10 +192,7 @@
                 return angular.isFunction(fn);
               };
 
-              scope.isLayerProtocol = function(mainType) {
-                return gnSearchSettings.mapProtocols.layers.
-                   indexOf(mainType) > -1;
-              };
+              scope.isLayerProtocol = gnRelatedService.isLayerProtocol;
 
               scope.config = gnRelatedResources;
 

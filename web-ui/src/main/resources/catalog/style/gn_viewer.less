@@ -142,10 +142,19 @@
     max-width: ~"calc(100% - 4em)";
     overflow-y: auto;
     transition: opacity @transition-params;
+    h3 {
+      margin-top: 15px;
+    }
     li[gn-layermanager-item] {
       .fa-arrows-alt,.gn-layer-ordering {
         opacity: 0;
         transition: opacity @transition-params;
+      }
+      label {
+        padding: 0px;
+        display: block;
+        margin-bottom: 0px;
+
       }
     }
     .gn-layer-outofrange > label {
@@ -244,6 +253,10 @@
       width: 100%;
       font-style: italic;
       font-size: 13px;
+    }
+    label {
+      padding: 10px 0;
+      font-weight: normal;
     }
   }
 
@@ -632,6 +645,25 @@ gn-geometry-tool .btn-group {
  }
 
 .layermanager-item-menu {
+  margin: -9px -14px;
+  ul {
+    li {
+      padding: 8px 10px !important;
+      border-top: 1px solid #ccc;
+      a {
+        font-size: 14px;
+      }
+      &:first-child {
+        border-top: 0;
+      }
+      label {
+        color: #757575;
+      }
+    }
+    input[type="range"] {
+      width: 100% !important;
+    }
+  }
 }
 
 [gn-ows-context] {
