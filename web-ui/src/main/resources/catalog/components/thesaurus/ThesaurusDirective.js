@@ -187,7 +187,6 @@
            replace: true,
            transclude: true,
            scope: {
-             mode: '@gnKeywordSelector',
              elementRef: '@',
              thesaurusKey: '@',
              keywords: '@',
@@ -314,7 +313,6 @@
                }
 
                // Then register search filter change
-               // Only applies to multiselect mode
                scope.$watch('filter', search);
              };
 
@@ -434,9 +432,7 @@
                  scope.$watch('results', getSnippet);
                  scope.$watch('selected', getSnippet);
 
-                 if (scope.mode === 'tagsinput') {
-                   initTagsInput();
-                 }
+                 initTagsInput();
                } else if (scope.invalidKeywordMatch) {
                  // invalidate element ref to not trigger
                  // an update of the record with an invalid

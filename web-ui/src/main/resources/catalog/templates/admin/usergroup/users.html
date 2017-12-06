@@ -235,76 +235,36 @@
                       data-ng-show="user.isAdministratorOrMore()">isAdministrator</span>
               </label>
 
-              <div>
+              <div
+                data-ng-show="userSelected.profile != 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
-                <select multiple="multiple"
-                        id="groups_RegisteredUser"
-                        name="groups_RegisteredUser"
-                        class="form-control"
-                        data-ng-click="setUserProfile()"
-                        data-ng-disabled="!user.isUserAdminOrMore()"
-                        data-ng-model="groupsByProfile['RegisteredUser']"
-                        data-ng-options="g.label[lang]|empty:g.name
-                                    for g in groups
-                                    | loggedUserIsUseradminOrMore:userAdminGroups:user.isAdministrator() |
-                                    orderBy:sortByLabel
-                                    track by g.id">
-                  <option></option>
-                </select>
+                <div data-gn-multiselect="groupsByProfile['RegisteredUser']"
+                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-choices="groups"></div>
+
+
                 <h3 data-translate="">Editor</h3>
-                <select multiple="multiple"
-                        id="groups_Editor"
-                        name="groups_Editor"
-                        class="form-control"
-                        data-ng-click="setUserProfile()"
-                        data-ng-disabled="!user.isUserAdminOrMore()"
-                        data-ng-model="groupsByProfile['Editor']"
-                        data-ng-options="g.label[lang]|empty:g.name
-                                    for g in groups
-                                    | loggedUserIsUseradminOrMore:userAdminGroups:user.isAdministrator() |
-                                    orderBy:sortByLabel
-                                    track by g.id">
-                  <option></option>
-                </select>
+                <div data-gn-multiselect="groupsByProfile['Editor']"
+                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-choices="groups"></div>
+
+
                 <h3 data-translate="">Reviewer</h3>
-                <select multiple="multiple"
-                        id="groups_Reviewer"
-                        name="groups_Reviewer"
-                        class="form-control"
-                        data-ng-click="setUserProfile()"
-                        data-ng-disabled="!user.isUserAdminOrMore()"
-                        data-ng-model="groupsByProfile['Reviewer']"
-                        data-ng-options="g.label[lang]|empty:g.name
-                                    for g in groups
-                                    | loggedUserIsUseradminOrMore:userAdminGroups:user.isAdministrator() |
-                                    orderBy:sortByLabel
-                                    track by g.id">
-                  <option></option>
-                </select>
+                <div data-gn-multiselect="groupsByProfile['Reviewer']"
+                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-choices="groups"></div>
 
                 <p class="help-block"
                    data-translate="">aReviewerInAGroupIsAlsoAnEditor</p>
 
 
                 <h3 data-translate="">UserAdmin</h3>
-                <select multiple="multiple"
-                        id="groups_UserAdmin"
-                        name="groups_UserAdmin"
-                        class="form-control"
-                        data-ng-click="setUserProfile()"
-                        data-ng-disabled="!user.isUserAdminOrMore()"
-                        data-ng-model="groupsByProfile['UserAdmin']"
-                        data-ng-options="g.label[lang]|empty:g.name
-                                    for g in groups
-                                    | loggedUserIsUseradminOrMore:userAdminGroups:user.isAdministrator() |
-                                    orderBy:sortByLabel
-                                    track by g.id">
-                  <option></option>
-                </select>
+                <div data-gn-multiselect="groupsByProfile['UserAdmin']"
+                     data-ng-disabled="!user.isUserAdminOrMore()"
+                     data-choices="groups"></div>
 
                 <p class="help-block"
                    data-translate="">useCtrlClickToUnselect</p>
-
               </div>
             </fieldset>
           </fieldset>
