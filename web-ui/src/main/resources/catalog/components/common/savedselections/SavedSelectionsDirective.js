@@ -147,6 +147,12 @@
         selections.notFound = [];
         var ctrl = this;
 
+        if (allRecords.length === 0) {
+          selections.records = {};
+          selections.size = 0;
+          defer.resolve(selections);
+          return;
+        }
         // TODO: Handle case when there is
         // too many items in the saved selections
         gnSearchManagerService.search(
@@ -474,10 +480,12 @@
                isValidRecord = true;
              }
 
-             if (isValidRecord && canBeAdded) {
+             if (angular.isArray(selection.records) &&
+                 isValidRecord && canBeAdded) {
                // Check if record already in current selection
                return selection.records.indexOf(scope.uuid) === -1;
-             } else if (isValidRecord && canBeAdded === false) {
+             } else if (angular.isArray(selection.records) &&
+                        isValidRecord && canBeAdded === false) {
                // Check if record not already in current selection
                return selection.records.indexOf(scope.uuid) !== -1;
              } else {
