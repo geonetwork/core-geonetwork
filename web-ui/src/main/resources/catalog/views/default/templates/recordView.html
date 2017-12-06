@@ -83,7 +83,7 @@
 
     <a class="btn btn-primary gn-md-edit-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
-       data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
+       data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
        title="{{'edit' | translate}}">
       <i class="fa fa-pencil"></i>
       <span data-translate="" class="hidden-sm hidden-xs">edit</span>
