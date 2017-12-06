@@ -149,6 +149,7 @@
           'appUrl': '../../srv/{{lang}}/catalog.search#/map',
           'is3DModeAllowed': true,
           'isSaveMapInCatalogAllowed': true,
+          'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
           'listOfServices': {
             'wms': [],
