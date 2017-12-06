@@ -323,7 +323,7 @@
       /**
        * Returns the list of groups inside "groups" with the selected profile
        */
-      var getLabel = function (g){
+      var getLabel = function(g) {
         return g.label[$scope.lang] || g.name;
       };
 
@@ -401,10 +401,11 @@
         $scope.setUserProfile();
       };
 
-      $scope.$watchCollection('groupsByProfile.RegisteredUser', updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.RegisteredUser',
+          updateProfileRules);
       $scope.$watchCollection('groupsByProfile.Editor', updateProfileRules);
       $scope.$watchCollection('groupsByProfile.UserAdmin', updateProfileRules);
-      $scope.$watchCollection('groupsByProfile.Reviewer', function (n, o) {
+      $scope.$watchCollection('groupsByProfile.Reviewer', function(n, o) {
         if (n !== o) {
           for (var j = 0; j < n.length; j++) {
             var g = n[j];
@@ -430,31 +431,32 @@
 
         var selectedRegisteredUserGroups = [],
             selectedEditorGroups = [],
-          selectedReviewerGroups = [],
+            selectedReviewerGroups = [],
             selectedUserAdminGroups = [];
 
-        for (var j = 0; j < $scope.groupsByProfile['RegisteredUser'].length; j++) {
+        for (var j = 0;
+             j < $scope.groupsByProfile['RegisteredUser'].length; j++) {
           if ($scope.groupsByProfile['RegisteredUser'][j]) {
             selectedRegisteredUserGroups.push(
-              $scope.groupsByProfile['RegisteredUser'][j].id);
+                $scope.groupsByProfile['RegisteredUser'][j].id);
           }
         }
         for (var j = 0; j < $scope.groupsByProfile['Editor'].length; j++) {
           if ($scope.groupsByProfile['Editor'][j]) {
             selectedEditorGroups.push(
-              $scope.groupsByProfile['Editor'][j].id);
+                $scope.groupsByProfile['Editor'][j].id);
           }
         }
         for (var j = 0; j < $scope.groupsByProfile['Reviewer'].length; j++) {
           if ($scope.groupsByProfile['Reviewer'][j]) {
             selectedReviewerGroups.push(
-              $scope.groupsByProfile['Reviewer'][j].id);
+                $scope.groupsByProfile['Reviewer'][j].id);
           }
         }
         for (var j = 0; j < $scope.groupsByProfile['UserAdmin'].length; j++) {
           if ($scope.groupsByProfile['UserAdmin'][j]) {
             selectedUserAdminGroups.push(
-              $scope.groupsByProfile['UserAdmin'][j].id);
+                $scope.groupsByProfile['UserAdmin'][j].id);
           }
         }
 

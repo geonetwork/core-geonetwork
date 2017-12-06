@@ -57,7 +57,7 @@
 
           // When selection list is updated, filter selected one
           // from the list of choices
-          scope.$watch('selected', function(n, o){
+          scope.$watch('selected', function(n, o) {
             if (n !== o) {
               scope.options = [];
               for (var i = 0; i < scope.choices.length; i++) {
@@ -122,7 +122,7 @@
                 [k.id] : scope.currentSelectionRight;
             scope.selected = $.grep(scope.selected, function(n) {
               var unselect = false;
-              for (var i = 0; i < elementsToRemove.length; i ++) {
+              for (var i = 0; i < elementsToRemove.length; i++) {
                 if (elementsToRemove[i] == n.id) {
                   unselect = true;
                   scope.options.push(n);

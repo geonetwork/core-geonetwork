@@ -206,8 +206,8 @@
               path += '/tab/' + tab;
             }
             $location.path(path)
-              .search('justcreated')
-              .search('redirectUrl', 'catalog.edit');
+                .search('justcreated')
+                .search('redirectUrl', 'catalog.edit');
           });
         },
 
