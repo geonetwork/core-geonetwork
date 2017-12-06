@@ -39,10 +39,9 @@
         },
         errorCheck: function() {
           return this.get()
-              .then(function(response) {
-                return response.data.report.some(function(rule) {
-                  return rule.error;
-                });
+            .then(function(response) {
+              return response.data.report.some(function(rule) {
+                return rule.requirement === 'REQUIRED' && rule.error;
               });
         }
       };
