@@ -479,12 +479,14 @@
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function() {
-        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword').one('focus',function() {
-          $(this).parents('.dropdown-menu').addClass('show');
-        });
-        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword').one('blur',function() {
-          $(this).parents('.dropdown-menu').removeClass('show');
-        });
+        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword')
+            .one('focus', function() {
+              $(this).parents('.dropdown-menu').addClass('show');
+            });
+        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword')
+            .one('blur', function() {
+              $(this).parents('.dropdown-menu').removeClass('show');
+            });
       };
 
       /**
@@ -581,7 +583,7 @@
         // append a random number to avoid caching in IE11
         var userLogin = catInfo.then(function(value) {
           return $http.get('../api/me?_random=' +
-            Math.floor(Math.random() * 10000)).
+              Math.floor(Math.random() * 10000)).
               success(function(me, status) {
                 if (angular.isObject(me)) {
                   angular.extend($scope.user, me);

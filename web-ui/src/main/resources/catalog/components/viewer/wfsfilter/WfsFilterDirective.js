@@ -807,26 +807,28 @@
               }
 
               // check if there is a valid "higher than" or "lower than" filter
-              var lowerBound = field.dates && field.dates[0];
-              var upperBound = field.dates && field.dates[field.dates.length-1];
+              var lowerBound = field.dates &&
+                  field.dates[0];
+              var upperBound = field.dates &&
+                  field.dates[field.dates.length - 1];
               var lowerActive = values.from &&
-                moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf()
-                > lowerBound;
+                  moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
+                  lowerBound;
               var upperActive = values.to &&
-                moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf()
-                < upperBound;
+                  moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
+                  upperBound;
               return lowerActive || upperActive;
             }
 
             // special case for geometry
             if (facetName == 'geometry') {
               return scope.ctrl.searchGeometry &&
-                scope.ctrl.searchGeometry !== ',,,';
+                  scope.ctrl.searchGeometry !== ',,,';
             }
 
             // other fields: the filter must be active
             return true;
-          }
+          };
         }
       };
     }]);

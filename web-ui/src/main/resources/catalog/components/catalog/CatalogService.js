@@ -558,8 +558,8 @@
               for (var i = 0; i < field.length; i++) {
                 var thesauri = field[i];
                 $.each(thesauri, function(key) {
-                  if(!thesaurusList[key] && thesauri[key].length)
-                  thesaurusList[key] = thesauri[key];
+                  if (!thesaurusList[key] && thesauri[key].length)
+                    thesaurusList[key] = thesauri[key];
                 });
               }
               record[fieldName] = thesaurusList;
@@ -683,7 +683,7 @@
               }
               else {
                 if (linkInfo.protocol.toLowerCase().indexOf(
-                  type.toLowerCase()) >= 0 &&
+                    type.toLowerCase()) >= 0 &&
                     (!groupId || groupId == linkInfo.group)) {
                   ret.push(linkInfo);
                 }

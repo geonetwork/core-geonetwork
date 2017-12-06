@@ -145,7 +145,7 @@
 
         // $timeout used to avoid map no rendered (eg: null size)
         $timeout(function() {
-          if(map.getSize()) {
+          if (map.getSize()) {
             map.getView().fit(extent, map.getSize(), { nearest: true });
           }
         }, 0, false);

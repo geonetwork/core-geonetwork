@@ -241,17 +241,17 @@
               window[gnViewerSettings.mapConfig.storage] : window.localStorage;
 
           if (gnViewerSettings.mapConfig.storage !== '' &&
-            storage.getItem(key)) {
+              storage.getItem(key)) {
             var c = storage.getItem(key);
             gnOwsContextService.loadContext(c, scope.map);
           } else if (gnViewerSettings.owsContext) {
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
-              scope.map);
+                scope.map);
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(
-              gnViewerSettings.defaultContext,
-              scope.map,
-              gnViewerSettings.additionalMapLayers);
+                gnViewerSettings.defaultContext,
+                scope.map,
+                gnViewerSettings.additionalMapLayers);
           }
 
           // store the current context in local storage to reload it

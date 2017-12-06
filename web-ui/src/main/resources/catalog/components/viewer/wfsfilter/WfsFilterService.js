@@ -411,10 +411,10 @@
           // add geometry (array with only one value)
           if (state.geometry) {
             result.geometry = [
-                state.geometry[0][0] + ',' +
-                state.geometry[1][1] + ',' +
-                state.geometry[1][0] + ',' +
-                state.geometry[0][1]
+              state.geometry[0][0] + ',' +
+                  state.geometry[1][1] + ',' +
+                  state.geometry[1][0] + ',' +
+                  state.geometry[0][1]
             ];
           }
         }

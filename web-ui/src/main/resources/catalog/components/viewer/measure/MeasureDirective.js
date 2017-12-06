@@ -226,8 +226,10 @@
           var coordinates = geometry.getCoordinates();
           length = 0;
           for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-            var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
-            var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
+            var c1 = ol.proj.transform(coordinates[i],
+                sourceProj, 'EPSG:4326');
+            var c2 = ol.proj.transform(coordinates[i + 1],
+                sourceProj, 'EPSG:4326');
             length += wgs84Sphere.haversineDistance(c1, c2);
           }
           return length;

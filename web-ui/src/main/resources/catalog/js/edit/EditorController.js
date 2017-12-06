@@ -521,7 +521,7 @@
 
         // else: do a mandatory validation check to ensure that if the MD is
         // invalid, the user can decide to stay in the editor to fix it
-        gnValidation.errorCheck().then(function (hasErrors) {
+        gnValidation.errorCheck().then(function(hasErrors) {
           // if record unpublish on save is enabled: ask for confirmation
           // before saving and closing the editor
           if (hasErrors) {
@@ -530,7 +530,7 @@
             $scope.confirmClose();
           }
         });
-      }
+      };
       $scope.confirmClose = function() {
         var promise = gnEditor.save(false, null, true)
             .then(function(form) {

@@ -31,7 +31,8 @@
 
     e.preventDefault();
 
-    var visible = $('[id="' + thisEl.attr('target')+'"]').toggle().is(':visible');
+    var visible = $('[id="' + thisEl.attr('target') + '"]')
+        .toggle().is(':visible');
     return visible;
   };
 

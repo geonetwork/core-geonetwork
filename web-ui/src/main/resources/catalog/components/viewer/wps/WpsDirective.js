@@ -130,7 +130,7 @@
             // application profile holds 2 arrays: inputs and outputs
             scope.applicationProfile = scope.wpsLink.applicationProfile || null;
             if (scope.applicationProfile &&
-              typeof scope.applicationProfile === 'string') {
+                typeof scope.applicationProfile === 'string') {
               try {
                 scope.applicationProfile = JSON.parse(scope.applicationProfile);
               }
@@ -188,8 +188,9 @@
 
                       // look for input info in app profile
                       if (scope.applicationProfile &&
-                        scope.applicationProfile.inputs) {
-                        scope.applicationProfile.inputs.forEach(function(input) {
+                      scope.applicationProfile.inputs) {
+                        scope.applicationProfile.inputs.forEach(
+                        function(input) {
                           if (input.identifier == inputName) {
                             defaultValue = input.defaultValue;
 
@@ -201,10 +202,12 @@
                             // or "to" dates of a filter
                             var valueIndex = -1;
                             if (wfsFilter.substr(-5) === '.from') {
-                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 5);
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 5);
                               valueIndex = 0;
                             } else if (wfsFilter.substr(-3) === '.to') {
-                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 3);
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 3);
                               valueIndex = 1;
                             }
 
@@ -212,7 +215,8 @@
                             wfsFilterValues[wfsFilter]) {
                               // take value at specific index, or all values
                               if (valueIndex >= 0) {
-                                wfsFilterValue = [wfsFilterValues[wfsFilter][valueIndex]];
+                                wfsFilterValue =
+                                [wfsFilterValues[wfsFilter][valueIndex]];
                               } else {
                                 wfsFilterValue = wfsFilterValues[wfsFilter];
                               }
@@ -291,7 +295,7 @@
                       // add enough fields to hold all default values
                       if (Array.isArray(defaultValue)) {
                         minCount = Math.max(minCount,
-                          Math.min(maxCount, defaultValue.length));
+                        Math.min(maxCount, defaultValue.length));
                       }
                       var count = inputs.length;
                       while (count < minCount) {
@@ -319,11 +323,11 @@
                       else if (defaultValue) {
                         inputs = scope.getInputsByName(inputName);
                         var defaultValueArray = Array.isArray(defaultValue) ?
-                          defaultValue : [defaultValue];
-                        for(var i = 0; i < inputs.length; i++) {
+                        defaultValue : [defaultValue];
+                        for (var i = 0; i < inputs.length; i++) {
                           if (!inputs[i].value && defaultValueArray[i]) {
                             scope.setInputValueByName(inputName, i,
-                              defaultValueArray[i]);
+                            defaultValueArray[i]);
                           }
                         }
                       }
@@ -350,8 +354,9 @@
 
                       // look for output info in app profile
                       if (scope.applicationProfile &&
-                        scope.applicationProfile.outputs) {
-                        scope.applicationProfile.outputs.forEach(function(output) {
+                      scope.applicationProfile.outputs) {
+                        scope.applicationProfile.outputs.forEach(
+                        function(output) {
                           if (output.identifier == outputName) {
                             // assign mime type if available
                             defaultMimeType = output.defaultMimeType ||
@@ -361,8 +366,8 @@
                             // (display graph options are defined)
                             // TODO: actually parse these options
                             if (output.displayGraphOptions) {
-                              scope.outputAsGraph = output.displayGraphOptions ?
-                              true : false;
+                              scope.outputAsGraph =
+                              output.displayGraphOptions ? true : false;
                             }
                           }
                         });
@@ -383,8 +388,8 @@
                     scope.wpsLink.output.mimeType = defaultMimeType;
 
                     // use output as reference unless doing a profile graph
-                    scope.wpsLink.output.asReference = scope.outputAsGraph ?
-                    false : true;
+                    scope.wpsLink.output.asReference =
+                    scope.outputAsGraph ? false : true;
 
                     scope.outputsVisible = true;
 

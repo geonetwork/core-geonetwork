@@ -546,7 +546,7 @@
       $scope.$on('PrivilegesUpdated', function() {
         $('#gn-share').modal('hide');
       });
-      
+
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function(b) {
         $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
@@ -560,7 +560,7 @@
       // Append * for like search
       $scope.updateParams = function() {
         $scope.searchObj.params.any =
-        '*' + $scope.searchObj.any + '*';
+            '*' + $scope.searchObj.any + '*';
       };
 
       init();
