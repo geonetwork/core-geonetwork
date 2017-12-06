@@ -876,7 +876,7 @@
     "metadata/workflow/allowPublishInvalidMd": "Allow publication of invalid metadata",
     "metadata/workflow/allowPublishInvalidMd-help": "Allows the publication of metadata that is not valid according to xsd or schematron rules.",
     "metadata/workflow/draftWhenInGroup": "Enable workflow for record created in the following groups",
-    "metadata/workflow/draftWhenInGroup-help": "Regular expression for matching groups where record needs to be set with draft status automatically. eg. MYOCEAN-.* to match all groups starting with MYOCEAN-, GROUP1|GROUP2 to match GROUP1 or GROUP2.",
+    "metadata/workflow/draftWhenInGroup-help": "Regular expression for matching groups where record needs to be set with draft status automatically. eg. MYOCEAN-.* to match all groups starting with MYOCEAN-, GROUP1|GROUP2 to match GROUP1 or GROUP2 or .* to match all.",
     "metadata/workflow/forceValidationOnMdSave": "Force validation on metadata save",
     "metadata/workflow/forceValidationOnMdSave-help": "When the metadata is saved force validation check",
     "metadata/import": "Metadata import",
