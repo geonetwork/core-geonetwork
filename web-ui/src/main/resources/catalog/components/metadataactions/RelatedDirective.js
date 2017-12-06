@@ -123,6 +123,7 @@
             link: function(scope, element, attrs, controller) {
               var promise;
               var elem = element[0];
+              scope.lang = scope.lang || scope.$parent.lang;
               element.on('$destroy', function() {
                 // Unregister the directive in the observer if it is defined
                 if (controller) {
