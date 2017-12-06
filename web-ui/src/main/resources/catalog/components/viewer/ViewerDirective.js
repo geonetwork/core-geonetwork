@@ -37,13 +37,15 @@
     'gnMap',
     'gnConfig',
     'gnSearchLocation',
+    'gnMetadataManager',
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMeasure',
     'gnViewerService',
-    function(gnMap, gnConfig, gnSearchLocation,
+    '$location', '$q', '$translate',
+    function(gnMap, gnConfig, gnSearchLocation, gnMetadataManager,
              gnSearchSettings, gnViewerSettings, gnMeasure,
-             gnViewerService) {
+             gnViewerService, $location, $q, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -158,6 +160,98 @@
                 scope.ol3d.setEnabled(
                     scope.is3dEnabled = !scope.ol3d.getEnabled());
               };
+
+              function addLayerFromLocation(config) {
+                if (angular.isUndefined(config.layer)) {
+                  // This is a service without a layer name
+                  // Display the add layer from service panel
+                  scope.activeTools.addLayers = true;
+                  scope.addLayerTabs.services = true;
+                  scope.addLayerUrl[config.type || 'wms'] = config.url;
+                } else if (config.layer) {
+                  scope.activeTools.layers = true;
+
+                  var loadLayerPromise = gnMap[
+                      config.type === 'wmts' ?
+                      'addWmtsFromScratch' : 'addWmsFromScratch'
+                      ](
+                      scope.map, config.url,
+                      config.layer, undefined, config.md);
+
+                  loadLayerPromise.then(function(layer) {
+                    if (layer) {
+                      gnMap.feedLayerWithRelated(layer, config.group);
+                    }
+                  }, function(error) {
+                    console.log(error);
+                  });
+                }
+              };
+
+              // Define UI status based on the location parameters
+              function initFromLocation() {
+
+                // Add command allows to add element to the map
+                // based on an array of objects.
+                var addCmd = $location.search()['add'];
+                if (addCmd) {
+                  addCmd = angular.fromJson(decodeURIComponent(addCmd));
+
+                  angular.forEach(addCmd, function(config) {
+
+                    if (gnMap.isLayerInMap(scope.map,
+                        config.name, config.url)) {
+                      scope.$emit('StatusUpdated', {
+                        msg: $translate.instant('layerIsAlreadyInMap', {
+                          layer: config.name,
+                          url: config.url
+                        }),
+                        timeout: 0,
+                        type: 'warning'});
+                      // TODO: You may want to add more than one time
+                      // a layer with different styling for example ?
+                      // Ask confirmation to the user ?
+                      $location.path('/map').search({activeTools: 'layers'});
+                      return;
+                    }
+
+
+                    // Collect the md info from a search
+                    if (config.uuid) {
+                      gnMetadataManager.
+                          getMdObjByUuid(config.uuid).then(function(md) {
+                            config.md = md;
+                            // TODO : If there is no config.layer
+                            // try to extract them from the md and
+                            // add all layers from the records.
+                            addLayerFromLocation(config);
+                          }, function(nullMd) {
+                            // BTW, the metadataUrl from the capability
+                            // may provide a link to the metadata record
+                            scope.$emit('StatusUpdated', {
+                              msg: $translate.instant(
+                              'layerWillBeAddedToMapButRecordNotFound', {
+                                uuid: config.uuid,
+                                layer: config.name,
+                                url: config.url
+                              }),
+                              timeout: 0,
+                              type: 'warning'});
+                            addLayerFromLocation(config);
+                          });
+                    } else {
+                      addLayerFromLocation(config);
+                    }
+                  });
+                  $location.search('add', null);
+                }
+
+                // Define which tool is active
+                if ($location.search()['tool']) {
+                  scope.activeTools[$location.search()['tool']] = true;
+                }
+              };
+
               // Turn off 3D mode when not using it because
               // it slow down the application.
               // TODO: improve
@@ -165,6 +259,10 @@
                 if (!gnSearchLocation.isMap() && scope.is3dEnabled) {
                   scope.switch2D3D(scope.map);
                 }
+              });
+
+              scope.$on('$locationChangeSuccess', function(next, current) {
+                initFromLocation();
               });
 
               var div = document.createElement('div');
