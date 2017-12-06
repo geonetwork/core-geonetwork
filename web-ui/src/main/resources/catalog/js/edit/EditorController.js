@@ -130,6 +130,7 @@
       $scope.gnConfig = gnConfig;
       $scope.unsupportedSchema = false;
       $scope.gnOnlinesrc = gnOnlinesrc;
+      $scope.redirectUrl = null;
 
       /**
        * Animation duration for slide up/down
@@ -188,7 +189,7 @@
 
               // Get the schema configuration for the current record
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
-
+              $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {
 
@@ -448,14 +449,16 @@
         window.onbeforeunload = null;
 
         // if there is no history, attempt to close tab
-        if (window.history.length == 1) {
+        if ($scope.redirectUrl != null) {
+          window.location.replace($scope.redirectUrl);
+        } else if (window.history.length == 1) {
           window.close();
           // This last point may trigger
           // "Scripts may close only the windows that were opened by it."
           // when the editor was not opened by a script.
+        } else {
+          window.history.back();
         }
-
-        window.history.back();
       };
 
       $scope.cancel = function(refreshForm) {

@@ -282,7 +282,8 @@
               <!--id and uuid from single import-->
               <div data-ng-repeat="(key, value) in report.metadataInfos">
                 <span>{{value[0].message}}</span>
-                <a href='#/metadata/{{key}}' title="{{'edit' | translate}}">
+                <a href='#/metadata/{{key}}?redirectUrl=catalog.edit'
+                   title="{{'edit' | translate}}">
                   <i class='fa fa-pencil'></i>
                 </a>
               </div>

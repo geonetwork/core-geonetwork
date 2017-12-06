@@ -205,7 +205,9 @@
             if (tab) {
               path += '/tab/' + tab;
             }
-            $location.path(path).search('justcreated');
+            $location.path(path)
+              .search('justcreated')
+              .search('redirectUrl', 'catalog.edit');
           });
         },
 
