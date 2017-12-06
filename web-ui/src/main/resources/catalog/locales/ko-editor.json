@@ -18,9 +18,9 @@
     "addFromThesaurus": "또는 동의어 사전에서 선택",
     "addKeywordNotFromThesaurus": "새로운 키워드 추가",
     "addLinks": "링크 추가",
-    "addOnlinesrc": "링크 추가",
+    "addOnlinesrc": "온라인 자원 추가",
     "updateOnlinesrc": "링크 갱신",
-    "addOnlinesrcTitle": "현재 메타데이터에 온라인 자원을 링크합니다",
+    "addOnlinesrcTitle": "온라인 자원 연결",
     "addThumbnail": "썸네일 추가",
     "addThumbnailTitle": "현재 메타데이터에 미리보기를 추가합니다",
     "allChangesCanceled": "모든 변경 내용이 취소되었습니다.",
@@ -357,5 +357,6 @@
     "inputGeometryIsInvalid": "입력한 지오메트리 오류 발견:",
     "inputGeometryHint": "선택한 포맷과 좌표체계에 해당하는 지오메트리를 여기에 붙여넣습니다.",
     "inputGeometryReadOnlyHint": "이 지오메트리는 읽기전용입니다.",
-    "selectKeyword": "키워드 추가"
+    "selectKeyword": "키워드 추가",
+    "saveLinkToSibling": "다른 자원에 링크 저장"
 }

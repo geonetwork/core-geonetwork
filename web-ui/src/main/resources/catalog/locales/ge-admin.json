@@ -441,7 +441,7 @@
     "harvesterOverrideUUID": "Override collided records",
     "harvesterOverrideUUID-skip": "Skip record",
     "harvesterOverrideUUID-overwrite": "Override collided records",
-    "harvesterOverrideUUID-random": "Create new UUID",
+    "harvesterOverrideUUID-random": "Neue UUID generieren",
     "harvesterOverrideUUIDHelp": "When two the harvester finds the same uuid on a record collected by another method (another harvester, importer, dashboard editor,...), should this record be skipped, overrided or generate a new UUID?",
     "harvesterRecords": "Geharvestete Metadatensätze",
     "harvesterSchedule": "Zeitplan",
