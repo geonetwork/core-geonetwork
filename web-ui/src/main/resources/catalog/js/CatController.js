@@ -129,7 +129,7 @@
           'formatter': {
             'list': [{
               'label': 'full',
-              'url' : '../api/records/{{md.getUuid()}}/' +
+              'url' : '../api/records/{{uuid}}/' +
                   'formatters/xsl-view?root=div&view=advanced'
             }]
           },
