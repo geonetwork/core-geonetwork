@@ -18,9 +18,8 @@
       </div>
       <div class="flex-spacer"></div>
       <div class="flex-col">
-        <div class="gn-layer-actions"
-             data-ng-if="!isParentNode"
-             data-ng-if="member.Style.length > 1">
+        <div class="gn-layer-actions"             
+             data-ng-if="!isParentNode && member.Style.length > 1">
           <div ngeo-popover
                ngeo-popover-placement="bottom">
             <a ngeo-popover-anchor role="button"
