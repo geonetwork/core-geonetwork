@@ -2,7 +2,7 @@
   <div class="alert alert-warning"
        data-ng-hide="mdView.current.record"
        data-translate=""
-       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
+       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
     recordNotFound
   </div>
 
