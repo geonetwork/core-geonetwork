@@ -748,7 +748,7 @@
            * @param {Object} getCapLayer object to convert
            * @param {string} url of the wms service (we want this one instead
            *  of the one from the capabilities to be sure its persistent)
-           * @param {string} name of the style to use
+           * @param {string} style of the style to use
            * @return {ol.Layer} the created layer
            */
           createOlWMSFromCap: function(map, getCapLayer, url, style) {
@@ -1104,7 +1104,7 @@
            *
            * @param {ol.map} map to add the layer
            * @param {Object} getCapLayer object to convert
-           * @param {string} name of the style to use
+           * @param {string} style of the style to use
            */
           addWmsToMapFromCap: function(map, getCapLayer, style) {
             var layer = this.createOlWMSFromCap(map, getCapLayer, null, style);
