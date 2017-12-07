@@ -199,7 +199,7 @@ public class EsClient implements InitializingBean {
 
     public String deleteByQuery(String index, String query) throws Exception {
         if (!activated) {
-            return false;
+            return "";
         }
 
         String searchQuery = "{\"query\": {\"query_string\": {" +
