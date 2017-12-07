@@ -18,9 +18,9 @@
     "addFromThesaurus": "tai valitse tesauruksesta",
     "addKeywordNotFromThesaurus": "Lisää uusia avainsanoja",
     "addLinks": "Lisää linkkejä",
-    "addOnlinesrc": "Lisää linkki",
+    "addOnlinesrc": "Add online resource",
     "updateOnlinesrc": "Päivitä linkki",
-    "addOnlinesrcTitle": "Linkitä online-lähde tähän metatietoon",
+    "addOnlinesrcTitle": "Link an online resource",
     "addThumbnail": "Lisää näytekuva",
     "addThumbnailTitle": "Lisää tiivistelmä tähän metatietoon",
     "allChangesCanceled": "Kaikki muutokset peruttu.",
@@ -358,5 +358,7 @@
     "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
     "selectKeyword": "Add keywords",
-    "saveLinkToSibling": "Save link to other resource"
+    "saveLinkToSibling": "Save link to other resource",
+    "confirmCloseInvalidTitle": "Confirm editor close",
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

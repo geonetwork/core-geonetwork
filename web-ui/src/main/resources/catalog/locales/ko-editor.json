@@ -358,5 +358,7 @@
     "inputGeometryHint": "선택한 포맷과 좌표체계에 해당하는 지오메트리를 여기에 붙여넣습니다.",
     "inputGeometryReadOnlyHint": "이 지오메트리는 읽기전용입니다.",
     "selectKeyword": "키워드 추가",
-    "saveLinkToSibling": "다른 자원에 링크 저장"
+    "saveLinkToSibling": "다른 자원에 링크 저장",
+    "confirmCloseInvalidTitle": "Confirm editor close",
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

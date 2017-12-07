@@ -18,9 +18,9 @@
     "addFromThesaurus": "o seleccionar d'un tesaure",
     "addKeywordNotFromThesaurus": "Afegir noves paraules clau",
     "addLinks": "Afegir enllaços",
-    "addOnlinesrc": "Afegir enllaç",
+    "addOnlinesrc": "Add online resource",
     "updateOnlinesrc": "Actualitzar enllaç",
-    "addOnlinesrcTitle": "Enllaçar a un recurs en línia a la metadada",
+    "addOnlinesrcTitle": "Link an online resource",
     "addThumbnail": "Afegir vista en miniatura",
     "addThumbnailTitle": "Afegir una miniatura a la metadada",
     "allChangesCanceled": "Cancel·lats tots els canvis.",
@@ -358,5 +358,7 @@
     "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
     "selectKeyword": "Add keywords",
-    "saveLinkToSibling": "Save link to other resource"
+    "saveLinkToSibling": "Save link to other resource",
+    "confirmCloseInvalidTitle": "Confirm editor close",
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

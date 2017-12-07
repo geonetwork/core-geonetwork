@@ -18,9 +18,9 @@
     "addFromThesaurus": "nebo je vybrat z tezauru",
     "addKeywordNotFromThesaurus": "Přidat nová klíčová slova",
     "addLinks": "Přidat odkazy",
-    "addOnlinesrc": "Add link",
+    "addOnlinesrc": "Add online resource",
     "updateOnlinesrc": "Update link",
-    "addOnlinesrcTitle": "Přiřadit online zdroj k aktuálním metadatům",
+    "addOnlinesrcTitle": "Link an online resource",
     "addThumbnail": "Přidat náhled",
     "addThumbnailTitle": "K aktuálním metadatům přidat přehled",
     "allChangesCanceled": "Všechny změny zrušeny.",
@@ -358,5 +358,7 @@
     "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
     "selectKeyword": "Add keywords",
-    "saveLinkToSibling": "Save link to other resource"
+    "saveLinkToSibling": "Save link to other resource",
+    "confirmCloseInvalidTitle": "Confirm editor close",
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }
