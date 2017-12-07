@@ -31,6 +31,7 @@ import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.Index;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -84,9 +85,9 @@ public class EsClient implements InitializingBean {
             }
             activated = true;
         } else {
-            throw new Exception(String.format(
+            Log.debug("geonetwork.index", String.format(
                 "No Elasticsearch URL defined '%s'. "
-                + "Check bean configuration. Statistics and dasboard will not be available.", this.serverUrl));
+                    + "Check bean configuration. Statistics and dasboard will not be available.", this.serverUrl));
         }
     }
 
@@ -197,6 +198,9 @@ public class EsClient implements InitializingBean {
 
 
     public String deleteByQuery(String index, String query) throws Exception {
+        if (!activated) {
+            return false;
+        }
 
         String searchQuery = "{\"query\": {\"query_string\": {" +
             "\"query\": \"" + query + "\"" +
