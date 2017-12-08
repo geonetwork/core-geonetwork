@@ -187,9 +187,9 @@
             'layers': []
           },
           'map-editor': {
-            'context': '../../map/config-viewer.xml',
+            'context': '',
             'extent': [0, 0, 0, 0],
-            'layers': []
+            'layers': [{'type':'osm'}]
           }
         },
         'geocoder': 'https://secure.geonames.org/searchJSON',
