@@ -85018,11 +85018,7 @@ goog.uri.utils.appendKeyValuePairs_ = function(key, value, pairs) {
   } else if (value != null) {
     // Skip a top-level null or undefined entirely.
     pairs.push(
-        '&', key,
-        // Check for empty string. Zero gets encoded into the url as literal
-        // strings.  For empty string, skip the equal sign, to be consistent
-        // with UriBuilder.java.
-        value === '' ? '' : '=', goog.string.urlEncode(value));
+        '&', key, '=', goog.string.urlEncode(value));
   }
 };
 
@@ -85172,9 +85168,7 @@ goog.uri.utils.appendParamsFromMap = function(uri, map) {
  */
 goog.uri.utils.appendParam = function(uri, key, opt_value) {
   var paramArr = [uri, '&', key];
-  if (goog.isDefAndNotNull(opt_value)) {
     paramArr.push('=', goog.string.urlEncode(opt_value));
-  }
   return goog.uri.utils.appendQueryData_(paramArr);
 };
 
