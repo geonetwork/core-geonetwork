@@ -114,6 +114,13 @@
           };
 
           scope.sortFn = function(a, b) {
+            if (angular.isObject(a.label)){
+              if (a.label[scope.$parent.lang]){
+                return a.label[scope.$parent.lang].toLowerCase() > b.label[scope.$parent.lang].toLowerCase();
+              } else {
+                return a.name.toLowerCase() > b.name.toLowerCase();
+              }
+            }
             return a.label.toLowerCase() > b.label.toLowerCase();
           };
 
