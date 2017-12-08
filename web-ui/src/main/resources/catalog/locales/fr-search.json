@@ -410,8 +410,8 @@
     "selection.indexing.error": "Une erreur est survenue durant l'indexation.",
     "showLegend": "Afficher la légende",
     "hideLegend": "Cacher la légende",
-    "mdActions": "Available actions",
-    "mdActions-view": "Viewable",
-    "mdActions-download": "Downloadable",
-    "mdActions-process": "Processable"
+    "mdActions": "Type d'interactions",
+    "mdActions-view": "Visualisable",
+    "mdActions-download": "Téléchargeable",
+    "mdActions-process": "Traitement"
 }
