@@ -174,6 +174,8 @@
               data-filter='{"_root": "gmd:CI_OnlineResource"}'/>
     </for>
     -->
+
+
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
       <!--
       Example of configuration to disable free text keywords in the thesaurus selector
@@ -411,6 +413,17 @@
   <views>
     <!--Turn on INSPIRE according to system settings -->
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
@@ -435,6 +448,42 @@
                     codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
                     codeListValue="dataset"/>
                 </gmd:hierarchyLevel>
+              </snippet>
+            </template>
+          </action>
+
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language"
+          />
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType" />
+
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType) = 0"
+                  name="spatialRepresentationType" or="spatialRepresentationType"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:spatialRepresentationType>
+                  <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
+                                                        codeListValue="vector"/>
+                </gmd:spatialRepresentationType>
+              </snippet>
+            </template>
+          </action>
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory" />
+
+          <action type="add"
+                  name="topicCategory" or="topicCategory"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:topicCategory>
+                  <gmd:MD_TopicCategoryCode></gmd:MD_TopicCategoryCode>
+                </gmd:topicCategory>
               </snippet>
             </template>
           </action>
@@ -560,6 +609,7 @@
                   <helper name="gmd:name" context="gmd:MD_Format"/>
                 </key>
                 <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
+                <key label="format_specification" xpath="gmd:MD_Format/gmd:specification/gco:CharacterString" />
               </values>
               <snippet>
                 <gmd:distributionFormat>
@@ -572,7 +622,9 @@
                       <gco:CharacterString>{{format_version}}</gco:CharacterString>
                     </gmd:version>
                     <gn:copy select="gmd:amendmentNumber"/>
-                    <gn:copy select="gmd:specification"/>
+                    <gmd:specification>
+                      <gco:CharacterString>{{format_specification}}</gco:CharacterString>
+                    </gmd:specification>
                     <gn:copy select="gmd:fileDecompressionTechnique"/>
                     <gn:copy select="gmd:formatDistributor"/>
                   </gmd:MD_Format>
@@ -1305,6 +1357,21 @@
           </action>
 
 
+          <field xpath="/gmd:MD_Metadata/gmd:language" />
+
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:language) = 0"
+                  name="language" or="language"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:language>
+                  <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+                </gmd:language>
+              </snippet>
+            </template>
+          </action>
+
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
         </section>
       </tab>
@@ -1501,7 +1568,7 @@
                           context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_FormatConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_date" use="gn-date-picker"
-                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 <key label="explanation" use="text"
                      xpath="gmd:DQ_ConformanceResult/gmd:explanation/gco:CharacterString"/>
               </values>
@@ -1517,7 +1584,7 @@
                         <gmd:date>
                           <gmd:CI_Date>
                             <gmd:date>
-                              <gco:Date>{{conformity_date}}</gco:Date>
+                              {{conformity_date}}
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
@@ -2015,6 +2082,17 @@
     </view>
 
     <view name="default">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
       <tab id="default" default="true" mode="flat">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
@@ -2081,6 +2159,17 @@
 
     </view>
     <view name="advanced">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
       <tab id="identificationInfo" default="true">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo" or="identificationInfo"
                  in="/gmd:MD_Metadata"/>
@@ -2112,6 +2201,7 @@
         <section name="metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
           <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
                  in="/gmd:MD_Metadata"/>
@@ -2124,7 +2214,6 @@
           <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
           <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:series"/>
           <field xpath="/gmd:MD_Metadata/gmd:describes"/>
           <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>
@@ -2146,6 +2235,16 @@
       </tab>
     </view>
     <view name="xml">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="xml" default="true"/>
     </view>
   </views>

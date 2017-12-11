@@ -37,12 +37,14 @@
   goog.require('gn_facets');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_selection_directive');
+  goog.require('search_filter_tags_directive');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
     'gn_facets',
     'gn_selection_directive',
-    'gn_search_form_results_directive'
+    'gn_search_form_results_directive',
+    'search_filter_tags_directive'
   ]);
 
   /**
@@ -70,9 +72,25 @@
           $scope.searchObj.selectionBucket ||
           (Math.random() + '').replace('.', '')
     };
+    $scope.finalParams = {};
 
     $scope.searching = 0;
     $scope.paginationInfo = $scope.paginationInfo || {};
+
+    /**
+     * Return the current search parameters.
+     **/
+    this.getSearchParams = function() {
+      return $scope.searchObj.params;
+    };
+
+    this.getFinalParams = function() {
+      return $scope.finalParams;
+    };
+
+    this.getSearchResults = function() {
+      return $scope.searchResults;
+    };
 
     /**
      * Tells if there is a pagination directive nested to this one.
@@ -88,6 +106,8 @@
         self.resetPagination();
       }
     };
+
+
 
     /**
      * Reset pagination 'from' and 'to' params and merge them
@@ -171,6 +191,7 @@
       params.bucket = $scope.searchResults.selectionBucket || 'metadata';
 
       var finalParams = angular.extend(params, hiddenParams);
+      $scope.finalParams = finalParams;
       gnSearchManagerService.gnSearch(finalParams).then(
           function(data) {
             $scope.searching--;
@@ -362,6 +383,11 @@
     'gnSearchLocation'
   ];
 
+  /**
+   * Possible attributes:
+   *  * runSearch: run search inmediately after the  directive is loaded.
+   *  * waitForUser: wait until a user id is available to trigger the search.
+   */
   module.directive('ngSearchForm', [
     'gnSearchLocation',
     function(gnSearchLocation) {
@@ -381,6 +407,20 @@
             }
           };
 
+          var waitForPagination = function() {
+            // wait for pagination to be set before triggering search
+            if (element.find('[data-gn-pagination]').length > 0) {
+              var unregisterFn = scope.$watch('hasPagination', function() {
+                if (scope.hasPagination) {
+                  scope.triggerSearch(true);
+                  unregisterFn();
+                }
+              });
+            } else {
+              scope.triggerSearch(false);
+            }
+          };
+
           // Run a first search on directive rendering if attr is specified
           // Don't run it on page load if the permalink is 'on' and the
           // $location is not set to 'search'
@@ -393,16 +433,17 @@
                   gnSearchLocation.getParams());
             }
 
-            // wait for pagination to be set before triggering search
-            if (element.find('[data-gn-pagination]').length > 0) {
-              var unregisterFn = scope.$watch('hasPagination', function() {
-                if (scope.hasPagination) {
-                  scope.triggerSearch(true);
-                  unregisterFn();
+            if (attrs.waitForUser === true) {
+              var userUnwatch = scope.$watch('user.id', function(userNewVal) {
+                // Don't trigger the search until the user id has been loaded
+                // Unregister the watch once we have the user id.
+                if (angular.isDefined(userNewVal)) {
+                  waitForPagination();
+                  userUnwatch();
                 }
               });
             } else {
-              scope.triggerSearch(false);
+              waitForPagination();
             }
           }
         }

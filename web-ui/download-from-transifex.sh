@@ -8,7 +8,10 @@ mkdir transifex-src
 cd transifex-src
 tx init --host=www.transifex.com
 tx set --auto-remote https://www.transifex.com/projects/p/core-geonetwork/
-tx pull -a
+tx pull -a -r 'core-geonetwork.editor'
+tx pull -a -r 'core-geonetwork.admin'
+tx pull -a -r 'core-geonetwork.core'
+tx pull -a -r 'core-geonetwork.search'
 cd ..
 
 TRANSLATION_DIR=transifex-src/translations/core-geonetwork.
@@ -20,7 +23,7 @@ l=(
     'ge::de'
     'it::it'
     'ko::ko'
-    'du::nl'
+    'nl::nl'
     'cz::cs_CZ'
     'ca::ca'
     'fi::fi'

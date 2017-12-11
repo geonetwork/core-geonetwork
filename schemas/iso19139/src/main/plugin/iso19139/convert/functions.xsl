@@ -179,7 +179,7 @@
     <xsl:variable name="charStringTitle"
                   select="$identification/gmd:citation/*/gmd:title/gco:CharacterString"/>
     <xsl:variable name="locStringTitles"
-                  select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString"/>
+                  select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[. != '']"/>
     <xsl:choose>
       <xsl:when test="string-length(string($docLangTitle)) != 0">
         <xsl:value-of select="$docLangTitle[1]"/>
@@ -193,6 +193,31 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ================================================================== -->
 
+  <xsl:template name="defaultAbstract">
+    <xsl:param name="isoDocLangId"/>
+
+    <xsl:variable name="poundLangId"
+                  select="concat('#',upper-case(java:twoCharLangCode($isoDocLangId)))" />
+
+    <xsl:variable name="identification"
+                  select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo/*[name(.)='gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification' or name(.)='srv:SV_ServiceIdentification' or @gco:isoType='srv:SV_ServiceIdentification']"></xsl:variable>
+    <xsl:variable name="docLangAbstract"
+                  select="$identification/gmd:abstract//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
+    <xsl:variable name="charStringAbstract"
+                  select="$identification/gmd:abstract/gco:CharacterString"/>
+    <xsl:variable name="locStringAbstracts"
+                  select="$identification/gmd:abstract//gmd:LocalisedCharacterString[. != '']"/>
+    <xsl:choose>
+      <xsl:when test="string-length(string($docLangAbstract[1])) != 0">
+        <xsl:value-of select="$docLangAbstract[1]"/>
+      </xsl:when>
+      <xsl:when test="string-length(string($charStringAbstract[1])) != 0">
+        <xsl:value-of select="string($charStringAbstract[1])"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="string($locStringAbstracts[1])"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>

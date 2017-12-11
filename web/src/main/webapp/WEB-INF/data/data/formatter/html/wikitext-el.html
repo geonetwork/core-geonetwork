@@ -1,4 +1,4 @@
-<span fmt-if="text" fmt-only-children="true" class="md-text">
-    <dt>{{label | escapeXmlContent}}</dt>
+<div fmt-if="text" class="md-text">
+    <dt title="{{label | escapeXmlContent}}">{{label | escapeXmlContent}}</dt>
     <dd>{{text}}</dd>
-</span>
+</div>

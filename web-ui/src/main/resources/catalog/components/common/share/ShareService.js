@@ -76,7 +76,7 @@
           // Check if user is member of groupOwner
           // or check if user is Reviewer and can edit record
           var ownerGroupInfo = $.grep(privileges, function(g) {
-            return g.group === groupOwner ||
+            return g.group == groupOwner ||
                    (g.operations.editing &&
                     $.inArray('Reviewer', g.userProfiles) !== -1);
           });

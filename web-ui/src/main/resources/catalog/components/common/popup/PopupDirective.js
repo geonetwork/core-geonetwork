@@ -50,6 +50,11 @@
               };
             }
             element.addClass('gn-popup modal fade');
+
+            // handle close callback
+            if (scope.options.closeCallback) {
+              element.on('hidden.bs.modal', scope.options.closeCallback);
+            }
           }
         };
       }

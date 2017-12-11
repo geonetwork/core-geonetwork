@@ -205,6 +205,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean withInfo,
+        @ApiParam(value = "Download as a file",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+            boolean attachment,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
@@ -270,8 +274,9 @@ public class MetadataApi implements ApplicationContextAware {
 
         boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
 
+        String mode = (attachment)?"attachment":"inline";
         response.setHeader("Content-Disposition", String.format(
-            "inline; filename=\"%s.%s\"",
+            mode + "; filename=\"%s.%s\"",
             metadata.getUuid(),
             isJson ? "json" : "xml"
         ));

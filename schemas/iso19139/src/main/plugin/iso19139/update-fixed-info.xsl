@@ -37,6 +37,7 @@
   <xsl:include href="update-fixed-info-keywords.xsl"/>
   <xsl:include href="layout/utility-fn.xsl"/>
 
+
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
   <xsl:variable name="node" select="/root/env/node"/>
 
@@ -246,8 +247,25 @@
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
       <!-- Add nileason if text is empty -->
+      <xsl:variable name="excluded"
+                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+
+
+      <xsl:variable name="valueInPtFreeTextForMainLanguage"
+                    select="normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)])"/>
+
+      <!-- Add nileason if text is empty -->
+      <xsl:variable name="isEmpty"
+                    select="if ($isMultilingual and not($excluded))
+                            then $valueInPtFreeTextForMainLanguage = ''
+                            else if ($valueInPtFreeTextForMainLanguage != '')
+                            then $valueInPtFreeTextForMainLanguage = ''
+                            else normalize-space(gco:CharacterString) = ''"/>
+
+
       <xsl:choose>
-        <xsl:when test="normalize-space(gco:CharacterString)=''">
+        <xsl:when test="$isEmpty">
           <xsl:attribute name="gco:nilReason">
             <xsl:choose>
               <xsl:when test="@gco:nilReason">
@@ -257,7 +275,7 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="@gco:nilReason!='missing' and normalize-space(gco:CharacterString)!=''">
+        <xsl:when test="@gco:nilReason != 'missing' and not($isEmpty)">
           <xsl:copy-of select="@gco:nilReason"/>
         </xsl:when>
       </xsl:choose>
@@ -270,9 +288,20 @@
       <xsl:variable name="element" select="name()"/>
 
 
-      <xsl:variable name="excluded"
-                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
       <xsl:choose>
+        <!-- Check record does not contains multilingual elements
+          matching the main language. This may happen if the main
+          language is declared in locales and only PT_FreeText are set.
+          It should not be possible in GeoNetwork, but record user can
+          import may use this encoding. -->
+        <xsl:when test="not($isMultilingual) and
+                        $valueInPtFreeTextForMainLanguage != '' and
+                        normalize-space(gco:CharacterString) = ''">
+
+          <gco:CharacterString>
+            <xsl:value-of select="$valueInPtFreeTextForMainLanguage"/>
+          </gco:CharacterString>
+        </xsl:when>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
           <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->
@@ -297,7 +326,7 @@
                 <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]/text()"/>
               </gco:CharacterString>
-              <xsl:apply-templates select="gmd:PT_FreeText"/>
+              <xsl:apply-templates select="gmd:PT_FreeText[normalize-space(.) != '']"/>
             </xsl:when>
             <xsl:otherwise>
               <!-- Populate PT_FreeText for default language if not existing. -->
@@ -428,7 +457,7 @@
             <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
               <xsl:attribute name="xlink:href">
                 <xsl:value-of
-                        select="concat($serviceUrl,'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
+                  select="concat($serviceUrl,'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
               </xsl:attribute>
             </xsl:when>
             <xsl:otherwise>
@@ -452,7 +481,7 @@
   <xsl:template match="gmd:PT_Locale">
     <xsl:element name="gmd:{local-name()}">
       <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+                    select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
 
       <xsl:apply-templates select="@*"/>
       <xsl:if test="normalize-space(@id)='' or normalize-space(@id)!=$id">
@@ -470,7 +499,7 @@
   <xsl:template match="gmd:textGroup">
     <xsl:variable name="elementLocalId"
                   select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
-   <xsl:choose>
+    <xsl:choose>
       <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
         <gmd:textGroup>
           <gmd:LocalisedCharacterString>
@@ -479,7 +508,7 @@
             <xsl:variable name="ptLocale"
                           select="$locales[@id = string($currentLocale)]"/>
             <xsl:variable name="id"
-                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue[. != '']))"/>
             <xsl:apply-templates select="@*"/>
             <xsl:if test="$id != ''">
               <xsl:attribute name="locale">
@@ -576,6 +605,12 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="@xsi:schemaLocation">
+    <xsl:if test="java:getSettingValue('system/metadata/validation/removeSchemaLocation') = 'false'">
+      <xsl:copy-of select="."/>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>

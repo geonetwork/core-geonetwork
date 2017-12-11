@@ -3,20 +3,24 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="form-group">
-        <input type="number" step="any"
-               data-ng-model="extent[3]"
-               data-ng-change="onBboxChange()"
-               class="input-sm form-control">
+        <input ng-if="!required" type="number" step="any" data-ng-model="extent[3]"
+               data-ng-change="onBboxChange()" class="input-sm form-control"
+               ng-disabled="readOnly">
+        <input ng-if="required" type="number" step="any" data-ng-model="extent[3]"
+               data-ng-change="onBboxChange()" class="input-sm form-control" required
+               ng-disabled="readOnly">
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-4">
       <div class="form-group">
-        <input type="number" step="any"
-               data-ng-model="extent[0]"
-               data-ng-change="onBboxChange()"
-               class="input-sm form-control">
+        <input ng-if="!required" type="number" step="any" data-ng-model="extent[0]"
+               data-ng-change="onBboxChange()" class="input-sm form-control"
+               ng-disabled="readOnly">
+        <input ng-if="required" type="number" step="any" data-ng-model="extent[0]"
+               data-ng-change="onBboxChange()" class="input-sm form-control" required
+               ng-disabled="readOnly">
       </div>
     </div>
     <!--Draw buttons-->
@@ -31,20 +35,24 @@
 
     <div class="col-sm-4">
       <div class="form-group">
-        <input type="number" step="any"
-               data-ng-model="extent[2]"
-               data-ng-change="onBboxChange()"
-               class="input-sm form-control">
+        <input ng-if="!required" type="number" step="any" data-ng-model="extent[2]"
+               data-ng-change="onBboxChange()" class="input-sm form-control"
+               ng-disabled="readOnly">
+        <input ng-if="required" type="number" step="any" data-ng-model="extent[2]"
+               data-ng-change="onBboxChange()" class="input-sm form-control" required
+               ng-disabled="readOnly">
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-12">
       <div class="form-group">
-        <input type="number" step="any"
-               data-ng-model="extent[1]"
-               data-ng-change="onBboxChange()"
-               class="input-sm form-control">
+        <input ng-if="!required" type="number" step="any" data-ng-model="extent[1]"
+               data-ng-change="onBboxChange()" class="input-sm form-control"
+               ng-disabled="readOnly">
+        <input ng-if="required" type="number" step="any" data-ng-model="extent[1]"
+               data-ng-change="onBboxChange()" class="input-sm form-control" required
+               ng-disabled="readOnly">
       </div>
     </div>
   </div>

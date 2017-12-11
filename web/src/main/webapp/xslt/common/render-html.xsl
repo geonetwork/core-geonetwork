@@ -25,11 +25,14 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
-  <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
-              encoding="UTF-8"/>
-
   <xsl:include href="../base-layout-cssjs-loader.xsl"/>
   <xsl:include href="../skin/default/skin.xsl"/>
+
+  <xsl:output omit-xml-declaration="yes"
+              method="html"
+              doctype-system="html"
+              indent="yes"
+              encoding="UTF-8"/>
 
   <xsl:template name="render-html">
     <xsl:param name="content"/>
@@ -51,11 +54,11 @@
 
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="{/root/gui/url}/images/logos/favicon.png"/>
-        <link href="rss.search?sortBy=changeDate"
+        <link href="{$nodeUrl}eng/rss.search?sortBy=changeDate"
               rel="alternate"
               type="application/rss+xml"
               title="{$title}"/>
-        <link href="portal.opensearch"
+        <link href="{$nodeUrl}eng/portal.opensearch"
               rel="search"
               type="application/opensearchdescription+xml"
               title="{$title}"/>
@@ -66,9 +69,47 @@
       <body>
         <div class="gn-full">
           <xsl:call-template name="header"/>
-          <xsl:copy-of select="$content"/>
+          <div class="container">
+            <xsl:copy-of select="$content"/>
+          </div>
           <xsl:call-template name="footer"/>
         </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+                integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+                crossorigin="anonymous">
+          &#160;
+        </script>
+      
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+                crossorigin="anonymous">
+          &#160;
+        </script>
+      
+        <script type="text/javascript">
+          // attach click to tab
+          $('.nav-tabs-advanced a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+          });
+          // hide empty tab     
+          $('.nav-tabs-advanced a').each(function() {
+      
+            var tabLink = $(this).attr('href');
+      
+            if (tabLink) {
+              if ($(tabLink).length === 0) {
+                $(this).parent().hide();
+              }
+            }
+          });
+          // show the first tab
+          $('.nav-tabs-advanced a:first').tab('show');
+        </script>
+        <xsl:call-template name="css-load"/>
       </body>
     </html>
   </xsl:template>

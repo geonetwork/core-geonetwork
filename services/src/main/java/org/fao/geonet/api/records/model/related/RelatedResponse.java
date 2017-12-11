@@ -448,7 +448,7 @@ public class RelatedResponse {
     })
     public static class Associated implements IListOnlyClassToArray {
 
-        protected List<RelatedMetadataItem> item;
+        protected List<AssociatedSiblingMetadataItem> item;
 
         /**
          * Gets the value of the item property.
@@ -463,12 +463,12 @@ public class RelatedResponse {
          * </pre>
          *
          *
-         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * <p> Objects of the following type(s) are allowed in the list {@link AssociatedSiblingMetadataItem
          * }
          */
-        public List<RelatedMetadataItem> getItem() {
+        public List<AssociatedSiblingMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<AssociatedSiblingMetadataItem>();
             }
             return this.item;
         }

@@ -42,7 +42,7 @@
                 'partials/filestore.html',
             scope: {
               uuid: '=gnFileStore',
-              current: '=',
+              selectCallback: '&',
               filter: '='
             },
             link: function(scope, element, attrs, controller) {
@@ -54,7 +54,7 @@
                   'public' : attrs['defaultStatus'];
 
               scope.setResource = function(r) {
-                scope.current = r;
+                scope.selectCallback({ selected: r });
               };
               scope.id = Math.random();
               scope.metadataResources = [];

@@ -1,64 +1,87 @@
 <div class="gn-editor-board"
      data-ng-controller="GnSearchController">
   <div class="row" data-ng-controller="GnEditorBoardSearchController">
-    <div class="col-sm-9"
+    <div class="col-sm-12"
          data-ng-search-form=""
-         data-runSearch="true">
+         data-runSearch="true"
+         data-wait-for-user="true" >
 
-      <form class="form-horizontal"
-            role="form">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-        <div class="row gn-top-search">
-          <div class="col-md-12">
-            <div class="input-group gn-form-any">
+      <div class="gn-sub-bar">
+        <form class="form-horizontal"
+              role="form">
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <div class="row gn-top-search">
+            <div class="col-sm-6 col-md-6 col-lg-5">
+              <div class="input-group gn-form-any">
 
               <span class="input-group-addon">
                 <label>
-                  <input type="checkbox" data-ng-model="onlyMyRecord"
-                         data-ng-click="toggleOnlyMyRecord();triggerSearch();">
+                  <input type="checkbox" data-ng-model="onlyMyRecord.is"
+                         data-ng-change="toggleOnlyMyRecord(triggerSearch);">
                   <span data-translate="">onlyMyRecord</span>
                 </label>
               </span>
 
-              <input type="text"
-                     class="form-control"
-                     id="gn-any-field"
-                     data-ng-model="searchObj.params.any"
-                     data-ng-model-options="modelOptions"
-                     placeholder="{{'anyPlaceHolder' | translate}}"
-                     data-typeahead="address for address in getAnySuggestions($viewValue)"
-                     data-typeahead-loading="anyLoading" class="form-control"
-                     data-typeahead-min-length="1">
+                <input type="text"
+                       class="form-control"
+                       id="gn-any-field"
+                       data-ng-model="searchObj.params.any"
+                       data-ng-model-options="modelOptions"
+                       placeholder="{{'anyPlaceHolder' | translate}}"
+                       data-typeahead="address for address in getAnySuggestions($viewValue)"
+                       data-typeahead-loading="anyLoading" class="form-control"
+                       data-typeahead-min-length="1">
 
-              <div class="input-group-btn">
-                <button type="button"
-                        data-ng-click="triggerSearch()"
-                        class="btn btn-primary">
-                  &nbsp;&nbsp;
-                  <i class="fa fa-search"></i>
-                  &nbsp;&nbsp;
-                </button>
+                <div class="input-group-btn">
+                  <button type="button"
+                          data-ng-click="triggerSearch()"
+                          class="btn btn-default">
+                    <i class="fa fa-search"></i>
+                  </button>
+                  <button type="button"
+                          data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.params);"
+                          title="{{'ClearTitle' | translate}}"
+                          class="btn btn-default">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
 
-                <button type="button"
-                        data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.params);"
-                        title="{{'ClearTitle' | translate}}"
-                        class="btn btn-link">
-                  <i class="fa fa-times"></i>
-                </button>
               </div>
-
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-7 text-right">
+              <a href="#/create" class="btn btn-primary">
+                <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
+              </a>
+              <a href="#/import" class="btn btn-default">
+                <i class="fa fa-upload"/>&nbsp;<span class="hidden-xs hidden-sm" data-translate="">ImportRecord</span>
+              </a>
+              <a href="#/directory" class="btn btn-default"
+                 ng-if="user.isEditorOrMore()">
+                <i class="fa fa-list-ul"/>&nbsp;<span class="hidden-xs hidden-sm hidden-md" data-translate="">directoryManager</span>
+              </a>
+              <a href="#/batchedit" class="btn btn-default"
+                 ng-if="user.isEditorOrMore()">
+                <i class="fa fa-pencil"/>&nbsp;<span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
+              </a>
             </div>
           </div>
+        </form>
+      </div>
+
+      <div class="row">
+        <div class="gn-results-heading col-md-offset-3">
+          <div data-search-filter-tags data-use-location-parameters="false"
+               data-ng-show="isFilterTagsDisplayed"></div>
         </div>
-      </form>
-      <br/>
+      </div>
+
       <div class="row"
            data-ng-show="searchResults.records.length > 0">
-        <div class="col-md-offset-3 col-md-4 relative">
+        <div class="col-sm-offset-3 col-md-offset-3 col-sm-4 col-md-4 relative">
           <div data-gn-selection-widget=""
                data-results="searchResults"></div>
         </div>
-        <div class="col-md-5">
+        <div class="col-sm-5 col-md-5">
           <div class="pull-right"
                data-gn-pagination="paginationInfo"
                data-hits-values="searchObj.hitsperpageValues"></div>
@@ -71,7 +94,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3 gn-search-facet">
+        <div class="col-sm-3 col-md-3 gn-search-facet">
 
           <!-- Hierachical facet mode -->
           <div data-ng-show="searchResults.records.length > 0"
@@ -82,9 +105,6 @@
           </div>
         </div>
         <div class="col-md-9">
-          <div class="gn-results-heading">
-            <div data-gn-facet-breadcrumb="currentFacets"></div>
-          </div>
           <span class="loading fa fa-spinner fa-spin"
                 data-ng-show="searching"></span>
 
@@ -100,28 +120,6 @@
                data-template-url="resultTemplate"></div>
         </div>
       </div>
-    </div>
-    <div class="col-sm-3">
-      <a href="#/create" class="btn btn-primary btn-lg btn-block">
-        <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
-      </a>
-      <a href="#/import" class="btn btn-default btn-lg btn-block">
-        <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
-      </a>
-      <a href="#/directory" class="btn btn-default btn-lg btn-block"
-         ng-if="user.isEditorOrMore()">
-        <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
-      </a>
-      <a href="#/batchedit" class="btn btn-default btn-lg btn-block"
-         ng-if="user.isEditorOrMore()">
-        <i class="fa fa-pencil"/>&nbsp;<span data-translate="">batchEditing</span>
-      </a>
-
-
-      <br/>
-
-      <p class="alert alert-info"
-         data-translate="">editorBoardInfo</p>
     </div>
   </div>
   <div data-ng-include="'../../catalog/templates/info.html'">

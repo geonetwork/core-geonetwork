@@ -4,7 +4,7 @@
   <warning>Attention!</warning>
   <nojs>Javascript n'est pas actif dans votre navigateur. Activez le ou cliquez
     <a
-      href="catalog.search.nojs">ici pour rechercher des informations
+      href="../search">ici pour rechercher des informations
     </a>
     en mode dégradé.
   </nojs>

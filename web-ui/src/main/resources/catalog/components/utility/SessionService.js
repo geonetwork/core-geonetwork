@@ -24,7 +24,8 @@
 (function() {
   goog.provide('gn_session_service');
 
-  var module = angular.module('gn_session_service', ['ngCookies', 'ngSanitize']);
+  var module = angular.module('gn_session_service',
+      ['ngCookies', 'ngSanitize']);
 
   /**
    * Session check & warning service

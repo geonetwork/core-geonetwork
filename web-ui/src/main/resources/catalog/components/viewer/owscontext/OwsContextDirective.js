@@ -90,8 +90,8 @@
         restrict: 'A',
         templateUrl: function(elem, attrs) {
           return attrs.template ||
-            '../../catalog/components/viewer/owscontext/' +
-            'partials/owscontext.html';
+              '../../catalog/components/viewer/owscontext/' +
+              'partials/owscontext.html';
         },
         scope: {
           user: '=',
@@ -152,9 +152,11 @@
 
 
           scope.isSaveMapInCatalogAllowed =
-              gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed === true;
+              gnGlobalSettings.gnCfg.mods.map.
+              isSaveMapInCatalogAllowed === true;
           scope.isExportMapAsImageEnabled =
-              gnGlobalSettings.gnCfg.mods.map.isExportMapAsImageEnabled === true;
+              gnGlobalSettings.gnCfg.mods.map.
+              isExportMapAsImageEnabled === true;
 
           scope.mapUuid = null;
 
@@ -181,7 +183,7 @@
               if (scope.isExportMapAsImageEnabled) {
                 scope.mapProps.overviewFilename = getMapFileName() + '.png';
                 scope.mapProps.overview =
-                  data.replace('data:image/png;base64,', '');
+                    data.replace('data:image/png;base64,', '');
               }
 
               return $http.post('../api/records/importfrommap',
@@ -234,14 +236,17 @@
           // load context from url or from storage
           var key = 'owsContext_' +
               window.location.host + window.location.pathname;
-          var storage = gnViewerSettings.storage ?
-              window[gnViewerSettings.storage] : window.localStorage;
-          if (gnViewerSettings.owsContext) {
-            gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
-                scope.map);
-          } else if (storage.getItem(key)) {
+
+          var storage = gnViewerSettings.mapConfig.storage ?
+              window[gnViewerSettings.mapConfig.storage] : window.localStorage;
+
+          if (gnViewerSettings.mapConfig.storage !== '' &&
+              storage.getItem(key)) {
             var c = storage.getItem(key);
             gnOwsContextService.loadContext(c, scope.map);
+          } else if (gnViewerSettings.owsContext) {
+            gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
+                scope.map);
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,

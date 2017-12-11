@@ -91,6 +91,9 @@
           // keys are: '<processId>@<uri>'
           scope.loadedDescriptions = {};
 
+          // this will hold the 'application profile' of the current WPS service
+          scope.applicationProfile = null;
+
           // maximum number of processes id saved in local storage
           var maxHistoryCount = attrs['maxHistory'] || 6;
 
@@ -125,14 +128,15 @@
 
             // parse application profile as JSON (if not already an object)
             // application profile holds 2 arrays: inputs and outputs
-            var applicationProfile = scope.wpsLink.applicationProfile;
-            if (applicationProfile && typeof applicationProfile === 'string') {
+            scope.applicationProfile = scope.wpsLink.applicationProfile || null;
+            if (scope.applicationProfile &&
+                typeof scope.applicationProfile === 'string') {
               try {
-                applicationProfile = JSON.parse(applicationProfile);
+                scope.applicationProfile = JSON.parse(scope.applicationProfile);
               }
               catch (e) {
                 console.warn('Error while loading application profile.',
-                  applicationProfile);
+                    scope.applicationProfile);
               }
             }
 
@@ -183,17 +187,39 @@
                       var wfsFilterValue;
 
                       // look for input info in app profile
-                      if (applicationProfile && applicationProfile.inputs) {
-                        applicationProfile.inputs.forEach(function(input) {
+                      if (scope.applicationProfile &&
+                      scope.applicationProfile.inputs) {
+                        scope.applicationProfile.inputs.forEach(
+                        function(input) {
                           if (input.identifier == inputName) {
                             defaultValue = input.defaultValue;
 
                             // check if there is a wfs filter active
                             // & apply value
-                            var linkedWfsFilter = input.linkedWfsFilter;
-                            if (linkedWfsFilter && wfsFilterValues &&
-                            wfsFilterValues[linkedWfsFilter]) {
-                              wfsFilterValue = wfsFilterValues[linkedWfsFilter];
+                            var wfsFilter = input.linkedWfsFilter || '';
+
+                            // handle the case where the link points to "from"
+                            // or "to" dates of a filter
+                            var valueIndex = -1;
+                            if (wfsFilter.substr(-5) === '.from') {
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 5);
+                              valueIndex = 0;
+                            } else if (wfsFilter.substr(-3) === '.to') {
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 3);
+                              valueIndex = 1;
+                            }
+
+                            if (wfsFilter && wfsFilterValues &&
+                            wfsFilterValues[wfsFilter]) {
+                              // take value at specific index, or all values
+                              if (valueIndex >= 0) {
+                                wfsFilterValue =
+                                [wfsFilterValues[wfsFilter][valueIndex]];
+                              } else {
+                                wfsFilterValue = wfsFilterValues[wfsFilter];
+                              }
                             }
                           }
                         });
@@ -201,7 +227,7 @@
 
                       // display field as overriden
                       scope.inputWfsOverride[inputName] =
-                      wfsFilterValue !== undefined;
+                      wfsFilterValue && wfsFilterValue.length > 0;
 
                       // literal data (basic form input)
                       if (input.literalData != undefined) {
@@ -261,20 +287,49 @@
                         }
                       }
 
-                      // add input fields if required (add 1 by default)
+                      // add missing input fields (add 1 by default)
                       var minCount = Math.max(1, input.minOccurs);
-                      var count = scope.getInputsByName(inputName).length;
+                      var maxCount = input.maxOccurs || 1;
+                      var inputs = scope.getInputsByName(inputName);
+
+                      // add enough fields to hold all default values
+                      if (Array.isArray(defaultValue)) {
+                        minCount = Math.max(minCount,
+                        Math.min(maxCount, defaultValue.length));
+                      }
+                      var count = inputs.length;
                       while (count < minCount) {
                         count++;
                         scope.wpsLink.inputs.push({
                           name: inputName,
-                          value: defaultValue
+                          value: ''
                         });
                       }
 
-                      // force value if a wfs filter is present
-                      if (wfsFilterValue !== undefined) {
-                        scope.setInputValueByName(inputName, 0, wfsFilterValue);
+                      // force values if a wfs filter is present
+                      // note: wfs filter value is an array of values
+                      if (wfsFilterValue && wfsFilterValue.length) {
+                        scope.removeAllInputValuesByName(inputName);
+                        wfsFilterValue.filter(function(value, index) {
+                          return index < maxCount;
+                        }).forEach(function(value) {
+                          scope.wpsLink.inputs.push({
+                            name: inputName,
+                            value: value
+                          });
+                        });
+                      }
+                      // apply default values if any
+                      else if (defaultValue) {
+                        inputs = scope.getInputsByName(inputName);
+                        var defaultValueArray = Array.isArray(defaultValue) ?
+                        defaultValue : [defaultValue];
+                        for (var i = 0; i < inputs.length; i++) {
+                          if (!inputs[i].value && defaultValueArray[i]) {
+                            scope.setInputValueByName(inputName, i,
+                            defaultValueArray[i]);
+                          }
+                        }
                       }
                     }
                     );
@@ -298,8 +353,10 @@
                       output.complexOutput._default.format.mimeType;
 
                       // look for output info in app profile
-                      if (applicationProfile && applicationProfile.outputs) {
-                        applicationProfile.outputs.forEach(function(output) {
+                      if (scope.applicationProfile &&
+                      scope.applicationProfile.outputs) {
+                        scope.applicationProfile.outputs.forEach(
+                        function(output) {
                           if (output.identifier == outputName) {
                             // assign mime type if available
                             defaultMimeType = output.defaultMimeType ||
@@ -309,8 +366,8 @@
                             // (display graph options are defined)
                             // TODO: actually parse these options
                             if (output.displayGraphOptions) {
-                              scope.outputAsGraph = output.displayGraphOptions ?
-                              true : false;
+                              scope.outputAsGraph =
+                              output.displayGraphOptions ? true : false;
                             }
                           }
                         });
@@ -320,7 +377,7 @@
 
                     // if there is a mimeType containing WMS: use it instead
                     var wmsOutput = gnWpsService.getProcessOutputWMSMimeType(
-                      scope.processDescription);
+                    scope.processDescription);
                     if (wmsOutput) {
                       defaultOutput = wmsOutput.outputIdentifier;
                       defaultMimeType = wmsOutput.mimeType;
@@ -331,8 +388,8 @@
                     scope.wpsLink.output.mimeType = defaultMimeType;
 
                     // use output as reference unless doing a profile graph
-                    scope.wpsLink.output.asReference = scope.outputAsGraph ?
-                      false : true;
+                    scope.wpsLink.output.asReference =
+                    scope.outputAsGraph ? false : true;
 
                     scope.outputsVisible = true;
 
@@ -588,6 +645,30 @@
             if (realIndex > -1) {
               scope.wpsLink.inputs.splice(realIndex, 1);
             }
+          };
+          scope.removeAllInputValuesByName = function(name) {
+            scope.wpsLink.inputs = scope.wpsLink.inputs.filter(function(input) {
+              return input.name !== name;
+            });
+          };
+
+          // checks are made against the application profile
+          scope._getInputInfo = function(name) {
+            var appProfile = scope.applicationProfile;
+            if (!appProfile || !appProfile.inputs) {
+              return false;
+            }
+            return appProfile.inputs.filter(function(input) {
+              return input.identifier === name;
+            })[0];
+          };
+          scope.isInputHidden = function(name) {
+            var input = scope._getInputInfo(name);
+            return input ? !!input.hidden : false;
+          };
+          scope.isInputDisabled = function(name) {
+            var input = scope._getInputInfo(name);
+            return input ? !!input.disabled : false;
           };
         }
       };

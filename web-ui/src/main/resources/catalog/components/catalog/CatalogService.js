@@ -205,7 +205,9 @@
             if (tab) {
               path += '/tab/' + tab;
             }
-            $location.path(path).search('justcreated');
+            $location.path(path)
+                .search('justcreated')
+                .search('redirectUrl', 'catalog.edit');
           });
         },
 
@@ -222,7 +224,7 @@
          * @return {HttpPromise} of the $http get
          */
         getMdObjByUuid: function(uuid, isTemplate) {
-          return $http.get('q?_uuid=' + uuid + '' +
+          return $http.get('qi?_uuid=' + uuid + '' +
               '&fast=index&_content_type=json&buildSummary=false' +
               (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
               then(function(resp) {
@@ -541,13 +543,32 @@
       });
       // Note: this step does not seem to be necessary; TODO: remove or refactor
       $.each(listOfJsonFields, function(idx) {
-        var field = listOfJsonFields[idx];
-        if (angular.isDefined(record[field])) {
+        var fieldName = listOfJsonFields[idx];
+        if (angular.isDefined(record[fieldName])) {
           try {
-            record[field] = angular.fromJson(record[field]);
+            record[fieldName] = angular.fromJson(record[fieldName]);
+            var field = record[fieldName];
+
+            // Combine all document keywordGroup fields
+            // in one object. Applies to multilingual records
+            // which may have multiple values after combining
+            // documents from all index
+            // fixme: not sure how to precess this, take first array as main
+            // object or take last arrays when they appear (what is done here)
+            if (fieldName === 'keywordGroup' && angular.isArray(field)) {
+              var thesaurusList = {};
+              for (var i = 0; i < field.length; i++) {
+                var thesauri = field[i];
+                $.each(thesauri, function(key) {
+                  if (!thesaurusList[key] && thesauri[key].length)
+                    thesaurusList[key] = thesauri[key];
+                });
+              }
+              record[fieldName] = thesaurusList;
+            }
           } catch (e) {}
         }
-      });
+      }.bind(this));
 
       // Create a structure that reflects the transferOption/onlinesrc tree
       var links = [];
@@ -663,7 +684,8 @@
                 }
               }
               else {
-                if (linkInfo.protocol.indexOf(type) >= 0 &&
+                if (linkInfo.protocol.toLowerCase().indexOf(
+                    type.toLowerCase()) >= 0 &&
                     (!groupId || groupId == linkInfo.group)) {
                   ret.push(linkInfo);
                 }

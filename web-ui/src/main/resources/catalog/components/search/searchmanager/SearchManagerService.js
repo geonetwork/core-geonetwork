@@ -32,7 +32,8 @@
     '$rootScope',
     '$http',
     'gnHttp',
-    function(gnUtilityService, $q, $rootScope, $http, gnHttp) {
+    function(gnUtilityService, $q, $rootScope,
+             $http, gnHttp) {
       /**
        * Utility to format a search response. JSON response
        * when containing one element will not make an array.
@@ -201,6 +202,7 @@
             });
         return defer.promise;
       };
+
       var indexSetOfRecords = function(params) {
         var defer = $q.defer();
         var defaultParams = {

@@ -57,8 +57,8 @@
 
   var tplFolder = '../../catalog/templates/editor/';
 
-  module.config(['$routeProvider',
-    function($routeProvider) {
+  module.config(['$routeProvider', 'gnGlobalSettings',
+    function($routeProvider, gnGlobalSettings) {
 
 
       $routeProvider.
@@ -72,7 +72,7 @@
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnEditorController'}).
           when('/create', {
-            templateUrl: tplFolder + 'new-metadata.html',
+            templateUrl: gnGlobalSettings.gnCfg.mods.editor.createPageTpl,
             controller: 'GnNewMetadataController'}).
           when('/create/from/:id/in/:group', {
             templateUrl: tplFolder + 'editor.html',
@@ -115,20 +115,22 @@
     'gnEditor', 'gnSearchManagerService', 'gnSchemaManagerService',
     'gnConfigService', 'gnUtilityService', 'gnOnlinesrc',
     'gnCurrentEdit', 'gnConfig', 'gnMetadataActions', 'Metadata',
+    'gnValidation',
     function($q, $scope, $routeParams, $http, $rootScope,
         $translate, $compile, $timeout, $location,
         gnEditor, gnSearchManagerService, gnSchemaManagerService,
         gnConfigService, gnUtilityService, gnOnlinesrc,
-        gnCurrentEdit, gnConfig, gnMetadataActions, Metadata) {
+        gnCurrentEdit, gnConfig, gnMetadataActions, Metadata,
+        gnValidation) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
       $scope.savedStatus = null;
       $scope.metadataFound = true;
       $scope.gnConfig = gnConfig;
-      $scope.gnSchemaConfig = {};
       $scope.unsupportedSchema = false;
       $scope.gnOnlinesrc = gnOnlinesrc;
+      $scope.redirectUrl = null;
 
       /**
        * Animation duration for slide up/down
@@ -147,6 +149,7 @@
           var button = $('#gn-view-menu-' + gnCurrentEdit.id);
           if (button) {
             menu.append(button);
+            $compile(button)($scope);
           }
         }
       };
@@ -167,6 +170,7 @@
             }).then(function(data) {
               $scope.metadataFound = data.count !== '0';
               $scope.metadataNotFoundId = $routeParams.id;
+              $scope.id = $routeParams.id;
 
               $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
               $scope.mdCategories = [];
@@ -183,31 +187,15 @@
               $scope.mdTitle = data.metadata[0].title ||
                   data.metadata[0].defaultTitle;
 
-              // Set default schema configuration in case none is defined
-              var config =
-                  gnConfig['metadata.editor.schemaConfig'][$scope.mdSchema];
-              if (!config) {
-                config = {
-                  displayToolTip: false
-                };
-              }
               // Get the schema configuration for the current record
-              gnCurrentEdit.schemaConfig = $scope.gnSchemaConfig = config;
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
-
+              $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {
 
                 // Default view to display is default
+                // it may be overriden by route params or custom function
                 var defaultTab = 'default';
-
-                // It may be overriden by schema configuration
-                // that user can change in the administration
-                // interface > settings > standard config
-                if (gnCurrentEdit.schemaConfig &&
-                    gnCurrentEdit.schemaConfig.defaultTab) {
-                  defaultTab = gnCurrentEdit.schemaConfig.defaultTab;
-                }
 
 
                 // It may be overriden by an application
@@ -241,10 +229,11 @@
                 angular.extend(gnCurrentEdit, {
                   id: $routeParams.id,
                   formId: '#gn-editor-' + $routeParams.id,
+                  containerId: '#gn-editor-container-' + $routeParams.id,
                   tab: $routeParams.tab || defaultTab,
                   displayAttributes: $routeParams.displayAttributes === 'true',
-                  displayTooltips:
-                      gnCurrentEdit.schemaConfig.displayToolTip === true,
+                  displayTooltips: $routeParams.displayTooltips === 'true',
+                  displayTooltipsMode: $routeParams.displayTooltipsMode || '',
                   compileScope: $scope,
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
@@ -259,10 +248,22 @@
                 // Create URL for loading the metadata form
                 // appending a random int in order to avoid
                 // caching by route.
-                $scope.editorFormUrl = gnEditor
+                var editorFormUrl = gnEditor
                     .buildEditUrlPrefix('editor') +
                     '&starteditingsession=yes&' +
                     '_random=' + Math.floor(Math.random() * 10000);
+
+                if (gnCurrentEdit.displayAttributes === true) {
+                  editorFormUrl += '&displayAttributes=true';
+                }
+
+                if (gnCurrentEdit.displayTooltips === true) {
+                  editorFormUrl += '&displayTooltips=true';
+                }
+
+                gnEditor.load(editorFormUrl).then(function() {
+                  // $scope.onFormLoad();
+                });
 
                 window.onbeforeunload = function() {
                   // TODO: could be better to provide
@@ -422,6 +423,7 @@
         $scope.setTemplate(!$scope.isTemplate());
         return $scope.save(refreshForm);
       };
+
       $scope.save = function(refreshForm) {
         $scope.saveError = false;
         var promise = gnEditor.save(refreshForm)
@@ -447,14 +449,16 @@
         window.onbeforeunload = null;
 
         // if there is no history, attempt to close tab
-        if (window.history.length == 1) {
+        if ($scope.redirectUrl != null) {
+          window.location.replace($scope.redirectUrl);
+        } else if (window.history.length == 1) {
           window.close();
           // This last point may trigger
           // "Scripts may close only the windows that were opened by it."
           // when the editor was not opened by a script.
+        } else {
+          window.history.back();
         }
-
-        window.history.back();
       };
 
       $scope.cancel = function(refreshForm) {
@@ -499,16 +503,53 @@
         }
       };
 
+      function parseXmlError(error) {
+        if (error.indexOf('<?xml') === 0) {
+          var x = jQuery.parseXML(error),
+              d = x.getElementsByTagName('description'),
+              m = d[0].textContent;
+          return m;
+        }
+        return null;
+      };
+
       $scope.close = function() {
+        // if auto unpublish is not set in the settings, or if MD is not
+        // published: close w/o confirmation
+        if (!$scope.gnCurrentEdit.metadata.isPublished() ||
+            !gnConfig['metadata.workflow.automaticUnpublishInvalidMd']) {
+          $scope.confirmClose();
+          return;
+        }
+
+        // else: do a mandatory validation check to ensure that if the MD is
+        // invalid, the user can decide to stay in the editor to fix it
+        gnValidation.errorCheck().then(function(hasErrors) {
+          // if record unpublish on save is enabled: ask for confirmation
+          // before saving and closing the editor
+          if (hasErrors) {
+            $('#confirm-editor-close').modal('show');
+          } else {
+            $scope.confirmClose();
+          }
+        });
+      };
+      $scope.confirmClose = function() {
         var promise = gnEditor.save(false, null, true)
             .then(function(form) {
               closeEditor();
             }, function(error) {
+              // When closing editor and if error occurs,
+              // the response is in XML. Try to get the message
+              message = parseXmlError(error);
+
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('saveMetadataError'),
-                error: error,
+                title: message ?
+                message : $translate.instant('saveMetadataError'),
+                error: message ? undefined : error,
                 timeout: 0,
                 type: 'danger'});
+              closeEditor();
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
         return promise;

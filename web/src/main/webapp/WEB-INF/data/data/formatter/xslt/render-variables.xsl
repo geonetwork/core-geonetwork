@@ -3,17 +3,33 @@
                 version="2.0">
 
   <!-- All URL parameters could be available as params -->
+
+  <!-- Define the view to be rendered as defined in
+  the config-editor.xml file of the schema. -->
   <xsl:param name="view" select="'default'"/>
 
-  <!-- Formatter will render a full HTML page. If not set,
-  then it will render an HTML DIV only. -->
+  <!-- Choose the type of HTML to return:
+  * html render a full HTML page
+  * div render a div element to be embedded in an existing webpage. -->
   <xsl:param name="root" select="'html'"/>
+
+  <!-- Define the full portal link. By default, it will link
+  to the catalog.search main page of the catalog. To configure a custom
+  use {{uuid}} to be replaced by the record UUID.
+  eg. http://another.portal.org/${uuid}
+  -->
+  <xsl:param name="portalLink" select="''"/>
+
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
                 select="/root/info/record/datainfo/schemaid"/>
+  <xsl:variable name="source"
+                select="/root/info/record/sourceinfo/sourceid"/>
   <xsl:variable name="metadataId"
                 select="/root/info/record/id"/>
+  <xsl:variable name="metadataUuid"
+                select="/root/info/record/uuid"/>
 
   <xsl:variable name="schemaCodelists">
     <null/>

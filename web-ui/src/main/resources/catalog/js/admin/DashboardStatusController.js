@@ -178,21 +178,23 @@
       $scope.indexRecordsWithErrors = function() {
         // Search records
         $http.get('qi?_content_type=json&' +
-          '_indexingError=1&bucket=ie&summaryOnly=true&_isTemplate=y or n').then(
-            function () {
+            '_indexingError=1&bucket=ie&' +
+            'summaryOnly=true&_isTemplate=y or n').then(
+            function() {
               // Select
               $http.put('../api/selections/ie').then(
-                function () {
-                  $http.get('../api/records/index?bucket=ie').then(
-                    function (response) {
+              function() {
+                $http.get('../api/records/index?bucket=ie').then(
+                    function(response) {
                       var res = response.data;
                       $rootScope.$broadcast('StatusUpdated', {
-                        msg: $translate.instant('selection.indexing.count', res),
+                        msg: $translate
+                    .instant('selection.indexing.count', res),
                         timeout: 2,
                         type: res.success ? 'success' : 'danger'});
                     }
-                  );
-                }
+                );
+              }
               );
             }
         );

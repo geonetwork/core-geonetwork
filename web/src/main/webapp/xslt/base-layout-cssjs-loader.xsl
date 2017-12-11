@@ -129,6 +129,7 @@
 
         <xsl:if test="$angularApp = 'gn_search' or
                       $angularApp = 'gn_editor' or
+                      $angularApp = 'gn_formatter_viewer' or
                       $angularApp = 'gn_admin'">
           <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
           <!-- Jsonix resources (OWS Context) -->
@@ -233,7 +234,11 @@
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
-      module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+
+      // Init GN config which is a dependency of gn
+      // in order to be initialized quite early
+      var cfgModule = angular.module('gn_config', []);
+      cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
       function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
       gnGlobalSettings.init(
       <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
