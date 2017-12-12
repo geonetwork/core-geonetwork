@@ -339,7 +339,7 @@
             for (var i = 0; i < groups.length; i++) {
               if (groups[i].id.profile == profile) {
                 var g = groups[i].group;
-                g.label = getLabel(g);
+                g.langlabel = getLabel(g);
                 res[profile].push(g);
               }
             }
