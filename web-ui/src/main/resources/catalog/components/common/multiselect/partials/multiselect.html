@@ -8,7 +8,7 @@
             data-ng-model="currentSelectionLeft">
       <option data-ng-repeat="e in options | filter:optionsSearch"
               value="{{e.id}}"
-              data-ng-dblclick="select(e)">{{e.label}}
+              data-ng-dblclick="select(e)">{{e.langlabel}}
       </option>
     </select>
   </div>
@@ -28,7 +28,7 @@
             data-ng-model="currentSelectionRight">
       <option data-ng-repeat="e in selected | filter:selectedSearch"
               value="{{e.id}}"
-              data-ng-dblclick="unselect(e)">{{e.label}}
+              data-ng-dblclick="unselect(e)">{{e.langlabel}}
       </option>
     </select>
   </div>

@@ -124,7 +124,7 @@
             success(function(data) {
               $scope.groups = data;
               angular.forEach($scope.groups, function(u) {
-                u.label = getLabel(u);
+                u.langlabel = getLabel(u);
               });
               $scope.isLoadingGroups = false;
             }).error(function(data) {
