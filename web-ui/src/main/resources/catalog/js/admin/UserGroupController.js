@@ -123,9 +123,6 @@
         $http.get('../api/groups' + profile).
             success(function(data) {
               $scope.groups = data;
-              angular.forEach($scope.groups, function(u) {
-                u.label = getLabel(u);
-              });
               $scope.isLoadingGroups = false;
             }).error(function(data) {
               // TODO
@@ -339,7 +336,6 @@
             for (var i = 0; i < groups.length; i++) {
               if (groups[i].id.profile == profile) {
                 var g = groups[i].group;
-                g.label = getLabel(g);
                 res[profile].push(g);
               }
             }
