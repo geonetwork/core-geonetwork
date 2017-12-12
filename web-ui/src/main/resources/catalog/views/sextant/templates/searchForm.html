@@ -29,12 +29,12 @@
       <!--Standard multi facet panel-->
       <div data-ng-if="::!facet.tree" gn-facet-multiselect="{{::facet.langs[lang] || facet.key}}" gn-facet-multiselect-title="{{facet.labels[lang]}}"
            gn-facet-multiselect-filter="{{::facet.filter}}"
-           gn-facet-multiselect-collapsed="{{::isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
+           gn-facet-multiselect-collapsed="{{::facet.opened !== true && isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
 
       <!--Tree facets-->
       <div data-ng-if="::facet.tree" sxt-facet-tree="{{::facet.langs[lang] || facet.key}}" sxt-facet-tree-title="{{facet.labels[lang]}}"
            sxt-facet-tree-filter="{{::facet.filter}}"
-           sxt-facet-tree-collapsed="{{::isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
+           sxt-facet-tree-collapsed="{{::facet.opened !== true && isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
 
     </div>
   </div>
