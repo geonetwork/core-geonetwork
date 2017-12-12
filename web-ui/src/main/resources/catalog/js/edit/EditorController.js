@@ -173,13 +173,13 @@
               $scope.id = $routeParams.id;
 
               $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
-              $scope.mdCategories = [];
+              $scope.mdCategories = {values: []};
               var categories = data.metadata[0].category;
               if (categories) {
                 if (angular.isArray(categories)) {
-                  $scope.mdCategories = categories;
+                  $scope.mdCategories.values = categories;
                 } else {
-                  $scope.mdCategories.push(categories);
+                  $scope.mdCategories.values.push(categories);
                 }
               }
 
