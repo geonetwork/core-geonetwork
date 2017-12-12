@@ -119,62 +119,7 @@
           };
 
 
-          var addWMTSToMap = function(link, md) {
-            var url = $filter('gnLocalized')(link.url) || link.url;
-            var uuid = md ? md['geonet:info'].uuid : '';
-            if (link.name &&
-               (angular.isArray(link.name) && link.name.length > 0)) {
-              angular.forEach(link.name, function(name) {
-                gnOwsCapabilities.getWMTSCapabilities(url).then(
-                   function(capObj) {
-                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                      name, capObj, uuid);
-                     if (layerInfo) {
-                       gnMap.addWmtsToMapFromCap(
-                        gnSearchSettings.viewerMap, layerInfo, capObj);
-                     }
-                   });
-              });
-              gnSearchLocation.setMap();
-            } else if (link.name && !angular.isArray(link.name) &&
-               link.name != '') {
-              gnOwsCapabilities.getWMTSCapabilities(url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj, uuid);
-                   if (layerInfo) {
-                     gnMap.addWmtsToMapFromCap(
-                     gnSearchSettings.viewerMap, layerInfo, capObj);
-                   } else {
-                     gnAlertService.addAlert({
-                       msg: 'Unable to load layer ' + link.name,
-                       type: 'success'
-                     });
-
-                   }
-                 });
-              gnSearchLocation.setMap();
-            } else if (link.title) {
-              layerName = $filter('gnLocalized')(link.title);
-              gnOwsCapabilities.getWMTSCapabilities(url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   layerName, capObj, uuid);
-                   if (layerInfo) {
-                     gnMap.addWmtsToMapFromCap(
-                     gnSearchSettings.viewerMap, layerInfo, capObj);
-                   } else {
-                     gnAlertService.addAlert({
-                       msg: 'Unable to load layer ' + layerName,
-                       type: 'success'
-                     });
-                   }
-                 });
-              gnSearchLocation.setMap();
-            } else {
-              gnMap.addOwsServiceToMap(url, 'WMTS');
-            }
-          };
+          var addWMTSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
 
           function addKMLToMap(record, md) {
             var url = $filter('gnLocalized')(record.url) || record.url;
