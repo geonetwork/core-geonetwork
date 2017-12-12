@@ -31,8 +31,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -62,7 +60,6 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.IllegalAddException;
 import org.jdom.input.JDOMParseException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -415,7 +412,7 @@ public class MetadataInsertDeleteApi {
             }
             Pair<Integer, String> pair = loadRecord(
                 metadataType, Xml.loadString(xml, false),
-                uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                uuidProcessing, group, category, rejectIfInvalid, false, transformWith, schema, extra, request);
             report.addMetadataInfos(pair.one(), String.format(
                 "Metadata imported from XML with UUID '%s'", pair.two())
             );
@@ -432,7 +429,7 @@ public class MetadataInsertDeleteApi {
                 if (xmlContent != null) {
                     Pair<Integer, String> pair = loadRecord(
                         metadataType, xmlContent,
-                        uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                        uuidProcessing, group, category, rejectIfInvalid, false, transformWith, schema, extra, request);
                     report.addMetadataInfos(pair.one(), String.format(
                         "Metadata imported from URL with UUID '%s'", pair.two())
                     );
@@ -497,7 +494,7 @@ public class MetadataInsertDeleteApi {
                     try {
                         Pair<Integer, String> pair = loadRecord(
                             metadataType, Xml.loadFile(f),
-                            uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                            uuidProcessing, group, category, rejectIfInvalid, false, transformWith, schema, extra, request);
                         report.addMetadataInfos(pair.one(), String.format(
                             "Metadata imported from server folder with UUID '%s'", pair.two())
                         );
@@ -772,6 +769,14 @@ public class MetadataInsertDeleteApi {
         )
         final boolean rejectIfInvalid,
         @ApiParam(
+            value = "(XML file only) Publish record.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "false"
+        )
+        final boolean publishToAll,
+        @ApiParam(
             value = "(MEF file only) Assign to current catalog.",
             required = false)
         @RequestParam(
@@ -846,7 +851,7 @@ public class MetadataInsertDeleteApi {
                 } else {
                     Pair<Integer, String> pair = loadRecord(
                         metadataType, Xml.loadStream(f.getInputStream()),
-                        uuidProcessing, group, category, rejectIfInvalid, transformWith, schema, extra, request);
+                        uuidProcessing, group, category, rejectIfInvalid, publishToAll, transformWith, schema, extra, request);
                     report.addMetadataInfos(pair.one(), String.format(
                         "Metadata imported with UUID '%s'", pair.two())
                     );
@@ -1099,7 +1104,8 @@ public class MetadataInsertDeleteApi {
         final MEFLib.UuidAction uuidProcessing,
         final String group,
         final String[] category,
-        boolean rejectIfInvalid,
+        final boolean rejectIfInvalid,
+        final boolean publishToAll,
         final String transformWith,
         String schema,
         final String extra,
@@ -1198,6 +1204,12 @@ public class MetadataInsertDeleteApi {
 
         // Set template
         dataMan.setTemplate(iId, metadataType, null);
+
+        if (publishToAll) {
+            dataMan.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.view.getId());
+            dataMan.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.download.getId());
+            dataMan.setOperation(context, iId, ReservedGroup.all.getId(), ReservedOperation.dynamic.getId());
+        }
 
         dataMan.activateWorkflowIfConfigured(context, id.get(0), group);
 

@@ -59,6 +59,7 @@
         serverFolder: '',
         recursiveSearch: false,
         rejectIfInvalid: false,
+        publishToAll: false,
         assignToCatalog: true,
         transformWith: '_none_',
         group: null,
