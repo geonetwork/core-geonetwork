@@ -350,27 +350,12 @@
    */
   module.filter('gnLocalized', function() {
     return function(obj, lang) {
-      if (angular.isObject(obj)) {   
-        if (lang&&obj[lang]){ 
-            return obj[lang];
-        } else {
-          //in some cases the object has a key: 'type', which should not be returned as the first language
-          var kys = Object.keys(obj); var aky=-1;
-          for (aky=0;aky<kys.length;aky++){
-            if (kys[aky]!='type' && kys[aky]!=""){break};
-          }; 
-          if (aky==-1) {
-            return "";
-          }
-          return obj[kys[aky]]; 
-        }; 
-      } else if (angular.isArray(obj) && obj.length>0) {
-        return obj[0]|'';
+      if (angular.isObject(obj)) {
+        return obj[lang] ? obj[lang] : (obj[Object.keys(obj)[0]] || '');
       } else {
-        return obj.toString();
-      };
+        return '';
+      }
     };
-  });
 
   module.factory('gnRegionService', [
     '$q',
