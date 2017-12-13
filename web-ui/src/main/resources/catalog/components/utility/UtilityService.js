@@ -356,6 +356,7 @@
         return '';
       }
     };
+  });
 
   module.factory('gnRegionService', [
     '$q',
