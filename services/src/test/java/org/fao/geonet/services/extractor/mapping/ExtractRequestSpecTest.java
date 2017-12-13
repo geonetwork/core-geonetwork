@@ -152,7 +152,7 @@ public class ExtractRequestSpecTest {
                         + "params=\"PHdwczpFeGVjdXRlIHhtbG5zOndwcz0iaHR0cDovL3d3dy5vcGVuZ2lzLm5ldC93cHMvMS4wL")
                 && xmlSpec.contains("identifier=\"r:extractionsurval\" outputMimeType=\"\" outputIdentifier=\"\""));
     }
-    
+
     /**
      * https://forge.ifremer.fr/mantis/view.php?id=38409
      * 
@@ -163,14 +163,28 @@ public class ExtractRequestSpecTest {
     @Test
     public void testMantisIssue38409() throws Exception {
         String f = ExtractRequestSpecTest.class.getResource("mantis-38409.json").getFile();
-
         String jsonString = FileUtils.readFileToString(new File(f));
         ObjectMapper mapper = new ObjectMapper();
         ExtractRequestSpec s = mapper.readValue(jsonString, ExtractRequestSpec.class);
 
         SextantExtractor se = new SextantExtractor();
         String xmlSpec = se.createXmlSpecification(s, false, null, null);
-        assertFalse("XML specification contains xmin=\"null\"", xmlSpec.contains("xmin=\"null\""));
 
+        assertFalse("XML specification contains xmin=\"null\"", xmlSpec.contains("xmin=\"null\""));
+        
+    }
+    /** See mantis issue 39238 */
+    @Test
+    public void testEscapeXmlMantis39238() throws Exception {
+        String f = ExtractRequestSpecTest.class.getResource("extract-spec-mantis-39238.json").getFile();
+        String jsonString = FileUtils.readFileToString(new File(f));
+        ObjectMapper mapper = new ObjectMapper();
+        ExtractRequestSpec s = mapper.readValue(jsonString, ExtractRequestSpec.class);
+
+        SextantExtractor se = new SextantExtractor();
+        String xmlSpec = se.createXmlSpecification(s, false, null, null);
+
+        assertTrue("Unexpected XML output", xmlSpec.contains("&quot;double-quotes&quot;")
+                && xmlSpec.contains("&lt;/xml&gt;"));
     }
 }

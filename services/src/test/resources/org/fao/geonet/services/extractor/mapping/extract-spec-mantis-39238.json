@@ -1,0 +1,31 @@
+{
+   "layers" : [
+      {
+         "output" : {
+            "format" : "ESRI Shapefile",
+            "epsg" : "4326",
+            "xmin" : "-10.546875000000005",
+            "xmax" : "9.140624999999993",
+            "mercator_lat" : "",
+            "name" : "surval_30140_all_point",
+            "ymin" : "41.50857729743939",
+            "ymax" : "51.17934297928923"
+         },
+         "id" : "94c01d83-ca59-4411-bae8-7db3e0b7181b",
+         "input" : {
+            "format" : "vector",
+            "epsg" : "4326",
+            "protocol" : "OGC:WFS",
+            "linkage" : "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"
+         },
+         "additionalInput" : []
+      }
+   ],
+   "user" : {
+      "lastname" : "bbbb",
+      "usage" : "something with some \"double-quotes\" in it, also with some special accented characters éééààà, and even an XSS attempt </xml>",
+      "org" : "camptocamp",
+      "mail" : "aaaa.bbbb@camptocamp.com",
+      "firstname" : "aaaa"
+   }
+}
