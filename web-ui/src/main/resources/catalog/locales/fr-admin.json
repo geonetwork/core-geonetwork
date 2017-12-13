@@ -1144,7 +1144,7 @@
     "keywordMissingValue": "Valeur manquante",
     "ui-grid": "Configuration des résultats de recherche",
     "gridConfigRelatedTypes": "Types de métadonnées associées à afficher",
-    "gridConfigRelatedTypes-help": "Valeurs possibles : children, parent, services, fcats, datasets, sibling"
+    "gridConfigRelatedTypes-help": "Valeurs possibles : children, parent, services, fcats, datasets, sibling",
     "editKeyword": "Modifier le mot-clé",
     "allLanguage": "Toutes",
     "allLanguage-help": "Afficher toutes les langues",
