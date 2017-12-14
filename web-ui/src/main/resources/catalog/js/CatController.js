@@ -75,7 +75,8 @@
         },
         'home': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/home'
+          'appUrl': '../../srv/{{lang}}/catalog.search#/home',
+          'fluidLayout': true
         },
         'search': {
           'enabled': true,
@@ -198,6 +199,7 @@
           'appUrl': '../../srv/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
           'isFilterTagsDisplayed': false,
+          'fluidEditorLayout': true,
           'createPageTpl':
               '../../catalog/templates/editor/new-metadata-horizontal.html'
         },
