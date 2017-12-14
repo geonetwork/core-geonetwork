@@ -263,7 +263,7 @@
   </xsl:template>
 
   <xsl:template mode="render-field"
-                match="*[gco:CharacterString]"
+                match="*[gco:CharacterString != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
@@ -792,16 +792,11 @@
       <xsl:otherwise>
         <xsl:value-of select="normalize-space(.)"/>
 
-        <!-- -->
         <xsl:if test="@uom">
           &#160;<xsl:value-of select="@uom"/>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
-
-    <xsl:if test="@uom">
-      &#160;<xsl:value-of select="@uom"/>
-    </xsl:if>
   </xsl:template>
 
   <!-- ... URL -->
