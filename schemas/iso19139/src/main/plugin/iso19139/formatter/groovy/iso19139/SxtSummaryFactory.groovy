@@ -223,35 +223,34 @@ class SxtSummaryFactory {
     def dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
       it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'publication'}
 
-        def year = '';
-        if(dateElts.size() > 0) {
-          def sDate = dateElts[0].'gmd:date'.'gco:Date'.text();
-          if(sDate == null || sDate == "") {
-            sDate = dateElts[0].'gmd:date'.'gco:DateTime'.text();
-          }
-          if(sDate != null && sDate != "") {
-            def pattern = "yyyy-MM-dd"
-            if(sDate.size() == 7) {
-              pattern = "yyyy-MM"
-            } else if(sDate.size() == 4) {
-              pattern = "yyyy"
-            }
-            SimpleDateFormat format = new SimpleDateFormat(pattern);
-            Date date = format.parse(sDate);
-            SimpleDateFormat df = new SimpleDateFormat("yyyy");
-            year = df.format(date);
-
-//            ISODate date = new ISODate(sDate);
-//            year = date.getYears();
+    def year = '';
+    if(dateElts.size() > 0) {
+      def sDate = dateElts[0].'gmd:date'.'gco:Date'.text();
+      if(sDate == null || sDate == "") {
+        sDate = dateElts[0].'gmd:date'.'gco:DateTime'.text();
       }
-
+      if(sDate != null && sDate != "") {
+        def pattern = "yyyy-MM-dd"
+        if(sDate.size() == 7) {
+          pattern = "yyyy-MM"
+        } else if(sDate.size() == 4) {
+          pattern = "yyyy"
+        }
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Date date = format.parse(sDate);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy");
+        year = df.format(date);
+      }
     }
 
-
+    def url = ''
+    if(el) {
+      url = el.'gmd:linkage'.'gmd:URL'
+    }
 
     def replacements
     replacements = [
-      url: el.'gmd:linkage'.'gmd:URL',
+      url: url,
       year: year,
       title: summary.title,
       citationPOTitle: this.f.translate('citationPOTitle'),

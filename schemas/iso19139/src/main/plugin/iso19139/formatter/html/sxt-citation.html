@@ -14,7 +14,9 @@
       </a></h2>
 
     <p>{{contacts}} ({{year}}). {{title}}. {{publishers}}
-      <br><a class="main_link" href="{{url}}">{{url}}</a></br>
+      <br fmt-if="url">
+        <a fmt-if="url" class="main_link" href="{{url}}">{{url}}</a>
+      </br>
     </p>
 
     <div fmt-if="mainPublicationDescription">
