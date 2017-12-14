@@ -93,8 +93,27 @@
           };
 
           var sortNodeFn = function(a, b) {
+            var aPos = a.get ? a.get('owc_position') : undefined;
+            var bPos = b.get ? b.get('owc_position') : undefined;
             var aName = a.name || a.get('label');
             var bName = b.name || b.get('label');
+
+            // comparing layers (fallback to label if nedded)
+            if (a instanceof ol.layer.Base && b instanceof ol.layer.Base) {
+              // if one is positioned and not the other, put it first
+              if (aPos !== undefined && bPos === undefined) {
+                return -1;
+              } else if (aPos === undefined && bPos !== undefined) {
+                return 1;
+              }
+
+              // if both are positioned, compare based on that
+              if (aPos !== undefined && bPos !== undefined) {
+                return aPos < bPos ? -1 : (aPos > bPos) ? 1 : 0;
+              }
+            }
+
+            // other comparisons: based on label only
             return aName < bName ? -1 : 1;
           };
 
