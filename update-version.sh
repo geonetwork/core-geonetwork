@@ -96,14 +96,8 @@ echo
 
 # Update version in sphinx doc files
 echo 'Documentation'
-echo ' * updating docs/eng/users/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/eng/users/source/conf.py 
-echo ' * updating docs/eng/developer/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/eng/developer/source/conf.py
-echo ' * updating docs/eng/training/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/eng/training/source/conf.py
-echo ' * updating docs/eng/source/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/fra/users/source/conf.py
+echo ' * updating docs/manuals/source/conf.py'
+sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py 
 echo
 
 # Update installer

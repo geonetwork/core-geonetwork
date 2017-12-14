@@ -200,6 +200,19 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <div class="col-sm-offset-5 col-sm-7">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox"
+                           name="publishToAll"
+                           data-ng-disabled="!user.isReviewerOrMore() || file_type === 'mef'"
+                           data-ng-model="params.publishToAll"/>
+                    <span data-translate="">publish</span>
+                  </label>
+                </div>
+              </div>
+            </div>
 
             <div class="form-group">
               <div class="col-sm-offset-5 col-sm-7">
@@ -207,6 +220,7 @@
                   <label>
                     <input type="checkbox"
                            name="assignToCatalog"
+                           data-ng-disabled="file_type !== 'mef'"
                            data-ng-model="params.assignToCatalog"/>
                     <span data-translate="">assignToCatalog</span>
                   </label>

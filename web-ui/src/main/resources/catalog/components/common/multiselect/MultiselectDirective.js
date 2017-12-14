@@ -114,7 +114,11 @@
           };
 
           scope.sortFn = function(a, b) {
-            return a.label.toLowerCase() > b.label.toLowerCase();
+            if (a.langlabel && b.langlabel) {
+              return a.langlabel.toLowerCase() > b.langlabel.toLowerCase();
+            } else {
+              return a.name.toLowerCase() > b.name.toLowerCase();
+            }
           };
 
           scope.unselect = function(k) {

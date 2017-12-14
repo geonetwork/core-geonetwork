@@ -8,7 +8,7 @@
     <div class="row list-group-item gn-related-item"
          data-ng-repeat="r in items track by $index"
          data-ng-init="mainType = config.getType(r, type);">
-      <div class="col-xs-1">
+      <div class="col-xs-1 col-sm-1">
         <!-- OWS have their name overlaid over the globe icon -->
         <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMSSERVICE') || (mainType === 'WMTS') || (mainType === 'WFS') || (mainType === 'WCS')">
           <span class="fa-stack fa-1x">
@@ -24,7 +24,7 @@
         </strong>
       </strong>
       </div>
-      <div class="col-xs-7">
+      <div class="col-xs-12 col-sm-7">
         <!-- WMS & WFS contains layer name in title -->
         <h4 data-ng-if="((mainType === 'WMS' || (mainType === 'WMSSERVICE') || mainType === 'WFS') &&
                         !isLayerProtocol(r)) &&
@@ -159,7 +159,7 @@
         </div>
       </div>
 
-      <div class="col-xs-4">
+      <div class="col-xs-12 col-sm-4">
         <button type="button"
                 class="btn btn-default btn-sm btn-block"
                 data-ng-show="hasAction(mainType)"

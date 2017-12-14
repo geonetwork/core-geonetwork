@@ -124,7 +124,7 @@
             success(function(data) {
               $scope.groups = data;
               angular.forEach($scope.groups, function(u) {
-                u.label = getLabel(u);
+                u.langlabel = getLabel(u);
               });
               $scope.isLoadingGroups = false;
             }).error(function(data) {
@@ -339,7 +339,7 @@
             for (var i = 0; i < groups.length; i++) {
               if (groups[i].id.profile == profile) {
                 var g = groups[i].group;
-                g.label = getLabel(g);
+                g.langlabel = getLabel(g);
                 res[profile].push(g);
               }
             }
