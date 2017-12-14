@@ -1933,7 +1933,7 @@
 		<description>Connection protocol to be used</description>
     <helper>
       <option value="WWW:LINK">Web link (URL)</option>
-      <option value="WWW:LINK-1.0-http--publication-URL">"Main publication link</option>
+      <option value="WWW:LINK-1.0-http--publication-URL">Main publication link</option>
       <option value="WWW:LINK-1.0-http--metadata-URL">Point of truth URL of this metadata record</option>
       <option value="FILE">Download (file)</option>
       <option value="COPYFILE">Download (copy)</option>
