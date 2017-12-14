@@ -23,10 +23,22 @@
     Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
 */
 .gn-bottom-bar {
-  height:50px;
-  position:relative;
-  overflow:hidden;
-  width:100%;
-  margin-bottom:0px;
+  height: 50px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 0px;
   border-radius: 0px;
+  border-width: 1px 0 0 0;
+  background: @gnBottombarBackground;
+  border-color: @gnBottombarBorderColor;
+  .gn-footer-text > span {
+    color: @gnBottombarColor !important;
+  }
+  a {
+    color: @gnBottombarColor !important;
+    &:hover {
+      color: @gnBottombarColorHover !important;
+    }
+  }
 }
