@@ -409,10 +409,6 @@ div.help ul li {
 
 /* CSS from v6 required by formatter */
 .gn-metadata-view {
-    background-color: #e4eef7 !important;
-    background-image: url("http://sextant.ifremer.fr/geonetwork/apps/sextant/images/schema/emodnet/background.gif") !important;
-    background-repeat: repeat-x !important;
-    background-attachment: fixed !important;
     padding: 10px;
 }
 .gn-metadata-view table.related td.thumbnail,
