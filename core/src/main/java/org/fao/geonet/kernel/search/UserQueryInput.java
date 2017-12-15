@@ -23,19 +23,18 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.jdom.Element;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
 
 /**
  * Search parameters that can be provided by a search client.
@@ -278,7 +277,13 @@ public class UserQueryInput {
         try {
             if (currentValues == null) {
                 Set<String> values = new LinkedHashSet<String>();
-                values.add(URLDecoder.decode(nodeValue, "UTF-8"));
+                String val = nodeValue;
+                try {
+                    val = URLDecoder.decode(nodeValue, "UTF-8");
+                } catch (IllegalArgumentException iea) {
+                    // keep val as the original nodeValue
+                }
+                values.add(val);
                 hash.put(nodeName, values);
             } else {
                 currentValues.add(URLDecoder.decode(nodeValue, "UTF-8"));
