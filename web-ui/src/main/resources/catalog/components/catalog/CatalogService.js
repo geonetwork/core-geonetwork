@@ -468,7 +468,8 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails'];
+        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
+        'creationDate', 'publicationDate', 'revisionDate'];
       var listOfJsonFields = ['keywordGroup', 'crsDetails'];    // See below; probably not necessary
       var record = this;
       this.linksCache = [];
