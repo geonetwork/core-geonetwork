@@ -1422,7 +1422,8 @@
         restrict: 'A',
         template: '{{value}}',
         scope: {
-          key: '@gnQmValue'
+          key: '@gnQmValue',
+          descriptiveResult: '@'
         },
         link: function linkFn(scope, element, attr) {
           var isTdp = angular.isDefined(attr['tdp']);
@@ -1445,10 +1446,14 @@
                     var v = values[i];
                     if (v.indexOf(cptId) === 0 && v.indexOf(mId) !== -1) {
                       var t = v.split('|');
-                      if (t[5] != '') { // Concat value + unit
-                        scope.value = t[5] + ' ' + t[6];
+                      if (!scope.descriptiveResult) {
+                        if (t[5] != '') { // Concat value + unit
+                          scope.value = t[5] + ' ' + t[6];
+                        } else {
+                          scope.value = '';
+                        }
                       } else {
-                        scope.value = '';
+                        scope.value = t[8];
                       }
                       return;
                     }
