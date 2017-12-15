@@ -256,6 +256,7 @@
     -->
   <xsl:template name="addLineBreaksAndHyperlinks">
     <xsl:param name="txt"/>
+
     <xsl:choose>
       <xsl:when test="true()">
         <xsl:choose>

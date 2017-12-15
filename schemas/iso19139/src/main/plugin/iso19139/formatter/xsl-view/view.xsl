@@ -770,7 +770,7 @@
      </xsl:variable>
 
      <xsl:call-template name="addLineBreaksAndHyperlinks">
-       <xsl:with-param name="txt" select="normalize-space($txt)"/>
+       <xsl:with-param name="txt" select="$txt"/>
      </xsl:call-template>
   </xsl:template>
 
