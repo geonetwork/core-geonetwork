@@ -318,6 +318,7 @@
       <name>srv:serviceTypeVersion</name>
       <name>srv:operationName</name>
       <name>srv:identifier</name>
+      <name>srv:serviceType</name>
     </exclude>
   </multilingualFields>
 

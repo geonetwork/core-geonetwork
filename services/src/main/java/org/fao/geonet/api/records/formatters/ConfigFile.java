@@ -23,11 +23,11 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import com.google.common.collect.Lists;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.utils.IO;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -35,11 +35,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class ConfigFile {
     private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
@@ -52,29 +50,42 @@ public class ConfigFile {
 
     private Properties config;
 
+    /**
+     * Create a new Config file reading the config.properties file from the specific formatter dir, general formatter
+     * dir and schema dir. Properties are override if the same property is found in more than one file. The more general
+     * property is the one in the schema folder and the most specific one is the one from the actual formatter folder.
+     *
+     * @param bundleDir       formatter folder.
+     * @param searchParentDir {@code true} if config.properties in the parent folders must be included.
+     * @param schemaDir       the schema root folder.
+     * @throws IOException thrown if there are problems reading the config files.
+     *
+     * @see ConfigFile#CONFIG_PROPERTIES_FILENAME
+     */
     public ConfigFile(Path bundleDir, boolean searchParentDir, Path schemaDir) throws IOException {
         this.config = new Properties();
-        Path[] properties;
+        List<Path> properties = new ArrayList<>();
         if (searchParentDir) {
             if (schemaDir == null) {
-                properties = new Path[]{
-                    bundleDir.getParent().resolve(CONFIG_PROPERTIES_FILENAME),
-                    bundleDir.resolve(CONFIG_PROPERTIES_FILENAME)};
+                properties.add(bundleDir.getParent().resolve(CONFIG_PROPERTIES_FILENAME));
+                properties.add(bundleDir.resolve(CONFIG_PROPERTIES_FILENAME));
 
             } else {
-                List<Path> tmp = Lists.newArrayList();
                 Path current = bundleDir;
                 while (current.getParent() != null && !schemaDir.equals(current) && Files.exists(current.getParent())) {
-                    tmp.add(current.resolve(CONFIG_PROPERTIES_FILENAME));
+                    properties.add(current.resolve(CONFIG_PROPERTIES_FILENAME));
                     current = current.getParent();
                 }
-                tmp.add(schemaDir.resolve(CONFIG_PROPERTIES_FILENAME));
-                properties = tmp.toArray(new Path[tmp.size()]);
+                properties.add(schemaDir.resolve(CONFIG_PROPERTIES_FILENAME));
             }
         } else {
-            properties = new Path[]{bundleDir.resolve(CONFIG_PROPERTIES_FILENAME)};
+            properties.add(bundleDir.resolve(CONFIG_PROPERTIES_FILENAME));
         }
 
+        // Reverse to allow override (issue #1973):
+        // more general -> file in the schema root
+        // more specific -> file in the formatter dir
+        Collections.reverse(properties);
         for (Path file : properties) {
             if (Files.exists(file)) {
                 try (Reader reader = IO.newBufferedReader(file, Constants.CHARSET)) {

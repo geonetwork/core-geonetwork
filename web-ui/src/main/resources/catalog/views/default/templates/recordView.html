@@ -435,19 +435,22 @@
           </h4>
 
           <p>
-          <dl data-ng-show="mdView.current.record.creationDate">
+          <dl data-ng-show="mdView.current.record.creationDate.length > 0">
             <dt data-translate>creationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
+            <dd data-ng-repeat="creaDate in mdView.current.record.creationDate track by $index"
+                data-gn-humanize-time="{{creaDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.publicationDate">
+          <dl data-ng-show="mdView.current.record.publicationDate.length > 0">
             <dt data-translate>publicationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
+            <dd data-ng-repeat="pubDate in mdView.current.record.publicationDate track by $index"
+                data-gn-humanize-time="{{pubDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.revisionDate">
+          <dl data-ng-show="mdView.current.record.revisionDate.length > 0">
             <dt data-translate>revisionDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
+            <dd data-ng-repeat="revDate in mdView.current.record.revisionDate track by $index"
+                data-gn-humanize-time="{{revDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
           <dl data-ng-show="mdView.current.record.tempExtentBegin ||
