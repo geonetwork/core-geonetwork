@@ -763,10 +763,15 @@
   <!-- Render values for text ... -->
    <xsl:template mode="render-value"
                 match="*[gco:CharacterString]">
+     <xsl:variable name="txt">
+       <xsl:apply-templates mode="localised" select=".">
+         <xsl:with-param name="langId" select="$langId"/>
+       </xsl:apply-templates>
+     </xsl:variable>
 
-    <xsl:apply-templates mode="localised" select=".">
-      <xsl:with-param name="langId" select="$langId"/>
-    </xsl:apply-templates>
+     <xsl:call-template name="addLineBreaksAndHyperlinks">
+       <xsl:with-param name="txt" select="normalize-space($txt)"/>
+     </xsl:call-template>
   </xsl:template>
 
   <xsl:template mode="render-value"
@@ -777,7 +782,7 @@
 
     <xsl:choose>
       <xsl:when test="contains(., 'http')">
-        <!-- Replace hyperlink in text by an hyperlink -->
+        <!-- Replace hyperlink in text by an hyperlink-->
         <xsl:variable name="textWithLinks"
                       select="replace(., '([a-z][\w-]+:/{1,3}[^\s()&gt;&lt;]+[^\s`!()\[\]{};:'&apos;&quot;.,&gt;&lt;?«»“”‘’])',
                                     '&lt;a href=''$1''&gt;$1&lt;/a&gt;')"/>

@@ -10,6 +10,8 @@
 
   <xsl:import href="common/render-html.xsl"/>
   <xsl:import href="common/functions-core.xsl"/>
+  <xsl:import href="common/utility-tpl.xsl"/>
+
   <xsl:import href="render-variables.xsl"/>
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
@@ -336,10 +338,27 @@
         </xsl:element>
       </xsl:if>
       <xsl:apply-templates mode="render-view"
-                           select="section|field"/>&#160;
+                           select="section|field|xsl"/>&#160;
     </div>
   </xsl:template>
 
+
+  <xsl:template mode="render-view"
+                match="xsl">
+    <div id="gn-section-{generate-id()}">
+      <xsl:if test="@name">
+        <xsl:variable name="title"
+                      select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
+
+        <xsl:element name="h{3 + count(ancestor-or-self::*[name(.) = 'section'])}">
+          <xsl:attribute name="class" select="'view-header'"/>
+          <xsl:value-of select="$title"/>
+        </xsl:element>
+      </xsl:if>
+      <xsl:apply-templates mode="render-view"
+                           select="@xpath"/>&#160;
+    </div>
+  </xsl:template>
 
   <!-- Render metadata elements defined by XPath -->
   <xsl:template mode="render-view"
