@@ -68,8 +68,8 @@
   "fullTextSearch": "Filtre",
   "sxtBack": "Retour",
   "mainPublicationIntroduction": "Pour toute utilisation de cette donnée dans une publication, merci de citer également les travaux suivants :",
-  "mdActions": "Visualisable/téléchargeable",
+  "mdActions": "Services associés",
   "mdActions-view": "Visualisable",
   "mdActions-download": "Téléchargeable",
-  "mdActions-process": "Traitement WPS"
+  "mdActions-process": "Traitement"
 }
