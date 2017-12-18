@@ -380,6 +380,7 @@
             ($scope.socialMediaLink.indexOf('/metadata/') != -1);
       });
       $scope.getPermalink = gnUtilityService.getPermalink;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
 
       try {
         var tokens = location.href.split('/');
