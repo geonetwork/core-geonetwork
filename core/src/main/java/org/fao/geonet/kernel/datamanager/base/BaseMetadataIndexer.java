@@ -14,15 +14,17 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
@@ -80,7 +82,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
-
 
     @Autowired
     private SearchManager searchManager;
@@ -312,20 +313,19 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders, final ISearchManager searchManager) throws Exception {
 
-        // If we have a pending indexing for this metadata, skip
-        if (waitForIndexing.contains(metadataId)) {
-            return;
-        }
+        synchronized(waitForIndexing) {
+            // If we have a pending indexing for this metadata, skip
+            if (waitForIndexing.contains(metadataId)) {
+                return;
+            }
 
-        // If we are currently indexing this metadata, wait for it to finish
-        synchronized (waitForIndexing) {
+            // If we are currently indexing this metadata, wait for it to finish
             while (indexing.contains(metadataId)) {
                 try {
                     waitForIndexing.add(metadataId);
                     Log.debug(Geonet.DATA_MANAGER, "Waiting for indexing record " + metadataId);
-                    // don't index the same metadata 2x
-                    waitForIndexing.wait(200);
-                    // Being 200ms the estimated time for an indexing to finish
+                    // don't index the same metadata twice
+                    wait(200);
                 } catch (InterruptedException e) {
                     return;
                 } finally {
@@ -334,7 +334,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
             // So, mark this metadata as being indexed
             indexing.add(metadataId);
-        }
+        } 
+        
         AbstractMetadata fullMd;
         Log.trace(Geonet.DATA_MANAGER, "Indexing record " + metadataId);
         try {
