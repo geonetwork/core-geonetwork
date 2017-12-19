@@ -337,7 +337,7 @@
             baseURL: layerUrl,
             layer: source.getLayer(),
             version: source.getVersion(),
-            requestEncoding: source.getRequestEncoding() || 'RVP',
+            requestEncoding: source.getRequestEncoding() || 'KVP',
             // Dimensions is not a mandatory parameter but it is required by Mapfish v2.1.2 if requestEncoding is REST
             dimensions: [],
             format: source.getFormat(),
