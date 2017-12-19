@@ -367,6 +367,8 @@
       // Define if search should exclude children
       searchSettings.excludeChildrenFromSearch = false;
 
+      // Define if the 'related' dropdown should show source/hassource relations
+      searchSettings.hideSourceRelations = false;
 
       // TODO: Too many changes made in sextant
       // compared to GeoNetwork facet config
@@ -424,6 +426,9 @@
           searchSettings.excludeChildrenFromSearch =
             sxtSettings.excludeChildrenFromSearch;
         }
+        if(sxtSettings.hideSourceRelations)  {
+          searchSettings.hideSourceRelations = sxtSettings.hideSourceRelations;
+        }
         if(sxtSettings.processes)  {
           viewerSettings.processes = sxtSettings.processes;
         }
@@ -474,6 +479,14 @@
       }
       if(searchSettings.excludeChildrenFromSearch) {
         searchSettings.filters.isChild = 'false';
+      }
+
+      if (searchSettings.hideSourceRelations) {
+        searchSettings.grid.related = searchSettings.grid.related.filter(
+          function(type) {
+            return type !== 'sources' && type !== 'hassources';
+          }
+        );
       }
 
       searchSettings.configWhat = searchSettings.configWhat || '';
