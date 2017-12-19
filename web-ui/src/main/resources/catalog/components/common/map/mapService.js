@@ -1602,6 +1602,9 @@
                 for (var i = 0; i < layer.ResourceURL.length; i++) {
                   urls.push(layer.ResourceURL[i].template);
                 }
+                if (layer.ResourceURL.length > 0) {
+                  url = encodeURI(layer.ResourceURL[0].template);
+                }
 
                 angular.extend(sourceConfig, {
                   urls: urls,
