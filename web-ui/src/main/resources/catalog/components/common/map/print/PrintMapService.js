@@ -294,6 +294,7 @@
           var tileGrid = source.getTileGrid();
           var matrixSet = source.getMatrixSet();
           var matrixIds = new Array(tileGrid.getResolutions().length);
+          var layerUrl = layer.get('url');
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
             var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
                 getExtent()) /tileGrid.getTileSize()) /
@@ -307,12 +308,24 @@
                 };
           }
 
+          // workaround for Mapfish v2.1.2 with REST and matrixIds
+          if (matrixIds.length > 0) {
+            if (/{style}/ig.test(decodeURI(layerUrl))) {
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{style}/ig, source.getStyle()));
+            }
+            if (/layer/ig.test(decodeURI(layerUrl))) {
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{layer}/ig, source.getLayer()));
+            }
+          }
+
           angular.extend(enc, {
             type: 'WMTS',
-            baseURL: layer.get('url'),
+            baseURL: layerUrl,
             layer: source.getLayer(),
             version: source.getVersion(),
-            requestEncoding: 'KVP',
+            requestEncoding: source.getRequestEncoding() || 'KVP',
+            // Dimensions is not a mandatory parameter but it is required by Mapfish v2.1.2 if requestEncoding is REST
+            dimensions: [],
             format: source.getFormat(),
             style: source.getStyle(),
             matrixSet: matrixSet,
