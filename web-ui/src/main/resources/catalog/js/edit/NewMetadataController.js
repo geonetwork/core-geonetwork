@@ -111,8 +111,7 @@
 
           // TODO: Better handling of lots of templates
           gnSearchManagerService.search('qi?_content_type=json&' +
-              query + '&fast=index&from=1&to=200&_isTemplate=y or n&' +
-            'sortBy=title&sortOrder=reverse').
+              query + '&fast=index&from=1&to=200&_isTemplate=y or n').
               then(function(data) {
 
                 $scope.mdList = data;
