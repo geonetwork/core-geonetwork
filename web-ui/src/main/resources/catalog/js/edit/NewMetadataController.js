@@ -180,13 +180,15 @@
       $scope.getTemplateNamesByType = function(type) {
         var tpls = [];
         for (var i = 0; i < $scope.mdList.metadata.length; i++) {
-          var mdType = $scope.mdList.metadata[i].type || unknownType;
+          var md = $scope.mdList.metadata[i];
+          md.title = md.title || md.defaultTitle;
+          var mdType = md.type || unknownType;
           if (mdType instanceof Array) {
             if (mdType.indexOf(type) >= 0) {
-              tpls.push($scope.mdList.metadata[i]);
+              tpls.push(md);
             }
           } else if (mdType == type) {
-            tpls.push($scope.mdList.metadata[i]);
+            tpls.push(md);
           }
         }
 
