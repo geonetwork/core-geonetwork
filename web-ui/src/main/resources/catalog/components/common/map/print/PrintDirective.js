@@ -180,14 +180,14 @@
               resolution >= minResolution) {
             if (src instanceof ol.source.WMTS) {
               encLayer = $scope.encoders.layers['WMTS'].call(this,
-                  layer, layerConfig);
+                  layer, layerConfig, proj);
             } else if (src instanceof ol.source.OSM) {
               encLayer = $scope.encoders.layers['OSM'].call(this,
                   layer, layerConfig);
             } else if (src instanceof ol.source.ImageWMS ||
                 src instanceof ol.source.TileWMS) {
               encLayer = $scope.encoders.layers['WMS'].call(this,
-                  layer, layerConfig);
+                  layer, layerConfig, proj);
             } else if (layer instanceof ol.layer.Vector) {
               var features = [];
               src.forEachFeatureInExtent(ext, function(feat) {

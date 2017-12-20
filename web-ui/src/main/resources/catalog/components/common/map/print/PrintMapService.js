@@ -38,7 +38,7 @@
     var DPI = 72;
     var MM_PER_INCHES = 25.4;
     var UNITS_RATIO = 39.37;
-    var METERS_PER_DEGREE = 222638.98158654716;
+    var METERS_PER_DEGREE = 111319.49079327358;
 
     /**
      * Get the map coordinates of the center of the given print rectangle.
@@ -222,7 +222,7 @@
           });
           return enc;
         },
-        'WMS': function(layer, config) {
+        'WMS': function(layer, config, proj) {
           var enc = self.encoders.
               layers['Layer'].call(this, layer);
           var params = layer.getSource().getParams();
@@ -243,7 +243,7 @@
             customParams: {
               'EXCEPTIONS': 'XML',
               'TRANSPARENT': 'true',
-              'CRS': 'EPSG:3857',
+              'CRS': proj.getCode(),
               'TIME': params.TIME
             },
             singleTile: config.singleTile || false
@@ -286,7 +286,7 @@
           });
           return enc;
         },
-        'WMTS': function(layer, config) {
+        'WMTS': function(layer, config, proj) {
           // sextant specific
           var enc = self.encoders.layers['Layer'].
               call(this, layer);
@@ -296,8 +296,8 @@
           var matrixIds = new Array(tileGrid.getResolutions().length);
           var layerUrl = layer.get('url');
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
-            var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
-                getExtent()) /tileGrid.getTileSize()) /
+            var mSize = (ol.extent.getWidth(proj.getExtent()) /
+                tileGrid.getTileSize()) /
                 tileGrid.getResolutions()[z];
                 matrixIds[z] = {
                   identifier: tileGrid.getMatrixIds()[z],
