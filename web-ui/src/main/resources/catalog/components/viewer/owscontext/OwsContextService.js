@@ -297,7 +297,8 @@
                     name: id,
                     url: '',
                     visible: false,
-                    group: layer.group
+                    group: layer.group,
+                    owc_position: layer.position
                   });
 
                   loadingLayer.displayInLayerManager = true;
@@ -503,6 +504,7 @@
             title: layer.get('title'),
             group: layer.get('group'),
             groupcombo: layer.get('groupcombo'),
+            position: layer.get('owc_position'),
             server: [{
               onlineResource: [{
                 href: url
@@ -620,6 +622,7 @@
           return promise.then(function(olL) {
             olL.set('group', layer.group);
             olL.set('groupcombo', layer.groupcombo);
+            olL.set('owc_position', layer.position);
             olL.setOpacity(layer.opacity);
             olL.setVisible(!layer.hidden);
             if (layer.title) {
@@ -650,6 +653,7 @@
                   } catch (e) {}
                   olL.set('group', layer.group);
                   olL.set('groupcombo', layer.groupcombo);
+                  olL.set('owc_position', layer.position);
                   olL.set('tree_index', index);
                   olL.setOpacity(layer.opacity);
                   olL.setVisible(!layer.hidden);

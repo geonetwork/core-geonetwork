@@ -347,6 +347,10 @@ var OWC_0_3_1_Module_Factory = function() {
         n: 'opacity',
         ti: 'Decimal',
         t: 'a'
+      }, {
+        n: 'position',
+        ti: 'Integer',
+        t: 'a'
       }]
     }, {
       ln: 'WindowType',
