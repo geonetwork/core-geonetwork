@@ -125,35 +125,19 @@
     <facet name="hasDqEmptyCptMeasures" indexKey="hasDqEmptyCptMeasures" label="hasDqEmptyCptMeasures"/>
     <facet name="hasDqCptNotCovered" indexKey="hasDqCptNotCovered" label="hasDqCptNotCovered"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
-    <facet name="p01"
-           label="p01"
-           indexKey="thesaurus-external.parameter.NVS.P01"/>
-    <facet name="p02"
-           label="p02"
-           indexKey="thesaurus-external.parameter.NVS.P02"/>
-    <facet name="p03"
-           label="p03"
-           indexKey="thesaurus-external.parameter.NVS.P03"/>
-    <facet name="p35"
-           label="p35"
-           indexKey="thesaurus-external.parameter.NVS.P35"/>
-    <facet name="A05"
-           label="A05"
-           indexKey="thesaurus-external.parameter.NVS.A05"/>
 
-    <facet name="atlantos_element"
-           label="atlantos_element"
-           indexKey="thesaurus-local.theme.atlantos_element"/>
+    <facet name="p01" label="p01" indexKey="thesaurus-external.parameter.NVS.P01"/>
+    <facet name="p02" label="p02" indexKey="thesaurus-external.parameter.NVS.P02"/>
+    <facet name="p03" label="p03" indexKey="thesaurus-external.parameter.NVS.P03"/>
+    <facet name="p35" label="p35" indexKey="thesaurus-external.parameter.NVS.P35"/>
+    <facet name="A05" label="A05" indexKey="thesaurus-external.parameter.NVS.A05"/>
+	  <facet name="C19" label="C19" indexKey="thesaurus-external.reference-geographical-area.NVS.C19"/>
 
-    <facet name="portail-donnees-facette-discipline"
-           label="portail-donnees-facette-discipline"
-           indexKey="thesaurus-local.discipline.portail-donnees-facette-discipline"/>
-    <facet name="portail-donnees-facette-type"
-           label="portail-donnees-facette-type"
-           indexKey="thesaurus-local.theme.portail-donnees-facette-type"/>
-    <facet name="portail-donnees-facette-comment"
-           label="portail-donnees-facette-comment"
-           indexKey="thesaurus-local.theme.portail-donnees-facette-comment"/>
+    <facet name="atlantos_element" label="atlantos_element" indexKey="thesaurus-local.theme.atlantos_element"/>
+
+    <facet name="portail-donnees-facette-discipline" label="portail-donnees-facette-discipline" indexKey="thesaurus-local.discipline.portail-donnees-facette-discipline"/>
+    <facet name="portail-donnees-facette-type" label="portail-donnees-facette-type" indexKey="thesaurus-local.theme.portail-donnees-facette-type"/>
+    <facet name="portail-donnees-facette-comment" label="portail-donnees-facette-comment" indexKey="thesaurus-local.theme.portail-donnees-facette-comment"/>
 
     <facet name="SIH_Especes_commerciales" indexKey="thesaurus-external.theme.SIH_Especes_commerciales" label="SIH_Especes_commerciales"/>
     <facet name="SIH_Groupes_Especes" indexKey="thesaurus-external.theme.SIH_Groupes_Especes" label="SIH_Groupes_Especes"/>
@@ -284,6 +268,7 @@
       <item facet="p03" max="300"/>
       <item facet="p35" max="300"/>
       <item facet="A05" max="300"/>
+      <item facet="C19" max="300"/>
 	    <item facet="atlantos_element" max="300"/>
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
