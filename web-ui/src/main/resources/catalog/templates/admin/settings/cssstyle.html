@@ -17,44 +17,135 @@
 				<form id="gn-settings" name="gnSettings" class="form-horizontal">
 					<fieldset>
 						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
-							<span data-translate="">basicCssProps</span>
+							<span data-translate="">gnBackgroundCss</span>
 						</legend>
-						<label for="gnCssStyle.backgroudColor">Background</label>
-						<color-picker ng-model="gnCssStyle.backgroudColor"
-							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
-						<label for="gnCssStyle.fontColor">Font Color</label>
-						<color-picker ng-model="gnCssStyle.fontColor"
+
+						<label for="gnCssStyle.gnBackgroundImage" data-translate="">gnBackgroundImage</label>
+						<input class="form-control" type="text"
+							data-ng-model="gnCssStyle.gnBackgroundImage" /> <br /> <label
+							for="gnCssStyle.gnBackgroundColor" data-translate="">gnBackgroundColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnBackgroundColor"
 							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
 						<br />
+
 					</fieldset>
-					<br /> <label for="gnCssStyle.colorScheme">Load a color
-						scheme</label> <select class="form-control"
-						data-ng-model="gnCssStyle.colorScheme">
-						<option>Default</option>
-						<option>Light Style</option>
-						<option>Dark Style</option>
-					</select> <label for="gnCssStyle.fontCombo">Select a font style</label> <select
-						class="form-control" data-ng-model="gnCssStyle.fontCombo">
-						<option>Classic</option>
-						<option>Modern</option>
-						<option>Experimental</option>
-					</select> <br />
-					</fieldset>
-					<br />
 					<fieldset>
 						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
-							<span data-translate="">advancedCssProps</span>
+							<span data-translate="">gnMenubarCss</span>
 						</legend>
-						<label for="gnCssStyle.customCss">Custom Css</label>
-						<textarea rows="8"
-							class="form-control ng-pristine ng-valid ng-empty ng-touched"
-							data-ng-model="gnCssStyle.customCss">
 
-					</textarea>
+						<label for="gnCssStyle.gnMenubarBackground" data-translate="">gnMenubarBackground</label>
+						<color-picker data-ng-model="gnCssStyle.gnMenubarBackground"
+							color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
+						<br /> <label for="gnCssStyle.gn-menubarBackgroundActive"
+							data-translate="">gnMenubarBackgroundActive</label>
+						<color-picker data-ng-model="gnCssStyle.gnMenubarBackgroundActive"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br /> <label for="gnCssStyle.gnMenubarColor" data-translate="">gnMenubarColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnMenubarColor"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br /> <label for="gnCssStyle.gn-menubarColorHover"
+							data-translate="">gnMenubarColorHover</label>
+						<color-picker data-ng-model="gnCssStyle.gnMenubarColorHover"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br /> <label for="gnCssStyle.gnMenubarBorderColor"
+							data-translate="">gnMenubarBorderColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnMenubarBorderColor"
+							color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
 						<br />
+
+					</fieldset>
+
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">gnBottombarCss</span>
+						</legend>
+
+						<label for="gnCssStyle.gnBottombarBackground" data-translate="">gnBottombarBackground</label>
+						<color-picker data-ng-model="gnCssStyle.gnBottombarBackground"
+							color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
+						<br /> <label for="gnCssStyle.gnBottombarColor" data-translate="">gnBottombarColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnBottombarColor"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br /> <label for="gnCssStyle.gnBottombarColorHover"
+							data-translate="">gnBottombarColorHover</label>
+						<color-picker data-ng-model="gnCssStyle.gnBottombarColorHover"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br /> <label for="gnCssStyle.gnBottombarBorderColor"
+							data-translate="">gnBottombarBorderColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnBottombarBorderColor"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br />
+
+					</fieldset>
+
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">gnTopicsCss</span>
+						</legend>
+
+						<label for="gnCssStyle.gnTopicsBackgroundColor" data-translate="">gnTopicsBackgroundColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnTopicsBackgroundColor"
+							color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
+						<br />
+
+					</fieldset>
+
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">gnInfoCss</span>
+						</legend>
+
+						<label for="gnCssStyle.gnInfoBackgroundColor" data-translate="">gnInfoBackgroundColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnInfoBackgroundColor"
+							color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
+						<br />
+
+					</fieldset>
+
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">gnResultcardsCss</span>
+						</legend>
+
+						<label for="gnCssStyle.gnResultcardBackgroundColor"
+							data-translate="">gnResultcardBackgroundColor</label>
+						<color-picker
+							data-ng-model="gnCssStyle.gnResultcardBackgroundColor"
+							color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
+						<br /> <label for="gnCssStyle.gnResultcardTitleBackgroundColor"
+							data-translate="">gnResultcardTitleBackgroundColor</label>
+						<color-picker
+							data-ng-model="gnCssStyle.gnResultcardTitleBackgroundColor"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br />
+
+					</fieldset>
+
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">gnResultsCss</span>
+						</legend>
+
+						<label for="gnCssStyle.gnResultsBackgroundColor" data-translate="">gnResultsBackgroundColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnResultsBackgroundColor"
+							color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
+						<br />
+
+					</fieldset>
+
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">gnMdViewCss</span>
+						</legend>
+
+						<label for="gnCssStyle.gnMdViewBackgroundColor" data-translate="">gnMdViewBackgroundColor</label>
+						<color-picker data-ng-model="gnCssStyle.gnMdViewBackgroundColor"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br />
+
 					</fieldset>
 				</form>
-
 				<div
 					data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
 					class="pull-right"></div>

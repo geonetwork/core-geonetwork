@@ -23,9 +23,9 @@
 
 (function() {
   goog.provide('gn_cssstyle_settings_controller');
-  
+
   var module = angular.module('gn_cssstyle_settings_controller',
-		  ['color.picker']);
+      ['color.picker']);
 
 
   /**
@@ -34,37 +34,44 @@
    *
    */
   module.controller('GnCssStyleSettingsController', [
-    '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService',
-    function($scope, $http, $rootScope, $translate, gnUtilityService) {
-    	
-    	
-    	$http.get('../api/cssstyle').then(function mySuccess(response) {
-    		$scope.gnCssStyle = response.data;
-    	});
-    	
-    	
-        $scope.saveCssStyleSettings = function(formId) {
-        	
-            $http.post('../api/cssstyle',
-            		formId)
-                .success(function(data) {
-//                  $rootScope.$broadcast('StatusUpdated', {
-//                    msg: $translate.instant('settingsUpdated'),
-//                    timeout: 2,
-//                    type: 'success'});
-//
-//                  $scope.loadCatalogInfo();
-                  $http.get('../../static/wroAPI/reloadModel');
-                })
-                .error(function(data) {
-                      $rootScope.$broadcast('StatusUpdated', {
-                        title: $translate.instant('settingsUpdateError'),
-                        error: data,
-                        timeout: 0,
-                        type: 'danger'});
-                    });
-          };
-     
+    '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService', '$window',
+    function($scope, $http, $rootScope, $translate, gnUtilityService, $window) {
+
+      $http({
+        method: 'GET',
+        url: '../api/customstyle',
+        headers: {'Content-Type': 'text/plain'}
+      }).then(function success(response) {
+        $scope.gnCssStyle = response.data;
+      },
+      function error(response) {});
+
+      $scope.saveCssStyleSettings = function(formId) {
+
+        $http.post('../api/customstyle',
+            formId)
+            .success(function(data) {
+              $http({
+                method: 'GET',
+                url: '../../static/wroAPI/reloadModel',
+                headers: {'Content-Type': 'text/plain'}
+              });
+              $http({
+                method: 'GET',
+                url: '../../static/wroAPI/reloadCache',
+                headers: {'Content-Type': 'text/plain'}
+              });
+              $window.location.reload();
+            })
+            .error(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate.instant('settingsUpdateError'),
+                error: data,
+                timeout: 0,
+                type: 'danger'});
+            });
+      };
+
     }]);
 
 })();

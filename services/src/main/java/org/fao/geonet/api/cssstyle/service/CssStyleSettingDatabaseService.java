@@ -1,44 +1,57 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 package org.fao.geonet.api.cssstyle.service;
 
+import java.util.List;
+
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.CssStyleSettings;
+import org.fao.geonet.domain.CssStyleSetting;
 import org.fao.geonet.repository.CssStyleSettingsRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CssStyleSettingDatabaseService implements ICssStyleSettingService {
 
-	@Override
-	public void saveSettings(CssStyleSettings cssStyleSettings) {
-		final CssStyleSettingsRepository cssStyleSettingRepository = ApplicationContextHolder.get()
-				.getBean(CssStyleSettingsRepository.class);
-		
-		CssStyleSettings published = cssStyleSettingRepository.findOne(CssStyleSettings.Status.PUBLISHED);
-		if(published!=null) {
-			cssStyleSettingRepository.delete(CssStyleSettings.Status.PUBLISHED);
-		}
-		cssStyleSettingRepository.save(cssStyleSettings);
-	}
+    @Override
+    public void saveSettings(List<CssStyleSetting> cssStyleSettings) {
+        final CssStyleSettingsRepository cssStyleSettingRepository = ApplicationContextHolder.get()
+                .getBean(CssStyleSettingsRepository.class);
 
-	@Override
-	public String getCustomCssSetting() {
-		final CssStyleSettingsRepository cssStyleSettingRepository = ApplicationContextHolder.get()
-				.getBean(CssStyleSettingsRepository.class);
-		CssStyleSettings published = cssStyleSettingRepository.findOne(CssStyleSettings.Status.PUBLISHED);
-		
-		if(published==null || published.getCustomCss()==null) return "";
-		
-		return published.getCustomCss();
-		
-	}
-	
-	@Override
-	public CssStyleSettings getCssStyleSettings() {
-		final CssStyleSettingsRepository cssStyleSettingRepository = ApplicationContextHolder.get()
-				.getBean(CssStyleSettingsRepository.class);
-		CssStyleSettings published = cssStyleSettingRepository.findOne(CssStyleSettings.Status.PUBLISHED);
-		
-		return published;
-		
-	}
+        cssStyleSettingRepository.deleteAll();
+
+        for (final CssStyleSetting cssStyleSetting : cssStyleSettings) {
+            cssStyleSettingRepository.save(cssStyleSetting);
+        }
+    }
+
+    @Override
+    public List<CssStyleSetting> getCustomCssSettings() {
+        final CssStyleSettingsRepository cssStyleSettingRepository = ApplicationContextHolder.get()
+                .getBean(CssStyleSettingsRepository.class);
+        final List<CssStyleSetting> values = cssStyleSettingRepository.findAll();
+
+        return values;
+
+    }
+
 }

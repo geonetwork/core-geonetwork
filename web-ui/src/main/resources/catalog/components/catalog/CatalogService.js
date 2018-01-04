@@ -204,15 +204,15 @@
 
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild, metadataUuid, hasCategoryOfSource)
-            .success(function(id) {
-            var path = '/metadata/' + id;
-            if (tab) {
-              path += '/tab/' + tab;
-            }
-            $location.path(path)
+              .success(function(id) {
+                var path = '/metadata/' + id;
+                if (tab) {
+                  path += '/tab/' + tab;
+                }
+                $location.path(path)
                 .search('justcreated')
                 .search('redirectUrl', 'catalog.edit');
-          });
+              });
         },
 
         /**
