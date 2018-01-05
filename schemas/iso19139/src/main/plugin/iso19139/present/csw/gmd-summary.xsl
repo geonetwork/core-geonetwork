@@ -46,6 +46,8 @@
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:element name="{if (@gco:isoType) then @gco:isoType else name()}">
+      <xsl:apply-templates select="@*"/>
+
       <xsl:apply-templates select="gmd:fileIdentifier"/>
       <xsl:apply-templates select="gmd:language"/>
       <xsl:apply-templates select="gmd:characterSet"/>
