@@ -1430,11 +1430,11 @@
             scope.value = scope.text.split('|')[2];
 
             element.replaceWith($compile('<a data-ng-href="{{link}}" ' +
-                'data-ng-bind-html="value"></a>')(scope));
+                'data-ng-bind-html="value | newlines"></a>')(scope));
           } else {
 
             element.replaceWith($compile('<span ' +
-                'data-ng-bind-html="text"></span>')(scope));
+                'data-ng-bind-html="text | linky | newlines"></span>')(scope));
           }
         }
 
