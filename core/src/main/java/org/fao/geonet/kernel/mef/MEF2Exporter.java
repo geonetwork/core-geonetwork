@@ -43,6 +43,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -54,6 +55,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.nio.file.FileSystem;
@@ -79,7 +81,8 @@ class MEF2Exporter {
      * @return MEF2 File
      */
     public static Path doExport(ServiceContext context, Set<String> uuids,
-                                Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+                                Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
 
         Path file = Files.createTempFile("mef-", ".mef");
         SearchManager searchManager = context.getBean(SearchManager.class);
@@ -182,7 +185,7 @@ class MEF2Exporter {
                     ))
                 )));
                 createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
-                    format, resolveXlink, removeXlinkAttribute);
+                    format, resolveXlink, removeXlinkAttribute, addSchemaLocation);
             }
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
@@ -214,13 +217,15 @@ class MEF2Exporter {
      */
     private static void createMetadataFolder(ServiceContext context,
                                              String uuid, FileSystem zipFs, boolean skipUUID,
-                                             Path stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+                                             Path stylePath, Format format, boolean resolveXlink,
+                                             boolean removeXlinkAttribute,
+                                             boolean addSchemaLocation) throws Exception {
 
         final Path metadataRootDir = zipFs.getPath(uuid);
         Files.createDirectories(metadataRootDir);
 
         Pair<Metadata, String> recordAndMetadataForExport =
-            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute, addSchemaLocation);
         Metadata record = recordAndMetadataForExport.one();
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
@@ -247,7 +252,7 @@ class MEF2Exporter {
         // --- save Feature Catalog
         String ftUUID = getFeatureCatalogID(context, record.getId());
         if (!ftUUID.equals("")) {
-            Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
+            Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
