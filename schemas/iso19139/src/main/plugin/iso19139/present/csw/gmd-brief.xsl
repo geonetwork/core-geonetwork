@@ -36,6 +36,8 @@
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+
       <xsl:apply-templates select="gmd:fileIdentifier"/>
       <xsl:apply-templates select="gmd:hierarchyLevel"/>
       <xsl:apply-templates select="gmd:identificationInfo"/>
