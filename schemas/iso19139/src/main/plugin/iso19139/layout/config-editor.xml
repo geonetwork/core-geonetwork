@@ -1247,16 +1247,16 @@
                     <gmd:geographicElement>
                       <gmd:EX_GeographicBoundingBox>
                         <gmd:westBoundLongitude>
-                          <gco:Decimal>8.00</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:westBoundLongitude>
                         <gmd:eastBoundLongitude>
-                          <gco:Decimal>15.50</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:eastBoundLongitude>
                         <gmd:southBoundLatitude>
-                          <gco:Decimal>54.50</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:southBoundLatitude>
                         <gmd:northBoundLatitude>
-                          <gco:Decimal>58.00</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:northBoundLatitude>
                       </gmd:EX_GeographicBoundingBox>
                     </gmd:geographicElement>
@@ -1275,16 +1275,16 @@
                     <gmd:geographicElement>
                       <gmd:EX_GeographicBoundingBox>
                         <gmd:westBoundLongitude>
-                          <gco:Decimal>8.00</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:westBoundLongitude>
                         <gmd:eastBoundLongitude>
-                          <gco:Decimal>15.50</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:eastBoundLongitude>
                         <gmd:southBoundLatitude>
-                          <gco:Decimal>54.50</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:southBoundLatitude>
                         <gmd:northBoundLatitude>
-                          <gco:Decimal>58.00</gco:Decimal>
+                          <gco:Decimal/>
                         </gmd:northBoundLatitude>
                       </gmd:EX_GeographicBoundingBox>
                     </gmd:geographicElement>
