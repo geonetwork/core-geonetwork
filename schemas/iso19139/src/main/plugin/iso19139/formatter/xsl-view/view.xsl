@@ -93,8 +93,14 @@
 
   <xsl:template mode="getMetadataAbstract" match="gmd:MD_Metadata">
     <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
-      <xsl:call-template name="localised">
-        <xsl:with-param name="langId" select="$langId"/>
+
+      <xsl:variable name="txt">
+        <xsl:call-template name="localised">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:call-template name="addLineBreaksAndHyperlinks">
+        <xsl:with-param name="txt" select="$txt"/>
       </xsl:call-template>
     </xsl:for-each>
   </xsl:template>
@@ -131,8 +137,13 @@
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
     <div class="alert alert-info">
       <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
-        <xsl:call-template name="localised">
-          <xsl:with-param name="langId" select="$langId"/>
+        <xsl:variable name="txt">
+          <xsl:call-template name="localised">
+            <xsl:with-param name="langId" select="$langId"/>
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:call-template name="addLineBreaksAndHyperlinks">
+          <xsl:with-param name="txt" select="$txt"/>
         </xsl:call-template>
       </xsl:for-each>
     </div>
@@ -739,9 +750,15 @@
    <xsl:template mode="render-value"
                 match="*[gco:CharacterString]">
 
-    <xsl:apply-templates mode="localised" select=".">
-      <xsl:with-param name="langId" select="$langId"/>
-    </xsl:apply-templates>
+     <xsl:variable name="txt">
+       <xsl:apply-templates mode="localised" select=".">
+         <xsl:with-param name="langId" select="$langId"/>
+       </xsl:apply-templates>
+     </xsl:variable>
+
+     <xsl:call-template name="addLineBreaksAndHyperlinks">
+       <xsl:with-param name="txt" select="$txt"/>
+     </xsl:call-template>
   </xsl:template>
 
   <xsl:template mode="render-value"

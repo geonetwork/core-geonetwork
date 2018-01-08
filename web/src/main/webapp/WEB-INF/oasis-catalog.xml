@@ -57,6 +57,9 @@
   <uri name="../../../xsl/utils-fn.xsl"
        uri="../xsl/utils-fn.xsl"/>
 
+  <uri name="common/utility-tpl.xsl"
+       uri="../xslt/common/utility-tpl.xsl"/>
+
   <uri name="common/render-html.xsl"
        uri="../xslt/common/render-html.xsl"/>
 
