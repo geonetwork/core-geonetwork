@@ -154,13 +154,18 @@
           };
           function resetPopup() {
             // Hack to remove popup on layer remove eg.
-            $('[gn-popover-dropdown] .btn').each(function(i, button) {
-              $(button).popover('hide');
+            $('div.popover').each(function(i, mnu) {
+              $(mnu).remove();
             });
           };
           scope.removeLayer = function(layer, map) {
             resetPopup();
             map.removeLayer(layer);
+          };
+          scope.setLayerStyle = function(layer, style) {
+            layer.getSource().updateParams({'STYLES': style.Name});
+            layer.set('legend', style.LegendURL[0].OnlineResource);
+            layer.set('currentStyle', style);
           };
           scope.zoomToExtent = function(layer, map) {
             if (layer.get('cextent')) {

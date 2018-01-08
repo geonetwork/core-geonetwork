@@ -248,6 +248,9 @@ public class HarvesterSettingsManager {
         HarvesterSetting s = settingsRepo.findOneByPath(path);
         if (s == null)
             return false;
+        
+        //First we have to remove all children
+        removeChildren(s.getId());
 
         settingsRepo.delete(s);
         return true;
@@ -266,8 +269,22 @@ public class HarvesterSettingsManager {
         if (parent == null)
             return false;
 
-        List<HarvesterSetting> children = settingsRepo.findAllChildren(parent.getId());
+        return removeChildren(parent.getId());
+    }
+
+    /**
+     * Remove  all children recursively with parent id as parent. Useful because no cascading is applied.
+        * @param parent
+        * @return
+     */
+    private boolean removeChildren(Integer parent) {
+        HarvesterSettingRepository settingsRepo = ApplicationContextHolder.get().getBean(HarvesterSettingRepository.class);
+
+        List<HarvesterSetting> children = settingsRepo.findAllChildren(parent);
         for (HarvesterSetting child : children) {
+            //This should be recursive
+            removeChildren(child.getId());
+
             remove(child);
         }
 

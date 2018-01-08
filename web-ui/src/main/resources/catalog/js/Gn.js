@@ -42,7 +42,7 @@ var geonetwork = {};
    * @type {module|*}
    */
   var module = angular.module('gn', [
-    'gn_locale', 'cfp.hotkeys'
+    'gn_locale', 'gn_config', 'cfp.hotkeys'
   ]);
 
 })();

@@ -6,7 +6,8 @@
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false">
-      <i class="fa fa-cog"/>&nbsp;
+      <i class="fa fa-cog"/>
+      <span data-translate="" class="hidden-xs">manageRecord</span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
@@ -87,7 +88,8 @@
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false">
-      <i class="fa fa-download"/>&nbsp;
+      <i class="fa fa-download"/>
+      <span data-translate="" class="hidden-xs">download</span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
@@ -106,8 +108,7 @@
         <i class="fa fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">exportPDF</span>
       </a></li>
-      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
-             target="_blank">
+      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true">
         <i class="fa fa-file-code-o"></i>&nbsp;
         <span data-translate="">exportXML</span>
       </a></li>

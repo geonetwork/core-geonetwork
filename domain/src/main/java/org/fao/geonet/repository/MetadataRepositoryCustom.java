@@ -34,6 +34,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
+import org.jdom.Element;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -109,4 +110,22 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      */
     List<SimpleMetadata> findAllSimple(String harvestUuid);
 
+    /**
+     * Find all metadata on specified page. Returns the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable);
+
+    /**
+     * Find all metadata. Returns the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids);
+    
 }

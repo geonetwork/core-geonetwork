@@ -47,6 +47,7 @@
               .success(function(data) {
                 scope.stylesheets = data;
                 scope.stylesheets.unshift('');
+                scope.element = scope.stylesheets[0];
               });
         }
       };

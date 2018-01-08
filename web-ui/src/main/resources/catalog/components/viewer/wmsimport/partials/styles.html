@@ -1,0 +1,39 @@
+<div data-ng-show="styles.length > 1">
+  <div data-ng-hide="layout === 'select'">
+    <h5>{{styles.length + '&nbsp;' + ('layerStylesAvailable' | translate)}}</h5>
+    <ul>
+      <li data-ng-repeat="s in styles track by $index"
+          class="flex-row width-100">
+        <div class="btn-group" role="group">
+          <div class="flex-row">
+            <div class="flex-col">
+              <a class="btn btn-xs btn-link"
+                 data-gn-img-modal="{url: s.LegendURL[0].OnlineResource, title: (s.Title || s.Name), id: s.Name}"
+                 title="{{'previewLegend' | translate}}">
+                <i class="fa fa-image"/>
+              </a>
+            </div>
+            <div class="flex-col">
+              <a data-ng-click="clickFn(s)"
+                 data-ng-disabled="current.Name === s.Name"
+                 title="{{::s.Abstract}}">
+                {{::s.Title || s.Name}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+
+  <select class="form-control"
+          data-ng-show="layout === 'select'"
+          data-ng-model="data.currentStyle"
+          data-ng-options="(s.Title || s.Name) for s in styles track by s.Name"
+          title="{{styles.length + ('layerStylesAvailable' | translate)}}">
+    <option value="" disabled="disabled">
+      {{styles.length + ('layerStylesAvailable' | translate)}}
+    </option>
+  </select>
+</div>

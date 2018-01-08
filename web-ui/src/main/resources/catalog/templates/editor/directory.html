@@ -100,15 +100,15 @@
 
             <div class="pos-relative">
               <input class="form-control filter-text" type="search"
-                ng-change="triggerSearch()"
-                ng-model="searchObj.params.any"
+                ng-change="updateParams(); triggerSearch()"
+                ng-model="searchObj.any"
                 ng-model-options="modelOptions"
                 placeholder="{{'filter' | translate}}" autofocus=""/>
             </div>
             &nbsp;
 
             <button type="button"
-                    data-ng-click="resetSearch(defaultSearchObj.params);"
+                    data-ng-click="resetSearch(defaultSearchObj.params); searchObj.any = ''"
                     title="{{'ClearTitle' | translate}}"
                     class="btn btn-link">
               <i class="fa fa-times"></i>
@@ -173,28 +173,36 @@
 
             <div class="directory-entries-list col-xs-12"
               ng-show="!searching">
+
+              <!-- result item -->
               <li class="list-group-item clearfix"
                   data-ng-repeat="md in searchResults.records">
 
-                <div class="entry-title" ng-if="!templatesShown()">
-
-                  <input data-gn-selection-md type="checkbox"
+                <div class="flex-row" ng-if="!templatesShown()">
+                  <input class="flex-no-shrink" type="checkbox"
+                         data-gn-selection-md
                          data-ng-model="md['geonet:info'].selected"
                          data-ng-change="change()"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
-                  <a href
+
+                  <a href class="text-ellipsis"
                      data-ng-if="user.canEditRecord(md)"
                      ng-click="startEditing(md)" title="{{md.title || md.defaultTitle}}">
                     {{md.title || md.defaultTitle}}</a>
                   <span data-ng-if="!user.canEditRecord(md)">{{md.title || md.defaultTitle}}</span>
                 </div>
 
-                <div class="entry-info" ng-if="!templatesShown()">
-                  <small class="text-muted" translate
-                    translate-values="{ownerName: getOwnerName(md), updateDate: getChangeDate(md)}">
-                    directoryEntryInfo
-                  </small>
+                <div class="entry-info flex-row flex-align-center" ng-if="!templatesShown()">
+                  <div class="text-muted">
+                    <small><span data-translate="">owner</span>:</small>
+                    <small>{{::md.getOwnername()}}</small>
+                    &nbsp;
+                    <small data-translate="">updatedOn</small>
+                    <small class="text-muted"
+                           data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+                           data-from-now=""></small>
+                  </div>
 
                   <div class="flex-spacer flex-grow"></div>
 
@@ -305,6 +313,7 @@
                   </button>
                 </div>
               </li>
+              <!-- end result item -->
             </div>
 
             <div class="search-options-header"
@@ -334,7 +343,10 @@
         <gn-md-type-widget metadata="activeEntry"></gn-md-type-widget>
         {{activeEntry.title || activeEntry.defaultTitle}}
         &nbsp;
-        <a href ng-click="closeEditor()">({{'close' | translate}})</a>
+        <a href class="btn btn-default" ng-click="closeEditor()">
+          <i class="fa fa-close"/>&nbsp;
+          <span data=translate="">cancel</span>
+        </a>
       </p>
 
       <p ng-show="!activeEntry" class="text-muted" translate>
@@ -345,7 +357,7 @@
 
   <!-- simple editor, used for importing XML-->
   <div class="row" ng-show="currentEditorAction != '' && !activeEntry">
-    <div class="col-md-12 col-lg-8">
+    <div class="col-md-12">
       <div class="panel-default panel entry-editor">
         <div class="panel-heading">
           <span translate class="entry-editor-title">
@@ -398,7 +410,7 @@
 
   <!-- full editor is only used for edition -->
   <div class="row" ng-show="currentEditorAction != '' && activeEntry">
-    <div class="col-sm-12 col-lg-8">
+    <div class="col-sm-12">
       <div class="panel-default panel entry-editor">
         <div class="panel-heading">
 
@@ -413,7 +425,7 @@
             </div>
 
             <button type="button" class="btn btn-default"
-                ng-click="startPermissionsEdit()"
+                ng-click="startPermissionsEdit(activeEntry)"
                 ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
                 title="{{'directoryEntryPermissions' | translate}}">
               <i class="fa fa-key"/>&nbsp;
@@ -481,17 +493,16 @@
           </div>
         </div>
         <div class="panel-body">
-          <fieldset data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-            <div data-ng-include="editorFormUrl"
-                 data-onload="onFormLoad()"></div>
+          <fieldset ng-if="activeEntry"
+                    ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+            <div id="gn-editor-container-{{activeEntry['geonet:info'].id}}"></div>
           </fieldset>
         </div>
       </div>
     </div>
 
     <div class="col-sm-12 col-lg-4"
-      ng-if="::gnConfig[gnConfig.key.isXLinkEnabled]"
-      ng-show="currentEditorAction === 'editEntry'">
+      ng-if="gnConfig[gnConfig.key.isXLinkEnabled] && activeEntry && currentEditorAction === 'editEntry'">
       <div class="panel-default panel">
         <div class="panel-heading">
           <span translate>directoryEntryAssociatedMetadata</span>
@@ -503,10 +514,10 @@
     </div>
   </div>
 
-  <div gn-modal class="gn-share"
-       gn-popup-options="{title:'sharingSettings'}"
+  <div gn-modal class="gn-share gn-privileges-popup"
+       gn-popup-options="{title:'sharingSettings', closeCallback: closePermissionsEdit}"
        id="gn-share">
-    <div gn-share="activeEntry['geonet:info'].id"></div>
+    <div ng-if="activeEntry" gn-share="activeEntry['geonet:info'].id"></div>
   </div>
 
   <div gn-modal class="gn-confirm-delete"
@@ -514,7 +525,6 @@
        id="gn-confirm-delete">
     <p translate>confirmDeleteEntry</p>
   </div>
-
 </div>
 
 <div data-ng-include="'../../catalog/templates/info.html'">

@@ -39,7 +39,8 @@
         </a>
       </li>
       <li class="dropdown dropdown-hover open" data-ng-if="gnCfg.mods.editor.enabled"
-          data-ng-show="authenticated && user.isEditorOrMore()">
+          data-ng-show="authenticated && user.isEditorOrMore()"
+          id="gn-login-dropdown">
         <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}"
            title="{{'editorBoard' | translate}}"
            class="dropdown-toggle"
@@ -59,14 +60,12 @@
             </a>
           </li>
           <li>
-            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory"
-               data-ng-if="user.isReviewerOrMore()">
+            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory">
               <i class="fa fa-fw fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
             </a>
           </li>
           <li>
-            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/batchedit"
-               data-ng-if="user.isReviewerOrMore()">
+            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/batchedit">
               <i class="fa fa-fw fa-pencil"/>&nbsp;<span data-translate="">batchEditing</span>
             </a>
           </li>
@@ -141,7 +140,8 @@
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle"
-           data-ng-keypress="$event">
+           data-ng-keypress="$event"
+           data-ng-mouseover="focusLoginPopup()">
           <i class="fa fa-sign-in"/>&nbsp;
           {{'signIn' | translate}}
         </a>
@@ -152,17 +152,27 @@
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
               <div class="form-group form-group-sm">
                 <label class="sr-only" for="inputUsername" data-translate="">username</label>
-                <input type="text" class="form-control" id="inputUsername" name="username" autofocus=""
-                  placeholder="{{'username' | translate}}" data-ng-model="signinUsername"
-                  required=""/>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="fa fa-user"></i>
+                  </span>
+                  <input type="text" class="form-control" id="inputUsername" name="username" autofocus=""
+                         placeholder="{{'username' | translate}}" data-ng-model="signinUsername"
+                         required=""/>
+                </div>
               </div>
               <div class="flex-spacer"></div>
               <div class="form-group form-group-sm">
-                <label class="sr-only"for="inputPassword" data-translate="">password</label>
+                <label class="sr-only" for="inputPassword" data-translate="">password</label>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="fa fa-lock"></i>
+                  </span>
                   <input type="password" class="form-control" id="inputPassword" name="password"
                     autocomplete="off"
                     data-ng-model="signinPassword" placeholder="{{'password' | translate}}"
                     required=""/>
+                </div>
               </div>
               <div class="flex-spacer"></div>
               <button type="submit" class="btn btn-primary btn-sm pull-right"

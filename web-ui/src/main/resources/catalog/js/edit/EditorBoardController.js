@@ -45,7 +45,11 @@
     'gnGlobalSettings',
     function($scope, $location, $rootScope, $translate, $q,
         gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
-      $scope.onlyMyRecord = false;
+      $scope.onlyMyRecord = {
+        is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
+      };
+      $scope.isFilterTagsDisplayed =
+          gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.defaultSearchObj = {
         permalink: false,
@@ -62,21 +66,24 @@
       };
       angular.extend($scope.searchObj, $scope.defaultSearchObj);
 
-      $scope.toggleOnlyMyRecord = function() {
-        $scope.onlyMyRecord = !$scope.onlyMyRecord;
+
+      $scope.toggleOnlyMyRecord = function(callback) {
+        $scope.onlyMyRecord.is ? setOwner() : unsetOwner();
+        callback();
       };
+
       var setOwner = function() {
         $scope.searchObj.params['_owner'] = $scope.user.id;
       };
+
       var unsetOwner = function() {
         delete $scope.searchObj.params['_owner'];
       };
-      $scope.$watch('onlyMyRecord', function(value) {
-        if (!$scope.searchObj) {
-          return;
-        }
 
-        value ? setOwner() : unsetOwner();
+      $scope.$watch('user.id', function(newId) {
+        if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+          setOwner();
+        }
       });
 
       $scope.deleteRecord = function(md) {

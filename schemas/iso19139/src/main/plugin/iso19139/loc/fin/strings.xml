@@ -41,6 +41,11 @@
   <simple>Yksinkertainen</simple>
   <inspire>INSPIRE</inspire>
   <inspire_sds>INSPIRE-SDS</inspire_sds>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
 
   <resource>Resurssi</resource>
   <xml>XML</xml>
@@ -101,6 +106,7 @@
   <inspireThemeURI>INSPIRE-teemat</inspireThemeURI>
   <format>Formaatti</format>
   <format_version>Versio</format_version>
+  <format_specification>Specification</format_specification>
   <lineage>Historiatiedot</lineage>
   <spatialResolution>Sijaintitiedon erotuskyky (mittakaava)</spatialResolution>
   <spatialDistance>Sijaintitiedon erotuskyky (näytetiheys)</spatialDistance>

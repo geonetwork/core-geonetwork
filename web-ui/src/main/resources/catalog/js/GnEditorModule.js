@@ -52,7 +52,6 @@
     'ui.ace'
   ]);
 
-  module.constant('gnViewerSettings', {});
 
   module.config(['$LOCALES',
     function($LOCALES) {

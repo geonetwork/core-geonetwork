@@ -47,13 +47,14 @@
         'gnMap',
         'gnOwsCapabilities',
         'gnSearchSettings',
+        'gnViewerSettings',
         'ngeoDecorateLayer',
         'gnSearchLocation',
         'gnOwsContextService',
         'gnWfsService',
         'gnAlertService',
         '$filter',
-        function(gnMap, gnOwsCapabilities, gnSearchSettings,
+        function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
             ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
             gnWfsService, gnAlertService, $filter) {
 
@@ -61,33 +62,23 @@
             angular.extend(this.map, options);
           };
 
-
-          var addWMSToMap = function(link, md) {
-            // Link is localized when using associated resource service
-            // and is not when using search
-            var url = $filter('gnLocalized')(link.url) || link.url;
-
-            var isServiceLink =
-               gnSearchSettings.mapProtocols.services.
+          /**
+           * Check if the link contains a valid layer protocol
+           * as configured in gnSearchSettings and check if it
+           * has a layer name.
+           *
+           * If not, then only service information is displayed.
+           *
+           * @param {object} link
+           * @return {boolean}
+           */
+          this.isLayerProtocol = function(link) {
+            return Object.keys(link.title).length > 0 &&
+               gnSearchSettings.mapProtocols.layers.
                indexOf(link.protocol) > -1;
-
-            if (isServiceLink) {
-              gnMap.addOwsServiceToMap(link.url, 'WMS');
-            } else {
-              //if this operation is called from search-from-map,
-              // the link does not contain title, but contains name directly
-              var layerName = link.name ? link.name :
-                 $filter('gnLocalized')(link.title) || link.title;
-              if (layerName) {
-                gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
-                   url, layerName, false, md);
-              } else {
-                gnMap.addOwsServiceToMap(url, 'WMS');
-              }
-            }
-
-            gnSearchLocation.setMap();
           };
+
+          var addWMSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
 
 
           var addWFSToMap = function(link, md) {
@@ -128,62 +119,7 @@
           };
 
 
-          var addWMTSToMap = function(link, md) {
-            var url = $filter('gnLocalized')(link.url) || link.url;
-            var uuid = md ? md['geonet:info'].uuid : '';
-            if (link.name &&
-               (angular.isArray(link.name) && link.name.length > 0)) {
-              angular.forEach(link.name, function(name) {
-                gnOwsCapabilities.getWMTSCapabilities(url).then(
-                   function(capObj) {
-                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                      name, capObj, uuid);
-                     if (layerInfo) {
-                       gnMap.addWmtsToMapFromCap(
-                        gnSearchSettings.viewerMap, layerInfo, capObj);
-                     }
-                   });
-              });
-              gnSearchLocation.setMap();
-            } else if (link.name && !angular.isArray(link.name) &&
-               link.name != '') {
-              gnOwsCapabilities.getWMTSCapabilities(url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj, uuid);
-                   if (layerInfo) {
-                     gnMap.addWmtsToMapFromCap(
-                     gnSearchSettings.viewerMap, layerInfo, capObj);
-                   } else {
-                     gnAlertService.addAlert({
-                       msg: 'Unable to load layer ' + link.name,
-                       type: 'success'
-                     });
-
-                   }
-                 });
-              gnSearchLocation.setMap();
-            } else if (link.title) {
-              layerName = $filter('gnLocalized')(link.title);
-              gnOwsCapabilities.getWMTSCapabilities(url).then(
-                 function(capObj) {
-                   var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   layerName, capObj, uuid);
-                   if (layerInfo) {
-                     gnMap.addWmtsToMapFromCap(
-                     gnSearchSettings.viewerMap, layerInfo, capObj);
-                   } else {
-                     gnAlertService.addAlert({
-                       msg: 'Unable to load layer ' + layerName,
-                       type: 'success'
-                     });
-                   }
-                 });
-              gnSearchLocation.setMap();
-            } else {
-              gnMap.addOwsServiceToMap(url, 'WMTS');
-            }
-          };
+          var addWMTSToMap = gnViewerSettings.resultviewFns.addMdLayerToMap;
 
           function addKMLToMap(record, md) {
             var url = $filter('gnLocalized')(record.url) || record.url;
@@ -226,6 +162,11 @@
             'WMS' : {
               iconClass: 'fa-globe',
               label: 'addToMap',
+              action: addWMSToMap
+            },
+            'WMSSERVICE' : {
+              iconClass: 'fa-globe',
+              label: 'addServiceLayersToMap',
               action: addWMSToMap
             },
             'WMTS' : {
@@ -366,7 +307,11 @@
             if (angular.isString(protocolOrType) &&
                 angular.isUndefined(resource['geonet:info'])) {
               if (protocolOrType.match(/wms/i)) {
-                return 'WMS';
+                if (this.isLayerProtocol(resource)) {
+                  return 'WMS';
+                } else {
+                  return 'WMSSERVICE';
+                }
               } else if (protocolOrType.match(/wmts/i)) {
                 return 'WMTS';
               } else if (protocolOrType.match(/wfs/i)) {

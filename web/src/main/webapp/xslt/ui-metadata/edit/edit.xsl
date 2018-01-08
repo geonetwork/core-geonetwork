@@ -66,74 +66,94 @@
   <xsl:include href="../form-builder.xsl"/>
 
   <xsl:template match="/">
-    <!--
-          The main editor form.
 
-          Disable form validation with novalidate attribute. -->
-    <form id="gn-editor-{$metadataId}" name="gnEditor" accept-charset="UTF-8" method="POST"
-          novalidate="" class="form-horizontal gn-editor gn-tab-{$tab}" role="form"
-          data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy">
+    <xsl:variable name="hasSidePanel"
+                  select="exists($viewConfig/sidePanel) and $isTemplate != 's' and $isTemplate != 't'"/>
+    <div id="gn-editor-container-{$metadataId}">
 
-      <input type="hidden" id="schema" value="{$schema}"/>
-      <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
-      <input type="hidden" id="isService" name="type" value="{$isService}"/>
-      <input type="hidden" id="uuid" value="{$metadataUuid}"/>
-      <input type="hidden" name="id" value="{$metadataId}"/>
-      <input type="hidden" id="title" value="{$metadataTitle}"/>
-      <input type="hidden" id="language" value="{$metadataLanguage}"/>
-      <input type="hidden" id="otherLanguages" value="{$metadataOtherLanguagesAsJson}"/>
-      <input type="hidden" id="version" name="version" value="{$metadata/gn:info/version}"/>
-      <input type="hidden" id="currTab" name="currTab" value="{$tab}"/>
-      <input type="hidden" id="displayAttributes" name="displayAttributes"
-             value="{$isDisplayingAttributes}"/>
-      <input type="hidden" id="displayTooltips" name="displayTooltips"
-             value="{$isDisplayingTooltips}"/>
-      <input type="hidden" id="minor" name="minor" value="{$isMinorEdit}"/>
-      <input type="hidden" id="flat" name="flat" value="{$isFlatMode}"/>
-      <input type="hidden" id="showvalidationerrors" name="showvalidationerrors"
-             value="{$showValidationErrors}"/>
+      <div class="col-md-{if ($hasSidePanel) then '8' else '12'}">
+
+        <!--
+              The main editor form.
+        -->
+        <form id="gn-editor-{$metadataId}"
+              name="gnEditor" accept-charset="UTF-8" method="POST"
+              novalidate="" class="form-horizontal gn-editor gn-tab-{$tab}" role="form"
+              data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy">
+
+          <input type="hidden" id="schema" value="{$schema}"/>
+          <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
+          <input type="hidden" id="isService" name="type" value="{$isService}"/>
+          <input type="hidden" id="uuid" value="{$metadataUuid}"/>
+          <input type="hidden" name="id" value="{$metadataId}"/>
+          <input type="hidden" id="title" value="{$metadataTitle}"/>
+          <input type="hidden" id="language" value="{$metadataLanguage}"/>
+          <input type="hidden" id="otherLanguages" value="{$metadataOtherLanguagesAsJson}"/>
+          <input type="hidden" id="version" name="version" value="{$metadata/gn:info/version}"/>
+          <input type="hidden" id="currTab" name="currTab" value="{$tab}"/>
+          <input type="hidden" id="displayAttributes" name="displayAttributes"
+                 value="{$isDisplayingAttributes = true()}"/>
+          <input type="hidden" id="displayTooltips" name="displayTooltips"
+                 value="{$isDisplayingTooltips = true()}"/>
+          <input type="hidden" id="displayTooltipsMode" name="displayTooltipsMode"
+                 value="{$displayTooltipsMode}"/>
+          <input type="hidden" id="minor" name="minor" value="{$isMinorEdit}"/>
+          <input type="hidden" id="flat" name="flat" value="{$isFlatMode}"/>
+          <input type="hidden" id="showvalidationerrors" name="showvalidationerrors"
+                 value="{$showValidationErrors}"/>
 
 
-      <xsl:variable name="metadataExtents">
-        <saxon:call-template name="{concat('get-', $schema, '-extents-as-json')}"/>
-      </xsl:variable>
-      <input type="hidden" id="extent" value="{$metadataExtents}"/>
+          <xsl:variable name="metadataExtents">
+            <saxon:call-template name="{concat('get-', $schema, '-extents-as-json')}"/>
+          </xsl:variable>
+          <input type="hidden" id="extent" value="{$metadataExtents}"/>
 
-      <xsl:call-template name="get-online-source-config">
-        <xsl:with-param name="pattern" select="$geopublishMatchingPattern"/>
-        <xsl:with-param name="id" select="'geoPublisherConfig'"/>
-      </xsl:call-template>
+          <xsl:call-template name="get-online-source-config">
+            <xsl:with-param name="pattern" select="$geopublishMatchingPattern"/>
+            <xsl:with-param name="id" select="'geoPublisherConfig'"/>
+          </xsl:call-template>
 
-      <xsl:call-template name="get-online-source-config">
-        <xsl:with-param name="pattern" select="$layerMatchingPattern"/>
-        <xsl:with-param name="id" select="'layerConfig'"/>
-      </xsl:call-template>
+          <xsl:call-template name="get-online-source-config">
+            <xsl:with-param name="pattern" select="$layerMatchingPattern"/>
+            <xsl:with-param name="id" select="'layerConfig'"/>
+          </xsl:call-template>
 
-      <!-- Dispatch to profile mode -->
-      <xsl:if test="$service != 'md.element.add'">
-        <xsl:call-template name="menu-builder">
-          <xsl:with-param name="config" select="$editorConfig"/>
-        </xsl:call-template>
-      </xsl:if>
+          <!-- Dispatch to profile mode -->
+          <xsl:if test="$service != 'md.element.add'">
+            <xsl:call-template name="menu-builder">
+              <xsl:with-param name="config" select="$editorConfig"/>
+            </xsl:call-template>
+          </xsl:if>
 
-      <div data-gn-toggle=""/>
+          <div data-gn-toggle=""/>
 
-      <xsl:choose>
-        <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
-          <xsl:apply-templates mode="form-builder" select="$tabConfig/section">
-            <xsl:with-param name="base" select="$metadata"/>
-          </xsl:apply-templates>
-        </xsl:when>
-        <xsl:when test="$tab = 'xml'">
-          <xsl:apply-templates mode="render-xml" select="$metadata"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <saxon:call-template name="{concat('dispatch-',$schema)}">
-            <xsl:with-param name="base" select="$metadata"/>
-          </saxon:call-template>
-        </xsl:otherwise>
-      </xsl:choose>
-    </form>
+          <xsl:choose>
+            <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
+              <xsl:apply-templates mode="form-builder" select="$tabConfig/section|$tabConfig/text|$tabConfig/directive">
+                <xsl:with-param name="base" select="$metadata"/>
+              </xsl:apply-templates>
+            </xsl:when>
+            <xsl:when test="$tab = 'xml'">
+              <xsl:apply-templates mode="form-builder" select="$viewConfig/text|$viewConfig/directive">
+                <xsl:with-param name="base" select="$metadata"/>
+              </xsl:apply-templates>
+              <xsl:apply-templates mode="render-xml" select="$metadata"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <saxon:call-template name="{concat('dispatch-',$schema)}">
+                <xsl:with-param name="base" select="$metadata"/>
+              </saxon:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
+        </form>
+      </div>
+      <div class="col-md-{if ($hasSidePanel) then '4' else '0'}">
+        <div class="gn-editor-tools-container">
+          <xsl:apply-templates mode="form-builder"
+                               select="$viewConfig/sidePanel/*"/>
+        </div>
+      </div>
+    </div>
 
   </xsl:template>
 

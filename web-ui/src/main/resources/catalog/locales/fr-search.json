@@ -408,5 +408,7 @@
     "wpsByUrl": "Recherche un processus",
     "wpsRecent": "Derniers traitements",
     "selection.indexing.count": "L'indexation a commencé pour les {{count}} fiches sélectionnées.",
-    "selection.indexing.error": "Une erreur est survenue durant l'indexation."
+    "selection.indexing.error": "Une erreur est survenue durant l'indexation.",
+    "showLegend": "Afficher la légende",
+    "hideLegend": "Cacher la légende"
 }

@@ -30,11 +30,13 @@
   goog.require('gn_md_feedback');
   goog.require('gn_mdview_directive');
   goog.require('gn_mdview_service');
+  goog.require('gn_related_observer_directive');
 
   var module = angular.module('gn_mdview', [
     'gn_mdview_service',
     'gn_mdview_directive',
-    'gn_md_feedback'
+    'gn_md_feedback',
+    'gn_related_observer_directive'
   ]);
 
   module.controller('GnMdViewController', [
@@ -48,6 +50,7 @@
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.usingFormatter = false;
+      $scope.url = location.href;
       $scope.compileScope = $scope.$new();
       $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
 
@@ -72,6 +75,30 @@
           });
         });
       };
+
+      // activate the tabs in the advanded metadata view
+      $scope.activateTabs = function() {
+
+        // attach click to tab
+        $('.nav-tabs-advanced a').click(function(e) {
+          e.preventDefault();
+          $(this).tab('show');
+        });
+        // hide empty tab
+        $('.nav-tabs-advanced a').each(function() {
+
+          var tabLink = $(this).attr('href');
+
+          if (tabLink) {
+            if ($(tabLink).length === 0) {
+              $(this).parent().hide();
+            }
+          }
+        });
+        // show the first tab
+        $('.nav-tabs-advanced a:first').tab('show');
+      };
+
       $scope.format = function(f) {
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
@@ -95,6 +122,9 @@
                   var content = $compile(snippet)($scope.compileScope);
 
                   $('#gn-metadata-display').append(content);
+
+                  // activate the tabs in the full view
+                  $scope.activateTabs();
                 });
           });
         }

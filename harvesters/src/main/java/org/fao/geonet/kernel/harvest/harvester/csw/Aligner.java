@@ -302,9 +302,16 @@ public class Aligner extends BaseAligner {
             log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
         }
 
+        String mdUuid = ri.uuid;
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context,
                 md, processName, processParams, log);
+
+            // Get new uuid if modified by XSLT process
+            mdUuid = dataMan.extractUUID(schema, md);
+            if(mdUuid == null) {
+                mdUuid = ri.uuid;
+            }
         }
         //
         // insert metadata
@@ -319,6 +326,7 @@ public class Aligner extends BaseAligner {
         } else {
             ownerId = Integer.parseInt(params.getOwnerId());
         }
+
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
@@ -334,6 +342,11 @@ public class Aligner extends BaseAligner {
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
+
+        try {
+            metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+        } catch (NumberFormatException e) {
+        }
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 

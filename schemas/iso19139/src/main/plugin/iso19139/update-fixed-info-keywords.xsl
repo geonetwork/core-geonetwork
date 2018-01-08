@@ -83,7 +83,7 @@
               <xsl:value-of select="tokenize(., '=')[1]"/>
             </key>
             <val>
-              <xsl:value-of select="tokenize(., '=')[2]"/>
+              <xsl:value-of select="java:decodeURLParameter(tokenize(., '=')[2])"/>
             </val>
           </param>
         </xsl:for-each>
@@ -109,6 +109,8 @@
         </xsl:if>
       </xsl:variable>
 
+      <!--<xsl:message>params: <xsl:copy-of select="params"/></xsl:message>
+      <xsl:message>$keywordIdentifiers: <xsl:copy-of select="$keywordIdentifiers"/></xsl:message>-->
 
       <!-- Collect all keyword blocks. -->
       <xsl:variable name="keywords"
@@ -149,11 +151,12 @@
                                       '(.*)id=([^&amp;]*)(.*)',
                                       concat(
                                         '$1id=$2',
-                                        if ($newIdentifiers != '' and $currentIdentifiers != '') then ',' else '',
+                                        if ($newIdentifiers != '' and $currentIdentifiers != '') then '%2C' else '',
                                         $newIdentifiers,
                                         '$3'))"/>
 
-              <!--<xsl:message>Appending all thesaurus ids to existing block:
+              <!--
+              <xsl:message>Appending all thesaurus ids to existing block:
                 Thesaurus: <xsl:value-of select="$currentThesaurus"/>
                 Current identifiers: <xsl:value-of select="$currentIdentifiers"/>
                 Identifiers to append: <xsl:value-of select="$newIdentifiers"/>
@@ -259,20 +262,26 @@
         <xsl:for-each-group select="$keywordIdentifiers"
                             group-by="thes">
 
-          <!--<xsl:message>Adding new xlink block
-               Thesaurus: <xsl:copy-of select="current-grouping-key()"/>
-               Keywords: <xsl:copy-of select="string-join(current-group()/id, ',')"/>
-          </xsl:message>-->
 
           <xsl:variable name="isThesaurusBlockExisting"
                         select="count($node/../*[contains(@xlink:href,
                                         concat('thesaurus=', current-grouping-key()))]) > 0"/>
           <xsl:if test="not($isThesaurusBlockExisting)">
+
+            <!--
+            <xsl:message>Adding new xlink block
+              Thesaurus: <xsl:copy-of select="current-grouping-key()"/>
+              Keywords: <xsl:copy-of select="string-join(current-group()/id, ',')"/>
+            </xsl:message>-->
+
             <gmd:descriptiveKeywords
                         xlink:href="{concat(
                                       $hrefPrefix,
                                       'skipdescriptivekeywords=true&amp;thesaurus=', current-grouping-key(),
-                                      '&amp;id=', string-join(current-group()/id[. != ''], ','),
+                                      '&amp;id=',
+                                      string-join(
+                                        current-group()/id[. != ''],
+                                        ','),
                                       $queryString)}"/>
           </xsl:if>
         </xsl:for-each-group>

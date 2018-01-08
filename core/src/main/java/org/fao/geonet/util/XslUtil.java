@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -54,12 +56,17 @@ import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.gml3.GMLConfiguration;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.geotools.xml.Parser;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.DOMOutputter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.context.ApplicationContext;
@@ -78,6 +85,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -410,7 +419,11 @@ public final class XslUtil {
     @Nonnull
     String twoCharLangCode(String iso3LangCode, String defaultValue) {
         if (iso3LangCode == null || iso3LangCode.length() == 0) {
-            return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+            if (defaultValue != null) {
+                return defaultValue;
+            } else {
+                return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+            }
         } else {
             if (iso3LangCode.equalsIgnoreCase("FRA")) {
                 return "FR";
@@ -603,6 +616,39 @@ public final class XslUtil {
         return ret;
     }
 
+
+
+    public static String geomToBbox(Object geom) {
+        String ret = "";
+        try {
+            String gml = (String) geom;
+
+            Element geomElement = Xml.loadString(gml, false);
+            String srs = geomElement.getAttributeValue("srsName");
+            CoordinateReferenceSystem geomSrs = DefaultGeographicCRS.WGS84;
+            if (srs != null && !(srs.equals(""))) geomSrs = CRS.decode(srs);
+
+            Parser parser = new Parser(new GMLConfiguration());
+            MultiPolygon jts = parseGml(parser, gml);
+
+
+            // if we have an srs and its not WGS84 then transform to WGS84
+            if (!CRS.equalsIgnoreMetadata(geomSrs, DefaultGeographicCRS.WGS84)) {
+                MathTransform tform = CRS.findMathTransform(geomSrs, DefaultGeographicCRS.WGS84);
+                jts = (MultiPolygon) JTS.transform(jts, tform);
+            }
+
+            final Envelope envelope = jts.getEnvelopeInternal();
+            return
+                String.format("%f|%f|%f|%f",
+                    envelope.getMinX(), envelope.getMinY(),
+                    envelope.getMaxX(), envelope.getMaxY());
+        } catch (Throwable e) {
+        }
+
+        return ret;
+    }
+
     /**
      * Retrieve a metadata record. Use this function only
      * to retrieve records visible for current user. This
@@ -684,6 +730,15 @@ public final class XslUtil {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
+            ex.printStackTrace();
+            return str;
+        }
+    }
+
+    public static String decodeURLParameter(String str) {
+        try {
+            return java.net.URLDecoder.decode(str, "UTF-8");
+        } catch (Exception ex) {
             ex.printStackTrace();
             return str;
         }

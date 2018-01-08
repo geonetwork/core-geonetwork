@@ -116,7 +116,7 @@
                                   $prefixUrl,
                                   'api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=',
                                    if (thesaurus/key) then thesaurus/key else /root/request/thesaurus,
-                                  '&amp;id=', /root/request/id,
+                                  '&amp;id=', encode-for-uri(/root/request/id),
                                   if (/root/request/lang) then concat('&amp;lang=', /root/request/lang) else '',
                                   if ($textgroupOnly) then '&amp;textgroupOnly' else '')"/>
         </xsl:when>

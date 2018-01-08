@@ -32,6 +32,11 @@
              gnMetadataActions, gnGlobalSettings, Metadata) {
       // Search parameters and configuration
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+      $scope.onlyMyRecord = {
+        is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
+      };
+      $scope.isFilterTagsDisplayed =
+          gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.defaultSearchObj = {
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,
@@ -50,9 +55,9 @@
 
 
       // Only my record toggle
-      $scope.onlyMyRecord = false;
-      $scope.toggleOnlyMyRecord = function() {
-        $scope.onlyMyRecord = !$scope.onlyMyRecord;
+      $scope.toggleOnlyMyRecord = function(callback) {
+        $scope.onlyMyRecord.is ? setOwner() : unsetOwner();
+        callback();
       };
       var setOwner = function() {
         $scope.searchObj.params['_owner'] = $scope.user.id;
@@ -60,11 +65,10 @@
       var unsetOwner = function() {
         delete $scope.searchObj.params['_owner'];
       };
-      $scope.$watch('onlyMyRecord', function(value) {
-        if (!$scope.searchObj) {
-          return;
+      $scope.$watch('user.id', function(newId) {
+        if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+          setOwner();
         }
-        value ? setOwner() : unsetOwner();
       });
 
 

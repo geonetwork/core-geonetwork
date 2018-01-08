@@ -34,12 +34,12 @@
     function(gnAlertValue, $timeout) {
 
       var delay = 2000;
-      this.addAlert = function(alert) {
+      this.addAlert = function(alert, d) {
         gnAlertValue.push(alert);
 
         $timeout(function() {
           gnAlertValue.splice(0, 1);
-        }, delay);
+        }, d || delay);
       };
     }]);
 

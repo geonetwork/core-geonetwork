@@ -154,11 +154,12 @@ public class Handlers {
 
         related.getChildren().each { rel ->
             def type = rel.name
-            def direction = Direction.CHILD
-            def association = rel.getAttributeValue("association")
 
             rel.getChildren("item").each { item ->
-                if (type == "sibling") {
+                def direction = Direction.CHILD
+                def association
+                if (type == "siblings") {
+                    association = item.getChildText("associationType")
                     if (association != null && association != '') {
                         type = association;
                         direction = Direction.PARENT
@@ -170,6 +171,8 @@ public class Handlers {
                     if (aggIndexEl != null) {
                         type = aggIndexEl.name.substring(4)
                     }
+                } else if (type == "onlines" || type == "thumbnails") {
+                    return;
                 }
 
                 def relatedIdInfo = addRelation(hierarchy, uuid, item, type, direction)
@@ -177,21 +180,24 @@ public class Handlers {
                 if (relatedIdInfo != null && direction == Direction.PARENT) {
                     def parentUUID = relatedIdInfo['uuid'] as String
                     def report = getRelatedReport(relatedIdInfo['id'] as int, parentUUID)
-                    report.getChildren("relation").each { potentialSiblingRel ->
-                         def relType = potentialSiblingRel.getAttributeValue("type")
-                        if (association != null) {
-                            boolean isAggSibling = potentialSiblingRel.getChildren("agg_$association").any {
-                                it.getTextTrim() == parentUUID
-                            }
-                            if (isAggSibling) {
-                                addRelation(hierarchy, parentUUID, potentialSiblingRel, association, Direction.SIBLING)
-                            }
-                        } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
-                            addRelation(hierarchy, parentUUID, potentialSiblingRel, relType, Direction.SIBLING)
-                        } else if (relType == 'children') {
-                            addRelation(hierarchy, parentUUID, potentialSiblingRel, "siblings", Direction.SIBLING)
-                        }
 
+                    report.getChildren().each { potentialSiblingRel ->
+                        def relType = potentialSiblingRel.name
+                        potentialSiblingRel.getChildren("item").each { potentialSiblingItem ->
+                            if (association != null) {
+                                boolean isAggSibling = potentialSiblingItem.getChildren("agg_$association").any {
+                                    it.getTextTrim() == parentUUID
+                                }
+                                if (isAggSibling) {
+                                    addRelation(hierarchy, parentUUID, potentialSiblingItem, association, Direction.SIBLING)
+                                }
+                            } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
+                                addRelation(hierarchy, parentUUID, potentialSiblingItem, relType, Direction.SIBLING)
+                            } else if (relType == 'children') {
+                                addRelation(hierarchy, parentUUID, potentialSiblingItem, "siblings", Direction.SIBLING)
+                            }
+
+                        }
                     }
                 }
             }
@@ -201,7 +207,7 @@ public class Handlers {
 
     private Element getRelatedReport(int id, String uuid) {
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
-        def RelatedItemType[] types = ["parent","children", "services", "datasets"];
+        def RelatedItemType[] types = [];
         def raw = MetadataUtils.getRelated(ServiceContext.get(), id, uuid, types, 1, 1000, true)
         def withGui = new Element("root").addContent(Arrays.asList(
                 new Element("gui").addContent(Arrays.asList(
@@ -245,6 +251,7 @@ public class Handlers {
       def link = new AssociatedLink(href, title, cls)
       link.setAbstract(desc);
       link.metadataId = relUuid;
+      link.setLogo(rel.getChildText('logo'));
 
       hierarchy.put(linkType, link)
 
@@ -256,7 +263,7 @@ public class Handlers {
         if (uuid.trim().isEmpty()) {
             return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
         } else {
-            return this.env.localizedUrl + "md.viewer#/full_view/" + URLEncoder.encode(uuid, "UTF-8")
+            return this.env.localizedUrl + "display#/" + URLEncoder.encode(uuid, "UTF-8") + "/formatters/full_view"
         }
     }
 

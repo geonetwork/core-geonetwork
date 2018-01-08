@@ -86,7 +86,7 @@
       }];
 
       $scope.isDashboardAvailable = false;
-      $http.get('../../warninghealthcheck').success(function(data) {
+      function buildMenuBasedOnStatus(data) {
         angular.forEach(data, function(o) {
           if (o.name === 'DashboardAppHealthCheck' &&
               o.status === 'OK') {
@@ -98,13 +98,10 @@
             tabs: tabs
           };
         });
-      }).error(function(data) {
-        $scope.pageMenu = {
-          folder: 'dashboard/',
-          defaultTab: 'status',
-          tabs: tabs
-        };
-      });
+      };
+      $http.get('../../warninghealthcheck')
+          .success(buildMenuBasedOnStatus)
+          .error(buildMenuBasedOnStatus);
 
       $http.get('../api/site/info').
           success(function(data) {
