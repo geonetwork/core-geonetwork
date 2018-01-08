@@ -136,7 +136,7 @@
         </ul>
       </li>
       <li class="dropdown dropdown-hover open signin-dropdown"
-        data-ng-show="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethEnabled">
+        data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethEnabled">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle"
