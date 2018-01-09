@@ -61,8 +61,16 @@
                     url: '../api/records/' + scope.inspMdUuid +
                     '/validate/inspire'
                   }).then(function mySucces(response) {
-                    scope.checkInBackgroud(response.data);
-
+                    if (angular.isDefined(response.data) && response.data!=null) {
+                      scope.checkInBackgroud(response.data);
+                    } else {
+                      scope.isDownloadingRecord = false;
+                      scope.isDownloadedRecord = false;
+                      gnAlertService.addAlert({
+                        msg: $translate.instant('inspireServiceError'),
+                        type: 'danger'
+                      });
+                    }
                   }, function myError(error) {
                     scope.isDownloadingRecord = false;
                     scope.isDownloadedRecord = false;
