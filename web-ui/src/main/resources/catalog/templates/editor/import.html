@@ -200,6 +200,19 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <div class="col-sm-offset-5 col-sm-7">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox"
+                           name="publishToAll"
+                           data-ng-disabled="!user.isReviewerOrMore() || file_type === 'mef'"
+                           data-ng-model="params.publishToAll"/>
+                    <span data-translate="">publish</span>
+                  </label>
+                </div>
+              </div>
+            </div>
 
             <div class="form-group">
               <div class="col-sm-offset-5 col-sm-7">
@@ -207,6 +220,7 @@
                   <label>
                     <input type="checkbox"
                            name="assignToCatalog"
+                           data-ng-disabled="file_type !== 'mef'"
                            data-ng-model="params.assignToCatalog"/>
                     <span data-translate="">assignToCatalog</span>
                   </label>
@@ -242,12 +256,17 @@
               </div>
             </div>
 
-
-            <button type="button" class="btn btn-primary pull-right"
-                    data-ng-click="importRecords('#gn-import')"
-                    title="{{'import' | translate}}">
-              <i class="fa fa-plus"/>&nbsp;<span data-translate="">importRecords</span>
-            </button>
+            <div class="pull-right">
+              <button type="button" class="btn btn-primary"
+                      data-ng-click="importRecords('#gn-import')"
+                      title="{{'import' | translate}}">
+                <i class="fa fa-plus"/>&nbsp;<span data-translate="">importRecords</span>
+              </button>
+              <a href="#/board" class="btn btn-default">
+                <i class="fa fa-close"/>&nbsp;
+                <span data-translate="">cancel</span>
+              </a>
+            </div>
           </form>
         </div>
       </div>
@@ -277,7 +296,8 @@
               <!--id and uuid from single import-->
               <div data-ng-repeat="(key, value) in report.metadataInfos">
                 <span>{{value[0].message}}</span>
-                <a href='#/metadata/{{key}}' title="{{'edit' | translate}}">
+                <a href='#/metadata/{{key}}?redirectUrl=catalog.edit'
+                   title="{{'edit' | translate}}">
                   <i class='fa fa-pencil'></i>
                 </a>
               </div>

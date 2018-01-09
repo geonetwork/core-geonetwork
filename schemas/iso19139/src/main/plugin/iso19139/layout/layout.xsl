@@ -170,6 +170,80 @@
 
   </xsl:template>
 
+  <!-- Render simple element with gmx:Anchor -->
+  <xsl:template mode="mode-iso19139" priority="200"
+                match="*[gmx:Anchor]">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
+
+    <xsl:variable name="elementName" select="name()"/>
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig"
+                  select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+    <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
+
+    <xsl:variable name="attributes">
+      <xsl:if test="$isEditing">
+
+        <!-- Create form for all existing attribute (not in gn namespace)
+        and all non existing attributes not already present for the
+        current element and its children (eg. @uom in gco:Distance).
+        A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
+        <xsl:apply-templates mode="render-for-field-for-attribute"
+                             select="
+              @*|
+              gn:attribute[not(@name = parent::node()/@*/name())]">
+          <xsl:with-param name="ref" select="gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates mode="render-for-field-for-attribute"
+                             select="
+          */@*|
+          */gn:attribute[not(@name = parent::node()/@*/name())]">
+          <xsl:with-param name="ref" select="*/gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+        </xsl:apply-templates>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:variable name="labelConfig">
+      <xsl:choose>
+        <xsl:when test="$overrideLabel != ''">
+          <element>
+            <label><xsl:value-of select="$overrideLabel"/></label>
+          </element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="$labelConfig"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="$labelConfig/*[1]"/>
+      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <!--<xsl:with-param name="widget"/>
+      <xsl:with-param name="widgetParams"/>-->
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="attributesSnippet" select="$attributes"/>
+      <xsl:with-param name="forceDisplayAttributes" select="true()" />
+      <xsl:with-param name="type"
+                      select="gn-fn-metadata:getFieldType($editorConfig, name(),
+            name(gmx:Anchor))"/>
+      <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo"
+                      select="if ($refToDelete) then $refToDelete else gn:element"/>
+      <!-- TODO: Handle conditional helper -->
+      <xsl:with-param name="listOfValues" select="$helper"/>
+      <xsl:with-param name="isFirst"
+                      select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
+    </xsl:call-template>
+  </xsl:template>
 
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19139" priority="200"
@@ -247,8 +321,11 @@
       </xsl:if>
     </xsl:variable>
 
+
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
+        <xsl:variable name="text"
+                      select="normalize-space(gco:CharacterString)"/>
 
         <values>
           <!--
@@ -271,13 +348,28 @@
 
           <!-- and create field for none translated language -->
           <xsl:for-each select="$metadataOtherLanguages/lang">
+            <xsl:variable name="code" select="@code"/>
             <xsl:variable name="currentLanguageId" select="@id"/>
-            <xsl:if test="count($theElement/parent::node()/
-                gmd:PT_FreeText/gmd:textGroup/
-                gmd:LocalisedCharacterString[@locale = concat('#',$currentLanguageId)]) = 0">
-              <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
-                     lang="{@id}"></value>
-            </xsl:if>
+            <xsl:variable name="ptFreeElementDoesNotExist"
+                          select="count($theElement/parent::node()/
+                                        gmd:PT_FreeText/*/
+                                        gmd:LocalisedCharacterString[
+                                          @locale = concat('#', $currentLanguageId)]) = 0"/>
+
+            <xsl:choose>
+              <xsl:when test="$ptFreeElementDoesNotExist and
+                              $text != '' and
+                              $code = $metadataLanguage">
+                <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
+                       lang="{@id}">
+                  <xsl:value-of select="$text"/>
+                </value>
+              </xsl:when>
+              <xsl:when test="$ptFreeElementDoesNotExist">
+                <value ref="lang_{@id}_{$theElement/parent::node()/gn:element/@ref}"
+                       lang="{@id}"></value>
+              </xsl:when>
+            </xsl:choose>
           </xsl:for-each>
         </values>
       </xsl:if>

@@ -69,7 +69,7 @@ public class LanguageUtils {
         Locale l = parseAcceptLanguage(locales);
         return locale2gnCode(l.getISO3Language());
     }
-    private String locale2gnCode (String code) {
+    static public String locale2gnCode (String code) {
         if (code.equals("fra")) {
             return "fre";
         } else {

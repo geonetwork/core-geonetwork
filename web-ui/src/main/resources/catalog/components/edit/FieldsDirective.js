@@ -136,24 +136,128 @@
    </example>
    */
   module.directive('gnFieldTooltip',
-      ['gnSchemaManagerService', 'gnCurrentEdit',
-       function(gnSchemaManagerService, gnCurrentEdit) {
+      ['gnSchemaManagerService', 'gnCurrentEdit', '$compile',
+       function(gnSchemaManagerService, gnCurrentEdit, $compile) {
+
+         var iconTemplate =
+         "<a class='btn field-tooltip' " +
+         "data-ng-show='gnCurrentEdit.displayTooltips'>" +
+         "<span class='fa fa-question-circle'></span></a>";
+
          return {
            restrict: 'A',
            link: function(scope, element, attrs) {
              var isInitialized = false;
              var isField =
-             element.is('input') || element.is('textarea');
+             element.is('input') ||
+             element.is('textarea') ||
+             element.is('select');
+             var tooltipTarget = element;
+             var iconMode = gnCurrentEdit.displayTooltipsMode === 'icon';
 
-             element.on('$destroy', function() {
-               element.off();
-             });
+
+
+             // use a icon to click on for a tooltip
+             if (iconMode) {
+               var tooltipAfterLabel = false;
+               var tooltipIconCompiled = $compile(iconTemplate)(scope);
+               var asideCol;
+
+
+               if (isField && element.attr('type') !== 'hidden') {
+
+                 if (tooltipAfterLabel) {
+                   // try to find the label (with class 'control-label') that
+                   // is before this element in the DOM and append the tooltip
+                   // button to it.
+                   //
+                   //  If it's not found,
+                   // place the button just before the element
+                   asideCol = element.parent('div').prev();
+
+                   if (asideCol.hasClass('control-label')) {
+                     asideCol.append(tooltipIconCompiled);
+                   } else {
+                     element.before(tooltipIconCompiled);
+                   }
+                 } else {
+                   // if element div parent has another
+                   // div width gn-control class,
+                   // put the tooltip there.
+                   asideCol = element.closest('.col-sm-11')
+                   .next('div.gn-control');
+                   if (asideCol.length > 0) {
+                     asideCol.append(tooltipIconCompiled);
+                   } else {
+
+                     asideCol = element.closest('.col-sm-9')
+                     .next('div.gn-control');
+
+                     if (asideCol.length > 0) {
+                       asideCol.append(tooltipIconCompiled);
+                     } else {
+                       // if element is part of a template snippet,
+                       // look for the
+                       // previous label and add the icon after it
+                       var id = element.attr('id');
+                       var re = /^_X[0-9]+_replace_.+$/;
+                       if (id && id.match(re)) {
+                         var label = element.closest('div')
+                         .children('label[for=' + id + ']')
+                         .after(tooltipIconCompiled);
+                       } else {
+                         // Add tooltip after the input element
+                         element.after(tooltipIconCompiled);
+                       }
+                     }
+                   }
+                 }
+               } else if (element.is('legend')) {
+                 element.contents().first().after(tooltipIconCompiled);
+               } else if (element.is('label')) {
+                 if (tooltipAfterLabel) {
+                   element.parent().children('div')
+                   .append(tooltipIconCompiled);
+                 } else {
+                   element.after(tooltipIconCompiled);
+                 }
+               }
+
+
+               // close tooltips on click in editor container
+               $('.gn-editor-container').on('mousedown', function(e) {
+                 //did not click a popover toggle or popover
+                 if ($(e.target).data('toggle') !== 'popover' &&
+                 $(e.target).parents('.popover.in').length === 0) {
+                   closeTooltips();
+                 }
+               });
+
+
+               // replace element with tooltip
+               tooltipTarget = tooltipIconCompiled;
+             } else {
+               element.on('$destroy', function() {
+                 element.off();
+               });
+             }
+
+
+             var closeTooltips = function() {
+               // Close all tooltips/popovers
+               // (there still might be some open)
+               $('.popover').popover('hide');
+               // Less official way to hide
+               $('.popover').hide();
+             };
+
 
              var initTooltip = function(event) {
                if (!isInitialized && gnCurrentEdit.displayTooltips) {
                  // Retrieve field information (there is a cache)
                  gnSchemaManagerService
-                  .getElementInfo(attrs.gnFieldTooltip).then(function(data) {
+                  .getElementInfo(attrs.gnFieldTooltip)
+                 .then(function(data) {
                    var info = data;
                    if (info.description && info.description.length > 0) {
                      // Initialize tooltip when description returned
@@ -172,6 +276,13 @@
                        html += info.help;
                      }
 
+                     // Only one tooltip visible at a time
+                     if (iconMode) {
+                       closeTooltips();
+                     }
+
+                     // Add description to the body html
+                     html += '<p>' + info.description + '</p>';
 
                      // Right same width as field
                      // For legend, popover is right
@@ -182,15 +293,15 @@
                      // to the remaining space between the element
                      // and the right window border.
                      var width = ($(window).width() -
-                         element.offset().left -
-                         element.outerWidth()) * .95;
+                     tooltipTarget.offset().left -
+                     tooltipTarget.outerWidth()) * .95;
 
                      var closeBtn = '<button onclick="$(this).' +
                      'closest(\'div.popover\').remove();" type="button" ' +
                      'class="fa fa-times btn btn-link pull-right"></button>';
 
-                     element.popover({
-                       title: info.description,
+                     tooltipTarget.popover({
+                       title: info.label,
                        container: 'body',
                        content: html,
                        html: true,
@@ -207,18 +318,26 @@
                        trigger: isField ? 'focus' : 'click'
                      });
 
-                     //                     if (event === 'hover' && !isField) {
-                     //                       element.popover('show');
-                     //                     } else
+
                      if (event === 'click' && !isField) {
-                       element.click('show');
+                       tooltipTarget.click('show');
                      } else {
-                       element.focus();
+                       tooltipTarget.focus();
                      }
 
-                     element.on('shown.bs.popover', function(event) {
-                       if ($('div.popover').css('top').charAt(0) === '-') {
-                         // move popover under navbar.
+                     if (iconMode) {
+                       tooltipTarget.mouseleave(function() {
+                         tooltipTarget.popover('hide');
+                         isInitialized = false;
+                       });
+                     }
+
+
+                     tooltipTarget.on('shown.bs.popover', function(event) {
+                       // move popover under navbar in case they are
+                       // above visible area.
+                       if ($('div.popover').css('top') &&
+                           $('div.popover').css('top').charAt(0) === '-') {
                          var oldTopPopover = $('div.popover').position().top;
                          var newTopPopover =
                          $(".navbar:not('.ng-hide')").outerHeight() + 5;
@@ -229,6 +348,7 @@
                        }
                      });
 
+                     tooltipTarget.popover('show');
                      isInitialized = true;
                    }
                  });
@@ -236,14 +356,23 @@
              };
 
              // On hover trigger the tooltip init
-             if (isField) {
-               element.focus(function() {
-                 initTooltip('focus');
+             if (iconMode) {
+               tooltipTarget.hover(function(event) {
+                 event.stopPropagation;
                });
-             } else {
-               element.click(function() {
+               tooltipTarget.hover(function() {
                  initTooltip('hover');
                });
+             } else {
+               if (isField) {
+                 tooltipTarget.focus(function() {
+                   initTooltip('focus');
+                 });
+               } else {
+                 tooltipTarget.click(function() {
+                   initTooltip('hover');
+                 });
+               }
              }
            }
          };

@@ -1,6 +1,7 @@
 <div class="container formatter-container">
   <div class="row">
-    <div class="gn-md-actions-btn pull-right btn-group md-actions" data-gn-md-actions-menu="md"/>
+    <div class="gn-md-actions-btn pull-right btn-group md-actions"
+         data-gn-md-actions-menu="md"/>
     <a class="btn btn-danger gn-md-delete-btn pull-right"
        data-ng-show="user.canEditRecord(md)"
        data-gn-click-and-spin="deleteRecord(md)"
@@ -16,5 +17,7 @@
       <i class="fa fa-pencil"></i>
     </a>
   </div>
-  <div data-ng-if="loading" class="gn-spinner"><i class="fa fa-spinner fa-spin fa-4x"></i></div>
+  <div data-ng-if="loading" class="gn-spinner">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+  </div>
 </div>

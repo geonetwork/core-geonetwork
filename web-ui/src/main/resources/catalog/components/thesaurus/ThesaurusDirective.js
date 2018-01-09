@@ -187,13 +187,13 @@
            replace: true,
            transclude: true,
            scope: {
-             mode: '@gnKeywordSelector',
              elementRef: '@',
              thesaurusKey: '@',
              keywords: '@',
              transformations: '@',
              currentTransformation: '@',
              lang: '@',
+             orderById: '@',
              textgroupOnly: '@',
 
              // Max number of tags allowed. Use 1 to restrict to only
@@ -313,7 +313,6 @@
                }
 
                // Then register search filter change
-               // Only applies to multiselect mode
                scope.$watch('filter', search);
              };
 
@@ -370,7 +369,8 @@
                      gnThesaurusService.getKeywordAutocompleter({
                        thesaurusKey: scope.thesaurusKey,
                        dataToExclude: scope.selected,
-                       lang: gnLangs.current
+                       lang: gnLangs.current,
+                       orderById: scope.orderById
                      });
 
                      // Init typeahead
@@ -432,9 +432,7 @@
                  scope.$watch('results', getSnippet);
                  scope.$watch('selected', getSnippet);
 
-                 if (scope.mode === 'tagsinput') {
-                   initTagsInput();
-                 }
+                 initTagsInput();
                } else if (scope.invalidKeywordMatch) {
                  // invalidate element ref to not trigger
                  // an update of the record with an invalid
@@ -482,7 +480,7 @@
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation, scope.langs,
-               scope.textgroupOnly).then(
+                   scope.textgroupOnly).then(
                function(data) {
                  scope.snippet = data;
                });
@@ -518,6 +516,7 @@
         scope: {},
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey || '';
+          scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           var initialized = false;
 
@@ -555,7 +554,8 @@
             var keywordsAutocompleter =
                 gnThesaurusService.getKeywordAutocompleter({
                   thesaurusKey: scope.thesaurusKey,
-                  lang: scope.lang
+                  lang: scope.lang,
+                  orderById: scope.orderById
                 });
 
             // Init typeahead

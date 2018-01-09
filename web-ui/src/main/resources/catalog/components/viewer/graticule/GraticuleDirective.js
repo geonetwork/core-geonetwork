@@ -130,7 +130,6 @@
           'graticule.html',
       scope: true,
       link: function(scope, element, attrs) {
-        var map = scope.$eval(attrs['gnGraticuleBtn']);
         var graticuleOgcService = scope.$eval(attrs['graticuleOgcService']);
         var graticule = null;
 
@@ -152,7 +151,6 @@
           graticule.background = true;  // do not save it in context
           graticule.setZIndex(1000);    // TODO: uncomment after OL upgrade
           graticule.setVisible(false);  // hidden by default
-          map.addLayer(graticule);
 
           // 'active' prop makes ogc layer visible/invisible
           Object.defineProperty(graticule, 'active', {
@@ -160,6 +158,11 @@
               return graticule.getVisible();
             },
             set: function(val) {
+              // add layer to map if not already done
+              var map = scope.$eval(attrs['gnGraticuleBtn']);
+              if (map.getLayers().getArray().indexOf(graticule) === -1) {
+                map.addLayer(graticule);
+              }
               graticule.setVisible(val);
             }
           });
@@ -191,6 +194,7 @@
         }
         scope.graticule = graticule;
 
+        var map = scope.$eval(attrs['gnGraticuleBtn']);
         var transform = ol.proj.getTransform(map.getView().getProjection(),
             'EPSG:4326');
 

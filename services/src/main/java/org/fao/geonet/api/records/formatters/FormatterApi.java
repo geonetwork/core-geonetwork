@@ -48,6 +48,7 @@ import java.util.concurrent.Callable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jeeves.xlink.Processor;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
@@ -265,15 +266,19 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (formatType == null) {
             formatType = FormatType.xml;
         }
-
-        final ServiceContext context = createServiceContext(locale.getISO3Language(),
-            formatType, request.getNativeRequest(HttpServletRequest.class));
+        
+        final String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        final ServiceContext context = createServiceContext(
+            language,
+            formatType,
+            request.getNativeRequest(HttpServletRequest.class));
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+
 
         Boolean hideWithheld = true;
 //        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
 //            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
-        Key key = new Key(metadata.getId(), locale.getISO3Language(), formatType, formatterId, hideWithheld, width);
+        Key key = new Key(metadata.getId(), language, formatType, formatterId, hideWithheld, width);
         final boolean skipPopularityBool = false;
 
         ISODate changeDate = metadata.getDataInfo().getChangeDate();
@@ -282,7 +287,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(locale.getLanguage(), roundedChangeDate) &&
+            if (request.checkNotModified(language, roundedChangeDate) &&
                 context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (!skipPopularityBool) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
@@ -312,7 +317,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             if (!skipPopularityBool) {
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
-            writeOutResponse(context, locale.getISO3Language(), request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+            writeOutResponse(context, metadataUuid, locale.getISO3Language(), request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
 
@@ -373,7 +378,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final String formattedMetadata = result.one().format(result.two());
         byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
-        writeOutResponse(context, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+        writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
     }
 
     /**
@@ -479,13 +484,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 context.getBean(DataManager.class).increasePopularity(context, resolvedId);
             }
 
-            writeOutResponse(context, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+            writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
 
-    private void writeOutResponse(ServiceContext context, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
+    private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
         response.setContentType(formatType.contentType);
-        String filename = "metadata." + formatType;
+        String filename = "metadata." + metadataUuid + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
         response.setStatus(HttpServletResponse.SC_OK);
         if (formatType == FormatType.pdf) {
@@ -646,8 +651,12 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                                                Boolean hide_withheld) throws Exception {
 
         AbstractMetadata md = loadMetadata(context.getBean(IMetadataUtils.class), id);
-        Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md, false);
+        XmlSerializer serializer = context.getBean(XmlSerializer.class);
+        boolean doXLinks = serializer.resolveXLinks();
 
+
+        Element metadata = serializer.removeHiddenElements(false, md, false);
+        if (doXLinks) Processor.processXLink(metadata, context);
 
         boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
         if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {

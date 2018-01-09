@@ -31,8 +31,8 @@
 
     e.preventDefault();
 
-    var visible = $('#' + thisEl.attr('target')).toggle().is(':visible');
-    console.log();
+    var visible = $('[id="' + thisEl.attr('target') + '"]')
+        .toggle().is(':visible');
     return visible;
   };
 
@@ -133,7 +133,7 @@
       parentParam = '&parentUuid=' + parentUuid;
     }
 
-    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&id=' +
+    $.ajax('md.format.xml?xsl=hierarchy_view&skipPopularity=y&uuid=' +
         metadataId + parentParam, {
           dataType: 'text',
           success: function(html) {

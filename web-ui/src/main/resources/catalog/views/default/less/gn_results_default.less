@@ -1,6 +1,22 @@
 @import "../../../style/gn_search.less";
 
 
+// search terms
+.searchterm {
+  margin: 0 5px 5px 0;
+  max-width: 100%;
+  span {
+    max-width: 15em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
+  }
+  i {
+    margin-top: -15px;
+    margin-left: 5px;
+  }
+}
+
 // styling for all search results
 ul.gn-resultview {
   @thumbnail-width: 170px;

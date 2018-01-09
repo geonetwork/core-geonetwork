@@ -83,15 +83,6 @@
                       class="form-control" id="{{s['name']}}" name="{{s.name}}"
                     >{{s.value}}</textarea>
 
-                    <!-- JSON configuration for map and editor -->
-                    <textarea
-                      data-gn-autogrow=""
-                      data-gn-json-text=""
-                      data-ng-model="s.value"
-                      data-ng-switch-when="metadata/editor/schemaConfig" type="text"
-                      class="form-control" id="{{s['name']}}" name="{{s.name}}"
-                    ></textarea>
-
                     <select data-ng-switch-when="system/server/protocol"
                             class="form-control"
                             name="{{s.name}}">

@@ -337,7 +337,7 @@
 
       $scope.testFormatter = function(mode) {
         var service = 'md.format.' + (mode == 'HTML' ? 'html' : 'xml');
-        var url = service + '?id=' + $scope.metadataId +
+        var url = service + '?uuid=' + $scope.metadataId +
             '&xsl=' + $scope.formatterSelected.id;
         if ($scope.formatterSelected.schema) {
           url += '&schema=' + $scope.formatterSelected.schema;

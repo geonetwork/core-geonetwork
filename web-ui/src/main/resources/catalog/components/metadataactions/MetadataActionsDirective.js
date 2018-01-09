@@ -104,10 +104,15 @@
    * The `gnMetadataCategoryUpdater` directive provides a
    * dropdown button which allows to set the metadata
    * categories.
+   *
+   * Don't use this directive more than one time in
+   * the same page.
    */
   module.directive('gnMetadataCategoryUpdater', [
-    'gnMetadataActions', '$translate', '$http', '$rootScope',
-    function(gnMetadataActions, $translate, $http, $rootScope) {
+    'gnMetadataActions', '$translate', '$http',
+    '$rootScope', '$filter', '$timeout',
+    function(gnMetadataActions, $translate, $http,
+             $rootScope, $filter, $timeout) {
 
       return {
         restrict: 'A',
@@ -119,10 +124,15 @@
           metadataUuid: '=',
           groupOwner: '=gnGroupOwner'
         },
-        link: function(scope) {
+        link: function(scope, e, attrs) {
           scope.lang = scope.$parent.lang;
           scope.categories = null;
           scope.ids = [];
+          scope.tid = 'tagsinput' + Math.floor(Math.random() * 10000);
+          scope.mode = attrs['gnMode'] || 'btn';
+
+          var initialCategories = [];
+          var tid = '#' + scope.tid;
 
           scope.updateCategoriesAllowed = function() {
             if (angular.isDefined(scope.groupOwner)) {
@@ -146,37 +156,110 @@
           var init = function() {
             return $http.get('../api/tags', {cache: true}).
                 success(function(data) {
+                  var lang = scope.lang;
                   scope.categories = data;
-                  if (angular.isDefined(scope.currentCategories)) {
-                    angular.forEach(scope.categories, function(c) {
-                      if (scope.currentCategories.indexOf(c.name) !== -1) {
-                        scope.ids.push(c.id);
-                      }
-                    });
+                  angular.forEach(scope.categories, function(c) {
+                    if (angular.isDefined(scope.currentCategories) &&
+                    scope.currentCategories.values.indexOf(c.name) !== -1) {
+                          scope.ids.push(c.id);
+                          initialCategories.push(c);
+                    }
+                    c.langlabel = $filter('gnLocalized')(c.label, lang);
+                  });
+
+                  if (scope.mode === 'autocomplete') {
+                    initTagInput();
                   }
                 });
+          };
+
+          function initTagInput() {
+            $timeout(function() {
+              try {
+                var maxNumberOfItems = 1000;
+
+                // Init tag input
+                $(tid).tagsinput({
+                  itemValue: 'name',
+                  itemText: 'langlabel',
+                  maxTags: maxNumberOfItems
+                });
+                var input = $(tid).tagsinput('input');
+
+                // Init data source
+                var source = new Bloodhound({
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                  queryTokenizer: Bloodhound.tokenizers.whitespace,
+                  local: scope.categories,
+                  limit: maxNumberOfItems
+                });
+                source.initialize();
+
+                // Init autocomplete
+                $(input).typeahead({
+                  minLength: 0,
+                  highlight: true
+                }, {
+                  name: 'category',
+                  source: source.ttAdapter(),
+                  displayKey: 'langlabel'
+                }).bind('typeahead:selected',
+                    $.proxy(function(obj, c) {
+                      // Add to tags
+                      this.tagsinput('add', c);
+
+                      scope.assign(c);
+
+                      // Clear typeahead
+                      this.tagsinput('input').typeahead('val', '');
+                    }, $(tid))
+                );
+
+                $(tid).on('itemRemoved', function(e) {
+                  scope.assign(e.item);
+                });
+
+                angular.forEach(initialCategories, function(c) {
+                  $(tid).tagsinput('add', c);
+                });
+              } catch (e) {
+                console.warn('No tagsinput for ' + tid +
+                    ', error: ' + e.message);
+              }
+            });
           };
 
           scope.sortByLabel = function(c) {
             return c.label[scope.lang];
           };
 
-
           // Remove or add category to the set of ids
           scope.assign = function(c, event) {
-            event.stopPropagation();
+            if (event) {
+              event.stopPropagation();
+            }
             var existIndex = scope.ids.indexOf(c.id), method = '';
             if (existIndex === -1) {
-              scope.ids.push(c.id);
               method = 'put';
             } else {
-              scope.ids.splice(existIndex, 1);
               method = 'delete';
             }
             $http[method]('../api/records/' +
                           scope.metadataUuid + '/tags?id=' + c.id)
                 .then(function() {
-                  scope.currentCategories.push(c.name);
+                  if (existIndex === -1) {
+                    scope.ids.push(c.id);
+                    scope.currentCategories.values.push(c.name);
+                  } else {
+                    scope.ids.splice(existIndex, 1);
+
+                    angular.forEach(scope.currentCategories.values,
+                    function(cat, idx) {
+                      if (cat === c.name) {
+                        scope.currentCategories.values.splice(idx, 1);
+                      }
+                    });
+                  }
                 }, function(response) {
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate.instant('assignCategoryError',

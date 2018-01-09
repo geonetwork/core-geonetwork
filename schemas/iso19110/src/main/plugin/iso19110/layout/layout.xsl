@@ -50,8 +50,10 @@
     <xsl:variable name="directive"
                   select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
-    <xsl:if test="$isEditing and
-      not($isFlatMode)">
+    <xsl:variable name="flatModeException"
+                  select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
+
+    <xsl:if test="$isEditing and (not($isFlatMode) or $flatModeException)">
 
       <xsl:variable name="label"
                     select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>

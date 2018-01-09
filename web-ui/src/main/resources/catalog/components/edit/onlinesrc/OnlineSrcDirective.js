@@ -81,12 +81,16 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/onlinesrcList.html',
-            scope: {},
+            scope: {
+              types: '@'
+            },
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.allowEdits = true;
               scope.lang = scope.$parent.lang;
+              scope.readonly = attrs['readonly'] || false;
+              scope.relations = {};
 
               /**
                * Calls service 'relations.get' to load
@@ -114,18 +118,8 @@
                     });
               };
               scope.isCategoryEnable = function(category) {
-                var config = gnCurrentEdit.schemaConfig.related;
-                if (config.readonly === true) {
-                  return false;
-                } else {
-                  if (config.categories &&
-                      config.categories.length > 0 &&
-                      $.inArray(category, config.categories) === -1) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                }
+                return angular.isUndefined(scope.types) ? true :
+                        category.match(scope.types) !== null;
               };
 
               // Reload relations when a directive requires it
@@ -136,13 +130,8 @@
                 }
               });
 
-              // When saving is done, refresh related resources
-              scope.$watch('gnCurrentEdit.version',
-                  function(newValue, oldValue) {
-                    if (parseInt(newValue || 0) > parseInt(oldValue || 0)) {
-                      loadRelations();
-                    }
-                  });
+              loadRelations();
+
               scope.sortLinks = function(g) {
                 return $filter('gnLocalized')(g.title);
               };
@@ -830,14 +819,20 @@
                   $timeout(function() {
                     if (angular.isArray(scope.gnCurrentEdit.extent)) {
                       // FIXME : only first extent is took into account
-                      var extent = scope.gnCurrentEdit.extent[0],
-                          proj = ol.proj.get(gnMap.getMapConfig().projection),
-                          projectedExtent =
-                          ol.extent.containsExtent(
+                      var projectedExtent;
+                      var extent = scope.gnCurrentEdit.extent &&
+                          scope.gnCurrentEdit.extent[0];
+                      var proj = ol.proj.get(gnMap.getMapConfig().projection);
+
+                      if (!extent || !ol.extent.containsExtent(
                           proj.getWorldExtent(),
-                          extent) ?
-                          gnMap.reprojExtent(extent, 'EPSG:4326', proj) :
-                          proj.getExtent();
+                          extent)) {
+                        projectedExtent = proj.getExtent();
+                      }
+                      else {
+                        projectedExtent =
+                            gnMap.reprojExtent(extent, 'EPSG:4326', proj);
+                      }
                       scope.map.getView().fit(
                           projectedExtent,
                           scope.map.getSize());
@@ -1015,7 +1010,7 @@
                       }
                       else {
                         fields[field] =
-                          $filter('gnLocalized')(linkToEdit[fields[field]]);
+                            $filter('gnLocalized')(linkToEdit[fields[field]]);
                       }
                     });
 
@@ -1232,7 +1227,7 @@
 
                 function checkIsOgc(protocol) {
 
-                  if (/OGC:WMS-[0-9].[0-9].[0-9]-http-get-map/.exec(protocol)) {
+                  if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
                     return 'WMS';
                   }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
@@ -1329,9 +1324,8 @@
 
                     if (!scope.isEditing) {
                       resetForm();
+                      initMultilingualFields();
                     }
-
-                    initMultilingualFields();
 
                     if (newValue.sources && newValue.sources.metadataStore) {
                       scope.$broadcast('resetSearch',
@@ -1358,25 +1352,22 @@
                   }
                 });
 
-                scope.resource = null;
-
                 /**
                  * Update url and name from uploaded resource.
                  * Triggered on file store selection change.
                  */
-                scope.$watch('resource', function(rsrc) {
-
-                  if (rsrc && rsrc.url) {
+                scope.selectUploadedResource = function(res) {
+                  if (res && res.url) {
                     var o = {
-                      name: rsrc.id.split('/').splice(2).join('/'),
-                      url: rsrc.url
+                      name: res.id.split('/').splice(2).join('/'),
+                      url: res.url
                     };
                     ['url', 'name'].forEach(function(pName) {
                       setParameterValue(pName, o[pName]);
                     });
                     scope.params.protocol = 'WWW:DOWNLOAD-1.0-http--download';
                   }
-                });
+                };
 
                 scope.$watchCollection('stateObj.selectRecords',
                     function(n, o) {

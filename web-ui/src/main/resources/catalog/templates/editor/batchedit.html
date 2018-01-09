@@ -2,7 +2,8 @@
      data-ng-controller="GnSearchController">
   <div data-ng-controller="GnBatchEditSearchController"
        data-ng-search-form=""
-       data-runSearch="true">
+       data-runSearch="true"
+       data-wait-for-user="true">
 
 
     <ul class="nav nav-tabs">
@@ -40,8 +41,8 @@
 
                     <span class="input-group-addon">
                       <label>
-                        <input type="checkbox" data-ng-model="onlyMyRecord"
-                               data-ng-click="toggleOnlyMyRecord()">
+                        <input type="checkbox" data-ng-model="onlyMyRecord.is"
+                               data-ng-change="toggleOnlyMyRecord(triggerSearch)">
                         <span data-translate="">onlyMyRecord</span>
                       </label>
                     </span>
@@ -87,6 +88,12 @@
               </div>
             </form>
             <br/>
+            <div class="row">
+              <div class="gn-results-heading col-md-offset-3">
+                <div data-search-filter-tags data-use-location-parameters="false"
+                     data-ng-show="isFilterTagsDisplayed"></div>
+              </div>
+            </div>
             <div class="row"
                  data-ng-show="searchResults.records.length > 0">
               <div class="col-md-offset-3 col-md-4 relative">
@@ -118,9 +125,6 @@
                 </div>
               </div>
               <div class="col-md-9">
-                <div class="gn-results-heading">
-                  <div data-gn-facet-breadcrumb="currentFacets"></div>
-                </div>
             <span class="loading fa fa-spinner fa-spin"
                   data-ng-show="searching"></span>
 

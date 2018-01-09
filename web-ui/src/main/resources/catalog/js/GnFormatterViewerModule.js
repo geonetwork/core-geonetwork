@@ -44,6 +44,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn');
   goog.require('gn_alert');
   goog.require('gn_catalog_service');
@@ -52,8 +64,10 @@
   goog.require('gn_mdview');
   goog.require('gn_popup_directive');
   goog.require('gn_popup_service');
+  goog.require('gn_related_directive');
   goog.require('gn_search_default_directive');
   goog.require('gn_utility');
+  goog.require('gn_viewer');
 
 
 
@@ -65,9 +79,11 @@
     'ngRoute',
     'gn',
     'gn_alert',
+    'gn_related_directive',
     'gn_catalog_service',
     'gn_mdactions_service',
     'gn_utility',
+    'gn_viewer',
     'gn_mdview'
   ]);
 
@@ -79,8 +95,10 @@
   module.constant('gnSearchSettings', {});
 
   module.controller('GnFormatterViewer',
-      ['$scope', '$http', '$sce', '$routeParams', 'Metadata', 'gnMdFormatter',
-       function($scope, $http, $sce, $routeParams, Metadata, gnMdFormatter) {
+      ['$scope', '$http', '$sce', '$routeParams', '$location',
+        'Metadata', 'gnMdFormatter',
+       function($scope, $http, $sce, $routeParams, $location,
+                Metadata, gnMdFormatter) {
 
          var formatter = $routeParams.formatter;
          var mdId = $routeParams.mdId;
@@ -90,7 +108,7 @@
            $scope.loading = false;
          });
 
-         var url = '../api/records/' + mdId + '/formatters/' + formatter;
+         var url = '../api/records/' + $location.url();
 
          gnMdFormatter.load(mdId, '.formatter-container', $scope, url);
        }]);
@@ -98,7 +116,14 @@
   module.config(['$routeProvider', function($routeProvider) {
     var tpls = '../../catalog/templates/';
 
-    $routeProvider.when('/:formatter/:mdId', { templateUrl: tpls +
-          'formatter-viewer.html', controller: 'GnFormatterViewer'});
+    $routeProvider
+        .when(
+        '/:mdId/formatters/:formatter', {
+          templateUrl: tpls + 'formatter-viewer.html',
+          controller: 'GnFormatterViewer'})
+        .when(
+        '/:mdId', {
+          templateUrl: tpls + 'formatter-viewer.html',
+          controller: 'GnFormatterViewer'});
   }]);
 })();

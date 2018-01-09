@@ -353,6 +353,7 @@ public class MetadataEditingApi {
             }
 
             boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
+            boolean isUnpublished = false;
 
             // Unpublish the metadata automatically if the setting automaticUnpublishInvalidMd is enabled and
             // the metadata becomes invalid
@@ -369,6 +370,7 @@ public class MetadataEditingApi {
                         (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
 
                     if (isInvalid) {
+                        isUnpublished = true;
                         operationAllowedRepo.deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
                     }
 
@@ -383,7 +385,14 @@ public class MetadataEditingApi {
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);
             dataUtils.endEditingSession(id, session);
-            return null;
+            if (isUnpublished) {
+                throw new IllegalStateException(String.format(
+                    "Record saved but as it was invalid at the end of " +
+                        "the editing session. The public record '%s' was unpublished.",
+                metadata.getUuid()));
+            } else {
+                return null;
+            }
         }
 
 //        if (!finished && !forget && commit) {

@@ -32,44 +32,54 @@
      * move to left/right button.
      *
      *
-     * choices and selected MUST be object
-     * with a getLabel method. The label will be
-     * the value in the list.
+     * Only support array of object with id and label props.
      *
      * TODO: Add drag&drop
      */
-  module.directive('gnMultiselect', ['$http', '$translate',
-    function($http, $translate) {
+  module.directive('gnMultiselect', [
+    function() {
 
       return {
         restrict: 'A',
         scope: {
           'selected': '=gnMultiselect',
-          'choices': '=',
-          'sortFn': '&',
-          'labelProp': '@'  // Function or property
+          'choices': '='
         },
         templateUrl: '../../catalog/components/common/multiselect/partials/' +
             'multiselect.html',
         link: function(scope, element, attrs) {
 
           var sortOnSelection = true;
+
+          //
           scope.currentSelectionLeft = [];
           scope.currentSelectionRight = [];
-          scope.selected = [];
 
-          /**
-           * Return the label of the element
-           * It could be a property of the object
-           * or a custom function which build the label
-           */
-          scope.getLabel = function(e) {
-            if (angular.isString(e[scope.labelProp])) {
-              return e[scope.labelProp];
-            } else if (angular.isFunction(e[scope.labelProp])) {
-              return e[scope.labelProp]();
+          // When selection list is updated, filter selected one
+          // from the list of choices
+          scope.$watch('selected', function(n, o) {
+            if (n !== o) {
+              scope.options = [];
+              for (var i = 0; i < scope.choices.length; i++) {
+                var e = scope.choices[i];
+                var isInSelection = false;
+                for (var j = 0; j < scope.selected.length; j++) {
+                  if (scope.selected[j].id === e.id) {
+                    isInSelection = true;
+                    break;
+                  }
+                }
+                if (!isInSelection) {
+                  scope.options.push(e);
+                }
+              }
+              // Sort both list
+              scope.options.sort(scope.sortFn);
+              scope.selected.sort(scope.sortFn);
             }
-          };
+          });
+          scope.selected = scope.selected || [];
+
           /**
           * Select a single element or the list of currently
           * selected element.
@@ -79,7 +89,7 @@
             if (!k) {
               angular.forEach(scope.currentSelectionLeft, function(value) {
                 elementsToAdd.push($.grep(scope.choices, function(n) {
-                  return scope.getLabel(n) === value;
+                  return n.id == value;
                 })[0]);
               });
             } else {
@@ -88,9 +98,14 @@
 
             angular.forEach(elementsToAdd, function(e) {
               scope.selected.push(e);
-              scope.choices = $.grep(scope.choices, function(n) {
-                return scope.getLabel(n) !== scope.getLabel(e);
-              });
+              var idx = null;
+              for (var i = 0; i < scope.options.length; i++) {
+                if (scope.options[i].id == e.id) {
+                  idx = i;
+                  break;
+                }
+              }
+              scope.options.splice(idx, 1);
             });
 
             if (sortOnSelection) {
@@ -98,21 +113,31 @@
             }
           };
 
+          scope.sortFn = function(a, b) {
+            if (a.langlabel && b.langlabel) {
+              return a.langlabel.toLowerCase() > b.langlabel.toLowerCase();
+            } else {
+              return a.name.toLowerCase() > b.name.toLowerCase();
+            }
+          };
 
           scope.unselect = function(k) {
             var elementsToRemove = k ?
-                [scope.getLabel(k)] : scope.currentSelectionRight;
+                [k.id] : scope.currentSelectionRight;
             scope.selected = $.grep(scope.selected, function(n) {
-              var toUnselect =
-                  $.inArray(scope.getLabel(n), elementsToRemove) !== -1;
-              if (toUnselect) {
-                scope.choices.push(n);
+              var unselect = false;
+              for (var i = 0; i < elementsToRemove.length; i++) {
+                if (elementsToRemove[i] == n.id) {
+                  unselect = true;
+                  scope.options.push(n);
+                  break;
+                }
               }
-              return !toUnselect;
+              return !unselect;
             });
 
             if (sortOnSelection) {
-              scope.choices.sort(scope.sortFn);
+              scope.options.sort(scope.sortFn);
             }
           };
 

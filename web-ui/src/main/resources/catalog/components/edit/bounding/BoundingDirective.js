@@ -35,13 +35,13 @@
    * This directive gives the user the possibility to define a bounding polygon,
    * either by drawing it manually on a map or copy-pasting data in the desired
    * format. The user can also select an input projection.
-   * The directive has a hidden output in GML & EPSG:4326.
+   * The directive has a hidden output in GML.
    *
-   * @attribute {string} coordinates list of coordinates
-   * separated with spaces
+   * @attribute {string} polygonXml existing geometry in GML format
    * @attribute {string} identifier id of the hidden input
-   * that will hold
-   *  the value entered by the user
+   * that will hold the value entered by the user
+   * @attribute {string} outputCrs EPSG:XXXX ref to use for geometry output;
+   * if undefined, the current projection selected by the user will be used
    */
   module.directive('gnBoundingPolygon', [
     'gnMap',
@@ -79,7 +79,7 @@
 
             // init map
             ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
-            ctrl.map.get('creationPromise').then(function () {
+            ctrl.map.get('creationPromise').then(function() {
               ctrl.initValue();
             });
 
@@ -154,6 +154,7 @@
             // projection list
             ctrl.projections = gnMap.getMapConfig().projectionList;
             ctrl.currentProjection = ctrl.projections[0].code;
+            ctrl.dataProjection = 'EPSG:4326';
 
             // available input formats
             // GML is not available as it cannot be parsed
@@ -161,23 +162,46 @@
             ctrl.formats = ['WKT', 'GeoJSON', 'GML'];
             ctrl.currentFormat = ctrl.formats[0];
 
+            function isProjAvailable(code) {
+              for (var i = 0; i < ctrl.projections.length; i++) {
+                if (ctrl.projections[i].code === code) {
+                  return true;
+                }
+              }
+              return false;
+            };
+
             // parse initial input coordinates to display shape
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
+                var srsName = ctrl.polygonXml.match(
+                    new RegExp('srsName=\"(EPSG:[0-9]*)\"'));
+                ctrl.dataProjection = srsName && srsName.length === 2 ?
+                    srsName[1] : 'EPSG:4326';
+
+                if (!isProjAvailable(ctrl.dataProjection)) {
+                  ctrl.projections.push({
+                    code: ctrl.dataProjection,
+                    label: ctrl.dataProjection
+                  });
+                }
+
+                ctrl.currentProjection = ctrl.dataProjection;
+
                 // parse first feature from source XML & set geometry name
-                var correctedXml = ctrl.polygonXml
-                    .replace(/<gml:LinearRingTypeCHOICE_ELEMENT0>/g, '')
-                    .replace(/<\/gml:LinearRingTypeCHOICE_ELEMENT0>/g, '')
-                    .replace(/<gml:LineStringTypeCHOICE_ELEMENT1>/g, '')
-                    .replace(/<\/gml:LineStringTypeCHOICE_ELEMENT1>/g, '');
-                var geometry = gnGeometryService.parseGeometryInput(
-                    ctrl.map,
-                    correctedXml,
-                    {
-                      crs: 'EPSG:4326',
-                      format: 'gml'
-                    }
-                    );
+                try {
+                  var geometry = gnGeometryService.parseGeometryInput(
+                      ctrl.map,
+                      ctrl.polygonXml,
+                      {
+                        crs: ctrl.currentProjection,
+                        format: 'gml'
+                      }
+                      );
+                } catch (e) {
+                  console.warn('Could not parse geometry');
+                  console.warn(e);
+                }
 
                 if (!geometry) {
                   console.warn('Could not parse geometry from extent polygon');
@@ -206,6 +230,9 @@
                     ctrl.map.getSize());
               }
 
+              var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :
+                  ctrl.currentProjection;
+
               // print output (skip if readonly)
               if (!ctrl.readOnly) {
                 ctrl.outputPolygonXml =
@@ -214,7 +241,7 @@
                     ctrl.map,
                     feature,
                     {
-                      crs: 'EPSG:4326',
+                      crs: outputCrs,
                       format: 'gml'
                     }
                     ) +
@@ -269,6 +296,8 @@
                 ctrl.handleInputChange();
               } else {
                 ctrl.updateInputTextFromGeometry();
+                // Update output if projection change
+                ctrl.updateOutput(source.getFeatures()[0]);
               }
             };
 

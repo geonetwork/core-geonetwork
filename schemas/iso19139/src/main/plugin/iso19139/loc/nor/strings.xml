@@ -31,4 +31,9 @@
   <refDate>Reference date</refDate>
   <temporalRef>Temporal information</temporalRef>
   <constraintInfo>Access constraint information</constraintInfo>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
 </strings>

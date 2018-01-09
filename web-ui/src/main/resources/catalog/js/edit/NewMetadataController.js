@@ -95,7 +95,8 @@
               fullPrivileges,
               $routeParams.template,
               false,
-              $routeParams.tab);
+              $routeParams.tab,
+              true);
         } else {
 
           // Metadata creation could be on a template
@@ -110,7 +111,8 @@
 
           // TODO: Better handling of lots of templates
           gnSearchManagerService.search('qi?_content_type=json&' +
-              query + '&fast=index&from=1&to=200&_isTemplate=y or n').
+              query + '&fast=index&from=1&to=200&_isTemplate=y or n&' +
+            'sortBy=title&sortOrder=reverse').
               then(function(data) {
 
                 $scope.mdList = data;
@@ -226,7 +228,8 @@
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,
-            metadataUuid
+            metadataUuid,
+            true
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('createMetadataError'),

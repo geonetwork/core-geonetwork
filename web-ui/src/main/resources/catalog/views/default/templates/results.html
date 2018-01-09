@@ -29,6 +29,13 @@
     </div>
 
     <div class="col-md-9 container-fluid">
+      <div class="row" data-ng-show="isFilterTagsDisplayedInSearch">
+        <div class="col-xs-12">
+          <div data-search-filter-tags="">
+
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-xs-12 col-md-9"
             data-gn-facet-dimension-list="searchResults.dimension"
@@ -61,6 +68,7 @@
               data-gn-sortby-values="searchObj.sortbyValues"></div>
         </div>
     </div>
+
 
     <div class="row">
       <div class="col-xs-12">

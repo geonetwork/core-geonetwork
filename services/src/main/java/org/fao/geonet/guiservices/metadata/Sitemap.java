@@ -1,29 +1,25 @@
-//==============================================================================
-//===
-//=== Sitemap
-//===
-//=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.guiservices.metadata;
 
@@ -38,7 +34,7 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.SitemapDocumentNotFoundEx;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -96,8 +92,8 @@ public class Sitemap implements Service {
 
         OperationAllowedRepository operationAllowedRepository =
             context.getBean(OperationAllowedRepository.class);
-        IMetadataUtils metadataRepository =
-            context.getBean(IMetadataUtils.class);
+        MetadataRepository metadataRepository =
+            context.getBean(MetadataRepository.class);
 
         final List<Integer> list = operationAllowedRepository.findAllIds(spec,
             OperationAllowedId_.metadataId);
@@ -110,31 +106,33 @@ public class Sitemap implements Service {
 
         Element result = null;
 
-        // Requesting a sitemap specific document
         if (doc > 0) {
+            // Requesting a sitemap specific document
             if (doc <= pages) {
-                final PageRequest pageRequest = new PageRequest(doc - 1, _maxItemsPage, sortByChangeDateDesc);
 
-                result = metadataRepository.findAllAsXml(MetadataSpecs.hasMetadataIdIn(list), pageRequest);
+                final PageRequest pageRequest = new PageRequest(doc - 1, _maxItemsPage, sortByChangeDateDesc);
+                result = metadataRepository.findAllUuidsAndChangeDatesAndSchemaId(list, pageRequest);
 
                 Element formatEl = new Element("format");
                 formatEl.setText(format.toLowerCase());
-
                 result.addContent(formatEl);
+
             } else {
                 throw new SitemapDocumentNotFoundEx(doc);
             }
 
-            // Request the sitemap (no specific document)
-        } else {
-            if (metadatataCount <= _maxItemsPage) {
-                result = metadataRepository.findAllAsXml(MetadataSpecs.hasMetadataIdIn(list), sortByChangeDateDesc);
+        } else { 
+            // Request the sitemap (no specific document) 
+            if (metadatataCount <= _maxItemsPage) { 
+                // Request the full sitemap 
+                result = metadataRepository.findAllUuidsAndChangeDatesAndSchemaId(list);
 
                 Element formatEl = new Element("format");
                 formatEl.setText(format.toLowerCase());
-
                 result.addContent(formatEl);
-            } else {
+
+            } else { 
+                // Request the index
                 result = new Element("response");
 
                 Element indexDocs = new Element("indexDocs");

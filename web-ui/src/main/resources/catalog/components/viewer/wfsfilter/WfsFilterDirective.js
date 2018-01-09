@@ -149,6 +149,9 @@
             searchGeometry: undefined
           };
 
+          scope.output = {};
+          // initialize object as it is not supposed to be undefined
+
           // if true, the "apply filters" button will be available
           scope.filtersChanged = false;
           scope.previousFilterState = {
@@ -306,7 +309,7 @@
                 indexObject.setFielsdOrder();
               }
             }
-            scope.hmActive = appProfile && appProfile.heatmap || true;
+            scope.hmActive = appProfile ? appProfile.heatmap : true;
 
             scope.resetFacets().then(scope.restoreInitialFilters);
           }
@@ -413,40 +416,19 @@
             }
           };
 
-          scope.onUpdateDate = function(field) {
-            var output = scope.output;
-            var fieldName = field.name;
-            var date;
+          // this returns a callback with the fieldname & type available
+          // the callback is called when the date range is updated, with
+          // 'from' and 'to' properties as arguments
+          scope.onUpdateDateRange = function(field, dateFrom, dateTo) {
+            scope.output[field.name] = {
+              type: field.type || 'date',
+              values: {
+                from: dateFrom,
+                to: dateTo
+              }
+            };
 
-            // mapping from field (timelineZoomable)
-            if (field.model) {
-              date = field.model;
-              if ((angular.isObject(date) && date.from && date.to) ||
-                  angular.isString(date)) {
-                output[fieldName] = {
-                  type: field.type || 'date',
-                  value: date
-                };
-              }
-              else {
-                delete output[fieldName];
-              }
-            }
-            // Direct mapping (datepicker)
-            else {
-              date = output[fieldName].values;
-
-              if ((angular.isObject(date) && date.from && date.to) ||
-                  angular.isString(date)) {
-                output[fieldName].type = 'date';
-              }
-              else {
-                output[fieldName].type = undefined;
-              }
-            }
-            if (output[fieldName].type) {
-              scope.filterFacets();
-            }
+            scope.filterFacets();
           };
 
           /**
@@ -513,7 +495,6 @@
            * to the output structure to generate the ui.
            */
           scope.resetFacets = function() {
-
             scope.output = {};
             scope.searchInput = '';
 
@@ -535,7 +516,6 @@
                   scope.count = resp.count;
                   refreshHeatmap();
                 });
-
           };
 
           /**
@@ -632,8 +612,8 @@
                     SLD: sldURL
                   });
                 }
-                scope.filtersChanged = false;   // reset 'apply filters' button
               }).finally(function() {
+                scope.filtersChanged = false;   // reset 'apply filters' button
                 defer.resolve();
               });
             } else {
@@ -808,6 +788,47 @@
 
             scope.filtersChanged = inputChanged || paramsChanged || geomChanged;
           });
+
+          // returns true if there is an active filter for this field
+          // field object is optional
+          scope.isFilterActive = function(facetName, field) {
+            // no available value: return false
+            if (!scope.output[facetName]) {
+              return false;
+            }
+
+            // special case for dates
+            if (scope.output[facetName].type == 'date') {
+              var values = scope.output[facetName].values;
+
+              // no dates defined: leave
+              if (!field || !values) {
+                return false;
+              }
+
+              // check if there is a valid "higher than" or "lower than" filter
+              var lowerBound = field.dates &&
+                  field.dates[0];
+              var upperBound = field.dates &&
+                  field.dates[field.dates.length - 1];
+              var lowerActive = values.from &&
+                  moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
+                  lowerBound;
+              var upperActive = values.to &&
+                  moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
+                  upperBound;
+              return lowerActive || upperActive;
+            }
+
+            // special case for geometry
+            if (facetName == 'geometry') {
+              return scope.ctrl.searchGeometry &&
+                  scope.ctrl.searchGeometry !== ',,,';
+            }
+
+            // other fields: the filter must be active
+            return true;
+          };
         }
       };
     }]);

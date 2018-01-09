@@ -81,6 +81,9 @@
             in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
         </section>
       </tab>
+      <flatModeExceptions>
+        <for name="gfc:code"/>
+      </flatModeExceptions>
     </view>
     <view name="advanced">
       <tab id="advanced">

@@ -28,6 +28,7 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -542,6 +543,7 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
+        Processor.processXLink(md, this.context);
 
         //--- do the validation on the metadata
         return dataManager.doValidate(session, schema, id, md, lang, false).one();
