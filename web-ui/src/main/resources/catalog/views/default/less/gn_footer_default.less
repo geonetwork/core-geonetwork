@@ -1,4 +1,5 @@
-@import "gn_variables_default.less"; // must be first
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 .gn-footer-text {
   margin-top: 15px;
@@ -31,15 +32,15 @@
   margin-bottom: 0px;
   border-radius: 0px;
   border-width: 1px 0 0 0;
-  background: @gnBottombarBackground;
-  border-color: @gnBottombarBorderColor;
+  background: @gn-bottombar-background;
+  border-color: @gn-bottombar-border-color;
   .gn-footer-text > span {
-    color: @gnBottombarColor !important;
+    color: @gn-bottombar-color !important;
   }
   a {
-    color: @gnBottombarColor !important;
+    color: @gn-bottombar-color !important;
     &:hover {
-      color: @gnBottombarColorHover !important;
+      color: @gn-bottombar-color-hover !important;
     }
   }
 }
