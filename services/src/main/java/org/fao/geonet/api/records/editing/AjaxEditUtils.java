@@ -279,8 +279,12 @@ public class AjaxEditUtils extends EditUtils {
         //--- locate the geonet:element and geonet:info elements and clone for
         //--- later re-use
         Element refEl = (Element) (el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
-        Element info = (Element) (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)).clone();
-        md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        Element info = null;
+        
+        if(md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE) != null) {
+            info = (Element) (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)).clone();
+            md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        }
 
         Element child = null;
         MetadataSchema mds = dataManager.getSchema(schema);
@@ -339,8 +343,10 @@ public class AjaxEditUtils extends EditUtils {
             editLib.expandTree(mds, el);
 
         }
-        //--- attach the info element to the child
-        child.addContent(info);
+        if(info != null) {
+            //--- attach the info element to the child
+            child.addContent(info);
+        }
 
           /* When adding an gmx:Anchor to an element, due to the following code gets also a gco:CharacterString in EditLib.
 
@@ -359,14 +365,16 @@ public class AjaxEditUtils extends EditUtils {
             Element child = isoPlugin.createBasicTypeCharacterString();
             element.addContent(child);
         */
-        if (childName.equals("gmx:Anchor")) {
+        if (childName != null && childName.equals("gmx:Anchor")) {
             if (child.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
                 child.removeChild("CharacterString", ISO19139Namespaces.GCO);
             }
         }
 
-        //--- attach the info element to the metadata root)
-        md.addContent((Element) info.clone());
+        if(info != null) {
+            //--- attach the info element to the metadata root)
+            md.addContent((Element) info.clone());
+        }
 
         //--- store the metadata in the session again
         setMetadataIntoSession(session, (Element) md.clone(), id);
