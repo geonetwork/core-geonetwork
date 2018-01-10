@@ -47,8 +47,8 @@
               class="form-group">
 
               <!-- Input label & info -->
-              <span>
-                <label>{{::input.title.value}}</label>
+              <label>
+                <span>{{::input.title.value}}&nbsp;</span>
                 <span class="fa fa-info-circle" ng-if="::input._abstract.value"
                   title="{{::input._abstract.value}}"></span>
                 <small class="text-danger" ng-if="::input.minOccurs">
@@ -58,7 +58,7 @@
                 <small class="text-muted"
                   ng-if="inputWfsOverride[input.identifier.value]">
                   {{::'inputIsOverloaded' | translate}}</small>
-              </span>
+              </label>
 
               <!-- Basic form field (combo box or text field) -->
               <div ng-if="::input.literalData">
