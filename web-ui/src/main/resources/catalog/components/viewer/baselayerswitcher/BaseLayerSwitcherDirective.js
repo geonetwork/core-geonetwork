@@ -56,7 +56,48 @@
             layers.insertAt(0, layer);
             return false;
           };
+
+          var dropdownMenuElement;
+          // Fix problems when the dropdown menu is bigger than the panel.
+          element.on('shown.bs.dropdown', function() {
+            var dropdownToggle = element.find('.baselayer');
+            var dropdownMenu = element.find('.dropdown-menu');
+            var top = dropdownToggle.offset().top + dropdownToggle.height() ;
+            var maxHeight = 600;
+            var width = dropdownToggle.width();
+            if (scope.dropup) {
+              maxHeight = dropdownToggle.offset().top;
+              top = dropdownToggle.offset().top - dropdownToggle.height() - dropdownMenu.height();
+            }
+            if (top <= 0) {
+              top = 0;
+            }
+            var left = dropdownToggle.offset().left ;
+            dropdownMenu.css({
+              'top': top + 'px',
+              'left': left + "px",
+              'max-height': maxHeight + 'px',
+              'width': width + 'px',
+              'display': 'block',
+              'overflow-y': 'auto',
+              'position': 'absolute'
+            });
+            dropdownMenuElement = dropdownMenu;
+            $('body').append(dropdownMenuElement.detach());
+          });
+
+          element.on('hidden.bs.dropdown', function() {
+            element.append(dropdownMenuElement.css({
+              position: false,
+              height: false,
+              left:false,
+              top: false,
+              display: ''
+            }).detach());
+          });
+
         }
+
       };
     }]);
 
