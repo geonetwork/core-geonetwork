@@ -285,6 +285,8 @@
   <addCrs3395Custom>WGS 84 / World Mercator (custom)</addCrs3395Custom>
   <addCrs4258>ETRS89</addCrs4258>
   <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
+  <emodnetAddQualityIndicators>Add quality indicators</emodnetAddQualityIndicators>
+
 
   <!-- Sextant -->
   <sextant>Sextant</sextant>

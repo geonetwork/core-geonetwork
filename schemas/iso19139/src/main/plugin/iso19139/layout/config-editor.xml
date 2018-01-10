@@ -1170,6 +1170,74 @@
                           contains(
                             */gmd:nameOfMeasure/*/text(),
                             'emodnet-bathymetry.QI.')]"/>
+
+            <action type="add"
+                    name="emodnetAddQualityIndicators"
+                    or="dataQualityInfo"
+                    in="/gmd:MD_Metadata"
+                    if="count(gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report[
+                          contains(
+                            */gmd:nameOfMeasure/*/text(),
+                            'emodnet-bathymetry.QI.')]) = 0">
+              <template>
+                <snippet>
+                  <gmd:dataQualityInfo>
+                    <gmd:DQ_DataQuality>
+                      <gmd:scope>
+                        <gmd:DQ_Scope>
+                          <gmd:level>
+                            <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                                              codeListValue="dataset"/>
+                          </gmd:level>
+                        </gmd:DQ_Scope>
+                      </gmd:scope>
+                      <gmd:report>
+                        <gmd:DQ_AbsoluteExternalPositionalAccuracy>
+                          <gmd:nameOfMeasure>
+                            <gco:CharacterString>emodnet-bathymetry.QI.Horizontal</gco:CharacterString>
+                          </gmd:nameOfMeasure>
+                          <gmd:result>
+                            <gmd:DQ_QuantitativeResult>
+                              <gmd:value>
+                                <gco:Record/>
+                              </gmd:value>
+                            </gmd:DQ_QuantitativeResult>
+                          </gmd:result>
+                        </gmd:DQ_AbsoluteExternalPositionalAccuracy>
+                      </gmd:report>
+                      <gmd:report>
+                        <gmd:DQ_AbsoluteExternalPositionalAccuracy>
+                          <gmd:nameOfMeasure>
+                            <gco:CharacterString>emodnet-bathymetry.QI.Vertical</gco:CharacterString>
+                          </gmd:nameOfMeasure>
+                          <gmd:result>
+                            <gmd:DQ_QuantitativeResult>
+                              <gmd:value>
+                                <gco:Record/>
+                              </gmd:value>
+                            </gmd:DQ_QuantitativeResult>
+                          </gmd:result>
+                        </gmd:DQ_AbsoluteExternalPositionalAccuracy>
+                      </gmd:report>
+                      <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                          <gmd:nameOfMeasure>
+                            <gco:CharacterString>emodnet-bathymetry.QI.Purpose</gco:CharacterString>
+                          </gmd:nameOfMeasure>
+                          <gmd:result>
+                            <gmd:DQ_QuantitativeResult>
+                              <gmd:value>
+                                <gco:Record/>
+                              </gmd:value>
+                            </gmd:DQ_QuantitativeResult>
+                          </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                      </gmd:report>
+                    </gmd:DQ_DataQuality>
+                  </gmd:dataQualityInfo>
+                </snippet>
+              </template>
+            </action>
           </section>
         </section>
       </tab>
