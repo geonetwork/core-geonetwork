@@ -956,11 +956,9 @@
     border: none;
   }
   .panel-heading {
-    height: 2em;
-    line-height: 2em;
     background-color: transparent;
     border-bottom: 1px solid @sxt-base-color;
-    padding: 0 15px;
+    margin-top: 0px;
     > button {
       display: none;
     }
@@ -977,7 +975,9 @@
   }
   label {
     font-weight: normal;
-    text-transform: uppercase;
+    span:first-of-type {
+      white-space: pre-wrap;
+    }
   }
   .dropdown-menu {
     label {
