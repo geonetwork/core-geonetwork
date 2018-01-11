@@ -1606,6 +1606,10 @@
                   url = encodeURI(layer.ResourceURL[0].template);
                 }
 
+                if (layer.ResourceURL.length > 0) {
+                  url = encodeURI(layer.ResourceURL[0].template);
+                }
+
                 angular.extend(sourceConfig, {
                   urls: urls,
                   requestEncoding: 'REST'
