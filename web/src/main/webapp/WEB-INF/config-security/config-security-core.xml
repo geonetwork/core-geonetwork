@@ -167,9 +167,10 @@
     </property>
     <property name="authenticationSuccessHandler">
       <bean
-        class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+        class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
         <property name="targetUrlParameter" value="redirectUrl"/>
+        <property name="useReferer" value="true" />
       </bean>
     </property>
     <property name="sessionAuthenticationStrategy">
