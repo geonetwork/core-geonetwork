@@ -1409,10 +1409,10 @@
     <xsl:param name="insertRef" select="''"/>
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    <button type="button" class="btn btn-link btn-xs"
+    <button type="button" class="btn btn-default btn-xs"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
-      <i class="fa fa-plus"/>
+      <i class="fa fa-plus fa-fw"/>
       <xsl:value-of select="$attributeLabel/label"/>
     </button>
   </xsl:template>
