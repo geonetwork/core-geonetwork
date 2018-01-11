@@ -206,8 +206,8 @@
           <tr data-ng-if="mdView.current.record.legalConstraints">
             <th data-translate="">legalConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index"
-                 data-ng-bind-html="c | newlines">
+              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -215,8 +215,8 @@
           <tr data-ng-if="mdView.current.record.securityConstraints">
             <th data-translate="">securityConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index"
-                 data-ng-bind-html="c | linky | newlines">
+              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -225,8 +225,8 @@
           <tr data-ng-if="mdView.current.record.resourceConstraints">
             <th data-translate="">resourceConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index"
-                 data-ng-bind-html="c | linky | newlines">
+              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>

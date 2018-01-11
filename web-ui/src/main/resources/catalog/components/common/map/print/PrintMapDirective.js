@@ -222,7 +222,7 @@
           }
           if (layer instanceof ol.layer.Group) {
             var encs = gnPrint.encoders.layers['Group'].call(this,
-                layer, proj);
+              layer, proj);
             encLayers = encLayers.concat(encs);
           } else {
             var enc = encodeLayer(layer, proj);
@@ -297,7 +297,7 @@
             resolution >= minResolution) {
           if (src instanceof ol.source.WMTS) {
             encLayer = gnPrint.encoders.layers['WMTS'].call(this,
-                layer, layerConfig, $scope.map);
+                layer, layerConfig, proj);
           } else if (src instanceof ol.source.OSM) {
             encLayer = gnPrint.encoders.layers['OSM'].call(this,
                 layer, layerConfig);
@@ -307,7 +307,7 @@
           } else if (src instanceof ol.source.ImageWMS ||
               src instanceof ol.source.TileWMS) {
             encLayer = gnPrint.encoders.layers['WMS'].call(this,
-                layer, layerConfig, $scope.map);
+                layer, layerConfig, proj);
           } else if (src instanceof ol.source.Vector ||
               src instanceof ol.source.ImageVector) {
             if (src instanceof ol.source.ImageVector) {
@@ -321,7 +321,7 @@
             if (features && features.length > 0) {
               encLayer =
                   gnPrint.encoders.layers['Vector'].call(this,
-                      layer, features);
+                    layer, features);
             }
           }
         }

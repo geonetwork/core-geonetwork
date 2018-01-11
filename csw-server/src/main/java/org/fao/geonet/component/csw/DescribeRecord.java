@@ -215,16 +215,17 @@ public class DescribeRecord extends AbstractOperation implements CatalogService 
     private HashMap<String, Element> getSchemaComponents(ServiceContext context, String typeName)
         throws NoApplicableCodeEx, InvalidParameterValueEx {
 
-        Element currentSC;
-        HashMap<String, Element> scElements = new HashMap<String, Element>();
+        HashMap<String, Element> scElements = new HashMap<>();
 
         if (typeName == null) {
-            Set<String> schemaFiles = new HashSet<String>(_catalogConfig
-                .getDescribeRecordTypename().values());
-            for (String schema : schemaFiles) {
-                String tname = schema.substring(0, schema.indexOf("."));
-                currentSC = loadSchemaComponent(context, tname, schema);
-                scElements.put(tname, currentSC);
+            for (String tname : _catalogConfig.getDescribeRecordTypename().keySet()) {
+                String schema = _catalogConfig.getDescribeRecordTypename().get(tname);
+                try {
+                    Element currentSC = loadSchemaComponent(context, tname, schema);
+                    scElements.put(tname, currentSC);
+                } catch (Exception ex) {
+                    context.warning("Error while getting schema " + tname + " (" + schema+"): " + ex.getMessage());
+                }
             }
         } else {
             if (_catalogConfig.getDescribeRecordTypename().containsKey(typeName)) {
