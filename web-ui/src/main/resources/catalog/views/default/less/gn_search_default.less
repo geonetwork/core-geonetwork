@@ -17,6 +17,8 @@
 @import "gn_map_default.less";
 // footer and bottombar
 @import "gn_footer_default.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 /* Hide the tabset selector because tab
    switch is available in the top tool bar */
@@ -70,8 +72,8 @@
 [data-ng-search-form] {
   .gn-top-search {
     position: relative;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     [typeahead] {
       vertical-align: middle;
       display: inline-block;
@@ -206,6 +208,14 @@
   li.gn-more {
     position: relative;
     float:right;
+  }
+  .quickresultcard {
+    background-color: @gn-resultcard-background-color;
+    .front {
+      .top {
+        background-color: @gn-resultcard-title-background-color
+      }
+    }
   }
 }
 

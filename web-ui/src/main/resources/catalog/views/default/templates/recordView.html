@@ -2,7 +2,7 @@
   <div class="alert alert-warning"
        data-ng-hide="mdView.current.record"
        data-translate=""
-       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
+       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
     recordNotFound
   </div>
 
@@ -206,8 +206,8 @@
           <tr data-ng-if="mdView.current.record.legalConstraints">
             <th data-translate="">legalConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index"
-                 data-ng-bind-html="c | newlines">
+              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -215,8 +215,8 @@
           <tr data-ng-if="mdView.current.record.securityConstraints">
             <th data-translate="">securityConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index"
-                 data-ng-bind-html="c | linky | newlines">
+              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -225,8 +225,8 @@
           <tr data-ng-if="mdView.current.record.resourceConstraints">
             <th data-translate="">resourceConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index"
-                 data-ng-bind-html="c | linky | newlines">
+              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -435,19 +435,22 @@
           </h4>
 
           <p>
-          <dl data-ng-show="mdView.current.record.creationDate">
+          <dl data-ng-show="mdView.current.record.creationDate.length > 0">
             <dt data-translate>creationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
+            <dd data-ng-repeat="creaDate in mdView.current.record.creationDate track by $index"
+                data-gn-humanize-time="{{creaDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.publicationDate">
+          <dl data-ng-show="mdView.current.record.publicationDate.length > 0">
             <dt data-translate>publicationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
+            <dd data-ng-repeat="pubDate in mdView.current.record.publicationDate track by $index"
+                data-gn-humanize-time="{{pubDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.revisionDate">
+          <dl data-ng-show="mdView.current.record.revisionDate.length > 0">
             <dt data-translate>revisionDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
+            <dd data-ng-repeat="revDate in mdView.current.record.revisionDate track by $index"
+                data-gn-humanize-time="{{revDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
           <dl data-ng-show="mdView.current.record.tempExtentBegin ||

@@ -43,13 +43,14 @@
                  placeholder="{{'filter' | translate}}"
                  class="form-control"
                  data-ng-show="tpls.length > 10"
-                 data-ng-model="titleFilter"/>
+                 data-ng-model="tplFilter.title"
+                 data-ng-model-options="{debounce: 200}"
+          />
 
           <div class="list-group">
-            <a data-ng-repeat="tpl in tpls | filter: {title: titleFilter}" href=""
-               class="list-group-item"
+            <a data-ng-repeat="tpl in tpls | filter:tplFilter" href="" class="list-group-item"
                data-ng-click="setActiveTpl(tpl)"
-               data-ng-class="{'active': tpl==activeTpl}">{{tpl.title || tpl.defaultTitle}}</a>
+               data-ng-class="{'active': tpl==activeTpl}">{{tpl.title}}</a>
           </div>
         </div>
       </div>

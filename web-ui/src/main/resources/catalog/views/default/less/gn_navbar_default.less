@@ -1,5 +1,18 @@
-@import "../../../style/gn_bootstrap.less";
+@import "../../../style/gn_bootstrap.less"; // must be first
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 .navbar {
-  margin-bottom: 0px;
+  margin-bottom: 0;
+}
+
+.navbar-default {
+  background-color: @gn-menubar-background;
+  border-color: @gn-menubar-border-color;
+  .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
+    color: @gn-menubar-color;
+    &:hover, &:focus {
+      color: @gn-menubar-color-hover;
+    }
+  }
 }
