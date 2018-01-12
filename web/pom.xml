@@ -531,9 +531,9 @@
 
 
   <build>
-  
+
     <plugins>
-    
+
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
 	        <groupId>pl.project13.maven</groupId>
@@ -548,7 +548,7 @@
 	                </goals>
 	            </execution>
 	        </executions>
-	
+
 	        <configuration>
 	            <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
 	            <prefix>git</prefix>
@@ -589,7 +589,7 @@
 	                <forceLongFormat>false</forceLongFormat>
 	            </gitDescribe>
 	            <!-- @since 2.2.2 -->
-	            <!-- 
+	            <!--
 	                Since version **2.2.2** the maven-git-commit-id-plugin comes equipped with an additional validation utility which can be used to verify if your project properties are set as you would like to have them set.
 	                *Note*: This configuration will only be taken into account when the additional goal `validateRevision` is configured inside an execution.
 	            -->
@@ -599,9 +599,9 @@
 	                         A descriptive name that will be used to be able to identify the validation that does not match up (will be displayed in the error message).
 	                    -->
 	                    <name>validating project version</name>
-	                    <!-- 
+	                    <!--
 	                         the value that needs the validation
-	                         *Note* : In order to be able to validate the generated git-properties inside the pom itself you may need to set the configuration `<injectAllReactorProjects>true</injectAllReactorProjects>`. 
+	                         *Note* : In order to be able to validate the generated git-properties inside the pom itself you may need to set the configuration `<injectAllReactorProjects>true</injectAllReactorProjects>`.
 	                    -->
 	                    <value>${project.version}</value>
 	                    <!--
@@ -613,7 +613,7 @@
 	            </validationProperties>
 	            <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
 	        </configuration>
-	
+
 	    </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
@@ -779,6 +779,7 @@
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webApp>
             <contextPath>/geonetwork</contextPath>
+            <defaultsDescriptor>${project.basedir}/jetty-webdefault.xml</defaultsDescriptor>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
               <resourcesAsCSV>
