@@ -55,6 +55,8 @@ import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 
@@ -89,7 +91,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
     public Element serviceSpecificExec(Element params, ServiceContext context)
         throws Exception {
 
-        GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
         boolean isEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
@@ -129,6 +131,11 @@ public class SelfRegister extends NotInReadOnlyModeService {
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (userRepository.findOneByEmail(email) != null) {
+            return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
+        }
+
+        if (userRepository.findByUsernameIgnoreCase(username).size() != 0) {
+            // username is ignored and the email is used as username in selfregister
             return element.addContent(new Element("result").setText("errorEmailAddressAlreadyRegistered"));
         }
 
