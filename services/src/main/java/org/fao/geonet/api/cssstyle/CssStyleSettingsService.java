@@ -137,12 +137,16 @@ public class CssStyleSettingsService {
      * @return the map
      * @throws JSONException the JSON exception
      */
-
     private Map<String, String> convertLessListToAngularFormat(List<CssStyleSetting> currentCssStyleSettings) throws JSONException {
         final Map<String, String> map = new HashMap<>();
 
         for (final CssStyleSetting cssStyleSetting : currentCssStyleSettings) {
-            map.put(fromDashToCamel(cssStyleSetting.getVariable()), cssStyleSetting.getValue());
+            // Checking the url variable (removing quotes)
+            if(cssStyleSetting.getVariable().equals("gn-background-image") && cssStyleSetting.getValue()!=null && cssStyleSetting.getValue().startsWith("'")) {
+                map.put(fromDashToCamel(cssStyleSetting.getVariable()), cssStyleSetting.getValue().substring(1, cssStyleSetting.getValue().length()-1));
+            } else {
+                map.put(fromDashToCamel(cssStyleSetting.getVariable()), cssStyleSetting.getValue());
+            }
         }
         return map;
     }
@@ -196,7 +200,7 @@ public class CssStyleSettingsService {
      */
 
     private Path initializeLessFileInDataFolder(String path) throws IOException {
-        final Path lessPath = Paths.get(path + "/gn_dynamic_style.less");
+        final Path lessPath = Paths.get(path + "/gn_dynamic_style.json");
         try {
             Files.createFile(lessPath);
         } catch (final FileAlreadyExistsException e1) {
@@ -259,7 +263,12 @@ public class CssStyleSettingsService {
         while (iter.hasNext()) {
             final String key = iter.next();
             if (input.getString(key) != null) {
-                output.put(fromCamelToDash(key), input.getString(key));
+                // For the url is necessary to add quotes
+                if(key.equals("gnBackgroundImage") && input.getString(key) != null && !input.getString(key).startsWith("'")) {
+                    output.put(fromCamelToDash(key), "'" + input.getString(key) + "'");
+                } else {
+                    output.put(fromCamelToDash(key), input.getString(key));
+                }
             }
         }
         return output.toString();

@@ -151,7 +151,7 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private Path openFileWithCustomStyle(String path) throws IOException {
-        final Path lessPath = Paths.get(path + "/gn_dynamic_style.less");
+        final Path lessPath = Paths.get(path + "/gn_dynamic_style.json");
         if (Files.exists(lessPath)) {
             return lessPath;
         } else {
