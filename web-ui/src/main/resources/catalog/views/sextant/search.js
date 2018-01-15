@@ -213,7 +213,8 @@
                 viewerMap.getSize()[0] == 0 && viewerMap.getSize()[1] == 0 )) {
                 loadAttempt += 1;
               }
-              if($(viewerMap.getTarget()).width()) {
+              if($(viewerMap.getTarget()).width() &&
+                $(viewerMap.getTarget()).height()) {
                 viewerMap.updateSize();
                 if(viewerMap.get('lastExtent')) {
                   viewerMap.getView().fit(
