@@ -345,6 +345,22 @@
           sort[p.sort] = {'order' : p.order};
           queryObject.sort.push(sort);
         }
+        if (coordinates) {
+          var coords = ol.proj.transform(coordinates,
+              map.getView().getProjection(), 'EPSG:4326');
+          queryObject.query.bool.filter = {
+            'geo_shape': {
+              'geom': {
+                'shape': {
+                  'type': 'circle',
+                  'radius': map.getView().getResolution() / 400 + 'km',
+                  'coordinates': coords
+                },
+                'relation': 'intersects'
+              }
+            }
+          };
+        }
         return JSON.stringify(queryObject);
       }.bind(this),
       responseHandler: function(res) {

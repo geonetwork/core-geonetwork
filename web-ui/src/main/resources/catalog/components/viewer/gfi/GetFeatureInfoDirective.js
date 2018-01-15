@@ -167,6 +167,7 @@
       this.overlay.setPosition(
           (newVal == 0) ? undefined : coordinates
       );
+      this.map.updateSize();
     }.bind(this));
   };
 
