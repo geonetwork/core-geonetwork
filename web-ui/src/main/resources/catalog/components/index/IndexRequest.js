@@ -243,7 +243,7 @@
                 this.createFacetSpecFromDateRanges_(
                 resp.indexData.aggregations);
 
-            return this.search(qParams, angular.extend(
+            return this.search(qParams, angular.merge(
                 {}, this.initialParams.facets, rangeDateP, statsP, aggs)
             );
           }.bind(this));

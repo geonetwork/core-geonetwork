@@ -36,7 +36,7 @@
 
       <!-- value filter field -->
       <div class="filter-input sxt-layertree-filter"
-        ng-if="field.more || facetFilters[field.name]" ng-show="field.expanded">
+        ng-if="field.more || facetFilters[field.name] || (field.tree.nodes.length > 20)" ng-show="field.expanded">
         <span class="fa fa-times-circle clear" title="clear"
           ng-click="facetFilters[field.name] = ''; filterFacets()"
           ng-show="facetFilters[field.name]"></span>
@@ -70,7 +70,9 @@
               callback="onUpdateDateRange(field, from, to)">
           </div>
         </div>
-        <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
+        <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
+          <span translate>more</span>...
+        </a>
       </div>
     </div>
     <!--Geometry Field-->

@@ -544,17 +544,24 @@
     }
 
     .list-group [gn-wfs-filter-facets-tree] {
-      .list-group {
+      > [gn-wfs-filter-facets-tree-item] > .list-group {
         border: none;
+      }
+      .list-group {
         margin-left: -15px;
         .list-group {
-          margin-left: 6.5px;
+          margin-left: 5.5px;
           display: none;
         }
       }
       .gn-leaf {
         margin-left: -2px;
       }
+    }
+
+    .see-more {
+      margin: 2px 22px;
+      display: block;
     }
   }
 
