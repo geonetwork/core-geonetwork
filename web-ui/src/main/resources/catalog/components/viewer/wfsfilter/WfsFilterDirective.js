@@ -656,7 +656,8 @@
             }
 
             // special case for dates
-            if (scope.output[facetName].type == 'date') {
+            if (scope.output[facetName].type == 'date' ||
+                scope.output[facetName].type == 'rangeDate') {
               var values = scope.output[facetName].values;
 
               // no dates defined: leave

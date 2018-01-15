@@ -955,7 +955,7 @@
     // TODO move this in createFacetData_ ? query param
     angular.forEach(qParams.params, function(field, fieldName) {
       var valuesQ = [];
-      if (field.type == 'date') {
+      if (field.type == 'date' || field.type == 'rangeDate') {
         return;
       }
       for (var p in field.values) {
@@ -987,7 +987,7 @@
 
     angular.forEach(qParams.qParams, function(field, fieldName) {
       var valuesQ = [];
-      if (field.type == 'date') {
+      if (field.type == 'date' || field.type == 'rangeDate') {
         return;
       }
       for (var p in field.values) {

@@ -261,7 +261,7 @@
         // Add appProfile extra fields
         newFields.forEach(function(f) {
           if (mergedF.indexOf(f.name) < 0) {
-            f.label = f.name;
+            f.label = f.label[gnGlobalSettings.lang] || f.name;
             fields.push(f);
           }
         });
