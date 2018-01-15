@@ -538,6 +538,24 @@
       margin-right: .3em;
       font-size: 14px;
     }
+
+    .list-group-item * {
+      vertical-align: text-bottom;
+    }
+
+    .list-group [gn-wfs-filter-facets-tree] {
+      .list-group {
+        border: none;
+        margin-left: -15px;
+        .list-group {
+          margin-left: 6.5px;
+          display: none;
+        }
+      }
+      .gn-leaf {
+        margin-left: -2px;
+      }
+    }
   }
 
   .btn-group {
@@ -548,15 +566,6 @@
 
   .close {
     font-size: 14px;
-  }
-}
-
-[gn-wfs-filter-facets-tree] {
-  .list-group .list-group{
-    display: none;
-  }
-  .gn-leaf {
-    margin-left: 16px;
   }
 }
 
