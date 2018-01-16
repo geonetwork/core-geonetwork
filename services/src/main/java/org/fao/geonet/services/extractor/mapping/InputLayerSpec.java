@@ -8,6 +8,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.fasterxml.jackson.xml.annotate.JacksonXmlProperty;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeXml;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InputLayerSpec {
 
@@ -80,6 +82,6 @@ public class InputLayerSpec {
 
     public String asXml() {
         return String.format("      <input format=\"%s\" epsg=\"%s\" protocol=\"%s\" linkage=\"%s\" filter=\"%s\" />\n",
-                this.format, this.epsg, this.protocol, this.linkage, StringEscapeUtils.escapeXml(this.filter));
+                this.format, this.epsg, this.protocol, escapeXml(this.linkage), escapeXml(this.filter));
     }
 }

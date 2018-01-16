@@ -7,6 +7,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.xml.annotate.JacksonXmlProperty;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeXml;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdditionalInputSpec {
 
@@ -68,6 +70,6 @@ public class AdditionalInputSpec {
     public String asXml() throws UnsupportedEncodingException {
         return String.format("      <additionalInput protocol=\"%s\" linkage=\"%s\" params=\"%s\" "
                 + "identifier=\"%s\" outputMimeType=\"%s\" outputIdentifier=\"%s\" />\n", this.protocol,
-                this.linkage, this.params, this.identifier, this.outputMimeType, this.outputIdentifier);
+                escapeXml(this.linkage), this.params, this.identifier, this.outputMimeType, this.outputIdentifier);
     }
 }
