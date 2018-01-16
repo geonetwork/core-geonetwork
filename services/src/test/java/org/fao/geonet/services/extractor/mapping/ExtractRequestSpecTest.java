@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -186,5 +187,16 @@ public class ExtractRequestSpecTest {
 
         assertTrue("Unexpected XML output", xmlSpec.contains("&quot;double-quotes&quot;")
                 && xmlSpec.contains("&lt;/xml&gt;"));
+    }
+
+    @Test
+    public void linkageAreXmlEscaped() throws UnsupportedEncodingException {
+        AdditionalInputSpec toTest1 = new AdditionalInputSpec();
+        toTest1.setLinkage("&-&");
+        InputLayerSpec toTest2 = new InputLayerSpec();
+        toTest2.setLinkage("&-&");
+
+        assertTrue("xml unsupported chars not escaped", toTest1.asXml().contains("&amp;-&amp;"));
+        assertTrue("xml unsupported chars not escaped", toTest2.asXml().contains("&amp;-&amp;"));
     }
 }
