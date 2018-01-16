@@ -311,10 +311,12 @@
           // workaround for Mapfish v2.1.2 with REST and matrixIds
           if (matrixIds.length > 0) {
             if (/{style}/ig.test(decodeURI(layerUrl))) {
-              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{style}/ig, source.getStyle()));
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{style}/ig,
+                  source.getStyle()));
             }
             if (/layer/ig.test(decodeURI(layerUrl))) {
-              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{layer}/ig, source.getLayer()));
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{layer}/ig,
+                  source.getLayer()));
             }
           }
 
@@ -324,7 +326,8 @@
             layer: source.getLayer(),
             version: source.getVersion(),
             requestEncoding: source.getRequestEncoding() || 'KVP',
-            // Dimensions is not a mandatory parameter but it is required by Mapfish v2.1.2 if requestEncoding is REST
+            // Dimensions is not a mandatory parameter
+            // but it is required by Mapfish v2.1.2 if requestEncoding is REST
             dimensions: [],
             format: source.getFormat(),
             style: source.getStyle(),

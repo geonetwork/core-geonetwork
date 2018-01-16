@@ -222,7 +222,7 @@
           }
           if (layer instanceof ol.layer.Group) {
             var encs = gnPrint.encoders.layers['Group'].call(this,
-              layer, proj);
+                layer, proj);
             encLayers = encLayers.concat(encs);
           } else {
             var enc = encodeLayer(layer, proj);
@@ -321,7 +321,7 @@
             if (features && features.length > 0) {
               encLayer =
                   gnPrint.encoders.layers['Vector'].call(this,
-                    layer, features);
+                  layer, features);
             }
           }
         }

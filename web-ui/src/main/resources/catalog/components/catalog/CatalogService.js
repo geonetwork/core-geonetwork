@@ -204,15 +204,15 @@
 
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild, metadataUuid, hasCategoryOfSource)
-            .success(function(id) {
-            var path = '/metadata/' + id;
-            if (tab) {
-              path += '/tab/' + tab;
-            }
-            $location.path(path)
+              .success(function(id) {
+                var path = '/metadata/' + id;
+                if (tab) {
+                  path += '/tab/' + tab;
+                }
+                $location.path(path)
                 .search('justcreated')
                 .search('redirectUrl', 'catalog.edit');
-          });
+              });
         },
 
         /**
@@ -535,7 +535,8 @@
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
         'creationDate', 'publicationDate', 'revisionDate'];
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];    // See below; probably not necessary
+      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+      // See below; probably not necessary
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
