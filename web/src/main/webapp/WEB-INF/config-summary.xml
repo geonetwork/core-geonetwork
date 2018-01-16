@@ -148,7 +148,8 @@
     <facet name="emodnet-checkpoint.challenges" indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges" label="emodnet-checkpoint.challenges"/>
     <facet name="emodnet-checkpoint.level.of.characteristics" indexKey="thesaurus-local.theme.emodnet-checkpoint.level.of.characteristics" label="emodnet-checkpoint.level.of.characteristics"/>
     <facet name="emodnet-checkpoint.production.mode" indexKey="thesaurus-local.theme.emodnet-checkpoint.production.mode" label="emodnet-checkpoint.production.mode"/>
-
+    <facet name="ParameterUsageVocabulary-other" indexKey="thesaurus-ParameterUsageVocabulary(other)" label="ParameterUsageVocabulary-other"/>
+    
     <facet name="dcsmm-descripteur" indexKey="thesaurus-local.theme.dcsmm-descripteur" label="dcsmm-descripteur"/>
     <facet name="dcsmm-methode" indexKey="thesaurus-local.theme.dcsmm-methode" label="dcsmm-methode"/>
     <facet name="dcsmm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcsmm-type-espace"/>
@@ -201,6 +202,7 @@
       <item facet="emodnet-checkpoint.challenges" max="300"/>
       <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
       <item facet="emodnet-checkpoint.production.mode" max="300"/>
+      <item facet="ParameterUsageVocabulary-other" max="300"/>
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
