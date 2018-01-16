@@ -77,6 +77,10 @@
                  (attrs['sourceRecords'] &&
                  attrs['sourceRecords'].split(',')) || [];
 
+                 scope.exclude =
+                   (attrs['exclude'] &&
+                     attrs['exclude'].split('#')) || [];
+
                  // Define a search query to choose from
                  if (scope.sourceRecords.length > 0) {
                    scope.searchQuery = {
@@ -115,7 +119,16 @@
                    '../api/0.1/records/' + scope.sourceRecord +
                    '/query/' + scope.query, {}).then(function(r) {
                      if (r.status === 200) {
-                       scope.fragments = r.data;
+                       scope.fragments = {};
+                       if (scope.exclude.length > 0) {
+                         angular.forEach(r.data, function(value, key) {
+                           if (scope.exclude.indexOf(key.trim()) === -1) {
+                             scope.fragments[key.trim()] = value;
+                           }
+                         });
+                       } else {
+                         scope.fragments = r.data;
+                       }
                      }
                    });
                  };
