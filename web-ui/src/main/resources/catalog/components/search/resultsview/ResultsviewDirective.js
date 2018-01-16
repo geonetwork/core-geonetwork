@@ -116,12 +116,10 @@
           }
 
           scope.buildEditorUrl = function(md) {
-            if (angular.isUndefined(md.standardName)) {
-              return '';
-            }
             var baseUrl = '#/metadata/' + md['geonet:info'].id;
             if (md['geonet:info'].schema == 'iso19115-3' ||
-                md['geonet:info'].schema == 'iso19139') {
+                md['geonet:info'].schema == 'iso19139' ||
+                md['geonet:info'].schema == 'dublin-core') {
               return baseUrl;
             } else {
               return '../../apps/sextant/?edit=' + md['geonet:info'].id +
