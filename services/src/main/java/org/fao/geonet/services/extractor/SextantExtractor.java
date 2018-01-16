@@ -1,5 +1,6 @@
 package org.fao.geonet.services.extractor;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeXml;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.File;
@@ -14,7 +15,6 @@ import javax.naming.directory.SearchResult;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.services.extractor.mapping.ExtractRequestSpec;
@@ -146,25 +146,25 @@ public class SextantExtractor {
             out.append(String.format(
                     "  <user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
                             + " uidNumber=\"%s\" login=\"%s\" org=\"%s\" usage=\"%s\" />\n",
-                    StringEscapeUtils.escapeXml(usr.getLastname()),
-                    StringEscapeUtils.escapeXml(usr.getFirstname()),
-                    StringEscapeUtils.escapeXml(usr.getMail()),
+                    escapeXml(usr.getLastname()),
+                    escapeXml(usr.getFirstname()),
+                    escapeXml(usr.getMail()),
                     usr.getMail().contains(IFREMER_PATTERN),
-                    StringEscapeUtils.escapeXml(uidNumber),
-                    StringEscapeUtils.escapeXml(login),
-                    StringEscapeUtils.escapeXml(usr.getOrg()),
-                    StringEscapeUtils.escapeXml(usr.getUsage())));
+                    escapeXml(uidNumber),
+                    escapeXml(login),
+                    escapeXml(usr.getOrg()),
+                    escapeXml(usr.getUsage())));
         } else {
             // if anonymous
             out.append(String.format(
                     "  <user lastname=\"%s\" firstname=\"%s\" mail=\"%s\" is_ifremer=\"%s\""
                             + " uidNumber=\"\" login=\"\" org=\"%s\" usage=\"%s\" />\n",
-                    StringEscapeUtils.escapeXml(usr.getLastname()),
-                    StringEscapeUtils.escapeXml(usr.getFirstname()),
-                    StringEscapeUtils.escapeXml(usr.getMail()),
+                    escapeXml(usr.getLastname()),
+                    escapeXml(usr.getFirstname()),
+                    escapeXml(usr.getMail()),
                     usr.getMail().contains(IFREMER_PATTERN),
-                    StringEscapeUtils.escapeXml(usr.getOrg()),
-                    StringEscapeUtils.escapeXml(usr.getUsage())));
+                    escapeXml(usr.getOrg()),
+                    escapeXml(usr.getUsage())));
         }
         out.append("  <layers>\n");
         for (LayerSpec l : jsonExtractionSpec.getLayers()) {
