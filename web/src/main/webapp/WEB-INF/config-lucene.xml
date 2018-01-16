@@ -141,6 +141,11 @@
       <field name="createDate" tagName="creationDate"/>
       <field name="revisionDate" tagName="revisionDate"/>
       <field name="publicationDate" tagName="publicationDate"/>
+<<<<<<< HEAD
+=======
+      <field name="abstract" tagName="abstract" multilingualSortField="true"/>
+      <field name="_defaultAbstract" tagName="defaultAbstract"/>
+>>>>>>> upstream/3.4.x
       <field name="keyword" tagName="keyword"/>
       <field name="keywordGroup" tagName="keywordGroup"/>
       <field name="parentUuid" tagName="parentId"/>

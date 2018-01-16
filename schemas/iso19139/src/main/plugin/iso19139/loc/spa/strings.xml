@@ -108,6 +108,7 @@
   <inspireThemeURI>INSPIRE themes</inspireThemeURI>
   <format>Formato</format>
   <format_version>Versión</format_version>
+  <format_specification>Especificación</format_specification>
   <lineage>Linaje</lineage>
   <spatialResolution>Resolución espacial (escala)</spatialResolution>
   <spatialDistance>Resolución espacial (distancia)</spatialDistance>

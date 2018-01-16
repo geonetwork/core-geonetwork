@@ -37,6 +37,8 @@
               '../../catalog/components/mdFeedback/partials/mdFeedback.html',
               link: function postLink(scope, element, attrs) {
 
+                scope.showLabel = attrs.showLabel;
+
                 $(element).find('.modal').on('hidden.bs.modal', function() {
                   scope.$apply(function() {
                     scope.mdFeedbackOpen = false;

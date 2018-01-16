@@ -30,6 +30,8 @@ import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.Index;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -52,6 +54,8 @@ public class EsClient implements InitializingBean {
     private String username;
     private String password;
 
+    private boolean activated = false;
+
     public static EsClient get() {
         return instance;
     }
@@ -63,7 +67,7 @@ public class EsClient implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (serverUrl != null) {
+        if (StringUtils.isNotEmpty(serverUrl)) {
             JestClientFactory factory = new JestClientFactory();
             factory.setHttpClientConfig(new HttpClientConfig
                 .Builder(this.serverUrl)
@@ -79,10 +83,11 @@ public class EsClient implements InitializingBean {
             synchronized (EsClient.class) {
                 instance = this;
             }
+            activated = true;
         } else {
-            throw new Exception(String.format(
-                "No ES client URL defined in %s. "
-                + "Check bean configuration.", this.serverUrl));
+            Log.debug("geonetwork.index", String.format(
+                "No Elasticsearch URL defined '%s'. "
+                    + "Check bean configuration. Statistics and dasboard will not be available.", this.serverUrl));
         }
     }
 
@@ -114,6 +119,9 @@ public class EsClient implements InitializingBean {
     }
 
     public boolean bulkRequest(String index, Map<String, String> docs) throws IOException {
+        if (!activated) {
+            return false;
+        }
         boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
             .defaultIndex(index)
@@ -190,6 +198,9 @@ public class EsClient implements InitializingBean {
 
 
     public String deleteByQuery(String index, String query) throws Exception {
+        if (!activated) {
+            return "";
+        }
 
         String searchQuery = "{\"query\": {\"query_string\": {" +
             "\"query\": \"" + query + "\"" +

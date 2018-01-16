@@ -118,7 +118,8 @@
               fullPrivileges,
               $routeParams.template,
               false,
-              $routeParams.tab);
+              $routeParams.tab,
+              true);
         } else {
 
           // Metadata creation could be on a template

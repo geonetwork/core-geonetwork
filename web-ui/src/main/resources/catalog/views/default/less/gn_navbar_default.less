@@ -1,54 +1,18 @@
-@import "../../../style/gn_bootstrap.less";
+@import "../../../style/gn_bootstrap.less"; // must be first
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 .navbar {
-  margin-bottom: 14px;
-  .navbar-brand {
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 50px;
-    font-size: 16px;
-  }
-
-  // handle hover dropdowns for editor and admin menu (only if not on mobile)
-  @media (min-width: @screen-sm-min) {
-    li.dropdown-hover {
-      & > .dropdown-toggle {
-        position: relative;
-        &:after {
-          font-family: FontAwesome;
-          content: "\f0d7";
-          position: absolute;
-          bottom: -5px;
-          left: 50%;
-          transform: translate(-50%, 0);
-          font-size: 0.9em;
-        }
-      }
-      &.open:not(.active) > .dropdown-toggle {
-        background: none;
-      }
-      ul {
-        display: none;
-      }
-      &:hover ul, & > a:focus + ul, & > a:active + ul {
-        display: block;
-      }
-    }
-  }
-
-  .gn-user-info {
-    display: inline-block;
-    vertical-align: middle;
-    margin: -6px 0px;
-    line-height: 1em;
-    .gn-user-role {
-      text-transform: uppercase;
-      opacity: 0.7;
-      font-size: 0.8em;
-    }
-  }
+  margin-bottom: 0;
 }
-.navbar-form {
-  border:none;
-  margin: 8px 0px;
+
+.navbar-default {
+  background-color: @gn-menubar-background;
+  border-color: @gn-menubar-border-color;
+  .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
+    color: @gn-menubar-color;
+    &:hover, &:focus {
+      color: @gn-menubar-color-hover;
+    }
+  }
 }

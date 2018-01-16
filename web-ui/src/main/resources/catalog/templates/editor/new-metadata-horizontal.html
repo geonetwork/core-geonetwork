@@ -95,7 +95,7 @@
       the selected group. If Editor, edit privileges is not
       set for the group. If Reviewer, user can choose. -->
       <div class="btn-group">
-        <button type="button" class="btn btn-success btn-lg"
+        <button type="button" class="btn btn-success"
                 data-gn-click-and-spin="createNewMetadata()"
                 data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
           <i class="fa fa-plus"/>
@@ -114,7 +114,10 @@
           </a></li>
         </ul>
       </div>
-
+      <a href="#/board" class="btn btn-default">
+        <i class="fa fa-close"/>&nbsp;
+        <span data-translate="">cancel</span>
+      </a>
     </div>
   </div>
 </div>

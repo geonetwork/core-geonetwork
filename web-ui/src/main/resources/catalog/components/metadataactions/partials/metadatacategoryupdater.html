@@ -1,24 +1,37 @@
-<div class="btn-group"
-     data-ng-show="categories.length > 0">
-  <button type="button"
-          class="btn btn-default dropdown-toggle"
-          data-toggle="dropdown">
-    <i class="fa fa-tags"></i>&nbsp;<span class="caret"></span>&nbsp;
-  </button>
-  <ul class="dropdown-menu pull-right"
-      role="menu">
-    <li role="presentation" class="dropdown-header"
-        data-translate="">setMetadataCategories
-    </li>
-    <li data-ng-repeat="c in categories | orderBy:sortByLabel"
-        data-ng-hide="enableallowedcategories && allowedcategories.indexOf(c.id) == -1">
-      <a data-ng-click="assign(c, $event)" href="">
-        <i class="fa" data-ng-class="ids.indexOf(c.id) !== -1 ? 'fa-check-square-o' : 'fa-square-o'"></i>
-        &#160;
-        <span class="fa gn-icon-{{c.name}}"></span>
-        {{c.label[lang] | translate}}
-      </a>
-    </li>
-  </ul>
-
-</div>
+<span>
+  <div class="btn-group"
+       data-ng-show="categories.length > 0 && mode === 'btn'">
+    <button type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown">
+      <i class="fa fa-tags"></i>
+      <span data-translate="" class="hidden-sm hidden-xs">listOfCategories</span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu pull-right"
+        role="menu">
+      <li role="presentation" class="dropdown-header"
+          data-translate="">setMetadataCategories
+      </li>
+      <li data-ng-repeat="c in categories | orderBy:sortByLabel"
+          data-ng-hide="enableallowedcategories && allowedcategories.indexOf(c.id) == -1">
+        <a data-ng-click="assign(c, $event)" href="">
+          <i class="fa" data-ng-class="ids.indexOf(c.id) !== -1 ? 'fa-check-square-o' : 'fa-square-o'"></i>
+          &#160;
+          <span class="fa gn-icon-{{c.name}}"></span>
+          {{c.label[lang] | translate}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div data-ng-show="categories.length > 0 && mode === 'autocomplete'">
+    <div class="row">
+      <label class="col-sm-2 control-label" data-translate="">
+        listOfCategories
+      </label>
+      <div class="col-sm-9">
+        <input type="text" id="{{tid}}" class="form-control"/>
+      </div>
+    </div>
+  </div>
+</span>

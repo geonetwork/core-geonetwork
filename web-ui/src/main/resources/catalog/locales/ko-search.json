@@ -403,12 +403,15 @@
     "wfsDownloadDataInstruction": "다운로드할 데이터 포맷 선택:",
     "wfsTypenameNotAvailable": " '{{typename}}'  피처타입을 WFS 서비스에서 사용할 수 없습니다. 사용가능한 피처타입을 선택하십시오.",
     "wfsChooseFeatureTypeToDownload": "다운로드할 피처타입 선택",
-    "processesTool": "WPS 프로세스 사용",
     "wpsGetCapError": "WPS capabilities 구문분석 오류",
     "wpsByUrl": "프로세스 검색",
     "wpsRecent": "최근 사용한 프로세스",
     "selection.indexing.count": "선택한 {{count}} 개의 레코드(들)의 인덱스 생성이 시작되었습니다.",
     "selection.indexing.error": "인덱스 선택중 오류가 발생했습니다.",
     "showLegend": "Show legend",
-    "hideLegend": "Hide legend"
+    "hideLegend": "Hide legend",
+    "mdActions": "Available actions",
+    "mdActions-view": "Viewable",
+    "mdActions-download": "Downloadable",
+    "mdActions-process": "Processable"
 }

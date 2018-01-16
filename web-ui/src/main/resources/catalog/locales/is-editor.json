@@ -18,9 +18,9 @@
     "addFromThesaurus": "eða velja þau úr hugtakaorðabók",
     "addKeywordNotFromThesaurus": "Bæta við nýjum lykilorðum",
     "addLinks": "Bæta við tenglum",
-    "addOnlinesrc": "Bæta tengli við",
+    "addOnlinesrc": "Add online resource",
     "updateOnlinesrc": "Uppfæra hlekk",
-    "addOnlinesrcTitle": "Tengdu gögn af netinu við núgildandi lýsigögn",
+    "addOnlinesrcTitle": "Link an online resource",
     "addThumbnail": "Bæta smámynd við",
     "addThumbnailTitle": "Bæta yfirliti við núgildandi lýsigögn",
     "allChangesCanceled": "Hætt við allar breytingar",
@@ -358,5 +358,7 @@
     "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
     "selectKeyword": "Add keywords",
-    "saveLinkToSibling": "Save link to other resource"
+    "saveLinkToSibling": "Save link to other resource",
+    "confirmCloseInvalidTitle": "Confirm editor close",
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

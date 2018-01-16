@@ -130,7 +130,7 @@
 
         <!-- Create form for all existing attribute (not in gn namespace)
          and all non existing attributes not already present. -->
-        <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
+        <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true()) then '' else 'hidden'}">
           <xsl:apply-templates mode="render-for-field-for-attribute"
                                select="
             ../../@*|
@@ -184,7 +184,7 @@
 
         <!-- Create form for all existing attribute (not in gn namespace)
          and all non existing attributes not already present. -->
-        <div class="well well-sm gn-attr {if ($isDisplayingAttributes) then '' else 'hidden'}">
+        <div class="well well-sm gn-attr {if ($isDisplayingAttributes = true()) then '' else 'hidden'}">
           <xsl:apply-templates mode="render-for-field-for-attribute"
                                select="
             ../../@*|

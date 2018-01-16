@@ -92,6 +92,9 @@
               <xsl:value-of
                 select="concat(util:getSettingValue('nodeUrl'), 'api/records/', $uuid)"/>
             </url>
+            <logo>
+              <xsl:value-of select="$metadata/logo"/>
+            </logo>
             <description>
               <value lang="{$lang}">
                 <xsl:value-of select="$metadata/abstract"/>
@@ -106,11 +109,14 @@
 
             <xsl:if test="$type = 'siblings'">
               <associationType>
-                <xsl:value-of select="../@initiative"/>
+                <xsl:value-of select="../@association"/>
               </associationType>
               <initiativeType>
-                <xsl:value-of select="../@association"/>
+                <xsl:value-of select="../@initiative"/>
               </initiativeType>
+            </xsl:if>
+            <xsl:if test="$type = 'associated'">
+              <xsl:copy-of select="$metadata/*[starts-with(name(), 'agg_')]"/>
             </xsl:if>
           </item>
         </xsl:for-each>

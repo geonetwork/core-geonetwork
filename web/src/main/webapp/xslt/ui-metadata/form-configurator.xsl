@@ -33,6 +33,12 @@
     Build the form from the schema plugin form configuration.
     -->
 
+  <xsl:template mode="form-builder" match="directive">
+    <div>
+      <xsl:copy-of select="@*"/>
+    </div>
+  </xsl:template>
+
 
   <!-- Create a fieldset in the editor with custom
     legend if attribute name is defined or default
@@ -255,7 +261,7 @@
         In that case, a geonet:child element should exist in the document.
         -->
       <xsl:choose>
-        <xsl:when test="$isDisplayed and not(@templateModeOnly)">
+        <xsl:when test="$isDisplayed = 'true' and not(@templateModeOnly)">
           <xsl:variable name="configName" select="@name"/>
 
 

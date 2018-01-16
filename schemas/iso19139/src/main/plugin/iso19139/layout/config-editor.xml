@@ -324,6 +324,7 @@
       <name>srv:serviceTypeVersion</name>
       <name>srv:operationName</name>
       <name>srv:identifier</name>
+      <name>srv:serviceType</name>
     </exclude>
   </multilingualFields>
 
@@ -417,6 +418,7 @@
 
   <!-- View configuration -->
   <views>
+<<<<<<< HEAD
     <view name="sextant"
           upAndDownControlHidden="true"
           displayIfRecord="contains(
@@ -438,6 +440,177 @@
           <action type="add" name="sextant-identifier" or="identifier"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation"
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier) = 0">
+=======
+    <!--Turn on INSPIRE according to system settings -->
+    <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="inspire" default="true" mode="flat">
+        <section name="resource">
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
+
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:hierarchyLevel) = 0"
+                  name="hierarchyLevel" or="hierarchyLevel"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:hierarchyLevel>
+                  <gmd:MD_ScopeCode
+                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                    codeListValue="dataset"/>
+                </gmd:hierarchyLevel>
+              </snippet>
+            </template>
+          </action>
+
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language"
+          />
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType" />
+
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType) = 0"
+                  name="spatialRepresentationType" or="spatialRepresentationType"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:spatialRepresentationType>
+                  <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
+                                                        codeListValue="vector"/>
+                </gmd:spatialRepresentationType>
+              </snippet>
+            </template>
+          </action>
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory" />
+
+          <action type="add"
+                  name="topicCategory" or="topicCategory"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:topicCategory>
+                  <gmd:MD_TopicCategoryCode></gmd:MD_TopicCategoryCode>
+                </gmd:topicCategory>
+              </snippet>
+            </template>
+          </action>
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
+
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            gmd:descriptiveKeywords
+            [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'INSPIRE Service taxonomy']"></field>
+          <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
+
+
+          <field name="url" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
+            /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
+                 del="../..">
+            <template>
+              <values>
+                <key label="url" xpath="gmd:URL" tooltip="gmd:linkage"/>
+              </values>
+              <snippet>
+                <gmd:linkage>
+                  <gmd:URL>{{url}}</gmd:URL>
+                </gmd:linkage>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="url" or="onLine"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+            <template>
+              <snippet>
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL/>
+                    </gmd:linkage>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </snippet>
+            </template>
+          </action>
+
+          <!-- Resource identifier for dataset, service
+          and add action to compute it if not defined. -->
+          <field name="identifier" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values>
+                <key label="code"
+                     xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"
+                     tooltip="gmd:code|gmd:MD_Identifier"/>
+              </values>
+              <snippet>
+                <gmd:identifier>
+                  <gmd:MD_Identifier>
+                    <gn:copy select="gmd:authority"/>
+                    <gmd:code>
+                      <gco:CharacterString>{{code}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
+                    </gmd:code>
+                  </gmd:MD_Identifier>
+                </gmd:identifier>
+              </snippet>
+            </template>
+          </field>
+          <field name="identifier" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+            <template>
+              <values>
+                <key label="code"
+                     xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"
+                     tooltip="gmd:code|gmd:MD_Identifier"/>
+              </values>
+              <snippet>
+                <gmd:identifier>
+                  <gmd:MD_Identifier>
+                    <gmd:code>
+                      <gco:CharacterString>{{code}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
+                    </gmd:code>
+                  </gmd:MD_Identifier>
+                </gmd:identifier>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="identifier" or="identifier"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation">
+>>>>>>> upstream/3.4.x
             <template>
               <snippet>
                 <gmd:identifier>
@@ -464,6 +637,43 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
                  del="../../../.."/>
 
+<<<<<<< HEAD
+=======
+          <field name="encoding" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                 del=".">
+            <template>
+              <values>
+                <key label="format"
+                     xpath="gmd:MD_Format/gmd:name/gco:CharacterString"
+                     tooltip="gmd:name|gmd:MD_Format">
+                  <helper name="gmd:name" context="gmd:MD_Format"/>
+                </key>
+                <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
+                <key label="format_specification" xpath="gmd:MD_Format/gmd:specification/gco:CharacterString" />
+              </values>
+              <snippet>
+                <gmd:distributionFormat>
+                  <gmd:MD_Format>
+                    <gmd:name>
+                      <gco:CharacterString>{{format}}</gco:CharacterString>
+                      <gn:copy select="gmd:PT_FreeText"/>
+                    </gmd:name>
+                    <gmd:version>
+                      <gco:CharacterString>{{format_version}}</gco:CharacterString>
+                    </gmd:version>
+                    <gn:copy select="gmd:amendmentNumber"/>
+                    <gmd:specification>
+                      <gco:CharacterString>{{format_specification}}</gco:CharacterString>
+                    </gmd:specification>
+                    <gn:copy select="gmd:fileDecompressionTechnique"/>
+                    <gn:copy select="gmd:formatDistributor"/>
+                  </gmd:MD_Format>
+                </gmd:distributionFormat>
+              </snippet>
+            </template>
+          </field>
+>>>>>>> upstream/3.4.x
 
           <action type="add" btnLabel="sextant-add-scale" or="spatialResolution"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/*"
@@ -794,6 +1004,7 @@
         </section>
       </tab>
 
+<<<<<<< HEAD
       <flatModeExceptions>
         <for name="gmd:keyword"/>
       </flatModeExceptions>
@@ -816,6 +1027,23 @@
                  in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
                  in="/gmd:MD_Metadata"/>
+=======
+          <field xpath="/gmd:MD_Metadata/gmd:language" />
+
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:language) = 0"
+                  name="language" or="language"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:language>
+                  <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+                </gmd:language>
+              </snippet>
+            </template>
+          </action>
+
+>>>>>>> upstream/3.4.x
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
           <field xpath="/gmd:MD_Metadata/gmd:metadataStandardName"/>
           <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
@@ -985,7 +1213,66 @@
           <field name="emodnetDisseminationLevel"
                  xpath="/gmd:MD_Metadata/gmd:metadataConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
 
+<<<<<<< HEAD
           <field xpath="/gmd:MD_Metadata/gmd:language"/>
+=======
+          <field
+            templateModeOnly="true"
+            notDisplayedIfMissing="true"
+            forceLabel="true"
+            name="sds-tech-spec"
+            del="../.."
+            xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_FormatConsistency/gmd:result">
+            <template>
+              <values>
+                <key label="conformity_linkage"
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href"/>
+                <key label="conformity_desc"
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/text()"
+                     tooltip="gmd:pass">
+                  <helper name="gmd:title"
+                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_FormatConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                </key>
+                <key label="conformity_date" use="gn-date-picker"
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
+                <key label="explanation" use="text"
+                     xpath="gmd:DQ_ConformanceResult/gmd:explanation/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:result>
+                  <gmd:DQ_ConformanceResult>
+                    <gmd:specification>
+                      <gmd:CI_Citation>
+                        <gmd:title>
+                          <gmx:Anchor xlink:href="{{conformity_linkage}}">{{conformity_desc}}
+                          </gmx:Anchor>
+                        </gmd:title>
+                        <gmd:date>
+                          <gmd:CI_Date>
+                            <gmd:date>
+                              {{conformity_date}}
+                            </gmd:date>
+                            <gmd:dateType>
+                              <gmd:CI_DateTypeCode
+                                codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                                codeListValue="publication"/>
+                            </gmd:dateType>
+                          </gmd:CI_Date>
+                        </gmd:date>
+                      </gmd:CI_Citation>
+                    </gmd:specification>
+                    <gmd:explanation>
+                      <gco:CharacterString>{{explanation}}</gco:CharacterString>
+                    </gmd:explanation>
+                    <gmd:pass>
+                      <gco:Boolean>true</gco:Boolean>
+                    </gmd:pass>
+                  </gmd:DQ_ConformanceResult>
+                </gmd:result>
+              </snippet>
+            </template>
+          </field>
+>>>>>>> upstream/3.4.x
 
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
 
@@ -1433,6 +1720,48 @@
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'L11')]"/>
 
+<<<<<<< HEAD
+=======
+    <view name="default">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="default" default="true" mode="flat">
+        <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
+        <section name="gmd:MD_Metadata">
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+          <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
+          <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
+                 in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
+                 in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
+                 in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardName"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
+          <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:series"/>
+          <field xpath="/gmd:MD_Metadata/gmd:describes"/>
+          <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
+>>>>>>> upstream/3.4.x
         </section>
       </tab>
 
@@ -1536,6 +1865,48 @@
         </section>
 
 
+<<<<<<< HEAD
+=======
+    </view>
+    <view name="advanced">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="identificationInfo" default="true">
+        <section xpath="/gmd:MD_Metadata/gmd:identificationInfo" or="identificationInfo"
+                 in="/gmd:MD_Metadata"/>
+      </tab>
+      <tab id="distributionInfo">
+        <section xpath="/gmd:MD_Metadata/gmd:distributionInfo" or="distributionInfo"
+                 in="/gmd:MD_Metadata"/>
+      </tab>
+      <tab id="dataQualityInfo">
+        <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo" or="dataQualityInfo"
+                 in="/gmd:MD_Metadata"/>
+      </tab>
+      <tab id="spatialRepresentationInfo">
+        <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"
+                 or="spatialRepresentationInfo" in="/gmd:MD_Metadata"/>
+      </tab>
+      <tab id="referenceSystemInfo">
+        <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo" or="referenceSystemInfo"
+                 in="/gmd:MD_Metadata"/>
+      </tab>
+      <tab id="contentInfo" toggle="true">
+        <section xpath="/gmd:MD_Metadata/gmd:contentInfo" or="contentInfo" in="/gmd:MD_Metadata"/>
+      </tab>
+      <tab id="portrayalCatalogueInfo" toggle="true">
+        <section xpath="/gmd:MD_Metadata/gmd:portrayalCatalogueInfo" or="portrayalCatalogueInfo"
+                 in="/gmd:MD_Metadata"/>
+>>>>>>> upstream/3.4.x
       </tab>
 
 
@@ -1912,6 +2283,16 @@
       </tab>
     </view>
     <view name="xml">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
       <tab id="xml" default="true"/>
     </view>
   </views>

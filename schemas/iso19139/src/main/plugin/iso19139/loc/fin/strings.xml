@@ -106,6 +106,7 @@
   <inspireThemeURI>INSPIRE-teemat</inspireThemeURI>
   <format>Formaatti</format>
   <format_version>Versio</format_version>
+  <format_specification>Specification</format_specification>
   <lineage>Historiatiedot</lineage>
   <spatialResolution>Sijaintitiedon erotuskyky (mittakaava)</spatialResolution>
   <spatialDistance>Sijaintitiedon erotuskyky (näytetiheys)</spatialDistance>

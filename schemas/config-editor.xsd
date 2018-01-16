@@ -509,6 +509,7 @@ the current user session using the displayIfRecord and displayIfServiceInfo attr
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" ref="sidePanel"/>
         <xs:element minOccurs="1" maxOccurs="unbounded" ref="tab">
           <xs:annotation>
             <xs:documentation><![CDATA[
@@ -554,6 +555,36 @@ Hide those controls in a view to make it easier with less controls for the end-u
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+
+      <xs:attribute name="displayAttributes" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Display attributes by default when loading the view.
+]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+
+      <xs:attribute name="displayTooltips" type="xs:boolean" fixed="true">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Display help documentation for all elements by default when loading the view.
+]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="displayTooltipsMode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Display help documentation onhover elements (default) or by clicking on an icon.
+]]></xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="icon"/>
+            <xs:enumeration value="onhover"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+
       <xs:attribute ref="displayIfRecord"/>
       <xs:attribute ref="displayIfServiceInfo"/>
       <xs:attribute name="hideTimeInCalendar" type="xs:boolean" fixed="true">
@@ -572,6 +603,56 @@ switching to another view may allow more control over the dates.
       <xs:field xpath="@id"/>
     </xs:unique>
   </xs:element>
+
+  <xs:element name="sidePanel">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+
+Defining the side panel configuration
+-------------------------------------
+
+The side panel can be composed of text element or directives.
+
+A good default config with all directives is:
+
+.. code-block:: xml
+
+      <sidePanel>
+        <directive gn-geo-publisher=""
+                   data-ng-if="gnCurrentEdit.geoPublisherConfig"
+                   data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+                   data-lang="lang"/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+        <directive data-gn-onlinesrc-list=""
+                   types="thumbnail|onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+      </sidePanel>
+
+
+To include text block use the following:
+
+
+.. code-block:: xml
+
+      <sidePanel>
+        <text ref="defaultviewdesc"></text>
+        ....
+
+
+
+]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="text"/>
+        <xs:element ref="directive"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+
+
 
   <xs:element name="tab">
     <xs:annotation>
@@ -603,7 +684,9 @@ Add custom view one default tab and a field for the title:
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:sequence>
+      <xs:choice>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="text"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="directive"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="section">
           <xs:annotation>
             <xs:documentation><![CDATA[
@@ -611,7 +694,7 @@ For each section a fieldset is created.
               ]]></xs:documentation>
           </xs:annotation>
         </xs:element>
-      </xs:sequence>
+      </xs:choice>
       <xs:attribute name="default" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -788,6 +871,7 @@ A section is a group of fields.
           </xs:annotation>
         </xs:element>
         <xs:element ref="action"/>
+        <xs:element ref="directive"/>
         <xs:element ref="text"/>
         <xs:element ref="xsl"/>
         <xs:element ref="section"/>
@@ -1892,6 +1976,20 @@ For example, create a table of contact:
       <xs:attribute name="xpath" use="required" type="xs:string"/>
       <xs:attribute name="mode" use="required" type="xs:string"/>
       <xs:attribute name="or" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="directive">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+
+Include any custom directive with required attributes.
+
+      ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:anyAttribute/>
     </xs:complexType>
   </xs:element>
 </xs:schema>

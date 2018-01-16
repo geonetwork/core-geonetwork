@@ -1487,6 +1487,7 @@
 		<description>Name of the test applied to the data</description>
 		<!-- ISO19138 Data quality basic measures Annex C - under revision ISO
 			19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
+<<<<<<< HEAD
 		<helper rel="gmd:measureDescription">
 			<option value="">-- Completeness --</option>
 			<option value="Excess item"
@@ -1943,6 +1944,578 @@
       <option value="OGC:WCS">Download (WCS)</option>
       <option value="OGC:WMS">View (WMS)</option>
       <option value="OGC:WMTS">View (WMTS)</option>
+=======
+    <helper rel="gmd:measureDescription">
+      <option value="">-- Completeness --</option>
+      <option value="Excess item"
+              title="Indication that an item is incorrectly present in the data"
+              id="ISO19138:2006:measure:1">Excess item
+      </option>
+      <option value="Number of excess items"
+              title="Number of items within the dataset, that should not have been in the dataset"
+              id="ISO19138:2006:measure:2">Number of excess items
+      </option>
+      <option value="Rate of excess items"
+              title="Number of excess items in the dataset in relation to the number of items that should have been present"
+              id="ISO19138:2006:measure:3">Rate of excess items
+      </option>
+      <option value="Number of duplicate feature instances"
+              title="Total number of exact duplications of feature instances within the data. Count of all items in the data that are incorrectly extracted with duplicate geometrie"
+              id="ISO19138:2006:measure:4">Number of duplicate feature instances
+      </option>
+      <option value="Missing item"
+              title="Indicator that shows that a specific item is missing in the data"
+              id="ISO19138:2006:measure:5">Missing item
+      </option>
+      <option value="Number of missing items"
+              title="Count of all items that should have been in the dataset and are missing"
+              id="ISO19138:2006:measure:6">Number of missing items
+      </option>
+      <option value="Rate of missing items"
+              title="Number of missing items in the dataset in relation to the number of items that should have been present"
+              id="ISO19138:2006:measure:7">Rate of missing items
+      </option>
+      <option value="">-- Logical consistency / Conceptual consistency
+        --
+      </option>
+      <option value="Conceptual schema noncompliance"
+              title="Indication that an item is not compliant to the rules of the relevant conceptual schema"
+              id="ISO19138:2006:measure:8">Conceptual schema noncompliance
+      </option>
+      <option value="Conceptual schema compliance"
+              title="Indication that an item complies with the rules of the relevant conceptual schema"
+              id="ISO19138:2006:measure:9">Conceptual schema compliance
+      </option>
+      <option
+        value="Number of items noncompliant to the rules of the conceptual schema"
+        title="Count of all items in the dataset that are noncompliant to the rules of the conceptual schema. If the conceptual schema explicitly or implicitly describes rules, these rules have to be followed. Violations against such rules can e.g. be invalid placement of features within a defined tolerance, duplication of features and invalid overlap of features."
+        id="ISO19138:2006:measure:10">Number of items noncompliant to the rules of the conceptual
+        schema
+      </option>
+      <option value="Number of invalid overlaps of surfaces"
+              title="Total number of erroneous overlaps within the data Which surfaces may overlap and which must not is application dependent. Not all overlapping surfaces are necessarily erroneous. When reporting this data quality measure the types of feature classes corresponding to the illegal overlapping surfaces have to be reported as well."
+              id="ISO19138:2006:measure:11">Number of invalid overlaps of surfaces
+      </option>
+      <option
+        value="Non-compliance rate with respect to the rules of the conceptual schema"
+        title="Number of items in the dataset that are noncompliant to the rules of the conceptual schema in relation to the total number of these items supposed to be in the dataset"
+        id="ISO19138:2006:measure:12">Non-compliance rate with respect to the rules of the
+        conceptual
+        schema
+      </option>
+      <option value=" Compliance rate with the rules of the conceptual schema"
+              title="number of items in the dataset in compliance with the rules of the conceptual schema in relation to the total number of items"
+              id="ISO19138:2006:measure:13">Compliance rate with the rules of the conceptual schema
+      </option>
+      <option value="">-- Logical consistency / Domain consistency --
+      </option>
+      <option value="Value domain non-conformance"
+              title="Indication of if an item is not in conformance with its value domain"
+              id="ISO19138:2006:measure:14">Value domain non-conformance
+      </option>
+      <option value="Value domain conformance"
+              title="Indication of if an item is conforming to its value domain"
+              id="ISO19138:2006:measure:15">Value domain conformance
+      </option>
+      <option value="Number of items not in conformance with their value domain"
+              title="Count of all items in the dataset that are not in conformance with their value domain."
+              id="ISO19138:2006:measure:16">Number of items not in conformance with their value
+        domain
+      </option>
+      <option value="Value domain conformance rate"
+              title="Number of items in the dataset that are in conformance with their value domain in relation to the total number of items in the dataset"
+              id="ISO19138:2006:measure:17">Value domain conformance rate
+      </option>
+      <option value="Value domain non-conformance rate"
+              title="the number of items in the dataset that are not in conformance with their value domain in relation to the total number of items"
+              id="ISO19138:2006:measure:18">Value domain non-conformance rate
+      </option>
+      <option value="Physical structure conflicts"
+              title="Count of all items in the dataset that are stored in conflict with the physical structure of the dataset"
+              id="ISO19138:2006:measure:19">Physical structure conflicts
+      </option>
+      <option value="Physical structure conflict rate"
+              title="Number of items in the dataset that are stored in conflict with the physical structure of the dataset divided by the total number of items"
+              id="ISO19138:2006:measure:20">Physical structure conflict rate
+      </option>
+      <option value="">-- Logical consistency / Topological consistency
+        --
+      </option>
+      <option value="Number of faulty point-curve connections"
+              title="Number of faulty point-curve connections in the dataset. A point-curve connection exists where different curves touch. These curves have an intrinsic topological relationship that has to reflect the true constellation. If the point-curve connection contradicts the universe of discourse, the point-curve connection is faulty with respect to this data quality measure. The data quality measure counts the number of errors of this kind."
+              id="ISO19138:2006:measure:21">Number of faulty point-curve connections
+      </option>
+      <option value="Rate of faulty point-curve connections"
+              title="Number of faulty link node connections in relation to the number of supposed link node connections"
+              id="ISO19138:2006:measure:22">Rate of faulty point-curve connections
+      </option>
+      <option value="Number of missing connection due to undershoots"
+              title="Count of items in the dataset, within the parameter tolerance, that are mismatched due to undershoots"
+              id="ISO19138:2006:measure:23">Number of missing connection due to undershoots
+      </option>
+      <option value="Number of missing connections due to overshoots"
+              title="Count of items in the dataset, within the parameter tolerance, that are mismatched due to overshoots"
+              id="ISO19138:2006:measure:24">Number of missing connections due to overshoots
+      </option>
+      <option value="Number of invalid slivers"
+              title="Count of all items in the dataset that are invalid sliver surfaces. A sliver is an unintended area that occurs when adjacent surfaces are not digitized properly. The borders of the adjacent surfaces may unintentionally gap or overlap by small amounts to cause a topological error."
+              id="ISO19138:2006:measure:25">Number of invalid slivers
+      </option>
+      <option value="Number of invalid self intersect errors"
+              title="Count of all items in the data that illegally intersect with themselves"
+              id="ISO19138:2006:measure:26">Number of invalid self intersect errors
+      </option>
+      <option value="Number of invalid self overlap errors"
+              title="Count of all items in the data that illegally self overlap"
+              id="ISO19138:2006:measure:27">Number of invalid self overlap errors
+      </option>
+      <option value="">-- Positional accuracy / Absolute or external
+        accuracy / General measures --
+      </option>
+      <option value="Mean value of positional uncertainties"
+              title="Mean value of the positional uncertainties for a set of positions where the positional uncertainties are defined as the distance between a measured position and what is considered as the corresponding true position"
+              id="ISO19138:2006:measure:28">Mean value of positional uncertainties
+      </option>
+      <option value="Mean value of positional uncertainties excluding outliers"
+              title="For a set of points where the distance does not exceed a defined threshold the arithmetical average of distances between their measured positions and what is considered as the corresponding true positions"
+              id="ISO19138:2006:measure:29">Mean value of positional uncertainties excluding
+        outliers
+      </option>
+      <option value="Number of positional uncertainties above a given threshold"
+              title="Number of positional uncertainties above a given threshold for a set of positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position"
+              id="ISO19138:2006:measure:30">Number of positional uncertainties above a given
+        threshold
+      </option>
+      <option value="Rate of positional errors above a given threshold"
+              title="Number of positional uncertainties above a given threshold for a set of positions in relation to the total number of measured positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position."
+              id="ISO19138:2006:measure:31">Rate of positional errors above a given threshold
+      </option>
+      <option value="Covariance matrix"
+              title="A symmetrical square matrix with variances of point coordinates on the main diagonal and covariances between these coordinates as off-diagonal elements."
+              id="ISO19138:2006:measure:32">Covariance matrix
+      </option>
+      <option value="">-- Positional accuracy / Absolute or external
+        accuracy / Vertical --
+      </option>
+      <option value="Linear error probable"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 50%."
+              id="ISO19138:2006:measure:33">Linear error probable
+      </option>
+      <option value="Standard linear error"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 68.3%."
+              id="ISO19138:2006:measure:34">Standard linear error
+      </option>
+      <option value="Linear map accuracy at 90% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 90%."
+              id="ISO19138:2006:measure:35">Linear map accuracy at 90% significance level
+      </option>
+      <option value="Linear map accuracy at 95% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 95%."
+              id="ISO19138:2006:measure:36">Linear map accuracy at 95% significance level
+      </option>
+      <option value="Linear map accuracy at 99% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99%."
+              id="ISO19138:2006:measure:37">Linear map accuracy at 99% significance level
+      </option>
+      <option value="Near certainty linear error"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99.8%."
+              id="ISO19138:2006:measure:38">Near certainty linear error
+      </option>
+      <option value="Root mean square error"
+              title="Standard deviation, where the true value is not estimated from the observations but known a priori."
+              id="ISO19138:2006:measure:39">Root mean square error
+      </option>
+      <option
+        value="Absolute linear error at 90% significance level of biased vertical data (Alternative 1)"
+        title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
+        id="ISO19138:2006:measure:40">Absolute linear error at 90% significance level of biased
+        vertical data (Alternative 1)
+      </option>
+      <option
+        value="Absolute linear error at 90% significance level of biased vertical data"
+        title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
+        id="ISO19138:2006:measure:41">Absolute linear error at 90% significance level of biased
+        vertical data
+      </option>
+      <option value="">-- Positional accuracy / Absolute or external
+        accuracy / Horizontal --
+      </option>
+      <option value="Circular standard deviation"
+              title="Radius describing a circle, in which the true point location lies with the probability of 39.4%."
+              id="ISO19138:2006:measure:42">Circular standard deviation
+      </option>
+      <option value="Circular error probable"
+              title="Radius describing a circle, in which the true point location lies with the probability of 50%."
+              id="ISO19138:2006:measure:43">Circular error probable
+      </option>
+      <option value=" Circular map accuracy standard"
+              title="Radius describing a circle, in which the true point location lies with the probability of 90%."
+              id="ISO19138:2006:measure:44">Circular map accuracy standard
+      </option>
+      <option value="Circular error at 95% significance level"
+              title="Radius describing a circle, in which the true point location lies with the probability of 95%."
+              id="ISO19138:2006:measure:45">Circular error at 95% significance level
+      </option>
+      <option value="Circular near certainty error"
+              title="Radius describing a circle, in which the true point location lies with the probability of 99.8%."
+              id="ISO19138:2006:measure:46">Circular near certainty error
+      </option>
+      <option value="Root mean square error of planimetry"
+              title="Radius of a circle around the given point, in which the true value lies with probability P."
+              id="ISO19138:2006:measure:47">Root mean square error of planimetry
+      </option>
+      <option
+        value="Absolute circular error at 90% significance level of biased data (Alternative 2)"
+        title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
+        id="ISO19138:2006:measure:48">Absolute circular error at 90% significance level of biased
+        data
+        (Alternative 2)
+      </option>
+      <option
+        value="Absolute circular error at 90% significance level of biased data"
+        title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
+        id="ISO19138:2006:measure:49">Absolute circular error at 90% significance level of biased
+        data
+      </option>
+      <option value="Uncertainty ellipse"
+              title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point"
+              id="ISO19138:2006:measure:50">Uncertainty ellipse
+      </option>
+      <option value="Confidence ellipse"
+              title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point"
+              id="ISO19138:2006:measure:51">Confidence ellipse
+      </option>
+      <option value="">-- Positional accuracy / Relative or internal
+        accuracy --
+      </option>
+      <option value="Relative vertical error"
+              title="Evaluation of the random errors of one relief feature to another in the same dataset or on the same map/chart. It is a function of the random errors in the two elevations with respect to a common vertical datum."
+              id="ISO19138:2006:measure:52">Relative vertical error
+      </option>
+      <option value="Relative horizontal error"
+              title="Evaluation of the random errors in the horizontal position of one feature to another in the same dataset or on the same map/chart."
+              id="ISO19138:2006:measure:53">Relative horizontal error
+      </option>
+      <option value="">-- Temporal accuracy / Accuracy of a time
+        measurement --
+      </option>
+      <option value="Time accuracy at 68.3% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 68.3%."
+              id="ISO19138:2006:measure:54">Time accuracy at 68.3% significance level
+      </option>
+      <option value="Time accuracy at 50% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 50%."
+              id="ISO19138:2006:measure:55">Time accuracy at 50% significance level
+      </option>
+      <option value="Time accuracy at 90% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 90%."
+              id="ISO19138:2006:measure:56">Time accuracy at 90% significance level
+      </option>
+      <option value="Time accuracy at 95% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 95%."
+              id="ISO19138:2006:measure:57">Time accuracy at 95% significance level
+      </option>
+      <option value="Time accuracy at 99% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99%."
+              id="ISO19138:2006:measure:58">Time accuracy at 99% significance level
+      </option>
+      <option value="Time accuracy at 99.8% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99.8%."
+              id="ISO19138:2006:measure:59">Time accuracy at 99.8% significance level
+      </option>
+      <option value="">-- Thematic accuracy / Classification
+        correctness --
+      </option>
+      <option value="Number of incorrectly classified features"
+              title="Number of incorrectly classified features" id="ISO19138:2006:measure:60">Number
+        of
+        incorrectly classified features
+      </option>
+      <option value="Misclassification rate"
+              title="number of incorrectly classified features in relation to the number of features that are supposed to be there"
+              id="ISO19138:2006:measure:61">Misclassification rate
+      </option>
+      <option value="Misclassification matrix"
+              title="matrix that indicates the number of items of class (i) classified as class (j)."
+              id="ISO19138:2006:measure:62">Misclassification matrix
+      </option>
+      <option value="Relative misclassification matrix"
+              title="matrix that indicates the number of items of class (i) classified as class (i) divided by the number of items of class (i)"
+              id="ISO19138:2006:measure:63">Relative misclassification matrix
+      </option>
+      <option value="Kappa coefficient"
+              title="Coefficient to quantify the proportion of agreement of assignments to classes by removing misclassifications"
+              id="ISO19138:2006:measure:64">Kappa coefficient
+      </option>
+      <option value="">-- Thematic accuracy / Non-quantitative
+        attribute correctness --
+      </option>
+      <option value="Number of incorrect attribute values"
+              title="Total number of erroneous attribute values within the relevant part of the dataset"
+              id="ISO19138:2006:measure:65">Number of incorrect attribute values
+      </option>
+      <option value="Rate of correct attribute values"
+              title="Number of correct attribute values in relation to the total number of attribute values"
+              id="ISO19138:2006:measure:66">Rate of correct attribute values
+      </option>
+      <option value="Rate of incorrect attribute values"
+              title="Number of attribute values where incorrect values are assigned in relation to the total number of attribute values"
+              id="ISO19138:2006:measure:67">Rate of incorrect attribute values
+      </option>
+      <option value="">-- Thematic accuracy / Quantitative attribute
+        accuracy --
+      </option>
+      <option value="Attribute value uncertainty at 68.3% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 68.3%."
+              id="ISO19138:2006:measure:68">Attribute value uncertainty at 68.3% significance level
+      </option>
+      <option value="Attribute value uncertainty at 50% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 50%."
+              id="ISO19138:2006:measure:69">Attribute value uncertainty at 50% significance level
+      </option>
+      <option value="Attribute value uncertainty at 90% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 90%."
+              id="ISO19138:2006:measure:70">Attribute value uncertainty at 90% significance level
+      </option>
+      <option value="Attribute value uncertainty at 95% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 95%."
+              id="ISO19138:2006:measure:71">Attribute value uncertainty at 95% significance level
+      </option>
+      <option value="Attribute value uncertainty at 99% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99%."
+              id="ISO19138:2006:measure:72">Attribute value uncertainty at 99% significance level
+      </option>
+      <option value="Attribute value uncertainty at 99.8% significance level"
+              title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99.8%."
+              id="ISO19138:2006:measure:73">Attribute value uncertainty at 99.8% significance level
+      </option>
+    </helper>
+  </element>
+  <element name="gmd:northBoundLatitude" id="347.0">
+    <label>North bound</label>
+    <description>Northern-most, coordinate of the limit of the dataset extent expressed in
+      latitude in decimal degrees (positive north)
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:numberOfDimensions" id="158.0">
+    <label>Number of dimensions</label>
+    <description>Number of independent spatial-temporal axes</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:obligation" id="311.0">
+    <label>Obligation</label>
+    <description>Obligation of the extended element</description>
+  </element>
+  <element name="gmd:offLine" id="278.0">
+    <label>Offline</label>
+    <description>Information about offline media on which the resource can be
+      obtained
+    </description>
+  </element>
+  <element name="gmd:offset" id="267.0">
+    <label>Offset</label>
+    <description>The physical value corresponding to a cell value of zero</description>
+  </element>
+  <element name="gmd:onLine" id="277.0">
+    <label>OnLine resource</label>
+    <description>Information about online sources from which the resource can be
+      obtained
+    </description>
+  </element>
+  <element name="gmd:onlineResource" id="390.0">
+    <help>Define URL to access the website</help>
+    <label>Website</label>
+    <description>On-line information that can be used to contact the individual or
+      organisation
+    </description>
+  </element>
+  <element name="gmd:orderingInstructions" id="301.0">
+    <label>Ordering instructions</label>
+    <description>General instructions, terms and services provided by the
+      distributor
+    </description>
+  </element>
+  <element name="gmd:organisationName" id="376.0">
+    <label>Organisation name</label>
+    <description>Name of the responsible organization</description>
+    <condition>conditional</condition>
+  </element>
+  <element name="gmd:orientationParameterAvailability" id="172.0">
+    <label>Orientation parameter availability</label>
+    <description>Indication of whether or not orientation parameters are available</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:orientationParameterDescription" id="173.0">
+    <label>Orientation parameter description</label>
+    <description>Description of parameters used to describe sensor orientation</description>
+  </element>
+  <element name="gmd:other" id="155.0">
+    <label>Other</label>
+    <description>Class of information that does not fall into the other categories to which the
+      information applies
+    </description>
+    <condition/>
+  </element>
+  <element name="gmd:otherCitationDetails" id="370.0">
+    <label>Other citation details</label>
+    <description>Other information required to complete the citation that is not recorded
+      elsewhere
+    </description>
+  </element>
+  <element name="gmd:otherConstraints" id="72.0">
+    <label>Other constraints</label>
+    <description>Other restrictions and legal prerequisites for accessing and using the
+      resource
+    </description>
+    <condition>conditional</condition>
+  </element>
+  <element name="gmd:page" id="406.0">
+    <label>Page</label>
+    <description>Details on which pages of the publication the article was
+      published
+    </description>
+  </element>
+  <element name="gmd:parameterCitation" id="175.0">
+    <label>Parameter citation</label>
+    <description>Reference providing description of the parameters</description>
+  </element>
+  <element name="gmd:parentEntity" id="316.0">
+    <label>Parent entity</label>
+    <description>Name of the metadata entity(s) under which this extended metadata element may
+      appear. The name(s) may be standard metadata element(s) or other extended metadata
+      element(s).
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:parentIdentifier" id="5.0">
+    <label>Parent identifier</label>
+    <btnLabel>Add parent record</btnLabel>
+    <btnClass>fa fa-sitemap</btnClass>
+    <description>File identifier of the metadata to which this metadata is a subset
+      (child)
+    </description>
+  </element>
+  <element name="gmd:pass" id="132.0">
+    <label>Pass</label>
+    <description>Indication of the conformance result where 0 = fail and 1 = pass</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:peakResponse" id="263.0">
+    <label>Peak response</label>
+    <description>Wavelength at which the response is the highest</description>
+  </element>
+  <element name="gmd:phone" id="526.0">
+    <label>Phone</label>
+    <description>Telephone numbers at which the organization or individual may be
+      contacted
+    </description>
+  </element>
+  <element name="gmd:plannedAvailableDateTime" id="300.0">
+    <label>Planned available datetime</label>
+    <description>Date and time when the dataset will be available
+      (CCYY-MM-DDThh:mm:ss)
+    </description>
+  </element>
+  <element name="gmd:pointInPixel" id="167.0">
+    <label>Point in Pixel</label>
+    <description>Point in a pixel corresponding to the Earth location of the pixel</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:pointOfContact" id="29.0">
+    <label>Point of contact</label>
+    <btnLabel>Add contact</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
+    <description>Identification of, and means of communication with, person(s) and
+      organizations(s) associated with the resource(s)
+    </description>
+  </element>
+  <element name="gmd:polygon" id="342.0">
+    <label>Polygon</label>
+    <description>Sets of points defining the bounding polygon</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:portrayalCatalogueCitation" id="269.0">
+    <label>Portrayal catalogue citation</label>
+    <description>Bibliographic reference to the portrayal catalogue cited</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:portrayalCatalogueInfo" id="19.0">
+    <label>Portrayal catalogue info</label>
+    <abbrLabel>Portrayal</abbrLabel>
+    <description>Provides information about the catalogue of rules defined for the portrayal of
+      a resource(s)
+    </description>
+  </element>
+  <element name="gmd:positionName" id="377.0">
+    <label>Position name</label>
+    <description>Role or position of the responsible person</description>
+    <condition>conditional</condition>
+  </element>
+  <element name="gmd:postalCode" id="384.0">
+    <label>Postal code</label>
+    <description>ZIP or other postal code</description>
+  </element>
+  <element name="gmd:presentationForm" id="368.0">
+    <label>Presentation form</label>
+    <description>Mode in which the resource is represented</description>
+  </element>
+  <element name="gmd:processStep" id="84.0">
+    <label>Process step</label>
+    <description>Information about an event in the creation process for the data specified by
+      the scope
+    </description>
+    <condition>conditional</condition>
+  </element>
+  <element name="gmd:processingLevelCode" id="249.0">
+    <label>Processing level code</label>
+    <description>Image distributor_s code that identifies the level of radiometric and geometric
+      processing that has been applied
+    </description>
+  </element>
+  <element name="gmd:processor" id="90.0">
+    <label>Processor</label>
+    <description>Identification of, and means of communication with, person(s) and
+      organization(s) associated with the process step
+    </description>
+  </element>
+  <element name="gmd:protocol" id="398.0" alias="protocol">
+    <label>Protocol</label>
+    <description>Connection protocol to be used</description>
+    <helper sort="true">
+      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</option>
+      <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
+      <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
+      <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
+      <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
+      <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
+      <option value="OGC:GML">OGC-GML Geography Markup Language</option>
+      <option value="OGC:ODS">OGC-ODS OpenLS Directory Service</option>
+      <option value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
+      <option value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
+      <option value="OGC:OPS">OGC-ODS OpenLS Presentation Service</option>
+      <option value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
+      <option value="OGC:SOS">OGC-SOS Sensor Observation Service</option>
+      <option value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
+      <option value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
+      <option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
+      <option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
+      <option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
+      <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
+      <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
+      <option value="OGC:WMC">OGC-WMC Web Map Context</option>
+      <option value="OGC:WMS">OGC-WMS Web Map Service</option>
+      <option value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</option>
+      <option value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</option>
+      <option value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</option>
+      <option value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</option>
+      <option value="OGC:WMTS">OGC-WMTS Web Map Tiled Service</option>
+      <option value="OGC:WMTS-1.0.0-http-get-capabilities">OGC-WMTS Capabilities service (ver 1.0.0)</option>
+      <option value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</option>
+      <option value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</option>
+      <option value="OGC:WNS">OGC-WNS Web Notification Service</option>
+>>>>>>> upstream/3.4.x
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
       <option value="OGC:OWS-C">View (OWS Context)</option>
     </helper>

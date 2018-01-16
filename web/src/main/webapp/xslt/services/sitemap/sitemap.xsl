@@ -89,8 +89,8 @@
           </sitemap>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:variable name="vMid"
-                        select="floor(($pStart + $pEnd) div 2)"/>
+          <xsl:variable name="vMid" select=
+            "floor(($pStart + $pEnd) div 2)"/>
           <xsl:call-template name="displayIndexDocs">
             <xsl:with-param name="pStart" select="$pStart"/>
             <xsl:with-param name="pEnd" select="$vMid"/>
@@ -113,15 +113,16 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
       <xsl:for-each select="metadata/record">
         <xsl:variable name="uuid" select="uuid"/>
-        <xsl:variable name="schemaid" select="datainfo/schemaid"/>
-        <xsl:variable name="changedate" select="datainfo/changedate"/>
+        <xsl:variable name="schemaid" select="schemaid"/>
+        <xsl:variable name="changedate" select="changedate"/>
 
         <url>
           <loc>
             <xsl:choose>
-              <xsl:when test="$format='xml'">
+              <xsl:when test="$format='xml'">               	
                 <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/formatters/xml')"/>
               </xsl:when>
+
               <xsl:otherwise>
                 <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid)"/>
               </xsl:otherwise>
@@ -164,4 +165,5 @@
       </sc:dataset>
     </urlset>
   </xsl:template>
+
 </xsl:stylesheet>

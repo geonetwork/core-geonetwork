@@ -69,6 +69,10 @@
                  attribute = ' gco:nilReason="' + scope.status + '"';
                }
 
+               var booleanXmlSnippet = (isNil) ? '' : '<' +
+               booleanElement + '>' + scope.status +
+               '</' + booleanElement + '>';
+
                scope.xmlSnippet = '<' + scope.tagName +
                ' xmlns:' + elementNs + '="' +
                gnSchemaManagerService.findNamespaceUri(elementNs,
@@ -76,9 +80,7 @@
                ' xmlns:' + booleanElementNs + '="' +
                gnSchemaManagerService.findNamespaceUri(booleanElementNs,
                    gnCurrentEdit.schema) + '"' +
-               attribute + '><' + booleanElement + '>' +
-               (isNil ? '' : scope.status) +
-               '</' + booleanElement + '></' + scope.tagName + '>';
+               attribute + '>' + booleanXmlSnippet + '</' + scope.tagName + '>';
              }
 
              scope.$watch('status', build);

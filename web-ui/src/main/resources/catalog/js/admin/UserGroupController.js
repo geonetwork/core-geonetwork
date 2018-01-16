@@ -25,9 +25,11 @@
   goog.provide('gn_usergroup_controller');
 
   goog.require('gn_dbtranslation');
+  goog.require('gn_multiselect');
 
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
+    'gn_multiselect',
     'blueimp.fileupload']);
 
 
@@ -121,6 +123,9 @@
         $http.get('../api/groups' + profile).
             success(function(data) {
               $scope.groups = data;
+              angular.forEach($scope.groups, function(u) {
+                u.langlabel = getLabel(u);
+              });
               $scope.isLoadingGroups = false;
             }).error(function(data) {
               // TODO
@@ -318,17 +323,24 @@
       /**
        * Returns the list of groups inside "groups" with the selected profile
        */
+      var getLabel = function(g) {
+        return g.label[$scope.lang] || g.name;
+      };
+
+      var profiles = ['Administrator',
+        'UserAdmin', 'Reviewer',
+        'Editor', 'RegisteredUser',
+        'Guest'];
       $scope.$watch('userGroups', function(groups) {
         var res = [];
-        angular.forEach(['Administrator',
-                         'UserAdmin', 'Reviewer',
-                         'Editor', 'RegisteredUser',
-                         'Guest'], function(profile) {
+        angular.forEach(profiles, function(profile) {
           res[profile] = [];
           if (groups != null) {
             for (var i = 0; i < groups.length; i++) {
               if (groups[i].id.profile == profile) {
-                res[profile].push(groups[i].group);
+                var g = groups[i].group;
+                g.langlabel = getLabel(g);
+                res[profile].push(g);
               }
             }
           }
@@ -351,9 +363,15 @@
        * group is also selected in the editor profile list.
        */
       $scope.setUserProfile = function(checked) {
+        if (!$scope.userSelected) {
+          return;
+        }
         // Switch the profile (AFA a watch on userIsAdmin does not work).
         if (checked) {
           $scope.userIsAdmin = !$scope.userIsAdmin;
+          angular.forEach(profiles, function(p) {
+            $scope.groupsByProfile[p] = [];
+          });
         }
         $scope.userUpdated = true;
         if ($scope.userIsAdmin) {
@@ -362,26 +380,15 @@
           // Define the highest profile for user
           var newprofile = 'RegisteredUser';
           for (var i = 0; i < $scope.profiles.length; i++) {
-            if ($scope.profiles[i] !== 'Administrator') {
-              var groups = $('#groups_' + $scope.profiles[i])[0];
+            var p = $scope.profiles[i];
+            if (p !== 'Administrator') {
               // If one of the group is selected, main user profile is updated
-              if (groups.selectedIndex > -1 &&
-                  groups.options[groups.selectedIndex].value != '') {
+              if ($scope.groupsByProfile[p].length > 0) {
                 newprofile = $scope.profiles[i];
               }
             }
           }
           $scope.userSelected.profile = newprofile;
-        }
-        // If user is reviewer in one group, he is also editor for that group
-        var editorGroups = $('#groups_Editor')[0];
-        var reviewerGroups = $('#groups_Reviewer')[0];
-        if (reviewerGroups.selectedIndex > -1) {
-          for (var j = 0; j < reviewerGroups.options.length; j++) {
-            if (reviewerGroups.options[j].selected) {
-              editorGroups.options[j].selected = true;
-            }
-          }
         }
       };
 
@@ -390,47 +397,68 @@
       };
 
 
+      function updateProfileRules() {
+        $scope.setUserProfile();
+      };
+
+      $scope.$watchCollection('groupsByProfile.RegisteredUser',
+          updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.Editor', updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.UserAdmin', updateProfileRules);
+      $scope.$watchCollection('groupsByProfile.Reviewer', function(n, o) {
+        if (n !== o) {
+          for (var j = 0; j < n.length; j++) {
+            var g = n[j];
+            var gIsAlsoForEditorProfile = false;
+            for (var i = 0; i < $scope.groupsByProfile['Editor'].length; i++) {
+              var eg = $scope.groupsByProfile['Editor'][i];
+              if (eg.id === g.id) {
+                gIsAlsoForEditorProfile = true;
+                break;
+              }
+            }
+            if (!gIsAlsoForEditorProfile) {
+              $scope.groupsByProfile['Editor'].push(g);
+            }
+          }
+          $scope.setUserProfile();
+        }
+      });
       /**
        * Save a user.
        */
       $scope.saveUser = function(formId) {
 
         var selectedRegisteredUserGroups = [],
-            selectedEditorGroups = [], selectedReviewerGroups = [],
+            selectedEditorGroups = [],
+            selectedReviewerGroups = [],
             selectedUserAdminGroups = [];
 
-        var registeredUserGroups = $('#groups_RegisteredUser')[0];
-        for (var j = 0; j < registeredUserGroups.options.length; j++) {
-          if (registeredUserGroups.options[j].selected) {
+        for (var j = 0;
+             j < $scope.groupsByProfile['RegisteredUser'].length; j++) {
+          if ($scope.groupsByProfile['RegisteredUser'][j]) {
             selectedRegisteredUserGroups.push(
-                registeredUserGroups.options[j].value);
+                $scope.groupsByProfile['RegisteredUser'][j].id);
           }
         }
-
-        var editorGroups = $('#groups_Editor')[0];
-        for (var j = 0; j < editorGroups.options.length; j++) {
-          if (editorGroups.options[j].selected) {
+        for (var j = 0; j < $scope.groupsByProfile['Editor'].length; j++) {
+          if ($scope.groupsByProfile['Editor'][j]) {
             selectedEditorGroups.push(
-                editorGroups.options[j].value);
+                $scope.groupsByProfile['Editor'][j].id);
           }
         }
-
-        var reviewerGroups = $('#groups_Reviewer')[0];
-        for (var j = 0; j < reviewerGroups.options.length; j++) {
-          if (reviewerGroups.options[j].selected) {
+        for (var j = 0; j < $scope.groupsByProfile['Reviewer'].length; j++) {
+          if ($scope.groupsByProfile['Reviewer'][j]) {
             selectedReviewerGroups.push(
-                reviewerGroups.options[j].value);
+                $scope.groupsByProfile['Reviewer'][j].id);
           }
         }
-
-        var userAdminGroups = $('#groups_UserAdmin')[0];
-        for (var j = 0; j < userAdminGroups.options.length; j++) {
-          if (userAdminGroups.options[j].selected) {
+        for (var j = 0; j < $scope.groupsByProfile['UserAdmin'].length; j++) {
+          if ($scope.groupsByProfile['UserAdmin'][j]) {
             selectedUserAdminGroups.push(
-                userAdminGroups.options[j].value);
+                $scope.groupsByProfile['UserAdmin'][j].id);
           }
         }
-
 
         var data = angular.extend({}, $scope.userSelected, {
           groupsRegisteredUser: selectedRegisteredUserGroups,
@@ -578,9 +606,6 @@
             });
       };
 
-      $scope.sortByLabel = function(group) {
-        return group.label[$scope.lang];
-      };
       $scope.unselectGroup = function() {
         $scope.groupSelected = null;
         $scope.groupUpdated = false;

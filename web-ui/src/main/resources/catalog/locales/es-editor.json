@@ -326,7 +326,7 @@
     "moreSpecificConcept": "Conceptos más específicos",
     "associatedConcept": "Conceptos asociados",
     "xsd": "Validación del esquema",
-    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>.",
+    "linkToXmlTab": "Algunos erroes se pueden solucionar usando el <a href=\"#/metadata/{{metadataId}}/tab/xml\">editor XML</a>.",
     "directoryManagerSubtitle": "Esta pantalla te permite editar entradas del directorio como contactos, formatos, etc... incluyendo la administración de plantillas.",
     "directoryManagerSubtitleImport": "Introducir aquí el contenido XML completo de una entrada a importar a la base de datos.",
     "directoryEntryTypes": "Tipos de entradas",
@@ -334,7 +334,7 @@
     "addNewDirectoryEntry": "Añadir una nueva entrada",
     "addNewDirectoryTemplate": "Crear una plantilla",
     "directoryEntryFromScratch": "Crear una entrada de cero",
-    "directoryEntryInfo": "Owner: {{ownerName}}, updated on {{updateDate}}",
+    "directoryEntryInfo": "Dueño: {{ownerName}}, actualizado en {{updateDate}}",
     "directoryEntryPermissions": "Permisos",
     "directoryEntryValidate": "Validar",
     "directoryEntryReject": "Rechazar",
@@ -353,10 +353,12 @@
     "filterBy": "Filtrar por...",
     "selectFormatAndProjection": "Seleccionar un formato y un sistema de proyección",
     "inputGeometryText": "Entrada de texto de la geometría",
-    "inputGeometryIsValid": "The input geometry is valid and is now visible on the map.",
+    "inputGeometryIsValid": "La geometría de entrada es válida y es visible en el mapa.",
     "inputGeometryIsInvalid": "Se encontró un error en la geometría",
-    "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
+    "inputGeometryHint": "Pega aquí la geometría en el formato y la proyección seleccionados.",
     "inputGeometryReadOnlyHint": "La geometría es de sólo lectura.",
     "selectKeyword": "Añadir palabras clave",
-    "saveLinkToSibling": "Guardar un enlace a otro recurso"
+    "saveLinkToSibling": "Guardar un enlace a otro recurso",
+    "confirmCloseInvalidTitle": "Confirm editor close",
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

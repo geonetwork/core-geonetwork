@@ -179,7 +179,7 @@
     <xsl:variable name="charStringTitle"
                   select="$identification/gmd:citation/*/gmd:title/gco:CharacterString"/>
     <xsl:variable name="locStringTitles"
-                  select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString"/>
+                  select="$identification/gmd:citation/*/gmd:title//gmd:LocalisedCharacterString[. != '']"/>
     <xsl:choose>
       <xsl:when test="string-length(string($docLangTitle)) != 0">
         <xsl:value-of select="$docLangTitle[1]"/>
@@ -207,7 +207,7 @@
     <xsl:variable name="charStringAbstract"
                   select="$identification/gmd:abstract/gco:CharacterString"/>
     <xsl:variable name="locStringAbstracts"
-                  select="$identification/gmd:abstract//gmd:LocalisedCharacterString"/>
+                  select="$identification/gmd:abstract//gmd:LocalisedCharacterString[. != '']"/>
     <xsl:choose>
       <xsl:when test="string-length(string($docLangAbstract[1])) != 0">
         <xsl:value-of select="$docLangAbstract[1]"/>
