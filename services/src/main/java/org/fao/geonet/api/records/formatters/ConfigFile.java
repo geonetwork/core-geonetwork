@@ -23,10 +23,6 @@
 
 package org.fao.geonet.api.records.formatters;
 
-<<<<<<< HEAD
-import com.google.common.collect.Lists;
-=======
->>>>>>> upstream/3.4.x
 import org.fao.geonet.Constants;
 import org.fao.geonet.utils.IO;
 
@@ -42,11 +38,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-<<<<<<< HEAD
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-=======
->>>>>>> upstream/3.4.x
 
 public class ConfigFile {
     private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";

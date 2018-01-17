@@ -125,15 +125,11 @@
     <facet name="hasDqEmptyCptMeasures" indexKey="hasDqEmptyCptMeasures" label="hasDqEmptyCptMeasures"/>
     <facet name="hasDqCptNotCovered" indexKey="hasDqCptNotCovered" label="hasDqCptNotCovered"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
-<<<<<<< HEAD
-=======
+
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
 	  <facet name="isPublishedToAll" indexKey="_isPublishedToAll" label="isPublishedToAll" />
-    <!--
-    Example configuration for hierarchical facet based on
-    the GeoNetwork region thesaurus or GEMET.
->>>>>>> upstream/3.4.x
+
 
     <facet name="p01" label="p01" indexKey="thesaurus-external.parameter.NVS.P01"/>
     <facet name="p02" label="p02" indexKey="thesaurus-external.parameter.NVS.P02"/>
@@ -163,20 +159,15 @@
     <facet name="dcsmm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcsmm-type-espace"/>
     <facet name="dcsmm-area" indexKey="thesaurus-local.place.dcsmm.area" label="dcsmm-area"/>
 
-    <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
-    <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
     <facet name="_groupPublished" indexKey="_groupPublished" label="publishedForGroup"/>
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
-<<<<<<< HEAD
 
     <facet name="odatis_variables" indexKey="thesaurus-local.theme.odatis_variables" label="odatis_variables"/>
     <facet name="odatis_centre_donnees" indexKey="thesaurus-local.theme.odatis_centre_donnees" label="odatis_centre_donnees"/>
     <facet name="odatis_type_jeux_donnee" indexKey="thesaurus-local.theme.type_jeux_donnee" label="odatis_type_jeux_donnee"/>
 
-=======
->>>>>>> upstream/3.4.x
     <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
 

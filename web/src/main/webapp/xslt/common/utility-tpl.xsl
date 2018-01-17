@@ -166,12 +166,7 @@
     <xsl:param name="txt"/>
 
     <xsl:choose>
-<<<<<<< HEAD
-      <xsl:when test="true()">
-
-=======
       <xsl:when test="util:getSettingValue('system/clickablehyperlinks/enable') = 'true'">
->>>>>>> upstream/3.4.x
         <xsl:variable name="nTxt" select="normalize-space($txt)"/>
 
         <xsl:variable name="first-word" select="substring-before($nTxt,' ')"/>
@@ -264,11 +259,7 @@
     <xsl:param name="txt"/>
 
     <xsl:choose>
-<<<<<<< HEAD
-      <xsl:when test="true()">
-=======
       <xsl:when test="util:getSettingValue('system/clickablehyperlinks/enable') = 'true'">
->>>>>>> upstream/3.4.x
         <xsl:choose>
           <xsl:when test="contains($txt,'&#13;&#10;')">
             <p>
