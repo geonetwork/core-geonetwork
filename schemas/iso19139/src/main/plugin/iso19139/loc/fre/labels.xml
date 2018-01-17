@@ -239,9 +239,9 @@
     <help>Classe comportant des informations relatives à la qualité du jeu de données. La qualité des données est exprimée par les éléments de métadonnées des classes DQ_DataQuality, LI_Lineage et DQ_Legislation. l'étendue des indications de qualité est définie et décrite dans la classe du champ d'application (DQ_Scope). La filiation ou la provenance des données est décrite dans la classe LI_Lineage qui est une agrégation des deux classes LI_Source (indications concernant les données source) et LI_ProcessStep (informations relatives aux étapes de traitement). Les différentes étapes de traitement peuvent à leur tour présenter une relation avec les données source. "+lineage" est obligatoire si "scope.DQ_Scope.level" = "Jeu de données".
       Les prescriptions de qualité applicables au jeu de données à décrire figurent dans la classe DQ_Legislation.
 
-    <!-- Réglement 1205-2008-->
-    La totalité des caractéristiques d’un produit qui lui confèrent l’aptitude à satisfaire des besoins exprimés ou
-    implicites, conformément à la norme EN ISO 19101.
+      <!-- Réglement 1205-2008-->
+      La totalité des caractéristiques d’un produit qui lui confèrent l’aptitude à satisfaire des besoins exprimés ou
+      implicites, conformément à la norme EN ISO 19101.
     </help>
     <condition/>
 
@@ -341,7 +341,7 @@
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Commentaire :</b>
     En pratique, ne sont concernées que les données respectant les spécifications de données INSPIRE et rentrant
     dans un cas de modèle de réseau (hydrographie, transport, services d’utilité publique).
@@ -389,7 +389,7 @@
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <ul>
       <li>L’emprise doit englober l’étendue du territoire pour lequel le producteur garantit la saisie de l’information fournie, une partie du territoire pouvant être vide du type d’objet saisi (par exemple, dans le cas de la localisation des sites SEVESO en Bretagne, l’emprise sera le rectangle englobant de la Bretagne, même si le rectangle englobant les sites SEVESO est plus petit ; en effet, l’absence de site SEVESO est une information en soi sur le reste du territoire breton).</li>
@@ -698,7 +698,7 @@ responsable du service.</li>
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <ul>
     <li>L’identifiant du système de référence doit être fourni. Cet identifiant est composé d’un code et d’un espace de nommage.</li>
@@ -724,7 +724,7 @@ responsable du service.</li>
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <li>Il est recommandé d’utiliser le calendrier grégorien.</li>
     <li>Dans le cas où le calendrier grégorien n’est pas utilisé (par exemple, dans certains domaines comme la géologie), ce champ doit impérativement être renseigné.</li>
@@ -1296,7 +1296,7 @@ de métadonnées de données « BD Carthage métropole »
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <ul>
     <li>Il est déconseillé de fournir une adresse électronique nominative, ceci afin de pouvoir plus facilement gérer les changements de fonctions des personnes impliquées.</li>
@@ -1516,7 +1516,7 @@ date de mise en ligne du service, en tant que date de publication.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <ul>
     <li>Il est recommandé de fournir au moins une date de référence (date de création, de dernière révision, ou de publication). (cf. Dates de référence)</li>
@@ -1617,16 +1617,16 @@ date de mise en ligne du service, en tant que date de publication.
     <help>La valeur se trouvant sous la barre de fraction. Il s'agit ici de l'échelle : dans le cas d'une carte à l'échelle du 1:25000, seul le terme "25000" est entré. Cette valeur peut également représenter une indication de précision dans le cas d'un jeu de données vectorielles. Exemple : des limites saisies à une échelle de 1:25'000 et présentant ce niveau de précision.</help>
     <condition>Il faut saisir ou une échelle ou une distance</condition>
     <helper>
-        <option value="1000">1:1 000</option>
-        <option value="5000">1:5 000</option>
-        <option value="10000">1:10 000</option>
-        <option value="25000">1:25 000</option>
-        <option value="50000">1:50 000</option>
-        <option value="100000">1:100 000</option>
-        <option value="200000">1:200 000</option>
-        <option value="300000">1:300 000</option>
-        <option value="500000">1:500 000</option>
-        <option value="1000000">1:1 000 000</option>
+      <option value="1000">1:1 000</option>
+      <option value="5000">1:5 000</option>
+      <option value="10000">1:10 000</option>
+      <option value="25000">1:25 000</option>
+      <option value="50000">1:50 000</option>
+      <option value="100000">1:100 000</option>
+      <option value="200000">1:200 000</option>
+      <option value="300000">1:300 000</option>
+      <option value="500000">1:500 000</option>
+      <option value="1000000">1:1 000 000</option>
     </helper>
   </element>
   <element name="gmd:density" id="293.0">
@@ -2027,7 +2027,7 @@ période de temps couverte par le service.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Commentaire :</b>
     C’est par exemple la période de validité d’un Plan Local d’Urbanisme.
 
@@ -2231,14 +2231,14 @@ période de temps couverte par le service.
       déterminée par l’organisation
     responsable de la ressource avant d’initier la saisie de la fiche de métadonnées.
     </p>
-    ]]></help>
-    <help><![CDATA[<b>Exemple :</b>
+    ]]></help>
+    <help><![CDATA[<b>Exemple :</b>
     Dans le cas des PLU de la ville de Marseille :
     <ul>
       <li>La Planche 14A du Plan local d’Urbanisme (PLU) de Marseille est a priori une série de données ;</li>
       <li>Le Plan Local d’Urbanisme (PLU) de Marseille, c’est-à-dire l’ensemble des planches composant le PLU de Marseille est a priori un ensemble de séries de données.</li>
     </ul>
-    ]]></help>
+    ]]></help>
   </element>
   <element name="gmd:hierarchyLevelName" id="7.0">
     <label>Nom du niveau de hiérarchie</label>
@@ -2296,8 +2296,8 @@ période de temps couverte par le service.
     <li>bloc identifiant le jeu de données.</li>
     </ul>
     </p>
-    ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations :</b>
+    ]]></help>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <p>
       <b>Une adresse Internet : </b>
 
@@ -2326,7 +2326,7 @@ période de temps couverte par le service.
       Il est reconnu qu‘il faut éviter les noms de services dans le bloc identifiant le jeu de données. Plus généralement, toutes les chaînes de caractères signifiantes (nom d’organismes...) sont à éviter car trop susceptibles de changer. De plus, il est recommandé de fournir l’identifiant en minuscule, et d’utiliser le tiret (-) en guise de séparateur.
       En cas d’d’absence de SIREN, une solution parallèle consiste à prendre le nom de domaine (celui de son site internet).
     </p>
-    ]]></help>
+    ]]></help>
   </element>
   <!--<element name="gmd:identifier" id="573.0" context="gmd:CI_Citation">
     <label>Identificateur de provenance</label>
@@ -2418,7 +2418,7 @@ période de temps couverte par le service.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     Cet élément doit être fixé à fre pour les métadonnées du GéoCatalogue utilisée pour le rapportage INSPIRE.
     ]]></help>
@@ -2437,19 +2437,19 @@ période de temps couverte par le service.
     <li>Cet élément répétable est obligatoire si la ressource inclut des informations textuelles.</li>
     </ul>
     Cet élément décrit factuellement la ou les langues utilisées dans la ressource. Le code à trois lettres provient de <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">la liste normalisée</a>.
-    ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations :</b>
+    ]]></help>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     <ul>
     <li>Cet élément est fourni sous la forme d’un code à trois lettres.</li>
     <li>La valeur de cet élément est fre pour le français.</li>
     <li>Lorsque la ressource n’inclut pas d’information textuelle (par exemple, une orthophoto), il est recommandé de mettre par défaut la langue des métadonnées et de préférence le français.</li>
     <li>Si des langues régionales ou étrangères sont concernées, elles peuvent être ajoutées.</li>
     </ul>
-    ]]></help>
-    <help><![CDATA[<b>Exemple :</b> fre, bre, baq, ger
-    ]]></help>
-    <help><![CDATA[<b>Contre-exemple :</b> FR, FRA, french, français
-    ]]></help>
+    ]]></help>
+    <help><![CDATA[<b>Exemple :</b> fre, bre, baq, ger
+    ]]></help>
+    <help><![CDATA[<b>Contre-exemple :</b> FR, FRA, french, français
+    ]]></help>
   </element>
   <element name="gmd:language" id="235.0" context="gmd:MD_FeatureCatalogueDescription">
     <label>Langue</label>
@@ -2497,7 +2497,7 @@ période de temps couverte par le service.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Commentaire :</b>
     <ul>
     <li>La généalogie de la ressource décrit l’historique d’un jeu de données et, s’il est connu, le cycle de vie de celui-ci, depuis l’acquisition et la saisie de l’information jusqu’à sa compilation avec d’autres jeux et les variantes de sa forme actuelle. Il s’agit d’apporter une description littérale et concise soit de l’histoire du jeu de données, soit des moyens, procédures ou traitements informatiques mis en œuvre au moment de l’acquisition du jeu de données. Par exemple, la généalogie peut consigner l’échelle de saisie si cette information est importante pour l’utilisation du jeu de données.</li>
@@ -2969,7 +2969,7 @@ période de temps couverte par le service.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Commentaire :</b>
     Pour chaque spécification visée, le degré de conformité (conforme/non conforme/non évalué)
     doit être indiqué. Pour les autres spécifications, la valeur ne pourra être que
@@ -3029,7 +3029,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <ul>
     <li>Il est déconseillé de fournir une adresse de messagerie électronique
@@ -3117,7 +3117,6 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <description>Protocole de la connexion à utiliser</description>
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
-<<<<<<< HEAD
     <helper>
       <option value="WWW:LINK">Adresse internet (URL)</option>
       <option value="WWW:LINK-1.0-http--publication-URL">Lien vers une publication principale</option>
@@ -3132,58 +3131,6 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="OGC:WFS">Télécharger (WFS)</option>
       <option value="OGC:WCS">Télécharger (WCS)</option>
       <option value="OGC:WPS">Traitement en ligne (WPS)</option>
-=======
-    <helper sort="true">
-      <option value="ESRI:AIMS--http--configuration">Fichier configuration ArcIMS Map Service (*.AXL)</option>
-      <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
-      <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
-      <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
-      <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
-      <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
-      <option value="OGC:GML">OGC-GML Geography Markup Language</option>
-      <option value="OGC:ODS">OGC-ODS OpenLS Directory Service</option>
-      <option value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
-      <option value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
-      <option value="OGC:OPS">OGC-ODS OpenLS Presentation Service</option>
-      <option value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
-      <option value="OGC:SOS">OGC-SOS Sensor Observation Service</option>
-      <option value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
-      <option value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
-      <option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
-      <option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
-      <option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
-      <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
-      <option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
-      <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
-      <option value="OGC:WMC">OGC-WMC Web Map Context</option>
-      <option value="OGC:WMS">OGC-WMS Web Map Service</option>
-      <option value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</option>
-      <option value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</option>
-      <option value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</option>
-      <option value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</option>
-      <option value="OGC:WMTS">OGC-WMTS Web Map Tiled Service</option>
-      <option value="OGC:WMTS-1.0.0-http-get-capabilities">OGC-WMTS Capabilities service (ver 1.0.0)</option>
-      <option value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</option>
-      <option value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</option>
-      <option value="OGC:WNS">OGC-WNS Web Notification Service</option>
-      <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
-      <option value="OGC:OWS-C">OGC OWS Context</option>
-      <option value="WWW:DOWNLOAD-1.0-ftp--download">Fichier à télécharger (FTP)</option>
-      <option value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</option>
-      <option value="FILE:GEO">Fichier SIG</option>
-      <option value="FILE:RASTER">Fichier SIG RASTER</option>
-      <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
-      <option value="WWW:LINK-1.0-http--link" default="">Adresse Internet (URL)</option>
-      <option value="WWW:LINK-1.0-http--partners">Site partenaire (URL)</option>
-      <option value="WWW:LINK-1.0-http--related">Site associé (URL)</option>
-      <option value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</option>
-      <option value="WWW:LINK-1.0-http--samples">Présentation produit (URL)</option>
-      <option value="DB:POSTGIS">Base de données / Table PostGIS</option>
-      <option value="DB:ORACLE">Base de données / ORACLE</option>
-      <option value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
-      <option value="RBNB:DATATURBINE">Data Turbine</option>
-      <option value="UKST">Type de service inconnu</option>
->>>>>>> upstream/3.4.x
     </helper>
   </element>
   <element name="gmd:purpose" id="26.0">
@@ -3285,7 +3232,7 @@ l’indiquera.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Commentaire :</b>
     Il faut tout d’abord remarquer que ces deux éléments sont sémantiquement liés. En effet,
     dans le cas où une restriction est applicable à l’accès public, le champ définissant les
@@ -3341,7 +3288,7 @@ diffusion restreinte.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Commentaire :</b>
     Dans le cas où une partie responsable a plusieurs rôles, les deux éléments de métadonnées devront être répétés pour chaque rôle.
     ]]></help>
@@ -3527,7 +3474,7 @@ diffusion restreinte.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <ul>
     <li>La résolution spatiale doit être fournie pour toutes les données géographiques (séries et ensemble de séries). Une exception est faite pour les données statistiques.</li>
@@ -3612,10 +3559,10 @@ diffusion restreinte.
   </element>
   <element name="gmd:title" id="360.0" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
     <label>Spécification</label>
-	  <description>Titre de la spécification</description>
-	  <help></help>
+    <description>Titre de la spécification</description>
+    <help></help>
     <helper editorMode="radio_linebreak"
-      displayIf="ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[name() = 'gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']">
+            displayIf="ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[name() = 'gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']">
       <option value="COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services">COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</option>
       <option value="INSPIRE Data Specification on Administrative Units - Guidelines v3.0.1">Guide INSPIRE sur les unités administratives</option>
       <option value="INSPIRE Data Specification on Cadastral Parcels - Guidelines v 3.0.1">Guide INSPIRE sur les parcelles cadastrales</option>
@@ -3646,7 +3593,7 @@ diffusion restreinte.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations pour les séries de données:</b>
     <ul>
     <li>Les règlements Interopérabilité INSPIRE doivent obligatoirement
@@ -3699,7 +3646,7 @@ celles des scénarios d’échange du Sandre est possible en complément.
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Commentaire :</b>
     L’article 7, paragraphe 1, de la directive 2007/2/CE correspond aux modalités
     techniques de l’interopérabilité : il s’agit des règlements relatifs à l’interopérabilité
@@ -3729,8 +3676,8 @@ sur le Géocatalogue national (et plus globalement à l’échelle européenne).
 titre WFS tout seul ne permettra pas à l’internaute de trouver facilement la ressource qu’il
 recherche. Ce titre n’est ni caractéristique ni unique et ne permet pas à l’utilisateur de
 comprendre ce dont traite le service.
-    ]]></help>
-        <help for="france"><![CDATA[<b>Recommandations :</b>
+    ]]></help>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
       <ul>
       <li>Il est recommandé de faire figurer une indication de la fonction du service.</li>
       <li>Il est recommandé de ne pas faire figurer les parties responsables c’est-à-dire les
@@ -3747,8 +3694,8 @@ de partage avec les utilisateurs ;</li>
 <li>L’acronyme peut être exprimé dans le résumé.</li>
 </ul>
 </ul>
-    ]]></help>
-        <help><![CDATA[<b>Exemple pour un service de visualisation:</b>
+    ]]></help>
+    <help><![CDATA[<b>Exemple pour un service de visualisation:</b>
       Service de visualisation cartographique (WMS) du référentiel hydrographique (BDCarTHAgE ®) Métropole, Service de visualisation cartographique (WMS) de Plan de Prévention du Risque
 Inondation de la vallée de l'Epte aval, Service d'accès à la carte Les sites Natura 2000 du Tarn.
 <br/>
@@ -3761,15 +3708,15 @@ Service de chaînage des éléments du référentiel hydrographique (BD CarTHAgE
 <b>Exemple pour un service de transformation:</b> Service de transformation de coordonnées de
 l’IGN (WPS)
 
-    ]]></help>
-        <help><![CDATA[<b>Contre-exemple :</b>
+    ]]></help>
+    <help><![CDATA[<b>Contre-exemple :</b>
       <ul>
       <li>Intitulé non compréhensible : Service d'accès à la carte N_APPB_ZINF_S_R74</li>
       <li>Acronyme : Service d'accès à la carte ZICO en Limousin</li>
       <li>Intitulé de la ressource servie, et non du service : Les sites Natura 2000 du Tarn</li>
       </ul>
 
-    ]]></help>
+    ]]></help>
     <condition>Obligatoire</condition>
 
   </element>
@@ -3791,8 +3738,8 @@ l’IGN (WPS)
       recherche. Autre exemple, on trouve sur le Géocatalogue une métadonnée
       intitulée Cartes utiles. Ce titre n’est ni caractéristique ni unique
       et ne permet pas à l’utilisateur de comprendre ce dont traite la donnée.
-    ]]></help>
-    <help for="france"><![CDATA[<b>Recommandations :</b>
+    ]]></help>
+    <help for="france"><![CDATA[<b>Recommandations :</b>
     Il est recommandé de faire figurer une indication de la zone géographique couverte, notamment si le même type de ressource est proposé sur plusieurs territoires.
     <ul>
     <li>Le recours à une indication de version ou millésime est justifié lorsqu’il existe (ou existera) plusieurs versions qui cohabitent (ou cohabiteront) dans le catalogue.</li>
@@ -3805,11 +3752,11 @@ l’IGN (WPS)
     </ul>
     </li>
     </ul>
-    ]]></help>
-    <help><![CDATA[<b>Exemple :</b> Plan de Prévention du Risque Inondation (PPRI) de Paris, ; Plan Local d’Urbanisme (PLU) de Marseille, ; Planche 14A du Plan local d’Urbanisme (PLU) de Marseille ; Plan Local d’Urbanisme – Marseille – approbation du 10/11/2011.
-    ]]></help>
-    <help><![CDATA[<b>Contre-exemple :</b> Cartes Utiles, Zonages du PLU
-    ]]></help>
+    ]]></help>
+    <help><![CDATA[<b>Exemple :</b> Plan de Prévention du Risque Inondation (PPRI) de Paris, ; Plan Local d’Urbanisme (PLU) de Marseille, ; Planche 14A du Plan local d’Urbanisme (PLU) de Marseille ; Plan Local d’Urbanisme – Marseille – approbation du 10/11/2011.
+    ]]></help>
+    <help><![CDATA[<b>Contre-exemple :</b> Cartes Utiles, Zonages du PLU
+    ]]></help>
     <condition>Obligatoire</condition>
 
   </element>
@@ -3837,7 +3784,7 @@ l’IGN (WPS)
     La catégorie thématique est un système de classification de haut niveau qui permet de regrouper et de chercher par thème les ressources de données géographiques disponibles.
     Une ou plusieurs valeurs parmi les 19 catégories thématiques ISO listées à la partie D.2 du règlement sur les métadonnées INSPIRE doivent être fournies (élément obligatoire et répétable).
     Cet élément de métadonnées vient de la norme ISO 19115. Une correspondance entre les catégories thématiques ISO et les thèmes INSPIRE a été établie dans la partie D2 du règlement Métadonnées.
-    ]]></help>
+    ]]></help>
     <condition>Obligatoire si "jeu de données"</condition>
   </element>
   <element name="gmd:MD_TopicCategoryCode">
@@ -3972,7 +3919,7 @@ l’IGN (WPS)
     ]]>
     </help>
     <help for="france">
-    <![CDATA[
+      <![CDATA[
     <b>Recommandations :</b>
     <ul>
     <li>Lorsqu’elles existent, il est obligatoire de diffuser les conditions applicables à l’accès et à l’utilisation de la ressource.</li>
@@ -4910,105 +4857,105 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <label>Nom</label>
     <description></description>
   </element>
-		<element name="xlink:href">
-			<label>Link href</label>
-			<description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
-		</element>
-  	<!-- ==================================================== -->
-    <element name="hidden-elements">
-        <label>Hidden Elements</label>
-        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
-    </element>
-    <!-- ==================================================== -->
-    <element name="gmx:name">
-        <label>Name</label>
-        <description>Feature catalogue name</description>
-    </element>
-    <element name="gmx:scope">
-        <label>Scope</label>
-        <description>Scope definition</description>
-    </element>
-    <element name="gmx:versionNumber">
-        <label>Version</label>
-        <description>Catalogue version</description>
-    </element>
-    <element name="gmx:versionDate">
-        <label>Date</label>
-        <description>Catalogue date</description>
-    </element>
-    <element name="gmx:fieldOfApplication">
-        <label>Field of application</label>
-        <description>Field of application</description>
-    </element>
-    <element name="gml:axisAbbrev">
-        <label>Axe (abréviation)</label>
-    </element>
-    <element name="gml:axisDirection">
-        <label>Direction de l'axe</label>
-    </element>
-    <element name="gml:maximumValue">
-        <label>Valeur maximum</label>
-    </element>
-    <element name="gml:minimumValue">
-        <label>Valeur minimum</label>
-    </element>
-    <element name="gml:scope">
-      <label>Domaine</label>
-    </element>
-    <element name="gml:VerticalCRS">
-        <label>CRS Vertical</label>
-    </element>
-    <element name="gml:axis">
-      <label>Axe</label>
-    </element>
-    <element name="gml:remarks">
-        <label>Remarque</label>
-    </element>
-    <element name="gml:domainOfValidity">
-        <label>Domaine de validité</label>
-    </element>
-    <element name="gml:verticalCS">
-        <label>CS Vertical</label>
-    </element>
-    <element name="gml:VerticalCS">
-        <label>CS Vertical</label>
-    </element>
-    <element name="gml:CoordinateSystemAxis">
-      <label>Coordinate system axis</label>
-    </element>
-    <element name="gml:rangeMeaning">
-        <label>Signification de l'interval</label>
-    </element>
-    <element name="gml:verticalDatum">
-        <label>Vertical datum</label>
-    </element>
-    <element name="gml:VerticalDatum">
-        <label>Vertical datum</label>
-    </element>
-    <element name="gml:realizationEpoch">
-        <label>Époque de réalisation</label>
-    </element>
-    <element name="gco:lower">
-      <label>Minimum</label>
-      <description/>
-    </element>
-    <element name="gmx:language">
-      <label>Langue des métadonnées</label>
-      <description></description>
-    </element>
-    <element name="gco:Angle">
-      <label>Angle</label>
-    </element>
-    <element name="gco:Distance">
-      <label>Distance</label>
-    </element>
-    <element name="gco:Length">
-      <label>Longueur</label>
-    </element>
-    <element name="gco:Measure">
-      <label>Mesure</label>
-    </element>
-    <element name="gco:Scale">
-      <label>Échelle</label>
-    </element>
+  <element name="xlink:href">
+    <label>Link href</label>
+    <description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="hidden-elements">
+    <label>Hidden Elements</label>
+    <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmx:name">
+    <label>Name</label>
+    <description>Feature catalogue name</description>
+  </element>
+  <element name="gmx:scope">
+    <label>Scope</label>
+    <description>Scope definition</description>
+  </element>
+  <element name="gmx:versionNumber">
+    <label>Version</label>
+    <description>Catalogue version</description>
+  </element>
+  <element name="gmx:versionDate">
+    <label>Date</label>
+    <description>Catalogue date</description>
+  </element>
+  <element name="gmx:fieldOfApplication">
+    <label>Field of application</label>
+    <description>Field of application</description>
+  </element>
+  <element name="gml:axisAbbrev">
+    <label>Axe (abréviation)</label>
+  </element>
+  <element name="gml:axisDirection">
+    <label>Direction de l'axe</label>
+  </element>
+  <element name="gml:maximumValue">
+    <label>Valeur maximum</label>
+  </element>
+  <element name="gml:minimumValue">
+    <label>Valeur minimum</label>
+  </element>
+  <element name="gml:scope">
+    <label>Domaine</label>
+  </element>
+  <element name="gml:VerticalCRS">
+    <label>CRS Vertical</label>
+  </element>
+  <element name="gml:axis">
+    <label>Axe</label>
+  </element>
+  <element name="gml:remarks">
+    <label>Remarque</label>
+  </element>
+  <element name="gml:domainOfValidity">
+    <label>Domaine de validité</label>
+  </element>
+  <element name="gml:verticalCS">
+    <label>CS Vertical</label>
+  </element>
+  <element name="gml:VerticalCS">
+    <label>CS Vertical</label>
+  </element>
+  <element name="gml:CoordinateSystemAxis">
+    <label>Coordinate system axis</label>
+  </element>
+  <element name="gml:rangeMeaning">
+    <label>Signification de l'interval</label>
+  </element>
+  <element name="gml:verticalDatum">
+    <label>Vertical datum</label>
+  </element>
+  <element name="gml:VerticalDatum">
+    <label>Vertical datum</label>
+  </element>
+  <element name="gml:realizationEpoch">
+    <label>Époque de réalisation</label>
+  </element>
+  <element name="gco:lower">
+    <label>Minimum</label>
+    <description/>
+  </element>
+  <element name="gmx:language">
+    <label>Langue des métadonnées</label>
+    <description></description>
+  </element>
+  <element name="gco:Angle">
+    <label>Angle</label>
+  </element>
+  <element name="gco:Distance">
+    <label>Distance</label>
+  </element>
+  <element name="gco:Length">
+    <label>Longueur</label>
+  </element>
+  <element name="gco:Measure">
+    <label>Mesure</label>
+  </element>
+  <element name="gco:Scale">
+    <label>Échelle</label>
+  </element>
 </labels>
