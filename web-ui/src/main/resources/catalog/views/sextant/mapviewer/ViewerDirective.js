@@ -376,6 +376,7 @@
             button.data('bs.popover').inState.click = false;
           }
         };
+        scope.hidePopover = hidePopover;
 
         // can’t use dismiss boostrap option: incompatible with opacity slider
         var onMousedown = function(e) {
