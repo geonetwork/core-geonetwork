@@ -429,6 +429,9 @@
         }
       };
 
+      // Share map loading functions
+      gnViewerSettings.resultviewFns = $scope.resultviewFns;
+
       // Manage tabs height for api
       $scope.tabOverflow = gnSearchSettings.tabOverflow;
 

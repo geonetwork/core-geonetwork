@@ -54,8 +54,6 @@
 
   $(document.body).append($('<div class="g"></div>'));
 
-  module.constant('gnViewerSettings', {});
-
   module.config(['$LOCALES',
     function($LOCALES) {
       $LOCALES.push('search');
