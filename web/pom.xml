@@ -757,11 +757,10 @@
           <packagingExcludes>
             xml/schemas/**,
             WEB-INF/data/*.db,
-            WEB-INF/data/data/config/schema-plugins/**,
+            WEB-INF/data/index/**,
             WEB-INF/data/data/formatter/**,
+            WEB-INF/data/data/backup/**,
             WEB-INF/data/data/resources/htmlcache/**,
-            WEB-INF/data/data/resources/map/**,
-            WEB-INF/data/data/resources/xml/**,
             catalog/lib/style/bootstrap/docs/**,
             catalog/lib/style/bootstrap/fonts/**,
             catalog/lib/style/bootstrap/grunt/**,
