@@ -82,7 +82,7 @@ public class LDAPUtils {
     }
 
     @Transactional
-    private User getUser(LDAPUser user, boolean importPrivilegesFromLdap,
+    protected User getUser(LDAPUser user, boolean importPrivilegesFromLdap,
                          String userName) {
         UserRepository userRepo = ApplicationContextHolder.get().getBean(UserRepository.class);
 
@@ -119,7 +119,7 @@ public class LDAPUtils {
     }
 
     @Transactional
-    private List<UserGroup> getPrivilegesAndCreateGroups(LDAPUser user,
+    protected List<UserGroup> getPrivilegesAndCreateGroups(LDAPUser user,
                                                          boolean createNonExistingLdapGroup, User toSave) {
         GroupRepository groupRepo = ApplicationContextHolder.get().getBean(GroupRepository.class);
 
@@ -168,10 +168,9 @@ public class LDAPUtils {
     }
 
     @Transactional
-    private void setUserGroups(final User user, List<UserGroup> userGroups)
+    protected void setUserGroups(final User user, List<UserGroup> userGroups)
         throws Exception {
         UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-        ;
 
         Collection<UserGroup> all = userGroupRepo.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
