@@ -824,6 +824,7 @@
     .list-group-item {
       font-size: @sxt-fontsize;
       border: none;
+      padding: 4px 0px;
       label {
         padding: 2px 0 2px 12px;
         &:hover {
@@ -831,6 +832,12 @@
           cursor: pointer;
         }
       }
+    }
+    .list-group {
+      height: auto;
+      max-height: none !important;
+      overflow: visible;
+      margin: 0px;
     }
     .fa-plus-square-o {
       &:before {

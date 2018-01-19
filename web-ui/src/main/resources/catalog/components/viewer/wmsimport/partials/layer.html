@@ -3,22 +3,20 @@
 
   <div class="flex-col">
     <div class="flex-row width-100 flex-align-stretch">
-      <div class="flex-col flex-grow">
-        <a href=""
-           class="truncate"
-           data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
-           title="{{member.Title || member.title}}">
-          <i class='fa'
-             data-ng-class='::isParentNode ? "fa-folder-o" : ""'></i>
-          {{member.Title || member.title}}
-          <span data-ng-if="member.Style.length === 1">
-            &nbsp;({{member.Style[0].Title}})
-          </span>
-        </a>
-      </div>
-      <div class="flex-spacer"></div>
+      <a href=""
+          class="flex-shrink text-ellipsis"
+          data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
+          title="{{member.Title || member.title}}">
+        <i class='fa'
+            data-ng-class='::isParentNode ? "fa-folder-o" : ""'></i>
+        {{member.Title || member.title}}
+        <span data-ng-if="member.Style.length === 1">
+          &nbsp;({{member.Style[0].Title}})
+        </span>
+      </a>
+      <div class="flex-spacer flex-grow"></div>
       <div class="flex-col">
-        <div class="gn-layer-actions"             
+        <div class="gn-layer-actions"
              data-ng-if="!isParentNode && member.Style.length > 1">
           <div ngeo-popover
                ngeo-popover-placement="bottom">
