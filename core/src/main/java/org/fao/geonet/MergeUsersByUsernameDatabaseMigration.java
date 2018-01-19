@@ -153,9 +153,11 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         Set<String> listOfAddedProfiles = new HashSet<>();
         List<UserGroup> mergedUserGroups = new ArrayList<>();
+        List<Integer> userIdList = new ArrayList<>(duplicatedUserList.size());
 
         for(int i = 0; i < duplicatedUserList.size(); i++) {
             User userToProcess = duplicatedUserList.get(i);
+            userIdList.add(userToProcess.getId());
 
             List<UserGroup> userGroupsToProcess = userGroupRepository.findAll(
                 UserGroupSpecs.hasUserId(userToProcess.getId()));
@@ -184,6 +186,9 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
             mergedUserGroups.add(userGroup);
         }
 
+        userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
+            userIdList);
         userGroupRepository.save(mergedUserGroups);
+
     }
 }
