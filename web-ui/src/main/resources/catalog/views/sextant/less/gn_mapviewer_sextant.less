@@ -35,9 +35,10 @@
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
-      margin-left: -1.7em;
       top: 2.9em;
       border-radius: .2em;
+      left: 50%;
+      transform: translate(-50%, 0);
       &:after {
         content: ' ';
         height: 0;
@@ -45,7 +46,7 @@
         width: 0;
         border: 5px solid transparent;
         border-bottom-color: rgba(0,0,0,.6);
-        left: .9em;
+        left: ~"calc(50% - 5px)";
         top: -10px;
       }
     }
