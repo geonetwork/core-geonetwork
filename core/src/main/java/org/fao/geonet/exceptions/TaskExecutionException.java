@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2018 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -20,22 +20,26 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.exceptions;
 
-package org.fao.geonet.repository;
+public class TaskExecutionException extends RuntimeException {
+    public TaskExecutionException() {
+        super();
+    }
 
-import org.fao.geonet.domain.UserSavedSelection;
-import org.fao.geonet.domain.UserSavedSelectionId;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+    public TaskExecutionException(String message) {
+        super(message);
+    }
 
-import java.util.List;
+    public TaskExecutionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-/**
- * Data Access object for accessing {@link UserSavedSelection} entities.
- */
-public interface UserSavedSelectionRepository extends
-    GeonetRepository<UserSavedSelection, UserSavedSelectionId>,
-    JpaSpecificationExecutor<UserSavedSelection>,
-    UserSavedSelectionRepositoryCustom {
+    public TaskExecutionException(Throwable cause) {
+        super(cause);
+    }
 
-    List<UserSavedSelection> findAllByUserSavedSelectionId_UserId(int id);
+    protected TaskExecutionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }
