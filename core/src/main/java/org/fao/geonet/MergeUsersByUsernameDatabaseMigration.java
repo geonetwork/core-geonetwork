@@ -22,7 +22,10 @@
  */
 package org.fao.geonet;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+import com.itextpdf.text.Meta;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -35,6 +38,9 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.transaction.Transactional;
 import java.util.*;
 
 /**
@@ -44,6 +50,7 @@ import java.util.*;
  */
 public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
+    @Transactional
     @Override
     public void run(ApplicationContext applicationContext) throws TaskExecutionException {
         UserRepository userRepository = applicationContext.getBean(UserRepository.class);
@@ -105,7 +112,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
      * @param newMetadataOwner new metadata owner user.
      * @throws Exception if anything doesn't work.
      */
-    private void transferMetadata(ApplicationContext applicationContext, List<User> oldMetadataOwnerList,
+    void transferMetadata(ApplicationContext applicationContext, List<User> oldMetadataOwnerList,
                                   User newMetadataOwner) throws Exception {
         MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
         DataManager dataManager = applicationContext.getBean(DataManager.class);
@@ -142,6 +149,13 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
             metadataStatusRepository.deleteAllById_UserId(oldOwner.getId());
             metadataStatusRepository.save(metadataStatusList);
 
+            dataManager.indexMetadata(Lists.transform(metadataList, new Function<Metadata, String>() {
+                @Nonnull
+                @Override
+                public String apply(@Nullable Metadata input) {
+                    return String.valueOf(input.getId());
+                }
+            }));
         }
 
     }
@@ -152,7 +166,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
      * @param duplicatedUserList list of users used to get the group list.
      * @param userToKeep the user to add to the groups of duplicatedUserList.
      */
-    private void mergeGroups(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
+    void mergeGroups(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
         GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
         UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         Set<String> listOfAddedProfiles = new HashSet<>();
