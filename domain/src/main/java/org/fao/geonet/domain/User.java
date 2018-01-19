@@ -424,7 +424,7 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @param otherUser     other user to merge data from.
      * @param mergeNullData if true then also set null values from other user. If false then only
-     *                      merge non-null data
+     *                      merge non-null data.
      */
     public void mergeUser(User otherUser, boolean mergeNullData) {
         if (mergeNullData || StringUtils.isNotBlank(otherUser.getUsername())) {
@@ -457,7 +457,7 @@ public class User extends GeonetEntity implements UserDetails {
                 Address address = iterator.next();
                 boolean found = false;
 
-                for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator.hasNext(); ) {
+                for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator2.hasNext(); ) {
                     Address otherAddress = iterator2.next();
                     if (otherAddress.getId() == address.getId()) {
                         address.mergeAddress(otherAddress, mergeNullData);

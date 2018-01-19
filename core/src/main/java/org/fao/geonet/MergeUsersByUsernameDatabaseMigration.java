@@ -55,12 +55,13 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
     public void run(ApplicationContext applicationContext) throws TaskExecutionException {
         UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         List<String> duplicatedUsernamesList = userRepository.findDuplicatedUsernamesCaseInsensitive();
-        Log.debug(Geonet.DB,"Found these duplicated usernames: " + duplicatedUsernamesList);
+        Log.debug(Log.JEEVES,"Found these duplicated usernames: " + duplicatedUsernamesList);
         try {
             for (String duplicatedUsername : duplicatedUsernamesList) {
                 mergeUsers(applicationContext, duplicatedUsername);
             }
         } catch (Exception e) {
+            Log.error(Log.JEEVES, "Exception merging users", e);
             throw new TaskExecutionException(e);
         }
 
@@ -74,24 +75,25 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         User greatestProfileUser = duplicatedUserList.get(0);
         User userToKeep = userRepository.findOne(greatestProfileUser.getId());
         Set<String> emails = new HashSet<>();
-        for(User duplicatedUser : duplicatedUserList) {
-            userToKeep.mergeUser(duplicatedUser, false);
-            emails.addAll(duplicatedUser.getEmailAddresses());
-        }
-        // Merge the greatestProfileUser again to keep its values
-        userToKeep.mergeUser(greatestProfileUser, false);
-        userToKeep.getEmailAddresses().addAll(emails);
+        Set<Address> addresses = new HashSet<>();
 
         mergeGroups(applicationContext, duplicatedUserList, userToKeep);
         transferMetadata(applicationContext, duplicatedUserList, userToKeep);
         transferSavedSelections(applicationContext, duplicatedUserList, userToKeep);
 
+        User tempUser = new User();
+        for(int i = duplicatedUserList.size() - 1; i >= 0; i--) { // i = 1  is intended
+            User duplicatedUser = duplicatedUserList.get(i);
+            addresses.addAll(duplicatedUser.getAddresses());
+            mergeUser(tempUser, duplicatedUser);
+            emails.addAll(duplicatedUser.getEmailAddresses());
+        }
 
-
-        userToKeep = userRepository.save(userToKeep);
+        mergeUser(userToKeep, tempUser);
         duplicatedUserList.remove(greatestProfileUser);
         userRepository.delete(duplicatedUserList);
-
+        userRepository.save(userToKeep);
+        userRepository.flush();
 
 
     }
@@ -207,6 +209,50 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
             userIdList);
         userGroupRepository.save(mergedUserGroups);
+    }
 
+    public User mergeUser(User toOverwrite, User toKeep) {
+        if (StringUtils.isNotBlank(toKeep.getSurname())) {
+            toOverwrite.setSurname(toKeep.getSurname());
+        }
+        if (StringUtils.isNotBlank(toKeep.getName())) {
+            toOverwrite.setName(toKeep.getName());
+        }
+        if (StringUtils.isNotBlank(toKeep.getOrganisation())) {
+            toOverwrite.setOrganisation(toKeep.getOrganisation());
+        }
+        if (StringUtils.isNotBlank(toKeep.getKind())) {
+            toOverwrite.setKind(toKeep.getKind());
+        }
+        if (StringUtils.isNotBlank(toKeep.getProfile().name())) {
+            toOverwrite.setProfile(toKeep.getProfile());
+        }
+
+        if (!toKeep.getEmailAddresses().isEmpty()) {
+            toOverwrite.getEmailAddresses().clear();
+            toOverwrite.getEmailAddresses().addAll(toKeep.getEmailAddresses());
+        }
+
+        ArrayList<Address> otherAddresses = new ArrayList<Address>(toKeep.getAddresses());
+        if (!otherAddresses.isEmpty()) {
+            for (Iterator<Address> iterator = toOverwrite.getAddresses().iterator(); iterator.hasNext(); ) {
+                Address address = iterator.next();
+                boolean found = false;
+
+                for (Iterator<Address> iterator2 = otherAddresses.iterator(); iterator2.hasNext(); ) {
+                    Address otherAddress = iterator2.next();
+                    if (otherAddress.getId() == address.getId()) {
+                        address.mergeAddress(otherAddress, false);
+                        found = true;
+                        iterator2.remove();
+                        break;
+                    }
+                }
+            }
+            toOverwrite.getAddresses().addAll(otherAddresses);
+        }
+
+        toOverwrite.getSecurity().mergeSecurity(toKeep.getSecurity(), false);
+        return toOverwrite;
     }
 }
