@@ -92,6 +92,10 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
     private void transferSavedSelections(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
         UserSavedSelectionRepository userSavedSelectionRepository = applicationContext.getBean(UserSavedSelectionRepository.class);
         // TODO
+
+        for(int i = 1; i < duplicatedUserList.size(); i++) { // i intentionally initialised to 1
+            userSavedSelectionRepository.deleteAllByUser(duplicatedUserList.get(i).getId());
+        }
     }
 
     /**
