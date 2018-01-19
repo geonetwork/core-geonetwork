@@ -103,8 +103,32 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         loginAs(user4, serviceContext);
         metadataIdList.put(importMetadataXML(serviceContext, "uuid", new ByteArrayInputStream(xmlBytes),
             MetadataType.METADATA, group1.getId(), Params.GENERATE_UUID), group1.getId());
+    }
 
+    @Test
+    public void testRun() {
+        User user1 = _userRepo.findOneByUsername("Username1");
+        User user2 = _userRepo.findOneByUsername("uSername1");
+        User user3 = _userRepo.findOneByUsername("usErname1");
+        User user4 = _userRepo.findOneByUsername("useRname1");
+        Group group1 = _groupRepo.findByName("groupTest1");
+        Group group2 = _groupRepo.findByName("groupTest2");
+        MergeUsersByUsernameDatabaseMigration migration = new MergeUsersByUsernameDatabaseMigration();
+        List<User> duplicatedUserNames = _userRepo.findByUsernameIgnoreCase("username1");
+        duplicatedUserNames.sort(Comparator.comparing(User::getProfile));
+        User greatestProfileUser = duplicatedUserNames.get(0);
+        User userTmp = migration.mergeUser(new User(), greatestProfileUser);
+        userTmp.setUsername(greatestProfileUser.getUsername());
 
+        migration.run(_applicationContext);
+        assertNull(_userRepo.findOne(user1.getId()));
+        assertNull(_userRepo.findOne(user2.getId()));
+        assertNull(_userRepo.findOne(user3.getId()));
+        User mergedUser = _userRepo.findOne(greatestProfileUser.getId());
+        assertNotNull(mergedUser);
+        assertEquals(userTmp.getUsername(), mergedUser.getUsername());
+        assertEquals(userTmp.getProfile(), mergedUser.getProfile());
+        assertEquals(userTmp.getPassword(), mergedUser.getPassword());
     }
 
     @Test
@@ -211,6 +235,8 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         address.setCity(username + "_city");
         address.setAddress(username + "_address");
         user.getAddresses().add(address);
+        user.getSecurity().setPassword(username + "_password");
+
 
 
         return user;
