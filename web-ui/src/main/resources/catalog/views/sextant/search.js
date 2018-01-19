@@ -47,6 +47,14 @@
         }
       }]);
 
+    // init gn_config
+    var cfgModule = angular.module('gn_config', []);
+    cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+      function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+        gnGlobalSettings.init({}, null, gnViewerSettings, gnSearchSettings);
+      }
+    ]);
+
     // api css loading
     var theme = sxtSettings.theme || 'default';
     var link = document.createElement("link");
