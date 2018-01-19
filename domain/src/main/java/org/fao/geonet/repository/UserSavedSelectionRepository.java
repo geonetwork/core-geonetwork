@@ -27,8 +27,6 @@ import org.fao.geonet.domain.UserSavedSelection;
 import org.fao.geonet.domain.UserSavedSelectionId;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
-
 /**
  * Data Access object for accessing {@link UserSavedSelection} entities.
  */
@@ -36,6 +34,4 @@ public interface UserSavedSelectionRepository extends
     GeonetRepository<UserSavedSelection, UserSavedSelectionId>,
     JpaSpecificationExecutor<UserSavedSelection>,
     UserSavedSelectionRepositoryCustom {
-
-    List<UserSavedSelection> findAllByUserSavedSelectionId_UserId(int id);
 }
