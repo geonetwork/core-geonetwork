@@ -90,24 +90,26 @@
               for (var i = 0, len = layer.length; i < len; i++) {
                 getFlatLayers(layer[i], inheritedCrs);
               }
-            } else if (angular.isDefined(layer)) {
+            } else if (layer) {
               // replace with complete CRS list if available
               if (layer.CRS && layer.CRS.length > inheritedCrs.length) {
                 inheritedCrs = layer.CRS;
               }
 
-              // add to flat layer array if we're on a leave (layer w/o child)
-              layer.url = url;
-              layer.CRS = inheritedCrs;
-              layers.push(layer);
+              if (layer.Layer) {
+                // make sure Layer element is an array
+                if (!angular.isArray(layer.Layer)) {
+                  layer.Layer = [layer.Layer];
+                }
 
-              // make sure Layer element is an array
-              if (layer.Layer && !angular.isArray(layer.Layer)) {
-                layer.Layer = [layer.Layer];
+                // process recursively on child layers
+                getFlatLayers(layer.Layer, inheritedCrs);
+              } else {
+                // add to flat layer array if we're on a leave (layer w/o child)
+                layer.url = url;
+                layer.CRS = inheritedCrs;
+                layers.push(layer);
               }
-
-              // process recursively on child layers
-              getFlatLayers(layer.Layer, inheritedCrs);
             }
           };
 
