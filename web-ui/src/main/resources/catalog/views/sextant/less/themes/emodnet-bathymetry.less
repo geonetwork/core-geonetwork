@@ -1,3 +1,25 @@
+/* latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/u-WUoqrET9fUeobQW7jkRRJtnKITppOI_IvcXXDNrsc.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/cJZKeOuBrn4kERxqtaUH3VtXRa8TVwTICgirnJhmVJw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
+}
+
+@sxt-font-family: 'Open Sans', sans-serif;
+@sxt-fontsize-big: 1.2em;
+@sxt-fontsize: 1em;
+@sxt-fontsize-small: 0.8em;
+@sxt-font-color: #444;
 
 @sxt-base-color-dark: #000000;
 @sxt-base-color: #0e72b5;
@@ -5,3 +27,8 @@
 
 @sxt-button-color: #f8b333;
 @sxt-button-color-light: #ceb329;
+
+// custom color for MD title
+.gn .gn-md-title {
+  background-color: #337ab7 !important;
+}
