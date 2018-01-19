@@ -64,7 +64,8 @@
 
         function buildUrl(prefix, lang, value, suffix) {
           if (value.indexOf('/') === 0) {
-            return value.substring(1);
+            return value.substring(1)
+                .replace('{{lang}}', gnLangs.getIso2Lang(lang));
           } else if (value.indexOf('|') > -1) {
             /* Allows to configure locales for custom views,
                providing the path and the locale type
@@ -84,6 +85,8 @@
           }
         };
         var allPromises = [];
+
+        options.locales.push('custom');
 
         angular.forEach(options.locales, function(value, index) {
           var langUrl = buildUrl(options.prefix, options.key,

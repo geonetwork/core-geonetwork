@@ -53,7 +53,15 @@ div[gn-transfer-ownership] * .list-group {
   line-height: 1.33;
   border-radius: 35px;
 }
-
+// help button
+[data-gn-need-help] {
+  margin-top: 10px;
+}
+.panel-heading {
+  [data-gn-need-help] {
+    margin-top: 0;
+  }
+}
 
 
 /* An update to 3.2 could provide responsive class
@@ -84,6 +92,38 @@ div[gn-transfer-ownership] * .list-group {
   .gn-account {
     a {
     }
+  }
+}
+
+.gn-sub-bar {
+  background-color: #fff;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  border: 1px solid #e7e7e7;
+  border-top: 0;
+  z-index: 5;
+}
+[ng-app="gn_editor"] {
+  .gn-top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: 52px;
+  }
+  .gn-sub-bar {
+    position: fixed;
+    top: 52px;
+    left: 20px;
+    right: 20px;
+  }
+  .gn-editor-board {
+    padding-top: 120px;
+  }
+  .gn-editor-container, .gn-batch-editor, #gn-directory-container,
+  #gn-new-metadata-container, #gn-import-container {
+    padding-top: 70px;
   }
 }
 
@@ -297,6 +337,10 @@ div.gn-scroll-spy {
       word-wrap: break-word;
     }
   }
+}
+.gn-save-invalid-modal {
+  max-width: none;
+  max-height: none;
 }
 img.thumb-small {
   max-width: 100%;
@@ -756,6 +800,74 @@ input.ng-invalid {
   }
 }
 
+
+.navbar {
+  margin-bottom: 14px;
+  .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 50px;
+    font-size: 16px;
+  }
+
+  // handle hover dropdowns for editor and admin menu (only if not on mobile)
+  @media (min-width: @screen-sm-min) {
+    li.dropdown-hover {
+      & > .dropdown-toggle {
+        position: relative;
+        &:after {
+          font-family: FontAwesome;
+          content: "\f0d7";
+          position: absolute;
+          bottom: -5px;
+          left: 50%;
+          transform: translate(-50%, 0);
+          font-size: 0.9em;
+        }
+      }
+      &.open:not(.active) > .dropdown-toggle {
+        background: none;
+      }
+      ul {
+        display: none;
+      }
+      &:hover ul, & > a:focus + ul, & > a:active + ul {
+        display: block;
+      }
+    }
+  }
+
+  .gn-user-info {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -6px 0px;
+    line-height: 1em;
+    .gn-user-role {
+      text-transform: uppercase;
+      opacity: 0.7;
+      font-size: 0.8em;
+    }
+  }
+}
+.navbar-form {
+  border:none;
+  margin: 8px 0px;
+}
+
+// styles for login popup in the navbar
+.signin-dropdown {
+  .dropdown-menu {
+    border-color: #e7e7e7;
+    .navbar-form {
+      .input-group {
+        .form-control {
+          min-width: 110px;
+        }
+      }
+    }
+  }
+}
+
 // general purpose layout helpers
 .pos-relative { position: relative; }
 .pos-absolute { position: absolute; }
@@ -787,3 +899,15 @@ input.ng-invalid {
 .text-ellipsis { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .width-100 { width: 100%; } .width-75 { width: 75%; } .width-50 { width: 50%; }
 .width-25 { width: 25%; } .width-33 { width: 33%; } .width-66 { width: 66%; }
+
+
+html {
+  // As a side-effect of setting the @viewport in bootstrap,
+  // IE11 & Edge make the scrollbar overlap the content and automatically hide itself when not in use.
+  // Unfortunately, the auto-showing of the scrollbar is sometimes too sensitive,
+  // thus making it hard to click on stuff near the right edge of the page.
+  // So we add this style to force IE11 & Edge to use a "normal", non-overlapping, non-auto-hiding scrollbar.
+  // See https://github.com/twbs/bootstrap/issues/18543
+  // TODO Remove this if Bootstrap version is >= 4.0.0
+  -ms-overflow-style: scrollbar;
+}

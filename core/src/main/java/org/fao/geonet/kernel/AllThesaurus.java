@@ -92,7 +92,7 @@ public class AllThesaurus extends Thesaurus {
     static String buildKeywordUri(String thesaurusKey, String uri) {
         try {
             thesaurusKey = URLEncoder.encode(thesaurusKey, Constants.ENCODING);
-            uri = URLEncoder.encode(uri, Constants.ENCODING);
+//            uri = URLEncoder.encode(uri, Constants.ENCODING);
             return URI_CODE_PREFIX + thesaurusKey + SEPARATOR + uri;
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);

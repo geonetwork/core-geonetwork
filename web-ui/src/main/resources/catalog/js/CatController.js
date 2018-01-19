@@ -59,7 +59,7 @@
           'enabled': true,
           'languages': {
             'eng': 'en',
-            'dut': 'du',
+            'dut': 'nl',
             'fre': 'fr',
             'ger': 'ge',
             'kor': 'ko',
@@ -131,7 +131,7 @@
           'formatter': {
             'list': [{
               'label': 'full',
-              'url' : '../api/records/{{md.getUuid()}}/' +
+              'url' : '../api/records/{{uuid}}/' +
                   'formatters/xsl-view?root=div&view=advanced'
             }]
           },
@@ -143,13 +143,15 @@
             'downloads': ['DOWNLOAD'],
             'layers': ['OGC'],
             'maps': ['ows']
-          }
+          },
+          'isFilterTagsDisplayedInSearch': false
         },
         'map': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/map',
           'is3DModeAllowed': false,
           'isSaveMapInCatalogAllowed': true,
+          'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
           'listOfServices': {
             'wms': [],
@@ -164,7 +166,16 @@
             'label': 'Google mercator (EPSG:3857)'
           }],
           'disabledTools': {
-            'processes': true
+            'processes': false,
+            'addLayers': false,
+            'layers': false,
+            'filter': false,
+            'contexts': false,
+            'print': false,
+            'mInteraction': false,
+            'graticule': false,
+            'syncAllLayers': false,
+            'drawVector': false
           },
           'graticuleOgcService': {},
           'map-viewer': {
@@ -173,24 +184,24 @@
             'layers': []
           },
           'map-search': {
-            'context': '',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
-            'layers': [
-              { type: 'osm' }
-            ]
+            'layers': []
           },
           'map-editor': {
             'context': '',
             'extent': [0, 0, 0, 0],
-            'layers': [
-              { type: 'osm' }
-            ]
+            'layers': [{'type': 'osm'}]
           }
         },
         'geocoder': 'https://secure.geonames.org/searchJSON',
         'editor': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.edit'
+          'appUrl': '../../srv/{{lang}}/catalog.edit',
+          'isUserRecordsOnly': false,
+          'isFilterTagsDisplayed': false,
+          'createPageTpl':
+              '../../catalog/templates/editor/new-metadata-horizontal.html'
         },
         'admin': {
           'enabled': true,
@@ -213,7 +224,7 @@
       requireProxy: [],
       gnCfg: angular.copy(defaultConfig),
       gnUrl: '',
-      docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
+      docUrl: 'http://geonetwork-opensource.org/manuals/3.4.x/',
       //docUrl: '../../doc/',
       modelOptions: {
         updateOn: 'default blur',
@@ -478,6 +489,18 @@
 
       // login url for inline signin form in top toolbar
       $scope.signInFormAction = '../../signin#' + $location.path();
+
+      // when the login input have focus, do not close the dropdown/popup
+      $scope.focusLoginPopup = function() {
+        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword')
+            .one('focus', function() {
+              $(this).parents('.dropdown-menu').addClass('show');
+            });
+        $('.signin-dropdown #inputUsername, .signin-dropdown #inputPassword')
+            .one('blur', function() {
+              $(this).parents('.dropdown-menu').removeClass('show');
+            });
+      };
 
       /**
        * Catalog facet summary providing

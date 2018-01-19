@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+<meta charset="utf-8">
+<!--
+	This website is powered by TYPO3 - inspiring people to share!
+	TYPO3 is a free open source Content Management Framework initially created by Kasper Skaarhoj and licensed under GNU/GPL.
+	TYPO3 is copyright 1998-2017 of Kasper Skaarhoj. Extensions are copyright of their respective owners.
+	Information and contribution at https://typo3.org/
+-->
+
+<!-- <base href="http://odatis.oceanobs.com/"> -->
+
+<title>Accès direct au catalogue</title>
+<meta name="description" content="Accès direct au catalogue de données ODATIS" />
+<meta name="keywords" content="catalogue, accès aux données" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+<meta name="generator" content="TYPO3 CMS">
+<meta name="language" content="fr">
+<meta name="description" content="Accès direct au catalogue de données ODATIS">
+<meta name="keywords" content="catalogue, accès aux données">
+
+</head>
+<body>
+
+
+<div id="c778">
+
+	    <div ng-app="gn_search_sextant"
+         ng-controller="GnCatController"
+         class="gn"
+         sxt-size="auto "
+         ng-include="'../../catalog/views/sextant/templates/index.html'">
+    </div>
+
+  <script type="text/javascript">
+        var sxtSettings = {
+        langDetector: {
+          fromHtmlTag: true,
+          regexp: '^\/([a-z]+)\/',
+          lang: 'fre'
+        },
+    // configWhat: 'ODATIS',
+    displayChildrenBtn: true,
+    tabOverflow : {
+      search: true,
+      map: true,
+      panier: true
+    },
+    layerFilter: true,
+        sortBy: ['-title', 'changeDate', 'relevance'],
+    servicesUrl: {
+      wms: [{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Océanographie physique',
+      url: 'http://www.ifremer.fr/services/wms/oceanographie_physique?'
+                },{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Biologie',
+      url: 'http://www.ifremer.fr/services/wms/biologie?'
+                },{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Géologie',
+      url: 'http://www.ifremer.fr/services/wms/geologie?'
+        },{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Bathymétrie',
+      url: 'http://www.ifremer.fr/services/wms/bathymetrie?'
+        },{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Imagerie acoustique',
+      url: 'http://www.ifremer.fr/services/wms/imagerie_acoustique?'
+        },{
+            name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - SISMER - Données des navires',
+      url: 'http://www.ifremer.fr/services/wms/sismer?'
+        },{
+            name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Granulats marins',
+      url: 'http://www.ifremer.fr/services/wms/granulats_marins?'
+        },{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Surveillance littorale',
+      url: 'http://www.ifremer.fr/services/wms/surveillance_littorale?'
+        },{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Photos anciennes',
+      url: 'http://www.ifremer.fr/services/photos_anciennes?'
+        },{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Scan littoral',
+      url: 'http://www.ifremer.fr/ifremerWS/WS/wms/scan-littoral?'
+        },{
+            name: 'Agence des aires marines protégées',
+      url: 'http://cartographie.aires-marines.fr/wms'
+        },{
+      name: 'BRGM Géologie',
+      url: 'http://geoservices.brgm.fr/geologie'
+        },{
+      name: 'BRGM Risques naturels et industriels',
+      url: 'http://geoservices.brgm.fr/risques'
+        },{
+      name: 'BRGM Observatoire des matériaux',
+      url: 'http://geoservices.brgm.fr/odmgm?'
+        },{
+      name: 'Cartorisque',
+      url: 'http://cartorisque.prim.net/wms/france?'
+        },{
+      name: 'Geolittoral',
+      url: 'http://geolittoral.application.equipement.gouv.fr/wms2/metropole?'
+        },{
+      name: 'Geosignal',
+      url: 'http://www.geosignal.org/cgi-bin/wmsmap?'
+        },{
+      name: '<a href="http://www.mnhn.fr" target="externe" class="tx-glossary"><dfn>MNHN</dfn></a>-INPN',
+      url: 'http://ws.carmencarto.fr/WMS/119/fxx_inpn?'
+        },{
+      name: 'Marine Regions',
+      url: 'http://geo.vliz.be/geoserver/MarineRegions/wms?Request=getCapabilities'
+        },{
+      name: 'SHOM',
+      url: 'http://services.data.shom.fr/INSPIRE/wms/r?version=1.3.0'
+        }],
+      wmts: [{
+      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> Photos anciennes et Hyperspectrales',
+      url: 'http://sextant.ifremer.fr/geowebcache/service/wmts?'
+    },{
+      name: 'Emodnet bathymetry',
+      url: 'http://ows.emodnet-bathymetry.eu/gwc/service/wmts?'
+    },{
+      name: 'maps.ngdc.noaa.gov',
+      url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+    }]
+    },
+    localisations: [{
+      name: 'United States',
+      extent: [-13884991, 2870341, -7455066, 6338219]
+    }, {
+      name: 'France',
+      extent: [-817059, 4675034, 1719426, 7050085]
+    },{
+      name: 'Brest',
+      extent: [-510281, 6164880, -490464, 6183435]
+    }],
+    panier: {
+    projs: [{
+      value: '4326',
+      label: 'Geographique - Datum WGS84'
+      },{
+      value: '2154',
+      label: 'Lambert - 93'
+      },{
+      value: '27571',
+      label: 'Lambert Zone I - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '27572',
+      label: 'Lambert Zone II - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '27573',
+      label: 'Lambert Zone III - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '27574',
+      label: 'Lambert Zone IV - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '27561',
+      label: 'Lambert Nord France - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '27562',
+      label: 'Lambert Centre France - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '27563',
+      label: 'Lambert Sud France - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '27564',
+      label: 'Lambert Corse - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      },{
+      value: '2984',
+      label: 'Lambert Nouvelle-Calédonie - RGNC 91'
+      },{
+      value: '3163',
+      label: 'Lambert Nouvelle-Calédonie - RGNC 91-93'
+      },{
+            value: '32600',
+      label: 'UTM - Datum WGS84'
+      },{
+      value: '2975',
+      label: 'La Réunion : RGR92 / UTM 40S (métrique)'
+      },{
+      value: '32740',
+      label: 'La Réunion : WGS84 / UTM 40S (métrique)'
+      },{
+      value: '4471',
+      label: 'Mayotte : RGM04 / UTM 38S (métrique)'
+      },{
+      value: '32738',
+      label: 'Mayotte : WGS84 / UTM 38S (métrique)'
+      },{
+            value: '32620',
+      label: 'Antilles : WGS84 / UTM 20N (métrique)'
+      },{
+            value: '2973',
+      label: 'Martinique Fort Desaix'
+      },{
+      value: '2970',
+      label: 'Guadeloupe Saint-Anne'
+      },{
+            value: '4230',
+      label: 'Geographique - Datum ED50'
+      },{
+      value: '4258',
+      label: 'European Terrestrial Reference System 1989 (ETRS89)'
+      },{
+      value: '3395',
+      label: 'Mercator - Datum WGS84 (métrique)'
+            },{
+      value: '3857',
+      label: 'Pseudo Mercator - Datum WGS84 (Google, degrés)'
+      }],
+    formats: {
+      vector:[
+        {
+        value: 'ESRI Shapefile',
+        label: 'Shapefile'
+        },{
+        value: 'MapInfo File',
+        label: 'MapInfo'
+        },{
+        value: 'GML',
+        label: 'GML'
+        },{
+        value: 'KML',
+        label: 'KML'
+        }, {
+        value: 'GeoJSON',
+        label: 'GeoJSON'
+        }
+      ],
+      raster:[
+        {
+        value: 'GTiff',
+        label: 'GeoTiff'
+        },{
+        value: 'ECW',
+        label: 'ECW'
+        },{
+        value: 'Jpeg2000',
+        label: 'Jpeg2000'
+        }
+      ]
+      },
+    },
+        facetConfig : [
+      {
+            key: 'odatis_variables',
+            tree: true,
+            opened: true,
+            labels: {
+                eng: 'Variables',
+                fre: 'Variables'
+            }},
+      {
+            key: 'odatis_type_jeux_donnee',
+            tree: true,
+            labels: {
+                eng: 'Type of datasets',
+                fre: 'Type de jeu de donnees'
+            }},{
+            key: 'odatis_centre_donnees',
+            labels: {
+                eng: 'Data centers',
+                fre: 'Centres de donnees'
+            }},
+      {
+            key: 'mdActions',
+            opened: true
+      }
+        ],
+
+        theme: 'odatis'
+
+};
+
+</script>
+<script type="text/javascript">
+if ( location.hash == "" && window.parent.location.hash != "" ) {
+  location.hash = window.parent.location.hash;
+}
+</script>
+<script src="//localhost:8080/geonetwork/static/lib.js"></script>
+<script src="//localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+
+
+
+
+
+</body>
+</html>

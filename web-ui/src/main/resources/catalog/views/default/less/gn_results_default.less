@@ -1,5 +1,24 @@
 @import "../../../style/gn_search.less";
 
+.gn-row-results {
+  padding-top: 15px;
+  background-color: @gn-results-background-color;
+}
+// search terms
+.searchterm {
+  margin: 0 5px 5px 0;
+  max-width: 100%;
+  span {
+    max-width: 15em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
+  }
+  i {
+    margin-top: -15px;
+    margin-left: 5px;
+  }
+}
 
 // styling for all search results
 ul.gn-resultview {

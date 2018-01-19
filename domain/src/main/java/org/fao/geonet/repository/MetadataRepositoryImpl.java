@@ -25,6 +25,7 @@ package org.fao.geonet.repository;
 
 import com.google.common.collect.Maps;
 
+import org.fao.geonet.domain.CswCapabilitiesInfoField_;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
@@ -32,6 +33,7 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
+import org.jdom.Element;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -126,7 +128,6 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
         return _entityManager.createQuery(cbQuery).getResultList();
     }
 
-
     @Override
     public Metadata findOneOldestByChangeDate() {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
@@ -169,6 +170,85 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
         //TODO paginate
 
         return query.getResultList();
+    }
+
+    @Override
+    public Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable) {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
+        Root<Metadata> root = cbQuery.from(Metadata.class);
+
+        cbQuery.multiselect(root.get(Metadata_.uuid), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId));
+
+        cbQuery.where(root.get(Metadata_.id).in(ids), cb.equal(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround), 'n'));
+
+        if (pageable != null && pageable.getSort() != null) {
+            final Sort sort = pageable.getSort();
+            List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, root);
+
+            cbQuery.orderBy(orders);
+        }
+
+        TypedQuery<Tuple> query = _entityManager.createQuery(cbQuery);
+        if (pageable != null) {
+            query.setFirstResult(pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+        }
+
+        Element result = new Element("metadata");
+        for (Tuple tuple : query.getResultList()) {
+
+            Element record = new Element("record");
+            Element uuid = new Element("uuid");
+            Element schemaid = new Element("schemaid");
+            Element changedate = new Element("changedate");
+
+            uuid.addContent((String) tuple.get(0));                    
+            changedate.addContent(((ISODate) tuple.get(1)).toString());
+            schemaid.addContent((String) tuple.get(2));
+
+            record.addContent(uuid);
+            record.addContent(changedate);
+            record.addContent(schemaid);
+
+            result.addContent(record);
+
+        }
+        return result;
+    }
+    
+    @Override
+    public Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids) {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cbQuery = cb.createQuery(Tuple.class);
+        Root<Metadata> root = cbQuery.from(Metadata.class);
+        
+        cbQuery.multiselect(root.get(Metadata_.uuid), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate), root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId));
+
+        cbQuery.where(root.get(Metadata_.id).in(ids), cb.equal(root.get(Metadata_.dataInfo).get(MetadataDataInfo_.type_JPAWorkaround), 'n'));
+
+        TypedQuery<Tuple> query = _entityManager.createQuery(cbQuery);
+
+        Element result = new Element("metadata");
+        for (Tuple tuple : query.getResultList()) {
+
+            Element record = new Element("record");
+            Element uuid = new Element("uuid");
+            Element schemaid = new Element("schemaid");
+            Element changedate = new Element("changedate");
+
+            uuid.addContent((String) tuple.get(0));                    
+            changedate.addContent(((ISODate) tuple.get(1)).toString());
+            schemaid.addContent((String) tuple.get(2));
+
+            record.addContent(uuid);
+            record.addContent(changedate);
+            record.addContent(schemaid);
+
+            result.addContent(record);
+
+        }
+        return result;
     }
 
 }

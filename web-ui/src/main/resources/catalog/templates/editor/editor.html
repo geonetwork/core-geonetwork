@@ -12,37 +12,16 @@
   </div>
   <div class="row gn-editor-container">
     <div class="modal-backdrop fade in" data-ng-show="gnCurrentEdit.working"></div>
-    <div class="col-md-8">
 
-      <div class="alert alert-danger" data-ng-if="unsupportedSchema"
-           data-translate=""
-           data-translate-values="{title: '{{mdTitle}}', schema: '{{mdSchema}}'}">
-        unsupportedSchemaAlert
-      </div>
-
-      <div data-ng-include="editorFormUrl"
-           data-onload="onFormLoad()"></div>
+    <div class="alert alert-danger" data-ng-if="unsupportedSchema"
+         data-translate=""
+         data-translate-values="{title: '{{mdTitle}}', schema: '{{mdSchema}}'}">
+      unsupportedSchemaAlert
     </div>
-    <div class="col-md-4"
-         data-ng-if="gnSchemaConfig.related.display === true || gnSchemaConfig.validation.display === true || gnSchemaConfig.suggestion.display === true">
-      <div class="gn-editor-tools-container">
 
-        <div data-gn-onlinesrc-list="" data-ng-if="gnSchemaConfig.related.display === true"></div>
 
-        <div data-ng-if="gnCurrentEdit.geoPublisherConfig" gn-geo-publisher=""
-             data-config="{{gnCurrentEdit.geoPublisherConfig}}"
-             data-lang="lang"></div>
-        <br/>
+    <div id="gn-editor-container-{{id}}"></div>
 
-        <div data-gn-validation-report=""
-             data-ng-if="gnSchemaConfig.validation.display === true"></div>
-
-        <div data-gn-suggestion-list=""
-             data-ng-if="gnSchemaConfig.suggestion.display === true"></div>
-
-        <div data-gn-need-help="user-guide/describing-information/creating-metadata.html"></div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -99,6 +78,12 @@
      id="linktosibling-popup">
   <div data-gn-link-to-sibling="#linktosibling-popup" id="link-to-sibling"
        class="link-sibling-md"></div>
+</div>
+
+<div data-gn-modal="" class="gn-save-invalid-modal"
+     data-gn-popup-options="{title:'confirmCloseInvalidTitle', confirmCallback: confirmClose}"
+     id="confirm-editor-close">
+  <p translate>confirmCloseInvalidMetadata</p>
 </div>
 
 <div data-ng-include="'../../catalog/templates/info.html'">

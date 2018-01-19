@@ -359,8 +359,8 @@
             var escaped = k.replace(/'/g, '\\\'');
             clause.push(
                 (config.isTokenized) ?
-                "(" + paramName + " LIKE '%" + escaped + "%')" :
-                "(" + paramName + " = '" + escaped + "')"
+                '(' + paramName + " LIKE '%" + escaped + "%')" :
+                '(' + paramName + " = '" + escaped + "')"
             );
           });
           if (clause.length == 0) return;
@@ -410,10 +410,10 @@
           // add geometry (array with only one value)
           if (state.geometry) {
             result.geometry = [
-                state.geometry[0][0] + ',' +
-                state.geometry[1][1] + ',' +
-                state.geometry[1][0] + ',' +
-                state.geometry[0][1]
+              state.geometry[0][0] + ',' +
+                  state.geometry[1][1] + ',' +
+                  state.geometry[1][0] + ',' +
+                  state.geometry[0][1]
             ];
           }
         }

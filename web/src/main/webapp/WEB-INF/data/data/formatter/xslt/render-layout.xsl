@@ -78,7 +78,9 @@
           <div class="col-md-8">
 
             <header>
-              <h1>
+              <h1 itemprop="name"
+                  itemscope="itemscope"
+                  itemtype="http://schema.org/name">
                 <i class="fa gn-icon-{$type}">&#160;</i>
                 <xsl:value-of select="$title"/>
               </h1>
@@ -90,19 +92,22 @@
               <div gn-related="md"
                    data-user="user"
                    data-types="onlines">&#160;</div>
-
-              <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
 
-
-            <xsl:for-each select="$viewConfig/*">
-              <xsl:sort select="@formatter-order"
-                        data-type="number"/>
-              <xsl:apply-templates mode="render-view"
-                                   select="."/>
-            </xsl:for-each>
+            <div>
+              <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <xsl:for-each select="$viewConfig/*">
+                  <xsl:sort select="@formatter-order"
+                            data-type="number"/>
+                  <xsl:apply-templates mode="render-view"
+                                       select="."/>
+                </xsl:for-each>
+              </div>
+            </div>
           </div>
-          <div class="gn-md-side col-md-4">
+          <div class="gn-md-side gn-md-side-advanced col-md-4">
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
 
             <br/>
@@ -235,14 +240,10 @@
     </div>
   </xsl:template>
 
-
-
-
   <!-- Render list of tabs in the current view -->
   <xsl:template mode="render-toc" match="view">
     <xsl:if test="count(tab) > 1">
-      <!-- TODO: Hide tabs which does not contains anything -->
-      <ul class="view-outline nav nav-pills">
+      <ul class="view-outline nav nav-tabs nav-tabs-advanced">
         <xsl:for-each select="tab">
           <li>
             <a href="#gn-tab-{@id}">
@@ -267,7 +268,7 @@
       <xsl:variable name="title"
                     select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
 
-      <div id="gn-tab-{@id}">
+      <div id="gn-tab-{@id}" class="tab-pane">
         <xsl:if test="count(following-sibling::tab) > 0">
           <h1 class="view-header">
             <xsl:value-of select="$title"/>
@@ -303,11 +304,13 @@
       <xsl:variable name="title"
                     select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
 
-      <div id="gn-tab-{@id}">
+      <div id="gn-tab-{@id}" class="tab-pane">
         <h3 class="view-header">
           <xsl:value-of select="$title"/>
         </h3>
-        <xsl:copy-of select="$content"/>
+        <div id="gn-view-{generate-id()}" class="gn-tab-content">
+          <xsl:copy-of select="$content"/>
+        </div>
       </div>
     </xsl:if>
   </xsl:template>
@@ -319,15 +322,15 @@
   -->
   <xsl:template mode="render-view"
                 match="section[@xpath]">
-    <div id="gn-view-{generate-id()}">
-      <xsl:apply-templates mode="render-view" select="@xpath"/>&#160;
+    <div id="gn-view-{generate-id()}" class="gn-tab-content">
+      <xsl:apply-templates mode="render-view" select="@xpath"/>
     </div>
   </xsl:template>
 
 
   <xsl:template mode="render-view"
                 match="section[not(@xpath)]">
-    <div id="gn-section-{generate-id()}">
+    <div id="gn-section-{generate-id()}" class="gn-tab-content">
       <xsl:if test="@name">
         <xsl:variable name="title"
                       select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>

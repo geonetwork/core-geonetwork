@@ -667,5 +667,6 @@ public final class Geonet {
         public static final String ID = "_id";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
+		public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
     }
 }

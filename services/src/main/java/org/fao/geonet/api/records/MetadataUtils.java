@@ -245,8 +245,10 @@ public class MetadataUtils {
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("hassources".equals(type))
                 parameters.addContent(new Element("hassource").setText(uuid));
-            else if ("associated".equals(type))
+            else if ("associated".equals(type)) {
                 parameters.addContent(new Element("agg_associated").setText(uuid));
+                parameters.addContent(new Element(Geonet.SearchResult.EXTRA_DUMP_FIELDS).setText("agg_*"));
+            }
             else if ("datasets".equals(type) || "fcats".equals(type) ||
                 "sources".equals(type) || "siblings".equals(type) ||
                 "parent".equals(type))

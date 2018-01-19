@@ -83,7 +83,11 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.context = context;
         this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
         if (!params.getImportXslt().equals("none")) {
-            thisXslt = thisXslt.resolve(params.getImportXslt());
+            String xslPath = params.getImportXslt();
+            if(!xslPath.endsWith(".xsl")) {
+                xslPath += ".xsl";
+            }
+            thisXslt = thisXslt.resolve(xslPath);
             transformIt = true;
         }
         localCateg = new CategoryMapper(context);

@@ -272,7 +272,7 @@
           storeExecuteResponse: output.storeExecuteResponse || true,
           status: output.status || false,
           output: []
-        }
+        };
 
         // output selection based on form control
         angular.forEach(description.processOutputs.output,
@@ -280,7 +280,7 @@
               if (descOutput.identifier.value === output.identifier) {
                 responseDocument.output.push({
                   asReference: output.asReference !== undefined ?
-                    output.asReference : descOutput.asReference,
+                  output.asReference : descOutput.asReference,
                   mimeType: output.mimeType,
                   identifier: {
                     value: output.identifier
@@ -399,7 +399,7 @@
           outputs.forEach(function(output) {
             var outputId = output.identifier.value;
             var mimeTypes = output.complexOutput.supported.format;
-            mimeTypes.forEach(function (mimeType) {
+            mimeTypes.forEach(function(mimeType) {
               if (!result && me.WMS_MIMETYPE_REGEX.test(mimeType.mimeType)) {
                 result = {
                   mimeType: mimeType.mimeType,
@@ -409,7 +409,7 @@
             });
           });
         } catch (e) {
-          console.warn('Failed parsing WPS process description: ', e)
+          console.warn('Failed parsing WPS process description: ', e);
         }
         return result;
       };

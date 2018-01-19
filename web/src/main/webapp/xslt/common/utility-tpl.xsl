@@ -21,7 +21,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                version="2.0">
 
   <xsl:template name="replaceString">
     <xsl:param name="expr"/>
@@ -164,8 +166,7 @@
     <xsl:param name="txt"/>
 
     <xsl:choose>
-      <xsl:when test="true()">
-
+      <xsl:when test="util:getSettingValue('system/clickablehyperlinks/enable') = 'true'">
         <xsl:variable name="nTxt" select="normalize-space($txt)"/>
 
         <xsl:variable name="first-word" select="substring-before($nTxt,' ')"/>
@@ -258,7 +259,7 @@
     <xsl:param name="txt"/>
 
     <xsl:choose>
-      <xsl:when test="true()">
+      <xsl:when test="util:getSettingValue('system/clickablehyperlinks/enable') = 'true'">
         <xsl:choose>
           <xsl:when test="contains($txt,'&#13;&#10;')">
             <p>

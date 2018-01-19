@@ -358,10 +358,9 @@
               // Moment will properly parse YYYY, YYYY-MM,
               // YYYY-MM-DDTHH:mm:ss which are the formats
               // used in the common metadata standards.
-              // By the way check Z
-              var date = null, suffix = 'Z';
-              if (originalDate.indexOf(suffix,
-                  originalDate.length - suffix.length) !== -1) {
+              // By the way check Z which may be used in GML times
+              var date = null;
+              if (originalDate.match('[Zz]$') !== null) {
                 date = moment(originalDate, 'YYYY-MM-DDtHH-mm-SSSZ');
               } else {
                 date = moment(originalDate);
@@ -856,7 +855,7 @@
 
             var datepickConfig = {
               container: typeof sxtSettings != 'undefined' ?
-                '.g' : 'body',
+                  '.g' : 'body',
               autoclose: true,
               keepEmptyValues: true,
               clearBtn: true,
@@ -864,52 +863,54 @@
               language: gnLangs.getIso2Lang(gnLangs.getCurrent())
             };
 
-            if(angular.isDefined(scope.dates)) {
+            if (angular.isDefined(scope.dates)) {
               angular.extend(datepickConfig, {
                 beforeShowDay: function(dt, a, b) {
                   var isEnable = available(dt);
                   return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
-                    isEnable;
+                      isEnable;
                 },
                 startDate: limits.min,
                 endDate: limits.max
               });
             }
             $(element).datepicker(datepickConfig)
-              .on('changeDate clearDate', function(ev) {
-              // view -> model
-              scope.$apply(function() {
-                if (!isRange) {
-                  var date = $(element).find('input')[0].value;
-                  scope.date = date !== '' ? date : undefined;
-                }
-                else {
-                  var target = ev.target;
-                  var pickers = $(element).find('input');
-                  var dateFrom = pickers[0].value;
-                  var dateTo = pickers[1].value;
-                  var changed = false;
+                .on('changeDate clearDate', function(ev) {
+                  // view -> model
+                  scope.$apply(function() {
+                    if (!isRange) {
+                      var date = $(element).find('input')[0].value;
+                      scope.date = date !== '' ? date : undefined;
+                    }
+                    else {
+                      var target = ev.target;
+                      var pickers = $(element).find('input');
+                      var dateFrom = pickers[0].value;
+                      var dateTo = pickers[1].value;
+                      var changed = false;
 
-                  // only apply the date which was modified if it is valid
-                  // (or cleared)
-                  if (target === pickers[0] &&
-                    (isDateValid(dateFrom) || dateFrom == '')) {
-                    scope.date.from = dateFrom !== '' ? dateFrom : undefined;
-                    changed = true;
-                  } else if (target === pickers[1] &&
-                    (isDateValid(dateTo) || dateTo == '')) {
-                    scope.date.to = dateTo !== '' ? dateTo : undefined;
-                    changed = true;
-                  }
+                      // only apply the date which was modified if it is valid
+                      // (or cleared)
+                      if (target === pickers[0] &&
+                      (isDateValid(dateFrom) || dateFrom == '')) {
+                        scope.date.from = dateFrom !== '' ?
+                        dateFrom : undefined;
+                        changed = true;
+                      } else if (target === pickers[1] &&
+                      (isDateValid(dateTo) || dateTo == '')) {
+                        scope.date.to = dateTo !== '' ?
+                        dateTo : undefined;
+                        changed = true;
+                      }
 
-                  // call the change function if the value was changed
-                  if (changed) {
-                    scope.internalChange = true;
-                    scope.onChangeFn();
-                  }
-                }
-              });
-            });
+                      // call the change function if the value was changed
+                      if (changed) {
+                        scope.internalChange = true;
+                        scope.onChangeFn();
+                      }
+                    }
+                  });
+                });
             rendered = true;
 
             // set initial dates (use $timeout to avoid messing with ng digest)
@@ -1188,19 +1189,19 @@
           function checkActive() {
             // regexps for getting the service & path
             var serviceRE = /\/?([^\/\?#]*)\??[^\/]*(?:#|$)/;
-            var pathRE = /#\/?([^\?]*)/
+            var pathRE = /#\/?([^\?]*)/;
 
             // compare current url & input href
             var url = $location.absUrl();
             var currentService =
-              url.match(serviceRE) ? url.match(serviceRE)[1] : '';
+                url.match(serviceRE) ? url.match(serviceRE)[1] : '';
             var currentPath = $location.path().substring(1);
             var targetService =
-              link.match(serviceRE) ? link.match(serviceRE)[1] : '';
+                link.match(serviceRE) ? link.match(serviceRE)[1] : '';
             var targetPath =
-              link.match(pathRE) ? link.match(pathRE)[1] : '';
+                link.match(pathRE) ? link.match(pathRE)[1] : '';
             var isActive = currentService == targetService &&
-              (!targetPath || currentPath.indexOf(targetPath) > -1);
+                (!targetPath || currentPath.indexOf(targetPath) > -1);
 
             if (isActive) {
               element.parent().addClass('active');
@@ -1237,7 +1238,8 @@
 
       } else if (angular.isString(value)) {
         if (value) {
-          return value.replace(/(\r)?\n/g, '<br/>');
+          return value.replace(/(\r)?\n/g, '<br/>')
+              .replace(/(&#13;)?&#10;/g, '<br/>');
         } else {
           return value;
         }
@@ -1287,6 +1289,7 @@
     return {
       restrict: 'A',
       link: function(scope, element, attr, ngModel) {
+        var modalElt;
 
         element.bind('click', function() {
           var md = scope.$eval(attr['gnImgModal']);
@@ -1332,7 +1335,9 @@
               modalElt.show();
             });
             modalElt.on('hidden.bs.modal', function() {
-              modalElt.remove();
+              if (modalElt) {
+                modalElt.remove();
+              }
             });
             modalElt.find('.gn-btn-modal-img').on('click', function() {
               modalElt.modal('hide');
@@ -1492,11 +1497,11 @@
             scope.value = scope.text.split('|')[2];
 
             element.replaceWith($compile('<a data-ng-href="{{link}}" ' +
-                'data-ng-bind-html="value"></a>')(scope));
+                'data-ng-bind-html="value | newlines"></a>')(scope));
           } else {
 
             element.replaceWith($compile('<span ' +
-                'data-ng-bind-html="text"></span>')(scope));
+                'data-ng-bind-html="text | linky | newlines"></span>')(scope));
           }
         }
 

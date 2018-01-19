@@ -340,6 +340,8 @@
             $scope.href = value.href;
           }
         });
+        //do not try to load undefined.html
+        if (!pageMenu||!pageMenu.folder||!$scope.type) return "";
         return tplFolder + pageMenu.folder + $scope.type + '.html';
       };
 

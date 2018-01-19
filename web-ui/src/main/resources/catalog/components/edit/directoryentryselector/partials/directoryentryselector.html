@@ -17,15 +17,22 @@
     <input type="text" class="form-control"
            placeholder="{{('searchA' + templateType) | translate}}"
            data-ng-show="searchAction"
-           data-ng-model="searchObj.params.any"
+           data-ng-model="searchObj.any"
            data-ng-model-options="{debounce: 200}"
-           ng-focus="triggerSearch()"
-           data-ng-change="triggerSearch()"
+           ng-focus="updateParams(); triggerSearch()"
+           data-ng-change="updateParams(); triggerSearch()"
            autocomplete="false"/>
+
+    <!-- spinner while searching -->
+    <div ng-show="searching" class="list-group tt-dropdown-menu gn-autocomplete-list text-center">
+      <br />
+      <i class="fa fa-spinner fa-spin" />
+      <br /><br />
+    </div>
 
     <!-- The autocomplete list -->
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
-         data-ng-show="searchResults.records.length > 0">
+         data-ng-show="searchResults.records.length > 0 && !searching">
       <span class="tt-suggestions">
         <div class="tt-suggestion flex-row"
           data-ng-repeat="r in searchResults.records">

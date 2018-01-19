@@ -23,14 +23,14 @@
   -->
 
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gml="http://www.opengis.net/gml"
-  xmlns:xlink="http://www.w3.org/1999/xlink">
+        xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
+        xmlns:gn="http://www.fao.org/geonetwork"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gmx="http://www.isotc211.org/2005/gmx"
+        xmlns:srv="http://www.isotc211.org/2005/srv"
+        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -422,10 +422,19 @@
           displayIfRecord="contains(
                             gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
                             'ISO 19115:2003/19139 - SEXTANT')">
+
       <thesaurusList>
         <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
         <thesaurus key="local.theme.sextant-theme" maxtags="1"/>
       </thesaurusList>
+
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
       <tab id="sextant-identification" mode="flat" default="true">
         <section name="sextantidentificationTitle">
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"
@@ -534,11 +543,11 @@
                   or="pointOfContact"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/*">
             <directiveAttributes
-                    data-template-add-action="true"
-                    data-template-type="contact"
-                    data-search-action="false"
-                    data-popup-action="true"
-                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-search-action="false"
+              data-popup-action="true"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
         </section>
       </tab>
@@ -573,8 +582,8 @@
                      tooltip="gmd:extent|gmd:EX_TemporalExtent"
                 >
                   <directiveAttributes
-                          data-tag-name="gml:endPosition"
-                          data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                    data-tag-name="gml:endPosition"
+                    data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
                 </key>
               </values>
               <snippet>
@@ -783,11 +792,11 @@
                   or="contact"
                   in="/gmd:MD_Metadata">
             <directiveAttributes
-                    data-template-add-action="true"
-                    data-search-action="false"
-                    data-popup-action="true"
-                    data-template-type="contact"
-                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+              data-template-add-action="true"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
 
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
@@ -799,6 +808,13 @@
       </flatModeExceptions>
     </view>
     <view name="default">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
       <tab id="default" default="true" mode="flat">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
@@ -865,6 +881,13 @@
 
     </view>
     <view name="advanced">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
       <tab id="identificationInfo" default="true">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo" or="identificationInfo"
                  in="/gmd:MD_Metadata"/>
@@ -965,6 +988,12 @@
                    transformations="to-iso19139-keyword"/>
       </thesaurusList>
 
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
 
       <tab id="emodnetHydrography-what"
            mode="flat"
@@ -1912,6 +1941,13 @@
       </tab>
     </view>
     <view name="xml">
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
       <tab id="xml" default="true"/>
     </view>
   </views>

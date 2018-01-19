@@ -106,7 +106,6 @@ input[type=text], input[type=number], select {
 
 .gn-editor-container {
   padding: 20px 5px;
-  margin-top: 60px;
 }
 
 @media only screen and (max-width: 815px) {
@@ -225,10 +224,21 @@ input[type=text], input[type=number], select {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    padding: 6px;
-
-    .gn-record-details {
-      padding-left: 38px;
+    padding: 6px 3px;
+    .btn-group {
+      margin-top: 3px;
+      .btn-single {
+        border-radius: 4px;
+      }
+    }
+    .col-lg-8, .col-md-8, .col-lg-4, .col-md-4 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @media (min-width: @screen-md-min) {
+      .btn-group {
+        float: right;
+      }
     }
   }
 }
@@ -466,7 +476,8 @@ form.gn-editor {
       padding-right: 0px;
   }
 
-  label.gn-required:after, .gn-required > label:after {
+  label.gn-required:after, .gn-required > label:after,
+  label.gn-mandatory:after, .gn-mandatory > label:after {
       content: "*";
       font-size: 2.5em;
       margin: 7px 0 0 7px;
@@ -732,6 +743,12 @@ table.gn-data-store {
     text-align: center;
   }
 }
+/* verical layout for the add metadata page */
+#gn-new-metadata-container.new-metadata-vertical {
+  .gn-record-type > a.list-group-item {
+    text-align: left;
+  }
+}
 
 .gn-schematron-title {
   word-wrap: break-word;
@@ -880,6 +897,23 @@ div.gn-individualName {
   }
 }
 
+// search filter boxes
+// search terms
+.searchterm {
+  margin: 0 5px 5px 0;
+  max-width: 100%;
+  span {
+    max-width: 98%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
+  }
+  i {
+    margin-top: -15px;
+    margin-left: 5px;
+  }
+}
+
 .skos-btn-icons {
   text-decoration: none !important;
   color: @gray;
@@ -1006,7 +1040,6 @@ gn-directory-associated-md {
 // md type widget (used only in editor for now)
 gn-md-type-widget {
   display: inline-block;
-
   & > div {
     border-radius: 1000px;
     width: 24px;
@@ -1045,6 +1078,14 @@ gn-md-type-widget {
     }
   }
 }
+.gn-editor-board {
+  .table.gn-results-editor td {
+    gn-md-type-widget {
+      margin-top: 5px;
+    }
+  }
+}
+
 
 gn-bounding-polygon {
   label {

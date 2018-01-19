@@ -100,15 +100,15 @@
 
             <div class="pos-relative">
               <input class="form-control filter-text" type="search"
-                ng-change="triggerSearch()"
-                ng-model="searchObj.params.any"
+                ng-change="updateParams(); triggerSearch()"
+                ng-model="searchObj.any"
                 ng-model-options="modelOptions"
                 placeholder="{{'filter' | translate}}" autofocus=""/>
             </div>
             &nbsp;
 
             <button type="button"
-                    data-ng-click="resetSearch(defaultSearchObj.params);"
+                    data-ng-click="resetSearch(defaultSearchObj.params); searchObj.any = ''"
                     title="{{'ClearTitle' | translate}}"
                     class="btn btn-link">
               <i class="fa fa-times"></i>
@@ -193,11 +193,16 @@
                   <span data-ng-if="!user.canEditRecord(md)">{{md.title || md.defaultTitle}}</span>
                 </div>
 
-                <div class="entry-info" ng-if="!templatesShown()">
-                  <small class="text-muted" translate
-                    translate-values="{ownerName: getOwnerName(md), updateDate: getChangeDate(md)}">
-                    directoryEntryInfo
-                  </small>
+                <div class="entry-info flex-row flex-align-center" ng-if="!templatesShown()">
+                  <div class="text-muted">
+                    <small><span data-translate="">owner</span>:</small>
+                    <small>{{::md.getOwnername()}}</small>
+                    &nbsp;
+                    <small data-translate="">updatedOn</small>
+                    <small class="text-muted"
+                           data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+                           data-from-now=""></small>
+                  </div>
 
                   <div class="flex-spacer flex-grow"></div>
 
@@ -338,7 +343,10 @@
         <gn-md-type-widget metadata="activeEntry"></gn-md-type-widget>
         {{activeEntry.title || activeEntry.defaultTitle}}
         &nbsp;
-        <a href ng-click="closeEditor()">({{'close' | translate}})</a>
+        <a href class="btn btn-default" ng-click="closeEditor()">
+          <i class="fa fa-close"/>&nbsp;
+          <span data=translate="">cancel</span>
+        </a>
       </p>
 
       <p ng-show="!activeEntry" class="text-muted" translate>
@@ -349,7 +357,7 @@
 
   <!-- simple editor, used for importing XML-->
   <div class="row" ng-show="currentEditorAction != '' && !activeEntry">
-    <div class="col-md-12 col-lg-8">
+    <div class="col-md-12">
       <div class="panel-default panel entry-editor">
         <div class="panel-heading">
           <span translate class="entry-editor-title">
@@ -402,7 +410,7 @@
 
   <!-- full editor is only used for edition -->
   <div class="row" ng-show="currentEditorAction != '' && activeEntry">
-    <div class="col-sm-12 col-lg-8">
+    <div class="col-sm-12">
       <div class="panel-default panel entry-editor">
         <div class="panel-heading">
 
@@ -485,17 +493,16 @@
           </div>
         </div>
         <div class="panel-body">
-          <fieldset data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-            <div data-ng-include="editorFormUrl"
-                 data-onload="onFormLoad()"></div>
+          <fieldset ng-if="activeEntry"
+                    ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+            <div id="gn-editor-container-{{activeEntry['geonet:info'].id}}"></div>
           </fieldset>
         </div>
       </div>
     </div>
 
     <div class="col-sm-12 col-lg-4"
-      ng-if="::gnConfig[gnConfig.key.isXLinkEnabled]"
-      ng-show="currentEditorAction === 'editEntry'">
+      ng-if="gnConfig[gnConfig.key.isXLinkEnabled] && activeEntry && currentEditorAction === 'editEntry'">
       <div class="panel-default panel">
         <div class="panel-heading">
           <span translate>directoryEntryAssociatedMetadata</span>

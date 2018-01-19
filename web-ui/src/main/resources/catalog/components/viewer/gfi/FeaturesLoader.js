@@ -50,7 +50,6 @@
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
     this.urlUtils = this.$injector.get('gnUrlUtils');
-    this.gnProxyUrl = this.$injector.get('gnGlobalSettings').proxyUrl;
 
     this.layer = config.layer;
     this.map = config.map;
@@ -65,9 +64,6 @@
     return this.loading;
   };
 
-  geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url) {
-    return this.gnProxyUrl + encodeURIComponent(url);
-  };
 
   /**
    *
@@ -99,43 +95,34 @@
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
-    this.promise = this.$http.get(
-        this.proxyfyUrl(uri)).then(function(response) {
-
-          this.loading = false;
-          if (layer.ncInfo) {
-            var doc = ol.xml.parse(response.data);
-            var props = {};
-            ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
-              var node = doc.getElementsByTagName(v);
-              if (node && node.length > 0) {
-                props[v] = ol.xml.getAllTextContent(node[0], true);
-              }
-            });
-            this.features = (props.value && props.value != 'none') ?
-                [new ol.Feature(props)] : [];
-          } else {
-            var format = new ol.format.WMSGetFeatureInfo();
-            var options = {
-              featureProjection: map.getView().getProjection()
-            };
-            // FIXME: should be effective with a OL update ?
-            var srsMatch = response.data.match(/srsName="(.*)"/);
-            if (srsMatch) {
-              this.projection = srsMatch[1];
-              options.dataProjection = ol.proj.get(srsMatch[1]);
-            }
-            this.features = format.readFeatures(response.data, options);
+    this.promise = this.$http.get(uri).then(function(response) {
+      this.loading = false;
+      if (layer.ncInfo) {
+        var doc = ol.xml.parse(response.data);
+        var props = {};
+        ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
+          var node = doc.getElementsByTagName(v);
+          if (node && node.length > 0) {
+            props[v] = ol.xml.getAllTextContent(node[0], true);
           }
+        });
+        this.features = (props.value && props.value != 'none') ?
+                [new ol.Feature(props)] : [];
+      } else {
+        var format = new ol.format.WMSGetFeatureInfo();
+        this.features = format.readFeatures(response.data, {
+          featureProjection: map.getView().getProjection()
+        });
+      }
 
-          return this.features;
+      return this.features;
 
-        }.bind(this), function() {
+    }.bind(this), function() {
 
-          this.loading = false;
-          this.error = true;
+      this.loading = false;
+      this.error = true;
 
-        }.bind(this));
+    }.bind(this));
 
   };
 
@@ -148,6 +135,27 @@
       if (!features || features.length == 0) {
         return;
       }
+
+      var data = features.map(function(f) {
+        var obj = f.getProperties();
+        Object.keys(obj).forEach(function(key) {
+          if (exclude.indexOf(key) == -1) {
+            var value = obj[key];
+            if (!(obj[key] instanceof Object)) {
+              obj[key] = $filter('linky')(obj[key], '_blank');
+              if (obj[key]) {
+                obj[key] = obj[key].replace(/>(.)*</, ' ' +
+                    'target="_blank">' + linkTpl + '<');
+              }
+            } else {
+              // Exclude objects which will not be displayed properly
+              exclude.push(key);
+            }
+          }
+        });
+        return obj;
+      });
+
       var columns = Object.keys(features[0].getProperties()).map(function(x) {
         return {
           field: x,
@@ -160,19 +168,7 @@
 
       return {
         columns: columns,
-        data: features.map(function(f) {
-          var obj = f.getProperties();
-          Object.keys(obj).forEach(function(key) {
-            if (exclude.indexOf(key) == -1) {
-              obj[key] = $filter('linky')(obj[key], '_blank');
-              if (obj[key]) {
-                obj[key] = obj[key].replace(/>(.)*</, ' ' +
-                    'target="_blank">' + linkTpl + '<');
-              }
-            }
-          });
-          return obj;
-        }),
+        data: data,
         pagination: true,
         pageSize: pageList[1],
         pageList: pageList
@@ -338,7 +334,7 @@
       method: 'POST',
       queryParams: function(p) {
         var queryObject = this.indexObject.buildESParams(state, {},
-          p.offset || 0, p.limit || 10000);
+            p.offset || 0, p.limit || 10000);
         if (p.sort) {
           queryObject.sort = [];
           var sort = {};

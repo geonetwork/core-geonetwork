@@ -146,6 +146,26 @@
              gnCurrentEdit.displayAttributes);
              return params.join('');
            },
+           load: function(url) {
+             var defer = $q.defer();
+             var scope = this;
+             $http.get(url,
+             {
+               headers: {'Content-Type':
+                 'application/x-www-form-urlencoded'}
+             }).success(function(data) {
+
+               var snippet = $(cleanData(data));
+               scope.refreshEditorForm(snippet);
+               gnCurrentEdit.working = false;
+               defer.resolve(snippet);
+             }).error(function(error) {
+               setStatus({msg: 'saveMetadataError', saving: false});
+               gnCurrentEdit.working = false;
+               defer.reject(error);
+             });
+             return defer.promise;
+           },
            /**
            * Save the metadata record currently in editing session.
            *
@@ -258,9 +278,9 @@
                // properly without removing them. There is maybe
                // references to DOM objects in the JS code which
                // make those objects not reachable by GC.
-               $(gnCurrentEdit.formId).find('*').remove();
+               $(gnCurrentEdit.containerId).find('*').remove();
 
-               $(gnCurrentEdit.formId).replaceWith(snippet);
+               $(gnCurrentEdit.containerId).replaceWith(snippet);
 
                if (gnCurrentEdit.compileScope) {
                  // Destroy previous scope
@@ -268,13 +288,17 @@
                    gnCurrentEdit.formScope.$destroy();
                  }
 
+                 // Update form values
+                 scope.onFormLoad();
+
                  // Compile against a new scope
                  gnCurrentEdit.formScope =
                  gnCurrentEdit.compileScope.$new();
                  $compile(snippet)(gnCurrentEdit.formScope);
+               } else {
+                 scope.onFormLoad();
                }
 
-               scope.onFormLoad();
              };
              if (form) {
                refreshForm(form);
@@ -318,6 +342,12 @@
                showValidationErrors:
                getInputValue('showvalidationerrors') == 'true',
                uuid: getInputValue('uuid'),
+               displayAttributes:
+               getInputValue('displayAttributes') == 'true',
+               displayTooltips:
+               getInputValue('displayTooltips') == 'true',
+               displayTooltipsMode:
+               getInputValue('displayTooltipsMode') || '',
                schema: getInputValue('schema'),
                version: getInputValue('version'),
                tab: getInputValue('currTab'),

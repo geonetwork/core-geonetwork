@@ -1,0 +1,13 @@
+<div col-md-offset-3 col-md-6 relative ngr-margin-bottom>
+  <span class="btn btn-sm btn-primary searchterm" data-ng-repeat="filter in currentFilters">
+    <span data-ng-if="filter.type == 'facet'"
+          data-ng-attr-title="{{filter.labelKey | decodeURIComponent | translate}}">{{filter.labelKey | decodeURIComponent | translate}}</span>
+    <span data-ng-if="filter.type == 'standard'"
+          data-ng-attr-title="{{filter.value | decodeURIComponent | translatearray:' or '}}">{{filter.value | decodeURIComponent | translatearray:' or '}}</span>
+    <span data-ng-if="filter.type == 'boolean'"
+          data-ng-attr-title="{{filter.labelKey | translate}}">{{filter.labelKey | translate}}</span>
+    <span data-ng-if="filter.type == 'geometry'"
+          data-ng-attr-title="{{filter.value}}">{{filter.value}}</span>
+    <i class="fa fa-times" data-ng-click="removeFilter(filter)"></i>
+</span>
+</div>

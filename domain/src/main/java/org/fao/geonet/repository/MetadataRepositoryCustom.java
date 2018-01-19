@@ -23,20 +23,21 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.repository.reports.MetadataReportsQueries;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.reports.MetadataReportsQueries;
+import org.jdom.Element;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * Custom (Non spring-data) Query methods for {@link Metadata} entities.
@@ -107,4 +108,22 @@ public interface MetadataRepositoryCustom {
      */
     List<SimpleMetadata> findAllSimple(String harvestUuid);
 
+    /**
+     * Find all metadata on specified page. Returns the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids, @Nonnull Pageable pageable);
+
+    /**
+     * Find all metadata. Returns the uuid, changedate and schemaid
+     *
+     * @param uuid the uuid of the harvester
+     * @return all metadata harvested by the identified harvester.
+     */
+    @Nullable
+    Element findAllUuidsAndChangeDatesAndSchemaId(List<Integer> ids);
+    
 }

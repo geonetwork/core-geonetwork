@@ -497,16 +497,53 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="isUserRecordsOnly">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+      <div data-ng-switch-when="isFilterTagsDisplayed">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+      <div data-ng-switch-when="isFilterTagsDisplayedInSearch">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
       <div data-ng-switch-when="disabledTools">
         <label class="control-label">{{('ui-' + key) | translate}}</label>
-        <div>
-          <input type="checkbox"
-               id="{{key}}-processes-checkbox"
-               data-ng-model="mCfg[key].processes"
-               ng-true-value="false" ng-false-value="true"/>&nbsp;
-          <label class="control-label"
-                 for="{{key}}-processes-checkbox" data-translate>
-            processesTool</label>
+        <div data-ng-repeat="(t, value) in mCfg[key]">
+          <div>
+            <input type="checkbox"
+                 id="{{key}}-{{t}}-checkbox"
+                 data-ng-model="mCfg[key][t]"
+                 ng-true-value="false" ng-false-value="true"/>&nbsp;
+            <label class="control-label"
+                   for="{{key}}-{{t}}-checkbox">
+              {{(t + 'Tool') | translate}}
+            </label>
+          </div>
         </div>
         <p class="help-block"
           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
@@ -588,6 +625,44 @@
         </div>
       </div>
 
+      <div data-ng-switch-when="createPageTpl">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+        <div class="checkbox">
+          <label>
+            <input type="radio" data-ng-model="mCfg[key]"
+                   value="../../catalog/templates/editor/new-metadata-horizontal.html"/>
+            <i class="fa fa-align-center fa-rotate-90"></i>&nbsp;
+            <span data-translate="">ui-createPageTpl-horizontal</span>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="radio" data-ng-model="mCfg[key]"
+                   value="../../catalog/templates/editor/new-metadata-vertical.html"/>
+            <i class="fa fa-align-center"></i>&nbsp;
+            <span data-translate="">ui-createPageTpl-vertical</span>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="radio" data-ng-model="mCfg[key]"
+                   value=""/>
+            <span data-translate="">ui-createPageTpl-other</span>
+
+            <input type="text"
+                   class="form-control"
+                   data-ng-model="mCfg[key]"/>
+          </label>
+        </div>
+
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
       <div data-ng-switch-default>
         <label class="control-label">{{('ui-' + key) | translate}}</label>
         <input type="text"
@@ -601,7 +676,7 @@
   </fieldset>
   <br/>
   <span data-translate="">ui-advancedConfig</span>
-  <textarea name="{{id}}" class="form-control">{{jsonConfig}}</textarea>
+  <textarea name="{{id}}" id="uiconfig" class="form-control">{{jsonConfig}}</textarea>
   <br/>
   <button class="btn btn-default"
           data-ng-click="testClientConfig()">

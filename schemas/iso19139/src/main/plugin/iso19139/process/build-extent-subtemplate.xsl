@@ -25,6 +25,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://geonetwork-opensource.org"
                 xmlns:saxon="http://saxon.sf.net/"
@@ -75,11 +76,34 @@
         <gmd:geographicElement>
           <gmd:EX_BoundingPolygon>
             <gmd:polygon>
-              <xsl:copy-of select="$theGeom//*/gn:geom/*"/>
+              <xsl:apply-templates mode="copy-geom"
+                                   select="$theGeom//*/gn:geom/*"/>
             </gmd:polygon>
           </gmd:EX_BoundingPolygon>
         </gmd:geographicElement>
       </xsl:if>
     </gmd:EX_Extent>
   </xsl:template>
+
+
+  <xsl:template mode="copy-geom"
+                match="gml:MultiSurface[not(@gml:id)]|gml:Polygon[not(@gml:id)]">
+    <xsl:copy>
+      <xsl:attribute name="gml:id">
+        <xsl:value-of select="generate-id(.)"/>
+      </xsl:attribute>
+      <xsl:apply-templates mode="copy-geom"
+                           select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+  <xsl:template mode="copy-geom"
+                match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates mode="copy-geom"
+                           select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
 </xsl:stylesheet>

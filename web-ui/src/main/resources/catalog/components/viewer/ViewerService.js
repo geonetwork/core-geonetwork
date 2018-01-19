@@ -57,7 +57,7 @@
        */
       this.openTool = function(toolName, tabName, url) {
         this.activeTool.name = toolName || '';
-        this.activeTool.tab = tabName || '';
+        this.activeTool.addLayerTabs = tabName || '';
         this.activeTool.url = url || '';
       };
 
@@ -77,7 +77,8 @@
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
       this.openWmsTab = function(serviceUrl) {
-        this.openTool('addLayers', 'wms', serviceUrl);
+        this.openTool('addLayers', 'services');
+        scope.addLayerUrl[config.type || 'wms'] = serviceUrl;
       };
 
       /**
@@ -85,7 +86,8 @@
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
       this.openWmtsTab = function(serviceUrl) {
-        this.openTool('addLayers', 'wmts', serviceUrl);
+        this.openTool('addLayers', 'services');
+        scope.addLayerUrl[config.type || 'wmts'] = serviceUrl;
       };
 
       /**

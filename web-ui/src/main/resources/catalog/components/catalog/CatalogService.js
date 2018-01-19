@@ -120,10 +120,11 @@
            * @param {boolean} isChild is child of a parent metadata
            * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
+           * @param {boolean} hasCategoryOfSource copy categories from source
            * @return {HttpPromise} Future object
            */
         copy: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, metadataUuid) {
+            isTemplate, isChild, metadataUuid, hasCategoryOfSource) {
           // new md type determination
           var mdType;
           switch (isTemplate) {
@@ -149,7 +150,8 @@
             isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
             isVisibleByAllGroupMembers: withFullPrivileges + '',
-            targetUuid: metadataUuid || ''
+            targetUuid: metadataUuid || '',
+            hasCategoryOfSource: hasCategoryOfSource ? 'true' : 'false'
           });
           return $http.put('../api/records/duplicate?' + url, {
             headers: {
@@ -195,12 +197,13 @@
            * @param {string} tab is the metadata editor tab to open
            * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
+           * @param {boolean} hasCategoryOfSource copy categories from source
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, tab, metadataUuid, useExtEditor) {
+            isTemplate, isChild, tab, metadataUuid, useExtEditor, hasCategoryOfSource) {
           return this.copy(id, groupId, withFullPrivileges,
-              isTemplate, isChild, metadataUuid).success(function(id) {
+              isTemplate, isChild, metadataUuid, hasCategoryOfSource).success(function(id) {
             // Sextant / use ExtJS editor for all but not MedSea
             if (useExtEditor) {
               window.location.replace('../../apps/sextant/?edit=' + id);
@@ -210,7 +213,9 @@
               if (tab) {
                 path += '/tab/' + tab;
               }
-              $location.path(path).search('justcreated');
+              $location.path(path)
+                  .search('justcreated')
+                  .search('redirectUrl', 'catalog.edit');;
             }
           });
         },
@@ -228,7 +233,7 @@
          * @return {HttpPromise} of the $http get
          */
         getMdObjByUuid: function(uuid, isTemplate) {
-          return $http.get('q?_uuid=' + uuid + '' +
+          return $http.get('qi?_uuid=' + uuid + '' +
               '&fast=index&_content_type=json&buildSummary=false' +
               (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
               then(function(resp) {
@@ -542,9 +547,9 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails'];
-      // See below; probably not necessary
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
+        'creationDate', 'publicationDate', 'revisionDate'];
+      var listOfJsonFields = ['keywordGroup', 'crsDetails'];    // See below; probably not necessary
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
@@ -556,29 +561,32 @@
       });
       // Note: this step does not seem to be necessary; TODO: remove or refactor
       $.each(listOfJsonFields, function(idx) {
-        var field = listOfJsonFields[idx];
-        if (angular.isDefined(record[field])) {
+        var fieldName = listOfJsonFields[idx];
+        if (angular.isDefined(record[fieldName])) {
           try {
-            record[field] = angular.fromJson(record[field]);
-            
+            record[fieldName] = angular.fromJson(record[fieldName]);
+            var field = record[fieldName];
+
             // Combine all document keywordGroup fields
             // in one object. Applies to multilingual records
             // which may have multiple values after combining
             // documents from all index
-            if (field === 'keywordGroup' &&
-                angular.isArray(record[field])) {
+            // fixme: not sure how to precess this, take first array as main
+            // object or take last arrays when they appear (what is done here)
+            if (fieldName === 'keywordGroup' && angular.isArray(field)) {
               var thesaurusList = {};
-              for (var i = 0; i < record[field].length; i ++) {
-                var thesauri = record[field][i];
-                $.each(thesauri, function (key) {
-                  thesaurusList[key] = thesauri[key];
+              for (var i = 0; i < field.length; i++) {
+                var thesauri = field[i];
+                $.each(thesauri, function(key) {
+                  if (!thesaurusList[key] && thesauri[key].length)
+                    thesaurusList[key] = thesauri[key];
                 });
               }
-              record[field] = thesaurusList;
+              record[fieldName] = thesaurusList;
             }
           } catch (e) {}
         }
-      });
+      }.bind(this));
 
       // Create a structure that reflects the transferOption/onlinesrc tree
       var links = [];
@@ -694,7 +702,8 @@
                 }
               }
               else {
-                if (linkInfo.protocol.indexOf(type) >= 0 &&
+                if (linkInfo.protocol.toLowerCase().indexOf(
+                    type.toLowerCase()) >= 0 &&
                     (!groupId || groupId == linkInfo.group)) {
                   ret.push(linkInfo);
                 }

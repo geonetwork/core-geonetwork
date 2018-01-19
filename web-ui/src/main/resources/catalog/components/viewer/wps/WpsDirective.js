@@ -134,13 +134,13 @@
             // application profile holds 2 arrays: inputs and outputs
             scope.applicationProfile = scope.wpsLink.applicationProfile || null;
             if (scope.applicationProfile &&
-              typeof scope.applicationProfile === 'string') {
+                typeof scope.applicationProfile === 'string') {
               try {
                 scope.applicationProfile = JSON.parse(scope.applicationProfile);
               }
               catch (e) {
                 console.warn('Error while loading application profile.',
-                  scope.applicationProfile);
+                    scope.applicationProfile);
               }
             }
 
@@ -192,8 +192,9 @@
 
                       // look for input info in app profile
                       if (scope.applicationProfile &&
-                        scope.applicationProfile.inputs) {
-                        scope.applicationProfile.inputs.forEach(function(input) {
+                      scope.applicationProfile.inputs) {
+                        scope.applicationProfile.inputs.forEach(
+                        function(input) {
                           if (input.identifier == inputName) {
                             defaultValue = input.defaultValue;
 
@@ -205,10 +206,12 @@
                             // or "to" dates of a filter
                             var valueIndex = -1;
                             if (wfsFilter.substr(-5) === '.from') {
-                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 5);
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 5);
                               valueIndex = 0;
                             } else if (wfsFilter.substr(-3) === '.to') {
-                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 3);
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 3);
                               valueIndex = 1;
                             }
 
@@ -295,7 +298,7 @@
                       // add enough fields to hold all default values
                       if (Array.isArray(defaultValue)) {
                         minCount = Math.max(minCount,
-                          Math.min(maxCount, defaultValue.length));
+                        Math.min(maxCount, defaultValue.length));
                       }
                       var count = inputs.length;
                       while (count < minCount) {
@@ -366,8 +369,8 @@
                             // (display graph options are defined)
                             // TODO: actually parse these options
                             if (output.displayGraphOptions) {
-                              scope.outputAsGraph = output.displayGraphOptions ?
-                              true : false;
+                              scope.outputAsGraph =
+                              output.displayGraphOptions ? true : false;
                             }
                           }
                         });
@@ -377,7 +380,7 @@
 
                     // if there is a mimeType containing WMS: use it instead
                     var wmsOutput = gnWpsService.getProcessOutputWMSMimeType(
-                      scope.processDescription);
+                    scope.processDescription);
                     if (wmsOutput) {
                       defaultOutput = wmsOutput.outputIdentifier;
                       defaultMimeType = wmsOutput.mimeType;
@@ -388,8 +391,8 @@
                     scope.wpsLink.output.mimeType = defaultMimeType;
 
                     // use output as reference unless doing a profile graph
-                    scope.wpsLink.output.asReference = scope.outputAsGraph ?
-                      false : true;
+                    scope.wpsLink.output.asReference =
+                    scope.outputAsGraph ? false : true;
 
                     scope.outputsVisible = true;
 

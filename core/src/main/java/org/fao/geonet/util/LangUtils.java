@@ -47,7 +47,7 @@ import java.util.Map;
 
 public class LangUtils {
 
-    private static final Map<TranslationKey, Map<String, String>> translationsCache = Maps.newConcurrentMap();
+    protected static final Map<TranslationKey, Map<String, String>> translationsCache = Maps.newConcurrentMap();
 
     /**
      * Find all the translations for a given key in the <type>.xml file.  normally you will want
@@ -109,11 +109,11 @@ public class LangUtils {
         return translate(context, "strings", key);
     }
 
-    private static final class TranslationKey {
+    protected static final class TranslationKey {
         private String type;
         private String key;
 
-        private TranslationKey(String type, String key) {
+        public TranslationKey(String type, String key) {
             this.type = type;
             this.key = key;
         }
