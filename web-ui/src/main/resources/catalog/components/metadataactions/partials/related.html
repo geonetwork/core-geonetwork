@@ -10,7 +10,7 @@
          data-ng-init="mainType = config.getType(r, type);">
       <div class="col-xs-1 col-sm-1">
         <!-- OWS have their name overlaid over the globe icon -->
-        <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMSSERVICE') || (mainType === 'WMTS') || 
+        <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMSSERVICE') || (mainType === 'WMTS') ||
                             (mainType === 'WMTSSERVICE') || (mainType === 'WFS') || (mainType === 'WCS')">
           <span class="fa-stack fa-1x">
             <i class="fa fa-globe fa-stack-2x" style="opacity: 0.55;"></i>
@@ -42,11 +42,11 @@
                        mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
                        mainType === 'WCS' ||
                        mainType.indexOf('LINK') === 0 ||
+                       mainType.indexOf('DEFAULT') === 0 ||
                        r.protocol === 'OGC:WFS') &&
-                       r.description.length > 0">
-          {{::r.description | gnLocalized: lang | striptags | characters:150}}
+                       r.locDescription.length > 0">
+          {{::r.locDescription | striptags | characters:150}}
         </h4>
-
         <div data-ng-switch on="mainType">
           <div data-ng-switch-when="WMS">
             <p class="text-muted">
@@ -162,7 +162,7 @@
                data-ng-if="mainType.indexOf('MD') == -1">
               <span data-translate="">otherLinkDetails</span><br/>
               <a href="{{r.url | gnLocalized: lang}}" target="_blank">
-                {{r.url | gnLocalized: lang}} </a>
+                {{r.locTitle || r.locUrl}}</a>
             </p>
           </div>
         </div>
