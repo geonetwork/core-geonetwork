@@ -87,11 +87,13 @@
 
               <xsl:if test="$view != 'emodnetHydrography'">
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+
+                <div gn-related="md"
+                    data-user="user"
+                    data-types="onlines">&#160;</div>
               </xsl:if>
 
-              <div gn-related="md"
-                   data-user="user"
-                   data-types="onlines">&#160;</div>
+              <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
 
             <div>
@@ -225,7 +227,11 @@
              data-watch=""
              data-filter="div > h3"/>-->
         <footer>
-
+          <xsl:if test="$view = 'emodnetHydrography'">
+            <div gn-related="md"
+                data-user="user"
+                data-types="onlines">&#160;</div>
+          </xsl:if>
         </footer>
       </article>
 
