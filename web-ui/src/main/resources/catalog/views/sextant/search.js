@@ -501,6 +501,13 @@
         viewerMap.updateSize();
         searchMap.updateSize();
       });
+
+      gnSearchSettings.mapProtocols = {
+        layers: [
+          ],
+        services: [
+          ]
+      };
     }]);
 
   module.controller('gnsSextantSearch', [
