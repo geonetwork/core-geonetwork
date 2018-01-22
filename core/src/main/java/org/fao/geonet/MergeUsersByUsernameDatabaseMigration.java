@@ -23,11 +23,8 @@
 package org.fao.geonet;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import com.itextpdf.text.Meta;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.TaskExecutionException;
 import org.fao.geonet.kernel.DataManager;
@@ -45,8 +42,6 @@ import java.util.*;
 
 /**
  * This migration merge users sharing the same case insensitive user name.
- *
- *
  */
 public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
@@ -55,7 +50,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
     public void run(ApplicationContext applicationContext) throws TaskExecutionException {
         UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         List<String> duplicatedUsernamesList = userRepository.findDuplicatedUsernamesCaseInsensitive();
-        Log.debug(Log.JEEVES,"Found these duplicated usernames: " + duplicatedUsernamesList);
+        Log.debug(Log.JEEVES, "Found these duplicated usernames: " + duplicatedUsernamesList);
         try {
             for (String duplicatedUsername : duplicatedUsernamesList) {
                 mergeUsers(applicationContext, duplicatedUsername);
@@ -82,7 +77,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         transferSavedSelections(applicationContext, duplicatedUserList, userToKeep);
 
         User tempUser = new User();
-        for(int i = duplicatedUserList.size() - 1; i >= 0; i--) { // i = 1  is intended
+        for (int i = duplicatedUserList.size() - 1; i >= 0; i--) { // i = 1  is intended
             User duplicatedUser = duplicatedUserList.get(i);
             addresses.addAll(duplicatedUser.getAddresses());
             mergeUser(tempUser, duplicatedUser);
@@ -93,29 +88,27 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         duplicatedUserList.remove(greatestProfileUser);
         userRepository.delete(duplicatedUserList);
         userRepository.save(userToKeep);
-        userRepository.flush();
-
-
     }
 
     private void transferSavedSelections(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
         UserSavedSelectionRepository userSavedSelectionRepository = applicationContext.getBean(UserSavedSelectionRepository.class);
         // TODO
 
-        for(int i = 1; i < duplicatedUserList.size(); i++) { // i intentionally initialised to 1
+        for (int i = 1; i < duplicatedUserList.size(); i++) { // i intentionally initialised to 1
             userSavedSelectionRepository.deleteAllByUser(duplicatedUserList.get(i).getId());
         }
     }
 
     /**
      * Transfer the metadata ownership from all the users in duplicatedUserList to userToKeep
-     * @param applicationContext the application context bean factory
+     *
+     * @param applicationContext   the application context bean factory
      * @param oldMetadataOwnerList list with the users whose metadata is going to be transferred.
-     * @param newMetadataOwner new metadata owner user.
+     * @param newMetadataOwner     new metadata owner user.
      * @throws Exception if anything doesn't work.
      */
     void transferMetadata(ApplicationContext applicationContext, List<User> oldMetadataOwnerList,
-                                  User newMetadataOwner) throws Exception {
+                          User newMetadataOwner) throws Exception {
         MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
         DataManager dataManager = applicationContext.getBean(DataManager.class);
         MetadataStatusRepository metadataStatusRepository = applicationContext.getBean(MetadataStatusRepository.class);
@@ -134,7 +127,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
             List<MetadataStatus> metadataStatusList = metadataStatusRepository.findAll(
                 MetadataStatusSpecs.hasUserId(oldOwner.getId()));
             for (MetadataStatus metadataStatus : metadataStatusList) {
-                MetadataStatusId  metadataStatusId = metadataStatus.getId();
+                MetadataStatusId metadataStatusId = metadataStatus.getId();
 
                 MetadataStatusId newMetadataStatusId = new MetadataStatusId();
                 newMetadataStatusId.setUserId(newMetadataOwner.getId());
@@ -159,14 +152,14 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
                 }
             }));
         }
-
     }
 
     /**
      * Add the userToKeep user to all the groups of duplicateduserList with the same profile these have in each group.
+     *
      * @param applicationContext the application context bean factory.
      * @param duplicatedUserList list of users used to get the group list.
-     * @param userToKeep the user to add to the groups of duplicatedUserList.
+     * @param userToKeep         the user to add to the groups of duplicatedUserList.
      */
     void mergeGroups(ApplicationContext applicationContext, List<User> duplicatedUserList, User userToKeep) {
         GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
@@ -175,7 +168,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         List<UserGroup> mergedUserGroups = new ArrayList<>();
         List<Integer> userIdList = new ArrayList<>(duplicatedUserList.size());
 
-        for(int i = 0; i < duplicatedUserList.size(); i++) {
+        for (int i = 0; i < duplicatedUserList.size(); i++) {
             User userToProcess = duplicatedUserList.get(i);
             userIdList.add(userToProcess.getId());
 

@@ -32,17 +32,18 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreIntegrationTest{
+public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreIntegrationTest {
 
     private Map<Integer, Integer> metadataIdList;
 
@@ -196,7 +197,7 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         final DataManager dataManager = _applicationContext.getBean(DataManager.class);
         final MetadataRepository metadataRepository = _applicationContext.getBean(MetadataRepository.class);
         migration.transferMetadata(_applicationContext, duplicatedUserNames, greatestProfileUser);
-        for(Map.Entry<Integer, Integer> entry :metadataIdList.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : metadataIdList.entrySet()) {
             Integer metadataId = entry.getKey();
             Integer groupId = entry.getValue();
             Metadata metadata = metadataRepository.findOne(metadataId);
@@ -236,7 +237,6 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         address.setAddress(username + "_address");
         user.getAddresses().add(address);
         user.getSecurity().setPassword(username + "_password");
-
 
 
         return user;
