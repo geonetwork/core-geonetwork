@@ -202,7 +202,6 @@
       <item facet="emodnet-checkpoint.challenges" max="300"/>
       <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
       <item facet="emodnet-checkpoint.production.mode" max="300"/>
-      <item facet="ParameterUsageVocabulary-other" max="300"/>
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
@@ -284,6 +283,7 @@
       <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
       <item facet="emodnet-checkpoint.production.mode" max="300"/>
       <item facet="checkpointType" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="ParameterUsageVocabulary-other" max="300"/>
       <item facet="dcsmm-descripteur" max="300"/>
       <item facet="dcsmm-methode" max="300"/>
       <item facet="dcsmm-type-espace" max="300"/>
