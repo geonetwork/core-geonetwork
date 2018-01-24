@@ -23,10 +23,32 @@
 
 package org.fao.geonet.api.records;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
-import io.swagger.annotations.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -38,13 +60,23 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -68,39 +100,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
     "/api/records",
@@ -157,7 +177,7 @@ public class MetadataInsertDeleteApi {
         HttpServletRequest request
     )
         throws Exception {
-        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -226,10 +246,10 @@ public class MetadataInsertDeleteApi {
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
-        final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         for (String uuid : records) {
-            Metadata metadata = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
             if (metadata == null) {
                 report.incrementNullRecords();
             } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
@@ -623,7 +643,7 @@ public class MetadataInsertDeleteApi {
     )
         throws Exception {
 
-        Metadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
+        AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
 
         SettingManager sm = applicationContext.getBean(SettingManager.class);
@@ -639,7 +659,7 @@ public class MetadataInsertDeleteApi {
             } else {
                 // Check if the UUID exists
                 try {
-                    Metadata checkRecord = ApiUtils.getRecord(targetUuid);
+                    AbstractMetadata checkRecord = ApiUtils.getRecord(targetUuid);
                     if (checkRecord != null) {
                         throw new BadParameterEx(String.format(
                             "You can't create a new record with the UUID '%s' because a record already exist with this UUID.",
@@ -1204,8 +1224,8 @@ public class MetadataInsertDeleteApi {
 
 
         if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
-            MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-            Metadata md = metadataRepository.findOneByUuid(uuid);
+            IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+            AbstractMetadata md = metadataRepository.findOneByUuid(uuid);
             if (md != null) {
                 throw new IllegalArgumentException(String.format(
                     "A record with UUID '%s' already exist and you choose no " +

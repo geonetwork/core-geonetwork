@@ -6,13 +6,13 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,11 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
     private SchemaManager schemaManager;
 
     @Autowired
-    private MetadataRepository metadataRepository;
+    private IMetadataUtils metadataUtils;
 
     public void init(ServiceContext context, Boolean force) throws Exception {
         schemaManager = context.getBean(SchemaManager.class);
-        metadataRepository = context.getBean(MetadataRepository.class);
+        metadataUtils = context.getBean(IMetadataUtils.class);
     }
 
     /**
@@ -76,7 +76,7 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
      */
     @Override
     public String getMetadataSchema(String id) throws Exception {
-        Metadata md = metadataRepository.findOne(id);
+        AbstractMetadata md = metadataUtils.findOne(id);
 
         if (md == null) {
             throw new IllegalArgumentException("Metadata not found for id : " + id);
@@ -85,7 +85,6 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
             return md.getDataInfo().getSchemaId();
         }
     }
-
 
     /**
      * Checks autodetect elements in installed schemas to determine whether the metadata record belongs to that schema. Use this method when
@@ -118,5 +117,4 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
             Log.debug(Geonet.DATA_MANAGER, "Schema detected was " + schema);
         return schema;
     }
-    
 }

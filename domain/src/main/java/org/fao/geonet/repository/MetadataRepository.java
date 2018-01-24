@@ -36,10 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Data Access object for the {@link Metadata} entities.
+ * 
+ * The use of this class is discouraged, you should use IMetadataUtils or IMetadataManager instead.
  *
  * @author Jesse
  */
-public interface MetadataRepository extends GeonetRepository<Metadata, Integer>, MetadataRepositoryCustom,
+public interface MetadataRepository extends GeonetRepository<Metadata, Integer>, MetadataRepositoryCustom<Metadata>,
     JpaSpecificationExecutor<Metadata> {
     /**
      * Find one metadata by the metadata's uuid.

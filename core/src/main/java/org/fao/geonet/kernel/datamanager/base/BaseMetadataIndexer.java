@@ -24,8 +24,8 @@ import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -54,7 +55,6 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -91,11 +91,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Autowired
     private GeonetworkDataDirectory geonetworkDataDirectory;
     @Autowired
-    private MetadataRepository metadataRepository;
-    @Autowired
     private MetadataStatusRepository statusRepository;
 
     private IMetadataUtils metadataUtils;
+    private IMetadataManager metadataManager;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -122,24 +121,23 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     private ApplicationEventPublisher publisher;
 
     public BaseMetadataIndexer() {
-        System.out.println("CREATING BASE METADATA INDEXER");
     }
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-         searchManager = context.getBean(SearchManager.class);
-         geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
-         metadataRepository = context.getBean(MetadataRepository.class);
-         statusRepository = context.getBean(MetadataStatusRepository.class);
-         metadataUtils = context.getBean(IMetadataUtils.class);
-         userRepository = context.getBean(UserRepository.class);
-         operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-         groupRepository = context.getBean(GroupRepository.class);
-         metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
-         schemaManager = context.getBean(SchemaManager.class);
-         svnManager = context.getBean(SvnManager.class);
-         inspireAtomFeedRepository = context.getBean(InspireAtomFeedRepository.class);
-         xmlSerializer = context.getBean(XmlSerializer.class);
-         settingManager = context.getBean(SettingManager.class);
+        searchManager = context.getBean(SearchManager.class);
+        geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
+        statusRepository = context.getBean(MetadataStatusRepository.class);
+        metadataUtils = context.getBean(IMetadataUtils.class);
+        metadataManager = context.getBean(IMetadataManager.class);
+        userRepository = context.getBean(UserRepository.class);
+        operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        groupRepository = context.getBean(GroupRepository.class);
+        metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        schemaManager = context.getBean(SchemaManager.class);
+        svnManager = context.getBean(SvnManager.class);
+        inspireAtomFeedRepository = context.getBean(InspireAtomFeedRepository.class);
+        xmlSerializer = context.getBean(XmlSerializer.class);
+        settingManager = context.getBean(SettingManager.class);
 
         servContext = context;
     }
@@ -147,6 +145,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public void setMetadataUtils(IMetadataUtils metadataUtils) {
         this.metadataUtils = metadataUtils;
+    }
+
+    @Override
+    public void setMetadataManager(IMetadataManager metadataManager) {
+        this.metadataManager = metadataManager;
     }
 
     Set<String> waitForIndexing = new HashSet<String>();
@@ -159,8 +162,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     }
 
     @Override
-    public int batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
-        final List<Integer> idsOfMetadataToDelete = metadataRepository.findAllIdsBy(specification);
+    public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification) throws Exception {
+        final List<Integer> idsOfMetadataToDelete = metadataUtils.findAllIdsBy(specification);
 
         for (Integer id : idsOfMetadataToDelete) {
             // --- remove metadata directory for each record
@@ -179,7 +182,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         }));
 
         // Remove records from the database
-        metadataRepository.deleteAll(specification);
+        metadataManager.deleteAll(specification);
 
         return idsOfMetadataToDelete.size();
     }
@@ -340,7 +343,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         } finally {
             indexLock.unlock();
         }
-        Metadata fullMd;
+        AbstractMetadata fullMd;
 
         try {
             Vector<Element> moreFields = new Vector<Element>();
@@ -363,7 +366,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
             }
 
-            fullMd = metadataRepository.findOne(id$);
+            fullMd = metadataUtils.findOne(id$);
 
             final String schema = fullMd.getDataInfo().getSchemaId();
             final String createDate = fullMd.getDataInfo().getCreateDate().getDateAndTime();
@@ -521,10 +524,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             if (searchManager == null) {
                 searchManager = servContext.getBean(SearchManager.class);
             }
-            
-            searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
-                        forceRefreshReaders);
-            
+
+            searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
+
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER,
                     "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);

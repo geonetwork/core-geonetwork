@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
@@ -28,6 +29,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -186,6 +188,7 @@ public class BaseMetadataManager implements IMetadataManager {
         editLib = new EditLib(schemaManager);
         metadataValidator.setMetadataManager(this);
         metadataUtils.setMetadataManager(this);
+        metadataIndexer.setMetadataManager(this);
     }
 
     public void init(ServiceContext context, Boolean force) throws Exception {
@@ -323,15 +326,16 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     private void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
-        Metadata metadata = metadataRepository.findOne(Integer.valueOf(id));
+        AbstractMetadata metadata = metadataUtils.findOne(Integer.valueOf(id));
         if (! settingManager.getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION) &&
                 metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
+            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
             if (result.size() > 0) {
                 throw new Exception("this template is referenced.");
             }
         }
+
         // --- remove operations
         metadataOperations.deleteMetadataOper(context, id, false);
 
@@ -356,7 +360,7 @@ public class BaseMetadataManager implements IMetadataManager {
         getXmlSerializer().delete(id, context);
     }
     
-    private MetaSearcher searcherForReferencingMetadata(ServiceContext context, Metadata metadata) throws Exception {
+    private MetaSearcher searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
         MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
         Element parameters =  new Element(Jeeves.Elem.REQUEST);
         parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
@@ -385,7 +389,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
         String uuid = metadataUtils.getMetadataUuid(metadataId);
-        Metadata findOne = metadataRepository.findOne(metadataId);
+        AbstractMetadata findOne = metadataUtils.findOne(metadataId);
         if (findOne != null) {
             boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
 
@@ -439,7 +443,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public String createMetadata(ServiceContext context, String templateId, String groupOwner, String source, int owner, String parentUuid,
             String isTemplate, boolean fullRightsForGroup, String uuid) throws Exception {
-        Metadata templateMetadata = metadataRepository.findOne(templateId);
+        AbstractMetadata templateMetadata = metadataUtils.findOne(templateId);
         if (templateMetadata == null) {
             throw new IllegalArgumentException("Template id not found : " + templateId);
         }
@@ -450,7 +454,8 @@ public class BaseMetadataManager implements IMetadataManager {
         if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
             xml = updateFixedInfo(schema, Optional.<Integer> absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
         }
-        final Metadata newMetadata = new Metadata().setUuid(uuid);
+        final Metadata newMetadata = new Metadata();
+        newMetadata.setUuid(uuid);
         newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
                 .setType(MetadataType.lookup(isTemplate));
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
@@ -509,7 +514,8 @@ public class BaseMetadataManager implements IMetadataManager {
         if (StringUtils.isBlank(metadataType)) {
             metadataType = MetadataType.METADATA.codeString;
         }
-        final Metadata newMetadata = new Metadata().setUuid(uuid);
+        final Metadata newMetadata = new Metadata();
+        newMetadata.setUuid(uuid);
         final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
         final ISODate isoCreateDate = createDate != null ? new ISODate(createDate) : new ISODate();
         newMetadata.getDataInfo().setChangeDate(isoChangeDate).setCreateDate(isoCreateDate).setSchemaId(schema).setDoctype(docType)
@@ -541,7 +547,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     @Override
-    public Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
+    public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
             boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
             throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
@@ -567,7 +573,7 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // --- store metadata
-        final Metadata savedMetadata = getXmlSerializer().insert(newMetadata, metadataXml, context);
+        final AbstractMetadata savedMetadata = getXmlSerializer().insert(newMetadata, metadataXml, context);
 
         final String stringId = String.valueOf(savedMetadata.getId());
         String groupId = null;
@@ -682,7 +688,7 @@ public class BaseMetadataManager implements IMetadataManager {
      * @return metadata if the that was updated
      */
     @Override
-    public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+    public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
             final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
             final boolean updateDateStamp) throws Exception {
         Element metadataXml = md;
@@ -697,7 +703,7 @@ public class BaseMetadataManager implements IMetadataManager {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
 
-            final Metadata metadata = metadataRepository.findOne(metadataId);
+            final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
             String uuid = null;
 
@@ -714,7 +720,7 @@ public class BaseMetadataManager implements IMetadataManager {
         setNamespacePrefixUsingSchemas(schema, metadataXml);
 
         // Notifies the metadata change to metatada notifier service
-        final Metadata metadata = metadataRepository.findOne(metadataId);
+        final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
         String uuid = null;
         if (schemaManager.getSchema(schema).isReadwriteUUID() && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
@@ -744,27 +750,28 @@ public class BaseMetadataManager implements IMetadataManager {
                 metadataIndexer.indexMetadata(metadataId, true, null);
             }
             MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
+            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
             for (Integer id : result.keySet()) {
                 IndexingList list = context.getBean(IndexingList.class);
                 list.add(id);
             }
         }
         // Return an up to date metadata record
-        return metadataRepository.findOne(metadataId);
+        return metadataUtils.findOne(metadataId);
     }
 
     /**
-     * TODO : buildInfoElem contains similar portion of code with indexMetadata
+     *  buildInfoElem contains similar portion of code with indexMetadata
      */
     private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
-        Metadata metadata = metadataRepository.findOne(id);
+        AbstractMetadata metadata = metadataUtils.findOne(id);
         final MetadataDataInfo dataInfo = metadata.getDataInfo();
         String schema = dataInfo.getSchemaId();
         String createDate = dataInfo.getCreateDate().getDateAndTime();
         String changeDate = dataInfo.getChangeDate().getDateAndTime();
         String source = metadata.getSourceInfo().getSourceId();
         String isTemplate = dataInfo.getType().codeString;
+        @SuppressWarnings("deprecation")
         String title = dataInfo.getTitle();
         String uuid = metadata.getUuid();
         String isHarvested = "" + Constants.toYN_EnabledChar(metadata.getHarvestInfo().isHarvested());
@@ -871,9 +878,9 @@ public class BaseMetadataManager implements IMetadataManager {
                         "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
             }
 
-            Metadata metadata = null;
+            AbstractMetadata metadata = null;
             if (metadataId.isPresent()) {
-                metadata = metadataRepository.findOne(metadataId.get());
+                metadata = metadataUtils.findOne(metadataId.get());
                 boolean isTemplate = metadata != null && metadata.getDataInfo().getType() == MetadataType.TEMPLATE;
 
                 // don't process templates
@@ -1173,5 +1180,41 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     private static void addElement(Element root, String name, Object value) {
         root.addContent(new Element(name).setText(value == null ? "" : value.toString()));
+    }
+
+    @Override
+    public AbstractMetadata save(AbstractMetadata info) {
+        if (info instanceof Metadata) {
+            return metadataRepository.save((Metadata) info);
+        } else {
+            throw new NotImplementedException("Unknown IMetadata subtype: " + info.getClass().getName());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public AbstractMetadata update(int id, @Nonnull Updater<? extends AbstractMetadata> updater) {
+        return metadataRepository.update(id, (Updater<Metadata>) updater);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void deleteAll(Specification<? extends AbstractMetadata> specs) {
+        try {
+            metadataRepository.deleteAll((Specification<Metadata>) specs);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            //Maybe it is not a Specification<Metadata>
+        }
+    }
+
+    @Override
+    public void delete(Integer id) {
+        metadataRepository.delete(id);
+    }
+
+    @Override
+    public void createBatchUpdateQuery(PathSpec<Metadata, String> servicesPath, String newUuid, Specification<Metadata> harvested) {
+        metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, harvested);
     }
 }

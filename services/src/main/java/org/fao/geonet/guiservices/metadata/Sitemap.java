@@ -24,28 +24,21 @@
 package org.fao.geonet.guiservices.metadata;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.SitemapDocumentNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
-import org.opengis.metadata.MetaData;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;

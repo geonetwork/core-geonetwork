@@ -43,9 +43,9 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -171,7 +171,7 @@ public class LDAPSynchronizerJob extends QuartzJobBean {
         // metadata
         final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
-        final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
         final Specifications<User> spec = Specifications.where(
             UserSpecs.hasAuthType(LDAPConstants.LDAP_FLAG)
         ).and(

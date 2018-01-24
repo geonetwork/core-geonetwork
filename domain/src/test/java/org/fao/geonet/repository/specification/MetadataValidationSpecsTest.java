@@ -1,6 +1,13 @@
 package org.fao.geonet.repository.specification;
 
 
+import static org.fao.geonet.repository.specification.MetadataValidationSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.MetadataValidationSpecs.isInvalidAndRequiredForMetadata;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.MetadataRepository;
@@ -8,12 +15,6 @@ import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.MetadataValidationRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.fao.geonet.repository.specification.MetadataValidationSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.MetadataValidationSpecs.isInvalidAndRequiredForMetadata;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for {@link org.fao.geonet.repository.specification.MetadataValidationSpecs}.
