@@ -9,6 +9,8 @@
 
   <xsl:import href="common/render-html.xsl"/>
   <xsl:import href="common/functions-core.xsl"/>
+  <xsl:import href="common/utility-tpl.xsl"/>
+
   <xsl:import href="render-variables.xsl"/>
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
@@ -167,13 +169,13 @@
               <div class="well text-center">
                 <span itemprop="identifier"
                     itemscope="itemscope"
-                    itemtype="http://schema.org/identifier" 
+                    itemtype="http://schema.org/identifier"
                     class="hidden">
                   <xsl:value-of select="$metadataUuid"/>
                 </span>
                 <a itemprop="url"
                    itemscope="itemscope"
-                   itemtype="http://schema.org/url" 
+                   itemtype="http://schema.org/url"
                    class="btn btn-block btn-primary"
                    href="{if ($portalLink != '')
                           then replace($portalLink, '\$\{uuid\}', $metadataUuid)
