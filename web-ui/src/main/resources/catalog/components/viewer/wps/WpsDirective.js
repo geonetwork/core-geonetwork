@@ -53,7 +53,15 @@
    *
    * @directiveInfo {Object} map
    * @directiveInfo {Object} wpsLink this object holds information on the WPS
-   *  service to use: name, url and applicationProfile (optional)
+   *  service to use; expected keys are:
+   *  * `name`: required, process identifier
+   *  * `url`: required, process URL
+   *  * `labels`: optional, object holding a string for different languages (use
+   *     ISO3 language codes as returned by `$tanslate.use()`, see:
+   *     https://angular-translate.github.io/docs/#/api/pascalprecht.translate.$translate)
+   *  * `label`: optional, string
+   *  * `applicationProfile`: optional, refer to the documentation on how to
+   *    set up an application profile object for a WPS service
    * @directiveInfo {Object} wfsLink the WFS link object
    *  will be used to overload inputs based on active WFS feature filters
    * @directiveInfo {boolean} hideExecuteButton if true,
@@ -673,6 +681,10 @@
             var input = scope._getInputInfo(name);
             return input ? !!input.disabled : false;
           };
+
+          scope.getLabel = function() {
+            return gnWpsService.getProcessLabel(scope.wpsLink);
+          }
         }
       };
     }

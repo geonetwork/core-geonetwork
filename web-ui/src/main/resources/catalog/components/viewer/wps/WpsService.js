@@ -79,8 +79,9 @@
     'gnGlobalSettings',
     'gnMap',
     '$q',
+    '$translate',
     function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings,
-             gnMap, $q) {
+             gnMap, $q, $translate) {
 
       this.WMS_MIMETYPE_REGEX = /.*ogc-wms/;
 
@@ -446,6 +447,23 @@
           console.warn('Error extracting WMS layers from response: ', e);
         }
       };
+
+      /**
+       * Returns a label normalized for the process description
+       * Field used: `labels[currentLang]` or `label`
+       * IF no label found, return nothing
+       * @param {Object} wpsLink object holding the process link
+       */
+      this.getProcessLabel = function (wpsLink) {
+        var currentLang = $translate.use();
+        if (wpsLink.labels) {
+          return wpsLink.labels[currentLang];
+        } else if (wpsLink.label) {
+          return wpsLink.label;
+        } else {
+          return null;
+        }
+      }
     }
   ]);
 
