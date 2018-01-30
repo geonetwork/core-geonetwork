@@ -1208,5 +1208,6 @@
     "gnResultsCss": "Result",
     "gnResultsBackgroundColor": "Background",
     "gnMdViewCss": "Metadata view",
-    "gnMdViewBackgroundColor": "Background"
+    "gnMdViewBackgroundColor": "Background",
+    "gnCssStyleIntroMessage": "Properties defined here replace the default system properties. An empty field restores the corresponding default value."
 }
