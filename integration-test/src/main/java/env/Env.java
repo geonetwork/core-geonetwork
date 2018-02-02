@@ -123,4 +123,8 @@ public class Env {
         return Env.prop.getProperty("adminPassword");
     }
 
+    public static String getAdminUser() {
+        return Env.prop.getProperty("adminUser");
+    }
+
 }

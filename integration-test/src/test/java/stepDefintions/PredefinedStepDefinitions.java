@@ -196,6 +196,7 @@ public class PredefinedStepDefinitions implements BaseTest {
     @Then("^I enter \"([^\"]*)\" into input field having (.+) \"([^\"]*)\"$")
     public void enter_text(String text, String type, String accessName) throws Exception {
         text = text.replace("{adminPassword}", adminPassword);
+        text = text.replace("{adminUser}", adminUser);
         miscmethodObj.validateLocator(type);
         inputObj.enterText(type, text, accessName);
     }
