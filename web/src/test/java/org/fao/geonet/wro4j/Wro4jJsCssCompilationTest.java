@@ -125,7 +125,7 @@ public class Wro4jJsCssCompilationTest {
         GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
         dataDirectory.setSchemaPluginsDir(webDir.resolve("WEB-INF/data/config/schema_plugins"));
         dataDirectory.setFormatterDir(webDir.resolve("WEB-INF/data/data/formatter"));
-        dataDirectory.setNodeLessFiles(webDir.resolve("WEB-INF/data/data/node_less_files"));
+        dataDirectory.setNodeLessFiles(webDir.resolve("WEB-INF/data/node_less_files"));
         GenericXmlApplicationContext applicationContext = new GenericXmlApplicationContext();
         applicationContext.refresh();
         applicationContext.getBeanFactory().registerSingleton("geonetworkDataDirectory", dataDirectory);
