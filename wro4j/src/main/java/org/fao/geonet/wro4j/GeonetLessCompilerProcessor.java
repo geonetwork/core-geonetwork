@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -244,11 +245,13 @@ public class GeonetLessCompilerProcessor extends Less4jProcessor {
         try {
             final GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
             
-            if(geonetworkDataDirectory!=null) {
-                final String path = geonetworkDataDirectory.getSystemDataDir().resolve("node-less-files").toString();
+            if(geonetworkDataDirectory!=null && geonetworkDataDirectory.getSystemDataDir()!=null) {
+                final String path = geonetworkDataDirectory.getSystemDataDir().resolve(Geonet.Config.NODE_LESS_DIR).toString();
                 final Path customLessFile = openFileWithCustomStyle(path);
                 return customLessFile;
-            } 
+            } else {
+                return null;
+            }
         } catch (NoSuchBeanDefinitionException e) {
            LOG.fine("org.fao.geonet.kernel.GeonetworkDataDirectory bean not found"); 
         }
