@@ -185,7 +185,8 @@
   module.directive('gnKmlImport', [
     'ngeoDecorateLayer',
     'gnAlertService',
-    function(ngeoDecorateLayer, gnAlertService) {
+    '$translate',
+    function(ngeoDecorateLayer, gnAlertService, $translate) {
       return {
         restrict: 'A',
         replace: true,
