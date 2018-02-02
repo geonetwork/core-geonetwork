@@ -17,6 +17,7 @@ public interface BaseTest {
     public static WebDriver driver = Env.CreateWebDriver(Env.getBrowserName());
     public static String endPointToTest = Env.getEndPointToTest();
     public static String adminPassword = Env.getAdminPassword();
+    public static String adminUser = Env.getAdminUser();
     public static WebDriverWait wait = new WebDriverWait(BaseTest.driver, 30);
 
     MiscMethods miscmethodObj = new MiscMethods();
