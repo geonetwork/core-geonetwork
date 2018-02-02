@@ -34,8 +34,8 @@
    *
    */
   module.controller('GnCssStyleSettingsController', [
-    '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService', '$window',
-    function($scope, $http, $rootScope, $translate, gnUtilityService, $window) {
+    '$scope', '$http', '$rootScope', '$translate', '$window',
+    function($scope, $http, $rootScope, $translate, $window) {
 
       $http({
         method: 'GET',
@@ -48,20 +48,21 @@
 
       $scope.saveCssStyleSettings = function(formId) {
 
-        $http.post('../api/customstyle',
-            formId)
-            .success(function(data) {
-              $http({
-                method: 'GET',
-                url: '../../static/wroAPI/reloadModel',
-                headers: {'Content-Type': 'text/plain'}
-              });
-              $http({
-                method: 'GET',
-                url: '../../static/wroAPI/reloadCache',
-                headers: {'Content-Type': 'text/plain'}
-              });
-              $window.location.reload();
+    	  $http.post('../api/customstyle',
+    			  formId)
+    			  .success(function(data) {
+    				  $http({
+    					  method: 'GET',
+    					  url: '../../static/wroAPI/reloadModel',
+    					  headers: {'Content-Type': 'text/plain'}
+    				  }).then(function(data) {
+    					  $http({
+    						  method: 'GET',
+    						  url: '../../static/wroAPI/reloadCache',
+    						  headers: {'Content-Type': 'text/plain'}
+    					  }).then(function(data) {
+    						  $window.location.reload(); });
+    				  });
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
