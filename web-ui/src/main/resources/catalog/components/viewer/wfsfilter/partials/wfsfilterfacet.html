@@ -36,7 +36,7 @@
 
       <!-- value filter field -->
       <div class="filter-input sxt-layertree-filter"
-        ng-if="field.more || facetFilters[field.name] || (field.tree.nodes.length > 20)" ng-show="field.expanded">
+        ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
         <span class="fa fa-times-circle clear" title="clear"
           ng-click="facetFilters[field.name] = ''; filterFacets()"
           ng-show="facetFilters[field.name]"></span>
