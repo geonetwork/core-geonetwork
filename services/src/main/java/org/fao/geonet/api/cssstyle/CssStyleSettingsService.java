@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.cssstyle.service.ICssStyleSettingService;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.CssStyleSetting;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.json.JSONException;
@@ -187,7 +188,7 @@ public class CssStyleSettingsService {
 
     private String getDataFolder() {
         final GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
-        final String path = geonetworkDataDirectory.getSystemDataDir().resolve("node-less-files").toString();
+        final String path = geonetworkDataDirectory.getSystemDataDir().resolve(Geonet.Config.NODE_LESS_DIR).toString();
         return path;
     }
 
