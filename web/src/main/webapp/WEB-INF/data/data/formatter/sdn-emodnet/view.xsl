@@ -6,6 +6,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gml="http://www.opengis.net/gml"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -85,7 +86,7 @@
 										<xsl:with-param name="DefinitionValue" select="$schemaStrings/conformity_title/text()"/>
 									</xsl:apply-templates>
 									<xsl:apply-templates select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
-										<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:alternateTitle']/label/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:alternateTitle']/label/text()"/>
 									</xsl:apply-templates>
 									<xsl:if test="//gmd:graphicOverview">
 										<tr valign="top">
@@ -99,9 +100,9 @@
 											</td>
 										</tr>
 									</xsl:if>
-							
+
 									<xsl:apply-templates select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
-										<xsl:with-param name="DefinitionValue" select="$schemaLabels19139/element[@name='gmd:abstract' and @id='25.0']/label/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaLabels19139/element[@name='gmd:abstract' and @id='25.0']/label/text()"/>
 									</xsl:apply-templates>
 
 								<!-- *** DESCRIPTIVE KEYWORDS *** -->
@@ -117,51 +118,51 @@
 								<!-- Feature type -->
 								<xsl:if test="//gmd:featureTypes/gco:LocalName != 'gridSeries'">
 									<xsl:apply-templates select="//gmd:featureTypes[1]">
-										<xsl:with-param name="DefinitionValue" select="$schemaStrings/featureType/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaStrings/featureType/text()"/>
 									</xsl:apply-templates>
 									<xsl:for-each select="//gmd:featureTypes[position()>1]">
 										<xsl:apply-templates select=".">
-											<xsl:with-param name="DefinitionValue"/> 
+											<xsl:with-param name="DefinitionValue"/>
 										</xsl:apply-templates>
 									</xsl:for-each>
 								</xsl:if>
 
 								<!-- Sea areas (C19)-->
 								<xsl:apply-templates select="//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/(text()='SeaVoX salt and fresh water body gazetteer' or text()='external.reference-geographical-area.NVS.C19')]/gmd:keyword[1]">
-									<xsl:with-param name="DefinitionValue" select="$schemaStrings/seaAreas/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaStrings/seaAreas/text()"/>
 								</xsl:apply-templates>
 								<xsl:for-each select="//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/(text()='SeaVoX salt and fresh water body gazetteer' or text()='external.reference-geographical-area.NVS.C19')]/gmd:keyword[position()>1]">
 									<xsl:apply-templates select=".">
-										<xsl:with-param name="DefinitionValue"/> 
+										<xsl:with-param name="DefinitionValue"/>
 									</xsl:apply-templates>
 								</xsl:for-each>
 
 
 								<!-- Ocean Discovery Parameters -->
 								<xsl:apply-templates select="//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/(text()='Parameter Discovery Vocabulary (P02)'or text()='external.parameter.NVS.P02')]/gmd:keyword[1]">
-									<xsl:with-param name="DefinitionValue" select="$schemaStrings/oceanDiscoveryParameters/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaStrings/oceanDiscoveryParameters/text()"/>
 								</xsl:apply-templates>
 								<xsl:for-each select="//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/(text()='Parameter Discovery Vocabulary (P02)'or text()='external.parameter.NVS.P02')]/gmd:keyword[position()>1]">
 									<xsl:apply-templates select=".">
-										<xsl:with-param name="DefinitionValue"/> 
+										<xsl:with-param name="DefinitionValue"/>
 									</xsl:apply-templates>
 								</xsl:for-each>
 
 
 								<!--Ocean chemistry variable  -->
 								<xsl:apply-templates select="//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/(text()='EMODNET chemistry lot aggregated parameter names'or text()='external.parameter.NVS.P35')]/gmd:keyword[1]">
-									<xsl:with-param name="DefinitionValue" select="$schemaStrings/oceanChemistryVariable/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaStrings/oceanChemistryVariable/text()"/>
 								</xsl:apply-templates>
 								<xsl:for-each select="//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/(text()='EMODNET chemistry lot aggregated parameter names'or text()='external.parameter.NVS.P35')]/gmd:keyword[position()>1]">
 									<xsl:apply-templates select=".">
-										<xsl:with-param name="DefinitionValue"/> 
+										<xsl:with-param name="DefinitionValue"/>
 									</xsl:apply-templates>
 								</xsl:for-each>
 
 								<!-- Usagage Licence -->
 								<xsl:apply-templates select="//gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation">
-									<xsl:with-param name="DefinitionValue" select="$schemaStrings/usageLicense/text()"/> 
-								</xsl:apply-templates>		
+									<xsl:with-param name="DefinitionValue" select="$schemaStrings/usageLicense/text()"/>
+								</xsl:apply-templates>
 
 								<!-- **************************************** spatioTemporalExtent **************************************** -->
 
@@ -189,11 +190,11 @@
 
 
 								<xsl:apply-templates select="//gmd:spatialResolution/gmd:MD_Resolution/gmd:distance">
-									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:distance']/label/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:distance']/label/text()"/>
 								</xsl:apply-templates>
 
 								<xsl:apply-templates select="//gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
-									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:code' and @id='207.0']/label/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:code' and @id='207.0']/label/text()"/>
 								</xsl:apply-templates>
 
 								<!-- ********************** Vertical extent ********************** -->
@@ -207,15 +208,15 @@
 										<td class="print_data"/>
 									</tr>
 									<xsl:apply-templates select="//gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue">
-										<xsl:with-param name="DefinitionValue" select="$schemaStrings19139/minDepth/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaStrings19139/minDepth/text()"/>
 
 									</xsl:apply-templates>
 									<xsl:apply-templates select="//gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue">
-										<xsl:with-param name="DefinitionValue" select="$schemaStrings19139/maxDepth/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaStrings19139/maxDepth/text()"/>
 									</xsl:apply-templates>
 
 									<xsl:apply-templates select="//gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:dimensionSize">
-										<xsl:with-param name="DefinitionValue" select="$schemaStrings/nbVerticalLevels/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaStrings/nbVerticalLevels/text()"/>
 									</xsl:apply-templates>
 								</xsl:if>
 								<!-- ********************** Temporal extent ********************** -->
@@ -230,15 +231,15 @@
 									<xsl:apply-templates select="//gml:TimePeriod"/>
 
 									<xsl:apply-templates select="//gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution">
-										<xsl:with-param name="DefinitionValue" select="$schemaStrings/temporalResolution/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaStrings/temporalResolution/text()"/>
 									</xsl:apply-templates>
 								</xsl:if>
 
-								<!-- **************************************** Access the data **************************************** -->	
+								<!-- **************************************** Access the data **************************************** -->
 								<xsl:if test="//gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString/text()='WWW:DOWNLOAD-1.0-link--download' or gmd:protocol/gco:CharacterString/text()='OGC:WMS:getCapabilities']">
 									<tr valign="top">
 										<td class="print_ttl">
-											<xsl:value-of select="$schemaStrings/url/text()"/>	
+											<xsl:value-of select="$schemaStrings/url/text()"/>
 										</td>
 										<td class="print_data">
 										</td>
@@ -247,10 +248,10 @@
 
 									<!-- File download -->
 									<xsl:apply-templates mode="onlineResource" select="//gmd:MD_Distribution/gmd:distributor[gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='WWW:DOWNLOAD-1.0-link--download'][1]/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
-										<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:protocol' and @id='398.0']/helper/option[@value='WWW:DOWNLOAD-1.0-link--download']/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:protocol' and @id='398.0']/helper/option[@value='WWW:DOWNLOAD-1.0-link--download']/text()"/>
 									</xsl:apply-templates>
 									<xsl:apply-templates mode="onlineResource" select="//gmd:MD_Distribution/gmd:distributor[gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='WWW:DOWNLOAD-1.0-link--download'][position()>1]/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
-										<xsl:with-param name="DefinitionValue"/> 
+										<xsl:with-param name="DefinitionValue"/>
 									</xsl:apply-templates>
 
 									<tr valign="top">
@@ -263,7 +264,7 @@
 
 									<!-- WMS -->
 									<xsl:apply-templates mode="onlineResource" select="//gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='OGC:WMS'][1]/gmd:CI_OnlineResource">
-										<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:protocol' and @id='398.0']/helper/option[@value='OGC:WMS']/text()"/> 
+										<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:protocol' and @id='398.0']/helper/option[@value='OGC:WMS']/text()"/>
 									</xsl:apply-templates>
 									<xsl:apply-templates mode="onlineResource" select="//gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString/text()='OGC:WMS'][position()> 1]/gmd:CI_OnlineResource">
 										<xsl:with-param name="DefinitionValue"/>
@@ -278,7 +279,7 @@
 								*/gmd:role/*/@codeListValue = 'resourceProvider']) > 0">
 									<tr valign="top">
 										<td class="print_ttl">
-											<xsl:value-of select="$schemaLabels19139/element[@name='gmd:contact' and @id='8.0' and @context='gmd:MD_Metadata']/label/text()"/>	
+											<xsl:value-of select="$schemaLabels19139/element[@name='gmd:contact' and @id='8.0' and @context='gmd:MD_Metadata']/label/text()"/>
 										</td>
 										<td class="print_data">
 										</td>
@@ -301,23 +302,23 @@
 									<td class="print_data"/>
 								</tr>
 								<xsl:apply-templates select="/root/gmd:MD_Metadata/gmd:fileIdentifier">
-									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:fileIdentifier']/label/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:fileIdentifier']/label/text()"/>
 								</xsl:apply-templates>
 
 								<xsl:apply-templates select="//gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString/text()='WWW:LINK-1.0-http--metadata-URL']/gmd:linkage">
-									<xsl:with-param name="DefinitionValue" select="$schemaStrings/DOIURL/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaStrings/DOIURL/text()"/>
 								</xsl:apply-templates>
 
 								<xsl:apply-templates select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
-									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:date']/label/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:date']/label/text()"/>
 								</xsl:apply-templates>
 
 								<xsl:apply-templates select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:editionDate">
-									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:editionDate']/label/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:editionDate']/label/text()"/>
 								</xsl:apply-templates>
 
 								<xsl:apply-templates select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:edition">
-									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:edition']/label/text()"/> 
+									<xsl:with-param name="DefinitionValue" select="$schemaLabels/element[@name='gmd:edition']/label/text()"/>
 								</xsl:apply-templates>
 
 
@@ -446,7 +447,7 @@
 						</xsl:element>
 					</td>
 				</xsl:otherwise>
-			</xsl:choose> 
+			</xsl:choose>
 		</tr>
 	</xsl:template>
 
@@ -472,7 +473,7 @@
 
 		<tr valign="top">
 			<td class="print_desc">
-				<xsl:value-of select="$schemaLabels19139/element[@name='gmd:EX_GeographicBoundingBox' and @id='343.0']/label/text()"/>	
+				<xsl:value-of select="$schemaLabels19139/element[@name='gmd:EX_GeographicBoundingBox' and @id='343.0']/label/text()"/>
 			</td>
 			<td class="print_data">
 
@@ -490,11 +491,11 @@
 						</td>
 						<td class="print_bounding">
 							<img class="result-photo"
-                 src="{root/url}/geonetwork/srv/fre/region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
-						</td>	
+                 src="{util:getSettingValue('nodeUrl')}eng/region.getmap.png?mapsrs=EPSG:3857&amp;width=250&amp;background=osm&amp;geomsrs=EPSG:4326&amp;geom={$box}"/>
+						</td>
 						<td class="print_bounding">
 							<xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, $numberFormat)"/>
-						</td>									
+						</td>
 					</tr>
 					<tr>
 						<td/>
@@ -540,7 +541,7 @@
           &#13;
           <xsl:for-each select="$mail[contains(text(), '@')]">
             <a href="mailto:{.}" title="{.}">
-              <img src="{root/url}/geonetwork/images/mail.png"/>
+              <img src="{util:getSettingValue('nodeUrl')}../images/mail.png"/>
             </a>
           </xsl:for-each>
           <xsl:if test="position() != last()"><br/></xsl:if>
