@@ -541,7 +541,7 @@
           &#13;
           <xsl:for-each select="$mail[contains(text(), '@')]">
             <a href="mailto:{.}" title="{.}">
-              <img src="{root/url}/geonetwork/images/mail.png"/>
+              <img src="{util:getSettingValue('nodeUrl')}../images/mail.png"/>
             </a>
           </xsl:for-each>
           <xsl:if test="position() != last()"><br/></xsl:if>
