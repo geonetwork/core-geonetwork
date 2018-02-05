@@ -31,6 +31,7 @@
     "recordType-s": "Annuaire",
     "recordType-t": "Gabarit pour élément d'annuaire",
     "UserAdmin": "Utilisateur administrateur",
+    "tooManyItemsInSelection": "Le panier ne peut contenir que {{maxSize}} éléments.",
     "_cat": "Catégorie",
     "categories": "Catégories",
     "learnTheApi": "Apprendre à utiliser l'API REST.",
