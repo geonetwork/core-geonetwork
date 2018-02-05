@@ -227,7 +227,35 @@
       searchSettings.formatter = {
         defaultUrl: function(md) {
           var url;
-          if(md.getSchema() == 'iso19139.sdn-product') {
+
+          // a formatter is specified in the configuration: use it
+          // else: determine formatter url based on schema
+          if (searchSettings.metadataFormatter) {
+            switch (searchSettings.metadataFormatter) {
+              case 'checkpoint-tdp':
+              case 'checkpoint-dps':
+              case 'medsea':
+                url = 'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' +
+                  searchSettings.metadataFormatter + '&uuid=' + md.getUuid();
+                break;
+              case 'emodnet-hydrography':
+              case 'emodnet-bathymetry':
+                url = 'md.format.xml?root=div&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + md.getUuid();
+                break;
+              case 'seadatanet':
+                url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+                break;
+              case 'emodnet':
+                url = 'md.format.xml?xsl=emodnet&uuid=' + md.getUuid();
+                break;
+              case 'sextant':
+                url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+                break;
+              default:
+                url = 'md.format.xml?xsl=' + searchSettings.metadataFormatter +
+                  '&uuid=' + md.getUuid();
+            }
+          } else if(md.getSchema() == 'iso19139.sdn-product') {
             url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19139.emodnet.hydrography') {
             url = 'md.format.xml?xsl=emodnet&uuid=' + md.getUuid();
@@ -462,6 +490,9 @@
               }
             }
           );
+        }
+        if(sxtSettings.metadataFormatter)  {
+          searchSettings.metadataFormatter = sxtSettings.metadataFormatter;
         }
       }
 
