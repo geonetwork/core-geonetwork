@@ -175,7 +175,9 @@
                           controller.finishRequest(elem, scope.relationFound);
                         }
                      } , function() {
+                      if (controller) {
                         controller.finishRequest(elem, false);
+                      }
                   });
                 }
               };
