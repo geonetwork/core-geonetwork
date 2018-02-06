@@ -353,6 +353,7 @@
   "fullyOutsideOf": "Fully outside of",
   "encloses": "Enclosing",
   "within": "Within",
+  "within_bbox": "Within",
   "transferOwnership": "Transfer Ownership",
   "selectNewOwner": "Select New Owner",
   "selectGroup": "Select Group",

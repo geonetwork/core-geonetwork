@@ -22,37 +22,15 @@
 
 package org.fao.geonet.kernel.search;
 
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
-
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.annotation.PreDestroy;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -105,11 +83,12 @@ import org.fao.geonet.kernel.search.spatial.IntersectionFilter;
 import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
 import org.fao.geonet.kernel.search.spatial.OrSpatialFilter;
+import org.fao.geonet.kernel.search.spatial.OverlapsBBoxFilter;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
-import org.fao.geonet.kernel.search.spatial.WithinFilter;
+import org.fao.geonet.kernel.search.spatial.WithinBBoxFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -128,16 +107,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.util.Assert;
-
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.DATABASE_CHANGE_DATE;
 
 /**
  * Indexes metadata using Lucene.
@@ -1567,7 +1564,8 @@ public class SearchManager implements ISearchManager {
                 types.put(Geonet.SearchResult.Relation.INTERSECTION.toLowerCase(), constructor(IntersectionFilter.class));
                 types.put(Geonet.SearchResult.Relation.OVERLAPS.toLowerCase(), constructor(OverlapsFilter.class));
                 types.put(Geonet.SearchResult.Relation.TOUCHES.toLowerCase(), constructor(TouchesFilter.class));
-                types.put(Geonet.SearchResult.Relation.WITHIN.toLowerCase(), constructor(WithinFilter.class));
+                types.put(Geonet.SearchResult.Relation.WITHIN_BBOX.toLowerCase(), constructor(WithinBBoxFilter.class));
+                types.put(Geonet.SearchResult.Relation.OVERLAPS_BBOX.toLowerCase(), constructor(OverlapsBBoxFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(BeyondFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(DWithinFilter.class));
             } catch (Exception e) {

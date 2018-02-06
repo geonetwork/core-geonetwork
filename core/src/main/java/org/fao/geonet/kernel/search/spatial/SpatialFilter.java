@@ -92,8 +92,8 @@ public abstract class SpatialFilter extends Filter {
     private org.opengis.filter.Filter _spatialFilter;
     private Map<String, FeatureId> _unrefinedMatches;
     private boolean warned = false;
-    private int _numHits;
-    private int _hits = 0;
+    protected int _numHits;
+    protected int _hits = 0;
 
     protected SpatialFilter(Query query, int numHits, Geometry geom, Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor) throws IOException {
         this._query = query;
@@ -106,7 +106,7 @@ public abstract class SpatialFilter extends Filter {
         // _index.query returns geometries that intersect with provided envelope. To use later a spatial filter that
         // provides geometries that don't intersect with the query envelope (_geom) should be used a full extent
         // envelope in this method, instead of the query envelope (_geom)
-        if (_spatialFilter.getClass().getName().equals("org.geotools.filter.spatial.DisjointImpl")) {
+        if (_spatialFilter!=null && _spatialFilter.getClass().getName().equals("org.geotools.filter.spatial.DisjointImpl")) {
             this._geom = WORLD_BOUNDS;
         }
     }
@@ -238,7 +238,7 @@ public abstract class SpatialFilter extends Filter {
                 for (int doc : docIndexLookup.get(feature.getIdentifier())) {
                     bits.set(doc);
                 }
-            };
+            }
         } catch (TopologyException e) {
             if (!warned) {
                 warned = true;
@@ -254,10 +254,10 @@ public abstract class SpatialFilter extends Filter {
     protected synchronized Map<String, FeatureId> unrefinedSpatialMatches() {
         if (_unrefinedMatches == null) {
             SpatialIndex spatialIndex = sourceAccessor.two();
-            List<Pair<FeatureId, String>> fids = spatialIndex.query(_geom.getEnvelopeInternal());
+            List<SpatialIndexWriter.Data> fids = spatialIndex.query(_geom.getEnvelopeInternal());
             _unrefinedMatches = new HashMap<>();
-            for (Pair<FeatureId, String> match : fids) {
-                _unrefinedMatches.put(match.two(), match.one());
+            for (SpatialIndexWriter.Data match : fids) {
+                _unrefinedMatches.put(match.getMetadataId(), match.getFeatureId());
             }
         }
         return _unrefinedMatches;
