@@ -46,6 +46,7 @@
              gnSearchManagerService, gnUtilityService, $timeout) {
 
       $scope.searchObj = {
+        internal: true,
         params: {
           template: 'y or s or n',
           sortBy: 'title'

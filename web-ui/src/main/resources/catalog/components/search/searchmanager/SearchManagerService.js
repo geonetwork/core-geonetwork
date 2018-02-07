@@ -191,9 +191,10 @@
 
       // TODO: remove search call to use params instead
       // of url and use gnSearch only (then rename it to search)
-      var gnSearch = function(params, error) {
+      var gnSearch = function(params, error, internal) {
         var defer = $q.defer();
-        gnHttp.callService('search', params).
+        gnHttp.callService(internal ? 'internalSearch' : 'search',
+            params).
             success(function(data, status) {
               defer.resolve(format(data));
             }).
