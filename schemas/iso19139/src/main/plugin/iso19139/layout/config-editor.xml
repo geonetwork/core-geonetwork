@@ -319,6 +319,9 @@
       <name>srv:operationName</name>
       <name>srv:identifier</name>
       <name>srv:serviceType</name>
+      <name ancestor="gmd:thesaurusName">gmd:code</name>
+      <name ancestor="gmd:aggregateDataSetIdentifier">gmd:code</name>
+      <name ancestor="gmd:CI_Citation">gmd:code</name>
     </exclude>
   </multilingualFields>
 
