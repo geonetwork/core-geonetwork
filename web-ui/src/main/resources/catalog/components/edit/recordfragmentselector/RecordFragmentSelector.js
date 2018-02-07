@@ -54,6 +54,7 @@
                pre: function preLink(scope) {
                  scope.searchObj = {
                    any: '',
+                   internal: true,
                    params: {
                      any: '',
                      from: 1,
