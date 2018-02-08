@@ -28,6 +28,7 @@ var gnHarvesterwebdav = {
                 "oneRunOnly" : false,
                 "status" : "active",
                 "recurse" : true,
+                "overrideUuid" : "SKIP",
                 "subtype" : "waf"
             },
             "privileges" : [ {
@@ -62,6 +63,7 @@ var gnHarvesterwebdav = {
                 + '    </account>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '    <recurse>' + h.options.recurse + '</recurse>'
