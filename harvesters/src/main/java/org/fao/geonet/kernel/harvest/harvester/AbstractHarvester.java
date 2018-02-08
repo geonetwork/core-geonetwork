@@ -991,6 +991,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
         settingMan.add(ID_PREFIX + optionsId, "every", params.getEvery());
         settingMan.add(ID_PREFIX + optionsId, "oneRunOnly", params.isOneRunOnly());
+        settingMan.add(ID_PREFIX + optionsId, "overrideUUID", params.getOverrideUuid());
         settingMan.add(ID_PREFIX + optionsId, "status", status);
 
         //--- setup content node ---------------------------------------

@@ -40,10 +40,27 @@
         transclude: true,
         scope: {
           harvester: '=gnHarvesterIdentification'
+          //               lang: '@lang'
         },
         templateUrl: '../../catalog/components/admin/harvester/partials/' +
             'identification.html',
         link: function(scope, element, attrs) {
+          scope.lang = 'eng'; // FIXME
+          scope.hideIconPicker = true; // hide or show the icon picker
+          scope.openTranslationModal = function() {
+            var translations = scope.harvester.site.translations;
+            if (translations === undefined || angular.isArray(translations)) {
+              translations = {};
+              scope.harvester.site.translations = translations;
+            }
+
+            for (var i = 0; i < scope.languages.length; i++) {
+              if (translations[scope.languages[i].id] === undefined) {
+                translations[scope.languages[i].id] = scope.harvester.site.name;
+              }
+            }
+            $('#translationModal').modal('show');
+          };
           $http.get('admin.harvester.info?type=icons&_content_type=json',
               {cache: true})
               .success(function(data) {
@@ -51,13 +68,13 @@
               });
           // $http.get('admin.usergroups.list@json?id=' + 1)
           //          .success(function(data) {
-          $http.get('../api/languages', {cache: true})
+          $http.get('info?_content_type=json&type=languages', {cache: true})
               .success(function(data) {
-                scope.languages = data;
+                scope.languages = data.language;
               });
-          $http.get('../api/groups', {cache: true})
+          $http.get('admin.group.list@json', {cache: true})
               .success(function(data) {
-                scope.groups = data;
+                scope.groups = data !== 'null' ? data : null;
               });
         }
       };
@@ -166,19 +183,21 @@
                } else if (who == 'allGroup') {
                  scope.allGroup = !scope.allGroup;
                  angular.forEach(scope.groups, function(g) {
-                   scope.selectedPrivileges[g.id] = scope.allGroup;
+                   scope.selectedPrivileges[g['@id']] = scope.allGroup;
                  });
                }
              };
              function loadGroups() {
-               $http.get('../api/groups?withReservedGroup=true',
+               $http.get('info?_content_type=json&' +
+               'type=groupsIncludingSystemGroups',
                {cache: true})
                .success(function(data) {
-                 scope.groups = data;
+                 scope.groups = data !== 'null' ? data.group : null;
                });
              }
 
              var initHarvesterPrivileges = function() {
+
                angular.forEach(scope.harvester.privileges, function(g) {
                  scope.selectedPrivileges[g['@id']] = true;
                });
@@ -241,6 +260,29 @@
               scope.setIcon = function(icon) {
                 scope.logo = icon;
               };
+            }
+          };
+        }]);
+  
+  /**
+   * Extra fields common for all harvesters
+   */
+  module.directive('gnHarvesterExtras',
+      ['$http', '$translate', '$rootScope',
+        function($http, $translate, $rootScope) {
+
+          return {
+            restrict: 'A',
+            replace: false,
+            templateUrl: '../../catalog/components/admin/harvester/partials/' +
+                'extras.html',
+
+            link: function(scope, element, attrs) {
+
+              $http.get('../api/languages', {cache: true})
+                  .success(function(data) {
+                    scope.languages = data;
+                  });
             }
           };
         }]);

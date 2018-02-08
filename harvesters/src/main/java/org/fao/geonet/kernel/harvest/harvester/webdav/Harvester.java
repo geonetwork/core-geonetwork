@@ -24,6 +24,7 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -43,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -97,6 +99,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
     //--------------------------------------------------------------------------
     private DataManager dataMan;
+    
+    private MetadataRepository metadataRepository;
 
     //--------------------------------------------------------------------------
     //---
@@ -132,10 +136,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         this.params = params;
 
         result = new HarvestResult();
+        result.addedMetadata = 0;
+        result.uuidSkipped = 0;
+        result.datasetUuidExist = 0;
+        result.couldNotInsert = 0;
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
         schemaMan = gc.getBean(SchemaManager.class);
+        metadataRepository = gc.getBean(MetadataRepository.class);
     }
 
     //---------------------------------------------------------------------------
@@ -260,7 +269,26 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         // 3.- If there is a collision of uuid with existent metadata, use a
         // random one
         if (dataMan.existsMetadataUuid(uuid)) {
-            uuid = null;
+            result.datasetUuidExist++;
+            switch(params.getOverrideUuid()){
+            case OVERRIDE:
+                UriMapper localUris = new UriMapper(context, 
+                        metadataRepository.findOneByUuid(uuid).getHarvestInfo().getUuid());
+                List<RecordInfo> records = localUris.getRecords(rf.getPath());
+                updateMetadata(rf, records.get(0));
+                log.info("Overriding record with uuid " + uuid);
+                result.updatedMetadata++;
+                return;
+            case RANDOM:
+                log.info("Generating random uuid for remote record with uuid " + uuid);
+                uuid = null;
+                break;
+            case SKIP:
+                log.info("Skipping record with uuid " + uuid);
+                result.uuidSkipped++;
+            default:
+                return;
+            }
         }
 
         // 4.- If we still don't have a clear UUID, use a random one (backup
@@ -273,10 +301,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             // --- set uuid inside metadata and get new xml
             try {
                 md = dataMan.setUUID(schema, uuid, md);
+                result.addedMetadata++;
             } catch (Exception e) {
                 log.error("  - Failed to set uuid for metadata with remote path : "
                     + rf.getPath());
-                errors.add(new HarvestError(context, e, this.log));
+                errors.add(new HarvestError(this.context, e, this.log));
+                result.couldNotInsert++;
                 return;
             }
         }
@@ -373,6 +403,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             dataMan.validate(schema, md);
             return true;
         } catch (Exception e) {
+            log.info("Validation failed. Error: "+e.getMessage());
             return false;
         }
     }
@@ -488,7 +519,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             dataMan.flush();
 
             dataMan.indexMetadata(record.id, true, null);
-            result.updatedMetadata++;
         }
     }
 
