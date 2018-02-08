@@ -361,6 +361,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false,
             defaultValue = "false")
             boolean withXLinkAttribute,
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+            boolean addSchemaLocation,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = "application/x-gn-mef-2-zip"
@@ -389,7 +393,7 @@ public class MetadataApi implements ApplicationContextAware {
             boolean skipUUID = false;
             file = MEFLib.doExport(
                 context, metadataUuid, format.toString(),
-                skipUUID, withXLinksResolved, withXLinkAttribute
+                skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
             );
         } else {
             Set<String> tmpUuid = new HashSet<String>();
@@ -429,7 +433,7 @@ public class MetadataApi implements ApplicationContextAware {
             Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
                 + " records.");
 
-            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute);
+            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation);
         }
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
             "inline; filename=\"%s.zip\"",

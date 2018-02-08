@@ -41,6 +41,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -48,6 +49,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -119,26 +121,20 @@ public class MEFLib {
     // --------------------------------------------------------------------------
 
     public static Path doExport(ServiceContext context, String uuid,
-                                String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+                                String format, boolean skipUUID, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
         return MEFExporter.doExport(context, uuid, Format.parse(format),
-            skipUUID, resolveXlink, removeXlinkAttribute);
+            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
     }
 
     // --------------------------------------------------------------------------
 
     public static Path doMEF2Export(ServiceContext context,
-                                    Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
-        throws Exception {
-        return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-            skipUUID, stylePath, resolveXlink, removeXlinkAttribute, false);
-    }
-
-    public static Path doMEF2Export(ServiceContext context,
                                     Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink,
-                                    boolean removeXlinkAttribute, boolean skipError)
+                                    boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation)
         throws Exception {
         return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-            skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError);
+            skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation);
     }
 
     // --------------------------------------------------------------------------
@@ -177,7 +173,10 @@ public class MEFLib {
      * @return A pair composed of the domain object metadata AND the record to be exported (includes
      * Xlink resolution and filters depending on user session).
      */
-    static Pair<Metadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+    static Pair<Metadata, String> retrieveMetadata(ServiceContext context, String uuid,
+                                                   boolean resolveXlink,
+                                                   boolean removeXlinkAttribute,
+                                                   boolean addSchemaLocation)
         throws Exception {
 
         final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
@@ -197,6 +196,26 @@ public class MEFLib {
         boolean withEditorValidationErrors = false;
         Element metadataForExportXml = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
         metadataForExportXml.removeChild("info", Edit.NAMESPACE);
+
+        if (addSchemaLocation) {
+            SchemaManager schemaManager = context.getBean(SchemaManager.class);
+
+            Attribute schemaLocAtt = schemaManager.getSchemaLocation(
+                metadata.getDataInfo().getSchemaId(), context);
+
+            if (schemaLocAtt != null) {
+                if (metadataForExportXml.getAttribute(
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
+                    metadataForExportXml.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    metadataForExportXml.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    metadataForExportXml.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                }
+            }
+        }
+
         String metadataForExportAsString = Xml.getString(metadataForExportXml);
 
         // Prepend xml declaration if needed.

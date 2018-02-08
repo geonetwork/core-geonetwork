@@ -87,7 +87,7 @@ public class Delete extends BackupFileService {
         //--- backup metadata in 'removed' folder
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && backupFile)
-            backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false));
+            backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false));
 
         //-----------------------------------------------------------------------
         //--- remove the metadata directory including the public and private directories.
