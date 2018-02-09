@@ -506,10 +506,7 @@
                     if (response.status.processSucceeded &&
                         gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map, scope.wpsLink.layer, {
-                            exclude: /^OUTPUT_/i
-                          }
-                      );
+                          response, scope.map, scope.wpsLink.layer);
                     }
                   }
                 }
