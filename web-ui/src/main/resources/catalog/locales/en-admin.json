@@ -1114,6 +1114,8 @@
     "ui-languages-help": "Define the list of language in the language selector",
     "ui-mod-home": "Home page",
     "ui-appUrl": "Application URL",
+    "ui-advancedSearchTemplate": "Template for advanced search form",
+    "ui-advancedSearchTemplate-help": "Allows to customize the advanced search form with a custom template.",
     "ui-mod-search": "Search application",
     "ui-hitsperpageValues": "Number of records per page",
     "ui-paginationInfo": "Default number of records per page",
