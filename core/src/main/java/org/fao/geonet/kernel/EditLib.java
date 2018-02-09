@@ -487,10 +487,27 @@ public class EditLib {
         for (Map.Entry<String, AddElemValue> entry : xmlAndXpathInputs.entrySet()) {
             String xpathProperty = entry.getKey();
             AddElemValue propertyValue = entry.getValue();
-            boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValue,
-                createXpathNodeIfNotExist);
-            if (updated) {
-                numUpdated++;
+
+            final boolean isMultipleMode = propertyValue.getNodeValue() != null &&
+                propertyValue.getNodeValue().getName()
+                    .startsWith(SpecialUpdateTags.MULTIPLE);
+
+            if (isMultipleMode) {
+                for(Element updateVal : (List<Element>) propertyValue.getNodeValue().getChildren()) {
+                    AddElemValue propertyValueToProcess = new AddElemValue(updateVal);
+
+                    boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValueToProcess,
+                        createXpathNodeIfNotExist);
+                    if (updated) {
+                        numUpdated++;
+                    }
+                }
+            } else {
+                boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValue,
+                    createXpathNodeIfNotExist);
+                if (updated) {
+                    numUpdated++;
+                }
             }
         }
         return numUpdated;
@@ -2008,21 +2025,26 @@ public class EditLib {
      */
     public static interface SpecialUpdateTags {
         /**
-         * Replace the content of the target
+         * Replace the content of the target.
          */
         String REPLACE = "gn_replace";
         /**
-         * Add to the target
+         * Add to the target.
          */
         String ADD = "gn_add";
         /**
-         * Create the target element and add
+         * Create the target element and add.
          */
         String CREATE = "gn_create";
         /**
-         * Delete the target
+         * Delete the target.
          */
         String DELETE = "gn_delete";
+
+        /**
+         * Multiple target updates
+         */
+        String MULTIPLE = "gn_multiple";
     }
 
     private static class SelectResult {
