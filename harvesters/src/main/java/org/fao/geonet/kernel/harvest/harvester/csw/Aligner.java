@@ -392,6 +392,14 @@ public class Aligner extends BaseAligner {
                 boolean index = false;
                 String language = context.getLanguage();
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
+                
+                if(force) {
+                    //change ownership of metadata to new harvester
+                    metadata.getHarvestInfo().setUuid(params.getUuid());
+                    metadata.getSourceInfo().setSourceId(params.getUuid());
+
+                    context.getBean(MetadataRepository.class).save(metadata);
+                }
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -403,7 +411,7 @@ public class Aligner extends BaseAligner {
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, Math.random() < 0.01, null);
+                dataMan.indexMetadata(id, true, null);
                 result.updatedMetadata++;
             }
         }
