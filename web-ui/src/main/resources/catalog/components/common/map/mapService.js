@@ -1363,6 +1363,16 @@
 
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name, map);
+
+              // Check if require proxy
+              var tmp_url = url.split('/');
+              tmp_url = tmp_url[0] + '/' + tmp_url[1] + '/' + tmp_url[2] + '/';
+              
+              if ($.inArray(tmp_url, gnGlobalSettings.requireProxy) !== -1) {
+                url = gnGlobalSettings.proxyUrl +
+                    encodeURIComponent(url);
+              }
+              
               gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
