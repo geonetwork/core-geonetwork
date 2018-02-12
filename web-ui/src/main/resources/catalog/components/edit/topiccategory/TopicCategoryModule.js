@@ -24,16 +24,10 @@
 (function() {
   goog.provide('gn_topiccategory');
 
-
-
-
-
-  goog.require('gn_multiselect');
   goog.require('gn_topiccategory_directive');
   goog.require('gn_topiccategory_service');
 
   angular.module('gn_topiccategory', [
-    'gn_multiselect',
     'gn_topiccategory_service',
     'gn_topiccategory_directive']);
 })();

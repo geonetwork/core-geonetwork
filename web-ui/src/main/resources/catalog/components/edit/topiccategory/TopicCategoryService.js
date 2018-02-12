@@ -53,10 +53,10 @@
           'gnUrlUtils',
           'TopicCategory',
           function($q, $rootScope, $http, gnUrlUtils, TopicCategory) {
-            var getTopicCategoriesSearchUrl = function() {
-              return '../api/standards/iso19139/codelists/gmd%3AMD_TopicCategoryCode';
+            var getTopicCategoriesSearchUrl = function(schema) {
+              return '../api/standards/' + (schema || 'iso19139') +
+                     '/codelists/topicCategory';
             };
-
 
             var parseTopicCategoriesResponse = function(data, dataToExclude) {
               var listOfTopicCategories = [];
@@ -79,16 +79,11 @@
               return listOfTopicCategories;
             };
 
+
             return {
-              /**
-             * Number of topic categories returned by search (autocompletion
-             * or selection, ...)
-             */
-              DEFAULT_NUMBER_OF_RESULTS: 200,
               /**
              * Number of topic categories to display in autocompletion list
              */
-              DEFAULT_NUMBER_OF_SUGGESTIONS: 30,
               getTopicCategoryAutocompleter: function(config) {
                 var topicCategoryAutocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -105,10 +100,9 @@
                     }
                     return 0;
                   },
-                  limit: config.max || this.DEFAULT_NUMBER_OF_RESULTS,
+                  limit: 100, // Topic category is limited to a small number of values
                   remote: {
-                    wildcard: 'QUERY',
-                    url: this.getTopicCategoriesSearchUrl(),
+                    url: getTopicCategoriesSearchUrl(config.schema),
                     filter: function(data) {
                       return parseTopicCategoriesResponse(data, config.dataToExclude);
                     }
@@ -117,32 +111,15 @@
                 topicCategoryAutocompleter.initialize();
                 return topicCategoryAutocompleter;
               },
-              getTopicCategoriesSearchUrl: getTopicCategoriesSearchUrl,
-              /**
-             * Convert JSON response to array of TopicCategory object.
-             * Filter element if dataToExclude parameter defined.
-             */
-              parseTopicCategoriesResponse: parseTopicCategoriesResponse,
-              getXMLSnippets: function(topicCategories) {
-                var xml = [];
-                angular.forEach(topicCategories, function(t) {
-                  xml.push('<gmd:topicCategory xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
-                  ' <gmd:MD_TopicCategoryCode>' + t + '</gmd:MD_TopicCategoryCode>' +
-                  '</gmd:topicCategory>');
-                });
 
-                return xml;
-              },
               getTopicCategories: function() {
                 var defer = $q.defer();
                 var url = getTopicCategoriesSearchUrl();
                 $http.get(url, { cache: true }).
-                success(function(data, status) {
+                success(function(data) {
                   defer.resolve(parseTopicCategoriesResponse(data));
                 }).
                 error(function(data, status) {
-                  //                TODO handle error
-                  //                defer.reject(error);
                 });
                 return defer.promise;
               },

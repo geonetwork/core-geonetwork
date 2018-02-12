@@ -39,11 +39,11 @@
    *
    */
   module.directive('gnTopiccategorySelector',
-      ['$compile', '$filter', '$timeout', '$translate',
-       'gnTopicCategoryService', 'gnEditor',
+      ['$compile', '$timeout', '$translate',
+       'gnTopicCategoryService', 'gnCurrentEdit',
        'TopicCategory', 'gnLangs',
-       function($compile, $filter, $timeout, $translate,
-                gnTopicCategoryService, gnEditor, TopicCategory, gnLangs) {
+       function($compile, $timeout, $translate,
+                gnTopicCategoryService, gnCurrentEdit, TopicCategory, gnLangs) {
 
          return {
            restrict: 'A',
@@ -56,94 +56,78 @@
            },
            templateUrl: '../../catalog/components/edit/topiccategory/partials/' +
            'topiccategory.html',
-           link: function(scope, element, attrs) {
-              console.log('gnTopicCategorySelector');
-
-             scope.max = gnTopicCategoryService.DEFAULT_NUMBER_OF_RESULTS;
-             scope.filter = null;
-             scope.results = null;
+           link: function(scope) {
              scope.snippet = null;
-             scope.isInitialized = false;
-             scope.refBackup = scope.ref;
-             scope.invalidTopicCategoryMatch = false;
              scope.selected = [];
              scope.initialTopicCategories = [];
+             var xpathBySchema = {
+               'iso19139': {
+                 xpath: 'gmd:identificationInfo/*/gmd:topicCategory',
+                 tpl: '<gmd:topicCategory ' +
+                 'xmlns:gmd="http://www.isotc211.org/2005/gmd">' +
+                 '<gmd:MD_TopicCategoryCode>{{t}}</gmd:MD_TopicCategoryCode>' +
+                 '</gmd:topicCategory>'
+               },
+               'iso19115-3': {
+                 xpath: 'mdb:identificationInfo/*/mri:topicCategory',
+                 tpl: '<mri:topicCategory xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0">' +
+                        '<mri:MD_TopicCategoryCode>{{t}}</mri:MD_TopicCategoryCode>\n' +
+                      '</mri:topicCategory>'
+               }
+             }
 
+             var schema = gnCurrentEdit.schema;
+             scope.xpath = xpathBySchema[schema].xpath;
+
+             // Initial values are comma separated encoded
              if (scope.values) {
                scope.initialTopicCategories = scope.values.split(',');
              }
 
              scope.maxTagsLabel = scope.maxTags || '∞';
 
-             scope.resetTopicCategories = function() {
-               scope.selected = [];
-               scope.ref = scope.refBackup;
-               scope.invalidTopicCategoryMatch = false;
-               checkState();
-             };
-
              scope.buildFinalSnippet = function() {
-               var snippet = "";
-
-               if (scope.snippets) {
-                 for(var i = 0; i < scope.snippets.length; i++) {
-                   snippet += "<gn_create>" +
-                     scope.snippets[i] + "</gn_create>";
-                 }
+               if (scope.snippets && scope.snippets.length) {
+                 return '<gn_replace>' +
+                          scope.snippets.join('&amp;&amp;&amp;') +
+                        '</gn_replace>';
+               } else {
+                 return '';
                }
-
-               return "<gn_multiple><gn_delete></gn_delete>" +
-                 snippet + "</gn_multiple>";
              };
-
 
              var init = function() {
+              // Load topic category code list, then init widget
+               gnTopicCategoryService.getTopicCategories()
+               .then(function(listOfTopicCategories) {
 
-               // Nothing to load - init done
-               scope.isInitialized = scope.initialTopicCategories.length === 0;
-
-               if (scope.isInitialized) {
-                 checkState();
-               } else {
-
-                 // Check that all initial keywords are in the thesaurus
-                 var counter = 0;
-                 gnTopicCategoryService.getTopicCategories()
-                 .then(function(listOfTopicCategories) {
-                   angular.forEach(scope.initialTopicCategories, function(topicCategory) {
-                     var existingTopicCategory = null;
-                     for (var i = 0; i < listOfTopicCategories.length; i++) {
-                       if (listOfTopicCategories[i].getId() == topicCategory) {
-                         existingTopicCategory = listOfTopicCategories[i];
-                       }
+                 angular.forEach(scope.initialTopicCategories, function(topicCategory) {
+                   var existingTopicCategory = null;
+                   for (var i = 0; i < listOfTopicCategories.length; i++) {
+                     if (listOfTopicCategories[i].getId() == topicCategory) {
+                       existingTopicCategory = listOfTopicCategories[i];
                      }
+                   }
 
-                     if (existingTopicCategory) {
-                       counter++;
-                       scope.selected.push(existingTopicCategory);
-                     }
-                   });
-
-                   // Init done when all keywords are selected
-                   if (counter === scope.initialTopicCategories.length) {
-                     scope.isInitialized = true;
-                     scope.invalidTopicCategoryMatch =
-                         scope.selected.length !== scope.initialTopicCategories.length;
-
-                     // Get the matching XML snippet for
-                     // the initial set of keywords
-                     // once the loaded keywords are all selected.
-                     checkState();
+                   if (existingTopicCategory) {
+                     scope.selected.push(existingTopicCategory);
                    }
                  });
-               }
 
-               // Then register search filter change
-               scope.$watch('filter', search);
+                 // Build XML for current topic categories
+                 getSnippet();
+
+                 scope.$watch('results', getSnippet);
+                 scope.$watch('selected', getSnippet);
+
+                 // Init autocompleter
+                 initTagsInput(listOfTopicCategories);
+               });
+
              };
 
              // Init typeahead and tag input
-             var initTagsInput = function() {
+             var initTagsInput = function(listOfTopicCategories) {
                var id = '#tagsinput_' + scope.ref;
                $timeout(function() {
                  try {
@@ -158,103 +142,67 @@
                      $(id).tagsinput('add', topicCategory);
                    });
 
-                   // Load all keywords from codelist on startup
-                   gnTopicCategoryService.getTopicCategories()
-                    .then(function(listOfTopicCategories) {
 
-                     var field = $(id).tagsinput('input');
-                     field.attr('placeholder',
-                     $translate.instant('searchTopiccategory'));
+                   var field = $(id).tagsinput('input');
+                   field.attr('placeholder',
+                   $translate.instant('searchTopicCategory'));
 
-                     var topicCategoriesAutocompleter =
-                     gnTopicCategoryService.getTopicCategoryAutocompleter({
-                       dataToExclude: scope.selected,
-                       lang: gnLangs.current
-                     });
+                   var topicCategoriesAutocompleter =
+                   gnTopicCategoryService.getTopicCategoryAutocompleter({
+                     dataToExclude: scope.selected,
+                     lang: gnLangs.current,
+                     schema: schema,
+                     data: listOfTopicCategories
+                   });
 
-                     // Init typeahead
-                     field.typeahead({
-                       minLength: 0,
-                       highlight: true
-                       // template: '<p>{{label}}</p>'
-                       // TODO: could be nice to have definition
-                     }, {
-                       name: 'topiccategory',
-                       displayKey: 'label',
-                       source: topicCategoriesAutocompleter.ttAdapter()
-                     }).bind('typeahead:selected',
-                     $.proxy(function(obj, topiccategory) {
-                       // Add to tags
-                       this.tagsinput('add', topiccategory);
 
-                       // Update selection and snippet
-                       angular.copy(this.tagsinput('items'), scope.selected);
-                       getSnippet(); // FIXME: should not be necessary
-                       // as there is a watch on it ?
+                   // Init typeahead
+                   field.typeahead({
+                     minLength: 0,
+                     highlight: true
+                   }, {
+                     name: 'topiccategory',
+                     displayKey: 'label',
+                     source: topicCategoriesAutocompleter.ttAdapter()
+                   }).bind('typeahead:selected',
+                   $.proxy(function(obj, topiccategory) {
+                     // Add to tags
+                     this.tagsinput('add', topiccategory);
 
-                       // Clear typeahead
-                       this.tagsinput('input').typeahead('val', '');
-                     }, $(id))
-                     );
+                     // Update selection and snippet
+                     angular.copy(this.tagsinput('items'), scope.selected);
+                     getSnippet();
+                     scope.$apply();
 
-                     $(id).on('itemRemoved', function() {
-                       angular.copy($(this)
-                       .tagsinput('items'), scope.selected);
-                       getSnippet();
-                     });
+                     // Clear typeahead
+                     this.tagsinput('input').typeahead('val', '');
+                   }, $(id))
+                   );
 
-                     // When clicking the element trigger input
-                     // to show autocompletion list.
-                     // https://github.com/twitter/typeahead.js/issues/798
-                     field.on('typeahead:opened', function() {
-                       var initial = field.val(),
-                       ev = $.Event('keydown');
-                       ev.keyCode = ev.which = 40;
-                       field.trigger(ev);
-                       if (field.val() != initial) {
-                         field.val('');
-                       }
-                       return true;
-                     });
+                   $(id).on('itemRemoved', function() {
+                     angular.copy($(this)
+                     .tagsinput('items'), scope.selected);
+                     getSnippet();
+                     scope.$apply();
+                   });
+
+                   // When clicking the element trigger input
+                   // to show autocompletion list.
+                   // https://github.com/twitter/typeahead.js/issues/798
+                   field.on('typeahead:opened', function() {
+                     var initial = field.val(),
+                     ev = $.Event('keydown');
+                     ev.keyCode = ev.which = 40;
+                     field.trigger(ev);
+                     if (field.val() != initial) {
+                       field.val('');
+                     }
+                     return true;
                    });
                  } catch (e) {
                    console.warn('No tagsinput for ' + id +
                    ', error: ' + e.message);
                  }
-               });
-             };
-
-             var checkState = function() {
-               if (scope.isInitialized && !scope.invalidTopicCategoryMatch) {
-                 getSnippet();
-
-                 scope.$watch('results', getSnippet);
-                 scope.$watch('selected', getSnippet);
-
-                 initTagsInput();
-               } else if (scope.invalidTopicCategoryMatch) {
-                 // invalidate element ref to not trigger
-                 // an update of the record with an invalid
-                 // state ie. topic categories not loaded properly
-                 scope.ref = '';
-               }
-             };
-
-
-             var search = function() {
-               gnTopicCategoryService.getTopicCategories()
-                .then(function(listOfTopicCategories) {
-
-                 // Remove from search already selected topic categories
-                 scope.results = $.grep(listOfTopicCategories, function(n) {
-                   var alreadySelected = true;
-                   if (scope.selected.length !== 0) {
-                     alreadySelected = $.grep(scope.selected, function(s) {
-                       return s.getLabel() === n.getLabel();
-                     }).length === 0;
-                   }
-                   return alreadySelected;
-                 });
                });
              };
 
@@ -267,8 +215,11 @@
              };
 
              var getSnippet = function() {
-               scope.snippets = gnTopicCategoryService
-                .getXMLSnippets(getTopicCategoryIds());
+               var xml = [];
+               angular.forEach(getTopicCategoryIds(), function(t) {
+                 xml.push(xpathBySchema['iso19139'].tpl.replace('{{t}}', t));
+               });
+               scope.snippets = xml;
              };
 
              init();

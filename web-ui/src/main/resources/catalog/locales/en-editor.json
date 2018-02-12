@@ -307,6 +307,7 @@
     "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Your metadata",
     "searchKeyword": "Search ...",
+    "searchTopicCategory": "Search ...",
     "searchOrTypeKeyword": "Type or search ...",
     "tagsAllowed": " tag(s) allowed",
     "suggestionListError": "Oops, something went wrong when retrieving suggestions!",
