@@ -1809,7 +1809,7 @@
     </description>
   </element>
   <!-- ==================================================== -->
-  <element name="gmd:MD_TopicCategoryCode">
+  <element name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <label>Topic category code</label>
     <description>High-level geographic data thematic classification to
       assist in the grouping and
