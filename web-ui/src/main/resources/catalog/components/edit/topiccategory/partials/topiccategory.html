@@ -1,30 +1,22 @@
 <div>
-  <div data-ng-show="invalidTopicCategoryMatch" class="alert alert-danger">
-    <p data-translate="notFoundInThesaurus"
-       data-translate-values="{keywords: initialTopicCategories}"></p>
-    <button class="btn btn-danger pull-right" data-ng-click="resetTopicCategories()">
-      <i class="fa fa-times"></i>&nbsp;<span data-translate="">resetKeywordsAnyway</span>
-    </button>
+  <div class="row">
+    <label class="col-sm-2 control-label">
+      {{label}}
+    </label>
+    <div class="col-sm-10"
+         data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
+         title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}">
+      <input type="text" id="tagsinput_{{ref}}"
+             class="form-control"></input>
+    </div>
   </div>
 
-  <span data-ng-show="!invalidTopicCategoryMatch">
-    <div class="row">
-      <label class="col-sm-2 control-label">
-        {{label}}
-      </label>
-      <div class="col-sm-9"
-           data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
-           title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}">
-        <input type="text" id="tagsinput_{{ref}}"
-               class="form-control"></input>
-      </div>
-    </div>
 
-
-    <!-- The topic categories snippet to insert once received -->
-    <div>
-      <input name="_P{{ref}}" type="hidden" value="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory" />
-      <input name="_P{{ref}}_xml" type="hidden" value="{{buildFinalSnippet()}}" />
-    </div>
-  </span>
+  <!-- The topic categories snippet to insert once received -->
+  <div>
+    <input name="_P{{ref}}"
+           type="hidden"
+           value="{{xpath}}" />
+    <input name="_P{{ref}}_xml" type="hidden" value="{{buildFinalSnippet()}}" />
+  </div>
 </div>
