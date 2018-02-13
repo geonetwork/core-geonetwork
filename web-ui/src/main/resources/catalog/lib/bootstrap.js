@@ -470,6 +470,8 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
 +function ($) {
   'use strict';
 
+  if(window.sxtApiJQuery && window.sxtApiJQuery.fn.collapse) return;
+
   // COLLAPSE PUBLIC CLASS DEFINITION
   // ================================
 
@@ -791,6 +793,8 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
 
 +function ($) {
   'use strict';
+
+  if(window.sxtApiJQuery && window.sxtApiJQuery.fn.modal) return;
 
   // MODAL CLASS DEFINITION
   // ======================
