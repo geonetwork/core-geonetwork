@@ -1,97 +1,192 @@
 <!DOCTYPE html>
-<html xml:lang="en-EN" xmlns="http://www.w3.org/1999/xhtml" lang="en-EN">
-  <head>
-    <title>Sextant API</title>
-  </head>
+<html xmlns:wicket="http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git;a=blob_plain;f=wicket-core/src/main/resources/META-INF/wicket-1.5.xsd;hb=master" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="keywords" content="EMODNET, Oceanography, Chemistry, Data management" />
+	<meta name="author" content="OGS/NODC - MARIS" />
+	<meta name="description" content="EMODnet Chemistry" />
 
-  <body>
-    <div ng-app="gn_search_sextant" ng-controller="GnCatController" class="gn sxt-max-md" sxt-size="auto" ng-include="'../../catalog/views/sextant/templates/index.html'"></div>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script type="text/javascript">
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+	<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+	<link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+	<link rel="apple-touch-icon-precomposed" href="/touch-icon-iphone-precomposed.png" />
 
-      var sxtSettings = {
-        langDetector: {
-          fromHtmlTag: true,
-          regexp: '^\/([a-z]+)\/',
-          lang: 'fr'
-        },
-        configWhat: 'AMBIO',
-        tabOverflow : {
-          search: true,
-          panier: true,
-          map: false
-        },
-        //viewerUrl: 'http://oceanbrowser.net/emodnet/',
-        layerFilter: true,
-        servicesUrl: {
-          wms: [{
-            name: 'Ifremer - Biologie',
-            url: 'ttp://www.ifremer.fr/services/wms/biologie?'
-          }],
-          wmts: [{
-            name: 'Ifremer - maps.ngdc.noaa.gov',
-            url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
-          }]
-        },
-        localisations: [{
-          name: 'United States',
-          extent: [-13884991, 2870341, -7455066, 6338219]
-        }, {
-          name: 'France',
-          extent: [-817059, 4675034, 1719426, 7050085]
-        },{
-          name: 'Brest',
-          extent: [-510281, 6164880, -490464, 6183435]
-        }],
+	<link href="http://www.emodnet-chemistry.eu/css/style.css" rel="stylesheet"/>
 
-        panier: {
-          projs: [{
-            value: '4326',
-            label: 'Geographique - Datum WGS84'
-          }],
-          formats: {
-            vector:[{
-              value: 'ESRI Shapefile',
-              label: 'ESRI Shapefile'
-            }, {
-              value: 'GeoJSON',
-              label: 'GeoJSON'
-            }],
-            raster:[{
-              value: 'GeoTiff',
-              label: 'GeoTiff'
-            }]
-          }
-        },
-        processes: [
-          {
-            applicationProfile: '{ "defaults": { "produit_id": "123456", "limits": "100, 200, 300, 400" } }',
-            label: 'Extraction Surval',
-            name: 'r:extractionsurval',
-            url: 'http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R'
-          }, {
-            labels: {
-              fre: 'Essai de label (FR)',
-              eng: 'Test label (EN)'
-            },
-            name: 'r:extractionsurval',
-            url: 'http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R'
-          }
-        ],
-        theme: 'emodnet-bathymetry',
-        graticule: {
-          type: 'wms',
-          url: 'http://www.ifremer.fr/services/wms1',
-          layer: 'graticule_4326'
-        }
-      };
 
-    </script>
+	<title>Sextant Catalogue service</title>
 
-    <script src="http://localhost:8080/geonetwork/static/lib.js"></script>
-    <script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+	<script src="../js/chat.js"></script>
 
-  </body>
 
+	<link href="http://www.emodnet-chemistry.eu/css/custom.css" rel="stylesheet"/>
+
+	<script src="http://www.emodnet-chemistry.eu/js/sextant-embed.js"></script>
+	<script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+	<script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+
+</head>
+
+<body id="top">
+
+
+	<header>
+
+		<div id="topbar">
+			<div class="wrapper clearfix">
+				<div class="branding">
+					<div id="logo"><a href="../welcome" title="Homepage">EMODnet Chemistry Portal</a></div>
+					<div id="payoff">
+						<h1>Chemistry</h1>
+						<p>Data &amp; products on marine water quality</p>
+					</div>
+				</div>
+
+				<div class="text-right">
+
+
+					<div id="freesearch">
+						<form id="cse-search-box" method="get" action="./catalogue-embed"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="-1.-searchPanel-searchForm" value="" /></div>
+							<input type="search" name="searchText" size="35" id="txtGoogleSearch" placeholder="Search" value=""/>
+							<input type="submit" value="Search" />
+						</form>
+					</div>
+
+
+					<ul id="topnav">
+						<li><a href="../help/contact">Contact us</a></li>
+						<li><a href="../wicket/bookmarkable/it.trieste.ogs.nodc.emodnet.web.SubmitDataContentPage">Submit data</a></li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+
+	</header>
+
+
+	<nav id="nav">
+
+		<a href="#nav" title="Show navigation">Show navigation</a>
+		<a href="#" title="Hide navigation">Hide navigation</a>
+
+		<div class="wrapper clearfix">
+
+			<ul class="clearfix">
+				<li><a href="../about">About</a></li><li><a href="../data">Data</a></li><li class="active"><a href="../products">Products</a></li><li><a href="../documents">Documents</a></li><li><a href="../newsevents">News &amp; Events</a></li><li><a href="../help">Help</a></li>
+
+			</ul>
+
+		</div>
+
+	</nav>
+
+
+	<div id="photobar">
+		<div class="wrapper">
+			<div id="chemicals"></div>
+		</div>
+	</div>
+
+
+
+<main>
+
+	<div class="wrapper clearfix">
+
+		<div id="breadcrumb">
+	<ul>
+		<li><a href="../welcome">Home</a></li><li><a href="../products">Products</a></li><li>Sextant Catalogue service</li>
+	</ul>
+</div>
+
+		<div>
+
+			<h1>Sextant Catalogue service</h1>
+
+
+
+	<div data-ng-app="gn_search_sextant" data-ng-controller="GnCatController" class="gn sxt-max-md nodc-fullContent" data-sxt-size="auto" data-ng-include="'../../catalog/views/sextant/templates/index.html'">
+	</div>
+
+
+
+		</div>
+
+	</div>
+
+</main>
+
+
+
+	<footer>
+		<div id="footer" class="clearfix">
+			<div class="wrapper clearfix">
+
+				<div class="column footer-logo">
+					<a href="http://emodnet.eu" target="_blank">EMODnet</a>
+				</div>
+
+				<div class="column footer-menu clearfix">
+					<h4>Menu</h4>
+
+					<ul>
+						<li><a href="../about/how">About</a></li>
+						<li><a href="../data/how">Data access</a></li>
+						<li><a href="./how">Data products</a></li>
+						<li><a href="../newsevents/news">Promotion</a></li>
+						<li><a href="../help/faq">Helpdesk</a></li>
+					</ul>
+
+				</div>
+				<div class="column footer-menu clearfix">
+					<h4>Quick links</h4>
+
+					<ul>
+						<li><a href="http://nodc.ogs.trieste.it/emodoc/index_emod.html">Extranet</a></li>
+						<li><a href="../sitemap">Sitemap</a></li>
+						<li><a href="../help/contact">Contact</a></li>
+					</ul>
+
+				</div>
+
+				<div class="column social-media">
+					<h4>FOLLOW US</h4>
+
+					<ul>
+						<li><a href="https://www.facebook.com/EMODnet" target="_blank"><i class="fa fa-facebook-square fa-3x" aria-hidden="true"></i></a></li>
+						<li><a href="https://twitter.com/EMODnet" target="_blank"><i class="fa fa-twitter-square fa-3x" aria-hidden="true"></i></a></li>
+						<li><a href="http://www.linkedin.com/company/emodnet" target="_blank"><i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i></a></li>
+						<li><a href="https://www.slideshare.net/emodnet" target="_blank"><i class="fa fa-slideshare" aria-hidden="true"></i></a></li>
+					</ul>
+
+					<p class="hostedby">Website hosted and developed by<br />OGS and MARIS</p>
+				</div>
+
+			</div>
+		</div>
+		<div class="copyright">
+			<div class="wrapper">
+				&copy; Copyright 2017&nbsp;-&nbsp;EMODnet - THE EUROPEAN MARINE OBSERVATION AND DATA NETWORK<br/>
+				<a href="../policy">Privacy policy</a>
+			</div>
+		</div>
+		<div class="copyright copyright-eu">
+			<div class="wrapper">
+				<dl class="clearfix">
+				<dt></dt>
+				<dd>
+					<p>The European Marine Observation and Data Network (EMODnet) is financed by the European Union under Regulation (EU) No 508/2014 of the European Parliament and of the Council of 15 May 2014 on the European Maritime and Fisheries Fund.</p>
+				</dd>
+				</dl>
+			</div>
+		</div>
+	</footer>
+
+
+</body>
 
 </html>

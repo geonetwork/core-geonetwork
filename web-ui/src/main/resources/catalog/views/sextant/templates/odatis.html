@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,7 +10,6 @@
 	Information and contribution at https://typo3.org/
 -->
 
-<!-- <base href="http://odatis.oceanobs.com/"> -->
 
 <title>Accès direct au catalogue</title>
 <meta name="description" content="Accès direct au catalogue de données ODATIS" />
@@ -22,28 +20,1389 @@
 <meta name="description" content="Accès direct au catalogue de données ODATIS">
 <meta name="keywords" content="catalogue, accès aux données">
 
+
+<link rel="stylesheet" type="text/css" href="http://odatis.oceanobs.com/typo3temp/Assets/efff6dfe88.css?1508330467" media="all">
+<link rel="stylesheet" type="text/css" href="http://odatis.oceanobs.com/typo3conf/ext/bootstrap_grids/Resources/Public/Flexslider2/flexslider.css?1502184929" media="all">
+
+
+
+
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107671608-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-107671608-1');
+</script>
+
+
+
+
+
+
+
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.js"></script>
+        <style>
+            .detailCatImg {display: none;}
+            </style>
+        <script type="text/javascript">
+
+            $(window).load(function(){
+
+                   $('#externalNewsContent p').each(function() {
+                    var $this = $(this);
+                    if($this.html().replace(/\s|&nbsp;/g, '').length == 0)
+                        $this.remove();
+                });
+                 var MyDiv1 = document.getElementById('textpage');
+                var MyDiv2 = document.getElementById('externalNewsContent');
+                MyDiv2.innerHTML = MyDiv1.innerHTML;
+
+               $('#externalNewsContent img').prop('src', function () { return this.src.replace('http://www.odatis-ocean.fr/','https://www.aviso.altimetry.fr/'); })
+
+                 $('#externalNewsContent a.internal-link').each(function() {
+                    $(this).attr('href', 'https://www.aviso.altimetry.fr/' + $(this).attr('href'));
+                 });
+                   $('.news-single p').each(function() {
+                    var $this = $(this);
+                    if($this.html().replace(/\s|&nbsp;/g, '').length == 0)
+                        $this.remove();
+                });
+                $('.txt-news-toclear p').each(function() {
+                    var $this = $(this);
+                    if($this.html().replace(/\s|&nbsp;/g, '').length == 0)
+                        $this.remove();
+                });
+
+            });
+
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-bootstrap-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-slicknav-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-header-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-blue-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-custom-css.css?1517564000" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<style type="text/css">
+
+				a.logo1 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnrs-gray.png');}
+				a.logo1:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnrs.png');}
+
+				a.logo2 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnes-gray.png');}
+				a.logo2:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnes.png');}
+
+				a.logo3 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ifremer-gray.png');}
+				a.logo3:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ifremer.png');}
+
+				a.logo4 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ird-gray.png');}
+				a.logo4:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ird.png');}
+
+				a.logo5 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/shom-gray.png');}
+				a.logo5:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/shom.png');}
+
+				a.logo6 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/universite_marine-gray.png');}
+				a.logo6:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/universite_marine.png');}
+
+		</style>
 </head>
 <body>
 
 
-<div id="c778">
 
-	    <div ng-app="gn_search_sextant"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="header-wrapper">
+    <div class="header-connect">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="header-half header-social">
+                        <ul class="list-inline">
+                            <li><i class="fa fa-globe"></i><a href="#">Languages</a><ul class="languages hoverSelectorBlock"><li class="active"><a href="acces-aux-donnees/acces-direct-au-catalogue/">Français</a></li><li><a href="en/data-access/acces-direct-au-catalogue/">English</a></li></ul></li>
+                            <li class="topbar-devider">&nbsp;</li>
+                            <li>
+                                <a title="Contact" href="contact/">
+                                    Contact
+                                </a>
+                            </li>
+                            <li class="topbar-devider">&nbsp;</li>
+                            <li>
+
+		<!--  lib.searchbox [begin] -->
+			<form action="recherche/" method="post" id="search-box"><tr><input name="tx_indexedsearch[sword]" value=""  class="form-search" placeholder="Recherche..." type="text" /><input type="hidden" name="tx_indexedsearch[sections]" value="0" /><input name="tx_indexedsearch[submit_button]" value="Search" type="hidden" /><input name="search" src="" value="Search" class="searchbox-button" type="image" style="visibility: hidden;" /></tr></form>
+		<!--  lib.searchbox [end] -->
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="http://odatis.oceanobs.com/">
+                    <img title="Odatis Ocean" alt="Odatis Ocean" src="http://odatis.oceanobs.com/fileadmin/user_upload/Logo-Odatis_fullsize.png" width="1408" height="579" />
+                </a>
+            </div>
+
+
+            <div  id="navbar" class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
+                <div class="container">
+
+        <ul class="nav navbar-nav" >
+
+
+                        <li class="dropdown ">
+
+                                    <a href="qui-sommes-nous/" class="dropdown-toggle">Qui sommes-nous?</a>
+
+                                        <ul class="dropdown-menu">
+
+
+                                                        <li>
+                                                            <a title="Qu'est-ce que le Pôle ODATIS?" href="qui-sommes-nous/quest-ce-que-le-pole-odatis/">Qu'est-ce que le Pôle ODATIS?</a>
+                                                        </li>
+
+
+
+                                                        <li class="dropdown-submenu">
+                                                            <a title="Contexte et organisation" href="qui-sommes-nous/contexte-et-organisation/">Contexte et organisation</a>
+
+                                                                <ul class="dropdown-menu">
+
+
+                                                                                <li>
+                                                                                    <a title="Gouvernance" href="qui-sommes-nous/contexte-et-organisation/gouvernance/">Gouvernance</a>
+                                                                                </li>
+
+
+
+                                                                                <li>
+                                                                                    <a title="Structures d'accueil" href="qui-sommes-nous/contexte-et-organisation/structures-daccueil/">Structures d'accueil</a>
+                                                                                </li>
+
+
+
+                                                                                <li>
+                                                                                    <a title="Règlementation" href="qui-sommes-nous/contexte-et-organisation/reglementation/">Règlementation</a>
+                                                                                </li>
+
+
+
+                                                                                <li>
+                                                                                    <a title="Les DOI" href="qui-sommes-nous/contexte-et-organisation/les-doi/">Les DOI</a>
+                                                                                </li>
+
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Contexte international" href="qui-sommes-nous/contexte-et-organisation/contexte-international/">Contexte international</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="Europe" href="qui-sommes-nous/contexte-et-organisation/contexte-international/europe/">Europe</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Programmes internationaux" href="qui-sommes-nous/contexte-et-organisation/contexte-international/programmes-internationaux/">Programmes internationaux</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+                                                                </ul>
+
+                                                        </li>
+
+
+
+                                                        <li class="dropdown-submenu">
+                                                            <a title="Centres de Données et Services" href="qui-sommes-nous/centres-de-donnees-et-services/">Centres de Données et Services</a>
+
+                                                                <ul class="dropdown-menu">
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="CDS-in situ" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/">CDS-in situ</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-IS-Coriolis" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-coriolis/">CDS-IS-Coriolis</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-IS-SHOM" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-shom/">CDS-IS-SHOM</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-IS-OMP" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-omp/">CDS-IS-OMP</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-IS-SISMER" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-sismer/">CDS-IS-SISMER</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-IS-LOV" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-lov/">CDS-IS-LOV</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-IS-OASU" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-oasu/">CDS-IS-OASU</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="CDS-satellite" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/">CDS-satellite</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-SAT-Brest" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/cds-sat-brest/">CDS-SAT-Brest</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-SAT-Toulouse" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/cds-sat-toulouse/">CDS-SAT-Toulouse</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDS-SAT Couleur" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/cds-sat-couleur/">CDS-SAT Couleur</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+                                                                </ul>
+
+                                                        </li>
+
+
+                                        </ul>
+
+
+                        </li>
+
+
+                        <li class="active dropdown">
+
+                                    <a href="acces-aux-donnees/" class="dropdown-toggle">Accès aux données</a>
+
+                                        <ul class="dropdown-menu">
+
+
+                                                        <li>
+                                                            <a title="Accès direct au catalogue" href="acces-aux-donnees/acces-direct-au-catalogue/">Accès direct au catalogue</a>
+                                                        </li>
+
+
+
+                                                        <li>
+                                                            <a title="Catalogue thématique" href="acces-aux-donnees/catalogue-thematique/">Catalogue thématique</a>
+                                                        </li>
+
+
+                                        </ul>
+
+
+                        </li>
+
+
+                        <li class="dropdown">
+
+                                    <a href="activites/" class="dropdown-toggle">Activités</a>
+
+                                        <ul class="dropdown-menu">
+
+
+                                                        <li class="dropdown-submenu">
+                                                            <a title="Disciplines de recherche" href="activites/disciplines-de-recherche/">Disciplines de recherche</a>
+
+                                                                <ul class="dropdown-menu">
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Biologie marine" href="activites/disciplines-de-recherche/biologie-marine/">Biologie marine</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="Bivalves" href="activites/disciplines-de-recherche/biologie-marine/bivalves/">Bivalves</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Chlorophylle a" href="activites/disciplines-de-recherche/biologie-marine/chlorophylle-a/">Chlorophylle a</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Habitats benthiques" href="activites/disciplines-de-recherche/biologie-marine/habitats-benthiques/">Habitats benthiques</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Organismes marins tropicaux" href="activites/disciplines-de-recherche/biologie-marine/organismes-marins-tropicaux/">Organismes marins tropicaux</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Organismes pathogènes" href="activites/disciplines-de-recherche/biologie-marine/organismes-pathogenes/">Organismes pathogènes</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Phytoplancton" href="activites/disciplines-de-recherche/biologie-marine/phytoplancton/">Phytoplancton</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Zooplancton" href="activites/disciplines-de-recherche/biologie-marine/zooplancton/">Zooplancton</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Toxines" href="activites/disciplines-de-recherche/biologie-marine/toxines/">Toxines</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Biogéochimie marine" href="activites/disciplines-de-recherche/biogeochimie-marine/">Biogéochimie marine</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="Alcalinité" href="activites/disciplines-de-recherche/biogeochimie-marine/alcalinite/">Alcalinité</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CDOM" href="activites/disciplines-de-recherche/biogeochimie-marine/cdom/">CDOM</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Eléments chimiques" href="activites/disciplines-de-recherche/biogeochimie-marine/elements-chimiques/">Eléments chimiques</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Métaux et métalloïdes" href="activites/disciplines-de-recherche/biogeochimie-marine/metaux-et-metalloides/">Métaux et métalloïdes</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Isotopes" href="activites/disciplines-de-recherche/biogeochimie-marine/isotopes/">Isotopes</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Nutriments" href="activites/disciplines-de-recherche/biogeochimie-marine/nutriments/">Nutriments</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Oxygène dissous" href="activites/disciplines-de-recherche/biogeochimie-marine/oxygene-dissous/">Oxygène dissous</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Turbidité" href="activites/disciplines-de-recherche/biogeochimie-marine/turbidite/">Turbidité</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Physique de l'océan" href="activites/disciplines-de-recherche/physique-de-locean/">Physique de l'océan</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="Température" href="activites/disciplines-de-recherche/physique-de-locean/temperature/">Température</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Salinité" href="activites/disciplines-de-recherche/physique-de-locean/salinite/">Salinité</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Hauteurs de mer" href="activites/disciplines-de-recherche/physique-de-locean/hauteurs-de-mer/">Hauteurs de mer</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Courants" href="activites/disciplines-de-recherche/physique-de-locean/courants/">Courants</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Marée océanique" href="activites/disciplines-de-recherche/physique-de-locean/maree-oceanique/">Marée océanique</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Vague" href="activites/disciplines-de-recherche/physique-de-locean/vague/">Vague</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Glace" href="activites/disciplines-de-recherche/physique-de-locean/glace/">Glace</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Pression" href="activites/disciplines-de-recherche/physique-de-locean/pression/">Pression</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Paramètres optiques" href="activites/disciplines-de-recherche/physique-de-locean/parametres-optiques/">Paramètres optiques</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Géologie" href="activites/disciplines-de-recherche/geologie/">Géologie</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="Trait de côte" href="activites/disciplines-de-recherche/geologie/trait-de-cote/">Trait de côte</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Flux sédimentaires" href="activites/disciplines-de-recherche/geologie/flux-sedimentaires/">Flux sédimentaires</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Débits fluviaux en mer" href="activites/disciplines-de-recherche/geologie/debits-fluviaux-en-mer/">Débits fluviaux en mer</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Météorologie" href="activites/disciplines-de-recherche/meteorologie/">Météorologie</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="Vent" href="activites/disciplines-de-recherche/meteorologie/vent/">Vent</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Température air" href="activites/disciplines-de-recherche/meteorologie/temperature-air/">Température air</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Pression atmosphérique" href="activites/disciplines-de-recherche/meteorologie/pression-atmospherique/">Pression atmosphérique</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Précipitation" href="activites/disciplines-de-recherche/meteorologie/precipitation/">Précipitation</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Humidité" href="activites/disciplines-de-recherche/meteorologie/humidite/">Humidité</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Flux radiatifs" href="activites/disciplines-de-recherche/meteorologie/flux-radiatifs/">Flux radiatifs</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Aérosols" href="activites/disciplines-de-recherche/meteorologie/aerosols/">Aérosols</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+                                                                </ul>
+
+                                                        </li>
+
+
+
+                                                        <li class="dropdown-submenu">
+                                                            <a title="Moyens d'observation" href="activites/moyens-dobservation/">Moyens d'observation</a>
+
+                                                                <ul class="dropdown-menu">
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Campagnes en mer" href="activites/moyens-dobservation/campagnes-en-mer/">Campagnes en mer</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="Campagnes hauturières" href="activites/moyens-dobservation/campagnes-en-mer/campagnes-hauturieres/">Campagnes hauturières</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="Campagnes côtières" href="activites/moyens-dobservation/campagnes-en-mer/campagnes-cotieres/">Campagnes côtières</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+
+                                                                                <li>
+                                                                                    <a title="Réseaux d'observation" href="activites/moyens-dobservation/reseaux-dobservation/">Réseaux d'observation</a>
+                                                                                </li>
+
+
+
+                                                                                <li>
+                                                                                    <a title="Satellites" href="activites/moyens-dobservation/satellites/">Satellites</a>
+                                                                                </li>
+
+
+                                                                </ul>
+
+                                                        </li>
+
+
+
+                                                        <li class="dropdown-submenu">
+                                                            <a title="Chantiers et projets" href="activites/chantiers-et-projets/">Chantiers et projets</a>
+
+                                                                <ul class="dropdown-menu">
+
+
+                                                                                <li class="dropdown-submenu">
+                                                                                    <a title="Chantiers" href="activites/chantiers-et-projets/chantiers/">Chantiers</a>
+
+                                                                                        <ul class="dropdown-menu">
+
+                                                                                                <li>
+                                                                                                    <a title="AMMA" href="activites/chantiers-et-projets/chantiers/amma/">AMMA</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="MISTRALS" href="activites/chantiers-et-projets/chantiers/mistrals/">MISTRALS</a>
+                                                                                                </li>
+
+                                                                                                <li>
+                                                                                                    <a title="CAF" href="activites/chantiers-et-projets/chantiers/caf/">CAF</a>
+                                                                                                </li>
+
+                                                                                        </ul>
+
+                                                                                </li>
+
+
+
+                                                                </ul>
+
+                                                        </li>
+
+
+                                        </ul>
+
+
+                        </li>
+
+
+                        <li class="">
+
+                                    <a href="actualites/">Actualités</a>
+
+                        </li>
+
+
+                        <li class="dropdown ">
+
+                                    <a href="ressources/" class="dropdown-toggle">Ressources</a>
+
+                                        <ul class="dropdown-menu">
+
+
+                                                        <li>
+                                                            <a title="Glossaire" href="ressources/glossaire/">Glossaire</a>
+                                                        </li>
+
+
+
+                                                        <li>
+                                                            <a title="Plan du site" href="ressources/plan-du-site/">Plan du site</a>
+                                                        </li>
+
+
+
+                                                        <li>
+                                                            <a title="FAQ" href="ressources/faq/">FAQ</a>
+                                                        </li>
+
+
+
+                                                        <li>
+                                                            <a title="Outils et logiciels" href="ressources/outils-et-logiciels/">Outils et logiciels</a>
+                                                        </li>
+
+
+                                        </ul>
+
+
+                        </li>
+
+
+
+        </ul>
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+            <ul class="wpb-mobile-menu">
+
+
+
+                    <li class="drop-down ">
+
+                                <a href="qui-sommes-nous/" class="drop-down ">Qui sommes-nous?</a>
+
+                                    <ul class="drop-down ">
+
+
+                                                    <li>
+                                                        <a title="Qu'est-ce que le Pôle ODATIS?" href="qui-sommes-nous/quest-ce-que-le-pole-odatis/">Qu'est-ce que le Pôle ODATIS?</a>
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a class="sub" title="Contexte et organisation" href="qui-sommes-nous/contexte-et-organisation/">Contexte et organisation</a>
+
+                                                            <ul class="sub">
+
+
+                                                                            <li>
+                                                                                <a title="Gouvernance" href="qui-sommes-nous/contexte-et-organisation/gouvernance/">Gouvernance</a>
+                                                                            </li>
+
+
+
+                                                                            <li>
+                                                                                <a title="Structures d'accueil" href="qui-sommes-nous/contexte-et-organisation/structures-daccueil/">Structures d'accueil</a>
+                                                                            </li>
+
+
+
+                                                                            <li>
+                                                                                <a title="Règlementation" href="qui-sommes-nous/contexte-et-organisation/reglementation/">Règlementation</a>
+                                                                            </li>
+
+
+
+                                                                            <li>
+                                                                                <a title="Les DOI" href="qui-sommes-nous/contexte-et-organisation/les-doi/">Les DOI</a>
+                                                                            </li>
+
+
+
+                                                                            <li>
+                                                                                <a class="sub testme" title="Contexte international" href="qui-sommes-nous/contexte-et-organisation/contexte-international/">Contexte international</a>
+
+                                                                                    <ul class="sub testme">
+
+                                                                                            <li>
+                                                                                                <a title="Europe" href="qui-sommes-nous/contexte-et-organisation/contexte-international/europe/">Europe</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Programmes internationaux" href="qui-sommes-nous/contexte-et-organisation/contexte-international/programmes-internationaux/">Programmes internationaux</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+                                                            </ul>
+
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a class="sub " title="Centres de Données et Services" href="qui-sommes-nous/centres-de-donnees-et-services/">Centres de Données et Services</a>
+
+                                                            <ul class="sub ">
+
+
+                                                                            <li>
+                                                                                <a class="sub " title="CDS-in situ" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/">CDS-in situ</a>
+
+                                                                                    <ul class="sub ">
+
+                                                                                            <li>
+                                                                                                <a title="CDS-IS-Coriolis" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-coriolis/">CDS-IS-Coriolis</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDS-IS-SHOM" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-shom/">CDS-IS-SHOM</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDS-IS-OMP" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-omp/">CDS-IS-OMP</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDS-IS-SISMER" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-sismer/">CDS-IS-SISMER</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDS-IS-LOV" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-lov/">CDS-IS-LOV</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDS-IS-OASU" href="qui-sommes-nous/centres-de-donnees-et-services/cds-in-situ/cds-is-oasu/">CDS-IS-OASU</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+
+                                                                            <li>
+                                                                                <a class="sub testme" title="CDS-satellite" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/">CDS-satellite</a>
+
+                                                                                    <ul class="sub testme">
+
+                                                                                            <li>
+                                                                                                <a title="CDS-SAT-Brest" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/cds-sat-brest/">CDS-SAT-Brest</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDS-SAT-Toulouse" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/cds-sat-toulouse/">CDS-SAT-Toulouse</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDS-SAT Couleur" href="qui-sommes-nous/centres-de-donnees-et-services/cds-satellite/cds-sat-couleur/">CDS-SAT Couleur</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+                                                            </ul>
+
+                                                    </li>
+
+
+                                    </ul>
+
+
+                    </li>
+
+
+                    <li class="active drop-down">
+
+                                <a href="acces-aux-donnees/" class="active drop-down">Accès aux données</a>
+
+                                    <ul class="active drop-down">
+
+
+                                                    <li>
+                                                        <a title="Accès direct au catalogue" href="acces-aux-donnees/acces-direct-au-catalogue/">Accès direct au catalogue</a>
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a title="Catalogue thématique" href="acces-aux-donnees/catalogue-thematique/">Catalogue thématique</a>
+                                                    </li>
+
+
+                                    </ul>
+
+
+                    </li>
+
+
+                    <li class="drop-down">
+
+                                <a href="activites/" class="drop-down">Activités</a>
+
+                                    <ul class="drop-down">
+
+
+                                                    <li>
+                                                        <a class="sub " title="Disciplines de recherche" href="activites/disciplines-de-recherche/">Disciplines de recherche</a>
+
+                                                            <ul class="sub ">
+
+
+                                                                            <li>
+                                                                                <a class="sub " title="Biologie marine" href="activites/disciplines-de-recherche/biologie-marine/">Biologie marine</a>
+
+                                                                                    <ul class="sub ">
+
+                                                                                            <li>
+                                                                                                <a title="Bivalves" href="activites/disciplines-de-recherche/biologie-marine/bivalves/">Bivalves</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Chlorophylle a" href="activites/disciplines-de-recherche/biologie-marine/chlorophylle-a/">Chlorophylle a</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Habitats benthiques" href="activites/disciplines-de-recherche/biologie-marine/habitats-benthiques/">Habitats benthiques</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Organismes marins tropicaux" href="activites/disciplines-de-recherche/biologie-marine/organismes-marins-tropicaux/">Organismes marins tropicaux</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Organismes pathogènes" href="activites/disciplines-de-recherche/biologie-marine/organismes-pathogenes/">Organismes pathogènes</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Phytoplancton" href="activites/disciplines-de-recherche/biologie-marine/phytoplancton/">Phytoplancton</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Zooplancton" href="activites/disciplines-de-recherche/biologie-marine/zooplancton/">Zooplancton</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Toxines" href="activites/disciplines-de-recherche/biologie-marine/toxines/">Toxines</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+
+                                                                            <li>
+                                                                                <a class="sub" title="Biogéochimie marine" href="activites/disciplines-de-recherche/biogeochimie-marine/">Biogéochimie marine</a>
+
+                                                                                    <ul class="sub">
+
+                                                                                            <li>
+                                                                                                <a title="Alcalinité" href="activites/disciplines-de-recherche/biogeochimie-marine/alcalinite/">Alcalinité</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CDOM" href="activites/disciplines-de-recherche/biogeochimie-marine/cdom/">CDOM</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Eléments chimiques" href="activites/disciplines-de-recherche/biogeochimie-marine/elements-chimiques/">Eléments chimiques</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Métaux et métalloïdes" href="activites/disciplines-de-recherche/biogeochimie-marine/metaux-et-metalloides/">Métaux et métalloïdes</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Isotopes" href="activites/disciplines-de-recherche/biogeochimie-marine/isotopes/">Isotopes</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Nutriments" href="activites/disciplines-de-recherche/biogeochimie-marine/nutriments/">Nutriments</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Oxygène dissous" href="activites/disciplines-de-recherche/biogeochimie-marine/oxygene-dissous/">Oxygène dissous</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Turbidité" href="activites/disciplines-de-recherche/biogeochimie-marine/turbidite/">Turbidité</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+
+                                                                            <li>
+                                                                                <a class="sub" title="Physique de l'océan" href="activites/disciplines-de-recherche/physique-de-locean/">Physique de l'océan</a>
+
+                                                                                    <ul class="sub">
+
+                                                                                            <li>
+                                                                                                <a title="Température" href="activites/disciplines-de-recherche/physique-de-locean/temperature/">Température</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Salinité" href="activites/disciplines-de-recherche/physique-de-locean/salinite/">Salinité</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Hauteurs de mer" href="activites/disciplines-de-recherche/physique-de-locean/hauteurs-de-mer/">Hauteurs de mer</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Courants" href="activites/disciplines-de-recherche/physique-de-locean/courants/">Courants</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Marée océanique" href="activites/disciplines-de-recherche/physique-de-locean/maree-oceanique/">Marée océanique</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Vague" href="activites/disciplines-de-recherche/physique-de-locean/vague/">Vague</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Glace" href="activites/disciplines-de-recherche/physique-de-locean/glace/">Glace</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Pression" href="activites/disciplines-de-recherche/physique-de-locean/pression/">Pression</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Paramètres optiques" href="activites/disciplines-de-recherche/physique-de-locean/parametres-optiques/">Paramètres optiques</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+
+                                                                            <li>
+                                                                                <a class="sub" title="Géologie" href="activites/disciplines-de-recherche/geologie/">Géologie</a>
+
+                                                                                    <ul class="sub">
+
+                                                                                            <li>
+                                                                                                <a title="Trait de côte" href="activites/disciplines-de-recherche/geologie/trait-de-cote/">Trait de côte</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Flux sédimentaires" href="activites/disciplines-de-recherche/geologie/flux-sedimentaires/">Flux sédimentaires</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Débits fluviaux en mer" href="activites/disciplines-de-recherche/geologie/debits-fluviaux-en-mer/">Débits fluviaux en mer</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+
+                                                                            <li>
+                                                                                <a class="sub testme" title="Météorologie" href="activites/disciplines-de-recherche/meteorologie/">Météorologie</a>
+
+                                                                                    <ul class="sub testme">
+
+                                                                                            <li>
+                                                                                                <a title="Vent" href="activites/disciplines-de-recherche/meteorologie/vent/">Vent</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Température air" href="activites/disciplines-de-recherche/meteorologie/temperature-air/">Température air</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Pression atmosphérique" href="activites/disciplines-de-recherche/meteorologie/pression-atmospherique/">Pression atmosphérique</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Précipitation" href="activites/disciplines-de-recherche/meteorologie/precipitation/">Précipitation</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Humidité" href="activites/disciplines-de-recherche/meteorologie/humidite/">Humidité</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Flux radiatifs" href="activites/disciplines-de-recherche/meteorologie/flux-radiatifs/">Flux radiatifs</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Aérosols" href="activites/disciplines-de-recherche/meteorologie/aerosols/">Aérosols</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+                                                            </ul>
+
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a class="sub" title="Moyens d'observation" href="activites/moyens-dobservation/">Moyens d'observation</a>
+
+                                                            <ul class="sub">
+
+
+                                                                            <li>
+                                                                                <a class="sub " title="Campagnes en mer" href="activites/moyens-dobservation/campagnes-en-mer/">Campagnes en mer</a>
+
+                                                                                    <ul class="sub ">
+
+                                                                                            <li>
+                                                                                                <a title="Campagnes hauturières" href="activites/moyens-dobservation/campagnes-en-mer/campagnes-hauturieres/">Campagnes hauturières</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="Campagnes côtières" href="activites/moyens-dobservation/campagnes-en-mer/campagnes-cotieres/">Campagnes côtières</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+
+                                                                            <li>
+                                                                                <a title="Réseaux d'observation" href="activites/moyens-dobservation/reseaux-dobservation/">Réseaux d'observation</a>
+                                                                            </li>
+
+
+
+                                                                            <li>
+                                                                                <a title="Satellites" href="activites/moyens-dobservation/satellites/">Satellites</a>
+                                                                            </li>
+
+
+                                                            </ul>
+
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a class="sub " title="Chantiers et projets" href="activites/chantiers-et-projets/">Chantiers et projets</a>
+
+                                                            <ul class="sub ">
+
+
+                                                                            <li>
+                                                                                <a class="sub  testme" title="Chantiers" href="activites/chantiers-et-projets/chantiers/">Chantiers</a>
+
+                                                                                    <ul class="sub  testme">
+
+                                                                                            <li>
+                                                                                                <a title="AMMA" href="activites/chantiers-et-projets/chantiers/amma/">AMMA</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="MISTRALS" href="activites/chantiers-et-projets/chantiers/mistrals/">MISTRALS</a>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <a title="CAF" href="activites/chantiers-et-projets/chantiers/caf/">CAF</a>
+                                                                                            </li>
+
+                                                                                    </ul>
+
+                                                                            </li>
+
+
+
+                                                            </ul>
+
+                                                    </li>
+
+
+                                    </ul>
+
+
+                    </li>
+
+
+                    <li class="">
+
+                                <a href="actualites/">Actualités</a>
+
+                    </li>
+
+
+                    <li class="drop-down ">
+
+                                <a href="ressources/" class="drop-down ">Ressources</a>
+
+                                    <ul class="drop-down ">
+
+
+                                                    <li>
+                                                        <a title="Glossaire" href="ressources/glossaire/">Glossaire</a>
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a title="Plan du site" href="ressources/plan-du-site/">Plan du site</a>
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a title="FAQ" href="ressources/faq/">FAQ</a>
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a title="Outils et logiciels" href="ressources/outils-et-logiciels/">Outils et logiciels</a>
+                                                    </li>
+
+
+                                    </ul>
+
+
+                    </li>
+
+
+            </ul>
+
+
+
+
+
+
+
+
+</div>
+<div class="breadcrumbs">
+    <div class="container">
+
+        <div class="pull-right breadcrumb">
+            <ul><li class="active sub">
+<a href="/" title="Accueil" class="active sub">Accueil</a>
+</li>
+<li>/</li>
+<li class="active sub">
+<a href="acces-aux-donnees/" title="Accès aux données" class="active sub">Accès aux données</a>
+</li>
+<li>/</li>
+<li class="active current">
+Accès direct au catalogue
+</li></ul>
+        </div>
+
+    </div>
+</div>
+
+
+
+<section class="content">
+    <div class="full-size">
+        <div class="row">
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                <h1 class="pull-left">Accès direct au catalogue</h1>
+            </div>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+<div id="c51">
+
+	<!-- <span>Partager</span>
+<br>
+Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox_1lqf"></div>
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4e5f5c6d440448a1"></script>
+
+
+
+
+
+</div>
+
+
+
+<div id="c986">
+
+
+
+
+
+
+
+
+	<div class="ce-textpic ce-right ce-intext">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<div class="ce-bodytext">
+
+			<table summary="" class="contenttable"><tbody><tr><td width="26%"></td><td><p>Le catalogue des données et produits du Pôle ODATIS permettent de découvrir les jeux de données fournis par la communauté nationale et leurs liens avec les programmes internationaux.</p><p>Ce catalogue propose plusieurs outils de services d’accès aux données : un service de recherche avec des filtres de sélection, un service de description de la donnée (via deux onglets : &quot;Aperçu&quot; et &quot;Complet&quot;), un service de visualisation, et un service de téléchargement direct ou via le portail local des partenaires.</p><ul><li>Plus d'information: <a href="fileadmin/images/acces_donnees/Manuel_d_utilisation_catalogue_ODATIS.pdf" title="Opens external link in new window" class="download">Manuel d'utilisation</a></li></ul></td></tr></tbody></table>
+		</div>
+
+
+	</div>
+
+
+
+
+</div>
+
+
+
+<div id="c978">
+
+	<!DOCTYPE html>
+
+<html xml:lang="fr-FR" xmlns="http://www.w3.org/1999/xhtml" lang="fr-FR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-bootstrap-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-slicknav-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-header-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-blue-css.css?1517564000" />
+<link rel="stylesheet" href="http://odatis.oceanobs.com/typo3temp/vhs-assets-custom-css.css?1517564000" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<style type="text/css">
+
+				a.logo1 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnrs-gray.png');}
+				a.logo1:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnrs.png');}
+
+				a.logo2 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnes-gray.png');}
+				a.logo2:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/cnes.png');}
+
+				a.logo3 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ifremer-gray.png');}
+				a.logo3:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ifremer.png');}
+
+				a.logo4 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ird-gray.png');}
+				a.logo4:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/ird.png');}
+
+				a.logo5 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/shom-gray.png');}
+				a.logo5:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/shom.png');}
+
+				a.logo6 {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/universite_marine-gray.png');}
+				a.logo6:hover {background-image:url('http://odatis.oceanobs.com/fileadmin/user_upload/images/partenaires/universite_marine.png');}
+
+		</style>
+</head>
+<body style="margin:0">
+    <div ng-app="gn_search_sextant"
          ng-controller="GnCatController"
          class="gn"
-         sxt-size="auto "
+         sxt-size="auto"
          ng-include="'../../catalog/views/sextant/templates/index.html'">
     </div>
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-jquery-js.js?1517564000"></script>
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-bootstrap.js?1517564000"></script>
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-slicknav.js?1517564000"></script>
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-scripto.js?1517564000"></script>
+</body>
 
-  <script type="text/javascript">
+<script type="text/javascript">
         var sxtSettings = {
         langDetector: {
           fromHtmlTag: true,
           regexp: '^\/([a-z]+)\/',
           lang: 'fre'
         },
-    // configWhat: 'ODATIS',
     displayChildrenBtn: true,
+        excludeChildrenFromSearch: false,
     tabOverflow : {
       search: true,
       map: true,
@@ -53,34 +1412,34 @@
         sortBy: ['-title', 'changeDate', 'relevance'],
     servicesUrl: {
       wms: [{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Océanographie physique',
+      name: 'Ifremer - Océanographie physique',
       url: 'http://www.ifremer.fr/services/wms/oceanographie_physique?'
                 },{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Biologie',
+      name: 'Ifremer - Biologie',
       url: 'http://www.ifremer.fr/services/wms/biologie?'
                 },{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Géologie',
+      name: 'Ifremer - Géologie',
       url: 'http://www.ifremer.fr/services/wms/geologie?'
         },{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Bathymétrie',
+      name: 'Ifremer - Bathymétrie',
       url: 'http://www.ifremer.fr/services/wms/bathymetrie?'
         },{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Imagerie acoustique',
+      name: 'Ifremer - Imagerie acoustique',
       url: 'http://www.ifremer.fr/services/wms/imagerie_acoustique?'
         },{
-            name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - SISMER - Données des navires',
+            name: 'Ifremer - SISMER - Données des navires',
       url: 'http://www.ifremer.fr/services/wms/sismer?'
         },{
-            name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Granulats marins',
+            name: 'Ifremer - Granulats marins',
       url: 'http://www.ifremer.fr/services/wms/granulats_marins?'
         },{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Surveillance littorale',
+      name: 'Ifremer - Surveillance littorale',
       url: 'http://www.ifremer.fr/services/wms/surveillance_littorale?'
         },{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Photos anciennes',
+      name: 'Ifremer - Photos anciennes',
       url: 'http://www.ifremer.fr/services/photos_anciennes?'
         },{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> - Scan littoral',
+      name: 'Ifremer - Scan littoral',
       url: 'http://www.ifremer.fr/ifremerWS/WS/wms/scan-littoral?'
         },{
             name: 'Agence des aires marines protégées',
@@ -104,7 +1463,7 @@
       name: 'Geosignal',
       url: 'http://www.geosignal.org/cgi-bin/wmsmap?'
         },{
-      name: '<a href="http://www.mnhn.fr" target="externe" class="tx-glossary"><dfn>MNHN</dfn></a>-INPN',
+      name: 'MNHN-INPN',
       url: 'http://ws.carmencarto.fr/WMS/119/fxx_inpn?'
         },{
       name: 'Marine Regions',
@@ -114,7 +1473,7 @@
       url: 'http://services.data.shom.fr/INSPIRE/wms/r?version=1.3.0'
         }],
       wmts: [{
-      name: '<dfn title="Institut Français de Recherche et d&#039;Exploitation de la MER">Ifremer</dfn> Photos anciennes et Hyperspectrales',
+      name: 'Ifremer Photos anciennes et Hyperspectrales',
       url: 'http://sextant.ifremer.fr/geowebcache/service/wmts?'
     },{
       name: 'Emodnet bathymetry',
@@ -143,28 +1502,28 @@
       label: 'Lambert - 93'
       },{
       value: '27571',
-      label: 'Lambert Zone I - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Zone I - Datum NTF'
       },{
       value: '27572',
-      label: 'Lambert Zone II - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Zone II - Datum NTF'
       },{
       value: '27573',
-      label: 'Lambert Zone III - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Zone III - Datum NTF'
       },{
       value: '27574',
-      label: 'Lambert Zone IV - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Zone IV - Datum NTF'
       },{
       value: '27561',
-      label: 'Lambert Nord France - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Nord France - Datum NTF'
       },{
       value: '27562',
-      label: 'Lambert Centre France - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Centre France - Datum NTF'
       },{
       value: '27563',
-      label: 'Lambert Sud France - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Sud France - Datum NTF'
       },{
       value: '27564',
-      label: 'Lambert Corse - Datum <a href="ressources/glossaire/" class="tx-glossary"><dfn title="National Tidal Facility">NTF</dfn></a>'
+      label: 'Lambert Corse - Datum NTF'
       },{
       value: '2984',
       label: 'Lambert Nouvelle-Calédonie - RGNC 91'
@@ -245,7 +1604,6 @@
       {
             key: 'odatis_variables',
             tree: true,
-            opened: true,
             labels: {
                 eng: 'Variables',
                 fre: 'Variables'
@@ -259,13 +1617,9 @@
             }},{
             key: 'odatis_centre_donnees',
             labels: {
-                eng: 'Data centers',
-                fre: 'Centres de donnees'
-            }},
-      {
-            key: 'mdActions',
-            opened: true
-      }
+                eng: 'Data centers and services',
+                fre: 'Centres de donnees et services'
+            }}
         ],
 
         theme: 'odatis'
@@ -278,12 +1632,314 @@ if ( location.hash == "" && window.parent.location.hash != "" ) {
   location.hash = window.parent.location.hash;
 }
 </script>
-<script src="//localhost:8080/geonetwork/static/lib.js"></script>
-<script src="//localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+<script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+<script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+</html>
 
 
 
 
 
+</div>
+
+
+                    </div>
+
+
+        </div>
+    </div>
+</section>
+
+<div class="footer-v1">
+    <div class="partners">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+
+
+
+
+
+
+
+		<ul class="footer-socials">
+
+				<li>
+
+							<a class="tooltips logo1" title="CNRS Logo" target="_blank" href="http://www.cnrs.fr/">
+
+							</a>
+
+				</li>
+
+				<li>
+
+							<a class="tooltips logo2" title="CNES Logo" target="_blank" href="https://cnes.fr/fr">
+
+							</a>
+
+				</li>
+
+				<li>
+
+							<a class="tooltips logo3" title="iFremer logo" target="_blank" href="http://ifremer.fr/">
+
+							</a>
+
+				</li>
+
+				<li>
+
+							<a class="tooltips logo4" title="IRD Logo" target="_blank" href="http://www.ird.fr/">
+
+							</a>
+
+				</li>
+
+				<li>
+
+							<a class="tooltips logo5" title="SHOM Logo" target="_blank" href="http://www.shom.fr/">
+
+							</a>
+
+				</li>
+
+				<li>
+
+							<a class="tooltips logo6" title="Universités marines Logo" target="_blank" href="https://www.universites-marines.fr/fr">
+
+							</a>
+
+				</li>
+
+		</ul>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer-area">
+    <div class="container">
+
+
+
+        <ul class="row footer">
+
+
+                    <li class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="headline">
+                            <h2>
+                                <a href="qui-sommes-nous/" >Qui sommes-nous?</a>
+                            </h2>
+                        </div>
+
+
+                            <ul class="footer-menu">
+
+                                    <li>
+                                        <a title="Centres de données et services" href="footer-menu/qui-sommes-nous/centres-de-donnees-et-services/">Centres de données et services</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Le Pôle ODATIS" href="footer-menu/qui-sommes-nous/le-pole-odatis/">Le Pôle ODATIS</a>
+                                    </li>
+
+                             </ul>
+
+
+                    </li>
+
+                    <li class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="headline">
+                            <h2>
+                                <a href="acces-aux-donnees/" >Accès aux données</a>
+                            </h2>
+                        </div>
+
+
+                            <ul class="footer-menu">
+
+                                    <li>
+                                        <a title="Accès direct au catalogue" href="footer-menu/acces-aux-donnees/acces-direct-au-catalogue/">Accès direct au catalogue</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Accès aux données par thématique" href="footer-menu/acces-aux-donnees/acces-aux-donnees-par-thematique/">Accès aux données par thématique</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Accès aux données par paramètre mesuré" href="footer-menu/acces-aux-donnees/acces-aux-donnees-par-parametre-mesure/">Accès aux données par paramètre mesuré</a>
+                                    </li>
+
+                             </ul>
+
+
+                    </li>
+
+                    <li class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="headline">
+                            <h2>
+                                <a href="activites/" >Activités</a>
+                            </h2>
+                        </div>
+
+
+                            <ul class="footer-menu">
+
+                                    <li>
+                                        <a title="Disciplines de recherche" href="footer-menu/activites/disciplines-de-recherche/">Disciplines de recherche</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Campagnes en mer" href="footer-menu/activites/campagnes-en-mer/">Campagnes en mer</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Réseaux d'observation" href="footer-menu/activites/reseaux-dobservation/">Réseaux d'observation</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Satellites" href="footer-menu/activites/satellites/">Satellites</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Chantiers et projets" href="footer-menu/activites/chantiers-et-projets/">Chantiers et projets</a>
+                                    </li>
+
+                             </ul>
+
+
+                    </li>
+
+                    <li class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="headline">
+                            <h2>
+                                <a href="actualites/" >Actualités</a>
+                            </h2>
+                        </div>
+
+
+                            <ul class="footer-menu">
+
+                                    <li>
+                                        <a title="Toutes nos actualités" href="footer-menu/actualites/toutes-nos-actualites/">Toutes nos actualités</a>
+                                    </li>
+
+                             </ul>
+
+
+                    </li>
+
+                    <li class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="headline">
+                            <h2>
+                                <a href="ressources/" >Ressources</a>
+                            </h2>
+                        </div>
+
+
+                            <ul class="footer-menu">
+
+                                    <li>
+                                        <a title="Glossaire" href="footer-menu/ressources/glossaire/">Glossaire</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="Plan du site" href="footer-menu/ressources/plan-du-site/">Plan du site</a>
+                                    </li>
+
+                                    <li>
+                                        <a title="FAQ" href="footer-menu/ressources/faq/">FAQ</a>
+                                    </li>
+
+                             </ul>
+
+
+                    </li>
+
+
+                    <li class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <h2></h2>
+
+                        <a class="navbar-brand-footer" href="http://odatis.oceanobs.com/">
+                            <img alt="Odatis Ocean" src="http://odatis.oceanobs.com/fileadmin/user_upload/Logo-Odatis_fullsize.png" width="1408" height="579" />
+                        </a>
+                    </li>
+
+
+        </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="row copyright">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                <p>©&nbsp;Odatis&nbsp;2018&nbsp; - Tous droits réservés</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+
+
+                    <ul class="footer-links">
+
+                            <li>
+
+                                        <a title="Plan du site" href="copyright-menu/plan-du-site/">Plan du site</a> -&nbsp;
+
+                            </li>
+
+                            <li>
+
+                                        <a title="Mentions Légales" href="copyright-menu/mentions-legales/">Mentions Légales</a> -&nbsp;
+
+                            </li>
+
+                            <li>
+
+                                        <a title="Réalisation : Totem numérique" href="copyright-menu/realisation-totem-numerique/">Réalisation : Totem numérique</a>
+
+                            </li>
+
+
+                    </ul>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<script src="http://odatis.oceanobs.com/typo3conf/ext/bootstrap_grids/Resources/Public/Flexslider2/jquery.flexslider-min.js?1502184929" type="text/javascript"></script>
+
+
+
+        <script type="text/javascript">
+            $( document ).ready(function() {
+                $(".tx-indexedsearch-searchbox-sword").attr("value", "");
+                $(".tx-indexedsearch-searchbox-sword").attr("placeholder", "Recherche");
+            });
+        </script>
+
+<!--
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-jquery-js.js?1517564000"></script>
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-bootstrap.js?1517564000"></script>
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-slicknav.js?1517564000"></script>
+<script type="text/javascript" src="http://odatis.oceanobs.com/typo3temp/vhs-assets-scripto.js?1517564000"></script>
+-->
 </body>
 </html>
