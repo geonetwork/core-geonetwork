@@ -24,41 +24,53 @@
 package v342;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.migration.DatabaseMigrationException;
+import org.fao.geonet.migration.JsonDatabaseMigration;
+import org.fao.geonet.utils.Log;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class AdvancedSearchFormMigration implements DatabaseMigrationTask {
+/**
+ * Adds a new field <code>mods.search.advancedSearchTemplate</code> to <code>ui/config</code> setting to customise
+ * the advanced search form using a template.
+ */
+public class AdvancedSearchFormMigration extends JsonDatabaseMigration
+    implements DatabaseMigrationTask {
+
     @Override
     public void update(Connection connection) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(
             "SELECT * FROM settings WHERE name='ui/config'")) {
             ResultSet rs = statement.executeQuery();
+
             if (rs.next()) {
                 String currentSettingJson = rs.getString("value");
                 Map<String, String> fieldsToUpdate = new HashMap<>(1);
                 fieldsToUpdate.put("/mods/search/advancedSearchTemplate",
                     "\"../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html\"");
 
-                String newSettingJson = insertOrUpdateField(currentSettingJson, fieldsToUpdate);
+                String newSettingJson = super.insertOrUpdateField(currentSettingJson, fieldsToUpdate);
                 try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE settings SET "
                     + "value=? WHERE name='ui/config'")) {
                     updateStatement.setString(1, newSettingJson);
                     updateStatement.executeUpdate();
                 }
             }
-
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK + ".databasemigration",
+                "Error in AdvancedSearchFormMigration. Cannot complete the "
+                    + "migration", e);
+            throw new DatabaseMigrationException(e);
         }
 
     }
@@ -73,35 +85,17 @@ public class AdvancedSearchFormMigration implements DatabaseMigrationTask {
      * @return a JSON string with updated/inserted values.
      */
     @VisibleForTesting
+    @Override
     protected String insertOrUpdateField(String currentSettingJson, Map<String, String> fieldsToUpdate) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(currentSettingJson);
-        for (Map.Entry<String, String> fieldToUpdate : fieldsToUpdate.entrySet()) {
-            String fullPath = fieldToUpdate.getKey();
-            String newJsonString = fieldToUpdate.getValue();
-            JsonNode newJsonTree = mapper.readTree(newJsonString);
-            JsonNode target = root.at(fullPath);
-            List<String> pathParts = new LinkedList<>();
-            pathParts.addAll(Arrays.asList(StringUtils.split(fullPath, "/")));
-            if (target.isMissingNode()) {
-                createMissingNodes(root, pathParts, newJsonTree);
-            } else {
-                String propertyName = pathParts.remove(pathParts.size() - 1);
-                target = root.at("/" + StringUtils.join(pathParts, "/"));
-                ((ObjectNode) target).set(propertyName, newJsonTree);
-            }
-        }
-        return mapper.writeValueAsString(root);
+        return super.insertOrUpdateField(currentSettingJson, fieldsToUpdate);
 
     }
 
     @VisibleForTesting
+    @Override
     protected void createMissingNodes(JsonNode root, List<String> fullPath, JsonNode newJsonTree) {
-        JsonNode newRoot = root;
-        for (int i = 0; i < fullPath.size() - 1; i++) {
-            String pathPart = fullPath.get(i);
-            newRoot = newRoot.with(pathPart);
-        }
-        ((ObjectNode) newRoot).set(fullPath.get(fullPath.size() - 1), newJsonTree);
+        super.createMissingNodes(root, fullPath, newJsonTree);
     }
+
+
 }
