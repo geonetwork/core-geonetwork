@@ -512,7 +512,8 @@
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
 
             var defer = $q.defer();
-            var sldConfig = wfsFilterService.createSLDConfig(scope.output);
+            var sldConfig = wfsFilterService.createSLDConfig(scope.output,
+              appProfile);
             var layer = scope.layer;
 
             indexObject.pushState();
