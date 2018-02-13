@@ -85,22 +85,41 @@
        * be gathered to create the full SLD filter config to send to the
        * generateSLD service.
        *
-       * @param {string} key index key of the field
+       * @param {string} name of the facet field
+       * @param {*} value of the active filter
        * @param {string} type of the facet field (range, field etc..)
+       * @param {boolean} multiValued if true, field can hold several values;
+       * the output filter will be `like '*value*'` instead of `= 'value'`
+       * @param {Object} fieldInfo field info taken from the application profile
        * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(name, value, type, multiValued) {
+      var buildSldFilter = function(name, value, type, multiValued, fieldInfo) {
         var filterFields = [];
 
+        // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
+        function transformDate(d) {
+          return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+        }
+
+        // date range
+        if (type == 'rangeDate' && fieldInfo.minField && fieldInfo.maxField) {
+          filterFields.push({
+            field_name: fieldInfo.maxField,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [transformDate(value.from)]
+            }]
+          }, {
+            field_name: fieldInfo.minField,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [transformDate(value.to)]
+            }]
+          });
+        }
+
         // date
-        if (type == 'date' || type == 'rangeDate') {
-
-          // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
-          // TODO: externalize this?
-          function transformDate(d) {
-            return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
-          }
-
+        else if (type == 'date') {
           filterFields.push({
             field_name: name,
             filter: [{
@@ -157,9 +176,11 @@
       /**
        * Create the generateSLD service config from the facet ui state.
        * @param {object} facetState represents the choices from the facet ui
+       * @param {object} appProfile optional, application profile holding field
+       * data
        * @return {object} the sld config object
        */
-      this.createSLDConfig = function(facetState) {
+      this.createSLDConfig = function(facetState, appProfile) {
         var sldConfig = {
           filters: []
         };
@@ -169,17 +190,21 @@
           var fieldInfo = attrName.match(/ft_(.*?)_([a-z]+)(?:_(tree))?$/);
           var fieldName = fieldInfo ? fieldInfo[1] : attrName;
           var type = attrValue.type || 'terms';
+          var appProfileField = appProfile && appProfile.fields &&
+            appProfile.fields.find(function(field) {
+              return field.name === fieldName;
+            });
 
           // multiple values
           if (attrValue.values && Object.keys(attrValue.values).length) {
             Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.values, type, true));
+                fieldName, attrValue.values, type, true, appProfileField));
           }
 
           // single value
           else if (attrValue.value) {
             Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.value, type, false));
+                fieldName, attrValue.value, type, false, appProfileField));
           }
         });
 
