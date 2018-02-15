@@ -1,8 +1,16 @@
-<div class="panel panel-default" data-ng-class="getClass()">
+<div id="gn-editor-validation-panel" class="panel panel-default" data-ng-class="getClass()">
   <div class="panel-heading"
        data-gn-slide-toggle="">
     <i class="fa" data-ng-class="getClass('icon')"></i>&nbsp;
     <span data-translate="">validationReport</span>
+    <button type="button" class="btn btn-default pull-right btn-xs"
+            data-ng-click="toggleAlwaysOnTop();$event.stopPropagation();"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{{'fixedOnTop' | translate}}">
+      <i class="fa fa-thumb-tack"/>
+    </button>
+    &nbsp;
     <button type="button" class="btn btn-default pull-right btn-xs"
             data-ng-click="load();$event.stopPropagation();"
             data-toggle="tooltip"
