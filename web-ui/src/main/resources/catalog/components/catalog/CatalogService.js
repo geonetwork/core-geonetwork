@@ -112,7 +112,7 @@
             sourceUuid: id,
             isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
-            isVisibleByAllGroupMembers: withFullPrivileges,
+            isVisibleByAllGroupMembers: withFullPrivileges ? 'true' : 'false',
             targetUuid: metadataUuid || ''
           });
           return $http.put('../api/records/duplicate?' + url, {
