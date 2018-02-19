@@ -298,7 +298,11 @@
                     url: '',
                     visible: false,
                     group: layer.group,
-                    owc_position: layer.position
+
+                    // Sextant specific
+                    owc_position: layer.position,
+                    owc_groupPosition: layer.groupPosition
+                    // end sextant specific
                   });
 
                   loadingLayer.displayInLayerManager = true;
@@ -504,7 +508,12 @@
             title: layer.get('title'),
             group: layer.get('group'),
             groupcombo: layer.get('groupcombo'),
+
+            // Sextant specific
             position: layer.get('owc_position'),
+            groupPosition: layer.get('owc_groupPosition'),
+            // end sextant specific
+
             server: [{
               onlineResource: [{
                 href: url
@@ -622,7 +631,12 @@
           return promise.then(function(olL) {
             olL.set('group', layer.group);
             olL.set('groupcombo', layer.groupcombo);
+
+            // Sextant specific
             olL.set('owc_position', layer.position);
+            olL.set('owc_groupPosition', layer.groupPosition);
+            // end sextant specific
+
             olL.setOpacity(layer.opacity);
             olL.setVisible(!layer.hidden);
             if (layer.title) {
@@ -653,7 +667,12 @@
                   } catch (e) {}
                   olL.set('group', layer.group);
                   olL.set('groupcombo', layer.groupcombo);
+
+                  // Sextant specific
                   olL.set('owc_position', layer.position);
+                  olL.set('owc_groupPosition', layer.groupPosition);
+                  // end sextant specific
+
                   olL.set('tree_index', index);
                   olL.setOpacity(layer.opacity);
                   olL.setVisible(!layer.hidden);
