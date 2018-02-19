@@ -93,24 +93,28 @@
           };
 
           var sortNodeFn = function(a, b) {
-            var aPos = a.get ? a.get('owc_position') : undefined;
-            var bPos = b.get ? b.get('owc_position') : undefined;
+            var aPos = undefined;
+            if (a.groupPosition !== undefined) aPos = a.groupPosition;
+            else if (a.get && a.get('owc_position') !== undefined) aPos = a.get('owc_position');
+
+            var bPos = undefined;
+            if (b.groupPosition !== undefined) bPos = b.groupPosition;
+            else if (b.get && b.get('owc_position') !== undefined) bPos = b.get('owc_position');
+
             var aName = a.name || a.get('label');
             var bName = b.name || b.get('label');
 
-            // comparing layers (fallback to label if nedded)
-            if (a instanceof ol.layer.Base && b instanceof ol.layer.Base) {
-              // if one is positioned and not the other, put it first
-              if (aPos !== undefined && bPos === undefined) {
-                return -1;
-              } else if (aPos === undefined && bPos !== undefined) {
-                return 1;
-              }
+            // comparing using positions (for groups or layers)
+            // if one is positioned and not the other, put it first
+            if (aPos !== undefined && bPos === undefined) {
+              return -1;
+            } else if (aPos === undefined && bPos !== undefined) {
+              return 1;
+            }
 
-              // if both are positioned, compare based on that
-              if (aPos !== undefined && bPos !== undefined) {
-                return aPos < bPos ? -1 : (aPos > bPos) ? 1 : 0;
-              }
+            // if both are positioned, compare based on that
+            if (aPos !== undefined && bPos !== undefined) {
+              return aPos < bPos ? -1 : (aPos > bPos) ? 1 : 0;
             }
 
             // other comparisons: based on label only
@@ -168,10 +172,12 @@
 
                 // save the state & path on the new node
                 // (path is used to track nodes uniquely)
+                // note: group position is set by the layer's `groupPosition` prop
                 newNode = {
                   name: group,
                   state: state,
-                  path: groupPath
+                  path: groupPath,
+                  groupPosition: layer.get('owc_groupPosition')
                 };
                 if (!node.nodes) node.nodes = [];
                 node.nodes.push(newNode);
@@ -183,6 +189,10 @@
               node.nodes.push(layer);
               node.nodes.sort(sortNodeFn);
               addWpsLayers(layer, node.nodes);
+
+              // save the group position on the layer
+              // (for context consistency, i.e. if layer order is changed)
+              layer.set('owc_groupPosition', node.groupPosition);
             }
           };
 
