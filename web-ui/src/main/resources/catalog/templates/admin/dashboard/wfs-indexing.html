@@ -1,0 +1,49 @@
+<div ng-controller="GnDashboardWfsIndexingController">
+  <div>
+    <div class="row">
+        <div class="col-md-12">
+          <h1 translate>wfsIndexingTitle</h1>
+          <p class="text-muted" translate>
+              wfsIndexingSubtitle
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <button type="button" ng-click="refreshJobList()" translate>refresh</button>
+    </div>
+
+    <div ng-repeat="job in jobs" class="row">
+      <dl class="dl-horizontal col-md-12">
+        <dt translate>wfsurl</dt>
+        <dd><a href="{{job.url}}">{{job.url}}</a> - <a href="{{job.url | asGetCapabilities:'WFS'}}">GetCapabilities</a></dd>
+
+        <dt translate>status</dt>
+        <dd><span class="label" ng-class="'label-' + getLabelClass(job.status)">{{job.status}}</span></dd>
+
+        <dt translate>wfsIndexingFeatureType</dt>
+        <dd>{{job.featureType}}</dd>
+
+        <dt translate>featureCount</dt>
+        <dd>{{job.featureCount}}</dd>
+
+        <dt translate>wfsIndexingMetadataUuid</dt>
+        <dd><code>{{job.mdUuid}}</code></dd>
+
+        <div ng-if="job.mdUuid">
+          <dt translate>wfsIndexingMetadata</dt>
+          <dd>
+            <span ng-if="job.md.error">
+              <span translate>{{job.md.error}}</span>
+            </span>
+            <span ng-if="job.md && !job.md.error">
+              <a href="catalog.search#/metadata/{{job.md.getUuid()}}" translate>{{job.md.title}}</a>
+            </span>
+            <i ng-if="!job.md" class="fa fa-spinner fa-spin"/>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
