@@ -1224,5 +1224,7 @@
     "wfsIndexingFeatureType": "Feature type",
     "wfsIndexingMetadata": "Associated metadata",
     "wfsIndexingMetadataNotFound": "Metadata could not be found.",
-    "wfsIndexingMetadataUuid": "Metadata UUID"
+    "wfsIndexingMetadataUuid": "Metadata UUID",
+    "wfsIndexingRefreshError": "An error occurred when refreshing the list:",
+    "wfsIndexingError": "Error encountered"
 }

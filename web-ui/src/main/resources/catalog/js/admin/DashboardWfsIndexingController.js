@@ -38,23 +38,19 @@
       $scope.indexUrl = gnHttp.getService('indexproxy') + '/features/_search';
 
       // list of wfs indexing jobs received from the index
-      $scope.jobs = [
-        // {
-        //   url: 'http://aaa.bbb',
-        //   featureType: 'TestFeature',
-        //   featureCount: 14,
-        //   status: 'error',
-        //   mdUuid: '94c01d83-ca59-4411-bae8-7db3e0b7181b'
-        // }, {
-        //   url: 'http://ccc.ddd',
-        //   featureType: 'TestFeature2',
-        //   featureCount: 1234,
-        //   status: 'success',
-        //   mdUuid: '3e0fd24a-23ef-44984b54a78'
-        // }
-      ];
+      // null means loading
+      $scope.jobs = null;
+
+      // error on request or results parsing
+      $scope.error = null;
+
+      // true if request pending
+      $scope.loading = false;
 
       $scope.refreshJobList = function() {
+        $scope.jobs = null;
+        $scope.error = null;
+        $scope.loading = true;
         $http.post($scope.indexUrl, {
           'query': {
             'query_string': {
@@ -62,29 +58,39 @@
             }
           }
         }).then(function(result) {
-          $scope.jobs = result.data.hits.hits.map(function (hit) {
-            var source = hit._source;
-            var infos = source.id.split('#');
-            return {
-              url: infos[0],
-              featureType: infos[1],
-              featureCount: source.totalRecords_i || 0,
-              status: source.endDate_dt === undefined ? 'ongoing' : source.status_s,
-              mdUuid: source.parent
-            };
-          });
+          $scope.loading = false;
+          try {
+            $scope.jobs = result.data.hits.hits.map(function (hit) {
+              var source = hit._source;
+              var infos = source.id.split('#');
+              return {
+                url: infos[0],
+                featureType: infos[1],
+                featureCount: source.totalRecords_i || 0,
+                status: source.endDate_dt === undefined ? 'ongoing' : source.status_s,
+                mdUuid: source.parent,
+                error: source.error_ss
+              };
+            });
 
-          $scope.jobs.forEach(function(job) {
-            gnMetadataManager.getMdObjByUuid(job.mdUuid).then(function(md) {
-              if (!md['geonet:info']) {
-                job.md = {
-                  error: 'wfsIndexingMetadataNotFound'
+            $scope.jobs.forEach(function(job) {
+              gnMetadataManager.getMdObjByUuid(job.mdUuid).then(function(md) {
+                if (!md['geonet:info']) {
+                  job.md = {
+                    error: 'wfsIndexingMetadataNotFound'
+                  }
+                  return;
                 }
-                return;
-              }
-              job.md = md;
-            })
-          });
+                job.md = md;
+              })
+            });
+          } catch(e) {
+            $scope.error = e.message;
+          }
+        }, function(result) {
+          $scope.loading = false;
+          $scope.error = result.data.error ?
+            result.data.error.reason : 'Could not reach index';
         });
       };
       $scope.refreshJobList();
