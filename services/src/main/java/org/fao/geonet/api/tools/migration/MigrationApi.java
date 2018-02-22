@@ -24,6 +24,7 @@
 package org.fao.geonet.api.tools.migration;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.ContextAwareTask;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.Profile;
@@ -75,9 +76,20 @@ public class MigrationApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         final DataSource dataSource = appContext.getBean(DataSource.class);
         try (Connection connection = dataSource.getConnection()) {
-            DatabaseMigrationTask task =
-                (DatabaseMigrationTask) Class.forName(stepName).newInstance();
-            task.update(connection);
+            Class<?> clazz = Class.forName(stepName);
+
+            if (DatabaseMigrationTask.class.isAssignableFrom(clazz)) {
+                DatabaseMigrationTask task =
+                    (DatabaseMigrationTask) clazz.newInstance();
+                task.update(connection);
+            } else if (ContextAwareTask.class.isAssignableFrom(clazz)) {
+                ContextAwareTask task = (ContextAwareTask) clazz.newInstance();
+                task.run(ApplicationContextHolder.get());
+            } else {
+                return new ResponseEntity<>(String.format(
+                    "'%s' is not a valid DatabaseMigrationTask or ContextAwareTask. Choose a valid migration step.",
+                    stepName), HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity<>("", HttpStatus.CREATED);
         } catch (ClassNotFoundException e) {
             return new ResponseEntity<>(String.format(

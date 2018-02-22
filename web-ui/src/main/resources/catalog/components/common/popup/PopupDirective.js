@@ -105,7 +105,7 @@
             element.css({
               left: scope.options.x ||
                   $(document.body).width() / 2 - element.width() / 2,
-              top: scope.options.y || 89 //89 is the default size of the header
+              top: scope.options.y || 60 // 50 is the default size of the header + extra margin
             });
           };
 

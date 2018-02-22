@@ -64,7 +64,7 @@
                  };
 
                  scope.modelOptions = angular.copy(
-                 gnGlobalSettings.modelOptions);
+                  gnGlobalSettings.modelOptions);
                },
                post: function(scope, element, attrs) {
                  scope.snippet = null;
@@ -74,8 +74,12 @@
                  // TODO: Retrieve title of source records
                  // to be displayed in the selector.
                  scope.sourceRecords =
-                 (attrs['sourceRecords'] &&
+                  (attrs['sourceRecords'] &&
                  attrs['sourceRecords'].split(',')) || [];
+
+                 scope.exclude =
+                  (attrs['exclude'] &&
+                 attrs['exclude'].split('#')) || [];
 
                  // Define a search query to choose from
                  if (scope.sourceRecords.length > 0) {
@@ -84,9 +88,9 @@
                    };
                  } else {
                    scope.searchQuery =
-                   (attrs['searchQuery'] &&
+                    (attrs['searchQuery'] &&
                    angular.fromJson(
-                       attrs['searchQuery']
+                        attrs['searchQuery']
                    .replace('{uuid}', gnCurrentEdit.uuid)
                    .replace(/'/g, '\"')
                    )) || {};
@@ -112,10 +116,19 @@
                  scope.getFragments = function() {
                    scope.fragments = [];
                    $http.post(
-                   '../api/0.1/records/' + scope.sourceRecord +
-                   '/query/' + scope.query, {}).then(function(r) {
+                    '../api/0.1/records/' + scope.sourceRecord +
+                    '/query/' + scope.query, {}).then(function(r) {
                      if (r.status === 200) {
-                       scope.fragments = r.data;
+                       scope.fragments = {};
+                       if (scope.exclude.length > 0) {
+                         angular.forEach(r.data, function(value, key) {
+                           if (scope.exclude.indexOf(key.trim()) === -1) {
+                             scope.fragments[key.trim()] = value;
+                           }
+                         });
+                       } else {
+                         scope.fragments = r.data;
+                       }
                      }
                    });
                  };
@@ -123,7 +136,7 @@
                  // Append * for like search
                  scope.updateParams = function() {
                    scope.searchObj.params.any =
-                   '*' + scope.searchObj.any + '*';
+                    '*' + scope.searchObj.any + '*';
                  };
 
                  scope.$watch('sourceRecord', function(n, o) {
@@ -134,13 +147,13 @@
 
                  scope.add = function() {
                    gnEditor.add(gnCurrentEdit.id,
-                   scope.elementRef, scope.elementName, scope.domId, 'before');
+                    scope.elementRef, scope.elementName, scope.domId, 'before');
                    return false;
                  };
 
                  scope.addFragment = function(f) {
                    var field = $.find('input[name=' + scope.snippetRef +
-                   ']')[0];
+                    ']')[0];
 
                    $(field).val(f);
                    scope.fragments = [];

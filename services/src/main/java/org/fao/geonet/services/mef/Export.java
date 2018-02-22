@@ -90,6 +90,8 @@ public class Export implements Service {
         boolean skipUUID = Boolean.parseBoolean(Util.getParam(params, "skipUuid", "false"));
         boolean resolveXlink = Boolean.parseBoolean(Util.getParam(params, "resolveXlink", "true"));
         boolean removeXlinkAttribute = Boolean.parseBoolean(Util.getParam(params, "removeXlinkAttribute", "true"));
+        boolean addSchemaLocation = Boolean.parseBoolean(Util.getParam(params, "addSchemaLocation", "true"));
+
         String relatedMetadataRecord = Util
             .getParam(params, "relation", "true");
 
@@ -114,7 +116,7 @@ public class Export implements Service {
         // Uuid parameter MUST be set and add to selection manager before
         // export.
         if (version == null) {
-            file = MEFLib.doExport(context, uuid, format, skipUUID, resolveXlink, removeXlinkAttribute);
+            file = MEFLib.doExport(context, uuid, format, skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
         } else {
             // MEF version 2 support multiple metadata record by file.
 
@@ -163,7 +165,7 @@ public class Export implements Service {
             Log.info(Geonet.MEF, "Building MEF2 file with " + uuids.size()
                 + " records.");
 
-            file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
+            file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute, false, addSchemaLocation);
         }
 
         // -- Reset selection manager

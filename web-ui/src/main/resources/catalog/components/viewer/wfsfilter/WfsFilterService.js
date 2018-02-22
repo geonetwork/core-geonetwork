@@ -165,22 +165,21 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
-          // fetch field info from attr name (expects 'ft_xxx_yy')
-          var fieldInfo = attrName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
+          // fetch field info from attr name (expects 'ft_xxx_yy_zz')
+          var fieldInfo = attrName.match(/ft_(.*?)_([a-z]+)(?:_(tree))?$/);
           var fieldName = fieldInfo ? fieldInfo[1] : attrName;
+          var type = attrValue.type || 'terms';
 
           // multiple values
           if (attrValue.values && Object.keys(attrValue.values).length) {
-            var multiValued = fieldInfo[3] != undefined;
-
             Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.values, attrValue.type, multiValued));
+                fieldName, attrValue.values, type, true));
           }
 
           // single value
           else if (attrValue.value) {
             Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.value, attrValue.type, false));
+                fieldName, attrValue.value, type, false));
           }
         });
 
@@ -262,7 +261,7 @@
         // Add appProfile extra fields
         newFields.forEach(function(f) {
           if (mergedF.indexOf(f.name) < 0) {
-            f.label = f.name;
+            f.label = f.label[gnGlobalSettings.lang] || f.name;
             fields.push(f);
           }
         });

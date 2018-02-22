@@ -31,9 +31,57 @@
   <refDate>Reference date</refDate>
   <temporalRef>Temporal information</temporalRef>
   <constraintInfo>Access constraint information</constraintInfo>
+  <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
+  <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19139Tooai_dc>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Full</advanced>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <inspire>INSPIRE</inspire>
+  <inspire_sds>SDS</inspire_sds>
+
+  <keywordFrom>Keywords - </keywordFrom>
+  <resource>Resource</resource>
+  <xml>XML</xml>
+  <metadata>Metadata</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Quality</dataQualityInfo>
+  <spatialRepresentationInfo>Spatial rep.</spatialRepresentationInfo>
+  <referenceSystemInfo>Ref. system</referenceSystemInfo>
+  <contentInfo>Content</contentInfo>
+  <portrayalCatalogueInfo>Portrayal</portrayalCatalogueInfo>
+  <metadataConstraints>Md. constraints</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <noThesaurusName>Keywords</noThesaurusName>
+  <bboxesSection>Geographic coverage</bboxesSection>
   <overviews>Overviews</overviews>
   <metadataInXML>XML</metadataInXML>
   <providedBy>Provided by</providedBy>
   <shareOnSocialSite>Share on social sites</shareOnSocialSite>
   <viewMode>Views</viewMode>
+  <linkToPortal>Access to the portal</linkToPortal>
+  <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
+  <citationProposal>Citation proposal</citationProposal>
+  <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>
+  <associatedResources>Associated resources</associatedResources>
+
+  <!-- XSD error translation -->
+  <invalidElement>Invalid element. Invalid content was found starting with element:</invalidElement>
+  <onElementOf>One of the following elements</onElementOf>
+  <isExpected>is expected.</isExpected>
+  <isNotComplete>is not complete.</isNotComplete>
+  <elementLocated>Parent element is</elementLocated>
+  <missingElement>Missing element. The content of element:</missingElement>
+  <invalidValue>Invalid or missing value.</invalidValue>
+  <notValidFor>is not a valid value for</notValidFor>
+  <xsdErrorIs>XSD error is:</xsdErrorIs>
+  <inElement>in element</inElement>
+  <enum1>Value</enum1>
+  <enum2>is not valid for the field</enum2>
+  <enum3>List of values is :</enum3>
+
 </strings>

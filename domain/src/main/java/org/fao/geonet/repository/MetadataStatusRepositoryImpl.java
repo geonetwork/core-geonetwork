@@ -36,7 +36,7 @@ import javax.persistence.Query;
  *
  * @author Jesse
  */
-public class MetadataStatusRepositoryImpl implements MetadataValidationRepositoryCustom {
+public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCustom {
 
     @PersistenceContext
     EntityManager _entityManager;
@@ -50,6 +50,15 @@ public class MetadataStatusRepositoryImpl implements MetadataValidationRepositor
         final int deleted = query.executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
+        return deleted;
+    }
+
+    @Override
+    public int deleteAllById_UserId(final int userId) {
+        String entityType = MetadataStatus.class.getSimpleName();
+        String userIdPropName = MetadataStatusId_.userId.getName();
+        Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + userIdPropName + " = " + userId);
+        final int deleted = query.executeUpdate();
         return deleted;
     }
 }

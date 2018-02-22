@@ -185,7 +185,8 @@
   module.directive('gnKmlImport', [
     'ngeoDecorateLayer',
     'gnAlertService',
-    function(ngeoDecorateLayer, gnAlertService) {
+    '$translate',
+    function(ngeoDecorateLayer, gnAlertService, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -195,8 +196,8 @@
           map: '=gnKmlImportMap'
         },
         controllerAs: 'kmlCtrl',
-        controller: ['$scope', '$http', '$translate',
-          function($scope, $http, $translate) {
+        controller: ['$scope', '$http',
+          function($scope, $http) {
 
             /**
            * Create new vector Kml file from url and add it to

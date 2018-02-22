@@ -57,4 +57,6 @@ public class HarvestResult {
     public int uuidSkipped;
     public int thumbnails;                // = number of thumbnail generated
     public int thumbnailsFailed;        // = number of thumbnail creation which failed
+    /** Number of metadata managed by other harvester. */
+    public int managedByOtherHarvester;
 }

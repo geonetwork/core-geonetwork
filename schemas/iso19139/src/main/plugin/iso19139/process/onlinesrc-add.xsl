@@ -240,22 +240,99 @@ Insert is made in first transferOptions found.
                   </gmd:applicationProfile>
                 </xsl:if>
 
-                <xsl:if test=". != ''">
+                <xsl:variable name="curName" select="."></xsl:variable>
+                <xsl:if test="$curName != ''">
                   <gmd:name>
-                    <gco:CharacterString>
-                      <xsl:value-of select="."/>
-                    </gco:CharacterString>
+                    <xsl:choose>
+
+                      <!--Multilingual-->
+                      <xsl:when test="contains($curName, '#')">
+                        <xsl:for-each select="tokenize($curName, $separator)">
+                          <xsl:variable name="nameLang"
+                                        select="substring-before(., '#')"></xsl:variable>
+                          <xsl:variable name="nameValue"
+                                        select="substring-after(., '#')"></xsl:variable>
+                          <xsl:if
+                            test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                            <gco:CharacterString>
+                              <xsl:value-of select="$nameValue"/>
+                            </gco:CharacterString>
+                          </xsl:if>
+                        </xsl:for-each>
+
+                        <gmd:PT_FreeText>
+                          <xsl:for-each select="tokenize($curName, $separator)">
+                            <xsl:variable name="nameLang"
+                                          select="substring-before(., '#')"></xsl:variable>
+                            <xsl:variable name="nameValue"
+                                          select="substring-after(., '#')"></xsl:variable>
+
+                            <xsl:if
+                              test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                              <gmd:textGroup>
+                                <gmd:LocalisedCharacterString
+                                  locale="{concat('#', $nameLang)}">
+                                  <xsl:value-of select="$nameValue"/>
+                                </gmd:LocalisedCharacterString>
+                              </gmd:textGroup>
+                            </xsl:if>
+
+                          </xsl:for-each>
+                        </gmd:PT_FreeText>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>
+                          <xsl:value-of select="$curName"/>
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </gmd:name>
                 </xsl:if>
 
-                <xsl:if test="tokenize($desc, ',')[position() = $pos] != ''">
+                <xsl:variable name="curDesc" select="tokenize($desc, ',')[position() = $pos]"></xsl:variable>
+                <xsl:if test="$curDesc != ''">
                   <gmd:description>
-                    <gco:CharacterString>
-                      <xsl:value-of select="tokenize($desc, ',')[position() = $pos]"/>
-                    </gco:CharacterString>
+                    <xsl:choose>
+                      <xsl:when test="contains($curDesc, '#')">
+                        <xsl:for-each select="tokenize($curDesc, $separator)">
+                          <xsl:variable name="descLang"
+                                        select="substring-before(., '#')"></xsl:variable>
+                          <xsl:variable name="descValue"
+                                        select="substring-after(., '#')"></xsl:variable>
+                          <xsl:if
+                            test="$useOnlyPTFreeText = 'false' and $descLang = $mainLang">
+                            <gco:CharacterString>
+                              <xsl:value-of select="$descValue"/>
+                            </gco:CharacterString>
+                          </xsl:if>
+                        </xsl:for-each>
+
+                        <gmd:PT_FreeText>
+                          <xsl:for-each select="tokenize($desc, $separator)">
+                            <xsl:variable name="descLang"
+                                          select="substring-before(., '#')"></xsl:variable>
+                            <xsl:variable name="descValue"
+                                          select="substring-after(., '#')"></xsl:variable>
+                            <xsl:if
+                              test="$useOnlyPTFreeText = 'true' or $descLang != $mainLang">
+                              <gmd:textGroup>
+                                <gmd:LocalisedCharacterString
+                                  locale="{concat('#', $descLang)}">
+                                  <xsl:value-of select="$descValue"/>
+                                </gmd:LocalisedCharacterString>
+                              </gmd:textGroup>
+                            </xsl:if>
+                          </xsl:for-each>
+                        </gmd:PT_FreeText>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>
+                          <xsl:value-of select="$curDesc"/>
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </gmd:description>
                 </xsl:if>
-
 
                 <xsl:if test="$function != ''">
                   <gmd:function>
