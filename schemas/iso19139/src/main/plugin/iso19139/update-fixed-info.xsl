@@ -88,7 +88,7 @@
       -->
       <xsl:variable name="emodnetUuid">
         <xsl:if test="
-                  //gmd:MD_Metadata/gmd:hierarchyLevelName/gco:CharacterString and
+                  //gmd:MD_Metadata/gmd:hierarchyLevelName/* and
                   normalize-space(//gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/
                   */gmd:identifier/*/gmd:code/gco:CharacterString) != '' and
                   $custodian != ''">
