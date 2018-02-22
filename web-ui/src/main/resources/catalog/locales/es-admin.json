@@ -508,8 +508,6 @@
     "manageMetadataIdentifierTemplates": "Plantillas para el Identificador del Metadato",
     "manageUsers": "Administrar usuarios",
     "manageVirtualCSW": "CSW Virtua",
-    "ui-bingKey": "Clave de Bing Maps",
-    "ui-bingKey-help": "Hostname related key for Bing Map tiles. You must get your own key here.",
     "mapserverConfiguration": "Configuración de URL",
     "mapserverDescription": "Descripción",
     "mapserverName": "Nombre",

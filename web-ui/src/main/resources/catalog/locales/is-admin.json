@@ -507,8 +507,6 @@
     "manageMetadataIdentifierTemplates": "Sniðmát fyrir auðkenni lýsigagna",
     "manageUsers": "Stjórna notendum",
     "manageVirtualCSW": "Sýndar CSW",
-    "ui-bingKey": "Bing Map Key",
-    "ui-bingKey-help": "Hostname related key for Bing Map tiles. You must get your own key here.",
     "mapserverConfiguration": "URL stillingar",
     "mapserverDescription": "Lýsing",
     "mapserverName": "Nafn",

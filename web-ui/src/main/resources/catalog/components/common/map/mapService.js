@@ -89,7 +89,7 @@
           }
           return null;
         };
-        
+
         /**
          * @description
          * Returns a Layer already added to the map.
@@ -139,7 +139,6 @@
            * others can be used depending on the layer type.
            * Handled types are:
            *  * `osm`: OSM, no other prop required
-           *  * `bing_aerial`: Bing Aerial background, required prop: `key`
            *  * `stamen`: Stamen layers, required prop: `name`
            *  * `wms`: generic WMS layer, required props: `name`, `url`
            *  * `wmts`: generic WMTS layer, required props: `name`, `url`
@@ -177,17 +176,6 @@
                         url: layerInfo.url
                   }),
                   title: layerInfo.title || 'TMS Layer'
-                }));
-                break;
-
-              case 'bing_aerial':
-                defer.resolve(new ol.layer.Tile({
-                  preload: Infinity,
-                  source: new ol.source.BingMaps({
-                    key: layerInfo.key,
-                    imagerySet: 'Aerial'
-                  }),
-                  title: layerInfo.title || 'Bing Aerial'
                 }));
                 break;
 
@@ -1227,10 +1215,10 @@
                     o.version = version;
                   }
                   olL = $this.addWmsToMap(map, o);
-                  
+
                   if(!angular.isUndefined(md['geonet:info']['uuid'])) {
                 	  olL.set('MDuuid', md['geonet:info']['uuid']);
-                  } 
+                  }
 
                   if (!angular.isArray(olL.get('errors'))) {
                     olL.set('errors', []);
@@ -1282,13 +1270,13 @@
               });
             } else {
             	var olL = getTheLayerFromMap(map, name, url);
-            	
+
             	  $q.resolve(md).then(function(md) {
                       if(!angular.isUndefined(md['geonet:info']['uuid'])) {
                   	    olL.set('MDuuid', md['geonet:info']['uuid']);
                       }
                     });
-            	
+
             }
             return defer.promise;
           },
@@ -1780,15 +1768,6 @@
                         url: opt.url
                   }),
                   title: title ||  'TMS Layer'
-                });
-              case 'bing_aerial':
-                return new ol.layer.Tile({
-                  preload: Infinity,
-                  source: new ol.source.BingMaps({
-                    key: gnViewerSettings.bingKey,
-                    imagerySet: 'Aerial'
-                  }),
-                  title: title ||  'Bing Aerial'
                 });
               case 'stamen':
                 //We make watercolor the default layer

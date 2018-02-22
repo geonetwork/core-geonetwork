@@ -504,8 +504,6 @@
     "manageMetadataIdentifierTemplates": "元数据标识符模板",
     "manageUsers": "管理用户",
     "manageVirtualCSW": "虚拟CSW",
-    "ui-bingKey": "Bing地图密钥",
-    "ui-bingKey-help": "Bing瓦片地图的主机名相关键。你必须获取自己的Key。",
     "mapserverConfiguration": "URL配置",
     "mapserverDescription": "描述",
     "mapserverName": "名称",

@@ -507,8 +507,6 @@
     "manageMetadataIdentifierTemplates": "Gérer les modèles d'identifiants",
     "manageUsers": "Gérer les utilisateurs",
     "manageVirtualCSW": "CSW virtuel",
-    "ui-bingKey": "Clé Bing",
-    "ui-bingKey-help": "Nom de l'hôte associé à la clé Bing. Vous devez récupérer votre propre clé.",
     "mapserverConfiguration": "Configuration des URLs",
     "mapserverDescription": "Description",
     "mapserverName": "Nom",

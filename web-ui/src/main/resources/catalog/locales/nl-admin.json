@@ -507,8 +507,6 @@
     "manageMetadataIdentifierTemplates": "Metadata Identificatie Templates",
     "manageUsers": "gebruikers beheren",
     "manageVirtualCSW": "Virtual CSW",
-    "ui-bingKey": "Bing Map Key",
-    "ui-bingKey-help": "Hostname related key for Bing Map tiles. You must get your own key here.",
     "mapserverConfiguration": "URL configuratie",
     "mapserverDescription": "beschrijving",
     "mapserverName": "naam",
