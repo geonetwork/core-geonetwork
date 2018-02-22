@@ -112,6 +112,20 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         }
     }
 
+    @Nonnull
+    @Override
+    public List<String> findDuplicatedUsernamesCaseInsensitive() {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<String> query = cb.createQuery(String.class);
+
+        Root<User> userRoot = query.from(User.class);
+        query = query.select(cb.lower(userRoot.get(User_.username)));
+        query.groupBy(cb.lower(userRoot.get(User_.username)));
+        query.having(cb.gt(cb.count(userRoot), 1));
+
+        return _entityManager.createQuery(query).getResultList();
+    }
+
     @Override
     @Nonnull
     public List<Pair<Integer, User>> findAllByGroupOwnerNameAndProfile(@Nonnull final Collection<Integer> metadataIds,

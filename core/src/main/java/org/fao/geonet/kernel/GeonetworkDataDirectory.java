@@ -80,6 +80,7 @@ public class GeonetworkDataDirectory {
     private Path htmlCacheDir;
     private Path uploadDir;
     private Path formatterDir;
+    private Path nodeLessFiles;
     private String nodeId;
 
     private boolean isDefaultNode;
@@ -322,6 +323,9 @@ public class GeonetworkDataDirectory {
         );
         backupDir = setDir(jeevesServlet, webappName, handlerConfig, backupDir,
             ".backup" + KEY_SUFFIX, Geonet.Config.BACKUP_DIR, "data", "backup"
+        );
+        nodeLessFiles = setDir(jeevesServlet, webappName, handlerConfig, nodeLessFiles,
+            ".node_less_files" + KEY_SUFFIX, Geonet.Config.NODE_LESS_DIR, "data", "node_less_files"
         );
 
         handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, this.systemDataDir.toString());
@@ -696,6 +700,14 @@ public class GeonetworkDataDirectory {
 
     public void setFormatterDir(Path formatterDir) {
         this.formatterDir = formatterDir;
+    }
+
+    public Path getNodeLessFiles() {
+        return nodeLessFiles;
+    }
+
+    public void setNodeLessFiles(Path nodeLessFiles) {
+        this.nodeLessFiles = nodeLessFiles;
     }
 
     public Path resolveWebResource(String resourcePath) {

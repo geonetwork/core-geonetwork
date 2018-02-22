@@ -28,8 +28,8 @@
       config = {};
     }
 
-    var module = angular.module('gn_search');
-    module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+    var cfgModule = angular.module('gn_config', []);
+    cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
       function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
         gnGlobalSettings.init(config, 'http://localhost:8080/geonetwork/srv/', gnViewerSettings, gnSearchSettings);
       }]);

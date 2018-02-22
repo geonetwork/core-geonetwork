@@ -155,6 +155,7 @@ public class Aligner extends BaseAligner {
     private Map<String, Object> processParams = new HashMap<String, Object>();
 
 
+    private MetadataRepository metadataRepository;
     //--------------------------------------------------------------------------
     //--- Public file update methods
     //--------------------------------------------------------------------------
@@ -172,6 +173,7 @@ public class Aligner extends BaseAligner {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
+        metadataRepository = gc.getBean(MetadataRepository.class);
         result = new HarvestResult();
 
         //--- save remote categories and groups into hashmaps for a fast access
@@ -289,7 +291,6 @@ public class Aligner extends BaseAligner {
                     else if (localUuids.getID(ri.uuid) == null) {
                         //record doesn't belong to this harvester but exists
                         result.datasetUuidExist++;
-                        
                         switch(params.getOverrideUuid()){
                         case OVERRIDE:
                             updateMetadata(ri, Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
@@ -338,7 +339,7 @@ public class Aligner extends BaseAligner {
     //--- Private methods : addMetadata
     //---
     //--------------------------------------------------------------------------
-    private Element extractValidMetadataForImport(DirectoryStream<Path> files, Element info) throws IOException, JDOMException {
+    private Element extractValidMetadataForImport (DirectoryStream<Path> files, Element info) throws IOException, JDOMException {
         Element metadataValidForImport;
         final String finalPreferredSchema = preferredSchema;
 
@@ -358,7 +359,7 @@ public class Aligner extends BaseAligner {
             Log.debug(Geonet.MEF, "Multiple metadata files");
 
         Map<String, Pair<String, Element>> mdFiles =
-            new HashMap<String, Pair<String, Element>>();
+                new HashMap<String, Pair<String, Element>>();
         for (Path file : files) {
             if (Files.isRegularFile(file)) {
                 Element metadata = Xml.loadFile(file);
@@ -557,7 +558,7 @@ public class Aligner extends BaseAligner {
         try {
             params.getValidate().validate(dataMan, context, md);
         } catch (Exception e) {
-            log.info("Ignoring invalid metadata uuid: " + ri.uuid);
+            log.info("Ignoring invalid metadata uuid: " + uuid);
             result.doesNotValidate++;
             return null;
         }

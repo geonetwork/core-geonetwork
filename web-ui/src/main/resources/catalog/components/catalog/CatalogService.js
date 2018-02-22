@@ -81,7 +81,7 @@
          * @return {HttpPromise} Future object
          */
         validate: function(id) {
-          return $http.put('../api/records/' + id + '/validate');
+          return $http.put('../api/records/' + id + '/validate/internal');
         },
 
         /**
@@ -98,7 +98,7 @@
          */
         validateDirectoryEntry: function(id, newState) {
           var param = '?isvalid=' + (newState ? 'true' : 'false');
-          return $http.put('../api/records/' + id + '/validate' + param);
+          return $http.put('../api/records/' + id + '/validate/internal' + param);
         },
 
         /**
@@ -149,7 +149,7 @@
             sourceUuid: id,
             isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
-            isVisibleByAllGroupMembers: withFullPrivileges,
+            isVisibleByAllGroupMembers: withFullPrivileges ? 'true' : 'false',
             targetUuid: metadataUuid || '',
             hasCategoryOfSource: hasCategoryOfSource ? 'true' : 'false'
           });
@@ -204,15 +204,15 @@
 
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild, metadataUuid, hasCategoryOfSource)
-            .success(function(id) {
-            var path = '/metadata/' + id;
-            if (tab) {
-              path += '/tab/' + tab;
-            }
-            $location.path(path)
+              .success(function(id) {
+                var path = '/metadata/' + id;
+                if (tab) {
+                  path += '/tab/' + tab;
+                }
+                $location.path(path)
                 .search('justcreated')
                 .search('redirectUrl', 'catalog.edit');
-          });
+              });
         },
 
         /**
@@ -421,6 +421,7 @@
           isXLinkEnabled: 'system.xlinkResolver.enable',
           isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
           isFeedbackEnabled: 'system.userFeedback.enable',
+          isInspireEnabled: 'system.inspireValidation.enable',
           isSearchStatEnabled: 'system.searchStats.enable',
           isHideWithHelEnabled: 'system.hidewithheldelements.enable'
         },
@@ -436,6 +437,7 @@
       isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
+      isInspireEnabled: 'system.inspire.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
     },
@@ -535,7 +537,8 @@
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
         'creationDate', 'publicationDate', 'revisionDate'];
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];    // See below; probably not necessary
+      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+      // See below; probably not necessary
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {

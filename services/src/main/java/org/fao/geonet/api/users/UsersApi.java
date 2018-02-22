@@ -293,10 +293,10 @@ public class UsersApi {
                 + Params.Operation.NEWUSER + " " + "operation");
         }
 
-        User user = userRepository.findOneByUsername(userDto.getUsername());
-        if (user != null) {
-            throw new IllegalArgumentException("User with username "
-                + userDto.getUsername() + " already exists");
+        List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
+        if (!existingUsers.isEmpty()) {
+            throw new IllegalArgumentException("Users with username "
+                + userDto.getUsername() + " ignore case already exists");
         }
 
         List<GroupElem> groups = new LinkedList<>();
@@ -306,14 +306,14 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
-        user = new User();
+        User user = new User();
         user.getSecurity().setPassword(
             PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
                 userDto.getPassword()));
 
         fillUserFromParams(user, userDto);
 
-        userRepository.save(user);
+        user = userRepository.save(user);
         setUserGroups(user, groups);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -371,14 +371,17 @@ public class UsersApi {
                 + userDto.getId());
         }
 
-        // Check no duplicated username
-        User userWithUsername = userRepository.findOneByUsername(userDto.getUsername());
-
-        if ((userWithUsername != null) && (user.getId() != userWithUsername.getId())) {
+        // Check no duplicated username and if we are adding a duplicate existing name with other case combination
+        List<User> usersWithUsernameIgnoreCase = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
+        if (usersWithUsernameIgnoreCase.size() != 0 &&
+            (!usersWithUsernameIgnoreCase.stream().anyMatch(u -> u.getId() == userIdentifier)
+                || usersWithUsernameIgnoreCase.stream().anyMatch(u ->
+                u.getUsername().equals(userDto.getUsername()) && u.getId() != userIdentifier)
+            )) {
             throw new IllegalArgumentException(String.format(
-                "Another user with username '%s' already exists",
-                user.getUsername()));
+                "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
+
 
         if (!myProfile.getAll().contains(profile)) {
             throw new IllegalArgumentException(
@@ -414,7 +417,7 @@ public class UsersApi {
 
         fillUserFromParams(user, userDto);
 
-        userRepository.save(user);
+        user = userRepository.save(user);
         setUserGroups(user, groups);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);

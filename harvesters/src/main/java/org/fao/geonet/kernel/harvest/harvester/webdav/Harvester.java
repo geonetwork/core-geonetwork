@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -305,7 +306,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             } catch (Exception e) {
                 log.error("  - Failed to set uuid for metadata with remote path : "
                     + rf.getPath());
-                errors.add(new HarvestError(context, e, this.log));
+                errors.add(new HarvestError(this.context, e, this.log));
                 result.couldNotInsert++;
                 return;
             }
@@ -404,6 +405,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             dataMan.validate(schema, md);
             return true;
         } catch (Exception e) {
+            log.info("Validation failed. Error: "+e.getMessage());
             return false;
         }
     }

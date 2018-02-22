@@ -106,14 +106,24 @@
                 '-c' + scope.map.getView().getCenter().join('-');
           };
 
-          function getMapAsImage($event) {
+          function getMapAsImage($event, scaleFactor) {
             var defer = $q.defer();
             if (scope.isExportMapAsImageEnabled) {
               scope.mapFileName = getMapFileName();
 
               scope.map.once('postcompose', function(event) {
                 var canvas = event.context.canvas;
-                var data = canvas.toDataURL('image/png');
+
+                var resizedCanvas = document.createElement("canvas");
+                var resizedContext = resizedCanvas.getContext("2d");
+                scaleFactor = scaleFactor || 1;
+                resizedCanvas.height = canvas.height * scaleFactor;
+                resizedCanvas.width = canvas.width * scaleFactor;
+
+                resizedContext.drawImage(canvas, 0, 0,
+                  resizedCanvas.width, resizedCanvas.height);
+
+                var data = resizedCanvas.toDataURL('image/png');
                 defer.resolve(data);
               });
               scope.map.renderSync();
@@ -170,7 +180,7 @@
           scope.saveInCatalog = function($event) {
             var defer = $q.defer();
 
-            getMapAsImage($event).then(function(data) {
+            getMapAsImage($event, .66).then(function(data) {
               scope.mapUuid = null;
 
               // Map as OWS context

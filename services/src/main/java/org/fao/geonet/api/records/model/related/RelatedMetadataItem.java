@@ -16,26 +16,26 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="relatedMetadataItem">
- *   &lt;complexContent>
- *     &lt;extension base="{}relatedItem">
- *       &lt;sequence>
- *         &lt;element name="description">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="values" type="{}localizedString" maxOccurs="unbounded"
+ * <complexType name="relatedMetadataItem">
+ *   <complexContent>
+ *     <extension base="{}relatedItem">
+ *       <sequence>
+ *         <element name="description">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="values" type="{}localizedString" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *     &lt;/extension>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *       </sequence>
+ *     </extension>
+ *   </complexContent>
+ * </complexType>
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -53,6 +53,7 @@ public class RelatedMetadataItem
 
     @XmlElement(required = true)
     protected String[] mdType;
+
 
     /**
      * Gets the value of the description property.
@@ -96,16 +97,16 @@ public class RelatedMetadataItem
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="values" type="{}localizedString" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="values" type="{}localizedString" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)

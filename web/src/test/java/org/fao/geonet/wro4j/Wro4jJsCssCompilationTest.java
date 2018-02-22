@@ -121,6 +121,16 @@ public class Wro4jJsCssCompilationTest {
     }
 
     private void testResourcesOfType(ResourceType resourceType, Predicate<String> testFilter) throws IOException {
+        Path webDir = AbstractCoreIntegrationTest.getWebappDir(Wro4jJsCssCompilationTest.class);
+        GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
+        dataDirectory.setSchemaPluginsDir(webDir.resolve("WEB-INF/data/config/schema_plugins"));
+        dataDirectory.setFormatterDir(webDir.resolve("WEB-INF/data/data/formatter"));
+        dataDirectory.setNodeLessFiles(webDir.resolve("WEB-INF/data/node_less_files"));
+        GenericXmlApplicationContext applicationContext = new GenericXmlApplicationContext();
+        applicationContext.refresh();
+        applicationContext.getBeanFactory().registerSingleton("geonetworkDataDirectory", dataDirectory);
+        ApplicationContextHolder.set(applicationContext);
+
         final Collection<Group> groups = wro4jModel.getGroups();
         StringBuilder errors = new StringBuilder();
         for (Group group : groups) {
@@ -128,6 +138,7 @@ public class Wro4jJsCssCompilationTest {
                 continue;
             }
             List<Resource> resources = group.collectResourcesOfType(resourceType).getResources();
+
 
 
             if (!resources.isEmpty()) {
@@ -154,7 +165,9 @@ public class Wro4jJsCssCompilationTest {
                         errors.append("\n        - ").append(resource.getUri()).append("\n");
                     }
                     errors.append("    * Error Message:\n        > ");
-                    errors.append(t.getMessage().replaceAll("(\n|\r)+", "\n        > ")).append("\n");
+                    if(t.getMessage()!=null) {
+                        errors.append(t.getMessage().replaceAll("(\n|\r)+", "\n        > ")).append("\n");
+                    }
                 }
             }
         }

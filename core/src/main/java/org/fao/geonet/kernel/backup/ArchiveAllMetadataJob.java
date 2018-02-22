@@ -138,7 +138,7 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
             boolean removeXlinkAttribute = false;
             boolean skipOnError = true;
             Path srcFile = MEFLib.doMEF2Export(serviceContext, new HashSet<>(uuids), format, false, stylePath,
-                    resolveXlink, removeXlinkAttribute, skipOnError);
+                    resolveXlink, removeXlinkAttribute, skipOnError, true);
 
             Path backupDir = dataDirectory.getBackupDir().resolve(BACKUP_DIR);
             String today = new SimpleDateFormat("-yyyy-MM-dd-HH:mm").format(new Date());

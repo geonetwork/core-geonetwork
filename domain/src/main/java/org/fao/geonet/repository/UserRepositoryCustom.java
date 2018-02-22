@@ -114,4 +114,13 @@ public interface UserRepositoryCustom {
      */
     @Nullable
     public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(@Nonnull String username);
+
+    /**
+     * Find the all the usernames that using a case insensitive compare appear more than one time. For example,
+     * if we have a list of users with usernames "usernNAME1", USerName1", "uSernaME2", uSERname2", "username3"
+     * this method return a list with "username1" and "username2".
+     * @return the list of usernames shared by more than one user (case insensitive.
+     */
+    @Nonnull
+    public List<String> findDuplicatedUsernamesCaseInsensitive();
 }
