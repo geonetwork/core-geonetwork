@@ -507,8 +507,6 @@
     "manageMetadataIdentifierTemplates": "Plantilles per a l'Identificador de la metadada",
     "manageUsers": "Administrar usuaris",
     "manageVirtualCSW": "CSW Virtua",
-    "ui-bingKey": "Bing Map Key",
-    "ui-bingKey-help": "Hostname related key for Bing Map tiles. You must get your own key here.",
     "mapserverConfiguration": "Configuració d'URL",
     "mapserverDescription": "Descripció",
     "mapserverName": "Nom",

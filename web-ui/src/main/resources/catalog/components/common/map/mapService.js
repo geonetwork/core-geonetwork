@@ -168,17 +168,6 @@
                 }));
                 break;
 
-              case 'bing_aerial':
-                defer.resolve(new ol.layer.Tile({
-                  preload: Infinity,
-                  source: new ol.source.BingMaps({
-                    key: layerInfo.key,
-                    imagerySet: 'Aerial'
-                  }),
-                  title: layerInfo.title || 'Bing Aerial'
-                }));
-                break;
-
               case 'stamen':
                 //We make watercolor the default layer
                 var type = layerInfo.name ? layerInfo.name : 'watercolor',
@@ -1751,15 +1740,6 @@
                         url: opt.url
                   }),
                   title: title ||  'TMS Layer'
-                });
-              case 'bing_aerial':
-                return new ol.layer.Tile({
-                  preload: Infinity,
-                  source: new ol.source.BingMaps({
-                    key: gnViewerSettings.bingKey,
-                    imagerySet: 'Aerial'
-                  }),
-                  title: title ||  'Bing Aerial'
                 });
               case 'stamen':
                 //We make watercolor the default layer

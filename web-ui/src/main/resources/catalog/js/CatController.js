@@ -253,7 +253,6 @@
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
-        gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
         gnViewerSettings.owsContext = gnViewerSettings.owsContext ||
             this.gnCfg.mods.map.context;
         gnViewerSettings.geocoder = this.gnCfg.mods.geocoder;

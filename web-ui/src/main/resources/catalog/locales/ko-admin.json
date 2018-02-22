@@ -507,8 +507,6 @@
     "manageMetadataIdentifierTemplates": "메타데이터 식별자 템플릿",
     "manageUsers": "사용자 관리",
     "manageVirtualCSW": "가상 CSW",
-    "ui-bingKey": "Bing Map 키",
-    "ui-bingKey-help": "Bing Map 타일의 호스트이름과 관련된 키입니다. 여기에 고유 키를 설정해야 합니다.",
     "mapserverConfiguration": "URL 설정",
     "mapserverDescription": "설명",
     "mapserverName": "이름",
