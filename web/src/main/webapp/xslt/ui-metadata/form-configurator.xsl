@@ -260,7 +260,7 @@
         In that case, a geonet:child element should exist in the document.
         -->
       <xsl:choose>
-        <xsl:when test="$isDisplayed and not(@templateModeOnly)">
+        <xsl:when test="$isDisplayed = 'true' and not(@templateModeOnly)">
           <xsl:variable name="configName" select="@name"/>
 
 

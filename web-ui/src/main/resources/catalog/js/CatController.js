@@ -85,6 +85,7 @@
             'hitsPerPage': 20
           },
           'facetsSummaryType': 'details',
+          'defaultSearchString': '',
           'facetTabField': '',
           'facetConfig': [
             // {

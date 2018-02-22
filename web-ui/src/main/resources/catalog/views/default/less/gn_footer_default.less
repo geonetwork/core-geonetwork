@@ -1,3 +1,5 @@
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 .gn-footer-text {
   margin-top: 15px;
@@ -23,10 +25,22 @@
     Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
 */
 .gn-bottom-bar {
-  height:50px;
-  position:relative;
-  overflow:hidden;
-  width:100%;
-  margin-bottom:0px;
+  height: 50px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 0px;
   border-radius: 0px;
+  border-width: 1px 0 0 0;
+  background: @gn-bottombar-background;
+  border-color: @gn-bottombar-border-color;
+  .gn-footer-text > span {
+    color: @gn-bottombar-color !important;
+  }
+  a {
+    color: @gn-bottombar-color !important;
+    &:hover {
+      color: @gn-bottombar-color-hover !important;
+    }
+  }
 }
