@@ -123,6 +123,38 @@
         };
       })
 
+      /* filter to check if a link is a getcapabilities request */
+      .filter('asGetCapabilities', function() {
+        return function(input,protocol,version) {
+          if (!input) return "";
+          //check protocol
+          if (!protocol) protocol = "WMS"
+          //check if starts with http
+          if (input.indexOf("http")!=0) input="http://"+input;
+          //check if capabilities is there
+          if (input.toLowerCase().indexOf("getcapabilities")==-1){
+            if (input.indexOf('\?')==-1) input=input+"?";
+            input=input+"&request=GetCapabilities&service="+protocol.toUpperCase()+(typeof(version)!='undefined'?("&version="+version):"");
+          }
+          return input;
+        };
+      })
+
+      /* filter to check if a value is an array, and if so,
+         return param or empty string quite some of the gn json returns
+         empty array if undefined or empty string was intended */
+      .filter('asArray', function() {
+        return function(input) {
+          if (!input) return [];
+          if (angular.isArray(input)) {
+            return input;
+          } else {
+            return [input];
+          }
+        };
+      })
+
+
       /* filter to check if a value is an empty array, and if so,
          return param or empty string quite some of the gn json returns
          empty array if undefined or empty string was intended */

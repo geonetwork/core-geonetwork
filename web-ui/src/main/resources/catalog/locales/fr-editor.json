@@ -85,7 +85,7 @@
     "linkToServiceError": "Une erreur est survenue lors de l'association entre la donnée et le service.",
     "chooseAProj": "Sélectionner la projection à utiliser pour l'affichage des coordonnées (note : les coordonnées sont toujours sauvegardées en WGS84 dans la fiche).",
     "chooseAType": "Sélectionner un type",
-    "chooseOnlinesrc": "Sélectionner un fichier",
+    "chooseOnlinesrc": "Sélectionner ou déposer un fichier",
     "chooseRegion": "Choisir un territoire",
     "clickToDrawABox": "Cliquer une fois pour activer le bouton et dessiner l'emprise. Recliquer pour arrêter de dessiner.",
     "closeEditor": "Enregistrer & fermer",

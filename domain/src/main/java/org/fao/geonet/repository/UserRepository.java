@@ -44,6 +44,13 @@ public interface UserRepository extends GeonetRepository<User, Integer>, JpaSpec
     public User findOneByUsername(String username);
 
     /**
+     * Find all users identified by the provided username ignoring the case.
+     * @param username the username.
+     * @return all users with username equals ignore case the provided username.
+     */
+    public List<User> findByUsernameIgnoreCase(String username);
+
+    /**
      * find all users with the given profile.
      *
      * @param profile the profile to use in search query.

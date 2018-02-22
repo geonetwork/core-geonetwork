@@ -807,6 +807,32 @@
 
                     If only one choice, make a simple button
               -->
+              <xsl:when test="$qualifiedName = 'gfc:code' and $schema='iso19110'">
+
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown" title="{$i18n/addA} {$label}">
+                    <span/>
+                    <span class="caret"/>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <xsl:variable name="name" select="'gco:CharacterString'"/>
+                    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
+                    <li title="{$label/description}">
+                      <a data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{$name}', '{$id}', 'replaceWith');">
+                        <xsl:value-of select="$label/label"/>
+                      </a>
+                    </li>
+                    <xsl:variable name="name2" select="'gmx:Anchor'"/>
+                    <xsl:variable name="label2" select="gn-fn-metadata:getLabel($schema, $name2, $labels)"/>
+                    <li title="{$label2/description}">
+                      <a data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{$name2}', '{$id}', 'replaceWith');">
+                        <xsl:value-of select="$label2/label"/>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </xsl:when>
+
               <xsl:when test="count($childEditInfo/gn:choose) = 1">
                 <xsl:for-each select="$childEditInfo/gn:choose">
                   <xsl:variable name="label"
@@ -1409,10 +1435,10 @@
     <xsl:param name="insertRef" select="''"/>
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    <button type="button" class="btn btn-link btn-xs"
+    <button type="button" class="btn btn-default btn-xs"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
-      <i class="fa fa-plus"/>
+      <i class="fa fa-plus fa-fw"/>
       <xsl:value-of select="$attributeLabel/label"/>
     </button>
   </xsl:template>

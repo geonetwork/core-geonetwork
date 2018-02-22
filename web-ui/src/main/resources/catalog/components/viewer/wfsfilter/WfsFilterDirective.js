@@ -156,9 +156,12 @@
           scope.filtersChanged = false;
           scope.previousFilterState = {
             params: {},
-            any: '',
             geometry: ''
           };
+
+          // this will hold filters entered by the user for each facet
+          // keys are facet names
+          scope.facetFilters = {};
 
           // Get an instance of index object
           var indexObject, geometry, extentFilter;
@@ -401,7 +404,6 @@
               };
               output[fieldName].values[facetKey] = true;
             }
-            scope.searchInput = '';
             scope.filterFacets();
           };
           ctrl.onCheckboxClick = scope.onCheckboxClick;
@@ -449,11 +451,28 @@
               }
             });
 
+            // use value filters for facets
+            var aggs = {};
+            Object.keys(scope.facetFilters).forEach(function(facetName) {
+              var filter = scope.facetFilters[facetName];
+              if (!filter) { return; }
+
+              // make the filter case insensitive, ie : abc => [aA][bB][cC]
+              filter = filter.replace(/./g, function(match) {
+                return '[' + match.toLowerCase() + match.toUpperCase() + ']';
+              });
+
+              aggs[facetName] = {
+                terms: {
+                  include: '.*' + filter + '.*'
+                }
+              };
+            });
+
             indexObject.searchWithFacets({
               params: scope.output,
-              any: scope.searchInput,
-              geometry: geometry
-            }).
+              geometry: scope.filterGeometry
+            }, aggs).
                 then(function(resp) {
                   indexObject.pushState();
                   scope.fields = resp.facets;
@@ -496,7 +515,6 @@
            */
           scope.resetFacets = function() {
             scope.output = {};
-            scope.searchInput = '';
 
             scope.resetSLDFilters();
 
@@ -532,7 +550,6 @@
 
             // apply filters to form
             scope.output = initialFilters.qParams || {};
-            scope.searchInput = initialFilters.any || '';
             if (initialFilters.geometry) {
               scope.ctrl.searchGeometry =
                   initialFilters.geometry[0][0] + ',' +
@@ -544,7 +561,6 @@
             // resend a search with initial filters to alter the facets
             return indexObject.searchWithFacets({
               params: initialFilters.qParams,
-              any: initialFilters.any,
               geometry: initialFilters.geometry
             }).then(function(resp) {
               indexObject.pushState();
@@ -578,7 +594,6 @@
             // save this filter state for future comparison
             scope.previousFilterState.params = angular.merge({}, scope.output);
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
-            scope.previousFilterState.any = scope.searchInput;
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
@@ -641,15 +656,6 @@
                   version);
             });
           };
-
-          /**
-           * Clear the search input
-           */
-          scope.clearInput = function() {
-            scope.searchInput = '';
-            scope.filterFacets();
-          };
-          scope.searchInput = '';
 
           // Init the directive
           if (scope.layer) {
@@ -774,31 +780,35 @@
             // or equal to ',,,' or '', which all amount to the same thing
             function normalize(s) { return (s || '').replace(',,,', ''); }
 
-            var inputChanged = scope.searchInput !=
-                scope.previousFilterState.any;
             var geomChanged = normalize(scope.ctrl.searchGeometry) !==
                 normalize(scope.previousFilterState.geometry);
 
             // only compare params object if necessary
             var paramsChanged = false;
-            if (!inputChanged && !geomChanged) {
+            if (!geomChanged) {
               paramsChanged = !angular.equals(
                   scope.previousFilterState.params, scope.output);
             }
 
-            scope.filtersChanged = inputChanged || paramsChanged || geomChanged;
+            scope.filtersChanged = paramsChanged || geomChanged;
           });
 
           // returns true if there is an active filter for this field
           // field object is optional
           scope.isFilterActive = function(facetName, field) {
+            // special case for geometry
+            if (facetName == 'geometry') {
+              return !!scope.filterGeometry;
+            }
+
             // no available value: return false
             if (!scope.output[facetName]) {
               return false;
             }
 
             // special case for dates
-            if (scope.output[facetName].type == 'date') {
+            if (scope.output[facetName].type == 'date' ||
+                scope.output[facetName].type == 'rangeDate') {
               var values = scope.output[facetName].values;
 
               // no dates defined: leave
@@ -807,28 +817,20 @@
               }
 
               // check if there is a valid "higher than" or "lower than" filter
-              var lowerBound = field.dates &&
-                  field.dates[0];
-              var upperBound = field.dates &&
-                  field.dates[field.dates.length - 1];
+              var lowerBound = field.dates && field.dates[0];
+              var upperBound = field.dates && field.dates[field.dates.length-1];
               var lowerActive = values.from &&
-                  moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
-                  lowerBound;
+                moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf()
+                > lowerBound;
               var upperActive = values.to &&
-                  moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
-                  upperBound;
+                moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf()
+                < upperBound;
               return lowerActive || upperActive;
-            }
-
-            // special case for geometry
-            if (facetName == 'geometry') {
-              return scope.ctrl.searchGeometry &&
-                  scope.ctrl.searchGeometry !== ',,,';
             }
 
             // other fields: the filter must be active
             return true;
-          };
+          }
         }
       };
     }]);

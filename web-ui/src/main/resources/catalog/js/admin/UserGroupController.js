@@ -613,7 +613,12 @@
       };
 
       $scope.selectGroup = function(g) {
-        $scope.groupSelected = g;
+        // groups list is shared between users and groups management
+        // for users management the groups get a langlabel property
+        // that breaks the group management.
+        // TODO: Use custom controllers for groups and users management
+        $scope.groupSelected = angular.copy(g);
+        delete $scope.groupSelected.langlabel;
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {

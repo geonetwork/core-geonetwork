@@ -138,54 +138,58 @@
               </a>
             </section>
 
-            <section class="gn-md-side-viewmode">
-              <h4>
-                <i class="fa fa-fw fa-eye">&#160;</i>
-                <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
-              </h4>
-              <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
-                <ul>
-                  <li>
-                    <a>
-                      <xsl:attribute name="href">
-                        <xsl:choose>
-                          <xsl:when test="@name = 'xml'">
-                            <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xml')"/>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xsl-view?view=', @name, '&amp;portalLink=', $portalLink)"/>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </xsl:attribute>
-                      <xsl:variable name="name" select="@name"/>
-                      <xsl:value-of select="$schemaStrings/*[name(.) = $name]"/>
-                    </a>
-                  </li>
-                </ul>
-              </xsl:for-each>
-            </section>
+            <!-- Display link to portal and other view only
+            when in pure HTML mode. -->
+            <xsl:if test="$root != 'div'">
+              <section class="gn-md-side-viewmode">
+                <h4>
+                  <i class="fa fa-fw fa-eye">&#160;</i>
+                  <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
+                </h4>
+                <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
+                  <ul>
+                    <li>
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:choose>
+                            <xsl:when test="@name = 'xml'">
+                              <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xml')"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                              <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xsl-view?view=', @name, '&amp;portalLink=', $portalLink)"/>
+                            </xsl:otherwise>
+                          </xsl:choose>
+                        </xsl:attribute>
+                        <xsl:variable name="name" select="@name"/>
+                        <xsl:value-of select="$schemaStrings/*[name(.) = $name]"/>
+                      </a>
+                    </li>
+                  </ul>
+                </xsl:for-each>
+              </section>
 
-            <section class="gn-md-side-access">
-              <div class="well text-center">
-                <span itemprop="identifier"
-                    itemscope="itemscope"
-                    itemtype="http://schema.org/identifier"
-                    class="hidden">
-                  <xsl:value-of select="$metadataUuid"/>
-                </span>
-                <a itemprop="url"
-                   itemscope="itemscope"
-                   itemtype="http://schema.org/url"
-                   class="btn btn-block btn-primary"
-                   href="{if ($portalLink != '')
-                          then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                          else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                  <i class="fa fa-fw fa-link">&#160;</i>
-                  <xsl:value-of select="$schemaStrings/linkToPortal"/>
-                </a>
-                <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
-              </div>
-            </section>
+              <section class="gn-md-side-access">
+                <div class="well text-center">
+                  <span itemprop="identifier"
+                      itemscope="itemscope"
+                      itemtype="http://schema.org/identifier"
+                      class="hidden">
+                    <xsl:value-of select="$metadataUuid"/>
+                  </span>
+                  <a itemprop="url"
+                     itemscope="itemscope"
+                     itemtype="http://schema.org/url"
+                     class="btn btn-block btn-primary"
+                     href="{if ($portalLink != '')
+                            then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                            else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                    <i class="fa fa-fw fa-link">&#160;</i>
+                    <xsl:value-of select="$schemaStrings/linkToPortal"/>
+                  </a>
+                  <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
+                </div>
+              </section>
+            </xsl:if>
 
             <section class="gn-md-side-associated">
               <h4>

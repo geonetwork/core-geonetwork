@@ -39,7 +39,7 @@
       'editing': 'fa-pencil'},
     internalOperations: ['editing', 'notify'],
     internalGroups: [-1, 0, 1],
-    internalGroupsProfiles: ['Administrator', 'Reviewer'],
+    internalGroupsProfiles: ['Administrator', 'UserAdmin', 'Reviewer'],
     // Use topGroups to place those groups with internet, intranet groups
     // on top of the privileges panel.
     // TODO: Move config to DB using isTopGroups in groups table

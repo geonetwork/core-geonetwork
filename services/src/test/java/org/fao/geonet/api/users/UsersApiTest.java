@@ -25,6 +25,7 @@ package org.fao.geonet.api.users;
 
 import com.google.gson.Gson;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
@@ -70,7 +71,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
     @Before
     public void setUp() {
-       createTestData();
+        createTestData();
     }
 
     @Test
@@ -83,7 +84,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(4)))
+            .andExpect(jsonPath("$", hasSize(5)))
             .andExpect(content().contentType("application/json"));
     }
 
@@ -123,7 +124,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/users/" + editorUser.getId() +  "/groups")
+        this.mockMvc.perform(get("/api/users/" + editorUser.getId() + "/groups")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
@@ -296,7 +297,38 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("User with username testuser-editor already exists")))
+            .andExpect(jsonPath("$.description", is("Users with username " + user.getUsername()
+                + " ignore case already exists")))
+            .andExpect(status().is(400));
+
+    }
+
+    @Test
+    public void createDuplicatedUsernameIgnoreCase() throws Exception {
+        UserDto user = new UserDto();
+        user.setUsername("tEsTuSeR-eDiToR");
+        user.setName("test");
+        user.setProfile(Profile.Editor.name());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(Collections.singletonList("mail@test.com"));
+        user.setPassword("password");
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is duplicated
+        this.mockMvc.perform(put("/api/users")
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("Users with username " + user.getUsername()
+                + " ignore case already exists")))
             .andExpect(status().is(400));
 
     }
@@ -311,8 +343,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(post("/api/users/" + user.getId() + "/actions/forget-password")
-            .param("password","newpassword")
-            .param("password2","newpassword")
+            .param("password", "newpassword")
+            .param("password2", "newpassword")
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
@@ -333,8 +365,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Try to update the password of admin user from a user with Editor profile
         this.mockMvc.perform(post("/api/users/" + admin.getId() + "/actions/forget-password")
-            .param("password","newpassword")
-            .param("password2","newpassword")
+            .param("password", "newpassword")
+            .param("password2", "newpassword")
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
@@ -354,8 +386,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // Check 400 is returned and a message indicating that passwords should be equal
         this.mockMvc.perform(post("/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(MediaType.APPLICATION_JSON)
-            .param("password","newpassword")
-            .param("password2","newpassword2")
+            .param("password", "newpassword")
+            .param("password2", "newpassword2")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("Passwords should be equal")))
@@ -374,8 +406,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // Check 404 is returned
         this.mockMvc.perform(post("/api/users/" + userId + "/actions/forget-password")
             .contentType(MediaType.APPLICATION_JSON)
-            .param("password","newpassword")
-            .param("password2","newpassword")
+            .param("password", "newpassword")
+            .param("password2", "newpassword")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.description", is("User not found")))
@@ -393,8 +425,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(post("/api/users/" + user.getId() + "/actions/forget-password")
             .contentType(MediaType.APPLICATION_JSON)
-            .param("password","newpassword")
-            .param("password2","newpassword")
+            .param("password", "newpassword")
+            .param("password2", "newpassword")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
@@ -459,8 +491,110 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(jsonPath("$.description", is("Another user with username 'testuser-editor' already exists")))
+            .andExpect(jsonPath("$.description", is("Another user with username "
+                + "'testuser-editor' ignore case already exists")))
             .andExpect(status().is(400));
+    }
+
+    @Test
+    public void updateUserDuplicatedUsernameIgnoreCase() throws Exception {
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        User userToReuseUsername = _userRepo.findOneByUsername("testuser-reviewer");
+        Assert.assertNotNull(userToReuseUsername);
+
+        UserDto user = new UserDto();
+        // Try to set the username of other existing user with other letter case
+        user.setUsername(StringUtils.swapCase(userToReuseUsername.getUsername()));
+        user.setName(userToUpdate.getName());
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is duplicated
+        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("Another user with username 'testuser-editor' ignore case already exists")))
+            .andExpect(status().is(400));
+    }
+
+    @Test
+    public void updateUserDuplicatedUsernameChangeNameCase() throws Exception {
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        User userToReuseUsername = _userRepo.findOneByUsername("testuser-EDITOR");
+        Assert.assertNotNull(userToReuseUsername);
+
+        UserDto user = new UserDto();
+        // Try to set the username of other existing user with other letter case
+        user.setUsername("TESTUSER-editor");
+        user.setName(userToUpdate.getName());
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is duplicated
+        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+    }
+
+    @Test
+    public void updateUserAlreadyExistingUsernameCase() throws Exception {
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        User userToReuseUsername = _userRepo.findOneByUsername("testuser-EDITOR");
+        Assert.assertNotNull(userToReuseUsername);
+
+        UserDto user = new UserDto();
+        // Try to set the username of other existing user with other letter case
+        user.setUsername(userToReuseUsername.getUsername());
+        user.setName(userToUpdate.getName());
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is duplicated
+        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.description", is("Another user with username 'testuser-editor' ignore case already exists")));
     }
 
     /**
@@ -508,5 +642,17 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         UserGroup userGroupUserAdmin = new UserGroup().setGroup(sampleGroup)
             .setProfile(Profile.Editor).setUser(testUserUserAdmin);
         _userGroupRepo.save(userGroupUserAdmin);
+
+        // User with same name different letter case
+        User testUserEditor2 = new User();
+        testUserEditor2.setUsername("testuser-EDITOR");
+        testUserEditor2.setProfile(Profile.Editor);
+        testUserEditor2.setEnabled(true);
+        testUserEditor2.getEmailAddresses().add("test@mail.com");
+        _userRepo.save(testUserEditor2);
+
+        UserGroup userGroupEditor2 = new UserGroup().setGroup(sampleGroup)
+            .setProfile(Profile.Editor).setUser(testUserEditor);
+        _userGroupRepo.save(userGroupEditor2);
     }
 }
