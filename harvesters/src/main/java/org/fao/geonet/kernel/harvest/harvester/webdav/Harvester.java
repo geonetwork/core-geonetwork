@@ -223,7 +223,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 addMetadata(rf);
             } else {
                 // only one metadata record created per uri by this harvester
-                updateMetadata(rf, records.get(0));
+                updateMetadata(rf, records.get(0), false);
             }
         }
         log.info("End of alignment for : " + params.getName());
@@ -274,7 +274,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             case OVERRIDE:
                 Metadata existingMetadata = metadataRepository.findOneByUuid(uuid);
                 RecordInfo existingRecordInfo = new RecordInfo(existingMetadata);
-                updateMetadata(rf, existingRecordInfo);
+                updateMetadata(rf, existingRecordInfo, true);
                 log.info("Overriding record with uuid " + uuid);
                 result.updatedMetadata++;
                 return;
@@ -407,7 +407,17 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
     }
 
-    private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
+    /**
+     * Updates the record on the database. The force parameter allows you to force an update even
+     * if the date is not more updated, to make sure transformation and attributes assigned by the
+     * harvester are applied. Also, it changes the ownership of the record so it is assigned to the
+     * new harvester that last updated it.
+        * @param rf
+        * @param record
+        * @param force
+        * @throws Exception
+     */
+    private void updateMetadata(RemoteFile rf, RecordInfo record, Boolean force) throws Exception {
         Element md = null;
 
         // Get the change date from the metadata content. If not possible, get it from the file change date if available
@@ -452,7 +462,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
 
 
-        if (!rf.isMoreRecentThan(record.changeDate)) {
+        if (!force && !rf.isMoreRecentThan(record.changeDate)) {
             if (log.isDebugEnabled())
                 log.debug("  - Metadata XML not changed for path : " + rf.getPath());
             result.unchangedMetadata++;
@@ -506,6 +516,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
                 date, false);
 
+            if(force) {
+                //change ownership of metadata to new harvester
+                metadata.getHarvestInfo().setUuid(params.getUuid());
+                metadata.getSourceInfo().setSourceId(params.getUuid());
+
+                context.getBean(MetadataRepository.class).save(metadata);
+            }
+            
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
