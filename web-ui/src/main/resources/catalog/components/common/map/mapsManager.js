@@ -45,7 +45,9 @@
     '$q',
     'gnMap',
     'gnOwsContextService',
-    function($q, gnMap, gnOwsContextService) {
+    'gnViewerSettings',
+    '$rootScope',
+    function($q, gnMap, gnOwsContextService, gnViewerSettings, $rootScope) {
       return {
         /**
          * These are types used when creating a new map with createMap
@@ -94,8 +96,30 @@
             }),
             // show zoom control in editor maps only
             controls: type !== this.EDITOR_MAP ? [] : [
-              new ol.control.Zoom()
-            ]
+                new ol.control.Zoom()
+              ]
+          });
+
+          var defer = $q.defer();
+          var sizeLoadPromise = defer.promise;
+          map.set('sizePromise', sizeLoadPromise);
+
+          // This is done to have no delay for the map size $watch
+          $rootScope.$on('$locationChangeSuccess', function() {
+            setTimeout(function() {
+              $rootScope.$apply();
+            });
+          }.bind(this));
+
+          var unWatchFn = $rootScope.$watch(function() {
+            return map.getTargetElement() &&
+              map.getTargetElement().offsetWidth;
+          }, function(width) {
+            if (width > 0) {
+              map.updateSize();
+              defer.resolve();
+              unWatchFn();
+            }
           });
 
           // no config found: return empty map

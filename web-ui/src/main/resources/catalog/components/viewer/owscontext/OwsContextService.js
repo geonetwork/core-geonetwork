@@ -151,12 +151,15 @@
           map.setView(view);
         }
 
-        // $timeout used to avoid map no rendered (eg: null size)
-        $timeout(function() {
-          if (map.getSize()) {
+        var loadPromise = map.get('sizePromise');
+        if (loadPromise) {
+          loadPromise.then(function() {
             map.getView().fit(extent, map.getSize(), { nearest: true });
-          }
-        }, 0, false);
+          })
+        }
+        else {
+          console.warn('Map must be created by mapsManager');
+        }
 
         // load the resources & add additional layers if available
         var layers = context.resourceList.layer;
