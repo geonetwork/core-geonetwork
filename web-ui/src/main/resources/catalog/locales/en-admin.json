@@ -1217,5 +1217,14 @@
     "styleVariable-gnResultsBackgroundColor": "Background",
     "gnMdViewCss": "Metadata view",
     "styleVariable-gnMdViewBackgroundColor": "Background",
-    "gnCssStyleIntroMessage": "Properties defined here replace the default system properties. An empty field restores the corresponding default value."
+    "gnCssStyleIntroMessage": "Properties defined here replace the default system properties. An empty field restores the corresponding default value.",
+    "wfs-indexing": "WFS Indexing",
+    "wfsIndexingTitle": "WFS Indexing Dashboard",
+    "wfsIndexingSubtitle": "Here are listed the ongoing and finished jobs for indexing features from remote WFS services. Once indexed, features can then be filtered according to their attributes and the filter applied to the original map layer.",
+    "wfsIndexingFeatureType": "Feature type",
+    "wfsIndexingMetadata": "Associated metadata",
+    "wfsIndexingMetadataNotFound": "Metadata could not be found.",
+    "wfsIndexingMetadataUuid": "Metadata UUID",
+    "wfsIndexingRefreshError": "An error occurred when refreshing the list:",
+    "wfsIndexingError": "Error encountered"
 }
