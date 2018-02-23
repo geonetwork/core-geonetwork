@@ -130,41 +130,54 @@
 
           // config found: load context if any, and apply extent & layers
           // (this is done through a promise anyway)
-          var promise = $q(function(resolve, reject) {
-            if (config.context) {
-              gnOwsContextService.loadContextFromUrl(config.context, map)
-                  .then(function() {
-                    resolve();
-                  });
-            } else {
-              // force async resolution
-              setTimeout(resolve, 0);
+          var mapReady;
+          if (type == this.VIEWER_MAP) {
+            var storage = gnViewerSettings.mapConfig.storage;
+            if (storage) {
+              storage = window[storage];
+              var key = 'owsContext_' +
+                window.location.host + window.location.pathname;
+              var context = storage.getItem(key);
+              if (context) {
+                gnOwsContextService.loadContext(context, map);
+                mapReady = true;
+              }
             }
-          }).then(function() {
-            // do a render of the map
-            map.renderSync();
+          }
+          if(!mapReady) {
+            if (config.context) {
+              mapReady = gnOwsContextService.loadContextFromUrl(
+                config.context, map);
+            }
+          }
+          var creationPromise = $q.when(mapReady).then(function() {
 
             // extent
             if (config.extent && ol.extent.getWidth(config.extent) &&
-                ol.extent.getHeight(config.extent) && map.getSize()) {
-              map.getView().fit(config.extent, map.getSize());
+              ol.extent.getHeight(config.extent)) {
+              if(type != this.SEARCH_MAP) {
+                // Because search map is fit by result md bbox
+                map.get('sizePromise').then(function() {
+                  map.getView().fit(config.extent, map.getSize(), { nearest: true });
+                })
+              }
             }
 
             // layers
             if (config.layers && config.layers.length) {
               config.layers.forEach(function(layerInfo) {
                 gnMap.createLayerFromProperties(layerInfo, map)
-                    .then(function(layer) {
-                      if (layer) {
-                        map.addLayer(layer);
-                      }
-                    });
+                  .then(function(layer) {
+                    if (layer) {
+                      map.addLayer(layer);
+                    }
+                  });
               });
             }
-          });
+          }.bind(this));
 
           // save the promise on the map
-          map.set('creationPromise', promise);
+          map.set('creationPromise', creationPromise);
 
           return map;
         }
