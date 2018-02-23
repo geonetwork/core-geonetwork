@@ -124,7 +124,7 @@
           };
 
           var viewerMap = new ol.Map({
-            controls: [],
+            controls: [new ol.control.Attribution()],
             view: new ol.View(mapsConfig)
           });
 
