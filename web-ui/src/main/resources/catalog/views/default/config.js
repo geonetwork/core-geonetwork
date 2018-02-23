@@ -115,20 +115,8 @@
 
           };
 
-          // Start location. This is usually overriden
-          // by context for large map and search records
-          // extent for minimap
-          var mapsConfig = viewerSettings.aoi || {
-            center: [280274.03240585705, 6053178.654789996],
-            zoom: 2
-          };
-
-          var viewerMap = new ol.Map({
-            controls: [],
-            view: new ol.View(mapsConfig)
-          });
-
           var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+          var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
 
           // Map protocols used to load layers/services in the map viewer
           searchSettings.mapProtocols = {
