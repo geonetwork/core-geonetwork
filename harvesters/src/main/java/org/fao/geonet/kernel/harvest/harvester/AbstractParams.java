@@ -63,11 +63,6 @@ public abstract class AbstractParams {
         SKIP, OVERRIDE, RANDOM
     }
 
-
-    public enum OverrideUuid {
-        SKIP, OVERRIDE, RANDOM
-    }
-
     //---------------------------------------------------------------------------
     //---
     //--- Variables
