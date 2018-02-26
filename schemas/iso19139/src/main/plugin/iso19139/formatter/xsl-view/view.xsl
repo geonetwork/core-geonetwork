@@ -280,6 +280,7 @@
                 match="*[gco:CharacterString != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
+    <xsl:param name="link" select="''" as="xs:string?"/>
 
     <dl>
       <dt>
@@ -288,8 +289,18 @@
                                 else tr:node-label(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
-        <xsl:apply-templates mode="render-value" select="."/>
-        <xsl:apply-templates mode="render-value" select="@*"/>
+        <xsl:choose>
+          <xsl:when test="$link != ''">
+            <a href="{$link}" target="_blank">
+              <xsl:apply-templates mode="render-value" select="."/>
+              <xsl:apply-templates mode="render-value" select="@*"/>
+            </a>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="render-value" select="."/>
+            <xsl:apply-templates mode="render-value" select="@*"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </dd>
     </dl>
   </xsl:template>
