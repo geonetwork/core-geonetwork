@@ -55,6 +55,15 @@
         </xsl:copy>
     </xsl:template>
 
+
+    <xsl:template match="gmd:MD_SpatialRepresentationTypeCode/@codeListValue[
+                                  starts-with(., 'SDN:')]">
+      <xsl:attribute name="codeListValue">
+        <xsl:value-of select="substring-after(., ' = ')"/>
+      </xsl:attribute>
+    </xsl:template>
+
+
     <xsl:template match="@uom" priority="200">
         <xsl:attribute name="uom">
             <xsl:value-of select="substring-after(., ' = ')"/>
