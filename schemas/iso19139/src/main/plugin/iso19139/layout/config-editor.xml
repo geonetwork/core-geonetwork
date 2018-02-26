@@ -1557,7 +1557,7 @@
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
                 <key label="edmoId"
-                     xpath="*/@uuid[1]"/>
+                     xpath="*[1]/@uuid"/>
               </values>
               <snippet>
                 <gmd:contact>
@@ -1700,7 +1700,7 @@
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
                 <key label="edmoId"
-                     xpath="*/@uuid[1]"/>
+                     xpath="*[1]/@uuid"/>
               </values>
               <snippet>
                 <gmd:contact>
@@ -1773,7 +1773,7 @@
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
                 <key label="edmoId"
-                     xpath="*/@uuid[1]"/>
+                     xpath="*[1]/@uuid"/>
               </values>
               <snippet>
                 <gmd:distributorContact>
