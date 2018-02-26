@@ -1904,6 +1904,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             uuid = extractUUID(schema, metadataXml);
         }
 
+        checkMetadataWithSameUuidExist(uuid, metadata.getId());
+
         //--- write metadata to dbms
         getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
         // Notifies the metadata change to metadata notifier service
@@ -1935,6 +1937,27 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         // Return an up to date metadata record
         return getMetadataRepository().findOne(metadataId);
+    }
+
+    /**
+     * Check if another record exist with that UUID. This is not allowed
+     * and would return a DataIntegrityViolationException
+     *
+     * @param uuid  The UUID to check for
+     * @param id    The current record id to compare with other record which may be found
+     * @return      An exception if another record is found, false otherwise
+     */
+    private boolean checkMetadataWithSameUuidExist(String uuid, int id) {
+        // Check if another record exist with that UUID
+        Metadata recordWithThatUuid = getMetadataRepository().findOneByUuid(uuid);
+        if (recordWithThatUuid != null &&
+            recordWithThatUuid.getId() != id) {
+            // If yes, this would have triggered a DataIntegrityViolationException
+            throw new IllegalArgumentException(String.format(
+                "Another record exist with UUID '%s'. This record as internal id '%d'. The record you're trying to update with id '%d' can not be saved.",
+                uuid, recordWithThatUuid.getId(), id));
+        }
+        return false;
     }
 
     /**
