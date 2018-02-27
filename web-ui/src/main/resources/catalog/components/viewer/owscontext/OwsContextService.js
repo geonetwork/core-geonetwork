@@ -250,11 +250,11 @@
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      bgLayers[idx - 1] = layer;
-
                       if (!layer) {
                         return;
                       }
+                      bgLayers[idx - 1] = layer;
+
                       layer.displayInLayerManager = false;
                       layer.background = true;
 
