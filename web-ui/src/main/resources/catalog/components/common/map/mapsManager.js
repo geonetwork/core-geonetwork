@@ -47,7 +47,9 @@
     'gnOwsContextService',
     'gnViewerSettings',
     '$rootScope',
-    function($q, gnMap, gnOwsContextService, gnViewerSettings, $rootScope) {
+    '$location',
+    function($q, gnMap, gnOwsContextService, gnViewerSettings, $rootScope,
+             $location) {
       return {
         /**
          * These are types used when creating a new map with createMap
@@ -132,15 +134,23 @@
           // (this is done through a promise anyway)
           var mapReady;
           if (type == this.VIEWER_MAP) {
-            var storage = gnViewerSettings.mapConfig.storage;
-            if (storage) {
-              storage = window[storage];
-              var key = 'owsContext_' +
-                window.location.host + window.location.pathname;
-              var context = storage.getItem(key);
-              if (context) {
-                gnOwsContextService.loadContext(context, map);
-                mapReady = true;
+            var params = $location.search();
+            var urlContext = params.owscontext || params.map;
+            if(urlContext) {
+              urlContext = decodeURIComponent(urlContext); 
+              mapReady = gnOwsContextService.loadContextFromUrl(
+                urlContext, map);
+            } else {
+              var storage = gnViewerSettings.mapConfig.storage;
+              if (storage) {
+                storage = window[storage];
+                var key = 'owsContext_' +
+                  window.location.host + window.location.pathname;
+                var context = storage.getItem(key);
+                if (context) {
+                  gnOwsContextService.loadContext(context, map);
+                  mapReady = true;
+                }
               }
             }
           }
@@ -173,6 +183,18 @@
                     }
                   });
               });
+            }
+            if(type == this.VIEWER_MAP && $location.search()) {
+              var params = $location.search();
+              if (params.wmsurl && params.layername) {
+                gnMap.addWmsFromScratch(map, params.wmsurl,
+                  params.layername, true).
+
+                then(function(layer) {
+                  layer.set('group', params.layergroup);
+                  map.addLayer(layer);
+                });
+              }
             }
           }.bind(this));
 

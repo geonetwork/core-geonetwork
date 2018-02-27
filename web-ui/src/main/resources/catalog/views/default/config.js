@@ -35,20 +35,14 @@
         'gnSearchSettings',
         'gnViewerSettings',
         'gnOwsContextService',
-        'gnMap', 'gnMapsManager',
-        'gnGlobalSettings',
-        '$location',
+        'gnMap',
+        'gnMapsManager',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnMapsManager, gnGlobalSettings, $location) {
-
-          // Load the context defined in the configuration
-          viewerSettings.defaultContext =
-              (viewerSettings.mapConfig.map || '../../map/config-viewer.xml');
-          viewerSettings.owsContext = $location.search().map;
+                 gnMap, gnMapsManager) {
 
           // these layers will be added along the default context
           // (transform settings to be usable by the OwsContextService)
-          var viewerMapLayers = viewerSettings.mapConfig.viewerMapLayers
+          var viewerMapLayers = viewerSettings.mapConfig.viewerMapLayers;
           viewerSettings.additionalMapLayers =
             viewerMapLayers && viewerMapLayers.map ?
             viewerMapLayers.map(function (layer) {
