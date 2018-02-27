@@ -13,7 +13,7 @@
         <a href=""
            title="{{'clickToAddResource' | translate}}"
            data-ng-click="setResource(r)">
-          {{r.id.split('/').splice(2).join('/')}}
+          {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
         </a>
       </td>
       <td>
