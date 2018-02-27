@@ -25,6 +25,7 @@
 
 package org.fao.geonet.api.records.attachments;
 
+import com.google.common.net.UrlEscapers;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -124,7 +125,9 @@ public class FilesystemStore implements Store {
                  Files.newDirectoryStream(resourceTypeDir, filter)) {
             for (Path path : directoryStream) {
                 MetadataResource resource = new FilesystemStoreResource(
-                    metadataUuid + "/attachments/" + path.getFileName(),
+                    UrlEscapers.urlFragmentEscaper().escape(metadataUuid) +
+                       "/attachments/" +
+                       UrlEscapers.urlFragmentEscaper().escape(path.getFileName().toString()),
                     settingManager.getNodeURL() + "api/records/",
                     visibility,
                     Files.size(path));
