@@ -795,6 +795,7 @@
               // TODO: parse better legend & attribution
               var requestedStyle = null;
               var legendUrl;
+
               if (style && angular.isArray(getCapLayer.Style) &&
                   getCapLayer.Style.length > 0) {
                 for (var i = 0; i < getCapLayer.Style.length; i++) {
@@ -841,11 +842,20 @@
               if (requestedStyle) {
                 layerParam.STYLES = requestedStyle.Name;
               } else {
-                // STYLES is mandatory parameter.
-                // ESRI will complain on this.
-                // Even &STYLES&... return an error on ESRI.
-                // TODO: Fix or workaround
-                layerParam.STYLES = '';
+                // The first style element is the default style
+                var defaultStyle;
+                if(angular.isArray(getCapLayer.Style) && getCapLayer.Style.length > 0) {
+                  defaultStyle = getCapLayer.Style[0];
+                }
+                if(defaultStyle) {
+                  // Set a casual style if available
+                  // to avoid issues on ESRI services
+                  layerParam.STYLES = defaultStyle.Name;
+                } else {
+                  // This is a problem for ESRI services
+                  // where STYLES is a mandatory field
+                  layerParam.STYLES = '';
+                }
               }
 
               var projCode = map.getView().getProjection().getCode();
