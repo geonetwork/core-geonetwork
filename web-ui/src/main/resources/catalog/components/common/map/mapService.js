@@ -1200,6 +1200,11 @@
             var defer = $q.defer();
             var $this = this;
 
+            try {
+              // Avoid double encoding
+              name = decodeURIComponent(escape(name));
+            } catch (e) {}
+
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
@@ -1228,9 +1233,10 @@
                   }
                   olL = $this.addWmsToMap(map, o);
                   
-                  if(!angular.isUndefined(md['geonet:info']['uuid'])) {
+                  if(md && md['geonet:info']['uuid']) {
                 	  olL.set('MDuuid', md['geonet:info']['uuid']);
-                  } 
+                    olL.set('metadataUuid', md['geonet:info']['uuid']);
+                  }
 
                   if (!angular.isArray(olL.get('errors'))) {
                     olL.set('errors', []);
@@ -1265,6 +1271,7 @@
                       olL.set('md', md);
                       if(!angular.isUndefined(md['geonet:info']['uuid'])) {
                     	  olL.set('MDuuid', md['geonet:info']['uuid']);
+                        olL.set('metadataUuid', md['geonet:info']['uuid']);
                       }
                     }) : $this.feedLayerMd(olL);
 
@@ -1282,13 +1289,10 @@
               });
             } else {
             	var olL = getTheLayerFromMap(map, name, url);
-            	
-            	  $q.resolve(md).then(function(md) {
-                      if(!angular.isUndefined(md['geonet:info']['uuid'])) {
-                  	    olL.set('MDuuid', md['geonet:info']['uuid']);
-                      }
-                    });
-            	
+            	if(olL && md && md['geonet:info']['uuid']) {
+                olL.set('MDuuid', md['geonet:info']['uuid']);
+                olL.set('metadataUuid', md['geonet:info']['uuid']);
+              }
             }
             return defer.promise;
           },
