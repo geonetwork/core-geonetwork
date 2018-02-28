@@ -68,9 +68,9 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService',
+    'gnUtilityService', '$timeout',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService) {
+        gnUtilityService, $timeout) {
 
       $scope.settings = [];
       $scope.initalSettings = [];
@@ -161,6 +161,13 @@
                       'children': filterBySection($scope.settings, level2name)
                     });
                   }
+                }
+
+                var target = $location.search()['scrollTo'];
+                if (target) {
+                  $timeout(function () {
+                    gnUtilityService.scrollTo(target);
+                  }, 300);
                 }
               }
             }).error(function(data) {

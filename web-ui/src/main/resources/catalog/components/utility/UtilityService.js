@@ -72,7 +72,8 @@
   }]);
 
   module.factory('gnUtilityService',
-      ['gnPopup', '$translate', function(gnPopup, $translate) {
+      ['gnPopup', '$translate', '$location',
+        function(gnPopup, $translate, $location) {
         /**
        * Scroll page to element.
        */
@@ -85,6 +86,8 @@
           }
           $('body,html').animate({scrollTop: top},
            duration, easing);
+
+          $location.search('scrollTo', elementId);
         };
 
         /**
