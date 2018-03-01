@@ -184,16 +184,6 @@
 
       var map = $scope.searchObj.viewerMap;
 
-      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-        gnMap.addWmsFromScratch(map, gnViewerSettings.wmsUrl,
-            gnViewerSettings.layerName, true).
-
-            then(function(layer) {
-              layer.set('group', gnViewerSettings.layerGroup);
-              map.addLayer(layer);
-            });
-      }
-
       // Display pop up on feature over
       var div = document.createElement('div');
       div.className = 'overlay';
