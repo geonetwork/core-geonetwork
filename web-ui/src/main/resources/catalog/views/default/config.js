@@ -40,24 +40,10 @@
         function(searchSettings, viewerSettings, gnOwsContextService,
                  gnMap, gnMapsManager) {
 
-          // these layers will be added along the default context
-          // (transform settings to be usable by the OwsContextService)
-          var viewerMapLayers = viewerSettings.mapConfig.viewerMapLayers;
-          viewerSettings.additionalMapLayers =
-            viewerMapLayers && viewerMapLayers.map ?
-            viewerMapLayers.map(function (layer) {
-              return {
-                name: '{type=' + layer.type + ', name=' + layer.name + '}',
-                title: layer.title,
-                group: 'Background layers',
-                server: [{
-                  service: 'urn:ogc:serviceType:WMS',
-                  onlineResource: [{
-                    href: layer.url
-                  }]
-                }]
-              }
-            }) : [];
+          if(viewerSettings.mapConfig.viewerMapLayers) {
+            console.warn('[geonetwork] Use of "mapConfig.viewerMapLayers" is depecrated. ' +
+              'Please configure layer per map type.')
+          }
 
           // Keep one layer in the background
           // while the context is not yet loaded.

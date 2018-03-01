@@ -133,15 +133,14 @@
           // config found: load context if any, and apply extent & layers
           // (this is done through a promise anyway)
           var mapReady;
+          var urlParams = $location.search();
           if (type == this.VIEWER_MAP) {
-            var params = $location.search();
-            var urlContext = params.owscontext || params.map;
+            var urlContext = urlParams.owscontext || urlParams.map;
             if(urlContext) {
-              urlContext = decodeURIComponent(urlContext); 
               mapReady = gnOwsContextService.loadContextFromUrl(
                 urlContext, map);
             } else {
-              var storage = gnViewerSettings.mapConfig.storage;
+              var storage = gnMap.getMapConfig().storage;
               if (storage) {
                 storage = window[storage];
                 var key = 'owsContext_' +
@@ -184,14 +183,13 @@
                   });
               });
             }
-            if(type == this.VIEWER_MAP && $location.search()) {
-              var params = $location.search();
-              if (params.wmsurl && params.layername) {
-                gnMap.addWmsFromScratch(map, params.wmsurl,
-                  params.layername, true).
+            if(type == this.VIEWER_MAP) {
+              if (urlParams.wmsurl && urlParams.layername) {
+                gnMap.addWmsFromScratch(map, urlParams.wmsurl,
+                  urlParams.layername, true).
 
                 then(function(layer) {
-                  layer.set('group', params.layergroup);
+                  layer.set('group', urlParams.layergroup);
                   map.addLayer(layer);
                 });
               }
