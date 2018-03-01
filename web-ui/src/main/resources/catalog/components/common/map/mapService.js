@@ -1232,9 +1232,9 @@
                     o.version = version;
                   }
                   olL = $this.addWmsToMap(map, o);
-                  
-                  if(md && md.getUuid()) {
-                    olL.set('metadataUuid', md.getUuid());
+
+                  if(olL && md) {
+                    olL.set('md', md);
                   }
 
                   if (!angular.isArray(olL.get('errors'))) {
@@ -1268,9 +1268,6 @@
                   var feedMdPromise = md ?
                     $q.resolve(md).then(function(md) {
                       olL.set('md', md);
-                      if(olL && md && md.getUuid()) {
-                        olL.set('metadataUuid', md.getUuid());
-                      }
                     }) : $this.feedLayerMd(olL);
 
                   feedMdPromise.then(finishCreation);
@@ -1287,8 +1284,8 @@
               });
             } else {
             	var olL = getTheLayerFromMap(map, name, url);
-                if(olL && md && md.getUuid()) {
-                  olL.set('metadataUuid', md.getUuid());
+                if(olL && md) {
+                  olL.set('md', md);
                 }
             }
             return defer.promise;
