@@ -29,7 +29,9 @@ import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Interface UserFeedbackRepository.
@@ -106,5 +108,16 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @return the user feedback
      */
     UserFeedback findByUuidAndStatus(String uuid, UserRatingStatus status);
+
+
+    /**
+     * Delete by metadata uuid.
+     *
+     * @param metadataId the metadata id
+     */
+    @Modifying
+    @Transactional
+    @Query("delete from GUF_UserFeedback where metadata_uuid = ?1")
+    void deleteByMetadata_Uuid(String metadataId);
 
 }

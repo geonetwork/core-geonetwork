@@ -25,6 +25,7 @@ package org.fao.geonet.api.userfeedback.service;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
@@ -47,172 +48,176 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserFeedbackDatabaseService implements IUserFeedbackService {
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
-   * publishUserFeedback(java.lang.String, org.fao.geonet.domain.User)
-   */
-  @Override
-  public void publishUserFeedback(String feedbackUuid, User user) {
-    final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-        .getBean(UserFeedbackRepository.class);
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
+     * publishUserFeedback(java.lang.String, org.fao.geonet.domain.User)
+     */
+    @Override
+    public void publishUserFeedback(String feedbackUuid, User user) throws ObjectNotFoundException {
+        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
+                .getBean(UserFeedbackRepository.class);
 
-    // TODO: Manage UserFeedback not found
-    final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
-    userFeedback.setStatus(UserRatingStatus.PUBLISHED);
-    userFeedback.setApprover(user);
+        final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
 
-    userFeedbackRepository.save(userFeedback);
-  }
+        if(userFeedback != null) {
+            userFeedback.setStatus(UserRatingStatus.PUBLISHED);
+            userFeedback.setApprover(user);
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
-   * removeUserFeedback(java.lang.String)
-   */
-  @Override
-  public void removeUserFeedback(String feedbackUuid) {
-    final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-        .getBean(UserFeedbackRepository.class);
-
-    final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
-
-    userFeedbackRepository.delete(userFeedback);
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
-   * retrieveMetadataRatings(java.lang.String, boolean)
-   */
-  @Override
-  public List<Rating> retrieveMetadataRatings(String metadataUuid, boolean published) {
-    final RatingRepository ratingRepository = ApplicationContextHolder.get().getBean(RatingRepository.class);
-
-    return ratingRepository.findByMetadata_Uuid(metadataUuid);
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
-   * retrieveUserFeedback(int, boolean)
-   */
-  @Override
-  public List<UserFeedback> retrieveUserFeedback(int maxSize, boolean published) {
-    final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-        .getBean(UserFeedbackRepository.class);
-
-    List<UserFeedback> result = null;
-
-    if (published) {
-
-      Pageable pageSize = null;
-
-      if (maxSize > 0) {
-        pageSize = new PageRequest(0, maxSize);
-      }
-
-      result = userFeedbackRepository.findByStatusOrderByDateDesc(UserRatingStatus.PUBLISHED, pageSize);
-    } else {
-
-      Pageable pageSize = null;
-
-      if (maxSize > 0) {
-        pageSize = new PageRequest(0, maxSize);
-      }
-
-      result = userFeedbackRepository.findByOrderByDateDesc(pageSize);
+            userFeedbackRepository.save(userFeedback);
+        } else {
+            throw new ObjectNotFoundException();
+        }
     }
 
-    return result;
-  }
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
+     * removeUserFeedback(java.lang.String)
+     */
+    @Override
+    public void removeUserFeedback(String feedbackUuid) {
+        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
+                .getBean(UserFeedbackRepository.class);
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
-   * retrieveUserFeedback(java.lang.String, boolean)
-   */
-  @Override
-  public UserFeedback retrieveUserFeedback(String feedbackUuid, boolean published) {
-    final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-        .getBean(UserFeedbackRepository.class);
+        final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
 
-    if (published) {
-      return userFeedbackRepository.findByUuidAndStatus(feedbackUuid, UserRatingStatus.PUBLISHED);
-    } else {
-      return userFeedbackRepository.findByUuid(feedbackUuid);
-    }
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
-   * retrieveUserFeedbackForMetadata(java.lang.String, int, boolean)
-   */
-  @Override
-  public List<UserFeedback> retrieveUserFeedbackForMetadata(String metadataUuid, int maxSize, boolean published) {
-
-    final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-        .getBean(UserFeedbackRepository.class);
-
-    List<UserFeedback> result = null;
-
-    if (published) {
-      Pageable pageSize = null;
-
-      if (maxSize > 0) {
-        pageSize = new PageRequest(0, maxSize);
-      }
-      result = userFeedbackRepository.findByMetadata_UuidAndStatusOrderByDateDesc(metadataUuid,
-          UserRatingStatus.PUBLISHED, pageSize);
-    } else {
-      Pageable pageSize = null;
-
-      if (maxSize > 0) {
-        pageSize = new PageRequest(0, maxSize);
-      }
-      result = userFeedbackRepository.findByMetadata_UuidOrderByDateDesc(metadataUuid, pageSize);
+        userFeedbackRepository.delete(userFeedback);
     }
 
-    return result;
-  }
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
+     * retrieveMetadataRatings(java.lang.String, boolean)
+     */
+    @Override
+    public List<Rating> retrieveMetadataRatings(String metadataUuid, boolean published) {
+        final RatingRepository ratingRepository = ApplicationContextHolder.get().getBean(RatingRepository.class);
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
-   * saveUserFeedback(org.fao.geonet.domain.userfeedback.UserFeedback)
-   */
-  @Override
-  public void saveUserFeedback(UserFeedback userFeedback) {
-    final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
-        .getBean(UserFeedbackRepository.class);
-
-    final MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
-
-    final UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-
-    if (userFeedback.getAuthorId() != null) {
-      final User author = userRepository.findOneByUsername(userFeedback.getAuthorId().getUsername());
-      userFeedback.setAuthorId(author);
-    }
-    if (userFeedback.getApprover() != null) {
-      final User approver = userRepository.findOneByUsername(userFeedback.getApprover().getUsername());
-      userFeedback.setApprover(approver);
-    }
-    final Metadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
-    userFeedback.setMetadata(metadata);
-
-    if (userFeedback.getDate() == null) {
-      userFeedback.setDate(new Date(System.currentTimeMillis()));
+        return ratingRepository.findByMetadata_Uuid(metadataUuid);
     }
 
-    userFeedbackRepository.save(userFeedback);
-  }
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
+     * retrieveUserFeedback(int, boolean)
+     */
+    @Override
+    public List<UserFeedback> retrieveUserFeedback(int maxSize, boolean published) {
+        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
+                .getBean(UserFeedbackRepository.class);
+
+        List<UserFeedback> result = null;
+
+        if (published) {
+
+            Pageable pageSize = null;
+
+            if (maxSize > 0) {
+                pageSize = new PageRequest(0, maxSize);
+            }
+
+            result = userFeedbackRepository.findByStatusOrderByDateDesc(UserRatingStatus.PUBLISHED, pageSize);
+        } else {
+
+            Pageable pageSize = null;
+
+            if (maxSize > 0) {
+                pageSize = new PageRequest(0, maxSize);
+            }
+
+            result = userFeedbackRepository.findByOrderByDateDesc(pageSize);
+        }
+
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
+     * retrieveUserFeedback(java.lang.String, boolean)
+     */
+    @Override
+    public UserFeedback retrieveUserFeedback(String feedbackUuid, boolean published) {
+        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
+                .getBean(UserFeedbackRepository.class);
+
+        if (published) {
+            return userFeedbackRepository.findByUuidAndStatus(feedbackUuid, UserRatingStatus.PUBLISHED);
+        } else {
+            return userFeedbackRepository.findByUuid(feedbackUuid);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
+     * retrieveUserFeedbackForMetadata(java.lang.String, int, boolean)
+     */
+    @Override
+    public List<UserFeedback> retrieveUserFeedbackForMetadata(String metadataUuid, int maxSize, boolean published) {
+
+        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
+                .getBean(UserFeedbackRepository.class);
+
+        List<UserFeedback> result = null;
+
+        if (published) {
+            Pageable pageSize = null;
+
+            if (maxSize > 0) {
+                pageSize = new PageRequest(0, maxSize);
+            }
+            result = userFeedbackRepository.findByMetadata_UuidAndStatusOrderByDateDesc(metadataUuid,
+                    UserRatingStatus.PUBLISHED, pageSize);
+        } else {
+            Pageable pageSize = null;
+
+            if (maxSize > 0) {
+                pageSize = new PageRequest(0, maxSize);
+            }
+            result = userFeedbackRepository.findByMetadata_UuidOrderByDateDesc(metadataUuid, pageSize);
+        }
+
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.fao.geonet.api.userfeedback.service.IUserFeedbackService#
+     * saveUserFeedback(org.fao.geonet.domain.userfeedback.UserFeedback)
+     */
+    @Override
+    public void saveUserFeedback(UserFeedback userFeedback) {
+        final UserFeedbackRepository userFeedbackRepository = ApplicationContextHolder.get()
+                .getBean(UserFeedbackRepository.class);
+
+        final MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+
+        final UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+
+        if (userFeedback.getAuthorId() != null) {
+            final User author = userRepository.findOneByUsername(userFeedback.getAuthorId().getUsername());
+            userFeedback.setAuthorId(author);
+        }
+        if (userFeedback.getApprover() != null) {
+            final User approver = userRepository.findOneByUsername(userFeedback.getApprover().getUsername());
+            userFeedback.setApprover(approver);
+        }
+        final Metadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
+        userFeedback.setMetadata(metadata);
+
+        if (userFeedback.getDate() == null) {
+            userFeedback.setDate(new Date(System.currentTimeMillis()));
+        }
+
+        userFeedbackRepository.save(userFeedback);
+    }
 }

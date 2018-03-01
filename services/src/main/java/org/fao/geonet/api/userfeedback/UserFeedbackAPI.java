@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -389,7 +390,8 @@ public class UserFeedbackAPI {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('Reviewer')")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback published."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
+            @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
     @ResponseBody
     public ResponseEntity publish(@PathVariable(value = "uuid")
     final String uuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
@@ -405,10 +407,12 @@ public class UserFeedbackAPI {
 
         try {
             final UserSession session = ApiUtils.getUserSession(httpSession);
-
             final IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
             userFeedbackService.publishUserFeedback(uuid, session.getPrincipal());
+
+        } catch (final ObjectNotFoundException e) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         } catch (final Exception e) {
             e.printStackTrace();
         }
