@@ -8,6 +8,7 @@
     xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:gmx="http://www.isotc211.org/2005/gmx"
+    xmlns:gml="http://www.opengis.net/gml"
     version="2.0"
     exclude-result-prefixes="#all">
 
@@ -49,12 +50,19 @@
     <xsl:template match="gco:CharacterString[
                                 starts-with(., 'SDN:') and
                                 not(ancestor::gmd:fileIdentifier)]|
-                        @uom[starts-with(., 'SDN:')]">
+                                gml:identifier[starts-with(., 'SDN:')]">
         <xsl:copy>
             <xsl:value-of select="substring-after(., ' = ')"/>
         </xsl:copy>
     </xsl:template>
-
+    
+    <xsl:template match="@uuidref[
+        starts-with(., 'SDN:')]">
+        <xsl:attribute name="uuidref">
+            <xsl:value-of select="substring-after(., ' = ')"/>
+        </xsl:attribute>
+    </xsl:template>
+    
 
     <xsl:template match="gmd:MD_SpatialRepresentationTypeCode/@codeListValue[
                                   starts-with(., 'SDN:')]">
