@@ -41,7 +41,7 @@
                  gnMap, gnMapsManager) {
 
           if(viewerSettings.mapConfig.viewerMapLayers) {
-            console.warn('[geonetwork] Use of "mapConfig.viewerMapLayers" is depecrated. ' +
+            console.warn('[geonetwork] Use of "mapConfig.viewerMapLayers" is deprecated. ' +
               'Please configure layer per map type.')
           }
 

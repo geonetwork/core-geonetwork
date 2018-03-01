@@ -48,8 +48,15 @@
     'gnViewerSettings',
     '$rootScope',
     '$location',
+    'gnSearchLocation',
     function($q, gnMap, gnOwsContextService, gnViewerSettings, $rootScope,
-             $location) {
+             $location, gnSearchLocation) {
+
+      var mapParams = {};
+      if(gnSearchLocation.isMap()) {
+        mapParams = $location.search();
+      }
+
       return {
         /**
          * These are types used when creating a new map with createMap
@@ -107,7 +114,7 @@
           map.set('sizePromise', sizeLoadPromise);
 
           // This is done to have no delay for the map size $watch
-          $rootScope.$on('$locationChangeSuccess', function() {
+          var unBindFn = $rootScope.$on('$locationChangeSuccess', function() {
             setTimeout(function() {
               $rootScope.$apply();
             });
@@ -121,6 +128,7 @@
               map.updateSize();
               defer.resolve();
               unWatchFn();
+              unBindFn();
             }
           });
 
@@ -133,9 +141,22 @@
           // config found: load context if any, and apply extent & layers
           // (this is done through a promise anyway)
           var mapReady;
-          var urlParams = $location.search();
+          var urlContext;
           if (type == this.VIEWER_MAP) {
-            var urlContext = urlParams.owscontext || urlParams.map;
+
+            $rootScope.$on('$locationChangeSuccess', function() {
+              if(gnSearchLocation.isMap()) {
+                var params = $location.search();
+                var newContext = params.owscontext || params.map;
+                if(newContext && newContext != urlContext) {
+                  urlContext = newContext;
+                  gnOwsContextService.loadContextFromUrl(
+                    urlContext, map)
+                }
+              }
+            }.bind(this));
+
+            urlContext = mapParams.owscontext || mapParams.map;
             if(urlContext) {
               mapReady = gnOwsContextService.loadContextFromUrl(
                 urlContext, map);
@@ -184,12 +205,12 @@
               });
             }
             if(type == this.VIEWER_MAP) {
-              if (urlParams.wmsurl && urlParams.layername) {
-                gnMap.addWmsFromScratch(map, urlParams.wmsurl,
-                  urlParams.layername, true).
+              if (mapParams.wmsurl && mapParams.layername) {
+                gnMap.addWmsFromScratch(map, mapParams.wmsurl,
+                  mapParams.layername, true).
 
                 then(function(layer) {
-                  layer.set('group', urlParams.layergroup);
+                  layer.set('group', mapParams.layergroup);
                   map.addLayer(layer);
                 });
               }
