@@ -1249,6 +1249,9 @@
   module.filter('encodeURIComponent', function() {
     return window.encodeURIComponent;
   });
+  module.filter('decodeURIComponent', function() {
+    return window.decodeURIComponent;
+  });
   module.directive('gnJsonText', function() {
     return {
       restrict: 'A',
