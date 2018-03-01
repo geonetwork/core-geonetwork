@@ -185,7 +185,11 @@ class WebDavRetriever implements RemoteRetriever {
                 if (log.isDebugEnabled()) {
                     log.debug("found xml file ! " + name.toLowerCase());
                 }
-                files.add(new WebDavRemoteFile(sardine, baseURL, davResource));
+                if (davResource.getModified() != null) {
+                    files.add(new WebDavRemoteFile(sardine, baseURL, davResource));
+                } else {
+                    log.warning("File " + davResource.getPath() + " skipped because it doesn't provide a modified date");
+                }
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug(name.toLowerCase() + " is not an xml file");
