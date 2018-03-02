@@ -191,10 +191,19 @@ public class MetadataUtils {
             if (listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.fcats)) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
-                if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
-                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "fcats", context, from, to, fast));
-                }
+                Element fcat = new Element("fcats");
+                
+                
+                for (String fcat_uuid : listOfUUIDs) {
+                    Element metadata = new Element("metadata");
+                    Element response = new Element("response");
+					Element current = getRecord(fcat_uuid, context, dm);
+					metadata.addContent(current);
+					response.addContent(metadata);
+	                fcat.addContent(response);
+				}
+                
+                relatedRecords.addContent(fcat);
             }
         }
 
@@ -346,7 +355,7 @@ public class MetadataUtils {
 
         Path file = null;
         try {
-            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false);
+            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false);
             Files.createDirectories(outDir);
             try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {

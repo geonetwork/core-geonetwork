@@ -191,6 +191,7 @@
             uuid = scope.md && scope.md.getUuid();
             ftName = scope.featureTypeName ||
                 scope.layer.getSource().getParams().LAYERS;
+            scope.featureTypeName = ftName;
 
             appProfile = null;
             appProfilePromise = wfsFilterService.getApplicationProfile(uuid,

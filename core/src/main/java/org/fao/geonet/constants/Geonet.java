@@ -514,6 +514,8 @@ public final class Geonet {
             public static final String CROSSES = "crosses";
             public static final String TOUCHES = "touches";
             public static final String WITHIN = "within";
+            public static final String WITHIN_BBOX = "within_bbox";
+            public static final String OVERLAPS_BBOX = "overlaps_bbox";
         }
 
         /**
@@ -559,6 +561,7 @@ public final class Geonet {
         public static final String BACKUP_DIR = "backupDir";
         public static final String SCHEMAPLUGINS_DIR = "schemaPluginsDir";
         public static final String CODELIST_DIR = "codeListDir";
+        public static final String NODE_LESS_DIR = "node_less_files";
         public static final String DIR = "dir";
         public static final String SUMMARY_CONFIG = "summaryConfig";
         public static final String LUCENE_CONFIG = "luceneConfig";

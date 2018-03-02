@@ -43,6 +43,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -55,6 +56,7 @@ import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.nio.file.FileSystem;
@@ -81,7 +83,7 @@ class MEF2Exporter {
      */
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
-                                boolean removeXlinkAttribute, boolean skipError) throws Exception {
+                                boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation) throws Exception {
 
         Path file = Files.createTempFile("mef-", ".mef");
         SearchManager searchManager = context.getBean(SearchManager.class);
@@ -184,9 +186,38 @@ class MEF2Exporter {
                                 )))
                         ))
                     )));
+                    csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
+                    append(cleanForCsv(uuid)).append("\";\"").
+                    append(cleanForCsv(id)).append("\";\"").
+                    append(mdType.toString()).append("\";\"").
+                    append(cleanForCsv(isHarvested)).append("\";\"").
+                    append(cleanForCsv(mdTitle)).append("\";\"").
+                    append(cleanForCsv(mdAbstract)).append("\"\n");
+
+                    body.addContent(new Element("div").setAttribute("class", "entry").addContent(Arrays.asList(
+                        new Element("h4").setAttribute("class", "title").addContent(
+                            new Element("a").setAttribute("href", uuid).setText(cleanXml(mdTitle))),
+                        new Element("p").setAttribute("class", "abstract").setText(cleanXml(mdAbstract)),
+                        new Element("table").setAttribute("class", "table").addContent(Arrays.asList(
+                            new Element("thead").addContent(
+                                new Element("tr").addContent(Arrays.asList(
+                                    new Element("th").setText("ID"),
+                                    new Element("th").setText("UUID"),
+                                    new Element("th").setText("Type"),
+                                    new Element("th").setText("isHarvested")
+                                ))),
+                            new Element("tbody").addContent(
+                                new Element("tr").addContent(Arrays.asList(
+                                    new Element("td").setAttribute("class", "id").setText(id),
+                                    new Element("td").setAttribute("class", "uuid").setText(xmlContentEscaper().escape
+                                        (uuid)),
+                                    new Element("td").setAttribute("class", "type").setText(mdType.toString()),
+                                    new Element("td").setAttribute("class", "isHarvested").setText(isHarvested)
+                                )))
+                        ))
+                    )));
                     createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
-                        format, resolveXlink, removeXlinkAttribute);
-                } catch (Throwable t) {
+                    format, resolveXlink, removeXlinkAttribute, addSchemaLocation);                } catch (Throwable t) {
                     if (skipError) {
                         Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
                     } else {
@@ -196,6 +227,7 @@ class MEF2Exporter {
                         throw new RuntimeException(t);
                     }
                 }
+
             }
             Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
             Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
@@ -227,13 +259,15 @@ class MEF2Exporter {
      */
     private static void createMetadataFolder(ServiceContext context,
                                              String uuid, FileSystem zipFs, boolean skipUUID,
-                                             Path stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+                                             Path stylePath, Format format, boolean resolveXlink,
+                                             boolean removeXlinkAttribute,
+                                             boolean addSchemaLocation) throws Exception {
 
         final Path metadataRootDir = zipFs.getPath(uuid);
         Files.createDirectories(metadataRootDir);
 
         Pair<Metadata, String> recordAndMetadataForExport =
-            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute, addSchemaLocation);
         Metadata record = recordAndMetadataForExport.one();
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
@@ -260,7 +294,7 @@ class MEF2Exporter {
         // --- save Feature Catalog
         String ftUUID = getFeatureCatalogID(context, record.getId());
         if (!ftUUID.equals("")) {
-            Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
+            Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));

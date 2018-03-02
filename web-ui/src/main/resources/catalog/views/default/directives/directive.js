@@ -64,6 +64,12 @@
             !angular.isArray(scope.attributeTable)) {
             scope.attributeTable = [scope.attributeTable];
           }
+          scope.showCodeColumn = false;
+          angular.forEach(scope.attributeTable, function(elem) {
+            if(elem.code > '') {
+              scope.showCodeColumn = true;
+            }
+          });
         }
       };
     }

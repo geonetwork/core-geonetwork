@@ -240,6 +240,10 @@
     <label>Text</label>
     <description></description>
   </element>
+  <element name="gmx:Anchor">
+    <label>Anchor</label>
+    <description></description>
+  </element>
   <element name="gmx:FileName">
     <label>File name</label>
     <description></description>

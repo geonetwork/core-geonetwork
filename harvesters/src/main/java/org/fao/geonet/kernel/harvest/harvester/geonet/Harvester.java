@@ -192,16 +192,29 @@ class Harvester implements IHarvester<HarvestResult> {
         //--- align local node
         HarvestResult result = new HarvestResult();
         if (!error) {
-            Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
-            result = aligner.align(records, errors);
-
-            Map<String, String> sources = buildSources(remoteInfo);
-            updateSources(records, sources);
+            try {
+                Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
+                result = aligner.align(records, errors);
+    
+                Map<String, String> sources = buildSources(remoteInfo);
+                updateSources(records, sources);
+             } catch (Exception t) {
+                log.error("Unknown error trying to harvest");
+                log.error(t.getMessage());
+                errors.add(new HarvestError(this.context, t, log));
+            } catch (Throwable t) {
+                log.fatal("Something unknown and terrible happened while harvesting");
+                log.fatal(t.getMessage());
+                errors.add(new HarvestError(this.context, t, log));
+            }
         } else {
             log.warning("Due to previous errors the align process has not been called");
         }
-        return result;
-    }
+
+		log.info("Total records processed in all searches :"+ records.size());
+
+		return result;
+	}
 
     //---------------------------------------------------------------------------
 

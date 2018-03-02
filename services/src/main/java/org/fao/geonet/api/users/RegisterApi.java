@@ -80,7 +80,8 @@ public class RegisterApi {
 
     @ApiOperation(value = "Create user account",
         nickname = "registerUser",
-        notes = "User is created with a registered user profile. Password is sent by email. Catalog administrator is also notified.")
+        notes = "User is created with a registered user profile. username field is ignored and the email is used as " +
+            "username. Password is sent by email. Catalog administrator is also notified.")
     @RequestMapping(
         value = "/actions/register",
         method = RequestMethod.PUT,
@@ -104,7 +105,7 @@ public class RegisterApi {
         boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
         if (!selfRegistrationEnabled) {
             return new ResponseEntity<>(String.format(
-                    messages.getString("self_registration_disabled")
+                messages.getString("self_registration_disabled")
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
@@ -127,9 +128,17 @@ public class RegisterApi {
             ), HttpStatus.PRECONDITION_FAILED);
         }
 
+        if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
+            // username is ignored and the email is used as username in selfregister
+            return new ResponseEntity<>(String.format(
+                messages.getString("user_with_that_username_found"),
+                userRegisterDto.getEmail()
+            ), HttpStatus.PRECONDITION_FAILED);
+        }
+
         User user = new User();
 
-        user.setUsername(userRegisterDto.getUsername());
+        // user.setUsername(userRegisterDto.getUsername());
         user.setName(userRegisterDto.getName());
         user.setOrganisation(userRegisterDto.getOrganisation());
         user.setProfile(Profile.findProfileIgnoreCase(userRegisterDto.getProfile()));
@@ -144,7 +153,7 @@ public class RegisterApi {
         user.setUsername(user.getEmail());
         Profile requestedProfile = user.getProfile();
         user.setProfile(Profile.RegisteredUser);
-        userRepository.save(user);
+        user = userRepository.save(user);
 
         Group targetGroup = getGroup(context);
         if (targetGroup != null) {

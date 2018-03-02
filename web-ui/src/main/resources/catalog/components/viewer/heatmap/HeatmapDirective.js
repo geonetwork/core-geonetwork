@@ -73,7 +73,7 @@
 
           // add popover for feature info
           ctrl.overlay = new ol.Overlay({
-            element: $('<div class="sxt-heatmap-overlay"></div>')[0],
+            element: $('<div class="heatmap-overlay"></div>')[0],
             positioning: 'bottom-center',
             stopEvent: false,
             offset: [0, -2]

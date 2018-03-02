@@ -674,6 +674,17 @@ button.active [role=tooltip] {
   }
 }
 .gn-privileges-popup {
+  position: fixed !important;
+  max-width: 750px;
+  .gn-popup-content {
+    vertical-align: top;
+    max-height: 750px;
+    .gn-share-grid {
+      tbody {
+        max-height: 45vh;
+      }
+    }
+  }
 }
 
 .gn-popup-title {

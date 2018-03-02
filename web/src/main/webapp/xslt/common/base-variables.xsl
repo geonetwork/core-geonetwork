@@ -59,10 +59,6 @@
 
   <xsl:variable name="searchView"
                 select="if (/root/request/view) then /root/request/view else if(util:getSettingValue('system/ui/defaultView')) then util:getSettingValue('system/ui/defaultView') else 'default'"></xsl:variable>
-  <xsl:variable name="owsContext" select="/root/request/owscontext"/>
-  <xsl:variable name="wmsUrl" select="/root/request/wmsurl"/>
-  <xsl:variable name="layerName" select="/root/request/layername"/>
-  <xsl:variable name="layerGroup" select="/root/request/layergroup"/>
   <xsl:variable name="angularModule"
                 select="if ($angularApp = 'gn_search') then concat('gn_search_', $searchView) else $angularApp"></xsl:variable>
 

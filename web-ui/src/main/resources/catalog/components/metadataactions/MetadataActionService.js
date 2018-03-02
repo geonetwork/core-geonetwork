@@ -192,7 +192,6 @@ goog.require('gn_share');
       this.validateMd = function(md, bucket) {
         if (md) {
           return gnMetadataManager.validate(md.getId()).then(function() {
-            $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('search');
           });
         } else {
@@ -201,7 +200,6 @@ goog.require('gn_share');
                     method: 'PUT'
                   }).then(function(data) {
             alertResult(data.data);
-            $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('search');
           });
         }

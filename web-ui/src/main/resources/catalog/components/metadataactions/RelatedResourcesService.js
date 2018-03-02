@@ -302,6 +302,9 @@
           };
 
           this.getType = function(resource, type) {
+            resource.locTitle = $filter('gnLocalized')(resource.title);
+            resource.locDescription = $filter('gnLocalized')(resource.description);
+            resource.locUrl = $filter('gnLocalized')(resource.url);
             var protocolOrType = resource.protocol + resource.serviceType;
             // Cas for links
             if (angular.isString(protocolOrType) &&

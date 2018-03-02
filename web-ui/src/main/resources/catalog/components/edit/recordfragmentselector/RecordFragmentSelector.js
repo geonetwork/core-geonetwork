@@ -64,7 +64,7 @@
                  };
 
                  scope.modelOptions = angular.copy(
-                 gnGlobalSettings.modelOptions);
+                  gnGlobalSettings.modelOptions);
                },
                post: function(scope, element, attrs) {
                  scope.snippet = null;
@@ -74,12 +74,12 @@
                  // TODO: Retrieve title of source records
                  // to be displayed in the selector.
                  scope.sourceRecords =
-                 (attrs['sourceRecords'] &&
+                  (attrs['sourceRecords'] &&
                  attrs['sourceRecords'].split(',')) || [];
 
                  scope.exclude =
-                   (attrs['exclude'] &&
-                     attrs['exclude'].split('#')) || [];
+                  (attrs['exclude'] &&
+                 attrs['exclude'].split('#')) || [];
 
                  // Define a search query to choose from
                  if (scope.sourceRecords.length > 0) {
@@ -88,9 +88,9 @@
                    };
                  } else {
                    scope.searchQuery =
-                   (attrs['searchQuery'] &&
+                    (attrs['searchQuery'] &&
                    angular.fromJson(
-                       attrs['searchQuery']
+                        attrs['searchQuery']
                    .replace('{uuid}', gnCurrentEdit.uuid)
                    .replace(/'/g, '\"')
                    )) || {};
@@ -116,8 +116,8 @@
                  scope.getFragments = function() {
                    scope.fragments = [];
                    $http.post(
-                   '../api/0.1/records/' + scope.sourceRecord +
-                   '/query/' + scope.query, {}).then(function(r) {
+                    '../api/0.1/records/' + scope.sourceRecord +
+                    '/query/' + scope.query, {}).then(function(r) {
                      if (r.status === 200) {
                        scope.fragments = {};
                        if (scope.exclude.length > 0) {
@@ -136,7 +136,7 @@
                  // Append * for like search
                  scope.updateParams = function() {
                    scope.searchObj.params.any =
-                   '*' + scope.searchObj.any + '*';
+                    '*' + scope.searchObj.any + '*';
                  };
 
                  scope.$watch('sourceRecord', function(n, o) {
@@ -147,13 +147,13 @@
 
                  scope.add = function() {
                    gnEditor.add(gnCurrentEdit.id,
-                   scope.elementRef, scope.elementName, scope.domId, 'before');
+                    scope.elementRef, scope.elementName, scope.domId, 'before');
                    return false;
                  };
 
                  scope.addFragment = function(f) {
                    var field = $.find('input[name=' + scope.snippetRef +
-                   ']')[0];
+                    ']')[0];
 
                    // Add current record UUID in component ID.
                    // Only required for Checkpoint

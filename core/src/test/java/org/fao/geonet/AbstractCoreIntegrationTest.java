@@ -257,6 +257,13 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return loginAs(user);
     }
 
+    public User loginAs(User user, ServiceContext context) {
+        UserSession userSession = new UserSession();
+        userSession.loginAs(user);
+        context.setUserSession(userSession);
+        return user;
+    }
+
     public MockHttpSession loginAs(User user) {
         MockHttpSession session = new MockHttpSession();
 

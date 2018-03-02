@@ -23,11 +23,25 @@
 
 package org.fao.geonet.api.records;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -35,6 +49,8 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.records.model.related.FCRelatedMetadataItem.FeatureType.AttributeTable;
+import org.fao.geonet.api.records.model.related.FeatureResponse;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -57,17 +73,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-
-import static org.fao.geonet.api.ApiParams.*;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
     "/api/records",
@@ -340,6 +361,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false,
             defaultValue = "false")
             boolean withXLinkAttribute,
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+            boolean addSchemaLocation,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = "application/x-gn-mef-2-zip"
@@ -368,7 +393,7 @@ public class MetadataApi implements ApplicationContextAware {
             boolean skipUUID = false;
             file = MEFLib.doExport(
                 context, metadataUuid, format.toString(),
-                skipUUID, withXLinksResolved, withXLinkAttribute
+                skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
             );
         } else {
             Set<String> tmpUuid = new HashSet<String>();
@@ -408,7 +433,7 @@ public class MetadataApi implements ApplicationContextAware {
             Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
                 + " records.");
 
-            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute);
+            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation);
         }
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
             "inline; filename=\"%s.zip\"",
@@ -459,7 +484,6 @@ public class MetadataApi implements ApplicationContextAware {
             int rows,
         HttpServletRequest request) throws Exception {
 
-
         Metadata md;
         try{
             md = ApiUtils.canViewRecord(metadataUuid, request);
@@ -474,17 +498,72 @@ public class MetadataApi implements ApplicationContextAware {
         // At least for related metadata and keep XSL only for links
         final ServiceContext context = ApiUtils.createServiceContext(request);
         Element raw = new Element("root").addContent(Arrays.asList(
-            new Element("gui").addContent(Arrays.asList(
-                new Element("language").setText(language.getISO3Language()),
-                new Element("url").setText(context.getBaseUrl())
-            )),
-            MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
+                new Element("gui").addContent(Arrays.asList(
+                        new Element("language").setText(language.getISO3Language()),
+                        new Element("url").setText(context.getBaseUrl())
+        		)),
+        		MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
         ));
         GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
-        final Element transform = Xml.transform(raw, relatedXsl);
+        final Element transform = Xml.transform(raw, relatedXsl);        
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
         return response;
     }
+
+    @ApiOperation(
+            value = "Returns a map to decode attributes in a dataset (from the associated feature catalog)",
+            nickname = "getFeatureCatalog",
+            notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
+                "to this records.<br/>" +
+                "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+        @RequestMapping(value = "/{metadataUuid}/featureCatalog",
+            method = RequestMethod.GET,
+            produces = {
+                MediaType.APPLICATION_XML_VALUE,
+                MediaType.APPLICATION_JSON_VALUE
+            })
+        @ResponseStatus(HttpStatus.OK)
+        @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Return the associated resources."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        })
+        @ResponseBody
+        public FeatureResponse getFeatureCatalog(
+            @ApiParam(
+                value = API_PARAM_RECORD_UUID,
+                required = true)
+            @PathVariable
+                String metadataUuid,
+            HttpServletRequest request) throws Exception {
+
+            RelatedItemType[] type = {RelatedItemType.fcats};
+            
+            FeatureResponse response = new FeatureResponse();
+
+            Map<String, String[]> decodeMap = new HashMap<>();
+
+            RelatedResponse related = getRelated(metadataUuid, type, 0, 100, request);
+
+            if(related.getFcats()!=null) {
+                for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
+                    if(element.getCode()!=null && !element.getCode().trim().equals("")) {
+                        if(!decodeMap.containsKey(element.getCode())) {
+                            String[] decodedValues = {element.getName(), element.getDefinition()}; 
+                            decodeMap.put(element.getCode(), decodedValues);
+                        }
+                    } else {
+                        if(!decodeMap.containsKey(element.getName())) {
+                            String[] decodedValues = {element.getName(), element.getDefinition()}; 
+                            decodeMap.put(element.getName(), decodedValues);
+                        }
+                    }
+                }
+            } else return response;
+
+            response.setDecodeMap(decodeMap);
+
+            return response;
+        }
 }

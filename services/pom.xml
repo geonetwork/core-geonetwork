@@ -170,6 +170,10 @@
       <version>0.6.2</version>
     </dependency>
     <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpmime</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.nibor.autolink</groupId>
       <artifactId>autolink</artifactId>
       <version>0.6.0</version>

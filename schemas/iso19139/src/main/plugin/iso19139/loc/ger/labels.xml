@@ -2565,8 +2565,7 @@
       Locator)
     </description>
   </element>
-  <element name="gmd:protocol" context="gmd:CI_OnlineResource"
-           id="398" alias="protocol">
+  <element name="gmd:protocol" id="398.0" alias="protocol">
     <label>Protokoll</label>
     <help/>
     <condition/>

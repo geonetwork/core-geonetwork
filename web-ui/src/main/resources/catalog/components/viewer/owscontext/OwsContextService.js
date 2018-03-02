@@ -122,6 +122,14 @@
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
+        
+        // -- check if projection is available in ol
+        if (!ol.proj.get(projection)){
+         console.warn('Projection '+ projection +' is not available, map will be projected in a spherical mercator projection');
+         projection='EPSG:3857';
+         ll=[-10026376,-15048966];
+         ur=[10026376,15048966];
+       }
 
         // sextant specific
         // to be removed when managed in settings
@@ -150,12 +158,15 @@
           map.setView(view);
         }
 
-        // $timeout used to avoid map no rendered (eg: null size)
-        $timeout(function() {
-          if (map.getSize()) {
+        var loadPromise = map.get('sizePromise');
+        if (loadPromise) {
+          loadPromise.then(function() {
             map.getView().fit(extent, map.getSize(), { nearest: true });
-          }
-        }, 0, false);
+          })
+        }
+        else {
+          console.warn('Map must be created by mapsManager');
+        }
 
         // load the resources & add additional layers if available
         var layers = context.resourceList.layer;
@@ -246,11 +257,11 @@
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      bgLayers[idx - 1] = layer;
-
                       if (!layer) {
                         return;
                       }
+                      bgLayers[idx - 1] = layer;
+
                       layer.displayInLayerManager = false;
                       layer.background = true;
 

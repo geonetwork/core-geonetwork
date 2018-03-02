@@ -32,6 +32,7 @@ var gnHarvesterwfsfeatures = {
                 "stylesheet" : "",
                 "streamFeatures" : false,
                 "createSubtemplates" : false,
+                "overrideUuid" : "SKIP",
                 "templateId" : "",
                 "recordsCategory": "",
                 "outputSchema" : "iso19139"
@@ -68,6 +69,7 @@ var gnHarvesterwfsfeatures = {
                 + '  </site>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>'

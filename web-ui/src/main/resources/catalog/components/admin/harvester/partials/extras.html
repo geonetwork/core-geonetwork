@@ -1,0 +1,14 @@
+<div>
+  <div data-ng-show="harvester['@type'] == 'webdav' || harvester['@type'] == 'geonetwork' || harvester['@type'] == 'csw' ">
+    <label class="control-label"> 
+      <span data-translate="">{{"harvesterOverrideUUID" | translate}}</span>
+    </label> 
+    <select data-ng-model="harvester.options.overrideUuid" 
+              class="form-control">
+      <option value="SKIP"><span data-translate="">{{"harvesterOverrideUUID-skip" | translate}}</span></option>
+      <option value="OVERRIDE"><span data-translate="">{{"harvesterOverrideUUID-overwrite" | translate}}</span></option>
+      <option value="RANDOM"><span data-translate="">{{"harvesterOverrideUUID-random" | translate}}</span></option>
+    </select>
+    <span class="help-block ng-scope" data-translate="">harvesterOverrideUUIDHelp</span>
+  </div>
+</div>

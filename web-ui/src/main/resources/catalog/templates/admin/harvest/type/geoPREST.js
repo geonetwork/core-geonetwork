@@ -26,6 +26,7 @@ var gnHarvestergeoPREST = {
             "options":   {
               "every": "0 0 0 ? * *",
               "oneRunOnly": false,
+              "overrideUuid" : "SKIP",
               "status": ""
             },
             "searches": [{
@@ -67,6 +68,7 @@ var gnHarvestergeoPREST = {
                 + '  </searches>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '  </options>'

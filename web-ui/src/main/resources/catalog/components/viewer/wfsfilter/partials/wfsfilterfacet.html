@@ -105,14 +105,14 @@
          data-ng-click="initIndexRequest()">
         <i class="fa fa-refresh"></i>
       </button>
-      <button data-ng-if="::user.canEditRecord(md) || md.isHarvested == 'y'"
+      <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'y'"
               type="button" class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
-          data-ng-if="::user.canEditRecord(md) || md.isHarvested == 'y'">
+          data-ng-if="user.canEditRecord(md) || md.isHarvested == 'y'">
         <li>
           <a href="" data-ng-click="indexWFSFeatures('1.0.0')">
             <i class="fa fa-pie-chart"></i>&nbsp;
