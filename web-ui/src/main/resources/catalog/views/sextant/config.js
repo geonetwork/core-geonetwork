@@ -20,8 +20,9 @@
     'gnGlobalSettings',
     'gnMap',
     'gnConfigService',
+    'gnMapsManager',
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap, gnConfigService) {
+             gnGlobalSettings, gnMap, gnConfigService, gnMapsManager) {
 
       if(typeof sxtSettings != 'undefined') {
         gnGlobalSettings.init({},
@@ -149,39 +150,26 @@
         angular.extend(mapsConfig, sxtSettings.olView);
       }
 
-      var viewerMap = new ol.Map({
-        view: new ol.View(mapsConfig),
-        controls: []
+      var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+      var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+
+      searchMap.get('creationPromise').then(function() {
+        searchMap.getView().setZoom(0);
+        searchMap.getView().setCenter([280274.03240585705, 6053178.654789996]);
       });
 
-      var searchMap = new ol.Map({
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
-        ],
-        controls: [],
-        view: new ol.View({
-          center: [280274.03240585705, 6053178.654789996],
-          zoom: 0
-        })
+      viewerMap.get('creationPromise').then(function() {
+        //Fix change view contraints
+        //TODO: Wait for fix in ol3: https://github.com/openlayers/ol3/issues/4265
+        if(mapsConfig.extent) {
+          var view = viewerMap.getView();
+          view.on('change:center', function(e) {
+            if(!ol.extent.containsCoordinate(mapsConfig.extent, view.getCenter())) {
+              view.setCenter(view.constrainCenter(view.getCenter()));
+            }
+          });
+        }
       });
-
-      $(window).load(function() {
-        viewerMap.updateSize();
-        searchMap.updateSize();
-      });
-
-      //Fix change view contraints
-      //TODO: Wait for fix in ol3: https://github.com/openlayers/ol3/issues/4265
-      if(mapsConfig.extent) {
-        var view = viewerMap.getView();
-        view.on('change:center', function(e) {
-          if(!ol.extent.containsCoordinate(mapsConfig.extent, view.getCenter())) {
-            view.setCenter(view.constrainCenter(view.getCenter()));
-          }
-        });
-      }
 
       /** Main tabs configuration */
       searchSettings.mainTabs = {

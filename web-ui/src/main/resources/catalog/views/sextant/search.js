@@ -146,6 +146,7 @@
 
 
       // make sure search map is correctly rendered
+      // note: this is required in sextant because of API mode; should be handled in a cleaner way eventually
       var unregisterMapsize = $scope.$on('locationBackToSearch', function() {
         if (angular.isUndefined(searchMap.getSize()) ||
           searchMap.getSize()[0] == 0 ||
@@ -159,84 +160,8 @@
       var waitingLayers = []; // Layers added from catalog but not visited yet
       var loadLayerPromises = []; // Promises to know when all layers are loaded
 
-      // Manage layer url parameters
-      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-        gnOwsContextService.initFirstContext(viewerMap).then(function() {
-          if(!gnMap.isLayerInMap(viewerMap, gnViewerSettings.layerName,
-              gnViewerSettings.wmsUrl)) {
-
-            var loadLayerPromise =
-              gnMap.addWmsFromScratch(viewerMap, gnViewerSettings.wmsUrl,
-                gnViewerSettings.layerName, true).
-
-              then(function(layer) {
-                if(layer) {
-                  layer.set('group', gnViewerSettings.layerGroup);
-                  layer.set('fromUrlParams', true);
-                  viewerMap.addLayer(layer);
-                  if(waitingLayers) waitingLayers.push(layer);
-                  $scope.addLayerPopover('map');
-                  if (!$scope.mainTabs.map.active) {
-                    $scope.mainTabs.map.titleInfo += 1;
-                  }
-                }
-              });
-            if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
-          }
-        });
-      }
-
       $scope.displayMapTab = function() {
         $scope.mainTabs.map.titleInfo = 0;
-
-        if(mapVisited) return;
-        mapVisited = true;
-
-        gnOwsContextService.initFirstContext(viewerMap).then(function() {
-
-          if(loadLayerPromises) {
-            return $q.all(loadLayerPromises).finally(function() {
-              var extent = ol.extent.createEmpty();
-              for(var i=0;i<waitingLayers.length;++i) {
-                ol.extent.extend(extent, waitingLayers[i].get('cextent'));
-              }
-              if (!ol.extent.isEmpty(extent)) {
-                viewerMap.set('lastExtent', extent);
-              }
-              if (loadLayerPromises) delete loadLayerPromises;
-              if (waitingLayers) delete waitingLayers;
-            });
-          }
-          return true;
-        }).then(function() {
-
-            var intervalId ;
-            var loadAttempt = 0;
-            intervalId = setInterval(function() {
-
-              if (loadAttempt > (25)) {
-                clearInterval(intervalId);
-              }
-              if(!viewerMap.getSize() || (
-                viewerMap.getSize()[0] == 0 && viewerMap.getSize()[1] == 0 )) {
-                loadAttempt += 1;
-              }
-              if($(viewerMap.getTarget()).width() &&
-                $(viewerMap.getTarget()).height()) {
-                viewerMap.updateSize();
-                if(viewerMap.get('lastExtent')) {
-                  viewerMap.getView().fit(
-                    viewerMap.get('lastExtent'),
-                    viewerMap.getSize(), { nearest: true });
-                }
-                clearInterval(intervalId);
-              }
-              else {
-                loadAttempt += 1;
-
-              }
-            }, 100);
-        });
       };
 
       $scope.displayPanierTab = function() {
@@ -454,25 +379,6 @@
 
       gnMdView.initFormatter(gnSearchSettings.formatterTarget || '.gn');
       gnSearchLocation.initTabRouting($scope.mainTabs);
-      $rootScope.$on('$locationChangeSuccess', function(){
-        var tab = $location.path().match(/^\/([a-zA-Z0-9]*)($|\/.*)/)[1];
-
-        // resize search map for any views exluding viewer
-        if (tab == 'search' && (!angular.isArray(
-            searchMap.getSize()) || searchMap.getSize()[0] < 0)) {
-          setTimeout(function() {
-            searchMap.updateSize();
-
-            // if an extent was obtained from a loaded context, apply it
-            if(searchMap.get('lastExtent')) {
-              searchMap.getView().fit(
-                searchMap.get('lastExtent'),
-                searchMap.getSize(), { nearest: true });
-            }
-          }, 0);
-        }
-      });
-
 
       $scope.gotoPanier = function() {
         $location.path('/panier');
@@ -497,9 +403,12 @@
       });
 
       // attempt to update map sizes
+      // note: this is required in sextant because of API mode; should be handled in a cleaner way eventually
       $(window).load(function() {
-        viewerMap.updateSize();
-        searchMap.updateSize();
+        setTimeout(function () {
+          viewerMap.updateSize();
+          searchMap.updateSize();
+        }, 500);
       });
 
       gnSearchSettings.mapProtocols = {

@@ -138,6 +138,12 @@
             return map;
           }
 
+          // SPECIFIC SEXTANT: use viewerSettings.defaultContext
+          if (type == this.VIEWER_MAP && gnViewerSettings.defaultContext) {
+            config.context = gnViewerSettings.defaultContext;
+          }
+          // end specific sxt
+
           // config found: load context if any, and apply extent & layers
           // (this is done through a promise anyway)
           var mapReady;
@@ -157,6 +163,7 @@
             }.bind(this));
 
             urlContext = mapParams.owscontext || mapParams.map;
+
             if(urlContext) {
               mapReady = gnOwsContextService.loadContextFromUrl(
                 urlContext, map);
@@ -205,6 +212,15 @@
               });
             }
             if(type == this.VIEWER_MAP) {
+
+              // SPECIFIC SEXTANT
+              // keep backwards compat with these params
+              if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
+                mapParams.wmsurl = gnViewerSettings.wmsurl;
+                mapParams.layerName = gnViewerSettings.layerName
+              }
+              // end specific sextant
+
               if (mapParams.wmsurl && mapParams.layername) {
                 gnMap.addWmsFromScratch(map, mapParams.wmsurl,
                   mapParams.layername, true).
