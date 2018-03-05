@@ -104,8 +104,9 @@
               zoom: 2
             }),
             // show zoom control in editor maps only
-            controls: type !== this.EDITOR_MAP ? [] : [
-                new ol.control.Zoom()
+            controls: type !== this.EDITOR_MAP ? [new ol.control.Attribution()] : [
+                new ol.control.Zoom(),
+                new ol.control.Attribution()
               ]
           });
 
