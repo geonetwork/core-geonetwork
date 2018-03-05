@@ -173,11 +173,12 @@
                 // save the state & path on the new node
                 // (path is used to track nodes uniquely)
                 // note: group position is set by the layer's `groupPosition` prop
+                var groupPosition = layer.get('owc_groupPosition');
                 newNode = {
                   name: group,
                   state: state,
                   path: groupPath,
-                  groupPosition: layer.get('owc_groupPosition')
+                  groupPosition: groupPosition && parseInt(groupPosition.split('/')[index])
                 };
                 if (!node.nodes) node.nodes = [];
                 node.nodes.push(newNode);
