@@ -121,10 +121,12 @@
           }.bind(this));
 
           var unWatchFn = $rootScope.$watch(function() {
-            return map.getTargetElement() &&
-              map.getTargetElement().offsetWidth;
-          }, function(width) {
-            if (width > 0) {
+            return map.getTargetElement() && Math.min(
+              map.getTargetElement().offsetWidth,
+              map.getTargetElement().offsetHeight
+            );
+          }, function(size) {
+            if (size > 0) {
               map.updateSize();
               defer.resolve();
               unWatchFn();
