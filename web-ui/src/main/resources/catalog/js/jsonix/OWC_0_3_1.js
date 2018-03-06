@@ -355,7 +355,6 @@ var OWC_0_3_1_Module_Factory = function() {
         t: 'a'
       }, {
         n: 'groupPosition',
-        ti: 'Integer',
         t: 'a'
       }
       // end sextant specific
