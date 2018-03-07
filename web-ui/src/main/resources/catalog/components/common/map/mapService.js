@@ -796,8 +796,7 @@
               var requestedStyle = null;
               var legendUrl;
 
-              if (style && angular.isArray(getCapLayer.Style) &&
-                  getCapLayer.Style.length > 0) {
+              if (style && this.containsStyles(getCapLayer)) {
                 for (var i = 0; i < getCapLayer.Style.length; i++) {
                   var s = getCapLayer.Style[i];
                   if (s.Name === style.Name) {
@@ -808,9 +807,7 @@
                 }
               }
 
-              if (!requestedStyle &&
-                  angular.isArray(getCapLayer.Style) &&
-                  getCapLayer.Style.length > 0) {
+              if (!requestedStyle && this.containsStyles(getCapLayer)) {
                 legendUrl = (getCapLayer.Style[getCapLayer.
                     Style.length - 1].LegendURL) ?
                     getCapLayer.Style[getCapLayer.
@@ -844,7 +841,7 @@
               } else {
                 // The first style element is the default style
                 var defaultStyle;
-                if(angular.isArray(getCapLayer.Style) && getCapLayer.Style.length > 0) {
+                if (this.containsStyles(getCapLayer)) {
                   defaultStyle = getCapLayer.Style[0];
                 }
                 if(defaultStyle) {
@@ -921,6 +918,26 @@
 
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#containsStyles
+           *
+           * @description
+           * Check if CapabilityLayer contains a not empty
+           * styles array
+           *
+           * @param {getCapLayer} Capability Layer
+           * @return {boolean} true if contains a not empty Style array
+           */
+          containsStyles: function(capLayer) {
+            if (angular.isArray(capLayer.Style) &&
+                capLayer.Style.length > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          },
 
           /**
            * @ngdoc method
