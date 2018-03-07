@@ -99,7 +99,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
     //--------------------------------------------------------------------------
     private DataManager dataMan;
-    
+
     private MetadataRepository metadataRepository;
 
     //--------------------------------------------------------------------------
@@ -272,10 +272,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             result.datasetUuidExist++;
             switch(params.getOverrideUuid()){
             case OVERRIDE:
-                UriMapper localUris = new UriMapper(context, 
-                        metadataRepository.findOneByUuid(uuid).getHarvestInfo().getUuid());
-                List<RecordInfo> records = localUris.getRecords(rf.getPath());
-                updateMetadata(rf, records.get(0));
+                Metadata existingMetadata = metadataRepository.findOneByUuid(uuid);
+                RecordInfo existingRecordInfo = new RecordInfo(existingMetadata);
+                updateMetadata(rf, existingRecordInfo);
                 log.info("Overriding record with uuid " + uuid);
                 result.updatedMetadata++;
                 return;
