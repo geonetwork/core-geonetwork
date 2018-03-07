@@ -467,7 +467,7 @@
             // Check for unsupported projections
             // To avoid to break the search page and map
             if(gnViewerSettings.mapConfig.projection && !ol.proj.get(gnViewerSettings.mapConfig.projection)) {
-              console.log('%c The map projection ' + gnViewerSettings.mapConfig.projection + ' is not supported.','color: #d00d00');
+              console.warn('The map projection ' + gnViewerSettings.mapConfig.projection + ' is not supported.');
               console.log('Now using default projection EPSG:3857.');
               // Switching to default
               gnViewerSettings.mapConfig.projection = 'EPSG:3857';
