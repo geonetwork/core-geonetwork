@@ -47,10 +47,23 @@
         function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils) {
           return {
             request: function(config) {
-              if (gnLangs.current && !config.headers['Accept-Language']) {
+              var isGnUrl =
+                  config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
+                  (config.url.indexOf('http') !== 0 &&
+                  config.url.indexOf('//') !== 0);
+              
+              //Add language headers manually or some servers fail
+              if (isGnUrl && gnLangs.current &&
+                  !config.headers['Accept-Language']) {
                 config.headers['Accept-Language'] = gnLangs.current;
+              } else if (!config.headers['Accept-Language']) {
+                config.headers['Accept-Language'] = navigator.language;
               }
-              if (config.url.indexOf('http', 0) === 0) {
+              // For HTTP url and those which
+              // are not targeting the catalog
+              // add proxy if needed
+              if (config.url.indexOf('http', 0) === 0 &&
+                  config.url.indexOf(gnGlobalSettings.gnUrl) !== 0) {
                 var url = config.url.split('/');
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
@@ -59,25 +72,43 @@
                   config.url = gnGlobalSettings.proxyUrl +
                       encodeURIComponent(config.url);
                 }
+              } else if (gnGlobalSettings.gnUrl) {
+                // Relative URL in API mode
+                // are prefixed with catalog URL
+                // console.log(config.url);
+                config.url = gnGlobalSettings.gnUrl +
+                             (gnLangs.current || 'eng') + '/' +
+                             config.url;
               }
 
-              return $q.when(config);
-            },
+              return config;
+            }, 
             responseError: function(response) {
               var config = response.config;
 
               if (config.nointercept) {
-                return $q.when(config);
-              // let it pass
-              } else if (!config.status || config.status === -1) {
+                if(response.status > 199 && response.status < 400) {
+                  // let it pass
+                  return $q.resolve(config);
+                } else {
+                  // return error
+                  return $q.reject(config);
+                }
+              } 
+
+              //If we have no error status, the request didn't even make it to the server
+              //Then, use proxy
+              if (response.status === -1) {
                 var defer = $q.defer();
 
                 if (config.url.indexOf('http', 0) === 0) {
                   if (gnUrlUtils.urlIsSameOrigin(config.url)) {
-                    // if the target URL is in the GN host, don't use proxy and reject the promise.
+                    // if the target URL is in the GN host,
+                    // don't use proxy and reject the promise.
                     return $q.reject(response);
                   } else {
-                    // if the target URL is in other site/protocol that GN, use the proxy to make the request.
+                    // if the target URL is in other site/protocol that GN,
+                    // use the proxy to make the request.
                     var url = config.url.split('/');
                     url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
@@ -85,21 +116,21 @@
                       gnGlobalSettings.requireProxy.push(url);
                     }
 
-                    $injector.invoke(['$http', function ($http) {
-                      // This modification prevents interception (infinite
+                    $injector.invoke(['$http', function($http) {
+                      // This modification prevents interception again (infinite
                       // loop):
-
                       config.nointercept = true;
 
                       // retry again
-                      $http(config).then(function (resp) {
+                      $http(config).then(function(resp) {
                         defer.resolve(resp);
-                      }, function (resp) {
+                      }, function(resp) {
                         defer.reject(resp);
                       });
                     }]);
                   }
                 } else {
+                  //It not an http request, it looks like an internal request
                   return $q.reject(response);
                 }
 
