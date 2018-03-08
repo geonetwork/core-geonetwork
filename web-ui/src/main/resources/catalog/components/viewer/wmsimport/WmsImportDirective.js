@@ -69,10 +69,10 @@
             
             //check if proxy is needed
             var url = $scope.url.split('/');
+            getCapLayer.useProxy = false;
             url = url[0] + '/' + url[1] + '/' + url[2] + '/';
             if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
-              $scope.url = gnGlobalSettings.proxyUrl +
-                                 encodeURIComponent($scope.url);
+              getCapLayer.useProxy = true;
             }
 
             if ($scope.format == 'wms') {

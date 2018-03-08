@@ -506,13 +506,10 @@
               });
             }
 
-            // Set proxy for Cesium to load
-            // layers not accessible with CORS headers
-            // This is optional if the WMS provides CORS
-            if (viewerSettings.cesiumProxy) {
-              source.set('olcs.proxy', function(url) {
-                return '../../proxy?url=' + encodeURIComponent(url);
-              });
+            if(layerParams.useProxy 
+                && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+              options.url = gnGlobalSettings.proxyUrl 
+                              + encodeURIComponent(options.url);
             }
 
             var layerOptions = {
@@ -665,8 +662,15 @@
               if (getCapLayer.version) {
                 layerParam.VERSION = getCapLayer.version;
               }
+              
+              url = url || getCapLayer.url;
+              if(getCapLayer.useProxy 
+                  && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+                url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
+              }
+              
               var layer = this.createOlWMS(map, layerParam, {
-                url: url || getCapLayer.url,
+                url: url,
                 label: getCapLayer.Title,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
@@ -846,6 +850,15 @@
                         bbox: extent.join(','),
                         typename: getCapLayer.name.prefix + ':' +
                                    getCapLayer.name.localPart}));
+                  
+
+                  
+                  //If this goes through the proxy, don't remove parameters
+                  if(getCapLayer.useProxy 
+                      && urlGetFeature.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+                    urlGetFeature = gnGlobalSettings.proxyUrl 
+                                        + encodeURIComponent(urlGetFeature);
+                  }
 
                   $.ajax({
                     url: urlGetFeature
@@ -903,6 +916,7 @@
               });
               layer.set('errors', errors);
               layer.set('featureTooltip', true);
+              layer.set('url', url);
               ngeoDecorateLayer(layer);
               layer.displayInLayerManager = true;
               layer.set('label', getCapLayer.name.prefix + ':' +
@@ -1005,6 +1019,12 @@
           addWmsFromScratch: function(map, url, name, createOnly, md, version) {
             var defer = $q.defer();
             var $this = this;
+            
+            if(getCapLayer.useProxy 
+                && urlGetFeature.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+              urlGetFeature = gnGlobalSettings.proxyUrl 
+                                  + encodeURIComponent(urlGetFeature);
+            }
 
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name);
