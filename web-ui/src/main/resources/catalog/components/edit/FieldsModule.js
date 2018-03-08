@@ -110,7 +110,7 @@
   goog.require('gn_field_duration_directive');
   goog.require('gn_fields_directive');
   goog.require('gn_logo_selector_directive');
-  goog.require('gn_md_inspire_validation_directive');
+  goog.require('gn_md_validation_tools_directive');
   goog.require('gn_multilingual_field_directive');
   goog.require('gn_organisation_entry_selector');
   goog.require('gn_record_fragment_selector');
@@ -132,7 +132,7 @@
     'gn_date_picker_directive',
     'gn_record_fragment_selector',
     'gn_checkbox_with_nilreason',
-    'gn_md_inspire_validation_directive',
+    'gn_md_validation_tools_directive',
     'gn_bounding'
   ]);
 })();
