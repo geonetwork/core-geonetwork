@@ -795,8 +795,8 @@
               // TODO: parse better legend & attribution
               var requestedStyle = null;
               var legendUrl;
-              if (style && angular.isArray(getCapLayer.Style) &&
-                  getCapLayer.Style.length > 0) {
+
+              if (style && this.containsStyles(getCapLayer)) {
                 for (var i = 0; i < getCapLayer.Style.length; i++) {
                   var s = getCapLayer.Style[i];
                   if (s.Name === style.Name) {
@@ -807,9 +807,7 @@
                 }
               }
 
-              if (!requestedStyle &&
-                  angular.isArray(getCapLayer.Style) &&
-                  getCapLayer.Style.length > 0) {
+              if (!requestedStyle && this.containsStyles(getCapLayer)) {
                 legendUrl = (getCapLayer.Style[getCapLayer.
                     Style.length - 1].LegendURL) ?
                     getCapLayer.Style[getCapLayer.
@@ -841,11 +839,20 @@
               if (requestedStyle) {
                 layerParam.STYLES = requestedStyle.Name;
               } else {
-                // STYLES is mandatory parameter.
-                // ESRI will complain on this.
-                // Even &STYLES&... return an error on ESRI.
-                // TODO: Fix or workaround
-                layerParam.STYLES = '';
+                // The first style element is the default style
+                var defaultStyle;
+                if (this.containsStyles(getCapLayer)) {
+                  defaultStyle = getCapLayer.Style[0];
+                }
+                if(defaultStyle) {
+                  // Set a casual style if available
+                  // to avoid issues on ESRI services
+                  layerParam.STYLES = defaultStyle.Name;
+                } else {
+                  // This is a problem for ESRI services
+                  // where STYLES is a mandatory field
+                  layerParam.STYLES = '';
+                }
               }
 
               var projCode = map.getView().getProjection().getCode();
@@ -911,6 +918,26 @@
 
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#containsStyles
+           *
+           * @description
+           * Check if CapabilityLayer contains a not empty
+           * styles array
+           *
+           * @param {getCapLayer} Capability Layer
+           * @return {boolean} true if contains a not empty Style array
+           */
+          containsStyles: function(capLayer) {
+            if (angular.isArray(capLayer.Style) &&
+                capLayer.Style.length > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          },
 
           /**
            * @ngdoc method
