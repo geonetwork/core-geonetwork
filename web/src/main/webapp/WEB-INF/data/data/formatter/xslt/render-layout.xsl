@@ -54,12 +54,19 @@
   <xsl:template name="render-record">
     <div class="container-fluid gn-metadata-view gn-view-{$view} gn-schema-{$schema}">
 
-      <xsl:if test="$css = 'sextant'">
-        <link rel="stylesheet" type="text/css" href="../../apps/js/ext/resources/css/ext-all.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gndefault.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gnmetadatadefault.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/metadata-view.css"/>
-      </xsl:if>
+      <xsl:choose>
+        <!-- This mode will be deprecated once the v5 is dropped. -->
+        <xsl:when test="$css = 'sextant'">
+          <link rel="stylesheet" type="text/css" href="../../apps/js/ext/resources/css/ext-all.css"/>
+          <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gndefault.css"/>
+          <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gnmetadatadefault.css"/>
+          <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/metadata-view.css"/>
+        </xsl:when>
+        <!-- Avoid script injection. Only allows letters, digits and '-', '_' in API id-->
+        <xsl:when test="matches($css, '^[A-Za-z0-9-_]+$')">
+          <link rel="stylesheet" type="text/css" href="{$nodeUrl}../static/api-{$css}.css"/>
+        </xsl:when>
+      </xsl:choose>
 
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
