@@ -15,13 +15,13 @@
 
 	<xsl:param name="displayInfo"/>
 	<xsl:param name="lang"/>
-	
+
 	<xsl:include href="../../../iso19139/present/metadata-utils.xsl"/>
-	
+
 	<!-- ============================================================================= -->
 
 	<xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
-		
+
 		<xsl:variable name="info" select="geonet:info"/>
 		<xsl:variable name="langId">
 			<xsl:call-template name="getLangId">
@@ -29,12 +29,12 @@
 				<xsl:with-param name="md" select="."/>
 			</xsl:call-template>
 		</xsl:variable>
-		
+
 		<xsl:variable name="identification" select="gmd:identificationInfo/gmd:MD_DataIdentification|
 			gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']|
 			gmd:identificationInfo/srv:SV_ServiceIdentification|
 			gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']"/>
-		
+
 		<csw:Record>
 
 			<xsl:for-each select="gmd:fileIdentifier">
@@ -47,7 +47,7 @@
 
 			<!-- DataIdentification - - - - - - - - - - - - - - - - - - - - - -->
 
-			<xsl:for-each select="$identification/gmd:citation/gmd:CI_Citation">	
+			<xsl:for-each select="$identification/gmd:citation/gmd:CI_Citation">
 				<xsl:for-each select="gmd:title">
 					<dc:title>
 						<xsl:apply-templates mode="localised" select=".">
@@ -55,7 +55,7 @@
 						</xsl:apply-templates>
 					</dc:title>
 				</xsl:for-each>
-				
+
 				<xsl:for-each select="gmd:alternateTitle">
 					<dct:alternative>
 						<xsl:apply-templates mode="localised" select=".">
@@ -63,9 +63,9 @@
 						</xsl:apply-templates>
 					</dct:alternative>
 				</xsl:for-each>
-				
+
 				<!-- Type - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-				
+
 				<xsl:for-each select="../../../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
 					<dc:type>
 						<xsl:apply-templates mode="localised" select=".">
@@ -73,9 +73,9 @@
 						</xsl:apply-templates>
 					</dc:type>
 				</xsl:for-each>
-				
+
 				<!-- subject -->
-				
+
 				<xsl:for-each select="../../gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(@gco:nilReason)]">
 					<dc:subject>
 					    <xsl:attribute name="href"><xsl:value-of select="gmx:Anchor/@xlink:href"></xsl:value-of></xsl:attribute>
@@ -86,10 +86,10 @@
 					<dc:subject>
 					<xsl:value-of select="."/></dc:subject><!-- TODO : translate ? -->
 				</xsl:for-each>
-				
-				
+
+
 				<!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-				
+
 				<xsl:for-each select="../../../../gmd:distributionInfo/gmd:MD_Distribution">
 					<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
 						<dc:format>
@@ -99,8 +99,8 @@
 						</dc:format>
 					</xsl:for-each>
 				</xsl:for-each>
-				
-				
+
+
 				<xsl:for-each select="gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='revision']/gmd:date/gco:Date">
 					<dct:modified><xsl:value-of select="."/></dct:modified>
 				</xsl:for-each>
@@ -125,19 +125,19 @@
 					<dc:contributor>
 						<xsl:apply-templates mode="localised" select=".">
 							<xsl:with-param name="langId" select="$langId"/>
-						</xsl:apply-templates>					
+						</xsl:apply-templates>
 					</dc:contributor>
 				</xsl:for-each>
 			</xsl:for-each>
 
-			
+
 			<!-- abstract -->
 
 			<xsl:for-each select="$identification/gmd:abstract">
 				<dct:abstract>
 					<xsl:apply-templates mode="localised" select=".">
 						<xsl:with-param name="langId" select="$langId"/>
-					</xsl:apply-templates>				
+					</xsl:apply-templates>
 				</dct:abstract>
 				<dc:description>
 					<xsl:apply-templates mode="localised" select=".">
@@ -158,7 +158,7 @@
 					<dc:rights>
 						<xsl:apply-templates mode="localised" select=".">
 							<xsl:with-param name="langId" select="$langId"/>
-						</xsl:apply-templates>									
+						</xsl:apply-templates>
 					</dc:rights>
 				</xsl:for-each>
 			</xsl:for-each>
@@ -168,26 +168,26 @@
 			<xsl:for-each select="$identification/gmd:language">
 				<dc:language><xsl:value-of select="gco:CharacterString|gmd:LanguageCode/@codeListValue"/></dc:language>
 			</xsl:for-each>
-			
+
 			<!-- Lineage -->
-			
+
 			<xsl:for-each select="gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement">
 				<dc:source>
 					<xsl:apply-templates mode="localised" select=".">
 						<xsl:with-param name="langId" select="$langId"/>
-					</xsl:apply-templates>				
+					</xsl:apply-templates>
 				</dc:source>
 			</xsl:for-each>
-			
+
 			<!-- Parent Identifier -->
-			
+
 			<xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
 				<dc:relation><xsl:value-of select="."/></dc:relation>
 			</xsl:for-each>
 
 
 			<!-- Distribution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-			
+
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
 				<xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name">
 					<dc:format>
@@ -196,7 +196,7 @@
 						</xsl:apply-templates>
 					</dc:format>
 				</xsl:for-each>
-			</xsl:for-each>				
+			</xsl:for-each>
 
 			<!-- bounding box -->
 
@@ -215,11 +215,11 @@
 							<xsl:otherwise><xsl:value-of select="$crs"/></xsl:otherwise>
 						</xsl:choose>
 					</xsl:attribute>
-					
+
 					<ows:LowerCorner>
 						<xsl:value-of select="concat(gmd:eastBoundLongitude/gco:Decimal, ' ', gmd:southBoundLatitude/gco:Decimal)"/>
 					</ows:LowerCorner>
-	
+
 					<ows:UpperCorner>
 						<xsl:value-of select="concat(gmd:westBoundLongitude/gco:Decimal, ' ', gmd:northBoundLatitude/gco:Decimal)"/>
 					</ows:UpperCorner>
@@ -227,23 +227,23 @@
 			</xsl:for-each>
 
 
-			<!-- Create as many URI element 
+			<!-- Create as many URI element
 				* thumbnails
 				* dataset online source elements
-				* as coupledResource defined for a WMS service. 
+				* as coupledResource defined for a WMS service.
 				 * Get one connect point for the service
 				 * Add as many layers defined in coupled resource elements.
 
 				With this information, client could access to onlinesource defined in the metadata.
-				
+
 				CSW 2.0.2 ISO profil does not support dc:URI elements.
-				What could be done is to add an output format supporting dclite4g 
+				What could be done is to add an output format supporting dclite4g
 				http://wiki.osgeo.org/wiki/DCLite4G (TODO)
 				-->
 			<xsl:for-each select="
 				gmd:identificationInfo/srv:SV_ServiceIdentification[srv:serviceType/gco:LocalName='OGC:WMS']|
 				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification' and srv:serviceType/gco:LocalName='OGC:WMS']">
-				
+
 				<xsl:variable name="connectPoint" select="srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
 				<xsl:variable name="serviceUrl">
 					<xsl:choose>
@@ -255,25 +255,25 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<dc:URI protocol="OGC:WMS-1.1.1-http-get-capabilities"><xsl:value-of select="$serviceUrl"/></dc:URI>
 				<xsl:for-each select="srv:coupledResource/srv:SV_CoupledResource">
 					<xsl:if test="gco:ScopedName!=''">
 						<dc:URI protocol="OGC:WMS" name="{gco:ScopedName}"><xsl:value-of select="$serviceUrl"/></dc:URI>
 					</xsl:if>
 				</xsl:for-each>
-				 
+
 			</xsl:for-each>
-			
-			
+
+
 			<xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
-				<xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
+				<xsl:for-each select=".//gmd:onLine/gmd:CI_OnlineResource">
 					<xsl:if test="gmd:linkage">
 						<dc:URI>
 							<xsl:if test="gmd:protocol">
 								<xsl:attribute name="protocol"><xsl:value-of select="gmd:protocol/gco:CharacterString"/></xsl:attribute>
 							</xsl:if>
-							
+
 							<xsl:if test="gmd:name">
 								<xsl:attribute name="name">
 									<xsl:for-each select="gmd:name">
@@ -283,7 +283,7 @@
 									</xsl:for-each>
 								</xsl:attribute>
 							</xsl:if>
-							
+
 							<xsl:if test="gmd:description">
 								<xsl:attribute name="description">
 									<xsl:for-each select="gmd:description">
@@ -293,7 +293,7 @@
 									</xsl:for-each>
 								</xsl:attribute>
 							</xsl:if>
-							
+
 							<xsl:value-of select="gmd:linkage/gmd:URL"/>
 						</dc:URI>
 					</xsl:if>
@@ -313,7 +313,7 @@
 								<xsl:attribute name="protocol">image/png</xsl:attribute>
 							</xsl:when>
 						</xsl:choose>
-						
+
 						<xsl:if test="$fileDescr">
 							<xsl:attribute name="name"><xsl:value-of select="$fileDescr"/></xsl:attribute>
 						</xsl:if>
@@ -322,16 +322,16 @@
 							<xsl:otherwise><xsl:value-of select="concat('resources.get?id=',$info/id,'&amp;fname=',$fileName,'&amp;access=public')"/>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+
 					</dc:URI>
 				</xsl:if>
 			</xsl:for-each>
-			
+
 			<!-- GeoNetwork elements added when resultType is equal to results_with_summary -->
 			<xsl:if test="$displayInfo = 'true'">
 				<xsl:copy-of select="$info"/>
             </xsl:if>
-			
+
 		</csw:Record>
 	</xsl:template>
 
