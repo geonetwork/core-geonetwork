@@ -13,6 +13,12 @@
   * div render a div element to be embedded in an existing webpage. -->
   <xsl:param name="root" select="'html'"/>
 
+
+  <!-- Define if header and footer should be displayed or not.
+   This only applies to root = html mode (ie. not when rendering a div) -->
+  <xsl:param name="header" select="'true'"/>
+
+
   <!-- Define the full portal link. By default, it will link
   to the catalog.search main page of the catalog. To configure a custom
   use {{uuid}} to be replaced by the record UUID.
