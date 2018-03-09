@@ -1259,10 +1259,9 @@
                     o.version = version;
                   }
                   olL = $this.addWmsToMap(map, o);
-                  
-                  if(md && md['geonet:info']['uuid']) {
-                	  olL.set('MDuuid', md['geonet:info']['uuid']);
-                    olL.set('metadataUuid', md['geonet:info']['uuid']);
+
+                  if(olL && md) {
+                    olL.set('md', md);
                   }
 
                   if (!angular.isArray(olL.get('errors'))) {
@@ -1296,10 +1295,6 @@
                   var feedMdPromise = md ?
                     $q.resolve(md).then(function(md) {
                       olL.set('md', md);
-                      if(!angular.isUndefined(md['geonet:info']['uuid'])) {
-                    	  olL.set('MDuuid', md['geonet:info']['uuid']);
-                        olL.set('metadataUuid', md['geonet:info']['uuid']);
-                      }
                     }) : $this.feedLayerMd(olL);
 
                   feedMdPromise.then(finishCreation);
@@ -1316,10 +1311,9 @@
               });
             } else {
             	var olL = getTheLayerFromMap(map, name, url);
-            	if(olL && md && md['geonet:info']['uuid']) {
-                olL.set('MDuuid', md['geonet:info']['uuid']);
-                olL.set('metadataUuid', md['geonet:info']['uuid']);
-              }
+                if(olL && md) {
+                  olL.set('md', md);
+                }
             }
             return defer.promise;
           },
