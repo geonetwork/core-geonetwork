@@ -39,6 +39,7 @@
           <xsl:with-param name="content">
             <xsl:call-template name="render-record"/>
           </xsl:with-param>
+          <xsl:with-param name="header" select="$header != 'false'"/>
           <xsl:with-param name="title">
             <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
           </xsl:with-param>
