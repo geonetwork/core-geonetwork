@@ -146,6 +146,20 @@
           }
           // end specific sxt
 
+          // SPECIFIC SEXTANT: this helper applies the aggregated extent of added layers
+          function applyAddedExtent (map) {
+            if (map.get('addedExtent') &&
+                !ol.extent.isEmpty(map.get('addedExtent')) &&
+                map.getSize() && map.getSize()[0] > 0 && map.getSize()[1] > 0) {
+              map.getView().fit(map.get('addedExtent'), map.getSize(),
+                { nearest: true });
+
+              // clear the property (this should happen only once)
+              map.unset('addedExtent')
+            }
+          }
+          // end specific sxt
+
           // config found: load context if any, and apply extent & layers
           // (this is done through a promise anyway)
           var mapReady;
@@ -202,6 +216,12 @@
               }
             }
 
+            // SPECIFIC SEXTANT: applies the aggregated extent of added layers
+            map.get('sizePromise').then(function() {
+              applyAddedExtent(map);
+            });
+            // end specific sextant
+
             // layers
             if (config.layers && config.layers.length) {
               config.layers.forEach(function(layerInfo) {
@@ -230,6 +250,16 @@
                 then(function(layer) {
                   layer.set('group', mapParams.layergroup);
                   map.addLayer(layer);
+
+                  // SPECIFIC SEXTANT: aggregate extents of all added layers
+                  if (layer.get('cextent') && map.get('addedExtent')) {
+                    map.set('addedExtent', ol.extent.extend(
+                      layer.get('cextent'),
+                      map.get('addedExtent')
+                    ));
+                    applyAddedExtent(map);
+                  }
+                  // end specific sextant
                 });
               }
             }

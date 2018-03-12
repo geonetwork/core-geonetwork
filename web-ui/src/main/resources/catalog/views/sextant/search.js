@@ -158,7 +158,9 @@
 
       var mapVisited = false; // Been once in mapviewer
       var waitingLayers = []; // Layers added from catalog but not visited yet
-      var loadLayerPromises = []; // Promises to know when all layers are loaded
+
+      // extent of the layers in the viewer (default: empty)
+      viewerMap.set('addedExtent', ol.extent.createEmpty());
 
       $scope.displayMapTab = function() {
         $scope.mainTabs.map.titleInfo = 0;
@@ -264,7 +266,7 @@
           // if this is a context: handle it differently
           if (link.protocol.indexOf('OGC:OWS-C') > -1) {
             gnOwsContextService.loadContextFromUrl(link.url,
-              $scope.searchObj.viewerMap);
+              viewerMap);
 
             // clear md scope
             if(gnSearchLocation.isMdView()) {
@@ -281,11 +283,11 @@
           // handle WMTS layer info
           if (link.protocol.indexOf('WMTS') > -1) {
             loadLayerPromise = gnMap.addWmtsFromScratch(
-              $scope.searchObj.viewerMap,
+              viewerMap,
               link.url, link.name, undefined, md);
           } else {
             loadLayerPromise = gnMap.addWmsFromScratch(
-              $scope.searchObj.viewerMap,
+              viewerMap,
               link.url, link.name, undefined, md);
           }
 
@@ -308,7 +310,14 @@
                 layer.set('downloads', link.extra.downloads);
               }
               if(waitingLayers) waitingLayers.push(layer);
-              if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+
+              // add layer extent to added layers extent for the viewer
+              if (layer.get('cextent') && viewerMap.get('addedExtent')) {
+                viewerMap.set('addedExtent', ol.extent.extend(
+                  layer.get('cextent'),
+                  viewerMap.get('addedExtent')
+                ));
+              }
 
               if(gnSearchLocation.isMdView()) {
                 angular.element($('[gn-metadata-display]')).scope().dismiss();
