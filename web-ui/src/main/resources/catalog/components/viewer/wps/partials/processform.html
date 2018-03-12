@@ -1,6 +1,6 @@
 <div>
   <div class="panel panel-default">
-    <h4 class="panel-heading" ng-if="describeState == 'succeeded'">
+    <h4 class="panel-heading" ng-if="describeState == 'succeeded' && !hideTitle">
       {{getLabel() || processDescription.title.value}}
       <span class="fa fa-info-circle" ng-if="::processDescription._abstract.value"
         title="{{::processDescription._abstract.value}}"></span>

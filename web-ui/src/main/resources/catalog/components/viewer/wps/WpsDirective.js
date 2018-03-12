@@ -97,7 +97,8 @@
             mimeType: ''
           };
 
-          scope.hideExecuteButton = attrs.hideExecuteButton;
+          scope.hideExecuteButton = !!scope.$eval(attrs.hideExecuteButton);
+          scope.hideTitle = !!scope.$eval(attrs.hideTitle);
 
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
