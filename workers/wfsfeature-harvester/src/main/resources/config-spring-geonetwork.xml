@@ -45,7 +45,7 @@
   </bean>
   <bean id="WFSFeatureIndexer"
         class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer">
-    <property name="featureCommitInterval" value="100"/>
+    <property name="featureCommitInterval" value="300"/>
   </bean>
 
   <bean id="esClient"
