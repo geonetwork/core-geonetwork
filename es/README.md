@@ -5,6 +5,8 @@
 Download Elasticsearch from https://www.elastic.co/fr/downloads/elasticsearch
 and copy it to the ES module. eg. es/elasticsearch-5.0.0
 
+or run "mvn install -Pes-download"
+
 Start ES.
 
 Configure index
