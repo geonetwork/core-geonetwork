@@ -34,8 +34,8 @@
       </label>
       <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
         class="btn btn-default dropdown-toggle">
-        <span translate class="ng-scope">activeFiltersDetails</span>
-        <i class="fa fa-caret-down"></i>&nbsp;
+        <span translate class="ng-scope">activeFiltersDetails</span>&nbsp;
+        <i class="fa fa-caret-down"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
         <li ng-repeat="filter in element.filter.params">
@@ -52,7 +52,7 @@
       <div ng-repeat="p in element.processes" class="sxt-process">
         <label ng-click="p.included = !p.included">
           <i class="fa sxt-layer-visibility text-primary"
-            ng-class="p.included ? 'fa-check-square' : 'fa-square'"/> 
+            ng-class="p.included ? 'fa-check-square' : 'fa-square'"/>
           <span class="wps-label">{{ p.desc || p.name }}</span>
         </label>
         <button type="button" data-ng-disabled="!p.included" class="btn btn-default" ng-click="editWPSForm(p)">
