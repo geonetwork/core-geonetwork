@@ -101,6 +101,17 @@
                     panierItem.filter.extent = extent
                   }
                 }
+
+                var processes = layer.get('processes');
+
+                // only add processes once (with desc as label in the form)
+                if (processes && !panierItem.processes) {
+                  processes = processes.map(function (process) {
+                    process.label = process.desc
+                    return process;
+                  });
+                  panierItem.processes = processes;
+                }
               }
               else {
                 panierItem.filter = null;
@@ -113,6 +124,8 @@
       /**
        * Adds references to WPS processes on the panier item by looking up
        * the links in the same group
+       * Note: processes may have already been added with bindPanierWithLayers;
+       * in this case, do nothing.
        *
        * @param {Object} panier All layers to download.
        */
@@ -121,7 +134,14 @@
           var processes = panierItem.md &&
             panierItem.md.getLinksByType(panierItem.link.group, 'OGC:WPS');
 
-          panierItem.processes = processes;
+          // only add processes once (with desc as label in the form)
+          if (processes && !panierItem.processes) {
+            processes = processes.map(function (process) {
+              process.label = process.desc
+              return process;
+            });
+            panierItem.processes = processes;
+          }
         });
       };
     }

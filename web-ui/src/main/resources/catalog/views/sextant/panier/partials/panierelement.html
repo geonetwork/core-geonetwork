@@ -51,7 +51,8 @@
       <label for="processesPF" class="control-label" translate>wpsIncludedProcesses</label>&nbsp;:&nbsp;
       <div ng-repeat="p in element.processes" class="sxt-process">
         <label ng-click="p.included = !p.included">
-          <i class="fa sxt-layer-visibility text-primary"
+          <i ng-if="!p.described" class="fa fa-fw fa-spin fa-spinner"/>
+          <i ng-if="p.described" class="fa fa-fw sxt-layer-visibility text-primary"
             ng-class="p.included ? 'fa-check-square' : 'fa-square'"/>
           <span class="wps-label">{{ p.desc || p.name }}</span>
         </label>
@@ -59,6 +60,12 @@
           <i class="fa fa-cogs"></i>&nbsp;
           <span translate="" class="ng-scope">{{ 'editWpsForm' | translate }}</span>
         </button>
+        <div class="hidden">
+          <gn-wps-process-form wps-link="p" wfs-link="wfsLink"
+            map="map" described-callback="describedCallback(p)"
+            cancel-previous="false">
+          </gn-wps-process-form>
+        </div>
       </div>
     </div>
 
