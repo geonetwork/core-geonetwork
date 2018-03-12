@@ -479,7 +479,7 @@ public class EditLib {
     public int addElementOrFragmentFromXpaths(Element metadataRecord,
                                               LinkedHashMap<String, AddElemValue> xmlAndXpathInputs,
                                               MetadataSchema metadataSchema,
-                                              boolean createXpathNodeIfNotExist) {
+                                              boolean createXpathNodeIfNotExist) throws JDOMException, IOException {
 
 
         int numUpdated = 0;
@@ -488,13 +488,21 @@ public class EditLib {
             String xpathProperty = entry.getKey();
             AddElemValue propertyValue = entry.getValue();
 
-            final boolean isMultipleMode = propertyValue.getNodeValue() != null &&
+            final boolean isReplaceAllMode = propertyValue.getNodeValue() != null &&
                 propertyValue.getNodeValue().getName()
-                    .startsWith(SpecialUpdateTags.MULTIPLE);
+                    .startsWith(SpecialUpdateTags.REPLACE_ALL);
 
-            if (isMultipleMode) {
-                for(Element updateVal : (List<Element>) propertyValue.getNodeValue().getChildren()) {
-                    AddElemValue propertyValueToProcess = new AddElemValue(updateVal);
+            if (isReplaceAllMode) {
+                // Remove all
+                AddElemValue propertyValueToProcess = new AddElemValue("<gn_delete></gn_delete>");
+
+                addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValueToProcess,
+                    createXpathNodeIfNotExist);
+
+                Element fragments = propertyValue.getNodeValue();
+
+                for (Element fragment : (List<Element>) fragments.getChildren()) {
+                    propertyValueToProcess = new AddElemValue("<gn_create>" + Xml.getString(fragment) + "</gn_create>");
 
                     boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValueToProcess,
                         createXpathNodeIfNotExist);
@@ -502,6 +510,7 @@ public class EditLib {
                         numUpdated++;
                     }
                 }
+
             } else {
                 boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValue,
                     createXpathNodeIfNotExist);
@@ -2044,7 +2053,7 @@ public class EditLib {
         /**
          * Multiple target updates
          */
-        String MULTIPLE = "gn_multiple";
+        String REPLACE_ALL = "gn_replace_all";
     }
 
     private static class SelectResult {

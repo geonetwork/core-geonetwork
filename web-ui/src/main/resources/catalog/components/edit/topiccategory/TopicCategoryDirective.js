@@ -87,13 +87,17 @@
              scope.maxTagsLabel = scope.maxTags || '∞';
 
              scope.buildFinalSnippet = function() {
-               if (scope.snippets && scope.snippets.length) {
-                 return '<gn_replace>' +
-                          scope.snippets.join('&amp;&amp;&amp;') +
-                        '</gn_replace>';
-               } else {
-                 return '';
+               var snippet = "";
+
+               if (scope.snippets) {
+                 for(var i = 0; i < scope.snippets.length; i++) {
+                   snippet +=
+                     scope.snippets[i];
+                 }
                }
+
+               return "<gn_replace_all>" +
+                 snippet + "</gn_replace_all>";
              };
 
              var init = function() {
@@ -165,18 +169,21 @@
                      displayKey: 'label',
                      source: topicCategoriesAutocompleter.ttAdapter()
                    }).bind('typeahead:selected',
-                   $.proxy(function(obj, topiccategory) {
-                     // Add to tags
-                     this.tagsinput('add', topiccategory);
+                     $.proxy(function(obj, topiccategory) {
+                       // Add to tags
+                       this.tagsinput('add', topiccategory);
 
-                     // Update selection and snippet
-                     angular.copy(this.tagsinput('items'), scope.selected);
-                     getSnippet();
-                     scope.$apply();
+                       // Update selection and snippet
+                       angular.copy(this.tagsinput('items'), scope.selected);
+                       getSnippet();
+                       scope.$apply();
 
-                     // Clear typeahead
-                     this.tagsinput('input').typeahead('val', '');
-                   }, $(id))
+                       // Clear typeahead
+                       this.tagsinput('input').typeahead('val', '');
+
+                       // Force prefect to update items to exclude
+                       topicCategoriesAutocompleter.initialize(true);
+                     }, $(id))
                    );
 
                    $(id).on('itemRemoved', function() {
@@ -184,6 +191,9 @@
                      .tagsinput('items'), scope.selected);
                      getSnippet();
                      scope.$apply();
+
+                     // Force prefect to update items to exclude
+                     topicCategoriesAutocompleter.initialize(true);
                    });
 
                    // When clicking the element trigger input

@@ -1328,14 +1328,20 @@
                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
-                    <directiveAttributes data-tag-name="gml:beginPosition"/>
+                    <directiveAttributes
+                      data-tag-name="gml:beginPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/>
+
                   </key>
                   <key label="endPosition"
                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
-                      data-tag-name="gml:endPosition"/>
+                      data-tag-name="gml:endPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+
+
                   </key>
                 </values>
                 <snippet>
