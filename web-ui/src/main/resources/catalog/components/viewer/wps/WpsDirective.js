@@ -100,6 +100,8 @@
 
           scope.hideExecuteButton = !!scope.$eval(attrs.hideExecuteButton);
           scope.hideTitle = !!scope.$eval(attrs.hideTitle);
+          scope.cancelPrevious = attrs.cancelPrevious !== undefined ?
+            !!scope.$eval(attrs.cancelPrevious) : true;
 
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
@@ -179,7 +181,7 @@
 
             // query a description and build up the form
             gnWpsService.describeProcess(newLink.uri, newLink.processId, {
-              cancelPrevious: true
+              cancelPrevious: scope.cancelPrevious
             }).then(
                 function(response) {
                   scope.describeState = 'succeeded';
