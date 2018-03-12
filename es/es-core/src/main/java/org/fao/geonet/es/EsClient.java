@@ -26,6 +26,7 @@ package org.fao.geonet.es;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
+import io.searchbox.client.JestResultHandler;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
@@ -145,57 +146,18 @@ public class EsClient implements InitializingBean {
             e.printStackTrace();
             throw e;
         }
-//        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
-//        BulkResponse response = null;
-//        int counter = 0;
-//
-//        Map<String, String> errors = new HashMap<>();
-//        Iterator iterator = docs.keySet().iterator();
-//        while (iterator.hasNext()) {
-//            String id = (String)iterator.next();
-//            try {
-//
-//                bulkRequestBuilder.add(
-//                    client.prepareIndex(index, index, id).setSource(docs.get(id))
-//                );
-//                counter ++;
-//
-//                if (bulkRequestBuilder.numberOfActions() % commitInterval == 0) {
-//                    response = bulkRequestBuilder.execute().actionGet();
-//                    logger.info(String.format(
-//                        "Importing %s: %d actions performed. Has errors: %s",
-//                        index,
-//                        counter,
-//                        response.hasFailures()
-//                    ));
-//                    if (response.hasFailures()) {
-//                        errors.put(counter + "", response.buildFailureMessage());
-//                        success = false;
-//                    }
-//                    bulkRequestBuilder = client.prepareBulk();
-//                }
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//        if (bulkRequestBuilder.numberOfActions() > 0) {
-//            bulkRequestBuilder
-//                .setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
-//            response = bulkRequestBuilder.execute().actionGet();
-//            logger.info(String.format(
-//                "Importing %s: %d actions performed. Has errors: %s",
-//                index,
-//                counter,
-//                response.hasFailures()
-//            ));
-//            if (response.hasFailures()) {
-//                errors.put(counter + "", response.buildFailureMessage());
-//                success = false;
-//            }
-//        }
         return success;
     }
 
+
+    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
+        client.executeAsync(bulk.build(), handler);
+
+    }
+
+    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
+        return client.execute(bulk.build());
+    }
 
     public String deleteByQuery(String index, String query) throws Exception {
         if (!activated) {
@@ -218,57 +180,6 @@ public class EsClient implements InitializingBean {
                 "Error during removal. Errors is '%s'.", result.getErrorMessage()
             ));
         }
-//
-//        Search search = new Search.TemplateBuilder(searchQuery)
-//            .addIndex(index)
-//            .addIndex(index)
-//            .build();
-//
-//        SearchResult result = client.execute(search);
-//        List<SearchResult.Hit<Object, Void>> hits = result.getHits(Object.class);
-//        for (SearchResult.Hit hit : hits) {
-////            hit.
-//        }
-
-//        Bulk bulk = new Bulk.Builder()
-//            .defaultIndex("twitter")
-//            .defaultType("tweet")
-//            .addAction(new Index.Builder(article1).build())
-//            .addAction(new Index.Builder(article2).build())
-//            .addAction(new Delete.Builder("1").index("twitter").type("tweet").build())
-//            .build();
-//
-//        client.execute(bulk);
-//        SearchResponse scrollResponse = client
-//            .prepareSearch(index)
-//            .setQuery(QueryBuilders.queryStringQuery(query))
-//            .setScroll(new TimeValue(60000))
-//            .setSize(scrollSize)
-//            .execute().actionGet();
-//
-//        BulkRequestBuilder brb = client.prepareBulk();
-//        while (true) {
-//            for (SearchHit hit : scrollResponse.getHits()) {
-//                brb.add(new DeleteRequest(index, hit.getType(), hit.getId()));
-//            }
-//            scrollResponse = client
-//                .prepareSearchScroll(scrollResponse.getScrollId())
-//                .setScroll(new TimeValue(60000))
-//                .execute().actionGet();
-//            if (scrollResponse.getHits().getHits().length == 0) {
-//                break;
-//            }
-//        }
-//
-//        if (brb.numberOfActions() > 0) {
-//            BulkResponse result = brb.execute().actionGet();
-//            if (result.hasFailures()) {
-//                throw new IOException(result.buildFailureMessage());
-//            } else {
-//                return String.format(
-//                    "{\"msg\": \"%d records removed.\"}", brb.numberOfActions());
-//            }
-//        }
     }
 
     protected void finalize() {
