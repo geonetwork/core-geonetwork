@@ -82,7 +82,8 @@
         scope: {
           map: '=',
           wpsLink: '=',
-          wfsLink: '='
+          wfsLink: '=',
+          describedCallback: '&'
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -421,6 +422,11 @@
                     }
                     scope.loadedDescriptions[processKey] =
                     angular.extend({}, scope.processDescription);
+                  }
+
+                  // described callback
+                  if (scope.describedCallback) {
+                    scope.describedCallback();
                   }
                 },
                 function(response) {
