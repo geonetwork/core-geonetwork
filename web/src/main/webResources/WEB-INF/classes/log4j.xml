@@ -103,7 +103,7 @@
     <logger name="geonetwork.httpproxy">
         <level value="WARN" />
     </logger>
-    <logger name="geonetwork.harvest.wfs.features">
+    <logger name="geonetwork.harvest.wfs.features" additivity="false">
       <level value="DEBUG"/>
       <appender-ref ref="fileAppender" />
     </logger>
