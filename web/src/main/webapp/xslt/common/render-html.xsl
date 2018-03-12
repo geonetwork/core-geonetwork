@@ -36,6 +36,7 @@
 
   <xsl:template name="render-html">
     <xsl:param name="content"/>
+    <xsl:param name="header"/>
     <xsl:param name="title"
                select="''"/>
     <xsl:param name="description"
@@ -68,11 +69,15 @@
 
       <body>
         <div class="gn-full">
-          <xsl:call-template name="header"/>
+          <xsl:if test="$header">
+            <xsl:call-template name="header"/>
+          </xsl:if>
           <div class="container">
             <xsl:copy-of select="$content"/>
           </div>
-          <xsl:call-template name="footer"/>
+          <xsl:if test="$header">
+            <xsl:call-template name="footer"/>
+          </xsl:if>
         </div>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

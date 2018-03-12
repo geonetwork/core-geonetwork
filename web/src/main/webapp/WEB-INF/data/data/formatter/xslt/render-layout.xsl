@@ -39,6 +39,7 @@
           <xsl:with-param name="content">
             <xsl:call-template name="render-record"/>
           </xsl:with-param>
+          <xsl:with-param name="header" select="$header != 'false'"/>
           <xsl:with-param name="title">
             <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
           </xsl:with-param>
@@ -53,12 +54,19 @@
   <xsl:template name="render-record">
     <div class="container-fluid gn-metadata-view gn-view-{$view} gn-schema-{$schema}">
 
-      <xsl:if test="$css = 'sextant'">
-        <link rel="stylesheet" type="text/css" href="../../apps/js/ext/resources/css/ext-all.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gndefault.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gnmetadatadefault.css"/>
-        <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/metadata-view.css"/>
-      </xsl:if>
+      <xsl:choose>
+        <!-- This mode will be deprecated once the v5 is dropped. -->
+        <xsl:when test="$css = 'sextant'">
+          <link rel="stylesheet" type="text/css" href="../../apps/js/ext/resources/css/ext-all.css"/>
+          <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gndefault.css"/>
+          <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/gnmetadatadefault.css"/>
+          <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/metadata-view.css"/>
+        </xsl:when>
+        <!-- Avoid script injection. Only allows letters, digits and '-', '_' in API id-->
+        <xsl:when test="matches($css, '^[A-Za-z0-9-_]+$')">
+          <link rel="stylesheet" type="text/css" href="{$nodeUrl}../static/api-{$css}.css"/>
+        </xsl:when>
+      </xsl:choose>
 
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
@@ -454,6 +462,17 @@
         <xsl:for-each select="$nodes">
           <xsl:apply-templates mode="render-field">
             <xsl:with-param name="fieldName" select="replace($fieldName, '\*', '')"/>
+            <!-- In EMODNet contact, an extra hyperlink is added
+            to the contact using a uuid attribute.
+            <gmd:CI_ResponsibleParty uuid="http://seadatanet.maris2.nl/v_edmo/print.asp?n_code=2467">
+              <gmd:organisationName>
+            There is no super generic way to achieve that, as we're
+            here in the default standard template looping over template fields.
+
+            For now, adding an extra parameter to set the field content with an hyperlink when we are in an organisation name.
+            -->
+            <xsl:with-param name="link"
+                            select="if (name(*) = 'gmd:organisationName') then $element/*/@uuid else ''"/>
           </xsl:apply-templates>
         </xsl:for-each>
       </xsl:for-each>

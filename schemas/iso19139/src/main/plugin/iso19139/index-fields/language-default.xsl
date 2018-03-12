@@ -66,6 +66,14 @@
     <xsl:call-template name="langId19139"/>
   </xsl:variable>
 
+  <!-- Define the way keyword and thesaurus are indexed. If false
+  only keyword, thesaurusName and thesaurusType field are created.
+  If true, advanced field are created to make more details query
+  on keyword type and search by thesaurus. Index size is bigger
+  but more detailed facet can be configured based on each thesaurus.
+  -->
+  <xsl:variable name="indexAllKeywordDetails" select="true()"/>
+
   <xsl:template match="/">
 
     <Documents>
@@ -303,7 +311,9 @@
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:for-each select="*/gmd:MD_Keywords">
-        <xsl:for-each select="gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId]">
+        <xsl:variable name="listOfKeywords"
+                      select="gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId]"/>
+        <xsl:for-each select="$listOfKeywords">
           <xsl:variable name="keyword" select="string(.)"/>
 
           <Field name="keyword" string="{$keyword}" store="true" index="true"/>
@@ -365,6 +375,44 @@
 
         <xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
           <Field name="keywordType" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <!-- Index thesaurus name to easily search for records
+        using keyword from a thesaurus. -->
+        <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation">
+          <xsl:variable name="thesaurusTitle"
+                        select="replace(gmd:title/gmd:LocalisedCharacterString[@locale=$langId]/text(), ' ', '')"/>
+
+          <xsl:variable name="thesaurusIdentifier"
+                        select="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text()"/>
+
+          <xsl:if test="$thesaurusIdentifier != ''">
+            <Field name="thesaurusIdentifier"
+                   string="{substring-after($thesaurusIdentifier,'geonetwork.thesaurus.')}"
+                   store="true" index="true"/>
+          </xsl:if>
+          <xsl:if test="gmd:title/gmd:LocalisedCharacterString[@locale=$langId]/text() != ''">
+            <Field name="thesaurusName"
+                   string="{gmd:title/gmd:LocalisedCharacterString[@locale=$langId]/text()}"
+                   store="true" index="true"/>
+          </xsl:if>
+
+          <xsl:variable name="fieldName" select="if ($thesaurusIdentifier != '') then $thesaurusIdentifier else $thesaurusTitle"/>
+          <xsl:variable name="fieldNameTemp" select="if (starts-with($fieldName, 'geonetwork.thesaurus')) then substring-after(
+                              $fieldName,
+                              'geonetwork.thesaurus.') else $fieldName"/>
+          <xsl:if test="$indexAllKeywordDetails and $fieldNameTemp != ''">
+            <!-- field thesaurus-{{thesaurusIdentifier}}={{keyword}} allows
+            to group all keywords of same thesaurus in a field -->
+            <xsl:variable name="currentType" select="string(.)"/>
+
+            <xsl:for-each select="$listOfKeywords">
+              <Field name="thesaurus-{$fieldNameTemp}"
+                     string="{string(.)}"
+                     store="true" index="true"/>
+
+            </xsl:for-each>
+          </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
 

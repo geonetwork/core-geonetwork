@@ -288,7 +288,7 @@
 
 
       <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution">
-        <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
+        <xsl:for-each select=".//gmd:onLine/gmd:CI_OnlineResource">
           <xsl:if test="gmd:linkage">
             <dc:URI>
               <xsl:if test="gmd:protocol">

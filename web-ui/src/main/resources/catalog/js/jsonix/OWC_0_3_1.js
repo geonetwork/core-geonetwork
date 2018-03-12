@@ -347,11 +347,18 @@ var OWC_0_3_1_Module_Factory = function() {
         n: 'opacity',
         ti: 'Decimal',
         t: 'a'
-      }, {
+      },
+      // Sextant specific
+      {
         n: 'position',
         ti: 'Integer',
         t: 'a'
-      }]
+      }, {
+        n: 'groupPosition',
+        t: 'a'
+      }
+      // end sextant specific
+      ]
     }, {
       ln: 'WindowType',
       ps: [{

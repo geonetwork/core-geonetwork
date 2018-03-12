@@ -72,6 +72,7 @@
             <option value="WWW:LINK">Web link</option>
             <option value="OGC:WMS">Web Map Service (OGC)</option>
             <option value="OGC:WCS">Web Coverage Service (OGC)</option>
+			<option value="OGC:SOS:getCapabilities">Sensor Observation Service - getCapabilities (OGC)</option>			
             <option value="WWW:OPENDAP">OPeNDAP</option>
             <option value="MYO:MOTU-SUB">MOTU (SUB)</option>
             <option value="MYO:MOTU-DGF">MOTU (DGF)</option>
