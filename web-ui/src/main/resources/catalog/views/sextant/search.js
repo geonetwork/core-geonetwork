@@ -480,6 +480,7 @@
         if(a === true) {
           sxtPanierService.bindPanierWithLayers($scope.searchObj.panier,
             viewerMap);
+          sxtPanierService.addProcessesToItems($scope.searchObj.panier);
         }
         else if (a === false){
         }
