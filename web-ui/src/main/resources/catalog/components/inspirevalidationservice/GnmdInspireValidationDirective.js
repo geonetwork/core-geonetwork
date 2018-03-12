@@ -61,7 +61,7 @@
                     url: '../api/records/' + scope.inspMdUuid +
                     '/validate/inspire'
                   }).then(function mySucces(response) {
-                    if (angular.isDefined(response.data) && response.data!=null) {
+                    if (angular.isDefined(response.data) && response.data != null) {
                       scope.checkInBackgroud(response.data);
                     } else {
                       scope.isDownloadingRecord = false;
