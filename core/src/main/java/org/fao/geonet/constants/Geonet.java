@@ -513,6 +513,8 @@ public final class Geonet {
             public static final String CROSSES = "crosses";
             public static final String TOUCHES = "touches";
             public static final String WITHIN = "within";
+            public static final String WITHIN_BBOX = "within_bbox";
+            public static final String OVERLAPS_BBOX = "overlaps_bbox";
         }
 
         /**

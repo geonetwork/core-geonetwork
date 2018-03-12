@@ -463,6 +463,16 @@
            * @return {Object} defaultMapConfig mapconfig
            */
           getMapConfig: function() {
+
+            // Check for unsupported projections
+            // To avoid to break the search page and map
+            if(gnViewerSettings.mapConfig.projection && !ol.proj.get(gnViewerSettings.mapConfig.projection)) {
+              console.warn('The map projection ' + gnViewerSettings.mapConfig.projection + ' is not supported.');
+              console.log('Now using default projection EPSG:3857.');
+              // Switching to default
+              gnViewerSettings.mapConfig.projection = 'EPSG:3857';
+            }
+
             return gnViewerSettings.mapConfig;
           },
 
@@ -795,8 +805,8 @@
               // TODO: parse better legend & attribution
               var requestedStyle = null;
               var legendUrl;
-              if (style && angular.isArray(getCapLayer.Style) &&
-                  getCapLayer.Style.length > 0) {
+
+              if (style && this.containsStyles(getCapLayer)) {
                 for (var i = 0; i < getCapLayer.Style.length; i++) {
                   var s = getCapLayer.Style[i];
                   if (s.Name === style.Name) {
@@ -807,9 +817,7 @@
                 }
               }
 
-              if (!requestedStyle &&
-                  angular.isArray(getCapLayer.Style) &&
-                  getCapLayer.Style.length > 0) {
+              if (!requestedStyle && this.containsStyles(getCapLayer)) {
                 legendUrl = (getCapLayer.Style[getCapLayer.
                     Style.length - 1].LegendURL) ?
                     getCapLayer.Style[getCapLayer.
@@ -841,11 +849,20 @@
               if (requestedStyle) {
                 layerParam.STYLES = requestedStyle.Name;
               } else {
-                // STYLES is mandatory parameter.
-                // ESRI will complain on this.
-                // Even &STYLES&... return an error on ESRI.
-                // TODO: Fix or workaround
-                layerParam.STYLES = '';
+                // The first style element is the default style
+                var defaultStyle;
+                if (this.containsStyles(getCapLayer)) {
+                  defaultStyle = getCapLayer.Style[0];
+                }
+                if(defaultStyle) {
+                  // Set a casual style if available
+                  // to avoid issues on ESRI services
+                  layerParam.STYLES = defaultStyle.Name;
+                } else {
+                  // This is a problem for ESRI services
+                  // where STYLES is a mandatory field
+                  layerParam.STYLES = '';
+                }
               }
 
               var projCode = map.getView().getProjection().getCode();
@@ -911,6 +928,26 @@
 
           },
 
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#containsStyles
+           *
+           * @description
+           * Check if CapabilityLayer contains a not empty
+           * styles array
+           *
+           * @param {getCapLayer} Capability Layer
+           * @return {boolean} true if contains a not empty Style array
+           */
+          containsStyles: function(capLayer) {
+            if (angular.isArray(capLayer.Style) &&
+                capLayer.Style.length > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          },
 
           /**
            * @ngdoc method
@@ -1200,6 +1237,11 @@
             var defer = $q.defer();
             var $this = this;
 
+            try {
+              // Avoid double encoding
+              name = decodeURIComponent(escape(name));
+            } catch (e) {}
+
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
@@ -1227,10 +1269,10 @@
                     o.version = version;
                   }
                   olL = $this.addWmsToMap(map, o);
-                  
-                  if(!angular.isUndefined(md['geonet:info']['uuid'])) {
-                	  olL.set('MDuuid', md['geonet:info']['uuid']);
-                  } 
+
+                  if(olL && md) {
+                    olL.set('md', md);
+                  }
 
                   if (!angular.isArray(olL.get('errors'))) {
                     olL.set('errors', []);
@@ -1263,9 +1305,6 @@
                   var feedMdPromise = md ?
                     $q.resolve(md).then(function(md) {
                       olL.set('md', md);
-                      if(!angular.isUndefined(md['geonet:info']['uuid'])) {
-                    	  olL.set('MDuuid', md['geonet:info']['uuid']);
-                      }
                     }) : $this.feedLayerMd(olL);
 
                   feedMdPromise.then(finishCreation);
@@ -1282,13 +1321,9 @@
               });
             } else {
             	var olL = getTheLayerFromMap(map, name, url);
-            	
-            	  $q.resolve(md).then(function(md) {
-                      if(!angular.isUndefined(md['geonet:info']['uuid'])) {
-                  	    olL.set('MDuuid', md['geonet:info']['uuid']);
-                      }
-                    });
-            	
+                if(olL && md) {
+                  olL.set('md', md);
+                }
             }
             return defer.promise;
           },

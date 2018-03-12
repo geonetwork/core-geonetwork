@@ -47,7 +47,7 @@ public class SearchDefaults {
      */
     private static String[][] DEFAULT_PARAMS = {
         {Geonet.SearchResult.RELATION,
-            Geonet.SearchResult.Relation.OVERLAPS},
+            Geonet.SearchResult.Relation.OVERLAPS_BBOX},
         {Geonet.SearchResult.EXTENDED, Geonet.Text.OFF},
         {Geonet.SearchResult.HITS_PER_PAGE, "10"},
         {Geonet.SearchResult.SIMILARITY, "1"},

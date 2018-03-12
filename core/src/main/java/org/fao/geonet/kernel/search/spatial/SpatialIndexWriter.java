@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search.spatial;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -32,7 +33,6 @@ import com.vividsolutions.jts.index.strtree.STRtree;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -403,6 +403,7 @@ public class SpatialIndexWriter implements FeatureListener {
             e.printStackTrace();
         }
         _index = new STRtree();
+
         FeatureIterator<SimpleFeature> features = null;
         try {
             features = _featureStore.getFeatures().features();
@@ -411,11 +412,9 @@ public class SpatialIndexWriter implements FeatureListener {
                 if (_idColumn == null) {
                     _idColumn = findIdColumn(_featureStore);
                 }
-                final Object idAtt = feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()).toString();
-                Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), idAtt);
-                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
-                if (defaultGeometry != null) {
-                    _index.insert(defaultGeometry.getEnvelopeInternal(), data);
+
+                if (feature.getDefaultGeometry() != null) {
+                    insertFeatureInIndex(feature);
                 }
             }
 
@@ -528,6 +527,67 @@ public class SpatialIndexWriter implements FeatureListener {
             }
         } catch (CacheException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void insertFeatureInIndex(SimpleFeature feature) {
+        Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
+        if (defaultGeometry instanceof MultiPolygon && defaultGeometry.getNumGeometries() > 1) {
+            for (int i = 0; i < defaultGeometry.getNumGeometries(); i++) {
+                Data data = buildData(feature, defaultGeometry.getNumGeometries());
+                Envelope envelope = defaultGeometry.getGeometryN(i).getEnvelopeInternal();
+                data.setEnv(envelope);
+                _index.insert(envelope, data);
+            }
+
+        } else {
+            Data data = buildData(feature, 1);
+            Envelope envelope = defaultGeometry.getEnvelopeInternal();
+            data.setEnv(envelope);
+            _index.insert(envelope, data);
+        }
+    }
+
+    private Data buildData(SimpleFeature feature, int numBrotherGeometries) {
+        Data data = new Data();
+        data.setMetadataId(feature.getAttribute(_idColumn == null ? _IDS_ATTRIBUTE_NAME : _idColumn.toString()).toString());
+        data.setFeatureId(feature.getIdentifier());
+        data.setNumBrotherGeometries(numBrotherGeometries);
+        return data;
+    }
+
+    public class Data {
+        private FeatureId featureId;
+        private String metadataId;
+        private Envelope env;
+        private int numBrotherGeometries;
+
+        public Envelope getEnv() {
+            return env;
+        }
+
+        public void setEnv(Envelope env) {
+            this.env = env;
+        }
+
+        public FeatureId getFeatureId() {
+            return featureId;
+        }
+
+        public void setFeatureId(FeatureId featureId) {
+            this.featureId = featureId;
+        }
+
+        public String getMetadataId() { return metadataId; }
+
+        public void setMetadataId(String metadataId) {
+            this.metadataId = metadataId;
+        }
+
+        public int getNumBrotherGeometries() {return numBrotherGeometries;}
+
+        public void setNumBrotherGeometries(int numBrotherGeometries) {
+            this.numBrotherGeometries = numBrotherGeometries;
         }
     }
 }

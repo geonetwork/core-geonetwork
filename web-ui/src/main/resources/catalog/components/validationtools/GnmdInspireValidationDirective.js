@@ -22,12 +22,12 @@
  */
 
 (function() {
-  goog.provide('gn_md_inspire_validation_directive');
+  goog.provide('gn_md_validation_tools_directive');
 
-  var module = angular.module('gn_md_inspire_validation_directive', []);
+  var module = angular.module('gn_md_validation_tools_directive', []);
 
   module.directive(
-      'gnMdInspireValidation', ['gnConfig', '$http', '$interval',
+      'gnMdValidationTools', ['gnConfig', '$http', '$interval',
         'gnAlertService', '$translate', 'gnPopup',
         function(gnConfig, $http, $interval, 
             gnAlertService, $translate, gnPopup) {
@@ -35,7 +35,7 @@
             restrict: 'AEC',
             replace: true,
             templateUrl:
-            '../../catalog/components/inspirevalidationservice/partials/mdInspireValidation.html',
+            '../../catalog/components/validationtools/partials/mdValidationTools.html',
             link: function postLink(scope, element, attrs) {
 
               scope.isInspireValidationEnabled =
