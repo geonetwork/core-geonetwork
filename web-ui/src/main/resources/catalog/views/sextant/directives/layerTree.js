@@ -25,6 +25,7 @@
             $scope.loadTool('wps', layer);
 
             wpsLink.layer = layer;
+            wpsLink.label = wpsLink.desc;
             $scope.wpsLink = wpsLink;
             $scope.wfsLink = wfsLink;
           };
