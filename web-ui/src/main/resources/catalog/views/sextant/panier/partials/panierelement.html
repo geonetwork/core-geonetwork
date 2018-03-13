@@ -50,7 +50,7 @@
     <div class="form-group sxt-processes-list" ng-show="element.processes && element.processes.length > 0">
       <label for="processesPF" class="control-label" translate>wpsIncludedProcesses</label>&nbsp;:&nbsp;
       <div ng-repeat="p in element.processes" class="sxt-process">
-        <label ng-click="p.included = !p.included">
+        <label ng-click="p.included = p.described && !p.included">
           <i ng-if="!p.described" class="fa fa-fw fa-spin fa-spinner"/>
           <i ng-if="p.described" class="fa fa-fw sxt-layer-visibility text-primary"
             ng-class="p.included ? 'fa-check-square' : 'fa-square'"/>
