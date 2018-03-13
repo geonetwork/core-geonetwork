@@ -290,6 +290,8 @@
     "uploadFile": "Nahrát soubor z vašeho počítače",
     "uuidAction": "Zpracovávám identifikátor záznamu",
     "validate-help": "Zkontrolovat, zda je záznam v souladu s pravidly standardního ověřování",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Ověřování",
     "runValidation": "Spustit kontrolu validace",
     "whoCanAccess": "Kdo má přístup",

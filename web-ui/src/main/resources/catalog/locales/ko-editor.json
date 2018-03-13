@@ -290,6 +290,8 @@
     "uploadFile": "로컬 컴퓨터에서 파일 업로드",
     "uuidAction": "레코드 식별자 처리",
     "validate-help": "표준 유효성검사 규칙에 대한 레코드 확인",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "유효성 검사",
     "runValidation": "유효성 검사 실행",
     "whoCanAccess": "접근할 수 있습니다",

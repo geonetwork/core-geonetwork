@@ -290,6 +290,8 @@
     "uploadFile": "Laden Sie eine Datei von Ihrem Computer hoch.",
     "uuidAction": "Datensatzidentifikator in Bearbeitung",
     "validate-help": "Datensatz gemäss Stadard-Validierungsregeln überprüfen",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Validierung",
     "runValidation": "Validierung starten",
     "whoCanAccess": "Wer hat Zugriff?",
