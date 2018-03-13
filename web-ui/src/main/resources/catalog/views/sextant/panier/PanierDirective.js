@@ -315,10 +315,12 @@
                         'hide-title="true" ' +
                         'hide-execute-button="true">' +
                       '</gn-wps-process-form>' +
-                      '<button type="button" class="btn btn-default" ' +
-                        'ng-click="saveWPSMessage(); $parent.close()">' +
-                        '{{ "wpsSaveForm" | translate }}' +
-                      '</button>',
+                      '<div class="text-center">' +
+                        '<button type="button" class="btn btn-default" ' +
+                          'ng-click="saveWPSMessage(); $parent.close()">' +
+                          '{{ "wpsSaveForm" | translate }}' +
+                        '</button>' +
+                      '</div>',
                     className: 'wps-form-modal',
                     onCloseCallback: function () {
                       scope.currentWPS = null;

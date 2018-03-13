@@ -959,12 +959,11 @@
   }
 }
 
-[sxt-main-viewer] .panel-tools gn-wps-process-form ,
-.g .panel-tools gn-wps-process-form {
+gn-wps-process-form {
   .panel {
     border: none;
   }
-  .panel-heading {
+  .panel > .panel-heading {
     background-color: transparent;
     border-bottom: 1px solid @sxt-base-color;
     margin-top: 0px;
@@ -1004,19 +1003,6 @@
       margin-bottom: 0;
     }
   }
-  .gn-execute {
-    [role="button"] {
-      padding: 0.3em 1em;
-      width: auto;
-    }
-    button {
-      padding: 0 1em;
-      width: auto;
-    }
-    button[type="submit"] {
-      border-radius: 2px 0 0 2px;
-    }
-  }
 
   .form-group.optional {
     display: none;
@@ -1035,6 +1021,23 @@
       width: auto;
     }
   }
+}
+
+// simplify output selection button only in viewer
+[sxt-main-viewer] .panel-tools gn-wps-process-form {
+  .gn-execute {
+    [role="button"] {
+      padding: 0.3em 1em;
+      width: auto;
+    }
+    button {
+      padding: 0 1em;
+      width: auto;
+    }
+    button[type="submit"] {
+      border-radius: 2px 0 0 2px;
+    }
+  }
   .output-selection {
     button {
       border-radius: 0 2px 2px 0;
@@ -1050,6 +1053,22 @@
         background-color: transparent;
       }
     }
+  }
+}
+
+// special rules for when the form is included in a panel
+.gn-popup-content gn-wps-process-form .panel {
+  .form-group.optional {
+    display: none;
+  }
+
+  max-height: 520px;
+  overflow: auto;
+  margin-bottom: 12px;
+  min-width: 340px;
+
+  .input-group {
+    width: 100%;
   }
 }
 
