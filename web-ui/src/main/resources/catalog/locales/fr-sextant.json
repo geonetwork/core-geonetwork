@@ -71,5 +71,6 @@
   "mdActions": "Services associés",
   "mdActions-view": "Visualisable",
   "mdActions-download": "Téléchargeable",
-  "mdActions-process": "Traitement"
+  "mdActions-process": "Traitement",
+  "wpsSelectOutput": "Format de sortie"
 }
