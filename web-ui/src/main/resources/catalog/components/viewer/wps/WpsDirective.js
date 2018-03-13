@@ -64,8 +64,15 @@
    *    set up an application profile object for a WPS service
    * @directiveInfo {Object} wfsLink the WFS link object
    *  will be used to overload inputs based on active WFS feature filters
-   * @directiveInfo {boolean} hideExecuteButton if true,
-   *  the 'execute' button is hidden
+   * @directiveInfo {function} describedCallback will be called with no arg when
+   *  the describeProcess request has been done & processed; this means the form
+   *  is ready to use
+   * @directiveInfo {boolean} hideExecuteButton if true, the 'execute' button
+   *  will be hidden
+   * @directiveInfo {boolean} hideTitle if true, the form title will be hidden
+   * @directiveInfo {boolean} cancelPrevious if true, concurrent requests on WPS
+   *  endpoints will be allowed; this permits having several forms at the same
+   *  time in the UI
    */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
