@@ -177,7 +177,7 @@
                      name: 'topiccategory',
                      displayKey: 'label',
                      limit: Infinity,
-                     source: allOrSearchFn,
+                     source: allOrSearchFn
                    }).bind('typeahead:selected',
                      $.proxy(function(obj, topiccategory) {
                        // Add to tags
