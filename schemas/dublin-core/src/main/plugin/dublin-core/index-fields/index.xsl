@@ -68,11 +68,6 @@
     <xsl:variable name="identifier" as="xs:string"
                   select="dc:identifier"/>
 
-
-    <xsl:message><xsl:value-of select="concat(
-      '#', count(preceding-sibling::simpledc), $identifier)"/>
-    </xsl:message>
-
     <!-- Create a first document representing the main record. -->
     <doc>
       <documentType>metadata</documentType>
