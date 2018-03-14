@@ -28,8 +28,9 @@
     </div>
 
     <div class="form-group sxt-active-filters dropdown" ng-if="element.filter.params || element.filter.any">
-      <label>
-        <input type="checkbox" ng-model="form.useFilters" />
+      <label ng-click="form.useFilters = !form.useFilters">
+        <i class="fa sxt-layer-visibility text-primary"
+          ng-class="form.useFilters ? 'fa-check-square' : 'fa-square'"/>
         <span translate>activeFilters</span>
       </label>
       <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
