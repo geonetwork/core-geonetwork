@@ -160,6 +160,15 @@
                    });
 
 
+                   function allOrSearchFn(q, sync) {
+                     if (q === '') {
+                       sync(topicCategoriesAutocompleter.all());
+                       // This is the only change needed to get 'ALL'
+                       // items as the defaults
+                     } else {
+                       topicCategoriesAutocompleter.search(q, sync);
+                     }
+                   }
                    // Init typeahead
                    field.typeahead({
                      minLength: 0,
@@ -167,7 +176,8 @@
                    }, {
                      name: 'topiccategory',
                      displayKey: 'label',
-                     source: topicCategoriesAutocompleter.ttAdapter()
+                     limit: Infinity,
+                     source: allOrSearchFn,
                    }).bind('typeahead:selected',
                      $.proxy(function(obj, topiccategory) {
                        // Add to tags
@@ -196,19 +206,6 @@
                      topicCategoriesAutocompleter.initialize(true);
                    });
 
-                   // When clicking the element trigger input
-                   // to show autocompletion list.
-                   // https://github.com/twitter/typeahead.js/issues/798
-                   field.on('typeahead:opened', function() {
-                     var initial = field.val(),
-                     ev = $.Event('keydown');
-                     ev.keyCode = ev.which = 40;
-                     field.trigger(ev);
-                     if (field.val() != initial) {
-                       field.val('');
-                     }
-                     return true;
-                   });
                  } catch (e) {
                    console.warn('No tagsinput for ' + id +
                    ', error: ' + e.message);

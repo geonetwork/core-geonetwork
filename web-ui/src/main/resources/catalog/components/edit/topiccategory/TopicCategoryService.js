@@ -88,6 +88,7 @@
                 var topicCategoryAutocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('label'),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
+                  identify: function(obj) { return obj.getLabel(); },
                   sorter:
                   function(a, b) {
                     var nameA = a.getLabel().toUpperCase();
@@ -100,23 +101,15 @@
                     }
                     return 0;
                   },
-                  limit: 100, // Topic category is limited to a small number of values
+                  limit: 100, 
                   prefetch: {
                     url: getTopicCategoriesSearchUrl(config.schema),
                     cache: false,
                     transform: function(response) {
-                      console.log('transform', response);
                       var r = parseTopicCategoriesResponse(response, config.dataToExclude);
-                      console.log('transform', r);
                       return r;
                     }
                   }
-                  /*remote: {
-                    url: getTopicCategoriesSearchUrl(config.schema),
-                    filter: function(data) {
-                      return parseTopicCategoriesResponse(data, config.dataToExclude);
-                    }
-                  }*/
                 });
                 topicCategoryAutocompleter.initialize();
                 return topicCategoryAutocompleter;
