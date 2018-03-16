@@ -192,7 +192,8 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class DataManager implements ApplicationEventPublisherAware {
 
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
-    Lock indexLock = new ReentrantLock();
+    Lock indexingLock = new ReentrantLock();
+    Lock waitLoopLock = new ReentrantLock();
     Set<String> waitForIndexing = new HashSet<String>();
     Set<String> indexing = new HashSet<String>();
     Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
@@ -545,11 +546,11 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     public boolean isIndexing() {
-        indexLock.lock();
+        indexingLock.lock();
         try {
             return !indexing.isEmpty() || !batchIndex.isEmpty();
         } finally {
-            indexLock.unlock();
+            indexingLock.unlock();
         }
     }
 
@@ -572,7 +573,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * TODO javadoc.
      */
     public void indexMetadata(final String metadataId, boolean forceRefreshReaders, ISearchManager searchManager) throws Exception {
-        indexLock.lock();
+        waitLoopLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
                 return;
@@ -581,16 +582,23 @@ public class DataManager implements ApplicationEventPublisherAware {
                 try {
                     waitForIndexing.add(metadataId);
                     // don't index the same metadata 2x
-                    wait(200);
+                    synchronized (this) {
+                        wait(200);
+                    }
                 } catch (InterruptedException e) {
                     return;
                 } finally {
                     waitForIndexing.remove(metadataId);
                 }
             }
-            indexing.add(metadataId);
+            indexingLock.lock();
+            try {
+                indexing.add(metadataId);
+            } finally {
+                indexingLock.unlock();
+            }
         } finally {
-            indexLock.unlock();
+            waitLoopLock.unlock();
         }
         Metadata fullMd;
 
@@ -777,11 +785,11 @@ public class DataManager implements ApplicationEventPublisherAware {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
         } finally {
-            indexLock.lock();
+            indexingLock.lock();
             try {
                 indexing.remove(metadataId);
             } finally {
-                indexLock.unlock();
+                indexingLock.unlock();
             }
         }
         if (fullMd != null) {
