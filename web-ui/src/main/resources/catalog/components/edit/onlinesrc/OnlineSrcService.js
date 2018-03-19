@@ -366,7 +366,7 @@
             scopedName: qParams.name,
             uuidref: qParams.uuidDS,
             uuid: qParams.uuidSrv,
-            source: qParams.identifier ? qParams.identifier : '',
+            source: qParams.identifier || '',
             process: qParams.process
           }).then(function() {
             var qParams = setParams('service-add', params);
@@ -375,7 +375,7 @@
               uuidref: qParams.uuidSrv,
               uuid: qParams.uuidDS,
               url: qParams.url,
-              source: qParams.identifier ? qParams.identifier : '',
+              source: qParams.identifier || '',
               protocol: qParams.protocol,
               process: qParams.process
             }).then(function() {
@@ -417,7 +417,7 @@
               scopedName: qParams.name,
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
-              source: qParams.identifier ? qParams.identifier : '',
+              source: qParams.identifier || '',
               process: qParams.process
             }).then(function() {
               closePopup(popupid);
