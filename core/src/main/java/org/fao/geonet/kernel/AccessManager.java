@@ -172,7 +172,9 @@ public class AccessManager {
             } else {
                 Specification<UserGroup> spec = UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
                 if (editingGroupsOnly) {
-                    spec = Specifications.where(spec).and(UserGroupSpecs.hasProfile(Profile.Editor));
+                    // User has edit privileges if his profile is at least Reviewer.
+                    // An Editor can only edit his own records.
+                    spec = Specifications.where(spec).and(UserGroupSpecs.hasProfile(Profile.Reviewer));
                 }
 
                 hs.addAll(_userGroupRepository.findGroupIds(spec));
@@ -402,8 +404,8 @@ public class AccessManager {
     }
 
     /**
-     * Check if current user can edit the metadata according to the groups where the metadata is
-     * editable.
+     * Check if current user can edit the metadata according to the groups
+     * where the metadata is editable.
      *
      * @param id The metadata internal identifier
      */
@@ -413,15 +415,20 @@ public class AccessManager {
             return false;
 
 
+        // Check this record has at least some edit operation allowed
         OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
         UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
-        List<OperationAllowed> allOpAlloweds = opAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
-            .editing)));
+        List<OperationAllowed> allOpAlloweds =
+            opAllowedRepository.findAll(where(hasMetadataId(id))
+                .and(hasOperation(ReservedOperation.editing)));
         if (allOpAlloweds.isEmpty()) {
             return false;
         }
 
-        Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Editor)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+        // User has edit privileges if his profile is at least Reviewer.
+        // An Editor can only edit his own records.
+        Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+            .and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
         for (OperationAllowed opAllowed : allOpAlloweds) {
