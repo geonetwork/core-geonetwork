@@ -61,7 +61,7 @@
   "wpsAvailableProcesses": "Traitements disponibles",
   "wpsProcess": "Traitement",
   "wpsProcesses": "Traitements",
-  "editWpsForm": "Paramètres du traitement",
+  "editWpsForm": "Paramètres",
   "wpsIncludedProcesses": "Traitements",
   "wpsSaveForm": "Sauvegarder et fermer",
   "inputIsOverloaded": "Cette valeur provient d'un filtre WFS",
@@ -71,5 +71,6 @@
   "mdActions": "Services associés",
   "mdActions-view": "Visualisable",
   "mdActions-download": "Téléchargeable",
-  "mdActions-process": "Traitement"
+  "mdActions-process": "Traitement",
+  "wpsSelectOutput": "Format de sortie"
 }

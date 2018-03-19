@@ -298,22 +298,29 @@
                 }
               });
 
+              // register WFS link if any
+              scope.wfsLink = scope.element.link.protocol == 'OGC:WFS' ?
+                  scope.element.link : null;
+
               // Generate WPS form
               scope.currentWPS = null;
               scope.editWPSForm = function(process) {
                 if(process) {
                   // open modal
                   var popup = gnPopup.create({
-                    title: 'editWpsForm',
+                    title: process.desc || 'editWpsForm',
                     content:
                       '<gn-wps-process-form wps-link="currentWPS" '+
                         'wfs-link="wfsLink" map="map" ' +
+                        'hide-title="true" ' +
                         'hide-execute-button="true">' +
                       '</gn-wps-process-form>' +
-                      '<button type="button" class="btn btn-default" ' +
-                        'ng-click="saveWPSMessage(); $parent.close()">' +
-                        '{{ "wpsSaveForm" | translate }}' +
-                      '</button>',
+                      '<div class="text-center">' +
+                        '<button type="button" class="btn btn-default" ' +
+                          'ng-click="saveWPSMessage(); $parent.close()">' +
+                          '{{ "wpsSaveForm" | translate }}' +
+                        '</button>' +
+                      '</div>',
                     className: 'wps-form-modal',
                     onCloseCallback: function () {
                       scope.currentWPS = null;
@@ -321,14 +328,10 @@
                   }, scope);
 
                   scope.currentWPS = process;
-
-                  // use WFS link
-                  scope.wfsLink = scope.element.link.protocol == 'OGC:WFS' ?
-                      scope.element.link : null;
                 }
               };
-              scope.saveWPSMessage = function() {
-                var process = scope.currentWPS;
+              scope.saveWPSMessage = function(p) {
+                var process = p || scope.currentWPS;
 
                 // do a describe process on the WPS & save execute message
                 gnWpsService.describeProcess(process.url, process.name).then(
@@ -344,6 +347,12 @@
                 // clear ref to process
                 scope.currentWPS = null;
               };
+
+              // called when the wps process is described in the directive
+              scope.describedCallback = function(process) {
+                process.described = true;
+                scope.saveWPSMessage(process);
+              }
             }
           };
         }

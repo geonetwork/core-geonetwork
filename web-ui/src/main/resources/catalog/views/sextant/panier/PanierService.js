@@ -87,7 +87,7 @@
                     d.protocol == l.protocol;
                 })) {
 
-                // 1. Check if a WFS filter is applied
+                // Check if a WFS filter is applied
                 var esObject = layer.get('indexObject');
                 if(esObject) {
                   var esConfig = esObject.getState();
@@ -102,19 +102,45 @@
                   }
                 }
 
-                // 2. Check if WPS is present
-                var wps = layer.get('processes');
-                wps.forEach(function(p) {
-                  // TODO test synchrone
-                  // TODO can we have loop ?
-                  p.layer = layer;
-                });
-                panierItem.processes = wps;
+                var processes = layer.get('processes');
+
+                // only add processes once (with desc as label in the form)
+                if (processes && !panierItem.processes) {
+                  processes = processes.map(function (process) {
+                    process.label = process.desc
+                    return process;
+                  });
+                  panierItem.processes = processes;
+                }
               }
               else {
                 panierItem.filter = null;
               }
             });
+          }
+        });
+      };
+
+      /**
+       * Adds references to WPS processes on the panier item by looking up
+       * the links in the same group
+       * Note: processes may have already been added with bindPanierWithLayers;
+       * in this case, do nothing.
+       *
+       * @param {Object} panier All layers to download.
+       */
+      this.addProcessesToItems = function(panier) {
+        panier.forEach(function(panierItem) {
+          var processes = panierItem.md &&
+            panierItem.md.getLinksByType(panierItem.link.group, 'OGC:WPS');
+
+          // only add processes once (with desc as label in the form)
+          if (processes && !panierItem.processes) {
+            processes = processes.map(function (process) {
+              process.label = process.desc
+              return process;
+            });
+            panierItem.processes = processes;
           }
         });
       };

@@ -28,14 +28,15 @@
     </div>
 
     <div class="form-group sxt-active-filters dropdown" ng-if="element.filter.params || element.filter.any">
-      <label>
-        <input type="checkbox" ng-model="form.useFilters" />
+      <label ng-click="form.useFilters = !form.useFilters">
+        <i class="fa fa-fw sxt-layer-visibility text-primary"
+          ng-class="form.useFilters ? 'fa-check-square' : 'fa-square'"/>
         <span translate>activeFilters</span>
       </label>
       <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
         class="btn btn-default dropdown-toggle">
-        <span translate class="ng-scope">activeFiltersDetails</span>
-        <i class="fa fa-caret-down"></i>&nbsp;
+        <span translate class="ng-scope">activeFiltersDetails</span>&nbsp;
+        <i class="fa fa-caret-down"></i>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
         <li ng-repeat="filter in element.filter.params">
@@ -50,15 +51,22 @@
     <div class="form-group sxt-processes-list" ng-show="element.processes && element.processes.length > 0">
       <label for="processesPF" class="control-label" translate>wpsIncludedProcesses</label>&nbsp;:&nbsp;
       <div ng-repeat="p in element.processes" class="sxt-process">
-        <label ng-click="p.included = !p.included">
-          <i class="fa sxt-layer-visibility text-primary"
-            ng-class="p.included ? 'fa-check-square' : 'fa-square'"/> 
+        <label ng-click="p.included = p.described && !p.included">
+          <i ng-if="!p.described" class="fa fa-fw fa-spin fa-spinner"/>
+          <i ng-if="p.described" class="fa fa-fw sxt-layer-visibility text-primary"
+            ng-class="p.included ? 'fa-check-square' : 'fa-square'"/>
           <span class="wps-label">{{ p.desc || p.name }}</span>
         </label>
         <button type="button" data-ng-disabled="!p.included" class="btn btn-default" ng-click="editWPSForm(p)">
           <i class="fa fa-cogs"></i>&nbsp;
           <span translate="" class="ng-scope">{{ 'editWpsForm' | translate }}</span>
         </button>
+        <div class="hidden">
+          <gn-wps-process-form wps-link="p" wfs-link="wfsLink"
+            map="map" described-callback="describedCallback(p)"
+            cancel-previous="false">
+          </gn-wps-process-form>
+        </div>
       </div>
     </div>
 

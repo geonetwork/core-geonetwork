@@ -86,8 +86,9 @@
             <h4 translate>validateConstraints</h4>
             <ul class="list-group" data-ng-class="{invalid : downloadDisabled}">
               <li ng-repeat="elt in panier" class="list-group-item">
-                <label>
-                  <input type="checkbox" ng-model="elt.validated" ng-change="validateDownload()"/>
+                <label ng-click="elt.validated = !elt.validated; validateDownload()">
+                  <i class="fa fa-fw sxt-layer-visibility text-primary"
+                    ng-class="elt.validated ? 'fa-check-square' : 'fa-square'"/>
                   {{elt.md.title || elt.md.defaultTitle}}
                 </label>
                 <a class="btn btn-link" data-toggle="collapse" data-target="#w{{elt.md.getUuid()}}" aria-expanded="false">

@@ -64,8 +64,15 @@
    *    set up an application profile object for a WPS service
    * @directiveInfo {Object} wfsLink the WFS link object
    *  will be used to overload inputs based on active WFS feature filters
-   * @directiveInfo {boolean} hideExecuteButton if true,
-   *  the 'execute' button is hidden
+   * @directiveInfo {function} describedCallback will be called with no arg when
+   *  the describeProcess request has been done & processed; this means the form
+   *  is ready to use
+   * @directiveInfo {boolean} hideExecuteButton if true, the 'execute' button
+   *  will be hidden
+   * @directiveInfo {boolean} hideTitle if true, the form title will be hidden
+   * @directiveInfo {boolean} cancelPrevious if true, concurrent requests on WPS
+   *  endpoints will be allowed; this permits having several forms at the same
+   *  time in the UI
    */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
@@ -82,7 +89,8 @@
         scope: {
           map: '=',
           wpsLink: '=',
-          wfsLink: '='
+          wfsLink: '=',
+          describedCallback: '&'
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -97,7 +105,10 @@
             mimeType: ''
           };
 
-          scope.hideExecuteButton = attrs.hideExecuteButton;
+          scope.hideExecuteButton = !!scope.$eval(attrs.hideExecuteButton);
+          scope.hideTitle = !!scope.$eval(attrs.hideTitle);
+          scope.cancelPrevious = attrs.cancelPrevious !== undefined ?
+            !!scope.$eval(attrs.cancelPrevious) : true;
 
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
@@ -177,7 +188,7 @@
 
             // query a description and build up the form
             gnWpsService.describeProcess(newLink.uri, newLink.processId, {
-              cancelPrevious: true
+              cancelPrevious: scope.cancelPrevious
             }).then(
                 function(response) {
                   scope.describeState = 'succeeded';
@@ -420,6 +431,11 @@
                     }
                     scope.loadedDescriptions[processKey] =
                     angular.extend({}, scope.processDescription);
+                  }
+
+                  // described callback
+                  if (scope.describedCallback) {
+                    scope.describedCallback();
                   }
                 },
                 function(response) {

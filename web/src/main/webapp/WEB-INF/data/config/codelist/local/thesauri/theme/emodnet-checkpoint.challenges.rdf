@@ -15,6 +15,42 @@
 	<dcterms:modified>2014-08-11</dcterms:modified>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##Atlantos8UC1">
+  <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  <skos:prefLabel xml:lang="en">Atlantos8 - UC1 - Harmful algal blooms</skos:prefLabel>
+  <skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##Atlantos8UC2">
+  <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  <skos:prefLabel xml:lang="en">Atlantos8 - UC2 - Storm surges</skos:prefLabel>
+  <skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##Atlantos8UC3">
+  <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  <skos:prefLabel xml:lang="en">Atlantos8 - UC3 - Ship routing hazard mapping</skos:prefLabel>
+  <skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##Atlantos8UC4">
+  <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  <skos:prefLabel xml:lang="en">Atlantos8 - UC4 - Oil spill hazard mapping</skos:prefLabel>
+  <skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##Atlantos8UC5">
+  <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  <skos:prefLabel xml:lang="en">Atlantos8 - UC5 - Offshore aquaculture siting</skos:prefLabel>
+  <skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##Atlantos8UC6">
+  <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  <skos:prefLabel xml:lang="en">Atlantos8- UC6 - Reanalyses for MSFD and ICES assessments</skos:prefLabel>
+  <skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##Atlantos8UC7">
+  <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+  <skos:prefLabel xml:lang="en">Atlantos8 - UC7 - Operational real-time and forecast modeling of North Atlantic Albacore tuna population</skos:prefLabel>
+  <skos:scopeNote xml:lang="en"></skos:scopeNote>
+</rdf:Description>
+
 <rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges##AtlanticCH01WindfarmSiting">
 	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 	<skos:prefLabel xml:lang="en">Atlantic - CH01 - Windfarm Siting</skos:prefLabel>
