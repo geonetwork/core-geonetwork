@@ -367,7 +367,7 @@
             uuidref: qParams.uuidDS,
             uuid: qParams.uuidSrv,
             process: qParams.process
-          }).then(function() {
+          }, true).then(function() {
             var qParams = setParams('service-add', params);
             runProcess(scope, {
               scopedName: qParams.name,
@@ -430,7 +430,7 @@
               uuid: qParams.uuidDS,
               protocol: qParams.protocol,
               process: qParams.process
-            }).then(addDatasetToServiceFn, function(error) {
+            }, true).then(addDatasetToServiceFn, function(error) {
               // Current user may not be able to edit
               // the targeted dataset. Notify user in this case
               // that only the service will be updated.

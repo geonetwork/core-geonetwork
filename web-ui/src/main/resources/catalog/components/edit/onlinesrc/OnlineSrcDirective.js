@@ -1428,8 +1428,10 @@
         '$rootScope',
         '$translate',
         'gnGlobalSettings',
+        'gnConfigService',
         function(gnOnlinesrc, Metadata, gnOwsCapabilities,
-            gnCurrentEdit, $rootScope, $translate, gnGlobalSettings) {
+                 gnCurrentEdit, $rootScope, $translate,
+                 gnGlobalSettings, gnConfigService) {
           return {
             restrict: 'A',
             scope: {},
@@ -1547,6 +1549,12 @@
                       }
                       else {
                         scope.srcParams.uuidDS = md.getUuid();
+                        scope.srcParams.name = gnCurrentEdit.mdTitle;
+                        scope.srcParams.desc = gnCurrentEdit.mdTitle;
+                        scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
+                        scope.srcParams.url =  gnConfigService.getServiceURL() +
+                          "api/records/" +
+                          md.getUuid() + "/formatters/xml";
                       }
                     }
                   });
