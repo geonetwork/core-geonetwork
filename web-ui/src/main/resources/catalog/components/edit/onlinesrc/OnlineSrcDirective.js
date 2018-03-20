@@ -1542,9 +1542,12 @@
                           scope.loadCurrentLink(links[0].url);
                           scope.srcParams.url = links[0].url;
                         } else {
-                          scope.srcParams.url = '';
-                          scope.alertMsg = $translate.instant(
-                              'linkToServiceWithoutURLError');
+                          scope.srcParams.name = scope.currentMdTitle;
+                          scope.srcParams.desc = scope.currentMdTitle;
+                          scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
+                          scope.srcParams.url =  gnConfigService.getServiceURL() +
+                            "api/records/" +
+                            md.getUuid() + "/formatters/xml";
                         }
                       }
                       else {
