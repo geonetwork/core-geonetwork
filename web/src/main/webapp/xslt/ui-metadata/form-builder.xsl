@@ -168,7 +168,7 @@
             <xsl:value-of select="$label/label"/>
           </label>
 
-          <div class="col-sm-9 gn-value">
+          <div class="col-sm-9 gn-value nopadding-in-table">
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field"
                              select="$metadataOtherLanguagesAsJson"/>

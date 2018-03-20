@@ -174,7 +174,7 @@
       <label class="col-sm-2 control-label">
         <xsl:value-of select="$labelConfig/label"/>
       </label>
-      <div class="col-sm-9 gn-value">
+      <div class="col-sm-9 gn-value nopadding-in-table">
         <div data-gn-date-picker="{gco:Date|gco:DateTime}"
              data-label=""
              data-element-name="{name(gco:Date|gco:DateTime)}"
