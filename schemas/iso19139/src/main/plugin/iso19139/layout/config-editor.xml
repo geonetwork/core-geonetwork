@@ -798,7 +798,7 @@
         <for name="gmd:keyword"/>
       </flatModeExceptions>
     </view>
-    <view name="default">
+    <view name="default" disabled="true">
       <tab id="default" default="true" mode="flat">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
@@ -938,7 +938,7 @@
           hideTimeInCalendar="true"
           upAndDownControlHidden="true"
           displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
-          'EMODNET')">
+          'EMODNET - BATHYMETRY')">
 
       <thesaurusList>
         <thesaurus key="external.theme.NVS.L23"
@@ -1911,6 +1911,470 @@
 
       </tab>
     </view>
+
+    <!--
+      SDN view
+      https://forge.ifremer.fr/mantis/view.php?id=40735
+    -->
+    <view name="sdn"
+          upAndDownControlHidden="true"
+          displayIfRecord="contains(
+                              gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
+                              'ISO 19115:2003/19139 - EMODNET - SDN')">
+      <thesaurusList>
+        <thesaurus key="external.theme.inspire-theme"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"
+                   maxtags="1"/>
+        <thesaurus key="local.theme.sextant-theme"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"
+                   maxtags="1"/>
+        <thesaurus key="external.parameter.NVS.P35"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.parameter.NVS.P02"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.reference-geographical-area.NVS.C19"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"/>
+
+      </thesaurusList>
+      <tab id="sdn-identification" mode="flat" default="true">
+        <section name="sextantidentificationTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"
+                 name="sextant-title"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"
+                 name="sdn-abstract"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:alternateTitle"
+                 name="sdn-short-name"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:language"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date"
+                 or="date"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*"
+                 name="sextant-date-resource"/>
+
+          <section name="sdnSpatialRepresentationType">
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"
+                   del="../.."/>
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
+              del="../../../.."/>
+
+
+            <action type="add" btnLabel="sextant-add-scale" or="spatialResolution"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/*"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1">
+              <template>
+                <snippet>
+                  <gmd:spatialResolution>
+                    <gmd:MD_Resolution>
+                      <gmd:equivalentScale>
+                        <gmd:MD_RepresentativeFraction>
+                          <gmd:denominator>
+                            <gco:Integer/>
+                          </gmd:denominator>
+                        </gmd:MD_RepresentativeFraction>
+                      </gmd:equivalentScale>
+                    </gmd:MD_Resolution>
+                  </gmd:spatialResolution>
+                </snippet>
+              </template>
+            </action>
+
+            <action type="add" btnLabel="sextant-add-resolution" or="spatialResolution"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/*"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1">
+              <template>
+                <snippet>
+                  <gmd:spatialResolution>
+                    <gmd:MD_Resolution>
+                      <gmd:distance>
+                        <gco:Distance uom=""/>
+                      </gmd:distance>
+                    </gmd:MD_Resolution>
+                  </gmd:spatialResolution>
+                </snippet>
+              </template>
+            </action>
+
+            <field
+              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*"/>
+
+
+            <text ref="hr"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
+
+            <action type="process"
+                    btnClass="fa fa-square-o"
+                    process="add-vector-info"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0"/>
+
+            <action type="process"
+                    btnClass="fa fa-th"
+                    process="add-grid-info"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0"/>
+
+            <text ref="change-spatial-type-alert"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
+
+            <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:featureTypes"/>
+
+          </section>
+
+          <section name="sextantkeywordTitle">
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"/>
+
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.local.theme.sextant-theme']"
+              name="sextant-theme"/>
+
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.inspire-theme']"
+              name="inspireTheme"/>
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                        contains(
+                          gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                          'NVS.C19')]"/>
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                        contains(
+                          gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                          'NVS.P02')]"/>
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                        contains(
+                          gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                          'NVS.P35')]"/>
+          </section>
+        </section>
+      </tab>
+
+
+
+      <tab id="sdn-contact" mode="flat">
+        <section name="sextantrespOrgaTitle">
+          <field name="sdn-OriginatorTitle"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'originator']"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+                <key label="edmoId"
+                     xpath="*[1]/@uuid"/>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add"
+                  name="sdn-OriginatorTitle"
+                  forceLabel="true"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <!-- TODO: filter on a group  ?
+            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
+            <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="true"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
+          </action>
+
+
+          <field name="sdn-ResourceProviderTitle"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:pointOfContact[*/gmd:role/*/@codeListValue = 'resourceProvider']"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+                <key label="edmoId"
+                     xpath="gmd:CI_ResponsibleParty/@uuid[starts-with(., 'http')]"/>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add"
+                  name="sdn-ResourceProviderTitle"
+                  addDirective="data-gn-directory-entry-selector"
+                  forceLabel="true"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="true"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider"/>
+          </action>
+
+        </section>
+      </tab>
+
+      <tab id="sdn-spatial" mode="flat">
+
+        <section name="sextantgeoLocationTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/*"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"
+                 or="referenceSystemInfo"
+                 in="/gmd:MD_Metadata"/>
+        </section>
+
+        <section name="sextanttempRefTitle">
+
+          <field name="temporalRangeSection"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                >
+                  <directiveAttributes
+                    data-tag-name="gml:endPosition"
+                    data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+
+          <action type="add" name="temporalRangeSection" or="temporalElement"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*">
+            <template>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        <gml:beginPosition/>
+                        <gml:endPosition/>
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </action>
+
+        </section>
+          <!-- TODO: add
+        Temporal resolution
+        Number of vertical levels
+        -->
+        <section name="sdn-verticalExtent">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:minimumValue"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:maximumValue"/>
+        </section>
+      </tab>
+
+
+      <tab id="sdn-usage" mode="flat">
+        <section name="sextantlimitationsTitle">
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
+        </section>
+      </tab>
+      <tab id="sdn-quality" mode="flat">
+        <section name="sextantqualityTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
+        </section>
+
+      </tab>
+
+      <tab id="sdn-metadata" mode="flat">
+        <section name="sextantmetadataInfoTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:language"/>
+
+          <field name="locale"
+                 xpath="/gmd:MD_Metadata/gmd:locale[*/gmd:languageCode/*/@codeListValue != ancestor::gmd:MD_Metadata/gmd:language/*/@codeListValue]"
+                 or="locale" in="/gmd:MD_Metadata"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 del=".">
+            <template>
+              <values>
+                <key label="locale"
+                     use="data-gn-language-picker"
+                     xpath="gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
+              </values>
+              <snippet>
+                <gmd:locale>
+                  <gmd:PT_Locale>
+                    <gmd:languageCode>
+                      <gmd:LanguageCode codeList="" codeListValue="{{locale}}"/>
+                    </gmd:languageCode>
+                    <gn:copy select="gmd:characterEncoding"/>
+                  </gmd:PT_Locale>
+                </gmd:locale>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="locale" or="locale"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:locale>
+                  <gmd:PT_Locale>
+                    <gmd:languageCode>
+                      <gmd:LanguageCode codeList="" codeListValue=""/>
+                    </gmd:languageCode>
+                    <gmd:characterEncoding>
+                      <gmd:MD_CharacterSetCode
+                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+                        codeListValue="utf8"/>
+                    </gmd:characterEncoding>
+                  </gmd:PT_Locale>
+                </gmd:locale>
+              </snippet>
+            </template>
+          </action>
+
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:contact"/>
+
+          <action type="add" name="metadataPointOfContact"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="contact"
+                  in="/gmd:MD_Metadata">
+            <directiveAttributes
+              data-template-add-action="true"
+              data-search-action="false"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+          </action>
+
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+        </section>
+      </tab>
+
+      <flatModeExceptions>
+        <for name="gmd:keyword"/>
+      </flatModeExceptions>
+    </view>
+
     <view name="xml">
       <tab id="xml" default="true"/>
     </view>

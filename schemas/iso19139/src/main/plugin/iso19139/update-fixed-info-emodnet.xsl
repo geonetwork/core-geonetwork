@@ -31,7 +31,7 @@
 
   <xsl:variable name="isEmodnet"
                 select="contains(/root/gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
-          'EMODNET')"/>
+          'EMODNET - BATHYMETRY')"/>
 
 
 

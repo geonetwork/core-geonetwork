@@ -935,6 +935,7 @@
 		<helper relAtt="uom">
 			<option title="Arc seconds (North)">Arc seconds (North)</option>
 			<option title="meter">meters</option>
+      <option title="degree">degree</option>
 		</helper>
 		<!--<helper relAtt="uom">
 			<option value="0.10" title="cm">10 cm</option>

@@ -314,8 +314,46 @@
   <isNotINSPIREConform>or not</isNotINSPIREConform>
   <sextant-add-scale>Add a scale</sextant-add-scale>
   <sextant-add-resolution>Add a resolution</sextant-add-resolution>
-  <!-- String for INSPIRE SDS tab -->
 
+  <add-vector-info>This resource is a vector</add-vector-info>
+  <add-vector-infoHelp>Add information related to a vector dataset (eg. spatial representation type, scale). It will remove information about grid.</add-vector-infoHelp>
+  <add-grid-info>This resource is a grid</add-grid-info>
+  <add-grid-infoHelp>Add information related to a grid (eg. number of dimension). It will remove information about vector.</add-grid-infoHelp>
+
+  <hr>
+    <div class="row">
+      <div class="col-md-offset-2">
+        <hr/>
+      </div>
+    </div>
+  </hr>
+
+  <change-spatial-type-alert>
+    <div class="row">
+      <div class="col-md-offset-2 alert alert-danger">
+        Changing the resource type from grid to vector or from vector to grid
+        will remove information about the current dataset to add the new field
+        required for the selected type. Check that you are not going to lose important information
+        when changing the spatial representation type of the current record.
+      </div>
+    </div>
+  </change-spatial-type-alert>
+
+  <sdnSpatialRepresentationType>Spatial representation type</sdnSpatialRepresentationType>
+  <sdn>Default</sdn>
+  <sdn-abstract>Overview</sdn-abstract>
+  <sdn-short-name>External shortname</sdn-short-name>
+  <sdn-OriginatorTitle>Originator</sdn-OriginatorTitle>
+  <sdn-ResourceProviderTitle>Resource provider</sdn-ResourceProviderTitle>
+  <sdn-identification>Identification</sdn-identification>
+  <sdn-contact>Contacts</sdn-contact>
+  <sdn-spatial>Spatial &amp; temporal ref.</sdn-spatial>
+  <sdn-usage>Usage</sdn-usage>
+  <sdn-quality>Quality</sdn-quality>
+  <sdn-verticalExtent>Vertical extent</sdn-verticalExtent>
+  <sdn-metadata>Metadata</sdn-metadata>
+
+  <!-- String for INSPIRE SDS tab -->
   <inspire_sds_cc1>Conformance class 1: invocable</inspire_sds_cc1>
   <inspire_sds_cc2>Conformance class 2: interoperable</inspire_sds_cc2>
   <inspire_sds_cc3>Conformance class 3: harmonized</inspire_sds_cc3>
