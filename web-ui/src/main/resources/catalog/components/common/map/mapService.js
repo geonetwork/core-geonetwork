@@ -671,15 +671,6 @@
                   angular.extend(config, {crossOrigin: 'anonymous'}) : config);
             }
 
-            // Set proxy for Cesium to load
-            // layers not accessible with CORS headers
-            // This is optional if the WMS provides CORS
-            if (gnViewerSettings.cesiumProxy) {
-              source.set('olcs.proxy', function(url) {
-                return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-              });
-            }
-
             var layerOptions = {
               url: options.url,
               type: 'WMS',
@@ -1249,6 +1240,15 @@
                     name, capObj, md && md.getUuid && md.getUuid()),
                     olL;
 
+                // Check if require proxy
+                var tmp_url = url.split('/');
+                tmp_url = tmp_url[0] + '/' + tmp_url[1] + '/' + tmp_url[2] + '/';
+                
+                if ($.inArray(tmp_url, gnGlobalSettings.requireProxy) !== -1) {
+                  url = gnGlobalSettings.proxyUrl +
+                      encodeURIComponent(url);
+                }
+
                 if (!capL) {
                   // If layer not found in the GetCapabilities
                   // Try to add the layer from the metadata
@@ -1343,6 +1343,14 @@
             return gnOwsCapabilities.getWMSCapabilities(url).
                 then(function(capObj) {
 
+                  // Check if require proxy
+                  var tmp_url = capObj.url.split('/');
+                  tmp_url = tmp_url[0] + '/' + tmp_url[1] + '/' + tmp_url[2] + '/';
+                  
+                  if ($.inArray(tmp_url, gnGlobalSettings.requireProxy) !== -1) {
+                    capObj.url = gnGlobalSettings.proxyUrl +
+                        encodeURIComponent(capObj.url);
+                  }
                   var createdLayers = [];
 
                   var layers = capObj.layers || capObj.Layer;
@@ -1390,6 +1398,16 @@
 
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name, map);
+
+              // Check if require proxy
+              var tmp_url = url.split('/');
+              tmp_url = tmp_url[0] + '/' + tmp_url[1] + '/' + tmp_url[2] + '/';
+              
+              if ($.inArray(tmp_url, gnGlobalSettings.requireProxy) !== -1) {
+                url = gnGlobalSettings.proxyUrl +
+                    encodeURIComponent(url);
+              }
+              
               gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(

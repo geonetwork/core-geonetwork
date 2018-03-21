@@ -219,24 +219,23 @@
               });
 
               //send request and decode result
-              if (true) {
-                $http.get(url, {
-                  cache: true
-                })
-                    .success(function(data) {
-                      try {
-                        defer.resolve(displayFileContent(data));
-                      } catch (e) {
-                        defer.reject(
-                        $translate.instant('failedToParseCapabilities'));
-                      }
-                    })
-                    .error(function(data, status) {
-                      defer.reject(
-                      $translate.instant('checkCapabilityUrl',
-                      {url: url, status: status}));
-                    });
-              }
+              $http.get(url, {
+                cache: true
+              })
+              .success(function(data) {
+                try {
+                  defer.resolve(displayFileContent(data));
+                } catch (e) {
+                  defer.reject(
+                  $translate.instant('failedToParseCapabilities'));
+                }
+              })
+              .error(function(data, status) {
+                defer.reject(
+                $translate.instant('checkCapabilityUrl',
+                {url: url, status: status}));
+              });
+              
             }
             else {
               defer.reject();
