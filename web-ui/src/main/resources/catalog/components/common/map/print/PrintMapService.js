@@ -218,7 +218,7 @@
           });
           return enc;
         },
-        'WMS': function(layer, config) {
+        'WMS': function(layer, config, proj) {
           var enc = self.encoders.
               layers['Layer'].call(this, layer);
           var params = layer.getSource().getParams();
@@ -239,7 +239,7 @@
             customParams: {
               'EXCEPTIONS': 'XML',
               'TRANSPARENT': 'true',
-              'CRS': 'EPSG:3857',
+              'CRS': proj.getCode(),
               'TIME': params.TIME
             },
             singleTile: config.singleTile || false
@@ -261,6 +261,31 @@
             tileSize: [
               layer.getSource().tileGrid.getTileSize(),
               layer.getSource().tileGrid.getTileSize()]
+          });
+          return enc;
+        },
+        'XYZ': function(layer, config) {
+          var enc = self.encoders.
+              layers['Layer'].call(this, layer);
+          var url = layer.getSource().getUrls()[0];
+          //Remove the XYZ and extension parts of the URL
+          if(url.indexOf("{z}") > 0) {
+            url = url.substring(0, url.indexOf("{z}"));
+            //Remove last "/"
+            url = url.substring(0, url.lastIndexOf("/"));
+          }
+          angular.extend(enc, {
+            type: 'XYZ',
+            extension: 'png',
+            baseURL: url,
+            // Hack to return an extent for the base
+            // layer in case of undefined
+            maxExtent: layer.getExtent() ||
+                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            resolutions: layer.getSource().getTileGrid().getResolutions(),
+            tileSize: [
+              layer.getSource().getTileGrid().getTileSize(),
+              layer.getSource().getTileGrid().getTileSize()]
           });
           return enc;
         },
@@ -300,7 +325,7 @@
           });
           return enc;
         },
-        'WMTS': function(layer, config) {
+        'WMTS': function(layer, config, proj) {
           // sextant specific
           var enc = self.encoders.layers['Layer'].
               call(this, layer);
@@ -310,7 +335,7 @@
           var matrixIds = new Array(tileGrid.getResolutions().length);
           var layerUrl = layer.get('url');
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
-            var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
+            var mSize = (ol.extent.getWidth(proj.
                 getExtent()) /tileGrid.getTileSize()) /
                 tileGrid.getResolutions()[z];
                 matrixIds[z] = {
