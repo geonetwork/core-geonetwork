@@ -492,14 +492,14 @@ public class MetadataApi implements ApplicationContextAware {
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
+        String language = languageUtils.getIso3langCode(request.getLocales());
 
         // TODO PERF: ByPass XSL processing and create response directly
         // At least for related metadata and keep XSL only for links
         final ServiceContext context = ApiUtils.createServiceContext(request);
         Element raw = new Element("root").addContent(Arrays.asList(
                 new Element("gui").addContent(Arrays.asList(
-                        new Element("language").setText(language.getISO3Language()),
+                        new Element("language").setText(language),
                         new Element("url").setText(context.getBaseUrl())
         		)),
         		MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
@@ -507,7 +507,7 @@ public class MetadataApi implements ApplicationContextAware {
         GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
-        final Element transform = Xml.transform(raw, relatedXsl);        
+        final Element transform = Xml.transform(raw, relatedXsl);
         RelatedResponse response = (RelatedResponse) Xml.unmarshall(transform, RelatedResponse.class);
         return response;
     }
@@ -539,7 +539,7 @@ public class MetadataApi implements ApplicationContextAware {
             HttpServletRequest request) throws Exception {
 
             RelatedItemType[] type = {RelatedItemType.fcats};
-            
+
             FeatureResponse response = new FeatureResponse();
 
             Map<String, String[]> decodeMap = new HashMap<>();
@@ -550,12 +550,12 @@ public class MetadataApi implements ApplicationContextAware {
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
                     if(element.getCode()!=null && !element.getCode().trim().equals("")) {
                         if(!decodeMap.containsKey(element.getCode())) {
-                            String[] decodedValues = {element.getName(), element.getDefinition()}; 
+                            String[] decodedValues = {element.getName(), element.getDefinition()};
                             decodeMap.put(element.getCode(), decodedValues);
                         }
                     } else {
                         if(!decodeMap.containsKey(element.getName())) {
-                            String[] decodedValues = {element.getName(), element.getDefinition()}; 
+                            String[] decodedValues = {element.getName(), element.getDefinition()};
                             decodeMap.put(element.getName(), decodedValues);
                         }
                     }
