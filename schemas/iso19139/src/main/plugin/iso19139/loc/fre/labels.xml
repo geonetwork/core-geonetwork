@@ -1807,6 +1807,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <helper relAtt="uom">
       <option title="Arc seconds (North)">Arc seconds (North)</option>
       <option title="meter">meters</option>
+      <option title="degree">degree</option>
     </helper>
     <!--<helper relAtt="uom">
       <option value="0.10" title="m">10 cm</option>

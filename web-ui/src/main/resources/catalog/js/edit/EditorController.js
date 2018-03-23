@@ -217,6 +217,9 @@
                       md.standardName.match(/emodnet checkpoint/i)) {
                     return 'characteristics';
                   } else if (md.standardName &&
+                    md.standardName.match(/emodnet - sdn/i)) {
+                    return 'sdn-identification';
+                  } else if (md.standardName &&
                       md.standardName.match(/emodnet -/i)) {
                     return 'emodnetHydrography-what';
                   } else if (md.standardName &&

@@ -412,4 +412,40 @@
   <isNotINSPIREConform>ou ne l'est pas</isNotINSPIREConform>
   <sextant-add-scale>Ajouter une échelle</sextant-add-scale>
   <sextant-add-resolution>Ajouter une résolution</sextant-add-resolution>
+
+  <thisIsAVector>This resource is a vector</thisIsAVector>
+  <thisIsAGrid>This resource is a grid</thisIsAGrid>
+
+  <sdnSpatialRepresentationType>Spatial representation type</sdnSpatialRepresentationType>
+
+  <hr>
+    <div class="row">
+      <div class="col-md-offset-2">
+        <hr/>
+      </div>
+    </div>
+  </hr>
+
+  <change-spatial-type-alert>
+    <div class="alert alert-danger">
+      Changing the resource type from grid to vector or from vector to grid
+      will remove information about the current dataset to add the new field
+      required for the selected type. Check that you are not going to lose important information
+      when changing the spatial representation type of the current record.
+    </div>
+  </change-spatial-type-alert>
+
+  <sdn>Default</sdn>
+  <sdn-abstract>Overview</sdn-abstract>
+  <sdn-short-name>External shortname</sdn-short-name>
+  <sdn-OriginatorTitle>Originator</sdn-OriginatorTitle>
+  <sdn-ResourceProviderTitle>Resource provider</sdn-ResourceProviderTitle>
+  <sdn-identification>Identification</sdn-identification>
+  <sdn-contact>Contacts</sdn-contact>
+  <sdn-spatial>Spatial &amp; temporal ref.</sdn-spatial>
+  <sdn-usage>Usage</sdn-usage>
+  <sdn-quality>Quality</sdn-quality>
+  <sdn-verticalExtent>Vertical extent</sdn-verticalExtent>
+  <sdn-metadata>Metadata</sdn-metadata>
+
 </strings>

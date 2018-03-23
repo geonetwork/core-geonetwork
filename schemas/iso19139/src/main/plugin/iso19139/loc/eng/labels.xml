@@ -850,6 +850,7 @@
       <option value="1000000">1:1´000´000</option>
     </helper>
 
+
   </element>
   <element name="gmd:density" id="293.0">
     <label>Density</label>
@@ -863,7 +864,7 @@
   <element name="gmd:description" id="561.0">
     <label>Description</label>
     <description>Description of the event, including related parameters or
-      tolerances</description>
+            tolerances</description>
   </element>
   <element name="gmd:description" id="561.0" context="gmd:MD_AbstractClass">
     <label>Description</label>
@@ -873,7 +874,7 @@
     <condition>mandatory</condition>
     <label>Description</label>
     <description>Description of the event, including related parameters or
-      tolerances</description>
+            tolerances</description>
   </element>
   <element name="gmd:description" id="93.0" context="LI_Source">
     <label>Description</label>
@@ -884,7 +885,7 @@
     <label>Description</label>
     <description>Spatial and temporal extent for the referring object</description>
     <_condition>Conditional / geographicElement and temporalElement and verticalElement not
-      documented?</_condition>
+            documented?</_condition>
   </element>
   <element name="gmd:description" id="401.0" context="gmd:CI_OnlineResource">
     <label>Description</label>
@@ -935,12 +936,13 @@
     <helper relAtt="uom">
       <option title="Arc seconds (North)">Arc seconds (North)</option>
       <option title="meter">meters</option>
+      <option title="degree">degree</option>
     </helper>
     <!--<helper relAtt="uom">
-            <option value="0.10" title="cm">10 cm</option>
-            <option value="0.25" title="cm">25 cm</option>
-            <option value="0.50" title="cm">50 cm</option>
-            <option value="1" title="m">1 m</option>
+      <option value="0.10" title="cm">10 cm</option>
+      <option value="0.25" title="cm">25 cm</option>
+      <option value="0.50" title="cm">50 cm</option>
+      <option value="1" title="m">1 m</option>
       To only set unit without changing the value
             <option title="m">m</option>
             <option value="30" title="m">30 m</option>
