@@ -47,11 +47,11 @@
     var defaultConfig = {
       'langDetector': {
         'fromHtmlTag': false,
-        'regexp': '^\/[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-]+\/([a-z]{3})\/',
+        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
         'default': 'eng'
       },
       'nodeDetector': {
-        'regexp': '^\/[a-zA-Z0-9_\-]+\/([a-zA-Z0-9_\-]+)\/[a-z]{3}\/',
+        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
         'default': 'srv'
       },
       'mods': {
