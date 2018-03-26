@@ -1,0 +1,7 @@
+<li class="list-group-item" data-ng-click="handle($event)"
+    data-ng-class='::!isParentNode ? "leaf" : ""'>
+  <label>
+    <span class='fa'  ng-class="::isParentNode ? 'fa-folder-o' : 'fa-plus-square-o'"></span>
+    {{member.Title || member.title}}
+  </label>
+</li>

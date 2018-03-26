@@ -429,15 +429,24 @@
           member: '='
         },
         templateUrl: '../../catalog/components/viewer/wmsimport/' +
-            'partials/layer.html',
+            'partials/layer-sextant.html',
         link: function(scope, element, attrs, controller) {
           var el = element;
 
-          scope.toggleNode = function(evt) {
+          var select = function() {
+            controller.addLayer(scope.member);
+            gnAlertService.addAlert({
+              msg: $translate.instant('layerAdded', {layer:
+                (scope.member.Title || scope.member.title)
+              }),
+              type: 'success'
+            });
+          };
+
+          var toggleNode = function(evt) {
             el.find('.fa').first().toggleClass('fa-folder-o')
                 .toggleClass('fa-folder-open-o');
             el.children('ul').toggle();
-            evt.stopPropagation();
           };
 
           scope.addLayer = function(c) {
@@ -445,6 +454,15 @@
           };
 
           scope.isParentNode = angular.isDefined(scope.member.Layer);
+
+          scope.handle = function(evt) {
+            if (scope.isParentNode) {
+              toggleNode();
+            } else {
+              select();
+            }
+            evt.stopPropagation();
+          };
 
           // Add all subchildren
           if (angular.isArray(scope.member.Layer)) {
