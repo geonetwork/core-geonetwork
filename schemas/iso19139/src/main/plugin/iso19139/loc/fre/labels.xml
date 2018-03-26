@@ -753,6 +753,7 @@ responsable du service.</li>
       <option value="1" title="day">days</option>
       <option value="1" title="month">months</option>
       <option value="1" title="year">years</option>
+      <option value="1" title="season">seasons</option>
     </helper>
   </element>
   <element name="gmd:MD_ScopeDescription" id="149.0">
