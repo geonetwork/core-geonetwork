@@ -97,6 +97,23 @@
     <property name="startDelay" value="60000"/>
   </bean>
 
+  <bean name="withHeldCheckBean"
+        class="org.fao.geonet.kernel.WithHeldCheckTaskJob"
+        scope="singleton"/>
+  <bean name="withHeldCheckTaskJob"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="targetObject" ref="withHeldCheckBean" />
+    <property name="targetMethod" value="executeInternal" />
+    <!--<property name="jobClass"
+              value="org.fao.geonet.kernel.WithHeldCheckTaskJob"/>-->
+  </bean>
+  <bean id="withHeldTaskTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="withHeldCheckTaskJob"/>
+    <property name="cronExpression" value="${withHeldCheck.frequency}"/>
+    <property name="startDelay" value="5000"/>
+  </bean>
+
 
 
   <!-- Task notifying user watching records -->
@@ -124,6 +141,7 @@
     <property name="triggers">
       <list>
         <ref bean="indexingTaskTrigger"/>
+        <ref bean="withHeldTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
         <ref bean="backupMetadataCronTrigger" />
       </list>

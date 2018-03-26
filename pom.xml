@@ -1345,6 +1345,7 @@
      when watchlist notifier is triggered (Default 4AM) -->
     <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
+    <withHeldCheck.frequency>0/30 * * * * ?</withHeldCheck.frequency>
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
