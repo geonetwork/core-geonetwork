@@ -741,4 +741,11 @@
     </xsl:copy>
   </xsl:template>
 
+
+  <xsl:template match="gmd:spatialRepresentationInfo/*/gmd:numberOfDimensions"
+                priority="200">
+    <xsl:copy>
+      <gco:Integer><xsl:value-of select="count(../gmd:axisDimensionProperties)"/></gco:Integer>
+    </xsl:copy>
+  </xsl:template>
 </xsl:stylesheet>

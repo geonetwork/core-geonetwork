@@ -229,6 +229,7 @@
     <name>gmd:ellipsoid</name>
     <name>gmd:attributes</name>
     <name>gmd:verticalCRS</name>
+    <name>gmd:axisDimensionProperties</name>
     <name>gmd:geographicBox</name>
     <name>gmd:EX_TemporalExtent</name>
     <name>gmd:EX_VerticalExtent</name>
@@ -942,7 +943,8 @@
 
       <thesaurusList>
         <thesaurus key="external.theme.NVS.L23"
-                   fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+                   fieldset="false" maxtags="1"
+                   transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.NVS.L05"
                    fieldset="false"
                    transformations="to-iso19139-keyword"/>
@@ -953,7 +955,8 @@
                    fieldset="false" maxtags="1" orderById="true"
                    transformations="to-iso19139-keyword"/>
         <thesaurus key="local.theme.emodnet-bathymetry.QI.Vertical"
-                   fieldset="false" maxtags="1" orderById="true" transformations="to-iso19139-keyword"/>
+                   fieldset="false" maxtags="1" orderById="true"
+                   transformations="to-iso19139-keyword"/>
         <thesaurus key="local.theme.emodnet-bathymetry.QI.Purpose"
                    fieldset="false" maxtags="1" orderById="true"
                    transformations="to-iso19139-keyword"/>
@@ -1932,13 +1935,13 @@
                    maxtags="1"/>
         <thesaurus key="external.parameter.NVS.P35"
                    fieldset="false"
-                   transformations="to-iso19139-keyword"/>
+                   transformations="to-iso19139-keyword-with-anchor"/>
         <thesaurus key="external.parameter.NVS.P02"
                    fieldset="false"
-                   transformations="to-iso19139-keyword"/>
+                   transformations="to-iso19139-keyword-with-anchor"/>
         <thesaurus key="external.reference-geographical-area.NVS.C19"
                    fieldset="false"
-                   transformations="to-iso19139-keyword"/>
+                   transformations="to-iso19139-keyword-with-anchor"/>
 
       </thesaurusList>
       <tab id="sdn-identification" mode="flat" default="true">
@@ -1955,76 +1958,6 @@
                  or="date"
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*"
                  name="sextant-date-resource"/>
-
-          <section name="sdnSpatialRepresentationType">
-
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"
-                   del="../.."/>
-            <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
-              del="../../../.."/>
-
-
-            <action type="add" btnLabel="sextant-add-scale" or="spatialResolution"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/*"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1">
-              <template>
-                <snippet>
-                  <gmd:spatialResolution>
-                    <gmd:MD_Resolution>
-                      <gmd:equivalentScale>
-                        <gmd:MD_RepresentativeFraction>
-                          <gmd:denominator>
-                            <gco:Integer/>
-                          </gmd:denominator>
-                        </gmd:MD_RepresentativeFraction>
-                      </gmd:equivalentScale>
-                    </gmd:MD_Resolution>
-                  </gmd:spatialResolution>
-                </snippet>
-              </template>
-            </action>
-
-            <action type="add" btnLabel="sextant-add-resolution" or="spatialResolution"
-                    in="/gmd:MD_Metadata/gmd:identificationInfo/*"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1">
-              <template>
-                <snippet>
-                  <gmd:spatialResolution>
-                    <gmd:MD_Resolution>
-                      <gmd:distance>
-                        <gco:Distance uom=""/>
-                      </gmd:distance>
-                    </gmd:MD_Resolution>
-                  </gmd:spatialResolution>
-                </snippet>
-              </template>
-            </action>
-
-            <field
-              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*"/>
-
-
-            <text ref="hr"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
-
-            <action type="process"
-                    btnClass="fa fa-square-o"
-                    process="add-vector-info"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0"/>
-
-            <action type="process"
-                    btnClass="fa fa-th"
-                    process="add-grid-info"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0"/>
-
-            <text ref="change-spatial-type-alert"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
-
-            <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:featureTypes"/>
-
-          </section>
 
           <section name="sextantkeywordTitle">
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"/>
@@ -2199,14 +2132,305 @@
         </section>
       </tab>
 
+
       <tab id="sdn-spatial" mode="flat">
+        <section name="sdnSpatialRepresentationType">
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"
+                 del="../.."/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
+            del="../../../.."/>
+
+
+          <action type="add" btnLabel="sextant-add-scale" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1">
+            <template>
+              <snippet>
+                <gmd:spatialResolution>
+                  <gmd:MD_Resolution>
+                    <gmd:equivalentScale>
+                      <gmd:MD_RepresentativeFraction>
+                        <gmd:denominator>
+                          <gco:Integer/>
+                        </gmd:denominator>
+                      </gmd:MD_RepresentativeFraction>
+                    </gmd:equivalentScale>
+                  </gmd:MD_Resolution>
+                </gmd:spatialResolution>
+              </snippet>
+            </template>
+          </action>
+
+          <action type="add" btnLabel="sextant-add-resolution" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1">
+            <template>
+              <snippet>
+                <gmd:spatialResolution>
+                  <gmd:MD_Resolution>
+                    <gmd:distance>
+                      <gco:Distance uom=""/>
+                    </gmd:distance>
+                  </gmd:MD_Resolution>
+                </gmd:spatialResolution>
+              </snippet>
+            </template>
+          </action>
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties"
+            or="axisDimensionProperties"
+            in="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:cellGeometry"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:transformationParameterAvailability"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:checkPointAvailability"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:pointInPixel"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:geometricObjects"/>
+
+          <text ref="hr"
+                if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
+
+          <action type="process"
+                  btnClass="fa fa-square-o"
+                  process="add-vector-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0"/>
+
+          <action type="process"
+                  btnClass="fa fa-th"
+                  process="add-grid-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0"/>
+
+          <text ref="change-spatial-type-alert"
+                if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:featureTypes"/>
+
+        </section>
 
         <section name="sextantgeoLocationTitle">
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/*"/>
 
+
           <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"
                  or="referenceSystemInfo"
                  in="/gmd:MD_Metadata"/>
+
+
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet label="addCrs4326">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs41001">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / Simple Mercator (EPSG 41001)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3035">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>Lambert Azimuthal Equal Area (EPSG 3035)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs4258">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>ETRS89 (EPSG 4258)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs32662">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / Plate Carree (EPSG 32662)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3395">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG 3395)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrsMYOA">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>MYO Arakawa-C ORCA025 native grid</gco:CharacterString>
+                        </gmd:code>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3411">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3412">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs6404">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>Spherical 3D CS (EPSG 6404)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrsSR-ORG29">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WRF Lambert Conformal Conic (SR-ORG 29)</gco:CharacterString>
+                        </gmd:code>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+
+
+
         </section>
 
         <section name="sextanttempRefTitle">
@@ -2294,12 +2518,15 @@
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
         </section>
       </tab>
+
+
       <tab id="sdn-quality" mode="flat">
         <section name="sextantqualityTitle">
           <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
         </section>
 
       </tab>
+
 
       <tab id="sdn-metadata" mode="flat">
         <section name="sextantmetadataInfoTitle">
