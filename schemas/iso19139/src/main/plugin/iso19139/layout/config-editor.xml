@@ -237,6 +237,7 @@
     <name>gmd:centerPoint</name>
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
+    <name>gmd:axisDimensionProperties</name>
     <name>gmd:identifier</name>
     <name>gmd:topicCategory</name>
   </fieldsWithFieldset>
