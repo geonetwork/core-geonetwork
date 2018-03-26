@@ -196,6 +196,7 @@
             link: {
               pre: function preLink(scope) {
                 scope.searchObj = {
+                  internal: true,
                   params: {}
                 };
                 scope.modelOptions =
@@ -786,6 +787,7 @@
                 scope.map = null;
 
                 scope.searchObj = {
+                  internal: true,
                   params: {
                     sortBy: 'title'
                   }
@@ -1447,6 +1449,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    internal: true,
                     params: {}
                   };
                   scope.modelOptions =
@@ -1612,6 +1615,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    internal: true,
                     any: '',
                     params: {}
                   };
@@ -1703,6 +1707,7 @@
                 pre: function preLink(scope) {
                   scope.ctrl = {};
                   scope.searchObj = {
+                    internal: true,
                     any: '',
                     defaultParams: {
                       any: '',

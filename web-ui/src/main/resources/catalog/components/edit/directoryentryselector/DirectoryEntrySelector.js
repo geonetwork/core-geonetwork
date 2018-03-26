@@ -92,6 +92,7 @@
                 pre: function preLink(scope) {
                   scope.searchObj = {
                     any: '',
+                    internal: true,
                     params: {
                       _isTemplate: 's',
                       any: '',
@@ -333,6 +334,7 @@
              return {
                pre: function preLink(scope) {
                  scope.searchObj = {
+                   internal: true,
                    defaultParams: {
                      _isTemplate: 's',
                      any: '',

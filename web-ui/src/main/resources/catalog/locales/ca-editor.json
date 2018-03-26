@@ -290,6 +290,8 @@
     "uploadFile": "Carregueu un arxiu des del vostre ordinador",
     "uuidAction": "Processat identificador del registre",
     "validate-help": "Comprovar el registre amb les regles de validació estàndard",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Validació",
     "runValidation": "Executar validació",
     "whoCanAccess": "Qui hi té accés",

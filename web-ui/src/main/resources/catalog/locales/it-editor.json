@@ -290,6 +290,8 @@
     "uploadFile": "Upload a file from your computer",
     "uuidAction": "Record identifier processing",
     "validate-help": "Check record against standard validation rules",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Validazione",
     "runValidation": "Run validation check",
     "whoCanAccess": "Who has access",

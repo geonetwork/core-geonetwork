@@ -382,6 +382,7 @@
                      }, {
                        name: 'keyword',
                        displayKey: 'label',
+                       limit: Infinity,
                        source: keywordsAutocompleter.ttAdapter()
                      }).bind('typeahead:selected',
                      $.proxy(function(obj, keyword) {
@@ -402,20 +403,6 @@
                        angular.copy($(this)
                        .tagsinput('items'), scope.selected);
                        getSnippet();
-                     });
-
-                     // When clicking the element trigger input
-                     // to show autocompletion list.
-                     // https://github.com/twitter/typeahead.js/issues/798
-                     field.on('typeahead:opened', function() {
-                       var initial = field.val(),
-                       ev = $.Event('keydown');
-                       ev.keyCode = ev.which = 40;
-                       field.trigger(ev);
-                       if (field.val() != initial) {
-                         field.val('');
-                       }
-                       return true;
                      });
                    });
                  } catch (e) {

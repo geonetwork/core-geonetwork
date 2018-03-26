@@ -83,10 +83,14 @@
     var layer = this.layer,
         map = this.map,
         coordinates = this.coordinates;
-    
-    var uuid = layer.get('MDuuid');
 
-   
+    var uuid;
+    if(layer.get('md')) {
+      uuid = layer.get('md').getUuid();
+    } else if(layer.get('metadataUuid')) {
+      uuid = layer.get('metadataUuid');
+    }
+
     var uri = layer.getSource().getGetFeatureInfoUrl(
         coordinates,
         map.getView().getResolution(),
@@ -129,7 +133,7 @@
 
         this.dictionary = null;
 
-        if(!angular.isUndefined(uuid)) {
+        if(uuid) {
           this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
           .then(function(response) {
             if(response.data['decodeMap']!=null) {

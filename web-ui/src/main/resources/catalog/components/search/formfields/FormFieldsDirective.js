@@ -123,11 +123,22 @@
               }, angular.extend({
                 name: 'datasource',
                 displayKey: 'name',
-                source: engine.ttAdapter()
+                limit: Infinity,
+                source: (data?allOrSearchFn:engine.ttAdapter())
               }, config)).on('typeahead:selected', function(event, datum) {
                 field.typeahead('val', '');
                 $(element).tagsinput('add', datum);
               });
+
+              function allOrSearchFn(q, sync) {
+                if (q === '') {
+                  sync(engine.all());
+                  // This is the only change needed to get 'ALL'
+                  // items as the defaults
+                } else {
+                  engine.search(q, sync);
+                }
+              }
 
               /** Binds input content to model values */
               var stringValues = [];
