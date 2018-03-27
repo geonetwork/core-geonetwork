@@ -26,6 +26,47 @@
   </xsl:template>
 
 
+  <xsl:variable name="isAGrid"
+                select="count(//gmd:spatialRepresentationInfo/gmd:MD_Georectified) > 0"/>
+
+  <xsl:template match="gmd:MD_DataIdentification">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates select="gmd:citation"/>
+      <xsl:apply-templates select="gmd:abstract"/>
+      <xsl:apply-templates select="gmd:purpose"/>
+      <xsl:apply-templates select="gmd:credit"/>
+      <xsl:apply-templates select="gmd:status"/>
+      <xsl:apply-templates select="gmd:pointOfContact"/>
+      <xsl:apply-templates select="gmd:resourceMaintenance"/>
+      <xsl:apply-templates select="gmd:graphicOverview"/>
+      <xsl:apply-templates select="gmd:resourceFormat"/>
+      <xsl:apply-templates select="gmd:descriptiveKeywords"/>
+      <xsl:apply-templates select="gmd:resourceSpecificUsage"/>
+      <xsl:apply-templates select="gmd:resourceConstraints"/>
+      <xsl:apply-templates select="gmd:aggregationInfo"/>
+
+
+      <xsl:if test="$isAGrid and count(gmd:spatialRepresentationType) = 0">
+        <gmd:spatialRepresentationType>
+          <gmd:MD_SpatialRepresentationTypeCode
+            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
+            codeListValue="grid"/>
+        </gmd:spatialRepresentationType>
+      </xsl:if>
+
+      <xsl:apply-templates select="gmd:spatialResolution"/>
+      <xsl:apply-templates select="gmd:language"/>
+      <xsl:apply-templates select="gmd:characterSet"/>
+      <xsl:apply-templates select="gmd:topicCategory"/>
+      <xsl:apply-templates select="gmd:environmentDescription"/>
+      <xsl:apply-templates select="gmd:extent"/>
+      <xsl:apply-templates select="gmd:supplementalInformation"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+
   <!-- Add an empty sextant theme block if not set already
   after the last keyword block. -->
   <xsl:variable name="hasSextantTheme"

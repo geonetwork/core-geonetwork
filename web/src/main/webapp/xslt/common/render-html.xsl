@@ -68,7 +68,7 @@
       </head>
 
       <body>
-        <div class="gn-full">
+        <div class="gn gn-full">
           <xsl:if test="$header">
             <xsl:call-template name="header"/>
           </xsl:if>
