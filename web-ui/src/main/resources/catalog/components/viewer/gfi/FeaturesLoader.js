@@ -287,9 +287,9 @@
 
   /**
    * Substitutes predefined filter value in urls.
-   * http://www.emso-fr.org?${filtre_param_liste}${filtre_param_group_liste} is
+   * http://www.emso-fr.org?myfilter=${filtre_param_liste}&group=${filtre_param_group_liste} is
    * transformed into
-   * http://www.emso-fr.org?param_liste=Escherichia&param_group_liste=Microbio
+   * http://www.emso-fr.org?myfilter=Escherichia&group=Microbio
    * if those value are set in wfsFilter facets search.
    *
    * @param {string} url
