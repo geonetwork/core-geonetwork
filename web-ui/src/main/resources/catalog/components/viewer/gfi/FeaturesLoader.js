@@ -263,30 +263,27 @@
     var indexFilters = this.indexObject.getState();
 
     var URL_SUBSTITUTE_PREFIX = 'filtre_';
-    var regex = /\$\{(\w+)\}/g;
-    var placeholders = [];
-    var urlFilters = [];
-    var paramsToAdd = {};
-    var match;
+    var regex = /\$\{(\w+)\}/;
+    var match = regex.exec(url);
 
-    while (match = regex.exec(url)) {
-      placeholders.push(match[0]);
-      urlFilters.push(match[1].substring(
-          URL_SUBSTITUTE_PREFIX.length, match[1].length));
-    }
+    while (match && match.length) {
+      var placeholder = match[0];
+      var urlFilter = match[1].substring(
+        URL_SUBSTITUTE_PREFIX.length, match[1].length);
 
-    urlFilters.forEach(function(p, i) {
-      var name = p;
-      var idxName = this.indexObject.getIdxNameObj_(name).idxName;
+      var idxName = this.indexObject.getIdxNameObj_(urlFilter).idxName;
       var fValue = indexFilters.qParams[idxName];
-      url = url.replace(placeholders[i], '');
 
       if (fValue) {
-        paramsToAdd[name] = Object.keys(fValue.values)[0];
+        url = url.replace(placeholder,
+          encodeURIComponent(Object.keys(fValue.values)[0]));
+      } else {
+        url = url.replace(placeholder, '');
       }
-    }.bind(this));
+      match = regex.exec(url);
+    }
+    return url;
 
-    return this.urlUtils.append(url, this.urlUtils.toKeyValue(paramsToAdd));
   };
 
   geonetwork.GnFeaturesINDEXLoader.prototype.getBsTableConfig = function() {
