@@ -150,26 +150,6 @@
         angular.extend(mapsConfig, sxtSettings.olView);
       }
 
-      var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
-      var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
-
-      searchMap.get('creationPromise').then(function() {
-        searchMap.getView().setZoom(0);
-        searchMap.getView().setCenter([280274.03240585705, 6053178.654789996]);
-      });
-
-      viewerMap.get('creationPromise').then(function() {
-        //Fix change view contraints
-        //TODO: Wait for fix in ol3: https://github.com/openlayers/ol3/issues/4265
-        if(mapsConfig.extent) {
-          var view = viewerMap.getView();
-          view.on('change:center', function(e) {
-            if(!ol.extent.containsCoordinate(mapsConfig.extent, view.getCenter())) {
-              view.setCenter(view.constrainCenter(view.getCenter()));
-            }
-          });
-        }
-      });
 
       /** Main tabs configuration */
       searchSettings.mainTabs = {
@@ -287,12 +267,6 @@
         tree: true,
         label: {eng: 'Sextant', fre: 'Sextant'}
       }];
-
-      // Set custom config in gnSearchSettings
-      angular.extend(searchSettings, {
-        viewerMap: viewerMap,
-        searchMap: searchMap
-      });
 
       gnPanierSettings.projs = [{
         value: '4326',
@@ -417,15 +391,6 @@
         if(sxtSettings.servicesUrl) {
           viewerSettings.servicesUrl = sxtSettings.servicesUrl;
         }
-        if(angular.isDefined(sxtSettings.localisations)) {
-          viewerSettings.localisations = sxtSettings.localisations;
-          if(angular.isArray(viewerSettings.localisations)){
-            viewerSettings.localisations.forEach(function(loc) {
-              loc.extent = ol.proj.transformExtent(loc.extent,
-                'EPSG:4326', viewerMap.getView().getProjection());
-            });
-          }
-        }
         if(sxtSettings.layerFilter)  {
           viewerSettings.layerFilter = sxtSettings.layerFilter;
         }
@@ -513,6 +478,45 @@
         angular.extend(searchSettings.filters, {
           _groupPublished: searchSettings.configWhat.replace(/,/g, ' or ')
         })
+      }
+
+      var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+      var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+
+      searchMap.get('creationPromise').then(function() {
+        searchMap.getView().setZoom(0);
+        searchMap.getView().setCenter([280274.03240585705, 6053178.654789996]);
+      });
+
+      viewerMap.get('creationPromise').then(function() {
+        //Fix change view contraints
+        //TODO: Wait for fix in ol3: https://github.com/openlayers/ol3/issues/4265
+        if(mapsConfig.extent) {
+          var view = viewerMap.getView();
+          view.on('change:center', function(e) {
+            if(!ol.extent.containsCoordinate(mapsConfig.extent, view.getCenter())) {
+              view.setCenter(view.constrainCenter(view.getCenter()));
+            }
+          });
+        }
+      });
+
+      // Set custom config in gnSearchSettings
+      angular.extend(searchSettings, {
+        viewerMap: viewerMap,
+        searchMap: searchMap
+      });
+
+      if(typeof sxtSettings != 'undefined') {
+        if(angular.isDefined(sxtSettings.localisations)) {
+          viewerSettings.localisations = sxtSettings.localisations;
+          if(angular.isArray(viewerSettings.localisations)){
+            viewerSettings.localisations.forEach(function(loc) {
+              loc.extent = ol.proj.transformExtent(loc.extent,
+                'EPSG:4326', viewerMap.getView().getProjection());
+            });
+          }
+        }
       }
     }]);
 })();
