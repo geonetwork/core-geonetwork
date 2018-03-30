@@ -37,14 +37,4 @@
     </div>
   </alert.M500>
   <report.M500>Main metadata language is:</report.M500>
-  <alert.M501>
-    <div>
-      Declare the main metadata language only once (see Advanced view / metadata section).
-      <br />
-      <span class="validationReportSuggestion">Suggestions: remove it from the other language
-        section.
-      </span>
-    </div>
-  </alert.M501>
-  <report.M501>No duplicate languages found.</report.M501>
 </strings>
