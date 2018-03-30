@@ -143,8 +143,16 @@
     <property name="allowSessionCreation" value="true"/>
   </bean>
 
-  <bean id="formLoginFilter"
-        class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+  <bean class="org.fao.geonet.web.GeoNetworkHttpSessionRequestCache" id="requestCache">
+    <property name="allowedUrlsPatterns">
+      <set>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/catalog.*</value>
+        <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.console</value>
+      </set>
+    </property>
+  </bean>
+
+  <bean id="formLoginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
     <property name="postOnly" value="true"/>
     <property name="usernameParameter" value="username"/>
     <property name="passwordParameter" value="password"/>
@@ -170,6 +178,7 @@
         class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
         <property name="targetUrlParameter" value="redirectUrl"/>
+        <property name="requestCache" ref="requestCache" />
       </bean>
     </property>
     <property name="sessionAuthenticationStrategy">
@@ -224,6 +233,7 @@
         class="org.springframework.security.web.access.ExceptionTranslationFilter">
     <constructor-arg index="0" ref="authenticationEntryPoint"/>
     <property name="accessDeniedHandler" ref="accessDeniedHandler"/>
+    <property name="requestCache" ref="requestCache" />
   </bean>
 
   <bean id="defaultAuthenticationEntryPoint"
