@@ -50,7 +50,8 @@
         params: {
           sortBy: 'popularity',
           from: 1,
-          to: 9
+          to: 9,
+          _retired: 'false'
         }
       };
     }]);
@@ -64,7 +65,8 @@
         params: {
           sortBy: 'changeDate',
           from: 1,
-          to: 9
+          to: 9,
+          _retired: 'false'
         }
       };
     }]);
@@ -310,7 +312,8 @@
         },
         defaultParams: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          _retired: 'false'
         },
         params: {
           'facet.q': '',

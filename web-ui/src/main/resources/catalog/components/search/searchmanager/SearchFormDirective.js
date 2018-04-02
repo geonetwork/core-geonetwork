@@ -123,9 +123,9 @@
 
       $scope.searching++;
       $scope.searchObj.params = angular.extend({},
-          $scope.searchObj.defaultParams || defaultParams,
-          $scope.searchObj.params,
-          defaultParams);
+          $scope.searchObj.defaultParams,
+          defaultParams,
+          $scope.searchObj.params);
 
       // Set default pagination if not set
       if ((!keepPagination &&

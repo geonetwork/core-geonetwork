@@ -637,7 +637,6 @@ public final class Geonet {
     }
 
     public static class IndexFieldNames {
-
         public static final String HASXLINKS = "_hasxlinks";
         public static final String XLINK = "_xlink";
         public static final String ROOT = "_root";
@@ -663,6 +662,7 @@ public final class Geonet {
         public static final String CAT = "_cat";
         public static final String STATUS = "_status";
         public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
+        public static final String RETIRED = "_retired" ;
         public static final String VALID = "_valid";
         public static final String ID = "_id";
         public static final String ANY = "any";
