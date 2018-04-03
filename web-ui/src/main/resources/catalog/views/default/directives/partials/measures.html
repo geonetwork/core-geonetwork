@@ -26,10 +26,10 @@
             class="{{getClass(q)}}">
           {{q.fu}}
         </td>
-        <td data-ng-show="(isTdp || isUd) && q.dps">
+        <td data-ng-show="isTdp || isUd">
           {{q.dps}}
         </td>
-        <td data-ng-show="isUd && q.tdp">
+        <td data-ng-show="isUd">
           {{q.tdp}}
         </td>
       </tr>

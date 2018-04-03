@@ -101,8 +101,9 @@
                 scope.qm[i][2].indexOf(codePrefix + qmId) !== -1) {
                 return {
                   name: scope.qm[i][3] + ' (' + scope.qm[i][2] + ')',
-                  value: scope.qm[i][5] !== '' ?
-                    Math.round(scope.qm[i][5]*100)/100 + ' ' + scope.qm[i][6] : ''
+                  value: isNumeric(scope.qm[i][5]) ?
+                    Math.round(scope.qm[i][5]*100)/100 + ' ' + scope.qm[i][6] :
+                    scope.qm[i][5]
                 };
               }
             }
@@ -129,7 +130,7 @@
                     if (v.indexOf(tokens[0] + '/' + tokens[1]) === 0 &&
                         v.indexOf(mId) !== -1) {
                       var t = v.split('|');
-                      qm.dps = t[5] != '' ? t[5] + ' ' + t[6] : '';
+                      qm.dps = isNumeric(t[5]) ? t[5] + ' ' + t[6] : t[5];
                       q1.resolve(qm);
                       break;
                     }
@@ -139,7 +140,7 @@
               });
 
               if (scope.isUd) {
-                if (tokens.length === 4) {
+                if (tokens.length >= 3) {
                   var tdpKey = tokens[2];
                   var q2 = $q.defer();
                   $http.get('qi?fast=index&_content_type=json&_uuid=' + tdpKey, {
@@ -152,7 +153,7 @@
                         if (v.indexOf(tokens[0] + '/' + tokens[1] + '/' + tokens[2]) === 0 &&
                             v.indexOf(mId) !== -1) {
                           var t = v.split('|');
-                          qm.tdp = t[5] != '' ? t[5] + ' ' + t[6] : '';
+                          qm.tdp = isNumeric(t[5]) ? t[5] + ' ' + t[6] : t[5];
                           q2.resolve(qm);
                           break;
                         }
@@ -197,7 +198,9 @@
               }
             }
           };
-
+          function isNumeric(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+          };
           function loadValues() {
             scope.isUd = false;
             scope.isTdp = false;
@@ -245,7 +248,7 @@
                         qmName: value[3] + ' (' + value[2] + ')',
                         qmDefinition: value[7],
                         qmStatement: value[8],
-                        qm: value[5] != '' ? Math.round(value[5]*100)/100 + ' ' + value[6] : '',
+                        qm: isNumeric(value[5]) ? Math.round(value[5]*100)/100 + ' ' + value[6] : value[5],
                         qeName: qe.name,
                         qe: qe.value,
                         fuName: fu.name,
