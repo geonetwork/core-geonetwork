@@ -192,17 +192,18 @@ public class MetadataUtils {
                 listOfTypes.contains(RelatedItemType.fcats)) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
                 Element fcat = new Element("fcats");
-                
-                
-                for (String fcat_uuid : listOfUUIDs) {
-                    Element metadata = new Element("metadata");
-                    Element response = new Element("response");
-					Element current = getRecord(fcat_uuid, context, dm);
-					metadata.addContent(current);
-					response.addContent(metadata);
-	                fcat.addContent(response);
-				}
-                
+
+                if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
+                    for (String fcat_uuid : listOfUUIDs) {
+                        Element metadata = new Element("metadata");
+                        Element response = new Element("response");
+                        Element current = getRecord(fcat_uuid, context, dm);
+                        metadata.addContent(current);
+                        response.addContent(metadata);
+                        fcat.addContent(response);
+                    }
+                }
+
                 relatedRecords.addContent(fcat);
             }
         }
