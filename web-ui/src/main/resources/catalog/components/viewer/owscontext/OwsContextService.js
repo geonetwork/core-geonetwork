@@ -190,6 +190,7 @@
           }
           gnViewerSettings.bgLayers.length = 0;
           var bgLayers = gnViewerSettings.bgLayers;
+          bgLayers.fromCtx = true;
           var isFirstBgLayer = false;
           // -------
 
@@ -233,6 +234,7 @@
                 // {type=wmts,name=Ocean_Basemap} or WMS
                 else {
 
+                  // to push in bgLayers not in the map
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
                     label: 'loading',
@@ -246,7 +248,7 @@
                   }
 
                   var layerIndex = bgLayers.push(loadingLayer);
-                  var p = self.createLayer(layer, map, i);
+                  var p = self.createLayer(layer, map, 'do not add');
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
@@ -465,6 +467,8 @@
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = layer.get('urlCap');
+          } else {
+            return;
           }
 
           // fetch current filters state (the whole object will be saved)
