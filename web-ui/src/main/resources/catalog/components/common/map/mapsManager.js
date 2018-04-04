@@ -171,8 +171,10 @@
             // keep backwards compat with these params
             if (gnViewerSettings.owscontext) {
               mapParams.owscontext = gnViewerSettings.owscontext;
+              alert('Url parameters for owscontext is deprecated.\nPlease use catalog.search#/map?owscontext= instead of catalog.search?owscontext=#/map');
             }
             if (gnViewerSettings.wmsurl && gnViewerSettings.layername) {
+              alert('Url parameters for layername is deprecated.\nPlease use catalog.serach#/map?layername= instead of catalog.serach?layername=#/map');
               mapParams.wmsurl = gnViewerSettings.wmsurl;
               mapParams.layername = gnViewerSettings.layername;
               mapParams.layergroup = gnViewerSettings.layergroup;
