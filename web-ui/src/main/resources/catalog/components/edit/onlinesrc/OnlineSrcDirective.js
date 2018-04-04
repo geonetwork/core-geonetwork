@@ -177,9 +177,10 @@
         '$timeout',
         '$http',
         '$filter',
+        '$log',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService,
             gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
-            $rootScope, $translate, $timeout, $http, $filter) {
+            $rootScope, $translate, $timeout, $http, $filter, $log) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -842,7 +843,7 @@
                     // Trigger init of print directive
                     scope.mode = 'thumbnailMaker';
                   }, 300);
-                };
+                }
 
                 scope.generateThumbnail = function() {
                   return $http.put('../api/0.1/records/' +
@@ -909,7 +910,8 @@
                     }
                   }
                   return scope.config.types[0];
-                };
+                }
+
                 gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
                   scope.isEditing = angular.isDefined(linkToEdit);
 
@@ -933,7 +935,7 @@
 
                       for (var p in scope.mdLangs) {
                         var v = scope.mdLangs[p];
-                        if (v.indexOf('#') == 0) {
+                        if (v.indexOf('#') === 0) {
                           var l = v.substr(1);
                           if (!l) {
                             l = scope.mdLang;
@@ -981,7 +983,7 @@
                       keyName = linkToEdit.title[scope.mdLang];
                       keyUrl = linkToEdit.url[scope.mdLang];
                       if (!keyName || ! keyUrl) {
-                        console.warn(
+                        $log.warn(
                             'Failed to compute key for updating the resource.');
                       }
                     }
@@ -1026,14 +1028,14 @@
                       function: linkToEdit.function,
                       selectedLayers: []
                       };
-                      } else{
+                      } else {
                       scope.editingKey= null;
                       scope.params.linkType= scope.config.types[0];
                       scope.params.protocol= null;
                       scope.params.name= '';
                       scope.params.desc= '';
                       initMultilingualFields();
-                    };
+                    }
                   });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
@@ -1180,7 +1182,7 @@
                   }
                   if (scope.OGCProtocol) {
                     scope.layers = [];
-                    if (scope.OGCProtocol == 'WMS') {
+                    if (scope.OGCProtocol === 'WMS') {
                       return gnOwsCapabilities.getWMSCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
@@ -1193,7 +1195,7 @@
                           }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
-                    } else if (scope.OGCProtocol == 'WFS') {
+                    } else if (scope.OGCProtocol === 'WFS') {
                       return gnWfsService.getCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
@@ -1238,7 +1240,7 @@
                   else {
                     return null;
                   }
-                };
+                }
 
                 /**
                  * On protocol combo Change.
@@ -1246,7 +1248,7 @@
                  * layer grid and call or not a getCapabilities.
                  */
                 scope.$watch('params.protocol', function(n, o) {
-                  if (!angular.isUndefined(scope.params.protocol) && o != n) {
+                  if (!angular.isUndefined(scope.params.protocol) && o !== n) {
                     resetProtocol();
                     scope.OGCProtocol = checkIsOgc(scope.params.protocol);
                     if (scope.OGCProtocol != null && !scope.isEditing) {
@@ -1285,7 +1287,7 @@
                  * them to the record.
                  */
                 scope.$watchCollection('params.selectedLayers', function(n, o) {
-                  if (o != n &&
+                  if (o !== n &&
                       scope.params.selectedLayers &&
                       scope.params.selectedLayers.length > 0) {
                     var names = [],
@@ -1375,12 +1377,12 @@
                     function(n, o) {
                       if (!angular.isUndefined(scope.stateObj.selectRecords) &&
                           scope.stateObj.selectRecords.length > 0 &&
-                          n != o) {
+                          n !== o) {
                         scope.metadataLinks = [];
                         scope.metadataTitle = '';
                         var md = new Metadata(scope.stateObj.selectRecords[0]);
                         var links = md.getLinksByType();
-                        if (angular.isArray(links) && links.length == 1) {
+                        if (angular.isArray(links) && links.length === 1) {
                           scope.params.url = links[0].url;
                         } else {
                           scope.metadataLinks = links;
@@ -1473,7 +1475,7 @@
                           gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
                       links = links.concat(
                           gnCurrentEdit.metadata.getLinksByType('wms'));
-                      if (angular.isArray(links) && links.length == 1) {
+                      if (angular.isArray(links) && links.length === 1) {
                         var serviceUrl = links[0].url;
                         scope.loadCurrentLink(serviceUrl);
                         scope.srcParams.url = serviceUrl;
@@ -1526,7 +1528,7 @@
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
                       scope.currentMdTitle = md.title || md.defaultTitle;
-                      if (scope.mode == 'service') {
+                      if (scope.mode === 'service') {
                         var links = [];
                         scope.layers = [];
                         scope.srcParams.selectedLayers = [];
@@ -1534,9 +1536,15 @@
                         links = links.concat(md.getLinksByType('OGC:WMS'));
                         links = links.concat(md.getLinksByType('wms'));
                         scope.srcParams.uuidSrv = md.getUuid();
+                        scope.srcParams.identifier =
+                          (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
+                            gnCurrentEdit.metadata.identifier[0] : '';
                         scope.srcParams.uuidDS = gnCurrentEdit.uuid;
+                        //the uuid of the source catalog (harvester)
+                        scope.srcParams.source = gnCurrentEdit.metadata.source;
 
-                        if (angular.isArray(links) && links.length == 1) {
+
+                        if (angular.isArray(links) && links.length === 1) {
                           scope.loadCurrentLink(links[0].url);
                           scope.srcParams.url = links[0].url;
                         } else {
@@ -1544,9 +1552,12 @@
                           scope.alertMsg = $translate.instant(
                               'linkToServiceWithoutURLError');
                         }
-                      }
-                      else {
+                      } else {
+                        // dataset
+                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                         scope.srcParams.uuidDS = md.getUuid();
+                        scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
+                        scope.srcParams.source = md.source;
                       }
                     }
                   });
@@ -1558,7 +1569,7 @@
                    * Hide modal on success.
                    */
                   scope.linkTo = function() {
-                    if (scope.mode == 'service') {
+                    if (scope.mode === 'service') {
                       return gnOnlinesrc.
                           linkToService(scope.srcParams, scope.popupid);
                     } else {
@@ -1631,7 +1642,7 @@
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
                     var searchParams = {};
-                    if (scope.mode == 'fcats') {
+                    if (scope.mode === 'fcats') {
                       searchParams = {
                         _schema: 'iso19110'
                       };
@@ -1639,7 +1650,7 @@
                         label: $translate.instant('linkToFeatureCatalog')
                       };
                     }
-                    else if (scope.mode == 'parent') {
+                    else if (scope.mode === 'parent') {
                       searchParams = {
                         hitsPerPage: 10
                       };
@@ -1647,7 +1658,7 @@
                         label: $translate.instant('linkToParent')
                       };
                     }
-                    else if (scope.mode == 'source') {
+                    else if (scope.mode === 'source') {
                       searchParams = {
                         hitsPerPage: 10
                       };
@@ -1779,7 +1790,7 @@
                    */
                   var findObj = function(md) {
                     for (i = 0; i < scope.selection.length; ++i) {
-                      if (scope.selection[i].md == md) {
+                      if (scope.selection[i].md === md) {
                         return i;
                       }
                     }

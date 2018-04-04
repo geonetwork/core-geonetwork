@@ -366,6 +366,7 @@
             scopedName: qParams.name,
             uuidref: qParams.uuidDS,
             uuid: qParams.uuidSrv,
+            source: qParams.identifier || '',
             process: qParams.process
           }).then(function() {
             var qParams = setParams('service-add', params);
@@ -374,6 +375,7 @@
               uuidref: qParams.uuidSrv,
               uuid: qParams.uuidDS,
               url: qParams.url,
+              source: qParams.identifier || '',
               protocol: qParams.protocol,
               process: qParams.process
             }).then(function() {
@@ -415,6 +417,7 @@
               scopedName: qParams.name,
               uuidref: qParams.uuidDS,
               uuid: qParams.uuidSrv,
+              source: qParams.identifier || '',
               process: qParams.process
             }).then(function() {
               closePopup(popupid);
@@ -428,6 +431,7 @@
               url: qParams.url,
               uuidref: qParams.uuidSrv,
               uuid: qParams.uuidDS,
+              source: qParams.source,
               protocol: qParams.protocol,
               process: qParams.process
             }).then(addDatasetToServiceFn, function(error) {
