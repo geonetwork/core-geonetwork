@@ -263,24 +263,34 @@
     var indexFilters = this.indexObject.getState();
 
     var URL_SUBSTITUTE_PREFIX = 'filtre_';
-    var regex = /\$\{(\w+)\}/;
+    var regex = /\$\{([a-zA-Z_.-]*)\}/;
     var match = regex.exec(url);
 
     while (match && match.length) {
-      var placeholder = match[0];
-      var urlFilter = match[1].substring(
-        URL_SUBSTITUTE_PREFIX.length, match[1].length);
+      try {
+        var placeholder = match[0];
+        var urlFilter = match[1].substring(
+          URL_SUBSTITUTE_PREFIX.length, match[1].length);
 
-      var idxName = this.indexObject.getIdxNameObj_(urlFilter).idxName;
-      var fValue = indexFilters.qParams[idxName];
+        var parseValue = (urlFilter.indexOf('.') > 0);
+        var filterName = urlFilter.split('.')[0];
+        var idxName = parseValue ? filterName : this.indexObject.getIdxNameObj_(filterName).idxName;
+        var fValue = indexFilters.qParams[idxName];
 
-      if (fValue) {
-        url = url.replace(placeholder,
-          encodeURIComponent(Object.keys(fValue.values)[0]));
-      } else {
-        url = url.replace(placeholder, '');
+        if (fValue) {
+          fValue = parseValue ? fValue.values[urlFilter.split('.')[1]] :
+            Object.keys(fValue.values)[0];
+          url = url.replace(placeholder,
+            encodeURIComponent(fValue));
+        } else {
+          url = url.replace(placeholder, '');
+        }
+        match = regex.exec(url);
       }
-      match = regex.exec(url);
+      catch (e) {
+        match = null;
+        console.warn('[sxt] Error while processing wfs url datas', filterName);
+      }
     }
     return url;
 
