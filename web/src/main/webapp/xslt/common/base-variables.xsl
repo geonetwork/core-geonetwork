@@ -127,6 +127,12 @@
   <xsl:variable name="isRecaptchaEnabled"
                 select="$env/system/userSelfRegistration/recaptcha/enable = 'true'" />
 
+  <!--Sextant specific-->
+  <xsl:variable name="owsContext" select="/root/request/owscontext"/>
+  <xsl:variable name="wmsUrl" select="/root/request/wmsurl"/>
+  <xsl:variable name="layerName" select="/root/request/layername"/>
+  <xsl:variable name="layerGroup" select="/root/request/layergroup"/>
+
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"
                 select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>

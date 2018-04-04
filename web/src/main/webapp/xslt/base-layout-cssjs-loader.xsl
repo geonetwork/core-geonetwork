@@ -200,9 +200,19 @@
     <xsl:if test="$angularApp = 'gn_search'">
       <script type="text/javascript">
         var module = angular.module('gn_search');
-        module.config(['gnGlobalSettings',
-        function(gnGlobalSettings) {
-        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        module.config(['gnGlobalSettings', 'gnViewerSettings',
+        function(gnGlobalSettings, gnViewerSettings) {
+
+          <xsl:if test="$owsContext">
+            gnViewerSettings.owscontext = '<xsl:value-of select="$owsContext"/>';
+          </xsl:if>
+          <xsl:if test="$wmsUrl and $layerName">
+            gnViewerSettings.wmsurl = '<xsl:value-of select="$wmsUrl"/>';
+            gnViewerSettings.layername = '<xsl:value-of select="$layerName"/>';
+            gnViewerSettings.layergroup = '<xsl:value-of select="$layerGroup"/>';
+          </xsl:if>
+
+          gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
         }]);
       </script>
     </xsl:if>

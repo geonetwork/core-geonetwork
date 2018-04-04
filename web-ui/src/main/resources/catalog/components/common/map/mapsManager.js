@@ -167,6 +167,18 @@
           var urlContext;
           if (type == this.VIEWER_MAP) {
 
+            // SPECIFIC SEXTANT
+            // keep backwards compat with these params
+            if (gnViewerSettings.owscontext) {
+              mapParams.owscontext = gnViewerSettings.owscontext;
+            }
+            if (gnViewerSettings.wmsurl && gnViewerSettings.layername) {
+              mapParams.wmsurl = gnViewerSettings.wmsurl;
+              mapParams.layername = gnViewerSettings.layername;
+              mapParams.layergroup = gnViewerSettings.layergroup;
+            }
+            // end specific sextant
+
             $rootScope.$on('$locationChangeSuccess', function() {
               if(gnSearchLocation.isMap()) {
                 var params = $location.search();
@@ -235,14 +247,6 @@
               });
             }
             if(type == this.VIEWER_MAP) {
-
-              // SPECIFIC SEXTANT
-              // keep backwards compat with these params
-              if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-                mapParams.wmsurl = gnViewerSettings.wmsurl;
-                mapParams.layerName = gnViewerSettings.layerName
-              }
-              // end specific sextant
 
               if (mapParams.wmsurl && mapParams.layername) {
                 gnMap.addWmsFromScratch(map, mapParams.wmsurl,
