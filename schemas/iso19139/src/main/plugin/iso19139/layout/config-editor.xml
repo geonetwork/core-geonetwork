@@ -2544,6 +2544,20 @@
 
       <tab id="sdn-spatial" mode="flat">
         <section name="sdnSpatialRepresentationType">
+          <!-- TODO: layout on one line ? -->
+          <action type="process"
+                  btnClass="fa fa-square-o"
+                  process="add-vector-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0"/>
+
+          <action type="process"
+                  btnClass="fa fa-th"
+                  process="add-grid-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0"/>
+
+          <text ref="change-spatial-type-alert"
+                if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
+
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"
@@ -2606,21 +2620,6 @@
 
           <text ref="hr"
                 if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
-
-          <action type="process"
-                  btnClass="fa fa-square-o"
-                  process="add-vector-info"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0"/>
-
-          <action type="process"
-                  btnClass="fa fa-th"
-                  process="add-grid-info"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0"/>
-
-          <text ref="change-spatial-type-alert"
-                if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
-
-          <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:featureTypes"/>
 
         </section>
 

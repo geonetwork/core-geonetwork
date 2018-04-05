@@ -330,10 +330,15 @@
             newscope.fragment =
               $compile(angular.element(response.data))(newscope);
 
-            var el = document.createElement('div');
-            el.setAttribute('gn-metadata-display', '');
-            $(selector).append(el);
-            $compile(el)(newscope);
+            // When using formatter display, do not use modal like in the main UI
+            if (selector === '.formatter-container') {
+              $(selector).append(newscope.fragment);
+            } else {
+              var el = document.createElement('div');
+              el.setAttribute('gn-metadata-display', '');
+              $(selector).append(el);
+              $compile(el)(newscope);
+            }
           }, function() {
             $rootScope.$broadcast('mdLoadingEnd');
             gnAlertService.addAlert({

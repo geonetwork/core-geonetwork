@@ -181,6 +181,9 @@
                 priority="2"/>
 
 
+  <!-- Remove content info section -->
+  <xsl:template match="gmd:contentInfo"/>
+
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
     <xsl:copy>

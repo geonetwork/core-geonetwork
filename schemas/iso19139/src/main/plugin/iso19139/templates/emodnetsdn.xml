@@ -369,22 +369,6 @@
       </gmd:extent>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
-  <gmd:contentInfo>
-    <gmd:MD_FeatureCatalogueDescription>
-      <gmd:includedWithDataset>
-        <gco:Boolean>false</gco:Boolean>
-      </gmd:includedWithDataset>
-      <gmd:featureTypes>
-        <!-- MANDATORY: type of the feature in the dataset                              -->
-        <!-- http://vocab.nerc.ac.uk/collection/L02/current/                    -->
-        <!-- (Grid series always except if only one time step in dataset, then Grid     -->
-        <!-- Issued from controlled vocabulary -->
-        <gco:LocalName>gridSeries</gco:LocalName>
-      </gmd:featureTypes>
-      <gmd:featureCatalogueCitation/>
-    </gmd:MD_FeatureCatalogueDescription>
-  </gmd:contentInfo>
-
   <gmd:distributionInfo xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:date="http://exslt.org/dates-and-times" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <gmd:MD_Distribution>
       <!-- DOI part -->
