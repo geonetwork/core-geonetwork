@@ -1201,11 +1201,10 @@
                             scope.layers = [];
                             scope.isUrlOk = true;
                             angular.forEach(capabilities.Layer, function(l) {
-                              console.log(l);
                               if (angular.isDefined(l.Identifier)) {
                                 scope.layers.push({
-                                    "Name":l.Identifier,
-                                    "Title":l.Title
+                                    "Name": l.Identifier,
+                                    "Title": l.Title
                                   });
                               }
                             });
@@ -1232,11 +1231,7 @@
                             scope.isUrlOk = error === 200;
                           });
                     }
-                    } else if (scope.OGCProtocol === 'WCS') {
-                      console.warn("WCS not implemented");
-                    } else if (scope.OGCProtocol === 'SOS') {
-                      console.warn("SOS not implemented");
-                    } else if (url.indexOf('http') === 0) {
+                  } else if (url.indexOf('http') === 0) {
                     return $http.get(url, {
                       gnNoProxy: false
                     }).then(function(response) {
@@ -1255,11 +1250,11 @@
                   if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
                     return 'WMS';
                   }
-                  else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
-                    return 'WMTS';
-                  }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
                     return 'WFS';
+                  }
+                  else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
+                    return 'WMTS';
                   }
                   else {
                     return null;
