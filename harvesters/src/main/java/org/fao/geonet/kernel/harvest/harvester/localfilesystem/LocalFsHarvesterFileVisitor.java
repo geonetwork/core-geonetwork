@@ -128,13 +128,12 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 Path filePath = file.toAbsolutePath().normalize();
                 if(MEFLib.isValidArchiveExtensionForMEF(file.getFileName().toString())) {
                     log.debug("reading file: " + filePath);
-                    SettingManager settingManager = context.getBean(SettingManager.class);
                     try {
                         MEFLib.Version version = MEFLib.getMEFVersion(file);
                         List<String> ids = MEFLib.doImport(
                                 version == MEFLib.Version.V1 ? "mef" : "mef2",
                                 null, "_none_",
-                                settingManager.getSiteId(),
+                                params.getUuid(),
                                 MetadataType.lookup(params.recordType),
                                 Iterables.toArray(params.getCategories(), String.class),
                                 params.getOwnerIdGroup(),
