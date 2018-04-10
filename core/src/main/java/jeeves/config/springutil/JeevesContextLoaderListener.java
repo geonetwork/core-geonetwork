@@ -23,27 +23,33 @@
 
 package jeeves.config.springutil;
 
-import com.google.common.io.Files;
+import java.io.File;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import jeeves.server.JeevesEngine;
-import jeeves.server.overrides.ConfigurationOverrides;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.utils.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.io.File;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.regex.Pattern;
+import com.google.common.io.Files;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jeeves.server.JeevesEngine;
+import jeeves.server.overrides.ConfigurationOverrides;
 
 /**
  * Initializes the ApplicationContexts for each node.
@@ -65,14 +71,72 @@ public class JeevesContextLoaderListener implements ServletContextListener {
         return ids;
     }
 
+    /**
+     * Returns the node configuration files
+        * @param servletContext
+        * @return
+     */
     private static File[] getNodeConfigurationFiles(ServletContext servletContext) {
 
-        final File nodeConfigDir = new File(servletContext.getRealPath("/WEB-INF/config-node"));
-        final File[] files = nodeConfigDir.listFiles();
-        if (files == null) {
+        // Check if an external node config directory is defined via JNDI
+        String configNodeFolderLocation = null;
+        try {
+            Context ctx = new InitialContext();
+            Context envCtx = (Context)ctx.lookup("java:comp/env");
+            configNodeFolderLocation = (String) envCtx.lookup("configNodeFolderLocation");
+        } catch (NamingException e) {
+            Log.info(Log.ENGINE, "No config folder url defined as JNDI string");
+        }
+
+        File nodeConfigDir = null;
+        if (configNodeFolderLocation == null || configNodeFolderLocation.equals("")) {
+            nodeConfigDir = new File(servletContext.getRealPath("/WEB-INF/config-node"));
+        } else {
+            nodeConfigDir = new File(configNodeFolderLocation);
+        }
+
+        // List Files in the directory (Must not be empty)
+        File[] files = nodeConfigDir.listFiles();
+        if (files == null || files.length==0) {
             throw new IllegalStateException("No node configuration file found in: " + nodeConfigDir);
         }
-        return files;  //To change body of created methods use File | Settings | File Templates.
+
+        // Removes folders from the list of node files
+        List<File> fileAsListToReturn = removeDirectoryFromList(files);
+
+        return fileAsListToReturn.toArray(new File[fileAsListToReturn.size()]);
+    }
+
+    /**
+     *  Removes folders from the list of node files
+        * @param files
+        * @return
+     */
+    private static List<File> removeDirectoryFromList(File[] files) {
+        List<File> fileAsList = Arrays.asList(files);
+        Iterator<File> fileAsIterable = fileAsList.iterator();
+        List<File> fileAsListToReturn = new ArrayList<>();
+
+        while(fileAsIterable.hasNext()) {
+            File f = fileAsIterable.next();
+            if(!f.isDirectory()) {
+                fileAsListToReturn.add(f);
+            }
+        }
+        return fileAsListToReturn;
+    }
+
+    /**
+     *  Removes element from List of Files
+        * @param original
+        * @param element
+        * @return
+     */
+    private static File[] removeElement(File[] original, int element){
+        File[] n = new File[original.length - 1];
+        System.arraycopy(original, 0, n, 0, element );
+        System.arraycopy(original, element+1, n, element, original.length - element-1);
+        return n;
     }
 
     @Override
