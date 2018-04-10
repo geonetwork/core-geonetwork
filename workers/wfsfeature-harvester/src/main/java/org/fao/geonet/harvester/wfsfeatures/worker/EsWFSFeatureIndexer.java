@@ -50,6 +50,7 @@ import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.referencing.CRS;
+import org.geotools.util.logging.Logging;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -77,6 +78,13 @@ import java.util.concurrent.TimeoutException;
 
 public class EsWFSFeatureIndexer {
     private static Logger LOGGER =  LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    static {
+        try {
+            Logging.ALL.setLoggerFactory("org.geotools.util.logging.Log4JLoggerFactory");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     private int featureCommitInterval = 300;
 
