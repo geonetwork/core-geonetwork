@@ -66,6 +66,7 @@
          */
           this.addLayer = function(getCapLayer, style) {
             getCapLayer.version = $scope.capability.version;
+            getCapLayer.capRequest = $scope.capability.Request;
             if ($scope.format == 'wms') {
               var layer =
                   gnMap.addWmsToMapFromCap($scope.map, getCapLayer, style);

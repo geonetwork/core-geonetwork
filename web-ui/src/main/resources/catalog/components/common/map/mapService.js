@@ -89,7 +89,7 @@
           }
           return null;
         };
-        
+
         /**
          * @description
          * Returns a Layer already added to the map.
@@ -923,6 +923,10 @@
                   layer.get('time') || layer.get('style')));
 
               layer.set('errors', errors);
+
+              //add the capabilities info, having available formats
+              layer.set('capRequest', getCapLayer.capRequest||null);
+
               return layer;
             }
 
