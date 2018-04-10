@@ -25,6 +25,7 @@
 <geonet>
   <services package="org.fao.geonet">
     <service name="catalog.search">
+      <class name=".guiservices.search.SearchUI"/>
       <documentation>Home page</documentation>
       <output sheet="../xslt/ui-search/search.xsl">
         <xml name="i18n" file="xml/i18n.xml"/>
