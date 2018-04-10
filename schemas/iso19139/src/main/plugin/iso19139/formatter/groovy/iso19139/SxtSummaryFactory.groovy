@@ -223,6 +223,11 @@ class SxtSummaryFactory {
     def dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
       it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'publication'}
 
+    if(dateElts.size() <= 0) {
+      dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
+              it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'creation'}
+    }
+
     def year = '';
     if(dateElts.size() > 0) {
       def sDate = dateElts[0].'gmd:date'.'gco:Date'.text();
