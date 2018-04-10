@@ -163,7 +163,12 @@
             }
           };
 
+          /**
+           * Used to set tree values in search params after a node click that
+           * triggers the search.
+           */
           scope.$on('beforesearch', function(e) {
+            if(!scope.member) return;
             var nodesSelected = [];
             getNodesSelected(scope.member, nodesSelected);
             scope.searchObj.params[indexKey] = nodesSelected.join(delimiter);
