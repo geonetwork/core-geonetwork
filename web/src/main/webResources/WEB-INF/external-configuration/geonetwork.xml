@@ -13,6 +13,7 @@
   St, Fifth Floor, Boston, MA 02110-1301, USA ~ ~ Contact: Jeroen Ticheler 
   - FAO - Viale delle Terme di Caracalla 2, ~ Rome - Italy. email: geonetwork@osgeo.org -->
 <Context>
+  <!-- External folder location -->
   <Environment name="configNodeFolderLocation"
     value="/.../gn-conf" type="java.lang.String" override="false" />
 

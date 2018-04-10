@@ -1,4 +1,6 @@
-# How to setup
+# How to setup an external database configuration
+
+To setup an external folder check the **geonetwork.xml** file in this folder.
 
 ## geonetwork.xml 
 
@@ -8,12 +10,24 @@ Example file to add to **tomcat/conf/Catalina/localhost** to define a JNDI prope
 
 The external GeoNetwork node configuration folder must contain **ONLY** the node configuration xml files, like srv.xml, the default in single node instances and the one placed in this folder as example.
 
-## srv.xml
+## srv.xml (or another node file)
 
-Inside the node file example must be configured the relative path (relative in relation to this file) to the dataSource.xml
+In this file must be configured the relative path (relative to this file location) to **dataSource.xml**
+
+```
+
+  <!-- The relative path to db configuration file -->
+  <import resource="../db-confs/dataSource.xml"/>
+  
+```
 
 ## dataSource.xml
 
-For common parameters check [/web/src/main/webResources/WEB-INF/config-db/README.md](https://github.com/geonetwork/core-geonetwork/blob/3.4.x/web/src/main/webResources/WEB-INF/config-db/README.md).
+The configuration parameters to setup and configure a database connection.
 
 For database specific configuration uncomment the appropriate section and edit the contents.
+
+Parameters informations is available here [/web/src/main/webResources/WEB-INF/config-db/README.md](https://github.com/geonetwork/core-geonetwork/blob/3.4.x/web/src/main/webResources/WEB-INF/config-db/README.md).
+
+
+
