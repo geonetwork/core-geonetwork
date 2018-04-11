@@ -95,7 +95,10 @@
                 'application/vnd.ogc.gml';
 
     //check if infoFormat is available in getCapabilities
-    if(layer.get('capRequest')) {
+    if(layer.get('capRequest') &&
+      layer.get('capRequest').GetFeatureInfo &&
+      angular.isArray(layer.get('capRequest').GetFeatureInfo.Format) &&
+      layer.get('capRequest').GetFeatureInfo.Format.length > 0) {
       if($.inArray(infoFormat,
           layer.get('capRequest').GetFeatureInfo.Format) == -1) {
         //use a valid format
