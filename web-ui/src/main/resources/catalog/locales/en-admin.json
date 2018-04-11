@@ -298,6 +298,7 @@
     "csw-outputSchemaOptions": "Typical Output Schemas",
     "csw-dublinCore": "Dublin Core",
     "csw-iso19139": "ISO 19139",
+    "csw-recommendedValues": "Recommended values",
     "currentCatalogLogo": "Current catalog logo",
     "customConfiguration": "Custom ...",
     "customizeElementSet": "Customize element set",
