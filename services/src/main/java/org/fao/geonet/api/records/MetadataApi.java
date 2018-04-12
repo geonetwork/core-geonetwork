@@ -178,9 +178,6 @@ public class MetadataApi implements ApplicationContextAware {
             || accept.contains(MEF_V2_ACCEPT_TYPE)) {
             return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
-            // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
-            //response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
-            //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
