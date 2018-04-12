@@ -149,7 +149,7 @@
 
                 $http({
                   method: 'GET',
-                  url: '../api/userfeedback?full=true&uuid=' + scope.metatdataUUID,
+                  url: '../api/userfeedback?uuid=' + scope.metatdataUUID,
                   isArray: true
                 }).then(function mySuccess(response) {
                   scope.fullCommentsList = [];
