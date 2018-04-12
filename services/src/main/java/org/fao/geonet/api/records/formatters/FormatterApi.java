@@ -113,6 +113,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -207,7 +208,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         produces = {
             MediaType.TEXT_HTML_VALUE,
             MediaType.APPLICATION_XHTML_XML_VALUE,
-            "application/pdf"
+            "application/pdf",
+            MediaType.ALL_VALUE
             // TODO: PDF
         })
     @ApiOperation(
@@ -259,6 +261,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         // Force PDF ouutput when URL parameter is set.
         // This is useful when making GET link to PDF which
         // can not use headers.
+        if (MediaType.ALL_VALUE.equals(acceptHeader)) {
+            acceptHeader = MediaType.TEXT_HTML_VALUE;
+        }
         if(formatType == null) {
             formatType = FormatType.find(acceptHeader);
         }
