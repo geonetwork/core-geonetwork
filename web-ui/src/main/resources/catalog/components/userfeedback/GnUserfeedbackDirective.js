@@ -88,7 +88,7 @@
 
                 $http({
                   method: 'GET',
-                  url: '../api/metadata/' + scope.metatdataUUID + '/userfeedbackrating',
+                  url: '../api/records/' + scope.metatdataUUID + '/userfeedbackrating',
                   isArray: false
                 }).then(function mySuccess(response) {
                   scope.rating = null;
@@ -164,7 +164,7 @@
 
                 $http({
                   method: 'GET',
-                  url: '../api/metadata/' + scope.metatdataUUID + '/userfeedbackrating',
+                  url: '../api/records/' + scope.metatdataUUID + '/userfeedbackrating',
                   isArray: false
                 }).then(function mySuccess(response) {
                   scope.rating = response.data;
@@ -259,7 +259,7 @@
 
                 $http({
                   method: 'GET',
-                  url: '../api/metadata/' + scope.metatdataUUID + '/userfeedbackrating',
+                  url: '../api/records/' + scope.metatdataUUID + '/userfeedbackrating',
                   isArray: false
                 }).then(function mySuccess(response) {
                   scope.rating = response.data;

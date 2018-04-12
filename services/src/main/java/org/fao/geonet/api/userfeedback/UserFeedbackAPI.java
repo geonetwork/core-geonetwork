@@ -64,6 +64,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * User Feedback REST API.
@@ -83,9 +84,6 @@ public class UserFeedbackAPI {
      * Delete user feedback.
      *
      * @param uuid the uuid
-     * @param request the request
-     * @param response the response
-     * @param httpSession the http session
      * @return the response entity
      * @throws Exception the exception
      */
@@ -98,7 +96,7 @@ public class UserFeedbackAPI {
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
     @ResponseBody
     public ResponseEntity deleteUserFeedback(@PathVariable(value = "uuid")
-    final String uuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+    final String uuid)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -129,11 +127,11 @@ public class UserFeedbackAPI {
      * @throws Exception the exception
      */
     @ApiOperation(value = "Provides an average rating for a metadata record", nickname = "getMetadataUserComments")
-    @RequestMapping(value = "/metadata/{uuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/records/{uuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public RatingAverage getMetadataRating(@PathVariable(value = "uuid")
-    final String metadataUuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+    final String metadataUuid, @ApiIgnore final HttpServletRequest request, @ApiIgnore final HttpServletResponse response, @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -191,7 +189,10 @@ public class UserFeedbackAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public UserFeedbackDTO getUserComment(@PathVariable(value = "uuid")
-    final String uuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+    final String uuid,
+                                          @ApiIgnore final HttpServletRequest request,
+                                          @ApiIgnore final HttpServletResponse response,
+                                          @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -246,15 +247,15 @@ public class UserFeedbackAPI {
      * @throws Exception the exception
      */
     // GET
-    @ApiOperation(value = "Finds a list of user feedback records. ", 
+    @ApiOperation(value = "Finds a list of user feedback records. ",
             notes = " This list will include also the draft uf if the client is logged as reviewer. "
             + " target={metadata uuid} maxnumber={max result size} "
             , nickname = "getUserComments")
     @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<UserFeedbackDTO> getUserComments(final HttpServletRequest request, final HttpServletResponse response,
-            final HttpSession httpSession) throws Exception {
+    public List<UserFeedbackDTO> getUserComments(@ApiIgnore final HttpServletRequest request, @ApiIgnore final HttpServletResponse response,
+                                                 @ApiIgnore final HttpSession httpSession) throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
@@ -331,7 +332,9 @@ public class UserFeedbackAPI {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity newUserFeedback(@ApiParam(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
-            final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession) throws Exception {
+                                          @ApiIgnore final HttpServletRequest request,
+                                          @ApiIgnore final HttpServletResponse response,
+                                          @ApiIgnore final HttpSession httpSession) throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
@@ -394,7 +397,8 @@ public class UserFeedbackAPI {
             @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
     @ResponseBody
     public ResponseEntity publish(@PathVariable(value = "uuid")
-    final String uuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+    final String uuid,
+                                  @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
