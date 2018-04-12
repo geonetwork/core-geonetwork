@@ -556,6 +556,7 @@
       // date types
       else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {
         if (facetField.type == 'rangeDate') {
+          fNameObj.isDateTime = true;
           var rangebuckets = [];
           for (var p in respAgg.buckets) {
             var b = respAgg.buckets[p];
