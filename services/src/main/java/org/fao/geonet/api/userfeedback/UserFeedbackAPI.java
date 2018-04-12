@@ -96,7 +96,12 @@ public class UserFeedbackAPI {
     @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback removed."),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
     @ResponseBody
-    public ResponseEntity deleteUserFeedback(@PathVariable(value = "uuid")
+    public ResponseEntity deleteUserFeedback(
+        @ApiParam(
+            value = "User feedback UUID.",
+            required = true
+        )
+        @PathVariable(value = "uuid")
     final String uuid)
             throws Exception {
 
@@ -128,11 +133,19 @@ public class UserFeedbackAPI {
      * @throws Exception the exception
      */
     @ApiOperation(value = "Provides an average rating for a metadata record", nickname = "getMetadataUserComments")
-    @RequestMapping(value = "/records/{uuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/records/{metadataUuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public RatingAverage getMetadataRating(@PathVariable(value = "uuid")
-    final String metadataUuid, @ApiIgnore final HttpServletRequest request, @ApiIgnore final HttpServletResponse response, @ApiIgnore final HttpSession httpSession)
+    public RatingAverage getMetadataRating(
+        @ApiParam(
+            value = "Metadata record UUID.",
+            required = true
+        )
+        @PathVariable(value = "metadataUuid")
+        final String metadataUuid,
+        @ApiIgnore final HttpServletRequest request,
+        @ApiIgnore final HttpServletResponse response,
+        @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -189,11 +202,16 @@ public class UserFeedbackAPI {
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public UserFeedbackDTO getUserComment(@PathVariable(value = "uuid")
-    final String uuid,
-                                          @ApiIgnore final HttpServletRequest request,
-                                          @ApiIgnore final HttpServletResponse response,
-                                          @ApiIgnore final HttpSession httpSession)
+    public UserFeedbackDTO getUserComment(
+          @ApiParam(
+              value = "User feedback UUID.",
+              required = true
+          )
+          @PathVariable(value = "uuid")
+          final String uuid,
+          @ApiIgnore final HttpServletRequest request,
+          @ApiIgnore final HttpServletResponse response,
+          @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -239,9 +257,48 @@ public class UserFeedbackAPI {
     }
 
     /**
+     * Gets the user comments for one record.
+     *
+     * @param response the response
+     * @param httpSession the http session
+     * @return the user comments
+     * @throws Exception the exception
+     */
+    // GET
+    @ApiOperation(value = "Finds a list of user feedback for a specific records. ",
+        notes = " This list will include also the draft user feedback if the client is logged as reviewer."
+        , nickname = "getUserCommentsOnARecord")
+    @RequestMapping(
+        value = "/records/{metadataUuid}/userfeedback",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<UserFeedbackDTO> getUserCommentsOnARecord(
+        @ApiParam(
+            value = "Metadata record UUID.",
+            required = true
+        )
+        @PathVariable
+        String metadataUuid,
+        @ApiParam(
+            value = "Maximum number of feedback to return.",
+            required = false
+        )
+        @RequestParam(
+            defaultValue = "-1",
+            required = false
+        )
+        int size,
+        @ApiIgnore final HttpServletResponse response,
+        @ApiIgnore final HttpSession httpSession) throws Exception {
+
+        return getUserFeedback(metadataUuid, size, response, httpSession);
+    }
+
+    /**
      * Gets the user comments.
      *
-     * @param request the request
      * @param response the response
      * @param httpSession the http session
      * @return the user comments
@@ -249,16 +306,44 @@ public class UserFeedbackAPI {
      */
     // GET
     @ApiOperation(value = "Finds a list of user feedback records. ",
-            notes = " This list will include also the draft uf if the client is logged as reviewer. "
-            + " uuid={metadata uuid} maxnumber={max result size} "
+            notes = " This list will include also the draft user feedback if the client is logged as reviewer."
             , nickname = "getUserComments")
-    @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @RequestMapping(
+        value = "/userfeedback",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<UserFeedbackDTO> getUserComments(@ApiIgnore final HttpServletRequest request, @ApiIgnore final HttpServletResponse response,
-                                                 @ApiIgnore final HttpSession httpSession,
-                                                 @RequestParam(required=false) String uuid, @RequestParam(required=false) String maxnumber) throws Exception {
+    public List<UserFeedbackDTO> getUserComments(
+        @ApiParam(
+            value = "Metadata record UUID.",
+            required = false
+        )
+        @RequestParam(
+            defaultValue = "",
+            required = false
+        )
+        String metadataUuid,
+        @ApiParam(
+            value = "Maximum number of feedback to return.",
+            required = false
+        )
+        @RequestParam(
+            defaultValue = "-1",
+            required = false
+        )
+        int size,
+        @ApiIgnore final HttpServletResponse response,
+        @ApiIgnore final HttpSession httpSession) throws Exception {
 
+        return getUserFeedback(metadataUuid, size, response, httpSession);
+    }
+
+    private List<UserFeedbackDTO> getUserFeedback(
+        String metadataUuid,
+        int size,
+        HttpServletResponse response,
+        HttpSession httpSession) {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
@@ -273,12 +358,6 @@ public class UserFeedbackAPI {
 
             final IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
-            int maxsize = -1;
-
-            if (maxnumber != null) {
-                maxsize = Integer.parseInt(maxnumber);
-            }
-
             final UserSession session = ApiUtils.getUserSession(httpSession);
 
             boolean published = true; // Takes only published comments
@@ -291,10 +370,10 @@ public class UserFeedbackAPI {
 
             List<UserFeedback> listUserfeedback = null;
 
-            if (uuid == null || uuid.equals("")) {
-                listUserfeedback = userFeedbackService.retrieveUserFeedback(maxsize, published);
+            if (metadataUuid == null || metadataUuid.equals("")) {
+                listUserfeedback = userFeedbackService.retrieveUserFeedback(size, published);
             } else {
-                listUserfeedback = userFeedbackService.retrieveUserFeedbackForMetadata(uuid, maxsize, published);
+                listUserfeedback = userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, size, published);
             }
 
             return listUserfeedback.stream().map(feedback -> UserFeedbackUtils.convertToDto(feedback)).collect(Collectors.toList());
@@ -319,20 +398,20 @@ public class UserFeedbackAPI {
      * New user feedback.
      *
      * @param userFeedbackDto the user feedback dto
-     * @param request the request
-     * @param response the response
      * @param httpSession the http session
      * @return the response entity
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Creates a userfeedback", notes = "Creates a userfeedback in draft status if the user is not logged in.", nickname = "newUserFeedback")
+    @ApiOperation(
+        value = "Creates a userfeedback",
+        notes = "Creates a user feedback in draft status if the user is not logged in.",
+        nickname = "newUserFeedback")
     @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity newUserFeedback(@ApiParam(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
-                                          @ApiIgnore final HttpServletRequest request,
-                                          @ApiIgnore final HttpServletResponse response,
-                                          @ApiIgnore final HttpSession httpSession) throws Exception {
+    public ResponseEntity newUserFeedback(
+        @ApiParam(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
+        @ApiIgnore final HttpSession httpSession) throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
@@ -380,8 +459,6 @@ public class UserFeedbackAPI {
      * Publish.
      *
      * @param uuid the uuid
-     * @param request the request
-     * @param response the response
      * @param httpSession the http session
      * @return the response entity
      * @throws Exception the exception
@@ -394,9 +471,14 @@ public class UserFeedbackAPI {
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER),
             @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)})
     @ResponseBody
-    public ResponseEntity publish(@PathVariable(value = "uuid")
-    final String uuid,
-                                  @ApiIgnore final HttpSession httpSession)
+    public ResponseEntity publish(
+        @ApiParam(
+            value = "User feedback UUID.",
+            required = true
+        )
+        @PathVariable(value = "uuid")
+        final String uuid,
+        @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -420,7 +502,5 @@ public class UserFeedbackAPI {
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
-
     }
-
 }

@@ -1,7 +1,9 @@
 <div>
   <button class="btn btn-default btn-sm" data-toggle="modal"
-    data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments"
-    data-translate="">GUFseeAllFeedbacks</button>
+    data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments">
+    <i class="fa fa-comment"></i>&nbsp;
+    <span data-translate="">GUFseeAllFeedbacks</span>
+  </button>
 
 
   <!-- All comments modal -->
@@ -40,7 +42,7 @@
                     <span class="fa fa-user"></span>
                   </div>
                   <div class="pull-left gn-userfeedback-comment-user">
-                    <a>{{row.authorName}}</a>
+                    <em>{{row.authorName}}</em>
                     <p>
                       <q>{{row.comment}}</q>
                     </p>
@@ -66,7 +68,7 @@
                 <h3 data-translate="">GUFaddReview</h3>
               </div>
               <textarea class="form-control gn-userfeedback-comment-area">
-                
+
               </textarea>
               <button type="button" class="btn btn-primary" data-translate="">GUFaddRating</button>
             </div>

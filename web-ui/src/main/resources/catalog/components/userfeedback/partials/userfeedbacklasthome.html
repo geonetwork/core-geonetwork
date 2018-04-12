@@ -1,5 +1,4 @@
 <div>
-
   <div data-ng-show="lastCommentsList.length">
     <div class="gn-userfeedback-card"
       data-ng-repeat="row in lastCommentsList">
@@ -18,14 +17,13 @@
           - / - <span class="fa fa-fw fa-star">&nbsp;</span>
         </div>
         <div class="gn-userfeedback-reply">
-          <a>{{row.authorName}}</a><br>on {{row.date | date:'medium'}}
+          <em>{{row.authorName}}</em><br>on {{row.date | date:'medium'}}
         </div>
       </div>
     </div>
   </div>
 
   <div data-ng-hide="lastCommentsList.length" data-translate="">GUFnoComments</div>
-
 
 </div>
 
