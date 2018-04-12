@@ -64,7 +64,7 @@
               // are not targeting the catalog
               // add proxy if needed
               if (config.url.indexOf('http', 0) === 0 &&
-                  config.url.indexOf('srv/api') === -1 && // Exclude API calls
+                  !gnUrlUtils.urlIsSameOrigin(config.url) &&
                   (gnGlobalSettings.gnUrl == '' ||
                   config.url.indexOf(gnGlobalSettings.gnUrl) !== 0)) {
                 var url = config.url.split('/');
