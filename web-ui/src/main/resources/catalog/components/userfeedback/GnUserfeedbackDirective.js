@@ -31,16 +31,16 @@
   goog.require('gn_userfeedback_controller');
 
   var module = angular.module('gn_userfeedback_directive',
-    ['gn_userfeedback_controller']);
+      ['gn_userfeedback_controller']);
 
   module.service('gnUserfeedbackService', [
     '$http',
     function($http) {
 
-      this.isEmptyUuid = function (str) {
+      this.isEmptyUuid = function(str) {
         if (angular.isUndefined(str) ||
-          str == null ||
-          str == '') {
+            str == null ||
+            str == '') {
           return true;
         } else {
           return false;
@@ -52,7 +52,7 @@
         return $http({
           method: 'GET',
           url: '../api/records/' + metatdataUUID +
-          '/userfeedback?size=' + numberOfCommentsDisplayed,
+              '/userfeedback?size=' + numberOfCommentsDisplayed,
           isArray: true
         });
       };
@@ -84,37 +84,8 @@
               scope.fewCommentsList = [];
               scope.loaded = false;
 
-              scope.$watch('parentUuid', function(newValue, oldValue) {
-                if (gnUserfeedbackService.isEmptyUuid(newValue)) {
-                  return;
-                };
-                scope.loaded = false;
-                scope.fewCommentsList = [];
-                gnUserfeedbackService.loadComments(newValue,
-                  scope.nbOfComments || 3).then(
-                    function(response) {
-                      scope.fewCommentsList =
-                        scope.fewCommentsList.concat(response.data);
-                      scope.loaded = true;
-                }, function(response) {
-                  console.log('gnUserfeedback.loadComments ' + metatdataUUID);
-                  console.log(response.statusText);
-                });;
-
-                gnUserfeedbackService.loadRating(newValue).then(
-                  function mySuccess(response) {
-                    scope.rating = null;
-                    scope.rating = response.data;
-                    scope.loaded = true;
-                }, function myError(response) {
-                  console.log('gnUserfeedback.loadComments ' + metatdataUUID);
-                  console.log(response.statusText);
-                });
-
-                scope.showButtonAllComments = true;
-                scope.showModal = false;
-              });
-
+              // Wait for the parentUuid and userName to be available
+              scope.$watch('parentUuid', loadPage);
               scope.$watch('userName', function(newValue, oldValue) {
                 if (newValue) {
                   scope.loggedIn = true;
@@ -124,6 +95,48 @@
                 }
               });
 
+              // Listen to the event reloadCommentList
+              scope.$on('reloadCommentList', refreshList);
+
+              // Functions
+              function refreshList(metadataUuid) {
+                if (metadataUuid) {
+                  metadataUuid = scope.parentUuid;
+                }
+                scope.loaded = false;
+                scope.fewCommentsList = [];
+                gnUserfeedbackService.loadComments(metadataUuid,
+                scope.nbOfComments || 3).then(
+                function(response) {
+                  scope.fewCommentsList =
+                          scope.fewCommentsList.concat(response.data);
+                  scope.loaded = true;
+                }, function(response) {
+                  console.log('gnUserfeedback.loadComments');
+                  console.log(response.statusText);
+                });
+
+                gnUserfeedbackService.loadRating(metadataUuid).then(
+                function mySuccess(response) {
+                  scope.rating = null;
+                  scope.rating = response.data;
+                  scope.loaded = true;
+                }, function myError(response) {
+                  console.log('gnUserfeedback.loadComments');
+                  console.log(response.statusText);
+                });
+
+                scope.showButtonAllComments = true;
+                scope.showModal = false;
+              }
+
+              function loadPage(newValue, oldValue) {
+                if (gnUserfeedbackService.isEmptyUuid(newValue)) {
+                  return;
+                }
+                refreshList(newValue);
+              }
+
             }
 
           };
@@ -131,8 +144,8 @@
 
 
   module.directive(
-      'gnUserfeedbackfull', ['$http', 'gnUserfeedbackService', '$translate',
-        function($http, gnUserfeedbackService, $translate) {
+      'gnUserfeedbackfull', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope',
+        function($http, gnUserfeedbackService, $translate, $rootScope) {
           return {
             restrict: 'AEC',
             replace: true,
@@ -162,32 +175,32 @@
                 scope.rating = null;
 
                 gnUserfeedbackService.loadComments(scope.metatdataUUID,
-                  -1).then(function(response) {
+                -1).then(function(response) {
                   scope.fullCommentsList = response.data;
                 });
                 gnUserfeedbackService.loadRating(scope.metatdataUUID).then(
-                  function(response) {
-                    scope.rating = response.data;
-                  }
-                )
+                function(response) {
+                  scope.rating = response.data;
+                }
+                );
               };
 
               scope.publish = function(id) {
                 if (window.confirm($translate.instant('GUFpublishConfirm'))) {
                   $http.get('../api/userfeedback/' + id + '/publish')
-                    .success(function(data, status) {
-                      scope.initPopup();
-                    });
+                  .success(function(data, status) {
+                    scope.initPopup();
+                    $rootScope.$broadcast('reloadCommentList');
+                  });
                 }
               };
 
               scope.deleteC = function(id) {
                 if (window.confirm($translate.instant('GUFdeleteConfirm'))) {
                   $http.delete('../api/userfeedback/' + id)
-                    .success(function(data) {
-                      scope.initPopup();
-                      // TODO close modal?
-                      // TODO and refresh comment list in record view
+                  .success(function(data) {
+                    scope.initPopup();
+                    $rootScope.$broadcast('reloadCommentList');
                   });
                 }
               };
@@ -197,8 +210,8 @@
         }]);
 
   module.directive(
-      'gnUserfeedbacknew', ['$http', '$window', '$translate',
-        function($http, $window, $translate) {
+      'gnUserfeedbacknew', ['$http', '$window', '$translate', '$rootScope',
+        function($http, $window, $translate, $rootScope) {
           return {
             restrict: 'AEC',
             replace: true,
@@ -224,26 +237,11 @@
                 }
               });
 
-              // When the user wants to stay anonymous the credentials
-              // should be hidden,
-              // and the option to show the username should be hidden
-              scope.toggleCredentials = function() {
-
-                $('.anonymous').each(function(index) {
-                  if ($(this).is(':visible')) {
-                    $(this).hide();
-                  } else {
-                    $(this).show();
-                  }
-                });
-
-              };
-
               scope.initPopup = function() {
 
                 if (angular.isUndefined(scope.metatdataUUID) ||
-                  scope.metatdataUUID == null ||
-                  scope.metatdataUUID == '') {
+                scope.metatdataUUID == null ||
+                scope.metatdataUUID == '') {
                   console.log('Metadata UUID is null');
                   return;
                 }
@@ -333,13 +331,13 @@
 
                   if (!re.test(scope.uf.authorEmail)) {
                     scope.authorEmailError =
-                      $translate.instant('GUFnotValidFormat');
+                    $translate.instant('GUFnotValidFormat');
 
                     return false;
                   }
                   if (scope.uf.authorOrganization.length > 64) {
                     scope.authorOrganizationError =
-                      $translate.instant('GUFtooLong');
+                    $translate.instant('GUFtooLong');
 
                     return false;
                   }
@@ -353,8 +351,9 @@
                 }
 
                 $http.post('../api/userfeedback', data)
-                  .success(function(data, status) {
-                    // TODO close modal and refresh comment list in record view
+                .success(function(data, status) {
+                  $rootScope.$broadcast('reloadCommentList');
+                  angular.element('#gn-userfeedback-addcomment').modal('hide');
                 });
               };
 
