@@ -27,7 +27,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -95,7 +99,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -112,17 +119,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
-
-import javax.print.attribute.standard.Media;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import springfox.documentation.annotations.ApiIgnore;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
@@ -228,8 +224,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             String acceptHeader,
         @PathVariable(
             value = "formatterId"
-        )
-        final String formatterId,
+        ) final String formatterId,
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -237,18 +232,15 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             String metadataUuid,
         @RequestParam(
             value = "width",
-            defaultValue = "_100")
-        final FormatterWidth width,
+            defaultValue = "_100") final FormatterWidth width,
         @RequestParam(
             value = "mdpath",
-            required = false)
-        final String mdPath,
+            required = false) final String mdPath,
         @RequestParam(
             value = "output",
             required = false)
-        FormatType formatType,
-        @ApiIgnore
-        final NativeWebRequest request,
+            FormatType formatType,
+        @ApiIgnore final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -264,7 +256,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (MediaType.ALL_VALUE.equals(acceptHeader)) {
             acceptHeader = MediaType.TEXT_HTML_VALUE;
         }
-        if(formatType == null) {
+        if (formatType == null) {
             formatType = FormatType.find(acceptHeader);
         }
         if (formatType == null) {
