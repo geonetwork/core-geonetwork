@@ -55,6 +55,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -249,13 +250,14 @@ public class UserFeedbackAPI {
     // GET
     @ApiOperation(value = "Finds a list of user feedback records. ",
             notes = " This list will include also the draft uf if the client is logged as reviewer. "
-            + " target={metadata uuid} maxnumber={max result size} "
+            + " uuid={metadata uuid} maxnumber={max result size} "
             , nickname = "getUserComments")
     @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<UserFeedbackDTO> getUserComments(@ApiIgnore final HttpServletRequest request, @ApiIgnore final HttpServletResponse response,
-                                                 @ApiIgnore final HttpSession httpSession) throws Exception {
+                                                 @ApiIgnore final HttpSession httpSession,
+                                                 @RequestParam(required=false) String uuid, @RequestParam(required=false) String maxnumber) throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
@@ -270,10 +272,6 @@ public class UserFeedbackAPI {
             Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComments");
 
             final IUserFeedbackService userFeedbackService = getUserFeedbackService();
-
-            final String uuid = request.getParameter("target");
-
-            final String maxnumber = request.getParameter("maxnumber");
 
             int maxsize = -1;
 

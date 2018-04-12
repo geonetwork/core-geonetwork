@@ -67,13 +67,12 @@
                 scope.metatdataUUID = id;
 
                 if (angular.isUndefined(scope.metatdataUUID) || scope.metatdataUUID == null || scope.metatdataUUID == '') {
-                  console.log('Metadata UUID is null!');
                   return;
                 }
 
                 $http({
                   method: 'GET',
-                  url: '../api/userfeedback?target=' + scope.metatdataUUID + '&maxnumber=3',
+                  url: '../api/userfeedback?uuid=' + scope.metatdataUUID + '&maxnumber=3',
                   isArray: true
                 }).then(function mySuccess(response) {
                   scope.fewCommentsList = [];
@@ -144,13 +143,13 @@
                 scope.rating = null;
 
                 if (angular.isUndefined(scope.metatdataUUID) || scope.metatdataUUID == null || scope.metatdataUUID == '') {
-                  console.log('Metadata UUID is null!');
+                  console.log('Metadata UUID is null');
                   return;
                 }
 
                 $http({
                   method: 'GET',
-                  url: '../api/userfeedback?full=true&target=' + scope.metatdataUUID,
+                  url: '../api/userfeedback?full=true&uuid=' + scope.metatdataUUID,
                   isArray: true
                 }).then(function mySuccess(response) {
                   scope.fullCommentsList = [];
@@ -253,7 +252,7 @@
               scope.initPopup = function() {
 
                 if (angular.isUndefined(scope.metatdataUUID) || scope.metatdataUUID == null || scope.metatdataUUID == '') {
-                  console.log('Metadata UUID is null!');
+                  console.log('Metadata UUID is null');
                   return;
                 }
 
