@@ -35,66 +35,48 @@
   module.value('gfiTemplateURL', gfiTemplateURL);
 
   module.directive('gnVectorFeatureToolTip',
-      ['ngeoDebounce', function(ngeoDebounce) {
+      ['ngeoDebounce', 'gnGlobalSettings', 'gfiTemplateURL',
+      function(ngeoDebounce, gnGlobalSettings, gfiTemplateURL) {
         return {
           restrict: 'A',
           scope: {
             map: '=gnVectorFeatureToolTip'
           },
+          templateUrl: gfiTemplateURL,
           link: function(scope, element, attrs) {
-            $('body').append('<div id="feature-info" data-content=""' +
-             'style="position: absolute; z-index: 100;"/>');
-            var info = $('#feature-info');
-            info.popover({
-              animation: false,
-              trigger: 'manual',
-              placement: 'top',
-              html: true,
-              title: 'Feature info'
+
+            var map = scope.map;
+            var mapElement = $(map.getTarget());
+
+            scope.features = [];
+            
+            var overlay = new ol.Overlay({
+              positioning: 'center-center',
+              position: undefined,
+              element: $('<span class="marker">+</span>')[0]
             });
+            map.addOverlay(overlay);
 
-            var displayFeatureInfo = function(pixel) {
-              var mapTop = scope.map.getTarget().getBoundingClientRect().top;
-              info.css({
-                left: pixel[0] + 'px',
-                top: (pixel[1] + mapTop) + 'px'
-              });
-
-              var feature = scope.map.forEachFeatureAtPixel(pixel,
-               function(feature, layer) {
-                 if (layer && layer.get('featureTooltip')) {
-                   return feature;
-                 }
-               }, undefined, function(layer) {
-                return layer instanceof ol.layer.Vector;
-
-              });
-              if (feature) {
-                var props = feature.getProperties();
-                var tooltipContent = '<ul>';
-                $.each(props, function(key, values) {
-                  if (typeof values !== 'object') {
-                    tooltipContent += '<li>' + key + ': ' + values + '</li>';
-                  }
-                });
-                tooltipContent += '</ul>';
-                info.popover('hide');
-                info.data('bs.popover').options.content = tooltipContent;
-                info.popover('show');
-              } else {
-                info.popover('hide');
-              }
+            scope.close = function() {
+              overlay.setPosition(undefined);
             };
 
-            scope.map.on('pointermove', ngeoDebounce(function(evt) {
-              if (evt.dragging) {
-                //info.hide();
-                info.popover('hide');
-                return;
+            map.on('singleclick', function(e) {
+              for (var i = 0; i < map.getInteractions().getArray().length; i++) {
+                var interaction = map.getInteractions().getArray()[i];
+                if ((interaction instanceof ol.interaction.Draw ||
+                    interaction instanceof ol.interaction.Select) &&
+                    interaction.getActive()) {
+                  return;
+                }
               }
-
-              displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
-            }, 500));
+              overlay.setPosition(e.pixel);
+            
+              scope.map.forEachFeatureAtPixel(e.pixel,
+                function(feature, layer) {
+                  scope.features.push(feature);
+              });
+            });
           }
         };
       }]);
@@ -148,6 +130,12 @@
         }).reverse();
 
         coordinates = e.coordinate;
+        
+        map.forEachFeatureAtPixel(e.pixel,
+          function(feature, layer) {
+            layers.push(layer)
+        });
+        
         this.registerTables(layers, e.coordinate);
 
       }.bind(this));
