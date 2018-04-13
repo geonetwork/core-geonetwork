@@ -103,7 +103,7 @@
           (<xsl:value-of select="$labelMeasureType/label"/>)
         </xsl:if>
       </label>
-      <div class="col-sm-9 gn-value">
+      <div class="col-sm-9 gn-value nopadding-in-table">
         <xsl:variable name="elementRef"
                       select="gco:*/gn:element/@ref"/>
         <xsl:variable name="helper"

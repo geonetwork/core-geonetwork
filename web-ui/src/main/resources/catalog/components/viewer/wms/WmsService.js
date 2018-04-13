@@ -92,6 +92,7 @@
        * @param {gnMap} map a GeoNetwork map where the layer will be added.
        */
       this.addLayerToMap = function(layer, map) {
+        layer.capRequest = scope.capabilities.Request||null;
         gnMap.addWmsToMapFromCap(map, layer);
       };
 
