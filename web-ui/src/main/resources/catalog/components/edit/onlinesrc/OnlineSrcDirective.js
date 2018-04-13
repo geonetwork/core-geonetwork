@@ -1566,6 +1566,8 @@
                         scope.srcParams.url =  gnConfigService.getServiceURL() +
                           "api/records/" +
                           md.getUuid() + "/formatters/xml";
+                        scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
+                        scope.srcParams.source = md.source;
                       }
                     }
                   });
