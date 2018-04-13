@@ -31,21 +31,27 @@
   goog.require('gn_mdview_directive');
   goog.require('gn_mdview_service');
   goog.require('gn_related_observer_directive');
+  goog.require('gn_userfeedback');
+  goog.require('gn_thesaurus');
+  goog.require('gn_catalog_service');
 
   var module = angular.module('gn_mdview', [
     'gn_mdview_service',
     'gn_mdview_directive',
     'gn_md_feedback',
-    'gn_related_observer_directive'
+    'gn_related_observer_directive',
+    'gn_userfeedback',
+    'gn_thesaurus', 
+    'gn_catalog_service'
   ]);
 
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
-    'gnMdView', 'gnMdViewObj', 'gnMdFormatter',
+    'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
-             gnMdView, gnMdViewObj, gnMdFormatter) {
+             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -53,6 +59,17 @@
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
       $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
+      $scope.isUserFeedbackEnabled = false;
+      $scope.isRatingEnabled = false;
+
+      statusSystemRating =
+         gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+      if (statusSystemRating == 'advanced') {
+        $scope.isUserFeedbackEnabled = true;
+      }
+      if (statusSystemRating == 'basic') {
+        $scope.isRatingEnabled = true;
+      }
 
       $scope.search = function(params) {
         $location.path('/search');

@@ -93,6 +93,7 @@
         <script src="{$uiResourcesPath}lib/angular-filter.min.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/hotkeys/hotkeys.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/modal.js"></script>        
         <script src="{$uiResourcesPath}lib/angular.ext/buttons.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/rating.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js"></script>
