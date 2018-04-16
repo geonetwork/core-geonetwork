@@ -22,19 +22,19 @@
  */
 
 (function() {
-  goog.provide('gn_default_gazetter_provider_service');
+  goog.provide('gn_alternative_gazetter_provider_service');
 
-  var module = angular.module('gn_default_gazetter_provider_service', []);
+  var module = angular.module('gn_alternative_gazetter_provider_service', []);
 
-  module.service('gnDefaultGazetterService',
+  module.service('gnAlternativeGazetteerService',
       [
         '$http',
-        'gnGlobalSettings',
+        'gnGlobalSettings', 
         'gnViewerSettings',
         'gnGetCoordinate',
         function($http, gnGlobalSettings, gnViewerSettings, gnGetCoordinate) {
 
-          // Default implementation of the gazetter
+          // Alternative implementation of the gazetteer
 
           this.onClick = function(scope, loc, map) {
             zoomTo(loc.extent, map);
@@ -43,7 +43,6 @@
           }
 
           this.search = function(scope, loc, query) {
-            console.log('Default');
             var lang = gnGlobalSettings.lang;
 
             if (query.length < 1) return;

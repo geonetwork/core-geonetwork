@@ -22,19 +22,19 @@
  */
 
 (function() {
-  goog.provide('gn_dutch_gazetter_provider_service');
+  goog.provide('gn_default_gazetter_provider_service');
 
-  var module = angular.module('gn_dutch_gazetter_provider_service', []);
+  var module = angular.module('gn_default_gazetter_provider_service', []);
 
-  module.service('gnDutchGazetterService',
+  module.service('gnDefaultGazetteerService',
       [
         '$http',
-        'gnGlobalSettings', 
+        'gnGlobalSettings',
         'gnViewerSettings',
         'gnGetCoordinate',
         function($http, gnGlobalSettings, gnViewerSettings, gnGetCoordinate) {
 
-          // Dutch implementation of the gazetter
+          // Default implementation of the gazetteer
 
           this.onClick = function(scope, loc, map) {
             zoomTo(loc.extent, map);
@@ -43,7 +43,6 @@
           }
 
           this.search = function(scope, loc, query) {
-            console.log('Dutch');
             var lang = gnGlobalSettings.lang;
 
             if (query.length < 1) return;

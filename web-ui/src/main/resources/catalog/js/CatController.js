@@ -192,8 +192,11 @@
             'layers': [{'type': 'osm'}]
           }
         },
-        'geocoder': 'https://secure.geonames.org/searchJSON',
-        'geocoderbehaviour': 'default',
+        'geocoder': {
+            'enabled': true,
+            'appUrl': 'https://secure.geonames.org/searchJSON',
+            'behaviour': 'default'
+        },
         'editor': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.edit',
@@ -256,8 +259,8 @@
         gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
         gnViewerSettings.defaultContext =
           gnViewerSettings.mapConfig['map-viewer'].context;
-        gnViewerSettings.geocoder = this.gnCfg.mods.geocoder;
-        gnViewerSettings.geocoderbehaviour = this.gnCfg.mods.geocoderbehaviour;
+        gnViewerSettings.geocoder = this.gnCfg.mods.geocoder.appUrl;
+        gnViewerSettings.geocoderbehaviour = this.gnCfg.mods.geocoder.behaviour;
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);

@@ -14,7 +14,7 @@
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * long with this program; if not, write to the Free Software
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  *
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
@@ -22,14 +22,33 @@
  */
 
 (function() {
-  goog.provide('gn_gazetter');
+  goog.provide('gn_gazetter_provider_service');
 
-  goog.require('gn_gazetter_provider_service');
-  goog.require('gn_default_gazetter_provider_service');
-  goog.require('gn_dutch_gazetter_provider_service');
+  var module = angular.module('gn_gazetter_provider_service', []);
 
-  angular.module('gn_gazetter', [
-    'gn_gazetter_provider_service',
-    'gn_default_gazetter_provider_service',
-    'gn_dutch_gazetter_provider_service']);
+  module.provider('gnGazetterService',
+      function() {
+    return {
+      $get : [
+        '$http',
+        'gnGlobalSettings', 
+        'gnViewerSettings',
+        'gnGetCoordinate',
+        'gnDefaultGazetteerService',
+        'gnAlternativeGazetteerService',
+        function($http, gnGlobalSettings, gnViewerSettings, gnGetCoordinate, gnDefaultGazetteerService, gnAlternativeGazetteerService) {
+
+          // Standard gazetteer implementation
+          this.gazetter = gnDefaultGazetteerService;
+
+          // Check if another gazetteer is configured
+          if(gnViewerSettings.geocoderbehaviour === 'alt') {
+            this.gazetter = gnAlternativeGazetteerService;
+          }
+
+          return this.gazetter;
+
+        }]
+    };
+  });
 })();
