@@ -180,8 +180,8 @@
 
                 // remove prefix & suffix on filter keys
                 Object.keys(currentFilters).forEach(function(key) {
-                  var name = key == 'geometry' ?
-                    esObject.getIdxNameObj_(key).name : key;
+                  var name = key == 'geometry' ? key :
+                    esObject.getIdxNameObj_(key).name;
                   wfsFilterValues[name] = currentFilters[key];
                 });
               }
