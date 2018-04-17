@@ -230,14 +230,10 @@ public class EditLib {
 
         Element child = new Element(name, prefix, ns);
 
-        SchemaSuggestions mdSugg = scm.getSchemaSuggestions(mdSchema.getName());
-
         String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
-
         LOGGER_ADD_ELEMENT.debug("#### - type name = {}", typeName);
 
         MetadataType type = mdSchema.getTypeInfo(typeName);
-
         LOGGER_ADD_ELEMENT.debug("#### - metadata type = {}", type);
 
         // remove everything and then add all children to the element and assure a correct position for the
@@ -257,6 +253,7 @@ public class EditLib {
         }
 
         //--- add mandatory sub-tags
+        SchemaSuggestions mdSugg = scm.getSchemaSuggestions(mdSchema.getName());
         fillElement(mdSchema, mdSugg, el, child);
 
         return child;
@@ -267,43 +264,50 @@ public class EditLib {
      * its parent.
      *
      * @param schema         The metadata schema
-     * @param el             The element
+     * @param targetElement             The element
      * @param qname          The qualified name of the element
      * @param fragment       XML fragment
      * @param removeExisting Remove element of the same type before insertion
      * @throws IllegalStateException Fail to parse the fragment.
      */
-    public void addFragment(String schema, Element el, String qname, String fragment, boolean removeExisting) throws Exception {
+    public void addFragment(String schema, Element targetElement, String qname, String fragment, boolean removeExisting) throws Exception {
 
         MetadataSchema mdSchema = scm.getSchema(schema);
-        String parentName = getParentNameFromChild(el);
-        Element fragElt;
-
-        LOGGER_ADD_ELEMENT.debug("Add XML fragment for element name: {}, parent: {}.", qname, parentName);
+        Element childToAdd;
 
         try {
-            fragElt = Xml.loadString(fragment, false);
+            childToAdd = Xml.loadString(fragment, false);
         } catch (JDOMException e) {
             LOGGER_ADD_ELEMENT.error("EditLib : Error parsing XML fragment {}.", fragment);
             throw new IllegalStateException("EditLib : Error when loading XML fragment, " + e.getMessage());
         }
 
-        String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
+        LOGGER_ADD_ELEMENT.debug( "#### - child qname = {}", qname);
+
+        String parentName = getParentNameFromChild(targetElement);
+        LOGGER_ADD_ELEMENT.debug("#### - parent name for type retrieval = {}", parentName);
+
+        String typeName = mdSchema.getElementType(targetElement.getQualifiedName(), parentName);
+        LOGGER_ADD_ELEMENT.debug("#### - type name = {}", typeName);
+
         MetadataType type = mdSchema.getTypeInfo(typeName);
+        LOGGER_ADD_ELEMENT.debug("#### - metadata type = {}", type);
 
         // remove everything and then add all children to the element and assure a correct position for the
         // new one: at the end of the others
-        el.removeContent();
+        targetElement.removeContent();
         for (String singleType: type.getAlElements()) {
             // Add existing children of all types
-            List<Element> list = getChildren(el, singleType);
+            List<Element> list = getChildren(targetElement, singleType);
             if (!qname.equals(singleType) || !removeExisting) {
-                for (Element aList : list) {
-                    el.addContent(aList);
+                LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, list.size());
+                for (Element existingChild : list) {
+                    targetElement.addContent(existingChild);
+                    LOGGER_ADD_ELEMENT.debug("####		- add child {}", existingChild.toString());
                 }
             }
             if (qname.equals(singleType))
-                el.addContent(fragElt);
+                targetElement.addContent(childToAdd);
         }
     }
 
