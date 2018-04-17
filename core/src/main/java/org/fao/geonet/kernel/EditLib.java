@@ -244,16 +244,16 @@ public class EditLib {
 
         Vector<Element> children = new Vector<Element>();
 
-        for (int i = 0; i < type.getElementCount(); i++) {
-            List<Element> list = getChildren(el, type.getElementAt(i));
+        for (String singleType: type.getAlElements()) {
+            List<Element> list = getChildren(el, singleType);
 
-            LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", type.getElementAt(i), list.size());
+            LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, list.size());
             for (Element aChild : list) {
                 children.add(aChild);
                 LOGGER_ADD_ELEMENT.debug("####		- add child {}", aChild.toString());
             }
 
-            if (qname.equals(type.getElementAt(i)))
+            if (qname.equals(singleType))
                 children.add(child);
         }
         //--- remove everything and then add all collected children to the element to assure a correct position for the
@@ -302,17 +302,17 @@ public class EditLib {
         // --- collect all children, adding the new one at the end of the others
         Vector<Element> children = new Vector<Element>();
 
-        for (int i = 0; i < type.getElementCount(); i++) {
+        for (String singleType: type.getAlElements()) {
             // Add existing children of all types
-            List<Element> list = getChildren(el, type.getElementAt(i));
-            if (qname.equals(type.getElementAt(i)) && removeExisting) {
+            List<Element> list = getChildren(el, singleType);
+            if (qname.equals(singleType) && removeExisting) {
                 // Remove all existing children of the type of element to add
             } else {
                 for (Element aList : list) {
                     children.add(aList);
                 }
             }
-            if (qname.equals(type.getElementAt(i)))
+            if (qname.equals(singleType))
                 children.add(fragElt);
         }
         // --- remove everything and then add all collected children to the element
@@ -1018,9 +1018,8 @@ public class EditLib {
         //-----------------------------------------------------------------------
         //--- handle attributes if mandatory or suggested
         //
-        for (int i = 0; i < type.getAttributeCount(); i++) {
-            MetadataAttribute attr = type.getAttributeAt(i);
-            LOGGER_FILL_ELEMENT.debug("####   - {} attribute = {}", i, attr.name);
+        for (MetadataAttribute attr: type.getAlAttribs()) {
+            LOGGER_FILL_ELEMENT.debug("####   - {} attribute = {}", attr.name);
             LOGGER_FILL_ELEMENT.debug("####     - required = {}", attr.required);
             LOGGER_FILL_ELEMENT.debug("####     - suggested = {}", sugg.isSuggested(elemName, attr.name));
 
@@ -1161,8 +1160,7 @@ public class EditLib {
         String chNS = getNamespace(chName, md, mdSchema);
         Element container = new Element(chUQname, chPrefix, chNS);
         MetadataType containerType = mdSchema.getTypeInfo(chName);
-        for (int k = 0; k < containerType.getElementCount(); k++) {
-            String elemName = containerType.getElementAt(k);
+        for (String elemName: containerType.getAlElements()) {
             LOGGER.debug("		-- Searching for child {}", elemName);
             List<Element> elems;
             if (elemName.contains(Edit.RootChild.GROUP) ||
@@ -1211,8 +1209,7 @@ public class EditLib {
         if (thisType.hasContainers) {
             Vector<Content> holder = new Vector<Content>();
 
-            for (int i = 0; i < thisType.getElementCount(); i++) {
-                String chName = thisType.getElementAt(i);
+            for (String chName: thisType.getAlElements()) {
                 if (chName.contains(Edit.RootChild.CHOICE) ||
                     chName.contains(Edit.RootChild.GROUP) ||
                     chName.contains(Edit.RootChild.SEQUENCE)) {
@@ -1705,8 +1702,7 @@ public class EditLib {
                     child.addContent(newElem);
                 } else {
                     action = "before"; // js adds new elements before this child
-                    for (int l = 0; l < type.getElementCount(); l++) {
-                        String chElem = type.getElementAt(l);
+                    for (String chElem :type.getAlElements()) {
                         if (chElem.contains(Edit.RootChild.CHOICE)) {
                             List<String> chElems = recurseOnNestedChoices(schema, chElem, parent);
 
@@ -1741,8 +1737,7 @@ public class EditLib {
         List<String> chElems = new ArrayList<String>();
         String elemType = schema.getElementType(chElem, parent);
         MetadataType type = schema.getTypeInfo(elemType);
-        for (int l = 0; l < type.getElementCount(); l++) {
-            String subChElem = type.getElementAt(l);
+        for (String subChElem: type.getAlElements()) {
             if (subChElem.contains(Edit.RootChild.CHOICE)) {
                 List<String> subChElems = recurseOnNestedChoices(schema, subChElem, chElem);
                 chElems.addAll(subChElems);
@@ -1771,8 +1766,7 @@ public class EditLib {
     }
 
     private void addAttribs(MetadataType type, Element md, MetadataSchema schema) {
-        for (int i = 0; i < type.getAttributeCount(); i++) {
-            MetadataAttribute attr = type.getAttributeAt(i);
+        for (MetadataAttribute attr: type.getAlAttribs()) {
 
             Element attribute = new Element(Edit.RootChild.ATTRIBUTE, Edit.NAMESPACE);
 
