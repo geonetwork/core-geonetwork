@@ -368,8 +368,8 @@ public class EditLib {
                         if (replaceExisting) {
                             @SuppressWarnings("unchecked")
                             List<Element> children = node.getChildren();
-                            for (int i = 0; i < children.size(); i++) {
-                                el.addContent((Element) children.get(i).clone());
+                            for (Element child: children) {
+                                el.addContent((Element) child.clone());
                             }
                             List<Attribute> attributes = node.getAttributes();
                             for (Attribute a : attributes) {
