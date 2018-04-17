@@ -157,26 +157,18 @@ public class EditLib {
      */
     public void removeEditingInfo(Element md) {
         //--- purge geonet: attributes
-        @SuppressWarnings("unchecked")
-        List<Attribute> listAtts = md.getAttributes();
-        for (int i = 0; i < listAtts.size(); i++) {
-            Attribute attr = listAtts.get(i);
+        for (Attribute attr: (List<Attribute>)md.getAttributes()) {
             if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
                 attr.detach();
-                i--;
             }
         }
 
         //--- purge geonet: children
-        @SuppressWarnings("unchecked")
-        List<Element> list = md.getChildren();
-        for (int i = 0; i < list.size(); i++) {
-            Element child = list.get(i);
+        for (Element child: (List<Element>)new ArrayList(md.getChildren())) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix()))
                 removeEditingInfo(child);
             else {
                 child.detach();
-                i--;
             }
         }
     }
@@ -272,15 +264,16 @@ public class EditLib {
         MetadataType type = mdSchema.getTypeInfo(typeName);
         LOGGER_ADD_ELEMENT.debug("#### - metadata type = {}", type);
 
-        // remove everything and then add all children to the element and assure a correct position for the
-        // new one: at the end of the others
+        // remove everything and then, depending on removeExisting
+        // readd all children to the element and assure a correct position for the new one: at the end of the others
+        // or just add the new one
+        List existingAllType = new ArrayList(targetElement.getChildren());
         targetElement.removeContent();
         for (String singleType: type.getAlElements()) {
-            // Add existing children of all types
-            List<Element> list = getChildren(targetElement, singleType);
+            List<Element> existingForThisType = filterOnQname(existingAllType, singleType);
+            LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, existingForThisType.size());
             if (!qname.equals(singleType) || !removeExisting) {
-                LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, list.size());
-                for (Element existingChild : list) {
+                for (Element existingChild : existingForThisType) {
                     targetElement.addContent(existingChild);
                     LOGGER_ADD_ELEMENT.debug("####		- add child {}", existingChild.toString());
                 }
@@ -910,12 +903,8 @@ public class EditLib {
     //---
     //--------------------------------------------------------------------------
 
-    private List<Element> getChildren(Element el, String qname) {
+    private List<Element> filterOnQname(List<Element> children, String qname) {
         Vector<Element> result = new Vector<Element>();
-
-        @SuppressWarnings("unchecked")
-        List<Element> children = el.getChildren();
-
         for (Element child : children) {
             if (child.getQualifiedName().equals(qname)) {
                 result.add(child);
@@ -1136,7 +1125,7 @@ public class EditLib {
                 elemName.contains(Edit.RootChild.CHOICE)) {
                 elems = searchChildren(elemName, md, schema);
             } else {
-                elems = getChildren(md, elemName);
+                elems = filterOnQname(md.getChildren(), elemName);
             }
             for (Element elem : elems) {
                 container.addContent((Element) elem.clone());
@@ -1186,7 +1175,7 @@ public class EditLib {
                         holder.addAll(elems);
                     }
                 } else {
-                    List<Element> chElem = getChildren(md, chName);
+                    List<Element> chElem = filterOnQname(md.getChildren(), chName);
                     for (Element elem : chElem) {
                         holder.add(elem.detach());
                     }
@@ -1488,7 +1477,6 @@ public class EditLib {
         }
 
         //---
-
         md.removeContent();
 
         for (Element aV : v) {
@@ -1565,7 +1553,7 @@ public class EditLib {
             String name2 = el2.getAttributeValue(NAME);
             String ns2 = el2.getAttributeValue(NAMESPACE);
             return el1.getName().equals(name2) && el1.getNamespaceURI().equals(ns2);
-            
+
         } else { // if (!geonetNS.equals(elemNS1) && !geonetNS.equals(elemNS2)) {
             return el1.getName().equals(el2.getName()) && el1.getNamespaceURI().equals(el2.getNamespaceURI());
         }
