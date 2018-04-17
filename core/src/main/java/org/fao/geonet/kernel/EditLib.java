@@ -209,14 +209,11 @@ public class EditLib {
     public Element addElement(MetadataSchema mdSchema, Element el, String qname) throws Exception {
         LOGGER_ADD_ELEMENT.debug("#### in addElement()");
         LOGGER_ADD_ELEMENT.debug("#### - parent = {}", el.getName());
-        LOGGER_ADD_ELEMENT.debug( "#### - child qname = {}", qname);
 
         String name = getUnqualifiedName(qname);
         String ns = getNamespace(qname, el, mdSchema);
         String prefix = getPrefix(qname);
-        String parentName = getParentNameFromChild(el);
 
-        LOGGER_ADD_ELEMENT.debug("#### - parent name for type retrieval = {}", parentName);
         LOGGER_ADD_ELEMENT.debug("#### - child name = {}", name);
         LOGGER_ADD_ELEMENT.debug("#### - child namespace = {}", ns);
         LOGGER_ADD_ELEMENT.debug("#### - child prefix = {}", prefix);
@@ -230,27 +227,7 @@ public class EditLib {
 
         Element child = new Element(name, prefix, ns);
 
-        String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
-        LOGGER_ADD_ELEMENT.debug("#### - type name = {}", typeName);
-
-        MetadataType type = mdSchema.getTypeInfo(typeName);
-        LOGGER_ADD_ELEMENT.debug("#### - metadata type = {}", type);
-
-        // remove everything and then add all children to the element and assure a correct position for the
-        // new one: at the end of the others
-        el.removeContent();
-        for (String singleType: type.getAlElements()) {
-            List<Element> list = getChildren(el, singleType);
-
-            LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, list.size());
-            for (Element aChild : list) {
-                el.addContent(aChild);
-                LOGGER_ADD_ELEMENT.debug("####		- add child {}", aChild.toString());
-            }
-
-            if (qname.equals(singleType))
-                el.addContent(child);
-        }
+        addChildToParent(mdSchema, el, child, qname, false);
 
         //--- add mandatory sub-tags
         SchemaSuggestions mdSugg = scm.getSchemaSuggestions(mdSchema.getName());
@@ -282,6 +259,10 @@ public class EditLib {
             throw new IllegalStateException("EditLib : Error when loading XML fragment, " + e.getMessage());
         }
 
+        addChildToParent(mdSchema, targetElement, childToAdd, qname, removeExisting);
+    }
+
+    private void addChildToParent(MetadataSchema mdSchema, Element targetElement, Element childToAdd, String qname, boolean removeExisting) throws Exception {
         LOGGER_ADD_ELEMENT.debug( "#### - child qname = {}", qname);
 
         String parentName = getParentNameFromChild(targetElement);
