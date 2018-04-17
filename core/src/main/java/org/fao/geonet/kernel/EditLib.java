@@ -612,7 +612,7 @@ public class EditLib {
                     // If a property is found,
                     // - handle deletion
                     // - Update text node or attributes
-                    if (propNode != null && !isCreateMode) {
+                    if (!isCreateMode) {
                         // And if magic tag is delete
                         // Delete a node
                         // <gn_delete/>
