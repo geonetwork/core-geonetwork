@@ -81,11 +81,6 @@ public class EditLib {
     public static final String COLON_SEPARATOR = "COLON";
     public static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
     private SchemaManager scm;
 
     //--------------------------------------------------------------------------
