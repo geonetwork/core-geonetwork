@@ -163,7 +163,6 @@ public class EditLib {
             Attribute attr = listAtts.get(i);
             if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
                 attr.detach();
-                i--;
             }
         }
 
@@ -176,7 +175,6 @@ public class EditLib {
                 removeEditingInfo(child);
             else {
                 child.detach();
-                i--;
             }
         }
     }
@@ -1487,7 +1485,6 @@ public class EditLib {
         }
 
         //---
-
         md.removeContent();
 
         for (Element aV : v) {
@@ -1564,7 +1561,7 @@ public class EditLib {
             String name2 = el2.getAttributeValue(NAME);
             String ns2 = el2.getAttributeValue(NAMESPACE);
             return el1.getName().equals(name2) && el1.getNamespaceURI().equals(ns2);
-            
+
         } else { // if (!geonetNS.equals(elemNS1) && !geonetNS.equals(elemNS2)) {
             return el1.getName().equals(el2.getName()) && el1.getNamespaceURI().equals(el2.getNamespaceURI());
         }
