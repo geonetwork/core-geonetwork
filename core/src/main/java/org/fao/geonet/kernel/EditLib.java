@@ -626,16 +626,10 @@ public class EditLib {
                                         .equals(SpecialUpdateTags.DELETE)) {
                                         parent.removeContent(parent.indexOf(matchingNode));
                                     }
-                                } else {
-                                    // If no parent, we probably matched the
-                                    // root element. This is not allowed.
-                                    isUpdated = false;
                                 }
                             } else if (propNode instanceof Attribute) {
                                 Element parent = ((Attribute) propNode).getParent();
                                 parent.removeAttribute(((Attribute) propNode).getName());
-                            } else {
-                                isUpdated = false;
                             }
                         } else {
                             // Update element content with node
@@ -653,8 +647,6 @@ public class EditLib {
                                 ((Element) propNode).setText(value.getStringValue());
                             } else if (propNode instanceof Attribute && !isValueXml) {
                                 ((Attribute) propNode).setValue(value.getStringValue());
-                            } else {
-                                isUpdated = false;
                             }
                         }
                         isUpdated = true;
