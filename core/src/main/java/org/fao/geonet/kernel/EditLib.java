@@ -351,33 +351,34 @@ public class EditLib {
             }
 
 
-            if (xmlSnippetAsString != null && !xmlSnippetAsString.equals("")) {
-                String[] fragments = xmlSnippetAsString.split(XML_FRAGMENT_SEPARATOR);
-                for (String fragment : fragments) {
-                    if (nodeName != null) {
-                        LOGGER.debug("Add XML fragment; {} to element with ref: {}", fragment, nodeRef);
-                        addFragment(schema, el, nodeName, fragment, replaceExisting);
-                    } else {
-                        LOGGER.debug("Add XML fragment; {} to element with ref: {} replacing content.", fragment, nodeRef);
-                        // clean before update
-                        el.removeContent();
-                        fragment = addGmlNamespaceToFragment(fragment);
+            if (xmlSnippetAsString == null || xmlSnippetAsString.equals("")) {
+                continue;
+            }
+            String[] fragments = xmlSnippetAsString.split(XML_FRAGMENT_SEPARATOR);
+            for (String fragment : fragments) {
+                if (nodeName != null) {
+                    LOGGER.debug("Add XML fragment; {} to element with ref: {}", fragment, nodeRef);
+                    addFragment(schema, el, nodeName, fragment, replaceExisting);
+                } else {
+                    LOGGER.debug("Add XML fragment; {} to element with ref: {} replacing content.", fragment, nodeRef);
+                    // clean before update
+                    el.removeContent();
+                    fragment = addGmlNamespaceToFragment(fragment);
 
-                        // Add content
-                        Element node = Xml.loadString(fragment, false);
-                        if (replaceExisting) {
-                            @SuppressWarnings("unchecked")
-                            List<Element> children = node.getChildren();
-                            for (Element child: children) {
-                                el.addContent((Element) child.clone());
-                            }
-                            List<Attribute> attributes = node.getAttributes();
-                            for (Attribute a : attributes) {
-                                el.setAttribute((Attribute) a.clone());
-                            }
-                        } else {
-                            el.addContent(node);
+                    // Add content
+                    Element node = Xml.loadString(fragment, false);
+                    if (replaceExisting) {
+                        @SuppressWarnings("unchecked")
+                        List<Element> children = node.getChildren();
+                        for (Element child: children) {
+                            el.addContent((Element) child.clone());
                         }
+                        List<Attribute> attributes = node.getAttributes();
+                        for (Attribute a : attributes) {
+                            el.setAttribute((Attribute) a.clone());
+                        }
+                    } else {
+                        el.addContent(node);
                     }
                 }
             }
