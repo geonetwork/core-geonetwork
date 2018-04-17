@@ -323,8 +323,7 @@ public class EditLib {
         }
     }
 
-    public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception, IOException,
-        JDOMException {
+    public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception {
         // Loop over each XML fragments to insert or replace
         HashMap<String, Element> nodeRefToElem = new HashMap<>();
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
