@@ -143,6 +143,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 false, context, file);
                         for (String id : ids) {
                             log.debug("Metadata imported from MEF: " + id);
+                            aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+                            listOfRecordsToIndex.add(Integer.valueOf(id));
                             result.totalMetadata++;
                         }
                     } catch (Exception e) {
