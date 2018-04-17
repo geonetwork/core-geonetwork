@@ -194,8 +194,7 @@
         },
         'geocoder': {
             'enabled': true,
-            'appUrl': 'https://secure.geonames.org/searchJSON',
-            'behaviour': 'default'
+            'appUrl': 'https://secure.geonames.org/searchJSON'
         },
         'editor': {
           'enabled': true,
@@ -260,7 +259,6 @@
         gnViewerSettings.defaultContext =
           gnViewerSettings.mapConfig['map-viewer'].context;
         gnViewerSettings.geocoder = this.gnCfg.mods.geocoder.appUrl;
-        gnViewerSettings.geocoderbehaviour = this.gnCfg.mods.geocoder.behaviour;
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);

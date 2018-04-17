@@ -39,8 +39,8 @@
     '$timeout',
     'gnGlobalSettings',
     'gnViewerSettings',
-    'gnGazetterService',
-    function($timeout, gnGlobalSettings, gnViewerSettings, gnGazetterService) {
+    'gnGazetteerProvider',
+    function($timeout, gnGlobalSettings, gnViewerSettings, gnGazetteerProvider) {
       return {
         restrict: 'A',
         require: 'gnLocalisationInput',
@@ -63,7 +63,7 @@
               map.getView().fit(extent, map.getSize());
             };
             this.onClick = function(loc, map) {
-              return gnGazetterService.onClick($scope, loc, map);
+              return gnGazetteerProvider.onClick($scope, loc, map);
             }
 
             $scope.zoomToYou = function(map) {
@@ -90,7 +90,7 @@
              * @param {string} query string value of the search input
              */
             this.search = function (loc, query) {
-              return gnGazetterService.search($scope, loc, $scope.query);
+              return gnGazetteerProvider.search($scope, loc, $scope.query);
             }
           }],
         link: function(scope, element, attrs, ctrl) {

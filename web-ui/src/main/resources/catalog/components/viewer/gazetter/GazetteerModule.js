@@ -22,14 +22,12 @@
  */
 
 (function() {
-  goog.provide('gn_gazetter');
+  goog.provide('gn_gazetteer');
 
-  goog.require('gn_gazetter_provider_service');
-  goog.require('gn_default_gazetter_provider_service');
-  goog.require('gn_alternative_gazetter_provider_service');
+  goog.require('gn_gazetteer_provider_service');
+  goog.require('gn_default_gazetteer_default_factory');
 
-  angular.module('gn_gazetter', [
-    'gn_gazetter_provider_service',
-    'gn_default_gazetter_provider_service',
-    'gn_alternative_gazetter_provider_service']);
+  angular.module('gn_gazetteer', [
+    'gn_gazetteer_provider_service',
+    'gn_default_gazetteer_default_factory']);
 })();

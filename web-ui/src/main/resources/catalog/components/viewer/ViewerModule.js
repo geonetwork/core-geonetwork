@@ -49,7 +49,7 @@
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
   goog.require('gn_wps');
-  goog.require('gn_gazetter');
+  goog.require('gn_gazetteer');
 
   /**
    * @ngdoc overview
@@ -84,7 +84,7 @@
     'gn_geometry',
     'gn_profile',
     'gn_heatmap',
-    'gn_gazetter'
+    'gn_gazetteer'
   ]);
 
   module.controller('gnViewerController', [

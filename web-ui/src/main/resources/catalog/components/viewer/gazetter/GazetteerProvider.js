@@ -22,33 +22,28 @@
  */
 
 (function() {
-  goog.provide('gn_gazetter_provider_service');
+  goog.provide('gn_gazetteer_provider_service');
 
-  var module = angular.module('gn_gazetter_provider_service', []);
+  var module = angular.module('gn_gazetteer_provider_service', []);
 
-  module.provider('gnGazetterService',
-      function() {
+
+  module.provider('gnGazetteerProvider', function() {
     return {
       $get : [
-        '$http',
-        'gnGlobalSettings', 
         'gnViewerSettings',
-        'gnGetCoordinate',
-        'gnDefaultGazetteerService',
-        'gnAlternativeGazetteerService',
-        function($http, gnGlobalSettings, gnViewerSettings, gnGetCoordinate, gnDefaultGazetteerService, gnAlternativeGazetteerService) {
+        'gnDefaultGazetteer',
+        function(gnViewerSettings, gnDefaultGazetteer) {
 
-          // Standard gazetteer implementation
-          this.gazetter = gnDefaultGazetteerService;
-
-          // Check if another gazetteer is configured
-          if(gnViewerSettings.geocoderbehaviour === 'alt') {
-            this.gazetter = gnAlternativeGazetteerService;
+          if(gnViewerSettings.gazetteerProvider) {
+            // returns the gazetteer configured in config.js
+            return gnViewerSettings.gazetteerProvider;
+          } else {
+            // returns the default one
+            return gnDefaultGazetteer;
           }
 
-          return this.gazetter;
-
         }]
-    };
-  });
+    }
+  }
+  );
 })();
