@@ -1430,8 +1430,10 @@
         '$rootScope',
         '$translate',
         'gnGlobalSettings',
+        'gnConfigService',
         function(gnOnlinesrc, Metadata, gnOwsCapabilities,
-            gnCurrentEdit, $rootScope, $translate, gnGlobalSettings) {
+                 gnCurrentEdit, $rootScope, $translate,
+                 gnGlobalSettings, gnConfigService) {
           return {
             restrict: 'A',
             scope: {},
@@ -1548,14 +1550,22 @@
                           scope.loadCurrentLink(links[0].url);
                           scope.srcParams.url = links[0].url;
                         } else {
-                          scope.srcParams.url = '';
-                          scope.alertMsg = $translate.instant(
-                              'linkToServiceWithoutURLError');
+                          scope.srcParams.name = scope.currentMdTitle;
+                          scope.srcParams.desc = scope.currentMdTitle;
+                          scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
+                          scope.srcParams.url =  gnConfigService.getServiceURL() +
+                            "api/records/" +
+                            md.getUuid() + "/formatters/xml";
                         }
                       } else {
                         // dataset
-                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                         scope.srcParams.uuidDS = md.getUuid();
+                        scope.srcParams.name = gnCurrentEdit.mdTitle;
+                        scope.srcParams.desc = gnCurrentEdit.mdTitle;
+                        scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
+                        scope.srcParams.url =  gnConfigService.getServiceURL() +
+                          "api/records/" +
+                          md.getUuid() + "/formatters/xml";
                         scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
                         scope.srcParams.source = md.source;
                       }

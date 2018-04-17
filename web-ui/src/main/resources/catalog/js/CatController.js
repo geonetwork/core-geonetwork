@@ -54,6 +54,10 @@
         'regexp': '^\/.+\/.+\/([a-z]{3})\/',
         'default': 'srv'
       },
+      'baseURLDetector': {
+        'regexp': '^\(/[a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\/[a-z]{3}\/',
+        'default': '/geonetwork'
+      },
       'mods': {
         'header': {
           'enabled': true,
@@ -400,8 +404,21 @@
         }
         return detector.default || 'srv';
       }
+
+      function detectBaseURL(detector) {
+        if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            return res[1];
+          }
+        }
+        return detector.default || 'geonetwork';
+      }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
       gnGlobalSettings.nodeId = $scope.nodeId;
+      gnConfig.env = gnConfig.env || {};
+      gnConfig.env.node = $scope.nodeId;
+      gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',

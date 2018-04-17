@@ -36,8 +36,8 @@
    * given map
    */
   module.directive('gnBaselayerswitcher', [
-    'gnViewerSettings',
-    function(gnViewerSettings) {
+    'gnViewerSettings', 'gnOwsContextService', '$rootScope',
+    function(gnViewerSettings, gnOwsContextService, $rootScope) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/baselayerswitcher/' +
@@ -57,6 +57,13 @@
             layers.removeAt(0);
             layers.insertAt(0, layer);
             return false;
+          };
+          scope.reset = function() {
+            $rootScope.$broadcast('owsContextReseted');
+            gnOwsContextService.loadContextFromUrl(
+              gnViewerSettings.defaultContext,
+              scope.map,
+              gnViewerSettings.additionalMapLayers);
           };
         }
       };

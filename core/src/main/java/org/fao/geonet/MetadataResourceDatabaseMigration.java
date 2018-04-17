@@ -71,15 +71,19 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
             ISO19139Namespaces.GCO);
 
     private static final String XPATH_RESOURCES =
-        "*//*[contains(text(), '/resources.get?')]";
-    private static final String XPATH_THUMBNAIL =
-        "*//gmd:MD_BrowseGraphic" +
-            "[gmd:fileDescription/gco:CharacterString = 'thumbnail' or " +
-            "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
-            "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
+            "*//*[contains(text(), '/resources.get?')]";
+    private static final String XPATH_THUMBNAIL_WITH_NO_URL =
+            "*//gmd:MD_BrowseGraphic" +
+                    "[gmd:fileDescription/gco:CharacterString = 'thumbnail' or " +
+                    "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
+                    "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
+    private static final String XPATH_THUMBNAIL_WITH_URL =
+            "*//gmd:graphicOverview/gmd:MD_BrowseGraphic[gmd:fileDescription/gco:CharacterString]/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]";
+    private static final String XPATH_ATTACHMENTS_WITH_URL =
+            "*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']/gmd:linkage/gmd:URL";
 
     private static final Pattern pattern = Pattern.compile(
-        "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
+            "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
 
     public static boolean updateMetadataResourcesLink(@Nonnull Element xml,
                                                       @Nullable String uuid,
@@ -109,18 +113,49 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
                                     "api/records/" + uuid + "/attachments/$4"));
                 changed = true;
             }
+            
+            // ATTACHMENTS
+            // This fix the imports of metadata with attachments
+            @SuppressWarnings("unchecked") final List<Element> linksAttachmentsUrl =
+                    Lists.newArrayList((Iterable<? extends Element>)
+                            Xml.selectNodes(xml, XPATH_ATTACHMENTS_WITH_URL, NAMESPACES));
 
-            @SuppressWarnings("unchecked") final List<Element> linksThumbnails =
-                Lists.newArrayList((Iterable<? extends Element>)
-                    Xml.selectNodes(xml, XPATH_THUMBNAIL, NAMESPACES));
+            for (Element element : linksAttachmentsUrl) {
+                final String url = element.getText();
+                if(url.indexOf("api/records/") > 0) {
+                    element.setText(url.replace(url.substring(0, url.indexOf("api/records/")), settingManager.getNodeURL()));
+                    changed = true;
+                }
+            }
 
-            for (Element element : linksThumbnails) {
+            // THUMBNAILS
+            // This fix the imports from older versions of GN
+            // where the thumbnails contains just the filename
+            @SuppressWarnings("unchecked") final List<Element> linksThumbnailsNoUrl =
+                    Lists.newArrayList((Iterable<? extends Element>)
+                            Xml.selectNodes(xml, XPATH_THUMBNAIL_WITH_NO_URL, NAMESPACES));
+
+            for (Element element : linksThumbnailsNoUrl) {
                 final String filename = element.getText();
                 element.setText(
                     String.format(
                         "%sapi/records/" + uuid + "/attachments/%s",
                         settingManager.getNodeURL(), filename));
                 changed = true;
+            }
+
+            // This fix the imports from current versions of GN
+            // where the thumbnails contains the full URL of the resource
+            @SuppressWarnings("unchecked") final List<Element> linksThumbnailsWithUrl =
+                    Lists.newArrayList((Iterable<? extends Element>)
+                            Xml.selectNodes(xml, XPATH_THUMBNAIL_WITH_URL, NAMESPACES));
+
+            for (Element element : linksThumbnailsWithUrl) {
+                final String url = element.getText();
+                if(url.indexOf("api/records/") > 0) {
+                    element.setText(url.replace(url.substring(0, url.indexOf("api/records/")), settingManager.getNodeURL()));
+                    changed = true;
+                }
             }
         } else {
             throw new UnsupportedOperationException("Metadata is not supported. UUID is not defined.");
