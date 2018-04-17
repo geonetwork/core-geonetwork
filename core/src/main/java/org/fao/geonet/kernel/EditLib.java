@@ -1539,50 +1539,40 @@ public class EditLib {
     private boolean equal(Element el1, Element el2) {
         String elemNS1 = el1.getNamespaceURI();
         String elemNS2 = el2.getNamespaceURI();
+        String geonetNS = Edit.NAMESPACE.getURI();
 
-        if (Edit.NAMESPACE.getURI().equals(elemNS1)) {
-            if (Edit.NAMESPACE.getURI().equals(elemNS2)) {
-                //--- both are geonet:child elements
+        if (geonetNS.equals(elemNS1) && geonetNS.equals(elemNS2)) {
+            if (!Edit.RootChild.CHILD.equals(el1.getName()))
+                return false;
 
-                if (!Edit.RootChild.CHILD.equals(el1.getName()))
-                    return false;
+            if (!Edit.RootChild.CHILD.equals(el2.getName()))
+                return false;
 
-                if (!Edit.RootChild.CHILD.equals(el2.getName()))
-                    return false;
+            String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
+            String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
 
-                String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
-                String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
+            String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
+            String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
 
-                String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
-                String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
+            return name1.equals(name2) && ns1.equals(ns2);
+        } else if (geonetNS.equals(elemNS1) && ! geonetNS.equals(elemNS2)) {
+            if (!Edit.RootChild.CHILD.equals(el1.getName()))
+                return false;
 
-                return name1.equals(name2) && ns1.equals(ns2);
-            } else {
-                //--- el1 is a geonet:child, el2 is not
+            String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
+            String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
 
-                if (!Edit.RootChild.CHILD.equals(el1.getName()))
-                    return false;
+            return el2.getName().equals(name1) && el2.getNamespaceURI().equals(ns1);
+        } else if (!geonetNS.equals(elemNS1) && geonetNS.equals(elemNS2)) {
+            if (!Edit.RootChild.CHILD.equals(el2.getName()))
+                return false;
 
-                String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
-                String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
+            String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
+            String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
 
-                return el2.getName().equals(name1) && el2.getNamespaceURI().equals(ns1);
-            }
-        } else {
-            if (Edit.NAMESPACE.getURI().equals(elemNS2)) {
-                //--- el2 is a geonet:child, el1 is not
-
-                if (!Edit.RootChild.CHILD.equals(el2.getName()))
-                    return false;
-
-                String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
-                String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
-
-                return el1.getName().equals(name2) && el1.getNamespaceURI().equals(ns2);
-            } else {
-                //--- both not geonet:child elements
-                return el1.getName().equals(el2.getName()) && el1.getNamespaceURI().equals(el2.getNamespaceURI());
-            }
+            return el1.getName().equals(name2) && el1.getNamespaceURI().equals(ns2);
+        } else { // if (!geonetNS.equals(elemNS1) && !geonetNS.equals(elemNS2)) {
+            return el1.getName().equals(el2.getName()) && el1.getNamespaceURI().equals(el2.getNamespaceURI());
         }
     }
 
