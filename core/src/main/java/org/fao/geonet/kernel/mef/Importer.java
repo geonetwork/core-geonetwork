@@ -464,7 +464,7 @@ public class Importer {
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
 
-                        if (finalGroupId == null) {
+                        if (finalGroupId == null || finalGroupId.equals("")) {
                             Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
                             if (ownerGroup != null) {
                                 metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
