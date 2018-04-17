@@ -157,20 +157,14 @@ public class EditLib {
      */
     public void removeEditingInfo(Element md) {
         //--- purge geonet: attributes
-        @SuppressWarnings("unchecked")
-        List<Attribute> listAtts = md.getAttributes();
-        for (int i = 0; i < listAtts.size(); i++) {
-            Attribute attr = listAtts.get(i);
+        for (Attribute attr: (List<Attribute>)md.getAttributes()) {
             if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
                 attr.detach();
             }
         }
 
         //--- purge geonet: children
-        @SuppressWarnings("unchecked")
-        List<Element> list = md.getChildren();
-        for (int i = 0; i < list.size(); i++) {
-            Element child = list.get(i);
+        for (Element child: (List<Element>)md.getChildren()) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix()))
                 removeEditingInfo(child);
             else {
