@@ -297,9 +297,7 @@ public class EditLib {
         for (String singleType: type.getAlElements()) {
             // Add existing children of all types
             List<Element> list = getChildren(el, singleType);
-            if (qname.equals(singleType) && removeExisting) {
-                // Remove all existing children of the type of element to add
-            } else {
+            if (!qname.equals(singleType) || !removeExisting) {
                 for (Element aList : list) {
                     el.addContent(aList);
                 }
