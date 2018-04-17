@@ -217,13 +217,7 @@ public class EditLib {
         LOGGER_ADD_ELEMENT.debug("#### - child name = {}", name);
         LOGGER_ADD_ELEMENT.debug("#### - child namespace = {}", ns);
         LOGGER_ADD_ELEMENT.debug("#### - child prefix = {}", prefix);
-
-        @SuppressWarnings("unchecked")
-        List<Element> childS = el.getChildren();
-        if (childS.size() > 0) {
-            Element elChildS = childS.get(0);
-            LOGGER_ADD_ELEMENT.debug("#### 	- parents first child = {}", elChildS.getName());
-        }
+        LOGGER_ADD_ELEMENT.debug("#### - parents first child = {}", el.getChildren().stream().findFirst().toString());
 
         Element child = new Element(name, prefix, ns);
 
