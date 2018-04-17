@@ -240,28 +240,20 @@ public class EditLib {
 
         LOGGER_ADD_ELEMENT.debug("#### - metadata type = {}", type);
 
-        //--- collect all children, adding the new one at the end of the others
-
-        Vector<Element> children = new Vector<Element>();
-
+        // remove everything and then add all children to the element and assure a correct position for the
+        // new one: at the end of the others
+        el.removeContent();
         for (String singleType: type.getAlElements()) {
             List<Element> list = getChildren(el, singleType);
 
             LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, list.size());
             for (Element aChild : list) {
-                children.add(aChild);
+                el.addContent(aChild);
                 LOGGER_ADD_ELEMENT.debug("####		- add child {}", aChild.toString());
             }
 
             if (qname.equals(singleType))
-                children.add(child);
-        }
-        //--- remove everything and then add all collected children to the element to assure a correct position for the
-        // new one
-
-        el.removeContent();
-        for (Element aChildren : children) {
-            el.addContent(aChildren);
+                el.addContent(child);
         }
 
         //--- add mandatory sub-tags
@@ -299,9 +291,9 @@ public class EditLib {
         String typeName = mdSchema.getElementType(el.getQualifiedName(), parentName);
         MetadataType type = mdSchema.getTypeInfo(typeName);
 
-        // --- collect all children, adding the new one at the end of the others
-        Vector<Element> children = new Vector<Element>();
-
+        // remove everything and then add all children to the element and assure a correct position for the
+        // new one: at the end of the others
+        el.removeContent();
         for (String singleType: type.getAlElements()) {
             // Add existing children of all types
             List<Element> list = getChildren(el, singleType);
@@ -309,17 +301,11 @@ public class EditLib {
                 // Remove all existing children of the type of element to add
             } else {
                 for (Element aList : list) {
-                    children.add(aList);
+                    el.addContent(aList);
                 }
             }
             if (qname.equals(singleType))
-                children.add(fragElt);
-        }
-        // --- remove everything and then add all collected children to the element
-        // --- to assure a correct position for the new one
-        el.removeContent();
-        for (Element aChildren : children) {
-            el.addContent(aChildren);
+                el.addContent(fragElt);
         }
     }
 
