@@ -75,37 +75,25 @@ public class EditLib {
     private static Logger LOGGER_FILL_ELEMENT = LoggerFactory.getLogger(Geonet.EDITORFILLELEMENT);
     private static Logger LOGGER_EXPAND_ELEMENT = LoggerFactory.getLogger(Geonet.EDITOREXPANDELEMENT);
     private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
-    private Hashtable<String, Integer> htVersions = new Hashtable<String, Integer>(1000);
 
     public static final String XML_FRAGMENT_SEPARATOR = "&&&";
     public static final String COLON_SEPARATOR = "COLON";
     public static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
 
     private SchemaManager scm;
+    private Hashtable<String, Integer> htVersions = new Hashtable<String, Integer>(1000);
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //--------------------------------------------------------------------------
-
-    /**
-     * Init structures.
-     */
     public EditLib(SchemaManager scm) {
         this.scm = scm;
         htVersions.clear();
     }
 
     /**
-     * Adds missing namespace (ie. GML) to XML inputs. It should be done by the client side but add
-     * a check in here.
-     *
+     * Adds missing gml namespace to XML inputs, if it is missing.
      * @param fragment The fragment to be checked and processed.
      * @return The updated fragment.
      */
-    public static String addNamespaceToFragment(String fragment) {
-        //add the gml namespace if its missing
+    public static String addGmlNamespaceToFragment(String fragment) {
         if (fragment.contains("<gml:") && !fragment.contains("xmlns:gml=\"")) {
             LOGGER.debug("  Add missing GML namespace.");
             fragment = fragment.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
@@ -114,8 +102,7 @@ public class EditLib {
     }
 
     /**
-     * Tag the element so the metaata-edit-embedded.xsl know which element is the element for
-     * display
+     * Tag the element so the metadata-edit-embedded.xsl know which element is the element for display
      */
     public static void tagForDisplay(Element elem) {
         elem.setAttribute("addedObj", "true", Edit.NAMESPACE);
@@ -132,20 +119,9 @@ public class EditLib {
      * Expands a metadata adding all information needed for editing.
      */
     public String getVersionForEditing(String schema, String id, Element md) throws Exception {
-        String version = getVersion(id, true) + "";
+        String version = getVersion(id, true);
         addEditingInfo(schema, md, 1, 0);
         return version;
-    }
-
-    public void addEditingInfo(String schema, Element md, int id, int parent) throws Exception {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("MD before editing infomation:\n{}", Xml.getString(md));
-        }
-        enumerateTree(md, id, parent);
-        expandTree(scm.getSchema(schema), md);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("MD after editing infomation::\n{}", Xml.getString(md));
-        }
     }
 
     public void enumerateTree(Element md) throws Exception {
@@ -157,11 +133,11 @@ public class EditLib {
     }
 
     public String getVersion(String id) {
-        return Integer.toString(getVersion(id, false));
+        return getVersion(id, false);
     }
 
     public String getNewVersion(String id) {
-        return Integer.toString(getVersion(id, true));
+        return getVersion(id, true);
     }
 
     /**
@@ -177,7 +153,6 @@ public class EditLib {
      */
     public void removeEditingInfo(Element md) {
         //--- purge geonet: attributes
-
         @SuppressWarnings("unchecked")
         List<Attribute> listAtts = md.getAttributes();
         for (int i = 0; i < listAtts.size(); i++) {
@@ -408,7 +383,7 @@ public class EditLib {
                         LOGGER.debug("Add XML fragment; {} to element with ref: {} replacing content.", fragment, nodeRef);
                         // clean before update
                         el.removeContent();
-                        fragment = addNamespaceToFragment(fragment);
+                        fragment = addGmlNamespaceToFragment(fragment);
 
                         // Add content
                         Element node = Xml.loadString(fragment, false);
@@ -1000,7 +975,7 @@ public class EditLib {
     /**
      * Returns the version of a metadata, incrementing it if necessary.
      */
-    private synchronized int getVersion(String id, boolean increment) {
+    private synchronized String getVersion(String id, boolean increment) {
         Integer inVer = htVersions.get(id);
 
         if (inVer == null)
@@ -1011,7 +986,7 @@ public class EditLib {
 
         htVersions.put(id, inVer);
 
-        return inVer;
+        return Integer.toString(inVer);
     }
 
     private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element element) throws Exception {
@@ -1950,4 +1925,14 @@ public class EditLib {
         }
     }
 
+    private void addEditingInfo(String schema, Element md, int id, int parent) throws Exception {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("MD before editing infomation:\n{}", Xml.getString(md));
+        }
+        enumerateTree(md, id, parent);
+        expandTree(scm.getSchema(schema), md);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("MD after editing infomation::\n{}", Xml.getString(md));
+        }
+    }
 }
