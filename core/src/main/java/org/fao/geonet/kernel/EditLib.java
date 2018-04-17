@@ -69,6 +69,10 @@ import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.fao.geonet.constants.Edit.ChildElem.Attr.NAME;
+import static org.fao.geonet.constants.Edit.ChildElem.Attr.NAMESPACE;
+import static org.fao.geonet.constants.Edit.RootChild.CHILD;
+
 public class EditLib {
     private static Logger LOGGER = LoggerFactory.getLogger(Geonet.EDITOR);
     private static Logger LOGGER_ADD_ELEMENT = LoggerFactory.getLogger(Geonet.EDITORADDELEMENT);
@@ -1528,9 +1532,9 @@ public class EditLib {
 
     private boolean equal(String childName, String childNS, Element el) {
         if (Edit.NAMESPACE.getURI().equals(el.getNamespaceURI())) {
-            return Edit.RootChild.CHILD.equals(el.getName())
-                && childName.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAME))
-                && childNS.equals(el.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE));
+            return CHILD.equals(el.getName())
+                && childName.equals(el.getAttributeValue(NAME))
+                && childNS.equals(el.getAttributeValue(NAMESPACE));
         } else
             return childName.equals(el.getName()) && childNS.equals(el.getNamespaceURI());
     }
@@ -1541,35 +1545,26 @@ public class EditLib {
         String geonetNS = Edit.NAMESPACE.getURI();
 
         if (geonetNS.equals(elemNS1) && geonetNS.equals(elemNS2)) {
-            if (!Edit.RootChild.CHILD.equals(el1.getName()))
-                return false;
-
-            if (!Edit.RootChild.CHILD.equals(el2.getName()))
-                return false;
-
-            String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
-            String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
-
-            String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
-            String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
-
+            if (!CHILD.equals(el1.getName())) return false;
+            if (!CHILD.equals(el2.getName())) return false;
+            String name1 = el1.getAttributeValue(NAME);
+            String ns1 = el1.getAttributeValue(NAMESPACE);
+            String name2 = el2.getAttributeValue(NAME);
+            String ns2 = el2.getAttributeValue(NAMESPACE);
             return name1.equals(name2) && ns1.equals(ns2);
+
         } else if (geonetNS.equals(elemNS1) && ! geonetNS.equals(elemNS2)) {
-            if (!Edit.RootChild.CHILD.equals(el1.getName()))
-                return false;
-
-            String name1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAME);
-            String ns1 = el1.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
-
+            if (!CHILD.equals(el1.getName())) return false;
+            String name1 = el1.getAttributeValue(NAME);
+            String ns1 = el1.getAttributeValue(NAMESPACE);
             return el2.getName().equals(name1) && el2.getNamespaceURI().equals(ns1);
+
         } else if (!geonetNS.equals(elemNS1) && geonetNS.equals(elemNS2)) {
-            if (!Edit.RootChild.CHILD.equals(el2.getName()))
-                return false;
-
-            String name2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAME);
-            String ns2 = el2.getAttributeValue(Edit.ChildElem.Attr.NAMESPACE);
-
+            if (!CHILD.equals(el2.getName())) return false;
+            String name2 = el2.getAttributeValue(NAME);
+            String ns2 = el2.getAttributeValue(NAMESPACE);
             return el1.getName().equals(name2) && el1.getNamespaceURI().equals(ns2);
+            
         } else { // if (!geonetNS.equals(elemNS1) && !geonetNS.equals(elemNS2)) {
             return el1.getName().equals(el2.getName()) && el1.getNamespaceURI().equals(el2.getNamespaceURI());
         }
@@ -1613,13 +1608,13 @@ public class EditLib {
      */
     private Element createElement(MetadataSchema schema, String parent, String qname, String childNS, int min, int max) throws Exception {
 
-        Element child = new Element(Edit.RootChild.CHILD, Edit.NAMESPACE);
+        Element child = new Element(CHILD, Edit.NAMESPACE);
         SchemaSuggestions mdSugg = scm.getSchemaSuggestions(schema.getName());
 
-        child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAME, getUnqualifiedName(qname)));
+        child.setAttribute(new Attribute(NAME, getUnqualifiedName(qname)));
         child.setAttribute(new Attribute(Edit.ChildElem.Attr.PREFIX, getPrefix(qname)));
-        child.setAttribute(new Attribute(Edit.ChildElem.Attr.NAMESPACE, childNS));
-        child.setAttribute(new Attribute(Edit.ChildElem.Attr.UUID, Edit.RootChild.CHILD + "_" + qname + "_" + UUID.randomUUID().toString()));
+        child.setAttribute(new Attribute(NAMESPACE, childNS));
+        child.setAttribute(new Attribute(Edit.ChildElem.Attr.UUID, CHILD + "_" + qname + "_" + UUID.randomUUID().toString()));
         child.setAttribute(new Attribute(Edit.ChildElem.Attr.MIN, "" + min));
         child.setAttribute(new Attribute(Edit.ChildElem.Attr.MAX, "" + max));
 
