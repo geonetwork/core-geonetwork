@@ -1406,39 +1406,36 @@ public class EditLib {
     }
 
     public String getNamespace(String qname, Element md, MetadataSchema schema) {
-        // check the element first to see whether the namespace is
-        // declared locally
+        // check the element first to see whether the namespace is declared locally
         String result = checkNamespaces(qname, md);
-        if (result.equals("UNKNOWN")) {
+        if (!result.equals("UNKNOWN")) { return result;}
 
-            // find root element, where namespaces *must* be declared
-            Element root = md;
-            while (root.getParent() != null && root.getParent() instanceof Element)
-                root = (Element) root.getParent();
-            result = checkNamespaces(qname, root);
-
-            // finally if it isn't on the root element then check the list
-            // namespaces we collected as we parsed the schema
-            if (result.equals("UNKNOWN")) {
-                result = getNamespace(qname, schema);
-            }
+        // find root element, where namespaces *must* be declared
+        Element root = md;
+        while (root.getParent() != null && root.getParent() instanceof Element) {
+            root = (Element) root.getParent();
         }
-        return result;
+        result = checkNamespaces(qname, root);
+        if (!result.equals("UNKNOWN")) { return result;}
+
+        // finally if it isn't on the root element then check the list
+        // namespaces we collected as we parsed the schema
+        return getNamespace(qname, schema);
     }
 
-    public String getNamespace(String qname, MetadataSchema schema) {
+    private String getNamespace(String qname, MetadataSchema schema) {
         // check the list of namespaces we collected as we parsed the schema
-        String result;
         String prefix = getPrefix(qname);
         if (!prefix.equals("")) {
-            result = schema.getNS(prefix);
-            if (result == null) result = "UNKNOWN";
-        } else result = "UNKNOWN";
-        return result;
+            String result = schema.getNS(prefix);
+            if (result != null) {
+                return result;
+            }
+        }
+        return "UNKNOWN";
     }
 
-    public String checkNamespaces(String qname, Element md) {
-        // get prefix
+    private String checkNamespaces(String qname, Element md) {
         String prefix = getPrefix(qname);
 
         // loop on namespaces to fine the one corresponding to prefix
