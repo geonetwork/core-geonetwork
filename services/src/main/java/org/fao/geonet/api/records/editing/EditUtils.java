@@ -263,7 +263,7 @@ class EditUtils {
                 if (Log.isDebugEnabled(Geonet.EDITOR))
                     Log.debug(Geonet.EDITOR, "replacing XML content");
                 el.removeContent();
-                val = EditLib.addNamespaceToFragment(val);
+                val = EditLib.addGmlNamespaceToFragment(val);
                 el.addContent(Xml.loadString(val, false));
             } else {
                 @SuppressWarnings("unchecked")
