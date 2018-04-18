@@ -164,7 +164,7 @@ public class EditLib {
         }
 
         //--- purge geonet: children
-        for (Element child: (List<Element>)md.getChildren()) {
+        for (Element child: (List<Element>)new ArrayList(md.getChildren())) {
             if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix()))
                 removeEditingInfo(child);
             else {
@@ -263,15 +263,16 @@ public class EditLib {
         MetadataType type = mdSchema.getTypeInfo(typeName);
         LOGGER_ADD_ELEMENT.debug("#### - metadata type = {}", type);
 
-        // remove everything and then add all children to the element and assure a correct position for the
-        // new one: at the end of the others
+        // remove everything and then, depending on removeExisting
+        // readd all children to the element and assure a correct position for the new one: at the end of the others
+        // or just add the new one
+        List existingAllType = new ArrayList(targetElement.getChildren());
         targetElement.removeContent();
         for (String singleType: type.getAlElements()) {
-            // Add existing children of all types
-            List<Element> list = getChildren(targetElement, singleType);
+            List<Element> existingForThisType = filterOnQname(existingAllType, singleType);
+            LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, existingForThisType.size());
             if (!qname.equals(singleType) || !removeExisting) {
-                LOGGER_ADD_ELEMENT.debug("####   - child of type {}, list size = {}", singleType, list.size());
-                for (Element existingChild : list) {
+                for (Element existingChild : existingForThisType) {
                     targetElement.addContent(existingChild);
                     LOGGER_ADD_ELEMENT.debug("####		- add child {}", existingChild.toString());
                 }
@@ -901,12 +902,8 @@ public class EditLib {
     //---
     //--------------------------------------------------------------------------
 
-    private List<Element> getChildren(Element el, String qname) {
+    private List<Element> filterOnQname(List<Element> children, String qname) {
         Vector<Element> result = new Vector<Element>();
-
-        @SuppressWarnings("unchecked")
-        List<Element> children = el.getChildren();
-
         for (Element child : children) {
             if (child.getQualifiedName().equals(qname)) {
                 result.add(child);
@@ -1127,7 +1124,7 @@ public class EditLib {
                 elemName.contains(Edit.RootChild.CHOICE)) {
                 elems = searchChildren(elemName, md, schema);
             } else {
-                elems = getChildren(md, elemName);
+                elems = filterOnQname(md.getChildren(), elemName);
             }
             for (Element elem : elems) {
                 container.addContent((Element) elem.clone());
@@ -1177,7 +1174,7 @@ public class EditLib {
                         holder.addAll(elems);
                     }
                 } else {
-                    List<Element> chElem = getChildren(md, chName);
+                    List<Element> chElem = filterOnQname(md.getChildren(), chName);
                     for (Element elem : chElem) {
                         holder.add(elem.detach());
                     }
