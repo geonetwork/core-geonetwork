@@ -74,15 +74,16 @@ import static org.fao.geonet.constants.Edit.ChildElem.Attr.NAMESPACE;
 import static org.fao.geonet.constants.Edit.RootChild.CHILD;
 
 public class EditLib {
-    private static Logger LOGGER = LoggerFactory.getLogger(Geonet.EDITOR);
-    private static Logger LOGGER_ADD_ELEMENT = LoggerFactory.getLogger(Geonet.EDITORADDELEMENT);
-    private static Logger LOGGER_FILL_ELEMENT = LoggerFactory.getLogger(Geonet.EDITORFILLELEMENT);
-    private static Logger LOGGER_EXPAND_ELEMENT = LoggerFactory.getLogger(Geonet.EDITOREXPANDELEMENT);
-    private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.EDITOR);
+    private static final Logger LOGGER_ADD_ELEMENT = LoggerFactory.getLogger(Geonet.EDITORADDELEMENT);
+    private static final Logger LOGGER_FILL_ELEMENT = LoggerFactory.getLogger(Geonet.EDITORFILLELEMENT);
+    private static final Logger LOGGER_EXPAND_ELEMENT = LoggerFactory.getLogger(Geonet.EDITOREXPANDELEMENT);
 
     public static final String XML_FRAGMENT_SEPARATOR = "&&&";
     public static final String COLON_SEPARATOR = "COLON";
     public static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
+
+    private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
 
     private SchemaManager scm;
     private Hashtable<String, Integer> htVersions = new Hashtable<String, Integer>(1000);
@@ -1119,9 +1120,7 @@ public class EditLib {
         for (String elemName: containerType.getAlElements()) {
             LOGGER.debug("		-- Searching for child {}", elemName);
             List<Element> elems;
-            if (elemName.contains(Edit.RootChild.GROUP) ||
-                elemName.contains(Edit.RootChild.SEQUENCE) ||
-                elemName.contains(Edit.RootChild.CHOICE)) {
+            if (edit_CHOICE_GROUP_SEQUENCE_in(elemName)) {
                 elems = searchChildren(elemName, md, schema);
             } else {
                 elems = filterOnQname(md.getChildren(), elemName);
@@ -1166,9 +1165,7 @@ public class EditLib {
             Vector<Content> holder = new Vector<Content>();
 
             for (String chName: thisType.getAlElements()) {
-                if (chName.contains(Edit.RootChild.CHOICE) ||
-                    chName.contains(Edit.RootChild.GROUP) ||
-                    chName.contains(Edit.RootChild.SEQUENCE)) {
+                if (edit_CHOICE_GROUP_SEQUENCE_in(chName)) {
                     List<Element> elems = searchChildren(chName, md, schema);
                     if (elems.size() > 0) {
                         holder.addAll(elems);
@@ -1195,9 +1192,7 @@ public class EditLib {
         List<Element> chChilds = md.getChildren();
         for (Element chChild : chChilds) {
             String chName = chChild.getName();
-            if (chName.contains(Edit.RootChild.CHOICE) ||
-                chName.contains(Edit.RootChild.GROUP) ||
-                chName.contains(Edit.RootChild.SEQUENCE)) {
+            if (edit_CHOICE_GROUP_SEQUENCE_in(chName)) {
                 List<Object> moreChChilds = getContainerChildren(chChild);
                 result.addAll(moreChChilds);
             } else {
@@ -1220,9 +1215,7 @@ public class EditLib {
             if (obj instanceof Element) {
                 Element mdCh = (Element) obj;
                 String mdName = mdCh.getName();
-                if (mdName.contains(Edit.RootChild.CHOICE) ||
-                    mdName.contains(Edit.RootChild.GROUP) ||
-                    mdName.contains(Edit.RootChild.SEQUENCE)) {
+                if (edit_CHOICE_GROUP_SEQUENCE_in(mdName)) {
                     if (mdCh.getChildren().size() > 0) {
                         Vector<Object> chChilds = getContainerChildren(mdCh);
                         if (chChilds.size() > 0) {
@@ -1427,11 +1420,7 @@ public class EditLib {
             // finally if it isn't on the root element then check the list
             // namespaces we collected as we parsed the schema
             if (result.equals("UNKNOWN")) {
-                String prefix = getPrefix(qname);
-                if (!prefix.equals("")) {
-                    result = schema.getNS(prefix);
-                    if (result == null) result = "UNKNOWN";
-                } else result = "UNKNOWN";
+                result = getNamespace(qname, schema);
             }
         }
         return result;
@@ -1848,5 +1837,11 @@ public class EditLib {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("MD after editing infomation::\n{}", Xml.getString(md));
         }
+    }
+
+    private boolean edit_CHOICE_GROUP_SEQUENCE_in(String name) {
+        return name.contains(Edit.RootChild.CHOICE) ||
+            name.contains(Edit.RootChild.GROUP) ||
+            name.contains(Edit.RootChild.SEQUENCE);
     }
 }
