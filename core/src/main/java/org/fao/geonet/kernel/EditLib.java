@@ -1452,21 +1452,11 @@ public class EditLib {
     }
 
     private void insertFirst(Element md, Element child) {
-        Vector<Element> v = new Vector<Element>();
-        v.add(child);
-
-        @SuppressWarnings("unchecked")
-        List<Element> list = md.getChildren();
-
-        for (Element elem : list) {
-            v.add(elem);
-        }
-
-        //---
+        List<Element> list = new ArrayList(md.getChildren());
         md.removeContent();
-
-        for (Element aV : v) {
-            md.addContent(aV);
+        md.addContent(child);
+        for (Element elem : list) {
+            md.addContent(elem);
         }
     }
 
@@ -1484,25 +1474,15 @@ public class EditLib {
             v.add(el);
 
             if (equal(childName, childNS, el) && !added) {
-                if (i == list.size() - 1) {
+                if (i == list.size() - 1 || !equal(el, list.get(i + 1))) {
                     v.add(child);
                     added = true;
-                } else {
-                    Element elNext = list.get(i + 1);
-
-                    if (!equal(el, elNext)) {
-                        v.add(child);
-                        added = true;
-                    }
                 }
             }
         }
 
         md.removeContent();
-
-        for (Element aV : v) {
-            md.addContent(aV);
-        }
+        md.addContent(v);
     }
 
     private boolean equal(String childName, String childNS, Element el) {
