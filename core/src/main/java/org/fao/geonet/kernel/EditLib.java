@@ -658,7 +658,7 @@ public class EditLib {
                         }
                     }
                 } else if (o instanceof Text) {
-                    propEl.setText(((Text) o).getText());
+                    propEl.addContent((Content)(new Text(((Text) o).getText())));
                 }
             }
         } else if (newValue.getName().equals(propEl.getName()) &&
