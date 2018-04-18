@@ -46,6 +46,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
@@ -768,17 +769,9 @@ public final class XslUtil {
             res = db.parse(is);
 
         } catch (Throwable e) {
-            e.printStackTrace();
-            Log.error(Geonet.GEONETWORK, "Failed fetching url: " + surl);
+            Log.error(Geonet.GEONETWORK, "Failed fetching url: " + surl, e);
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.error(Geonet.GEONETWORK, "Failed fetching url2: " + surl);
-                }
-            }
+            IOUtils.closeQuietly(is);
         }
 
         return res;
