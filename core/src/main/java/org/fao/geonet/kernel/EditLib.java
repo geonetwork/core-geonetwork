@@ -510,9 +510,7 @@ public class EditLib {
 
             // If a property is not found in metadata,
             // or in create mode, create it...
-            if (
-                (nodeList.size() == 0 && createXpathNodeIfNotExist) ||
-                    isCreateMode) {
+            if ( (nodeList.isEmpty() && createXpathNodeIfNotExist) || isCreateMode) {
                 int indexOfRequiredPortion = -1;
                 // Extract the XPath for the element to match. For:
                 //  * Relative XPath (*//gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString
@@ -1034,7 +1032,7 @@ public class EditLib {
                             !elemType.isOrType() ||                         // eg. gmd:EX_Extent
                             (elemType.isOrType() && (                       // eg. depends on schema-suggestions.xml
                                 childHasOneSuggestion ||                    //   expand the only one suggestion - TODO - this needs improvements
-                                    (childSuggestion.size() == 0 && elemType.getElementList().contains("gco:CharacterString")))
+                                    (childSuggestion.isEmpty() && elemType.getElementList().contains("gco:CharacterString")))
                                 //   expand element which have no suggestion
                                 // and have a gco:CharacterString substitute.
                                 // gco:CharacterString is the default.
@@ -1050,10 +1048,8 @@ public class EditLib {
                         // Add it to the element
                         element.addContent(child);
 
-                        if (childHasOnlyCharacterStringSuggestion &&
-                            isISOPlugin) {
-                            child.addContent(isoPlugin.createBasicTypeCharacterString()
-                            );
+                        if (childHasOnlyCharacterStringSuggestion && isISOPlugin) {
+                            child.addContent(isoPlugin.createBasicTypeCharacterString());
                         }
 
                         // Continue ....
@@ -1062,9 +1058,7 @@ public class EditLib {
                         // Logging some cases to avoid
                         if (LOGGER_FILL_ELEMENT.isDebugEnabled()) {
                             if (elemType.isOrType() && isISOPlugin) {
-                                if (elemType.getElementList().contains(
-                                    isoPlugin.getBasicTypeCharacterStringName())
-                                    && !childHasOneSuggestion) {
+                                if (elemType.getElementList().contains(isoPlugin.getBasicTypeCharacterStringName()) && !childHasOneSuggestion) {
                                     LOGGER_FILL_ELEMENT.debug("####   - (INNER) Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: {}", element.getName());
                                 } else {
                                     LOGGER_FILL_ELEMENT.debug("####   - WARNING (INNER): requested expansion of an OR element : {}", childName);
@@ -1074,10 +1068,7 @@ public class EditLib {
                     }
                 }
             }
-        } else if (isISOPlugin &&
-            type.getElementList().contains(
-                isoPlugin.getBasicTypeCharacterStringName()) &&
-            !hasSuggestion) {
+        } else if (isISOPlugin && type.getElementList().contains(isoPlugin.getBasicTypeCharacterStringName()) && !hasSuggestion) {
             // expand element which have no suggestion
             // and have a gco:CharacterString substitute.
             // gco:CharacterString is the default.
@@ -1350,7 +1341,7 @@ public class EditLib {
             LOGGER_EXPAND_ELEMENT.debug("- namespace = {}", childNS);
 
             List<?> list = md.getChildren(childName, Namespace.getNamespace(childNS));
-            if (list.size() == 0 && !(type.isOrType())) {
+            if (list.isEmpty() && !(type.isOrType())) {
                 LOGGER_EXPAND_ELEMENT.debug("- no children of this type already present");
 
                 Element newElem = createElement(schema, elemName, childQName, childNS, type.getMinCardinAt(i), type.getMaxCardinAt(i));
