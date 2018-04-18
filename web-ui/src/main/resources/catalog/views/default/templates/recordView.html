@@ -409,18 +409,18 @@
         </br>
         
         <div data-gn-userfeedback='{{mdView.current.record.getUuid()}}'
-                  data-gn-user={{user.username}} data-ng-show="isUserFeedbackEnabled">
+                  data-gn-user={{user.username}} data-ng-if="isUserFeedbackEnabled">
         </div>
         <div class="gn-md-feedback-buttons clearfix">
           <div class="pull-left"
                   data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}'
                   data-gn-user={{user.username}}
-                  data-ng-show="isUserFeedbackEnabled">
+                  data-ng-if="isUserFeedbackEnabled">
           </div>
           <div class="pull-left"
                   data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}'
                   data-gn-user={{user.username}}
-                  data-ng-show="isUserFeedbackEnabled">
+                  data-ng-if="isUserFeedbackEnabled">
           </div>
         </div>
 
