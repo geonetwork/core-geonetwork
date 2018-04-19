@@ -32,6 +32,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -524,13 +525,13 @@ public class MetadataApi implements ApplicationContextAware {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public FeatureResponse getFeatureCatalog(
+    public FeatureResponse getFeatureCatalog (
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
-        HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws ResourceNotFoundException {
 
         RelatedItemType[] type = {RelatedItemType.fcats};
 
@@ -538,26 +539,42 @@ public class MetadataApi implements ApplicationContextAware {
 
         Map<String, String[]> decodeMap = new HashMap<>();
 
-        RelatedResponse related = getRelated(metadataUuid, type, 0, 100, request);
+        try {
+            RelatedResponse related = getRelated(metadataUuid, type, 0, 100, request);
 
-        if (related.getFcats() != null) {
-            for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
-                if (element.getCode() != null && !element.getCode().trim().equals("")) {
-                    if (!decodeMap.containsKey(element.getCode())) {
-                        String[] decodedValues = {element.getName(), element.getDefinition()};
-                        decodeMap.put(element.getCode(), decodedValues);
-                    }
-                } else {
-                    if (!decodeMap.containsKey(element.getName())) {
-                        String[] decodedValues = {element.getName(), element.getDefinition()};
-                        decodeMap.put(element.getName(), decodedValues);
+            if (isIncludedAttributeTable(related.getFcats())) {
+                for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
+                    if (StringUtils.isNotBlank(element.getCode())) {
+                        if (!decodeMap.containsKey(element.getCode())) {
+                            String[] decodedValues = {element.getName(), element.getDefinition()};
+                            decodeMap.put(element.getCode(), decodedValues);
+                        }
+                    } else {
+                        if (!decodeMap.containsKey(element.getName())) {
+                            String[] decodedValues = {element.getName(), element.getDefinition()};
+                            decodeMap.put(element.getName(), decodedValues);
+                        }
                     }
                 }
             }
-        } else return response;
 
-        response.setDecodeMap(decodeMap);
+            response.setDecodeMap(decodeMap);
 
-        return response;
+            return response;
+        } catch (Exception e) {
+            Log.error(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new ResourceNotFoundException();
+        }
+
+    }
+
+
+    private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
+        return fcat != null
+            && fcat.getItem() != null
+            && fcat.getItem().size()>0
+            && fcat.getItem().get(0).getFeatureType()!=null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable()!=null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement()!=null;
     }
 }
