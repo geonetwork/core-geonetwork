@@ -122,7 +122,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             if (file != null &&
                 file.getFileName() != null &&
                 file.getFileName().toString() != null &&
-                    (file.getFileName().toString().endsWith(".xml") || file.getFileName().toString().endsWith(".mef"))) {
+                    (file.getFileName().toString().endsWith(".xml") || MEFLib.isValidArchiveExtensionForMEF(file.getFileName().toString()))) {
 
                 Element xml;
                 Path filePath = file.toAbsolutePath().normalize();
@@ -143,6 +143,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 false, context, file);
                         for (String id : ids) {
                             log.debug("Metadata imported from MEF: " + id);
+                            aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+                            listOfRecordsToIndex.add(Integer.valueOf(id));
                             result.totalMetadata++;
                         }
                     } catch (Exception e) {

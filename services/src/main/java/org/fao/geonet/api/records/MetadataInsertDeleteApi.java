@@ -1227,7 +1227,7 @@ public class MetadataInsertDeleteApi {
         SettingManager settingManager = appContext.getBean(SettingManager.class);
         Map<String, String> sourceTranslations = Maps.newHashMap();
         try {
-            Importer.importRecord(uuid, uuidProcessing, md, schema, 0,
+            uuid = Importer.importRecord(uuid, uuidProcessing, md, schema, 0,
                 settingManager.getSiteId(),
                 settingManager.getSiteName(),
                 sourceTranslations, context, id, date, date, group, metadataType);
