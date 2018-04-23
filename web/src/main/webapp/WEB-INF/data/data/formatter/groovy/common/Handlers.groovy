@@ -153,9 +153,9 @@ public class Handlers {
         Element related = getRelatedReport(id, uuid)
 
         related.getChildren().each { rel ->
-            def type = rel.name
 
             rel.getChildren("item").each { item ->
+                def type = rel.name
                 def direction = Direction.CHILD
                 def association
                 if (type == "siblings") {
