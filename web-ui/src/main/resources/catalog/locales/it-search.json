@@ -80,7 +80,7 @@
     "mapLinkonlinesrc": "Carica mappa",
     "openRecord": "Visualizza record",
     "openRecordhasfeaturecat": "Associa record",
-    "openRecordfcats": "Feature catalog",
+    "openRecordfcat": "Feature catalog",
     "openRecordparent": "Parent record",
     "openRecordsources": "Dati di origine",
     "openRecordchildren": "Child record",
@@ -404,12 +404,15 @@
     "wfsDownloadDataInstruction": "Choose a data format to download:",
     "wfsTypenameNotAvailable": "The featuretype '{{typename}}' is not available in the WFS service. You can select from available featuretypes instead",
     "wfsChooseFeatureTypeToDownload": "Choose a featuretype to download",
-    "processesTool": "Use a WPS process",
     "wpsGetCapError": "Error while parsing WPS capabilities:",
     "wpsByUrl": "Search processes",
     "wpsRecent": "Recent Processes",
     "selection.indexing.count": "Indexing started for the {{count}} record(s) selected.",
     "selection.indexing.error": "Error during selection indexing.",
     "showLegend": "Show legend",
-    "hideLegend": "Hide legend"
+    "hideLegend": "Hide legend",
+    "mdActions": "Available actions",
+    "mdActions-view": "Viewable",
+    "mdActions-download": "Downloadable",
+    "mdActions-process": "Processable"
 }
