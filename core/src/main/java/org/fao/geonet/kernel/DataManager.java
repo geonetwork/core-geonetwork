@@ -1530,6 +1530,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @throws Exception hmm
      */
     public int rateMetadata(final int metadataId, final String ipAddress, final int rating) throws Exception {
+        // Save rating for this IP
         MetadataRatingByIp ratingEntity = new MetadataRatingByIp();
         ratingEntity.setRating(rating);
         ratingEntity.setId(new MetadataRatingByIpId(metadataId, ipAddress));
@@ -1537,9 +1538,8 @@ public class DataManager implements ApplicationEventPublisherAware {
         final MetadataRatingByIpRepository ratingByIpRepository = getApplicationContext().getBean(MetadataRatingByIpRepository.class);
         ratingByIpRepository.save(ratingEntity);
 
-        //
-        // calculate new rating
-        //
+
+        // Calculate new rating
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -1553,9 +1553,47 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId), true, null);
+
+        // And register the metadata to be indexed in the near future
+        final IndexingList list = getApplicationContext().getBean(IndexingList.class);
+        list.add(metadataId);
 
         return rating;
+    }
+
+
+    /**
+     * Set global metadata rating.
+     *
+     * There is 2 rating mechanisms:
+     * <ul>
+     *     <li>{@link org.fao.geonet.domain.userfeedback.RatingsSetting#BASIC} which store rating by IP (@see {@link #rateMetadata(int, String, int)}</li>
+     *     <li>{@link org.fao.geonet.domain.userfeedback.RatingsSetting#ADVANCED} which store user feedback and compute an average rate</li>
+     * </ul>
+     *
+     * This method is use by the ADVANCED mode to store the global average value.
+     *
+     * @param metadataId
+     * @param average
+     * @return
+     * @throws Exception
+     */
+    public void rateMetadata(final int metadataId, final int average) {
+
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, String.format(
+                "Setting rating in advanced mode for id: %d --> rating is: %d", metadataId , average));
+
+        getMetadataRepository().update(metadataId, new Updater<Metadata>() {
+            @Override
+            public void apply(Metadata entity) {
+                entity.getDataInfo().setRating(average);
+            }
+        });
+
+        // And register the metadata to be indexed in the near future
+        final IndexingList list = getApplicationContext().getBean(IndexingList.class);
+        list.add(metadataId);
     }
 
     /**

@@ -112,7 +112,6 @@
                           scope.fewCommentsList.concat(response.data);
                   scope.loaded = true;
                 }, function(response) {
-                  console.log('gnUserfeedback.loadComments');
                   console.log(response.statusText);
                 });
 
@@ -122,7 +121,6 @@
                   scope.rating = response.data;
                   scope.loaded = true;
                 }, function myError(response) {
-                  console.log('gnUserfeedback.loadComments');
                   console.log(response.statusText);
                 });
 
