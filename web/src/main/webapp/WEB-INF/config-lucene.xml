@@ -109,6 +109,7 @@
       <field name="_isHarvested" tagName="isHarvested"/>
       <field name="_popularity" tagName="popularity"/>
       <field name="_rating" tagName="rating"/>
+      <field name="feedbackCount" tagName="feedbackCount"/>
       <field name="_displayOrder" tagName="displayOrder"/>
       <field name="_view" tagName="view"/>
       <field name="_notify" tagName="notify"/>
@@ -348,6 +349,8 @@
   -->
   <numeric>
     <Field name="denominator"/>
+    <Field name="feedbackCount"/>
+    <Field name="_rating"/>
     <Field name="northBL" type="double"/>
     <Field name="eastBL" type="double"/>
     <Field name="southBL" type="double"/>
