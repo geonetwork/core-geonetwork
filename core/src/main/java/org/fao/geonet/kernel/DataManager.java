@@ -104,6 +104,7 @@ import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.exceptions.JeevesException;
@@ -700,6 +701,12 @@ public class DataManager implements ApplicationEventPublisherAware {
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DUMMY, "0", false, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity, true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.RATING, rating, true, true));
+            if (RatingsSetting.ADVANCED.equals(getSettingManager().getValue(Settings.SYSTEM_LOCALRATING_ENABLE))) {
+                UserFeedbackRepository userFeedbackRepository = getApplicationContext().getBean(UserFeedbackRepository.class);
+                int nbOfFeedback = userFeedbackRepository.findByMetadata_Uuid(uuid).size();
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.FEEDBACKCOUNT, nbOfFeedback + "", true, true));
+            }
+
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER, displayOrder, true, false));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra, false, true));
 
