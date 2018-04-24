@@ -147,7 +147,7 @@ public class GroupsApi {
     @RequestMapping(value = "/{groupId}/logo", method = RequestMethod.GET)
     public void getGroupLogo(
         @ApiParam(value = "Group identifier", required = true) @PathVariable(value = "groupId") final Integer groupId,
-        final WebRequest webRequest,
+        @ApiIgnore final WebRequest webRequest,
         HttpServletRequest request,
         HttpServletResponse response) throws ResourceNotFoundException {
 

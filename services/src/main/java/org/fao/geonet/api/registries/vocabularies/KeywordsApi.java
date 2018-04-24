@@ -181,8 +181,8 @@ public class KeywordsApi {
             defaultValue = "DESC"
         )
             String sort,
-        NativeWebRequest webRequest,
-        HttpServletRequest request,
+        @ApiIgnore
+            HttpServletRequest request,
         @ApiIgnore
             @ApiParam(hidden = true)
         HttpSession httpSession
