@@ -71,15 +71,10 @@ import springfox.documentation.annotations.ApiIgnore;
  * User Feedback REST API.
  */
 @RequestMapping(value = { "/api", "/api/" + API.VERSION_0_1 })
-@Api(value = "userfeedback", tags = "userfeedback")
+@Api(value = "userfeedback", tags = "userfeedback",
+    description = "User feedback")
 @Controller("userfeedback")
 public class UserFeedbackAPI {
-
-    /** The Constant API_PARAM_CSW_SERVICE_IDENTIFIER. */
-    public static final String API_PARAM_CSW_SERVICE_IDENTIFIER = "Service identifier";
-
-    /** The Constant API_PARAM_CSW_SERVICE_DETAILS. */
-    public static final String API_PARAM_CSW_SERVICE_DETAILS = "Service details";
 
     /**
      * Delete user feedback.
@@ -403,7 +398,7 @@ public class UserFeedbackAPI {
      * @throws Exception the exception
      */
     @ApiOperation(
-        value = "Creates a userfeedback",
+        value = "Creates a user feedback",
         notes = "Creates a user feedback in draft status if the user is not logged in.",
         nickname = "newUserFeedback")
     @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -463,7 +458,7 @@ public class UserFeedbackAPI {
      * @return the response entity
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Publishes a record", notes = "For reviewers", nickname = "publish")
+    @ApiOperation(value = "Publishes a feedback", notes = "For reviewers", nickname = "publishFeedback")
     @RequestMapping(value = "/userfeedback/{uuid}/publish", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('Reviewer')")
