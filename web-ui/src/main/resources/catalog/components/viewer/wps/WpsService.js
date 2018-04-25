@@ -238,7 +238,8 @@
               }
             });
           }
-          if (input.boundingBoxData && data) {
+          // we bbox is cleared value is still set to ',,,'
+          if (input.boundingBoxData && data && data != ',,,') {
             var bbox = data.split(',');
             request.value.dataInputs.input.push({
               identifier: {
