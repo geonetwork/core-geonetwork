@@ -186,8 +186,11 @@ class Harvester implements IHarvester<HarvestResult> {
 
         Lib.net.setupProxy(context, req);
 
-        if (params.isUseAccount())
+        if (params.isUseAccount()) {
             req.setCredentials(params.getUsername(), params.getPassword());
+            req.setPreemptiveBasicAuth(true);
+        }
+
         CswServer server = null;
         try {
             Element capabil = req.execute();
