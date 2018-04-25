@@ -234,6 +234,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         if (params.isUseAccount()) {
             req.setCredentials(params.getUsername(), params.getPassword());
+            req.setPreemptiveBasicAuth(true);
         }
 
         xml = req.execute();
