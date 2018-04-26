@@ -28,6 +28,7 @@
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:owsg="http://www.opengeospatial.net/ows"
                 xmlns:ows11="http://www.opengis.net/ows/1.1"
+                xmlns:ows2="http://www.opengis.net/ows/2.0"
                 xmlns:wms="http://www.opengis.net/wms"
                 xmlns:wcs="http://www.opengis.net/wcs"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -40,7 +41,7 @@
   <xsl:template match="*" mode="RespParty">
 
     <xsl:for-each
-      select="ContactPersonPrimary/ContactPerson|wms:ContactPersonPrimary/wms:ContactPerson|wcs:individualName|ows:ServiceContact/ows:IndividualName|ows11:ServiceContact/ows11:IndividualName">
+      select="ContactPersonPrimary/ContactPerson|wms:ContactPersonPrimary/wms:ContactPerson|wcs:individualName|ows:ServiceContact/ows:IndividualName|ows11:ServiceContact/ows11:IndividualName|ows2:ServiceContact/ows2:IndividualName">
       <individualName>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -51,7 +52,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <xsl:for-each
-      select="ContactPersonPrimary/ContactOrganization|wms:ContactPersonPrimary/wms:ContactOrganization|wcs:organisationName|ows:ProviderName|ows11:ProviderName">
+      select="ContactPersonPrimary/ContactOrganization|wms:ContactPersonPrimary/wms:ContactOrganization|wcs:organisationName|ows:ProviderName|ows11:ProviderName|ows2:ProviderName">
       <organisationName>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -62,7 +63,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <xsl:for-each
-      select="ContactPosition|wms:ContactPosition|wcs:positionName|ows:ServiceContact/ows:PositionName|ows11:ServiceContact/ows11:PositionName">
+      select="ContactPosition|wms:ContactPosition|wcs:positionName|ows:ServiceContact/ows:PositionName|ows11:ServiceContact/ows11:PositionName|ows2:ServiceContact/ows2:PositionName">
       <positionName>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -94,7 +95,8 @@
       <CI_Telephone>
         <xsl:for-each select="ContactVoiceTelephone|wms:ContactVoiceTelephone|
             ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice|
-            ows11:ServiceContact/ows11:ContactInfo/ows11:Phone/ows11:Voice">
+            ows11:ServiceContact/ows11:ContactInfo/ows11:Phone/ows11:Voice|
+            ows2:ServiceContact/ows2:ContactInfo/ows2:Phone/ows2:Voice">
           <voice>
             <gco:CharacterString>
               <xsl:value-of select="."/>
@@ -104,7 +106,8 @@
 
         <xsl:for-each select="ContactFacsimileTelephone|wms:ContactFacsimileTelephone|
             ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Facsimile|
-            ows11:ServiceContact/ows11:ContactInfo/ows11:Phone/ows11:Facsimile">
+            ows11:ServiceContact/ows11:ContactInfo/ows11:Phone/ows11:Facsimile|
+            ows2:ServiceContact/ows2:ContactInfo/ows2:Phone/ows2:Facsimile">
           <facsimile>
             <gco:CharacterString>
               <xsl:value-of select="."/>
@@ -118,7 +121,8 @@
     <xsl:for-each select="ContactAddress|../wms:ContactInformation|wms:ContactAddress|
               wcs:contactInfo|
               ows:ServiceContact/ows:ContactInfo/ows:Address|
-              ows11:ServiceContact/ows11:ContactInfo/ows11:Address">
+              ows11:ServiceContact/ows11:ContactInfo/ows11:Address|
+              ows2:ServiceContact/ows2:ContactInfo/ows2:Address">
 
       <address>
         <CI_Address>
@@ -133,7 +137,8 @@
     <xsl:variable name="url" select="//Service/OnlineResource/@xlink:href|
       //wms:Service/wms:OnlineResource/@xlink:href|
       ows:ProviderSite/@xlink:href|
-      ows11:ProviderSite/@xlink:href"/>
+      ows11:ProviderSite/@xlink:href|
+      ows2:ProviderSite/@xlink:href"/>
     <xsl:if test="$url != ''">
       <onlineResource>
         <CI_OnlineResource>
@@ -151,7 +156,7 @@
   <!-- ============================================================================= -->
 
   <xsl:template match="*" mode="Address">
-    <xsl:for-each select="Address|wms:Address|ows:DeliveryPoint|ows11:DeliveryPoint">
+    <xsl:for-each select="Address|wms:Address|ows:DeliveryPoint|ows11:DeliveryPoint|ows2:DeliveryPoint">
       <deliveryPoint>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -161,7 +166,7 @@
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <xsl:for-each select="City|wms:City|wcs:address/wcs:city|ows:City|ows11:City">
+    <xsl:for-each select="City|wms:City|wcs:address/wcs:city|ows:City|ows11:City|ows2:City">
       <city>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -172,7 +177,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <xsl:for-each
-      select="StateOrProvince|wms:StateOrProvince|ows:AdministrativeArea|ows11:AdministrativeArea">
+      select="StateOrProvince|wms:StateOrProvince|ows:AdministrativeArea|ows11:AdministrativeArea|ows2:AdministrativeArea">
       <administrativeArea>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -182,7 +187,7 @@
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <xsl:for-each select="PostCode|wms:PostCode|ows:PostalCode|ows11:PostalCode">
+    <xsl:for-each select="PostCode|wms:PostCode|ows:PostalCode|ows11:PostalCode|ows2:PostalCode">
       <postalCode>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -192,7 +197,7 @@
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <xsl:for-each select="Country|wms:Country|wcs:address/wcs:country|ows:Country|ows11:Country">
+    <xsl:for-each select="Country|wms:Country|wcs:address/wcs:country|ows:Country|ows11:Country|ows2:Country">
       <country>
         <gco:CharacterString>
           <xsl:value-of select="."/>
@@ -203,7 +208,7 @@
     <!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <xsl:for-each
-      select="ContactElectronicMailAddress|wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress">
+      select="ContactElectronicMailAddress|wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress|ows2:ElectronicMailAddress">
       <electronicMailAddress>
         <gco:CharacterString>
           <xsl:value-of select="."/>
