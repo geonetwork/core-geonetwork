@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
+import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +45,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 
@@ -133,8 +135,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     private User approver;
 
     /** The date. */
-    @Column(nullable = false)
-    private Date date;
+    private ISODate date;
 
     /** The citation. */
     @OneToOne(cascade = CascadeType.ALL)
@@ -242,7 +243,8 @@ public class UserFeedback extends GeonetEntity implements Serializable {
      *
      * @return the date
      */
-    public Date getDate() {
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "date", nullable = false, length = 30))
+    public ISODate getDate() {
         return date;
     }
 
@@ -389,7 +391,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
      *
      * @param date the new date
      */
-    public void setDate(Date date) {
+    public void setDate(ISODate date) {
         this.date = date;
     }
 

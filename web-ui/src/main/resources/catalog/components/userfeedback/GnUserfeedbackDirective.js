@@ -28,16 +28,13 @@
 
   goog.require('gn_catalog_service');
   goog.require('gn_search_location');
-  goog.require('gn_userfeedback_controller');
 
-  var module = angular.module('gn_userfeedback_directive',
-      ['gn_userfeedback_controller']);
+  var module = angular.module('gn_userfeedback_directive', []);
 
   module.service('gnUserfeedbackService', [
-    '$http',
-    function($http) {
-
-      this.isEmptyUuid = function(str) {
+    '$http', '$q',
+    function($http, $q) {
+      this.isBlank = function(str) {
         if (angular.isUndefined(str) ||
             str == null ||
             str == '') {
@@ -64,28 +61,78 @@
           isArray: false
         });
       };
+
+      this.loadRatingCriteria = function() {
+        var deferred = $q.defer();
+        $http({
+          method: 'GET',
+          url: '../api/userfeedback/ratingcriteria',
+          isArray: false,
+          cache: true
+        }).then(function(r) {
+          var data = [];
+          angular.forEach(r.data, function (c) {
+            // By pass internal criteria. ie. average.
+            if (c.id !== -1) {
+              angular.forEach(c.label, function (value, key) {
+                var token = value.split('#');
+                if (token.length === 2) {
+                  c.label[key] = {
+                    label: token[0],
+                    description: token[1]
+                  };
+                } else {
+                  c.label[key] = {
+                    label: value,
+                    description: ''
+                  };
+                }
+              });
+              data.push(c)
+            }
+          });
+          deferred.resolve(data);
+        }, function (r) {
+          deferred.reject(r);
+        });
+        return deferred.promise;
+      };
     }]);
 
   module.directive(
-      'gnUserfeedback', ['$http', 'gnUserfeedbackService',
-        function($http, gnUserfeedbackService) {
+      'gnUserfeedback', ['$http', 'gnUserfeedbackService', 'Metadata',
+        function($http, gnUserfeedbackService, Metadata) {
           return {
             restrict: 'AEC',
             replace: true,
-            controller: 'gnUserfeedbackController',
             scope: {
-              parentUuid: '@gnUserfeedback',
+              record: '=gnUserfeedback',
               userName: '@gnUser',
               nbOfComments: '@nbOfComments'
             },
             templateUrl: '../../catalog/components/' +
             'userfeedback/partials/userfeedback.html',
             link: function(scope) {
+              var defaultNbOfComments = 3;
+
               scope.fewCommentsList = [];
               scope.loaded = false;
 
-              // Wait for the parentUuid and userName to be available
-              scope.$watch('parentUuid', loadPage);
+              scope.ratingCategories = [];
+              scope.lang = scope.$parent.$parent.lang;
+              gnUserfeedbackService.loadRatingCriteria().then(function(data) {
+                scope.ratingCategories = data;
+                scope.mdrecord = new Metadata(scope.record);
+                refreshList();
+              });
+
+              // Wait for the record and userName to be available
+              scope.$watch('record', function(n, o) {
+                if (n !== o && n !== null && angular.isDefined(n)) {
+                  scope.mdrecord = new Metadata(n);
+                  refreshList();
+                }
+              });
               scope.$watch('userName', function(newValue, oldValue) {
                 if (newValue) {
                   scope.loggedIn = true;
@@ -99,14 +146,11 @@
               scope.$on('reloadCommentList', refreshList);
 
               // Functions
-              function refreshList(metadataUuid) {
-                if (metadataUuid) {
-                  metadataUuid = scope.parentUuid;
-                }
+              function refreshList() {
                 scope.loaded = false;
                 scope.fewCommentsList = [];
-                gnUserfeedbackService.loadComments(metadataUuid,
-                scope.nbOfComments || 3).then(
+                gnUserfeedbackService.loadComments(scope.mdrecord.getUuid(),
+                scope.nbOfComments || defaultNbOfComments).then(
                 function(response) {
                   scope.fewCommentsList =
                           scope.fewCommentsList.concat(response.data);
@@ -115,7 +159,7 @@
                   console.log(response.statusText);
                 });
 
-                gnUserfeedbackService.loadRating(metadataUuid).then(
+                gnUserfeedbackService.loadRating(scope.mdrecord.getUuid()).then(
                 function mySuccess(response) {
                   scope.rating = null;
                   scope.rating = response.data;
@@ -127,36 +171,42 @@
                 scope.showButtonAllComments = true;
                 scope.showModal = false;
               }
-
-              function loadPage(newValue, oldValue) {
-                if (gnUserfeedbackService.isEmptyUuid(newValue)) {
-                  return;
-                }
-                refreshList(newValue);
-              }
-
             }
-
           };
         }]);
 
 
   module.directive(
-      'gnUserfeedbackfull', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope',
-        function($http, gnUserfeedbackService, $translate, $rootScope) {
+      'gnUserfeedbackfull', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope', 'Metadata',
+        function($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
           return {
             restrict: 'AEC',
             replace: true,
-            controller: 'gnUserfeedbackControllerFull',
             scope: {
-              parentUuid: '@gnUserfeedbackfull',
+              record: '=gnUserfeedbackfull',
               userName: '@gnUser'
             },
             templateUrl: '../../catalog/components/userfeedback/' +
             'partials/userfeedbackfull.html',
             link: function(scope) {
-              scope.$watch('parentUuid', function(newValue, oldValue) {
-                scope.metatdataUUID = newValue;
+              function initRecord(md) {
+                var m = new Metadata(md);
+                scope.metatdataUUID = m.getUuid();
+                scope.metatdataTitle = m.getTitle();
+              }
+
+              initRecord(scope.record);
+
+              scope.ratingCategories = [];
+              scope.lang = scope.$parent.$parent.lang;
+              gnUserfeedbackService.loadRatingCriteria().then(function(data) {
+                scope.ratingCategories = data;
+              });
+
+              scope.$watch('record', function(n, o) {
+                if(n !== o && n !== null && angular.isDefined(n)) {
+                  initRecord(n);
+                }
               });
 
               scope.$watch('userName', function(newValue, oldValue) {
@@ -208,22 +258,50 @@
         }]);
 
   module.directive(
-      'gnUserfeedbacknew', ['$http', '$window', '$translate', '$rootScope',
-        function($http, $window, $translate, $rootScope) {
+      'gnUserfeedbacknew', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope', 'Metadata',
+        function($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
           return {
             restrict: 'AEC',
             replace: true,
-            controller: 'gnUserfeedbackControllerNew',
             scope: {
-              parentUuid: '@gnUserfeedbacknew',
+              record: '=gnUserfeedbacknew',
               userName: '@gnUser'
             },
             templateUrl: '../../catalog/components/' +
             'userfeedback/partials/userfeedbacknew.html',
             link: function(scope) {
+              function initRecord(md) {
+                var m = new Metadata(md);
+                scope.metatdataUUID = m.getUuid();
+                scope.metatdataTitle = m.getTitle();
+              }
 
-              scope.$watch('parentUuid', function(newValue, oldValue) {
-                scope.metatdataUUID = newValue;
+              initRecord(scope.record);
+
+              scope.ratingCategories = [];
+              scope.lang = scope.$parent.$parent.lang;
+              gnUserfeedbackService.loadRatingCriteria().then(function(data) {
+                scope.ratingCategories = data;
+              });
+
+              scope.$watch('record', function(n, o) {
+                if(n !== o && n !== null && angular.isDefined(n)) {
+                  initRecord(n);
+                }
+              });
+
+              scope.$watchCollection('uf.rating', function(n, o) {
+                scope.average = null;
+                if (n !== o) {
+                  var total = 0, categoryNumber = 0;
+                  angular.forEach(scope.uf.rating, function (value, key) {
+                    if (value > 0) {
+                      total += value;
+                      categoryNumber ++;
+                    }
+                  });
+                  scope.uf.ratingAVG = Math.floor(total/categoryNumber);
+                }
               });
 
               scope.$watch('userName', function(newValue, oldValue) {
@@ -237,64 +315,20 @@
 
               scope.initPopup = function() {
 
-                if (angular.isUndefined(scope.metatdataUUID) ||
-                scope.metatdataUUID == null ||
-                scope.metatdataUUID == '') {
+                if (gnUserfeedbackService.isBlank(scope.metatdataUUID)) {
                   console.log('Metadata UUID is null');
                   return;
                 }
 
-                $http({
-                  method: 'GET',
-                  url: '../api/records/' + scope.metatdataUUID + '/userfeedbackrating',
-                  isArray: false
-                }).then(function mySuccess(response) {
-                  scope.rating = response.data;
-                }, function myError(response) {
-                  console.log('gnUserfeedbacknew.initPopup ' + scope.metatdataUUID);
-                  console.log(response.statusText);
+                scope.uf = {
+                  rating: {},
+                  ratingAVG: null
+                };
+
+                angular.forEach(scope.ratingCategories, function (c) {
+                  scope.uf.rating[c.id] = null;
                 });
               };
-
-              // For update the average shown on the form
-              scope.updateRate = function() {
-
-                var tot = 0;
-                var i = 0;
-
-                if (scope.uf.ratingCOMPLETE > 0) {
-                  tot = tot + scope.uf.ratingCOMPLETE;
-                  i++;
-                }
-                if (scope.uf.ratingREADABILITY > 0) {
-                  tot = tot + scope.uf.ratingREADABILITY;
-                  i++;
-                }
-                if (scope.uf.ratingFINDABILITY > 0) {
-                  tot = tot + scope.uf.ratingFINDABILITY;
-                  i++;
-                }
-                if (scope.uf.ratingDATAQUALITY > 0) {
-                  tot = tot + scope.uf.ratingDATAQUALITY;
-                  i++;
-                }
-                if (scope.uf.ratingSERVICEQUALITY > 0) {
-                  tot = tot + scope.uf.ratingSERVICEQUALITY;
-                  i++;
-                }
-                if (scope.uf.ratingOTHER > 0) {
-                  tot = tot + scope.uf.ratingOTHER;
-                  i++;
-                }
-
-                if (tot > 0) {
-                  scope.uf.ratingAVG = Math.floor(tot / i);
-                } else {
-                  scope.uf.ratingAVG = 0;
-                }
-              };
-
-
 
               scope.submitForm = function(data) {
 
@@ -366,7 +400,6 @@
           return {
             restrict: 'AEC',
             replace: true,
-            controller: 'gnUserfeedbackControllerLast',
             scope: {
               nbOfComments: '@nbOfComments'
             },

@@ -28,6 +28,7 @@ import java.util.UUID;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -83,6 +84,9 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
     @Query("SELECT uf from GUF_UserFeedback uf order by uf.date DESC ")
     List<UserFeedback> findByOrderByDateDesc(Pageable p);
 
+    @Query("SELECT uf from GUF_UserFeedback uf order by uf.date ASC ")
+    List<UserFeedback> findByOrderByDateAsc(Pageable pageSize);
+
     /**
      * Find by status order by date desc.
      *
@@ -91,6 +95,7 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @return the list
      */
     List<UserFeedback> findByStatusOrderByDateDesc(UserFeedback.UserRatingStatus status, Pageable p);
+    List<UserFeedback> findByStatusOrderByDateAsc(UserRatingStatus status, Pageable p);
 
     /**
      * Find by uuid.

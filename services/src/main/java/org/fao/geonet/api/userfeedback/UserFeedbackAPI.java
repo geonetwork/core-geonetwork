@@ -40,10 +40,12 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -75,6 +77,39 @@ import springfox.documentation.annotations.ApiIgnore;
     description = "User feedback")
 @Controller("userfeedback")
 public class UserFeedbackAPI {
+
+
+    /**
+     * Gets rating criteria
+     *
+     * @param response the response
+     * @return the list of rating criteria
+     * @throws Exception the exception
+     */
+    @ApiOperation(
+        value = "Get list of rating criteria",
+        nickname = "getRatingCriteria")
+    @RequestMapping(
+        value = "/userfeedback/ratingcriteria",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<RatingCriteria> getRatingCriteria(
+        @ApiIgnore final HttpServletResponse response
+    ) {
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return null;
+        } else {
+            RatingCriteriaRepository criteriaRepository = appContext.getBean(RatingCriteriaRepository.class);
+            return criteriaRepository.findAll();
+        }
+    }
 
     /**
      * Delete user feedback.
@@ -140,8 +175,7 @@ public class UserFeedbackAPI {
         final String metadataUuid,
         @ApiIgnore final HttpServletRequest request,
         @ApiIgnore final HttpServletResponse response,
-        @ApiIgnore final HttpSession httpSession)
-            throws Exception {
+        @ApiIgnore final HttpSession httpSession) {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
@@ -193,7 +227,7 @@ public class UserFeedbackAPI {
      * @return the user comment
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Finds a specific usercomment", nickname = "getUserComment")
+    @ApiOperation(value = "Finds a specific user feedback", nickname = "getUserFeedback")
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody

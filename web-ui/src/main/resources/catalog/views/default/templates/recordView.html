@@ -6,7 +6,7 @@
     recordNotFound
   </div>
 
-  <div class="row gn-md-view" 
+  <div class="row gn-md-view"
        data-ng-show="mdView.current.record">
     <button class="btn btn-primary"
             data-ng-click="closeRecord(mdView.current.record)">
@@ -18,7 +18,7 @@
             data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
             data-ng-show="mdView.records.length > 1"
             data-ng-click="previousRecord()">
-      <i class="fa fa-angle-left"></i> 
+      <i class="fa fa-angle-left"></i>
       <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
       <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
     </button>
@@ -407,18 +407,19 @@
           </div>
         </section>
         </br>
-        
-        <div data-gn-userfeedback='{{mdView.current.record.getUuid()}}'
-                  data-gn-user={{user.username}} data-ng-if="isUserFeedbackEnabled">
+
+        <div data-gn-userfeedback='mdView.current.record'
+             data-gn-user={{user.username}}
+             data-ng-if="isUserFeedbackEnabled">
         </div>
         <div class="gn-md-feedback-buttons clearfix">
           <div class="pull-left"
-                  data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}'
+                  data-gn-userfeedbackfull='mdView.current.record'
                   data-gn-user={{user.username}}
                   data-ng-if="isUserFeedbackEnabled">
           </div>
           <div class="pull-left"
-                  data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}'
+                  data-gn-userfeedbacknew='mdView.current.record'
                   data-gn-user={{user.username}}
                   data-ng-if="isUserFeedbackEnabled">
           </div>
@@ -449,7 +450,7 @@
                              mdView.current.record.tempExtentBegin ||
                              mdView.current.record.tempExtentEnd">
           <h4>
-            <i class="fa fa-fw fa-clock-o"></i> 
+            <i class="fa fa-fw fa-clock-o"></i>
             <span data-translate="">tempExtent</span>
           </h4>
 
