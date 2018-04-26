@@ -36,8 +36,8 @@
     function($http, $q) {
       this.isBlank = function(str) {
         if (angular.isUndefined(str) ||
-            str == null ||
-            str == '') {
+          str == null ||
+          str == '') {
           return true;
         } else {
           return false;
@@ -49,7 +49,7 @@
         return $http({
           method: 'GET',
           url: '../api/records/' + metatdataUUID +
-              '/userfeedback?size=' + numberOfCommentsDisplayed,
+          '/userfeedback?size=' + numberOfCommentsDisplayed,
           isArray: true
         });
       };
@@ -100,66 +100,68 @@
     }]);
 
   module.directive(
-      'gnUserfeedback', ['$http', 'gnUserfeedbackService', 'Metadata',
-        function($http, gnUserfeedbackService, Metadata) {
-          return {
-            restrict: 'AEC',
-            replace: true,
-            scope: {
-              record: '=gnUserfeedback',
-              userName: '@gnUser',
-              nbOfComments: '@nbOfComments'
-            },
-            templateUrl: '../../catalog/components/' +
-            'userfeedback/partials/userfeedback.html',
-            link: function(scope) {
-              var defaultNbOfComments = 3;
+    'gnUserfeedback', ['$http', 'gnUserfeedbackService', 'Metadata',
+      function($http, gnUserfeedbackService, Metadata) {
+        return {
+          restrict: 'AEC',
+          replace: true,
+          scope: {
+            record: '=gnUserfeedback',
+            userName: '@gnUser',
+            nbOfComments: '@nbOfComments'
+          },
+          templateUrl: '../../catalog/components/' +
+          'userfeedback/partials/userfeedback.html',
+          link: function(scope) {
+            var defaultNbOfComments = 3;
 
-              scope.fewCommentsList = [];
-              scope.loaded = false;
+            scope.fewCommentsList = [];
+            scope.loaded = false;
 
-              scope.ratingCategories = [];
-              scope.lang = scope.$parent.$parent.lang;
-              gnUserfeedbackService.loadRatingCriteria().then(function(data) {
-                scope.ratingCategories = data;
+            scope.ratingCategories = [];
+            scope.lang = scope.$parent.$parent.lang;
+            gnUserfeedbackService.loadRatingCriteria().then(function(data) {
+              scope.ratingCategories = data;
+              if(scope.record != null) {
                 scope.mdrecord = new Metadata(scope.record);
                 refreshList();
-              });
+              }
+            });
 
-              // Wait for the record and userName to be available
-              scope.$watch('record', function(n, o) {
-                if (n !== o && n !== null && angular.isDefined(n)) {
-                  scope.mdrecord = new Metadata(n);
-                  refreshList();
-                }
-              });
-              scope.$watch('userName', function(newValue, oldValue) {
-                if (newValue) {
-                  scope.loggedIn = true;
-                  scope.authorNameValue = newValue;
-                } else {
-                  scope.loggedIn = false;
-                }
-              });
+            // Wait for the record and userName to be available
+            scope.$watch('record', function(n, o) {
+              if (n !== o && n !== null && angular.isDefined(n)) {
+                scope.mdrecord = new Metadata(n);
+                refreshList();
+              }
+            });
+            scope.$watch('userName', function(newValue, oldValue) {
+              if (newValue) {
+                scope.loggedIn = true;
+                scope.authorNameValue = newValue;
+              } else {
+                scope.loggedIn = false;
+              }
+            });
 
-              // Listen to the event reloadCommentList
-              scope.$on('reloadCommentList', refreshList);
+            // Listen to the event reloadCommentList
+            scope.$on('reloadCommentList', refreshList);
 
-              // Functions
-              function refreshList() {
-                scope.loaded = false;
-                scope.fewCommentsList = [];
-                gnUserfeedbackService.loadComments(scope.mdrecord.getUuid(),
+            // Functions
+            function refreshList() {
+              scope.loaded = false;
+              scope.fewCommentsList = [];
+              gnUserfeedbackService.loadComments(scope.mdrecord.getUuid(),
                 scope.nbOfComments || defaultNbOfComments).then(
                 function(response) {
                   scope.fewCommentsList =
-                          scope.fewCommentsList.concat(response.data);
+                    scope.fewCommentsList.concat(response.data);
                   scope.loaded = true;
                 }, function(response) {
                   console.log(response.statusText);
                 });
 
-                gnUserfeedbackService.loadRating(scope.mdrecord.getUuid()).then(
+              gnUserfeedbackService.loadRating(scope.mdrecord.getUuid()).then(
                 function mySuccess(response) {
                   scope.rating = null;
                   scope.rating = response.data;
@@ -168,261 +170,266 @@
                   console.log(response.statusText);
                 });
 
-                scope.showButtonAllComments = true;
-                scope.showModal = false;
-              }
+              scope.showButtonAllComments = true;
+              scope.showModal = false;
             }
-          };
-        }]);
+          }
+        };
+      }]);
 
 
   module.directive(
-      'gnUserfeedbackfull', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope', 'Metadata',
-        function($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
-          return {
-            restrict: 'AEC',
-            replace: true,
-            scope: {
-              record: '=gnUserfeedbackfull',
-              userName: '@gnUser'
-            },
-            templateUrl: '../../catalog/components/userfeedback/' +
-            'partials/userfeedbackfull.html',
-            link: function(scope) {
-              function initRecord(md) {
+    'gnUserfeedbackfull', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope', 'Metadata',
+      function($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
+        return {
+          restrict: 'AEC',
+          replace: true,
+          scope: {
+            record: '=gnUserfeedbackfull',
+            userName: '@gnUser'
+          },
+          templateUrl: '../../catalog/components/userfeedback/' +
+          'partials/userfeedbackfull.html',
+          link: function(scope) {
+            function initRecord(md) {
+              if (scope.record != null) {
                 var m = new Metadata(md);
                 scope.metatdataUUID = m.getUuid();
                 scope.metatdataTitle = m.getTitle();
               }
+            }
 
-              initRecord(scope.record);
 
-              scope.ratingCategories = [];
-              scope.lang = scope.$parent.$parent.lang;
-              gnUserfeedbackService.loadRatingCriteria().then(function(data) {
-                scope.ratingCategories = data;
-              });
+            initRecord(scope.record);
 
-              scope.$watch('record', function(n, o) {
-                if(n !== o && n !== null && angular.isDefined(n)) {
-                  initRecord(n);
-                }
-              });
+            scope.ratingCategories = [];
+            scope.lang = scope.$parent.$parent.lang;
+            gnUserfeedbackService.loadRatingCriteria().then(function(data) {
+              scope.ratingCategories = data;
+            });
 
-              scope.$watch('userName', function(newValue, oldValue) {
-                if (newValue) {
-                  scope.loggedIn = true;
-                  scope.authorNameValue = newValue;
-                } else {
-                  scope.loggedIn = false;
-                }
-              });
+            scope.$watch('record', function(n, o) {
+              if(n !== o && n !== null && angular.isDefined(n)) {
+                initRecord(n);
+              }
+            });
 
-              scope.initPopup = function() {
-                scope.fullCommentsList = [];
-                scope.rating = null;
+            scope.$watch('userName', function(newValue, oldValue) {
+              if (newValue) {
+                scope.loggedIn = true;
+                scope.authorNameValue = newValue;
+              } else {
+                scope.loggedIn = false;
+              }
+            });
 
-                gnUserfeedbackService.loadComments(scope.metatdataUUID,
+            scope.initPopup = function() {
+              scope.fullCommentsList = [];
+              scope.rating = null;
+
+              gnUserfeedbackService.loadComments(scope.metatdataUUID,
                 -1).then(function(response) {
-                  scope.fullCommentsList = response.data;
-                });
-                gnUserfeedbackService.loadRating(scope.metatdataUUID).then(
+                scope.fullCommentsList = response.data;
+              });
+              gnUserfeedbackService.loadRating(scope.metatdataUUID).then(
                 function(response) {
                   scope.rating = response.data;
                 }
-                );
-              };
+              );
+            };
 
-              scope.publish = function(id) {
-                if (window.confirm($translate.instant('GUFpublishConfirm'))) {
-                  $http.get('../api/userfeedback/' + id + '/publish')
+            scope.publish = function(id) {
+              if (window.confirm($translate.instant('GUFpublishConfirm'))) {
+                $http.get('../api/userfeedback/' + id + '/publish')
                   .success(function(data, status) {
                     scope.initPopup();
                     $rootScope.$broadcast('reloadCommentList');
                   });
-                }
-              };
+              }
+            };
 
-              scope.deleteC = function(id) {
-                if (window.confirm($translate.instant('GUFdeleteConfirm'))) {
-                  $http.delete('../api/userfeedback/' + id)
+            scope.deleteC = function(id) {
+              if (window.confirm($translate.instant('GUFdeleteConfirm'))) {
+                $http.delete('../api/userfeedback/' + id)
                   .success(function(data) {
                     scope.initPopup();
                     $rootScope.$broadcast('reloadCommentList');
                   });
-                }
-              };
+              }
+            };
 
-            }
-          };
-        }]);
+          }
+        };
+      }]);
 
   module.directive(
-      'gnUserfeedbacknew', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope', 'Metadata',
-        function($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
-          return {
-            restrict: 'AEC',
-            replace: true,
-            scope: {
-              record: '=gnUserfeedbacknew',
-              userName: '@gnUser'
-            },
-            templateUrl: '../../catalog/components/' +
-            'userfeedback/partials/userfeedbacknew.html',
-            link: function(scope) {
-              function initRecord(md) {
+    'gnUserfeedbacknew', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope', 'Metadata',
+      function($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
+        return {
+          restrict: 'AEC',
+          replace: true,
+          scope: {
+            record: '=gnUserfeedbacknew',
+            userName: '@gnUser'
+          },
+          templateUrl: '../../catalog/components/' +
+          'userfeedback/partials/userfeedbacknew.html',
+          link: function(scope) {
+            function initRecord(md) {
+              if (scope.record != null) {
                 var m = new Metadata(md);
                 scope.metatdataUUID = m.getUuid();
                 scope.metatdataTitle = m.getTitle();
               }
+            }
 
-              initRecord(scope.record);
+            initRecord(scope.record);
 
-              scope.ratingCategories = [];
-              scope.lang = scope.$parent.$parent.lang;
-              gnUserfeedbackService.loadRatingCriteria().then(function(data) {
-                scope.ratingCategories = data;
-              });
+            scope.ratingCategories = [];
+            scope.lang = scope.$parent.$parent.lang;
+            gnUserfeedbackService.loadRatingCriteria().then(function(data) {
+              scope.ratingCategories = data;
+            });
 
-              scope.$watch('record', function(n, o) {
-                if(n !== o && n !== null && angular.isDefined(n)) {
-                  initRecord(n);
-                }
-              });
+            scope.$watch('record', function(n, o) {
+              if(n !== o && n !== null && angular.isDefined(n)) {
+                initRecord(n);
+              }
+            });
 
-              scope.$watchCollection('uf.rating', function(n, o) {
-                scope.average = null;
-                if (n !== o) {
-                  var total = 0, categoryNumber = 0;
-                  angular.forEach(scope.uf.rating, function (value, key) {
-                    if (value > 0) {
-                      total += value;
-                      categoryNumber ++;
-                    }
-                  });
-                  scope.uf.ratingAVG = Math.floor(total/categoryNumber);
-                }
-              });
-
-              scope.$watch('userName', function(newValue, oldValue) {
-                if (newValue) {
-                  scope.loggedIn = true;
-                  scope.authorNameValue = newValue;
-                } else {
-                  scope.loggedIn = false;
-                }
-              });
-
-              scope.initPopup = function() {
-
-                if (gnUserfeedbackService.isBlank(scope.metatdataUUID)) {
-                  console.log('Metadata UUID is null');
-                  return;
-                }
-
-                scope.uf = {
-                  rating: {},
-                  ratingAVG: null
-                };
-
-                angular.forEach(scope.ratingCategories, function (c) {
-                  scope.uf.rating[c.id] = null;
+            scope.$watchCollection('uf.rating', function(n, o) {
+              scope.average = null;
+              if (n !== o) {
+                var total = 0, categoryNumber = 0;
+                angular.forEach(scope.uf.rating, function (value, key) {
+                  if (value > 0) {
+                    total += value;
+                    categoryNumber ++;
+                  }
                 });
+                scope.uf.ratingAVG = Math.floor(total/categoryNumber);
+              }
+            });
+
+            scope.$watch('userName', function(newValue, oldValue) {
+              if (newValue) {
+                scope.loggedIn = true;
+                scope.authorNameValue = newValue;
+              } else {
+                scope.loggedIn = false;
+              }
+            });
+
+            scope.initPopup = function() {
+
+              if (gnUserfeedbackService.isBlank(scope.metatdataUUID)) {
+                console.log('Metadata UUID is null');
+                return;
+              }
+
+              scope.uf = {
+                rating: {},
+                ratingAVG: null
               };
 
-              scope.submitForm = function(data) {
+              angular.forEach(scope.ratingCategories, function (c) {
+                scope.uf.rating[c.id] = null;
+              });
+            };
 
-                if (!scope.loggedIn) {
+            scope.submitForm = function(data) {
 
-                  scope.authorNameError = false;
-                  scope.authorEmailError = false;
-                  scope.authorOrganizationError = false;
+              if (!scope.loggedIn) {
 
-                  if (!data.authorName) {
-                    scope.authorNameError = $translate.instant('GUFrequired');
+                scope.authorNameError = false;
+                scope.authorEmailError = false;
+                scope.authorOrganizationError = false;
 
-                    return false;
-                  }
-                  if (!data.authorEmail) {
-                    scope.authorEmailError = $translate.instant('GUFrequired');
+                if (!data.authorName) {
+                  scope.authorNameError = $translate.instant('GUFrequired');
 
-                    return false;
-                  }
-                  if (scope.uf.authorName.length > 64) {
-                    scope.authorNameError = $translate.instant('GUFtooLong');
+                  return false;
+                }
+                if (!data.authorEmail) {
+                  scope.authorEmailError = $translate.instant('GUFrequired');
 
-                    return false;
-                  }
-                  if (scope.uf.authorEmail.length > 64) {
-                    scope.authorEmailError = $translate.instant('GUFtooLong');
+                  return false;
+                }
+                if (scope.uf.authorName.length > 64) {
+                  scope.authorNameError = $translate.instant('GUFtooLong');
 
-                    return false;
-                  }
+                  return false;
+                }
+                if (scope.uf.authorEmail.length > 64) {
+                  scope.authorEmailError = $translate.instant('GUFtooLong');
 
-                  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                  return false;
+                }
 
-                  if (!re.test(scope.uf.authorEmail)) {
-                    scope.authorEmailError =
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                if (!re.test(scope.uf.authorEmail)) {
+                  scope.authorEmailError =
                     $translate.instant('GUFnotValidFormat');
 
-                    return false;
-                  }
-                  if (scope.uf.authorOrganization.length > 64) {
-                    scope.authorOrganizationError =
+                  return false;
+                }
+                if (scope.uf.authorOrganization.length > 64) {
+                  scope.authorOrganizationError =
                     $translate.instant('GUFtooLong');
 
-                    return false;
-                  }
+                  return false;
                 }
+              }
 
-                scope.uf.metadataUUID = scope.metatdataUUID;
+              scope.uf.metadataUUID = scope.metatdataUUID;
 
-                if (angular.isUndefined(scope.metatdataUUID)) {
-                  console.log('Metadata UUID is null!');
-                  return;
-                }
+              if (angular.isUndefined(scope.metatdataUUID)) {
+                console.log('Metadata UUID is null!');
+                return;
+              }
 
-                $http.post('../api/userfeedback', data)
+              $http.post('../api/userfeedback', data)
                 .success(function(data, status) {
                   $rootScope.$broadcast('reloadCommentList');
                   angular.element('#gn-userfeedback-addcomment').modal('hide');
                 });
-              };
+            };
 
-            }
-          };
-        }]);
+          }
+        };
+      }]);
 
 
   module.directive(
-      'gnUserfeedbacklasthome', ['$http',
-        function($http) {
-          return {
-            restrict: 'AEC',
-            replace: true,
-            scope: {
-              nbOfComments: '@nbOfComments'
-            },
-            templateUrl: '../../catalog/components/userfeedback/partials/userfeedbacklasthome.html',
-            link: function(scope) {
+    'gnUserfeedbacklasthome', ['$http',
+      function($http) {
+        return {
+          restrict: 'AEC',
+          replace: true,
+          scope: {
+            nbOfComments: '@nbOfComments'
+          },
+          templateUrl: '../../catalog/components/userfeedback/partials/userfeedbacklasthome.html',
+          link: function(scope) {
 
-              scope.lastCommentsList = [];
+            scope.lastCommentsList = [];
 
-              scope.loadLastComments = function() {
-                $http({
-                  method: 'GET',
-                  url: '../api/userfeedback?size=' + (scope.nbOfComments || 6),
-                  isArray: true
-                }).then(function mySuccess(response) {
-                  scope.lastCommentsList = [];
-                  scope.lastCommentsList = scope.lastCommentsList.concat(response.data);
-                }, function myError(response) {
-                  console.log(response.statusText);
-                });
+            scope.loadLastComments = function() {
+              $http({
+                method: 'GET',
+                url: '../api/userfeedback?size=' + (scope.nbOfComments || 6),
+                isArray: true
+              }).then(function mySuccess(response) {
+                scope.lastCommentsList = [];
+                scope.lastCommentsList = scope.lastCommentsList.concat(response.data);
+              }, function myError(response) {
+                console.log(response.statusText);
+              });
 
-              };
-              scope.loadLastComments();
-            }
-          };
-        }]);
+            };
+            scope.loadLastComments();
+          }
+        };
+      }]);
 })();
