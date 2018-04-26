@@ -310,13 +310,20 @@ public class EditLib {
             // * X125_gmdCOLONkeywords_replace
             nodeRef = nodeConfig[0];
 
-            if (nodeConfig[nodeConfig.length-1].equals("replace")) {
-                replaceExisting = true;
+            if (nodeConfig.length > 1 && nodeConfig[1] != null) {
+                if (nodeConfig[1].equals("replace")) {
+                    replaceExisting = true;
+                } else {
+                    nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
+                }
             }
 
-            if (nodeConfig.length > 1) {
-                nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
+            if (nodeConfig.length > 2 && nodeConfig[2] != null) {
+                if (nodeConfig[2].equals("replace")) {
+                    replaceExisting = true;
+                }
             }
+
 
             // Get element to fill
             Element el = nodeRefToElem.get(nodeRef);
