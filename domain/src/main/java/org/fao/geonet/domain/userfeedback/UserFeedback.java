@@ -135,7 +135,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     private User approver;
 
     /** The date. */
-    private ISODate date;
+    private Date date;
 
     /** The citation. */
     @OneToOne(cascade = CascadeType.ALL)
@@ -243,8 +243,8 @@ public class UserFeedback extends GeonetEntity implements Serializable {
      *
      * @return the date
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "date", nullable = false, length = 30))
-    public ISODate getDate() {
+//    @AttributeOverride(name = "dateAndTime", column = @Column(name = "date", columnDefinition = "varchar", nullable = false, length = 30))
+    public Date getDate() {
         return date;
     }
 
@@ -391,7 +391,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
      *
      * @param date the new date
      */
-    public void setDate(ISODate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

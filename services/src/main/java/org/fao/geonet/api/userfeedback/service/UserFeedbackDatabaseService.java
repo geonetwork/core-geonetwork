@@ -138,7 +138,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
                 pageSize = new PageRequest(0, maxSize);
             }
 
-            result = userFeedbackRepository.findByStatusOrderByDateAsc(UserRatingStatus.PUBLISHED, pageSize);
+            result = userFeedbackRepository.findByStatusOrderByDateDesc(UserRatingStatus.PUBLISHED, pageSize);
         } else {
 
             Pageable pageSize = null;
@@ -147,7 +147,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
                 pageSize = new PageRequest(0, maxSize);
             }
 
-            result = userFeedbackRepository.findByOrderByDateAsc(pageSize);
+            result = userFeedbackRepository.findByOrderByDateDesc(pageSize);
         }
 
         return result;
@@ -194,10 +194,10 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             result = userFeedbackRepository.findByMetadata_UuidAndStatusOrderByDateDesc(metadataUuid,
                     UserRatingStatus.PUBLISHED, pageSize);
         } else {
-            Pageable pageSize = new PageRequest(0, Integer.MAX_VALUE, Sort.Direction.ASC, UserFeedback_.date.getName());
+            Pageable pageSize = null;
 
             if (maxSize > 0) {
-                pageSize = new PageRequest(0, maxSize, Sort.Direction.ASC, UserFeedback_.date.getName());
+                pageSize = new PageRequest(0, maxSize);
             }
             result = userFeedbackRepository.findByMetadata_UuidOrderByDateDesc(metadataUuid, pageSize);
         }
@@ -233,7 +233,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         userFeedback.setMetadata(metadata);
 
         if (userFeedback.getDate() == null) {
-            userFeedback.setDate(new ISODate(System.currentTimeMillis()));
+            userFeedback.setDate(new ISODate(System.currentTimeMillis()).toDate());
         }
 
         userFeedbackRepository.save(userFeedback);

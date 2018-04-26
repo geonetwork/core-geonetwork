@@ -215,7 +215,7 @@ public class UserFeedbackUtils {
             userfeedback.setParent(parent);
         }
 
-        userfeedback.setDate(new ISODate(System.currentTimeMillis()));
+        userfeedback.setDate(new ISODate(System.currentTimeMillis()).toDate());
 
         if (author != null) {
             userfeedback.setAuthorId(author);
@@ -258,7 +258,7 @@ public class UserFeedbackUtils {
         userfeedbackDto.setUuid(input.getUuid());
         userfeedbackDto.setComment(input.getComment());
         userfeedbackDto.setMetadataUUID(input.getMetadata().getUuid());
-        userfeedbackDto.setDate(input.getDate().getDateAndTime());
+        userfeedbackDto.setDate(new ISODate(input.getDate().getTime()).getDateAndTime());
 
         if (input.getAuthorId() != null) {
             userfeedbackDto.setAuthorUserId(input.getAuthorId().getId());
@@ -330,8 +330,8 @@ public class UserFeedbackUtils {
 
             for (final UserFeedback userFeedback : list) {
 
-                if (maxDate == null || userFeedback.getDate() != null && userFeedback.getDate().timeDifferenceInSeconds(maxDate) > 0) {
-                    maxDate = userFeedback.getDate();
+                if (maxDate == null || userFeedback.getDate() != null && userFeedback.getDate().after(maxDate.toDate())) {
+                    maxDate = new ISODate(userFeedback.getDate().getTime());
                 }
 
                 if (userFeedback.getDetailedRatingList() != null && userFeedback.getDetailedRatingList().size() > 0) {
