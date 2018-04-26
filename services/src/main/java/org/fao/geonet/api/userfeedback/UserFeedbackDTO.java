@@ -54,6 +54,9 @@ public class UserFeedbackDTO implements Serializable {
     /** The metadata UUID. */
     private String metadataUUID;
 
+    /** The metadata title. */
+    private String metadataTitle;
+
     /** The author user id. */
     private Integer authorUserId;
 
@@ -373,5 +376,13 @@ public class UserFeedbackDTO implements Serializable {
 
     public void setCaptcha(String captcha) {
         this.captcha = captcha;
+    }
+
+    public String getMetadataTitle() {
+        return metadataTitle;
+    }
+
+    public void setMetadataTitle(String metadataTitle) {
+        this.metadataTitle = metadataTitle;
     }
 }

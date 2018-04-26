@@ -38,6 +38,7 @@ import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
 import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
@@ -301,6 +302,9 @@ public class UserFeedbackUtils {
         } else {
             userfeedbackDto.setPublished(false);
         }
+
+        userfeedbackDto.setMetadataTitle(XslUtil.getIndexField(null, userfeedbackDto.getMetadataUUID(), "title", ""));
+
         return userfeedbackDto;
     }
 
