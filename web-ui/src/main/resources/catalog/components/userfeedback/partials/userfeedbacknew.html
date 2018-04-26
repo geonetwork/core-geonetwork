@@ -160,6 +160,16 @@
           </div>
         </div>
         <div class="modal-footer">
+          <div class="form-group" data-ng-if="recaptchaEnabled">
+            <div vc-recaptcha class="col-lg-8"
+                 theme="'light'"
+                 key="recaptchaKey"></div>
+
+            <span class="col-lg-8" style="color: red;" data-ng-show="resolveRecaptcha" data-translate="">
+              resolveCaptcha
+            </span>
+          </div>
+
           <input type="hidden" data-ng-model="uf.ratingAVG">
           <button type="button" class="btn btn-default" data-dismiss="modal"
             data-translate="">GUFclose</button>

@@ -29,7 +29,7 @@
   goog.require('gn_catalog_service');
   goog.require('gn_search_location');
 
-  var module = angular.module('gn_userfeedback_directive', []);
+  var module = angular.module('gn_userfeedback_directive', ['vcRecaptcha']);
 
   module.service('gnUserfeedbackService', [
     '$http', '$q',
@@ -263,8 +263,10 @@
       }]);
 
   module.directive(
-    'gnUserfeedbacknew', ['$http', 'gnUserfeedbackService', '$translate', '$rootScope', 'Metadata',
-      function($http, gnUserfeedbackService, $translate, $rootScope, Metadata) {
+    'gnUserfeedbacknew', ['$http', 'gnUserfeedbackService', '$translate', '$q',
+      '$rootScope', 'Metadata', 'vcRecaptchaService', 'gnConfig',
+      function($http, gnUserfeedbackService, $translate, $q,
+               $rootScope, Metadata, vcRecaptchaService, gnConfig) {
         return {
           restrict: 'AEC',
           replace: true,
@@ -275,6 +277,12 @@
           templateUrl: '../../catalog/components/' +
           'userfeedback/partials/userfeedbacknew.html',
           link: function(scope) {
+            scope.recaptchaEnabled =
+              gnConfig['system.userSelfRegistration.recaptcha.enable'];
+            scope.recaptchaKey =
+              gnConfig['system.userSelfRegistration.recaptcha.publickey'];
+            scope.resolveRecaptcha = false;
+
             function initRecord(md) {
               if (scope.record != null) {
                 var m = new Metadata(md);
@@ -338,6 +346,19 @@
             };
 
             scope.submitForm = function(data) {
+              if (scope.recaptchaEnabled) {
+                if (vcRecaptchaService.getResponse() === '') {
+                  scope.resolveRecaptcha = true;
+
+                  var deferred = $q.defer();
+                  deferred.resolve('');
+                  return deferred.promise;
+                }
+
+                scope.resolveRecaptcha = false;
+                scope.uf.captcha = vcRecaptchaService.getResponse();
+              }
+
 
               if (!scope.loggedIn) {
 
@@ -393,6 +414,7 @@
                 .success(function(data, status) {
                   $rootScope.$broadcast('reloadCommentList');
                   angular.element('#gn-userfeedback-addcomment').modal('hide');
+                  vcRecaptchaService.reload();
                 });
             };
 

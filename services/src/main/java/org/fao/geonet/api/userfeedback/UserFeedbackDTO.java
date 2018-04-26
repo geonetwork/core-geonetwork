@@ -78,6 +78,8 @@ public class UserFeedbackDTO implements Serializable {
     /** The parent uuid. */
     private String parentUuid;
 
+    private String captcha;
+
     /** The date. */
     private String date;
     /** The keywords. */
@@ -363,5 +365,13 @@ public class UserFeedbackDTO implements Serializable {
 
     public void setRating(Map<Integer, Integer> rating) {
         this.rating = rating;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
     }
 }
