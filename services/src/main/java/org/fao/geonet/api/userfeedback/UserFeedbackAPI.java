@@ -26,6 +26,8 @@ package org.fao.geonet.api.userfeedback;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,14 +39,19 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
+import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -75,6 +82,39 @@ import springfox.documentation.annotations.ApiIgnore;
     description = "User feedback")
 @Controller("userfeedback")
 public class UserFeedbackAPI {
+
+
+    /**
+     * Gets rating criteria
+     *
+     * @param response the response
+     * @return the list of rating criteria
+     * @throws Exception the exception
+     */
+    @ApiOperation(
+        value = "Get list of rating criteria",
+        nickname = "getRatingCriteria")
+    @RequestMapping(
+        value = "/userfeedback/ratingcriteria",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<RatingCriteria> getRatingCriteria(
+        @ApiIgnore final HttpServletResponse response
+    ) {
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return null;
+        } else {
+            RatingCriteriaRepository criteriaRepository = appContext.getBean(RatingCriteriaRepository.class);
+            return criteriaRepository.findAll();
+        }
+    }
 
     /**
      * Delete user feedback.
@@ -140,8 +180,7 @@ public class UserFeedbackAPI {
         final String metadataUuid,
         @ApiIgnore final HttpServletRequest request,
         @ApiIgnore final HttpServletResponse response,
-        @ApiIgnore final HttpSession httpSession)
-            throws Exception {
+        @ApiIgnore final HttpSession httpSession) {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
@@ -193,7 +232,7 @@ public class UserFeedbackAPI {
      * @return the user comment
      * @throws Exception the exception
      */
-    @ApiOperation(value = "Finds a specific usercomment", nickname = "getUserComment")
+    @ApiOperation(value = "Finds a specific user feedback", nickname = "getUserFeedback")
     @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
@@ -389,6 +428,9 @@ public class UserFeedbackAPI {
         return (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
     }
 
+    @Autowired
+    LanguageUtils languageUtils;
+
     /**
      * New user feedback.
      *
@@ -406,7 +448,8 @@ public class UserFeedbackAPI {
     @ResponseBody
     public ResponseEntity newUserFeedback(
         @ApiParam(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
-        @ApiIgnore final HttpSession httpSession) throws Exception {
+        @ApiIgnore final HttpSession httpSession,
+        @ApiIgnore final HttpServletRequest request) throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
@@ -420,9 +463,23 @@ public class UserFeedbackAPI {
 
             final UserSession session = ApiUtils.getUserSession(httpSession);
 
+            Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
             Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "newUserFeedback");
 
             final IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+            boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+
+            if (recaptchaEnabled) {
+                boolean validRecaptcha = RecaptchaChecker.verify(userFeedbackDto.getCaptcha(),
+                    settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+                if (!validRecaptcha) {
+                    return new ResponseEntity<>(
+                        messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
+                }
+            }
 
             userFeedbackService
                     .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null));

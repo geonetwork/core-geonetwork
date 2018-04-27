@@ -20,39 +20,24 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.repository.userfeedback;
 
-(function() {
-  goog.provide('gn_userfeedback_controller');
+import org.fao.geonet.domain.userfeedback.Rating;
+import org.fao.geonet.domain.userfeedback.RatingCriteria;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-  var module = angular.module('gn_userfeedback_controller', [
-    'ui.bootstrap.modal', 'ui.bootstrap.tpls']);
+import java.util.List;
 
-  module.controller('gnUserfeedbackController', ['$scope', '$http',
-    '$modal', '$document', function($scope, $http, $modal, $document) {
+/**
+ * The Interface RatingCriteriaRepository.
+ */
+public interface RatingCriteriaRepository extends JpaRepository<RatingCriteria, Long> {
 
-    }
-
-  ]);
-
-  module.controller('gnUserfeedbackControllerFull', ['$scope', '$http',
-    '$modal', '$document', function($scope, $http, $modal, $document) {
-
-    }
-
-  ]);
-
-  module.controller('gnUserfeedbackControllerNew', ['$scope', '$http',
-    '$modal', '$document', function($scope, $http, $modal, $document) {
-
-    }
-
-  ]);
-
-  module.controller('gnUserfeedbackControllerLast', ['$scope', '$http',
-    '$modal', '$document', function($scope, $http, $modal, $document) {
-
-    }
-
-  ]);
-
-})();
+    /**
+     * Find by criteria id.
+     *
+     * @param id the criteria id
+     * @return the list
+     */
+    RatingCriteria findById(Integer id);
+}

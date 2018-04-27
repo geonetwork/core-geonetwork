@@ -45,26 +45,6 @@ import javax.persistence.Table;
 @SequenceGenerator(name = Rating.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Rating implements Serializable {
 
-    /**
-     * The Enum Category.
-     */
-    public enum Category {
-
-        /** The avg. */
-        AVG,
-        /** The complete. */
-        COMPLETE,
-        /** The readability. */
-        READABILITY,
-        /** The findability. */
-        FINDABILITY,
-        /** The dataquality. */
-        DATAQUALITY,
-        /** The servicequality. */
-        SERVICEQUALITY,
-        /** The other. */
-        OTHER;
-    }
 
     /** The Constant ID_SEQ_NAME. */
     static final String ID_SEQ_NAME = "gufrat_id_seq";
@@ -83,9 +63,9 @@ public class Rating implements Serializable {
     private UserFeedback userfeedback;
 
     /** The category. */
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "criteria_id", referencedColumnName = "id")
+    private RatingCriteria category;
 
     /** The rating. */
     @Column
@@ -96,7 +76,7 @@ public class Rating implements Serializable {
      *
      * @return the category
      */
-    public Category getCategory() {
+    public RatingCriteria getCategory() {
         return category;
     }
 
@@ -133,7 +113,7 @@ public class Rating implements Serializable {
      *
      * @param category the new category
      */
-    public void setCategory(Category category) {
+    public void setCategory(RatingCriteria category) {
         this.category = category;
     }
 

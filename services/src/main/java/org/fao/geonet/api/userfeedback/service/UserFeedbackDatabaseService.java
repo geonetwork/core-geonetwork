@@ -29,11 +29,13 @@ import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.formatters.groovy.EnvironmentImpl;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
+import org.fao.geonet.domain.userfeedback.UserFeedback_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -42,7 +44,10 @@ import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
 
 /**
  * User feedback provider that uses database persistence.
@@ -96,7 +101,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         DataManager dataManager = appContext.getBean(DataManager.class);
         UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
             .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
-        dataManager.rateMetadata(metadata.getId(), averageRating.getRatingAverage());
+        dataManager.rateMetadata(metadata.getId(), averageRating.getRatingAverages().get(AVERAGE_ID));
     }
 
     /*
@@ -228,7 +233,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         userFeedback.setMetadata(metadata);
 
         if (userFeedback.getDate() == null) {
-            userFeedback.setDate(new Date(System.currentTimeMillis()));
+            userFeedback.setDate(new ISODate(System.currentTimeMillis()).toDate());
         }
 
         userFeedbackRepository.save(userFeedback);
@@ -237,6 +242,10 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         DataManager dataManager = appContext.getBean(DataManager.class);
         UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
             .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
-        dataManager.rateMetadata(metadata.getId(), averageRating.getRatingAverage());
+        Integer average =  averageRating.getRatingAverages().get(AVERAGE_ID);
+        // May be null if first comment not yet published
+        if (average != null) {
+            dataManager.rateMetadata(metadata.getId(), averageRating.getRatingAverages().get(AVERAGE_ID));
+        }
     }
 }
