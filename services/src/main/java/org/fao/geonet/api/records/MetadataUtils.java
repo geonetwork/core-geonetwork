@@ -207,7 +207,9 @@ public class MetadataUtils {
                     }
                 }
 
-                relatedRecords.addContent(fcat);
+                if (fcat != null) {
+                    relatedRecords.addContent(fcat);
+                }
             }
         }
 
