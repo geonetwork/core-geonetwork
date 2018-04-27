@@ -7,4 +7,4 @@ UPDATE Settings SET name = 'system/localrating/enable', datatype = 0, value = 'b
 UPDATE Settings SET value='3.4.2' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
-
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvester/disabledHarvesterTypes', '', 0, 9011, 'n');

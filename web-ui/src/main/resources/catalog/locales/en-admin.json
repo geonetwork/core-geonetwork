@@ -745,6 +745,8 @@
     "system/feedback/mailServer/ignoreSslCertificateErrors": "Ignore errors caused by the mail server's SSL certificate",
     "system/harvester": "Harvesters",
     "system/harvester/enableEditing": "Allow editing on harvested records",
+    "system/harvester/disabledHarvesterTypes": "Disabled harvester protocols",
+    "system/harvester/disabledHarvesterTypes-help": "Comma or space separated list of disabled harvested protocols. For example:  arcsde, csw, filesystem, geonetwork, geonetwork20, geoPREST, oaipmh, ogcwxs, thredds, wfsfeatures.",
     "system/harvesting": "Harvester",
     "system/harvesting/mail/enabled": "Activate harvester notification",
     "system/harvesting/mail/level1": "... on success",

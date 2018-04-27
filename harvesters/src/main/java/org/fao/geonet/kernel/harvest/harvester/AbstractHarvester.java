@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -42,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
@@ -67,6 +69,7 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -1141,6 +1144,40 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     public static String[] getHarvesterTypes(ServiceContext context) {
         return context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
+    }
+
+    /**
+     * Get the list of not disabled registered harvesters
+     *
+     * @param context
+     * @return
+     */
+    public static String[] getNonDisabledHarvesterTypes(ServiceContext context) {
+        String[] availableTypes = context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
+        SettingManager localSettingManager = context.getApplicationContext().getBean(SettingManager.class);
+        String disabledTypesString = StringUtils.defaultIfBlank(localSettingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES), "");
+        String[] disabledTypes = StringUtils.split(disabledTypesString.toLowerCase().replace(',', ' '), " ");
+
+        String[] result = Arrays.stream(availableTypes)
+            .filter(type -> Arrays.stream(disabledTypes).noneMatch(type::equalsIgnoreCase))
+            .collect(Collectors.toList()).toArray(new String[]{});
+
+        return result;
+
+    }
+
+    /**
+     * Check if the harvester's type is in the list of disabled harvesters.
+     * @return <code>true</code> if the harvester's type is disabled in the settings, <code>false</code> otherwise.
+     */
+    public boolean isHarvesterTypeDisabled() {
+        String[] disabledTypes = StringUtils.split(
+            StringUtils.defaultIfBlank(
+                settingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES),
+                "").toLowerCase().replace(',', ' '),
+            " ");
+        String type = getType();
+        return Arrays.stream(disabledTypes).anyMatch(disabledType -> disabledType.equalsIgnoreCase(type));
     }
 
     /**
