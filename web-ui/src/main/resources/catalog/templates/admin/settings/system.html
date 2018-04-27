@@ -46,8 +46,9 @@
 
                     <p class="help-block">
                       <span
-                        data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')">
-                        {{s['name'] + '-help' | translate}}
+                        data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
+                        data-translate="">
+                        {{(s['name'] + '-help')}}
                       </span>
                     </p>
                   </div>
@@ -312,7 +313,7 @@
                             data-ng-model="s.value"
                             data-ng-change="processRecommended('siteIdChange', s['name'])"/>
                     </div>
-                    
+
                     <input data-ng-switch-when="system/inspire/remotevalidation/url" type="text" class="form-control"
                           id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}" placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}" />
 
