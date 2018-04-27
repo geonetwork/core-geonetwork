@@ -414,7 +414,10 @@
                 .success(function(data, status) {
                   $rootScope.$broadcast('reloadCommentList');
                   angular.element('#gn-userfeedback-addcomment').modal('hide');
-                  vcRecaptchaService.reload();
+
+                  if (scope.recaptchaEnabled) {
+                    vcRecaptchaService.reload();
+                  }
                 });
             };
 
