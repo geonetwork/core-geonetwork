@@ -38,19 +38,19 @@
     <!-- Default Lucene version to use (mainly for Analyzer creation). -->
     <luceneVersion>4_9</luceneVersion>
     <!-- How often to check if a commit is required -->
-    <commitInterval>30000</commitInterval>
+    <commitInterval>1000</commitInterval>
     <!-- If true then NRTManagerReopenThread will control how often the reader are reopened.
-    	 If false then the reader will be opened everytime they are obtained.  -->
+       If false then the reader will be opened everytime they are obtained.  -->
     <useNRTManagerReopenThread>true</useNRTManagerReopenThread>
     <!--
-    	Only applies if useNRTManagerReopenThread is true
-    	Maximum time until a new  reader must be opened; this sets the upper bound
-    	on how slowly reopens may occur
-    	See NRTManagerReopenThread -->
+      Only applies if useNRTManagerReopenThread is true
+      Maximum time until a new  reader must be opened; this sets the upper bound
+      on how slowly reopens may occur
+      See NRTManagerReopenThread -->
     <nrtManagerReopenThreadMaxStaleSec>5</nrtManagerReopenThreadMaxStaleSec>
     <!--
-    	 Only applies if useNRTManagerReopenThread is true
-    	 Minimum time until a new reader can be opened; this sets the lower bound
+       Only applies if useNRTManagerReopenThread is true
+       Minimum time until a new reader can be opened; this sets the lower bound
          on how quickly reopens may occur, when a caller
          is waiting for a specific indexing change to become visible
          See NRTManagerReopenThread-->
@@ -93,19 +93,20 @@
     <!--
       List of fields to dump when using q service. Fields must be stored in the index.
 
-	  The attribute 'multilingualSortField' flag fields that are used for sorting also may have translations.
-	  This is the solution for http://trac.osgeo.org/geonetwork/ticket/1112
-	  This is an issue where searching by one field and sorting by another will result
-	  in an incorrect sorting. The reason is that sorted field may have multiple translations.
-	  If the document found is one language (say french) and the UI language is english then
-	  then the french translation will be used for sorting even though when the metadata
-	  is viewed by user the metadata will be in english.
+    The attribute 'multilingualSortField' flag fields that are used for sorting also may have translations.
+    This is the solution for http://trac.osgeo.org/geonetwork/ticket/1112
+    This is an issue where searching by one field and sorting by another will result
+    in an incorrect sorting. The reason is that sorted field may have multiple translations.
+    If the document found is one language (say french) and the UI language is english then
+    then the french translation will be used for sorting even though when the metadata
+    is viewed by user the metadata will be in english.
 
-	  The following fields are the sort field that can have translations and therefore
-	  need special care when indexing and sorting.
-	   -->
+    The following fields are the sort field that can have translations and therefore
+    need special care when indexing and sorting.
+     -->
     <dumpFields>
       <field name="_isTemplate" tagName="isTemplate"/>
+      <field name="_draft" tagName="draft"/>
       <field name="_isHarvested" tagName="isHarvested"/>
       <field name="_popularity" tagName="popularity"/>
       <field name="_rating" tagName="rating"/>
@@ -117,9 +118,10 @@
       <field name="_featured" tagName="featured"/>
       <field name="_owner" tagName="owner"/>
       <field name="_userinfo" tagName="userinfo"/>
-      <field name="_isPublishedToAll" tagName="isPublishedToAll"/>
       <field name="_ownername" tagName="ownername"/>
       <field name="_cat" tagName="category"/>
+      <field name="topicCat" tagName="topicCat"/>
+      <field name="inspirethemewithac" tagName="inspirethemewithac"/>
       <field name="_valid" tagName="valid"/>
       <field name="_valid_schematron-rules-geonetwork" tagName="valid_schematron-rules-geonetwork"/>
       <field name="_valid_schematron-rules-iso" tagName="valid_schematron-rules-iso"/>
@@ -127,30 +129,59 @@
       <field name="_valid_xsd" tagName="valid_xsd"/>
       <field name="_selected" tagName="selected"/>
       <field name="_source" tagName="source"/>
+      <field name="_status" tagName="mdStatus"/>
       <field name="_edit" tagName="edit"/>
+      <field name="_root" tagName="root"/>
       <field name="_title" tagName="title" multilingualSortField="true"/>
       <field name="_docLocale" tagName="docLocale"/>
       <field name="_locale" tagName="_locale"/>
       <field name="_defaultTitle" tagName="defaultTitle"/>
-      <field name="abstract" tagName="abstract"/>
+      <field name="createDate" tagName="creationDate"/>
+      <field name="revisionDate" tagName="revisionDate"/>
+      <field name="publicationDate" tagName="publicationDate"/>
+      <field name="abstract" tagName="abstract" multilingualSortField="true"/>
       <field name="keyword" tagName="keyword"/>
+      <field name="keywordGroup" tagName="keywordGroup"/>
       <field name="parentUuid" tagName="parentId"/>
       <field name="type" tagName="type"/>
+      <field name="identifier" tagName="identifier"/>
       <field name="image" tagName="image"/>
       <field name="link" tagName="link"/>
+      <field name="format" tagName="format"/>
+      <field name="denominator" tagName="denominator"/>
+      <field name="resolution" tagName="resolution"/>
+      <field name="crs" tagName="crs"/>
+      <field name="crsDetails" tagName="crsDetails"/>
       <field name="credit" tagName="credit"/>
+      <field name="cl_status" tagName="status"/>
+      <field name="cl_status_text" tagName="status_text"/>
+      <field name="updateFrequency" tagName="updateFrequency"/>
+      <field name="lineage" tagName="lineage"/>
       <field name="responsibleParty" tagName="responsibleParty"/>
-      <field name="accessConstr" tagName="Constraints"/>
-      <field name="otherConstr" tagName="Constraints"/>
-      <field name="classif" tagName="SecurityConstraints"/>
-      <field name="conditionApplyingToAccessAndUse" tagName="Constraints"/>
+      <field name="MD_LegalConstraintsOtherConstraints" tagName="legalConstraints"/>
+      <field name="MD_LegalConstraintsUseLimitation" tagName="legalConstraints"/>
+      <field name="MD_SecurityConstraintsUseLimitation" tagName="securityConstraints"/>
+      <field name="MD_ConstraintsUseLimitation" tagName="resourceConstraints"/>
+      <field name="cl_classification_text" tagName="classification_text"/>
+      <field name="cl_maintenanceAndUpdateFrequency_text"
+             tagName="maintenanceAndUpdateFrequency_text"/>
+      <field name="cl_spatialRepresentationType_text" tagName="spatialRepresentationType_text"/>
       <field name="datasetLang" tagName="datasetLang"/>
-      <field name="language" tagName="language"/>
-      <field name="spatialRepresentationType" tagName="spatialRepresentationType"/>
+      <field name="mdLanguage" tagName="mdLanguage"/>
       <field name="serviceType" tagName="serviceType"/>
+      <field name="tempExtentBegin" tagName="tempExtentBegin"/>
+      <field name="tempExtentEnd" tagName="tempExtentEnd"/>
       <field name="geoBox" tagName="geoBox"/>
+      <field name="extentDesc" tagName="geoDesc"/>
+      <field name="geoDescCode" tagName="geoDescCode"/>
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
+      <field name="_op0" tagName="publishedForGroup"/>
+      <field name="_groupOwner" tagName="groupOwner"/>
+      <field name="_logo" tagName="logo"/>
+      <field name="standardName" tagName="standardName"/>
+      <field name="_groupWebsite" tagName="groupWebsite"/>
+      <field name="attributeTable" tagName="attributeTable"/>
     </dumpFields>
   </search>
 
@@ -200,6 +231,7 @@
   -->
   <fieldSpecificAnalyzer>
     <Field name="_uuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="standardName" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="parentUuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="operatesOn" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
@@ -263,6 +295,7 @@
     <Field name="_dummy" boost="0.0F"/>
     <Field name="_isTemplate" boost="0.0F"/>
     <Field name="_owner" boost="0.0F"/>
+    <Field name="_draft" boost="0.0F"/>
   </fieldBoosting>
 
 
@@ -296,6 +329,7 @@
    -->
   <tokenized>
     <Field name="any"/>
+    <Field name="anylight"/>
     <Field name="abstract"/>
     <Field name="title"/>
     <Field name="altTitle"/>
@@ -320,4 +354,18 @@
     <Field name="southBL" type="double"/>
     <Field name="westBL" type="double"/>
   </numeric>
+
+  <!-- List all of the lucene field names which will have similarity applied to them
+       To disable set enabled to false.
+
+       If enabled is false or not present then similarity will be applied to all fields (except some special case instances)
+  -->
+  <fuzzyMatching enabled="true">
+    <Field name="any"/>
+    <Field name="anylight"/>
+    <Field name="title"/>
+    <Field name="altTitle"/>
+    <Field name="abstract"/>
+    <Field name="specificationTitle"/>
+  </fuzzyMatching>
 </config>

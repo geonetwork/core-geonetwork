@@ -97,11 +97,11 @@ public class Export implements Service {
 
         UserSession session = context.getUserSession();
 
-        Log.info(Geonet.MEF, "Create export task for selected metadata(s).");
+        Log.debug(Geonet.MEF, "Create export task for selected metadata(s).");
         SelectionManager selectionManger = SelectionManager.getManager(session);
         Set<String> uuids = selectionManger.getSelection(bucket);
 
-        Log.info(Geonet.MEF, "Current record(s) in selection: " + uuids.size());
+        Log.debug(Geonet.MEF, "Current record(s) in selection: " + uuids.size());
 
         // If provided uuid, export the metadata record only
         selectionManger.close(SelectionManager.SELECTION_METADATA);
@@ -157,12 +157,12 @@ public class Export implements Service {
                 }
 
                 if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
-                    Log.info(Geonet.MEF, "Child and services added into the selection");
+                    Log.trace(Geonet.MEF, "Child and services added into the selection");
                 }
             }
 
             uuids = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
-            Log.info(Geonet.MEF, "Building MEF2 file with " + uuids.size()
+            Log.debug(Geonet.MEF, "Building MEF2 file with " + uuids.size()
                 + " records.");
 
             file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute, false, addSchemaLocation);
@@ -219,7 +219,7 @@ public class Export implements Service {
                     }
                 }
             }
-            Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
+            Log.debug(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
 
             return uuids;
         }

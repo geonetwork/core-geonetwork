@@ -5,26 +5,25 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataU
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataHarvestInfo;
 import org.fao.geonet.domain.MetadataRatingByIp;
 import org.fao.geonet.domain.MetadataRatingByIpId;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -52,9 +51,13 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Optional;
 
@@ -166,9 +169,10 @@ public class BaseMetadataUtils implements IMetadataUtils {
      *
      * Note: Only the metadata record is stored in session. If the editing session upload new documents or thumbnails, those documents will
      * not be cancelled. This needs improvements.
+     * @return 
      */
     @Override
-    public void startEditingSession(ServiceContext context, String id) throws Exception {
+    public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
             Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
         }
@@ -179,6 +183,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
         Element metadataBeforeAnyChanges = context.getBean(IMetadataManager.class).getMetadata(context, id, forEditing,
                 withValidationErrors, keepXlinkAttributes);
         context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
+        
+        return Integer.valueOf(id);
     }
 
     /**
@@ -347,7 +353,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         } catch (Throwable t) {
             //Maybe it is not a Specification<Metadata>
         }
-        throw new NotImplementedException("Unknown IMetadata subtype: " + specs.getClass().getName());
+        throw new NotImplementedException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
     }
 
     /**
@@ -812,7 +818,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         } catch (Throwable t) {
             //Maybe it is not a Specification<Metadata>
         }
-        throw new NotImplementedException("Unknown IMetadata subtype: " + specs.getClass().getName());
+        throw new NotImplementedException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
     }
 
     @Override
@@ -830,12 +836,19 @@ public class BaseMetadataUtils implements IMetadataUtils {
         return metadataRepository.findOneByUuid(uuid);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public AbstractMetadata findOne(Specification<Metadata> spec) {
-        return metadataRepository.findOne(spec);
+    public AbstractMetadata findOne(Specification<? extends AbstractMetadata> spec) {
+        try {
+            return metadataRepository.findOne((Specification<Metadata>) spec);
+        } catch (Throwable t) {
+            // Maybe it is not a Specification<Metadata>
+        }
+        return null;
     }
 
     @Override
+    @Transactional(readOnly=true, isolation=Isolation.READ_COMMITTED)
     public AbstractMetadata findOne(String id) {
         return metadataRepository.findOne(id);
     }
@@ -858,7 +871,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         } catch (Throwable t) {
             //Maybe it is not a Specification<Metadata>
         }
-        throw new NotImplementedException("Unknown IMetadata subtype: " + specs.getClass().getName());
+        throw new NotImplementedException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
     }
 
     @Override
@@ -867,8 +880,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
     }
 
     @Override
+    @Transactional(readOnly=true, isolation=Isolation.READ_COMMITTED, propagation=Propagation.REQUIRES_NEW, timeout=500)
     public boolean exists(Integer iId) {
-        return metadataRepository.exists(iId);
+        Boolean exist = metadataRepository.exists(iId);
+        Log.trace(Geonet.DATA_MANAGER, "exists(" + iId + ") -> " + exist);
+        return exist;
     }
 
     @SuppressWarnings("unchecked")
@@ -879,7 +895,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         } catch (Throwable t) {
             //Maybe it is not a Specification<Metadata>
         }
-        throw new NotImplementedException("Unknown IMetadata subtype: " + specs.getClass().getName());
+        throw new NotImplementedException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
     }
 
     @Override
@@ -895,14 +911,43 @@ public class BaseMetadataUtils implements IMetadataUtils {
         } catch (Throwable t) {
             //Maybe it is not a Specification<Metadata>
         }
-        throw new NotImplementedException("Unknown IMetadata subtype: " + specs.getClass().getName());
+        throw new NotImplementedException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
     }
-    
+
+    @Override
+    public Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(Pageable pageable) {
+        return metadataRepository.findAllIdsAndChangeDates(pageable);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec) {
+        try {
+            return metadataRepository.findAllSourceInfo((Specification<Metadata>) spec);
+        } catch (Throwable t) {
+            // Maybe it is not a Specification<Metadata>
+        }
+        throw new NotImplementedException("Unknown AbstractMetadata subtype: " + spec.getClass().getName());
+    }
+
     protected MetadataRepository getMetadataRepository() {
         return metadataRepository;
     }
-    
+
     protected SchemaManager getSchemaManager() {
         return schemaManager;
     }
+
+    protected IMetadataSchemaUtils getMetadataSchemaUtils() {
+        return metadataSchemaUtils;
+    }
+    
+    protected IMetadataManager getMetadataManager() {
+        return metadataManager;
+    }
+    
+    protected IMetadataIndexer getMetadataIndexer() {
+        return metadataIndexer;
+    }
+
 }

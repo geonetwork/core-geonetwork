@@ -89,7 +89,7 @@ public class GetCategories implements Service {
 
         HashSet<String> hsMetadataCat = new HashSet<String>();
 
-        for (MetadataCategory cat : metadata.getMetadataCategories()) {
+        for (MetadataCategory cat : metadata.getCategories()) {
             hsMetadataCat.add(cat.getId() + "");
         }
 

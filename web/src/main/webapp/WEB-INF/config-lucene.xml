@@ -106,6 +106,7 @@
 	   -->
     <dumpFields>
       <field name="_isTemplate" tagName="isTemplate"/>
+      <field name="_draft" tagName="draft"/>
       <field name="_isHarvested" tagName="isHarvested"/>
       <field name="_popularity" tagName="popularity"/>
       <field name="_rating" tagName="rating"/>
@@ -295,6 +296,7 @@
     <Field name="_dummy" boost="0.0F"/>
     <Field name="_isTemplate" boost="0.0F"/>
     <Field name="_owner" boost="0.0F"/>
+    <Field name="_draft" boost="0.0F"/>
   </fieldBoosting>
 
 

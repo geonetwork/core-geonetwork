@@ -120,15 +120,15 @@ public class SchemaManager {
             catalogProp = "";
         }
         if (!catalogProp.equals("")) {
-            Log.info(Geonet.SCHEMA_MANAGER, "Overriding " + Constants.XML_CATALOG_FILES + " property (was set to " + catalogProp + ")");
+            Log.debug(Geonet.SCHEMA_MANAGER, "Overriding " + Constants.XML_CATALOG_FILES + " property (was set to " + catalogProp + ")");
         }
         catalogProp = webInf.resolve("oasis-catalog.xml") + ";" + schemapluginUriCatalog;
         System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
-        Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
+        Log.debug(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
 
         Path blankXSLFile = webappDir.resolve("xsl").resolve("blanks.xsl");
         System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile.toUri().toASCIIString());
-        Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
+        Log.debug(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
 
         return webInf;
     }
@@ -1262,7 +1262,7 @@ public class SchemaManager {
             return;
         }
 
-        Log.info(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " + schemasDir.getFileName());
+        Log.debug(Geonet.SCHEMA_MANAGER, "    Adding xml schema : " + schemasDir.getFileName());
 
         String stage = "";
         try {

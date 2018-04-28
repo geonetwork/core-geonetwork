@@ -99,6 +99,7 @@
     <facet name="format" indexKey="format" label="formats"/>
     <facet name="title" indexKey="title" label="titles"/>
     <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
+    <facet name="draft" indexKey="_draft" label="draft"/>
     <facet name="isValid" indexKey="_valid" label="isValid"/>
     <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
     <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
@@ -158,6 +159,7 @@
       <item facet="gemetKeyword"
             translator="term:http://geonetwork-opensource.org/gemet"/>
       -->
+          <item facet="draft"/>
     </summaryType>
 
     <summaryType name="manager" format="DIMENSION">
@@ -177,6 +179,7 @@
       <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
       <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
 	    <item facet="isPublishedToAll" max="2" sortBy="value" translator="apploc:"/>
+      <item facet="draft"/>
     </summaryType>
 
     <!-- (deprecated) old-style configuration supporting only

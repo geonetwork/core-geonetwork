@@ -23,9 +23,25 @@
 
 package org.fao.geonet.api.records.editing;
 
-import io.swagger.annotations.*;
-import jeeves.server.UserSession;
-import jeeves.server.dispatchers.guiservices.XmlFile;
+import static jeeves.guiservices.session.Get.getSessionAsXML;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -40,7 +56,14 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -57,29 +80,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import static jeeves.guiservices.session.Get.getSessionAsXML;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
     "/api/records",
@@ -112,8 +129,9 @@ public class MetadataEditingApi {
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "The editor form."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+            @ApiResponse(code = 200, message = "The editor form."),
+//            @ApiResponse(code = 307, message = "Redirecting to another editor."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseBody
     public Element startEditing(
@@ -139,7 +157,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
         @RequestParam
             Map<String,String> allRequestParams,
-        HttpServletRequest request
+        HttpServletRequest request,
+        HttpServletResponse response
         ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
@@ -149,8 +168,22 @@ public class MetadataEditingApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         if (starteditingsession) {
-            DataManager dm = applicationContext.getBean(DataManager.class);
-            dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
+            Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            
+            if(id2 != metadata.getId()) {
+//                StringBuilder sb = new StringBuilder();
+//                sb.append(request.getContextPath());
+//                sb.append(request.getServletPath());
+//                sb.append("/catalog.edit#").append(id2);
+//                sb.append("/editor/").append("?");
+//                sb.append(request.getQueryString());
+//                response.sendRedirect(sb.toString());
+                
+                Element el = new Element("script");
+                el.setText("window.location.hash = \"#/metadata/" + id2 + "\"");
+                return el;
+            }
         }
 
         Element elMd = new AjaxEditUtils(context)
@@ -244,7 +277,10 @@ public class MetadataEditingApi {
 //        ajaxEditUtils.preprocessUpdate(allRequestParams, context);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        DataManager dataMan = applicationContext.getBean(DataManager.class);
+        IMetadataUtils dataUtils = applicationContext.getBean(IMetadataUtils.class);
+        IMetadataManager dataMan = applicationContext.getBean(IMetadataManager.class);
+        IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
+        IMetadataIndexer indexer = applicationContext.getBean(IMetadataIndexer.class);
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         String id = String.valueOf(metadata.getId());
@@ -265,7 +301,7 @@ public class MetadataEditingApi {
         }
 
         int iLocalId = Integer.parseInt(id);
-        dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
+        dataUtils.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
 
         //--- use StatusActionsFactory and StatusActions class to possibly
         //--- change status as a result of this edit (use onEdit method)
@@ -311,7 +347,7 @@ public class MetadataEditingApi {
 
             // Save validation if the forceValidationOnMdSave is enabled
             if (forceValidationOnMdSave) {
-                dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+                validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
                     new Document(metadata.getXmlData(false)), context.getLanguage());
                 reindex = true;
             }
@@ -344,11 +380,11 @@ public class MetadataEditingApi {
             }
 
             if (reindex) {
-                dataMan.indexMetadata(id, true, null);
+                indexer.indexMetadata(id, true, null);
             }
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);
-            dataMan.endEditingSession(id, session);
+            dataUtils.endEditingSession(id, session);
             if (isUnpublished) {
                 throw new IllegalStateException(String.format(
                     "Record saved but as it was invalid at the end of " +
@@ -410,7 +446,7 @@ public class MetadataEditingApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        DataManager dataMan = applicationContext.getBean(DataManager.class);
+        IMetadataUtils dataMan = applicationContext.getBean(IMetadataUtils.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
         dataMan.cancelEditingSession(context, String.valueOf(metadata.getId()));
     }

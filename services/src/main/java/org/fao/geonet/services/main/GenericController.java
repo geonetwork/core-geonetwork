@@ -72,9 +72,9 @@ public class GenericController {
         if (forwardedFor != null)
             ip = forwardedFor;
 
-        Log.info(Log.REQUEST, "==========================================================");
+        Log.trace(Log.REQUEST, "==========================================================");
 
-        Log.info(Log.REQUEST, "HTML Request (from " + ip + ") : " + request.getRequestURI());
+        Log.trace(Log.REQUEST, "HTML Request (from " + ip + ") : " + request.getRequestURI());
         if (Log.isDebugEnabled(Log.REQUEST)) {
             Log.debug(Log.REQUEST, "Method       : " + request.getMethod());
             Log.debug(Log.REQUEST, "Content type : " + request.getContentType());

@@ -102,7 +102,7 @@ public class RdfOutputManager {
                 int size = results.size();
                 int page = 1;
 
-                Log.info(Geonet.GEONETWORK, "DCAT - Processing " + size + " results");
+                Log.trace(Geonet.GEONETWORK, "DCAT - Processing " + size + " results");
 
                 if (size == 0) {
                     Element recordsRdf = Xml.transform(records, xslPath);
@@ -122,7 +122,7 @@ public class RdfOutputManager {
 
                         // write results to file when processing the last record of the page or last record of the results
                         if (hasToWriteResults(i, size)) {
-                            Log.info(Geonet.GEONETWORK, "DCAT - Processing results from page " + page);
+                            Log.trace(Geonet.GEONETWORK, "DCAT - Processing results from page " + page);
 
                             // Process the resultset
                             Element recordsRdf = Xml.transform(records, xslPath);
@@ -147,7 +147,7 @@ public class RdfOutputManager {
 
 
             // Create the final rdf file
-            Log.info(Geonet.GEONETWORK, "DCAT - Creating RDF file with results");
+            Log.debug(Geonet.GEONETWORK, "DCAT - Creating RDF file with results");
 
             BufferedReader reader1 = null, reader2 = null;
             try {
@@ -157,7 +157,7 @@ public class RdfOutputManager {
 
 
                 // File header
-                Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file header and dcat:Catalog section");
+                Log.trace(Geonet.GEONETWORK, "DCAT - ... Writing file header and dcat:Catalog section");
                 writeFileHeader(outputRdfFile);
 
                 // Append catalog records
@@ -169,12 +169,12 @@ public class RdfOutputManager {
                 outputRdfFile.write("\n");
 
                 // Append records file
-                Log.info(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
+                Log.trace(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
                 reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile), Charset.forName("UTF-8")));
                 IOUtils.copy(reader2, outputRdfFile);
 
                 // File footer
-                Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file footer");
+                Log.trace(Geonet.GEONETWORK, "DCAT - ... Writing file footer");
                 writeFileFooter(outputRdfFile);
             } finally {
                 IOUtils.closeQuietly(outputRdfFile);
