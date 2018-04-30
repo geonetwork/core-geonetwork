@@ -1,10 +1,9 @@
 <div class="md-feedback"
-     data-ng-show="isFeedbackEnabled"
-     data-ng-controller="gnMdFeedbackController">
+     data-ng-show="isFeedbackEnabled">
   <a href data-ng-click="toggle()"
      title="{{'fbFeedback' | translate}}"
      class="gn-md-feedback-btn">
-    <i class="fa fa-fw fa-comments-o"></i>
+    <i class="fa fa-fw fa-envelope"></i>
     <span class="hidden-xs" data-ng-show="showLabel" data-translate="">{{showLabel}}</span>
   </a>
   <div class="modal fade">
@@ -20,11 +19,11 @@
         <form class="form-horizontal"
               role="form"
               name="gnFeedbackForm"
-              data-ng-submit="send(gnFeedbackForm, '#gn-contact-md-form')"
+              data-ng-submit="send(gnFeedbackForm, '#gn-contact-md-form', md.getUuid())"
               id="gn-contact-md-form">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="modal-body">
-            <div data-ng-if="!success">
+            <div>
               <div class="">
                 <h4 data-translate="">fbContact</h4>
                 <div class="form-group gn-required">
@@ -35,17 +34,6 @@
                            value="{{user.name}}" required="required"/>
                   </div>
                 </div>
-                <!-- <div class="form-group">
-                   <label class="col-sm-3 control-label"></label>
-                   <div class="col-sm-9">
-                     <label class="radio-inline">
-                       <input type="radio" name="gender" value="{{user.gender}}"/> M
-                     </label>
-                     <label class="radio-inline">
-                       <input type="radio" name="gender" value="{{user.gender}}"/> V
-                     </label>
-                   </div>
-                 </div>-->
                 <div class="form-group">
                   <label class="col-sm-3 control-label"
                          data-translate="">fbFunction</label>
@@ -125,16 +113,34 @@
                 </div>
               </div>
 
-              <input type="hidden" name="uuid" value="{{md.getUuid()}}"/>
-              <input type="hidden" name="title" value="{{md.defaultTitle}}"/>
-              <input type="hidden" name="metadataEmail"
-                     value="{{md.allContacts.metadata[0].email || md.allContacts.resource[0].email }}"/>
-              <input type="hidden" name="metadataOrganization"
-                     value="{{md.allContacts.metadata[0].org || md.allContacts.resource[0].org}}"/>
+              <input type="hidden"
+                     name="uuid"
+                     value="{{md.getUuid()}}"/>
+              <input type="hidden"
+                     id="recaptcha"
+                     name="recaptcha"/>
+              <input type="hidden"
+                     name="metadataEmail"
+                     value="{{sendTo}}"/>
+              <ul>
+                <li data-ng-repeat="c in contactList" data-ng-show="c.email !== ''">
+                  <label class="control-label">
+                    <input type="checkbox" data-ng-model="c.selected" data-ng-change="updateList()"/>
+                    {{c.email}} ({{c.role}})
+                  </label>
+                </li>
+              </ul>
 
+              <div class="form-group" data-ng-if="recaptchaEnabled">
+                <div vc-recaptcha class="col-lg-8"
+                     theme="'light'"
+                     key="recaptchaKey"></div>
+
+                <span class="col-lg-8" style="color: red;" data-ng-show="resolveRecaptcha" data-translate="">
+                  resolveCaptcha
+                </span>
+              </div>
             </div>
-            <p class="alert alert-info" data-ng-if="success" data-translate="">feebackSent</p>
-
           </div>
           <div class="modal-footer">
             <button class="btn btn-primary pull-right" type="submit">
