@@ -50,6 +50,7 @@
           scope.selectedClass = null;
           scope.selectedCollection = null;
           scope.selectedLanguages = {};
+          scope.loadingCollection = false;
 
           function getMainLanguage() {
             for (var p in scope.selectedLanguages) {
@@ -110,6 +111,7 @@
 
           scope.$watch('selectedClass', function (n, o) {
             if (n !== o && n != null) {
+              scope.loadingCollection = true;
               gnRegistryService.loadItemCollection(
                 scope.url,
                 scope.selectedClass,
@@ -120,6 +122,9 @@
                   scope.itemCollection.sort(compareItem);
                   scope.selectedCollection =
                     scope.itemCollection[0].codelist.id;
+                  scope.loadingCollection = false;
+                }, function(error) {
+                  scope.loadingCollection = false;
                 }
               );
             }
