@@ -30,7 +30,7 @@
         <span data-gn-pagination-list=""
               data-items="thesaurus | filter:thesaurusSearch | orderBy:'title'"
               data-cache="thesaurus"/>
-              
+
         <!-- Add new thesauri button  -->
         <div class="btn-group btn-block">
           <button type="button" class="btn btn-success btn-block dropdown-toggle"
@@ -47,6 +47,10 @@
             <li>
               <a href ng-click="addThesaurus('file')" translate>
                 fromLocalFile</a>
+            </li>
+            <li>
+              <a href ng-click="addThesaurus('registry')" translate>
+                fromRegistry</a>
             </li>
             <li>
               <a href ng-click="addThesaurus('url')" translate>
@@ -295,7 +299,7 @@
 
           <!-- File import form -->
           <form id="gn-upload-thesaurus" name="gn-upload-thesaurus"
-                data-ng-show="importAs == 'file' || importAs == 'url'"
+                data-ng-show="importAs == 'file' || importAs == 'url' || importAs == 'registry'"
                 action="{{'thesaurus.upload?_content_type=json&_csrf=' + csrf}}"
                 method="POST" enctype="multipart/form-data"
                 data-file-upload="thesaurusUploadOptions">
@@ -310,11 +314,16 @@
 
             <!-- TODO : Add thesaurus combo from repository.
             It could be relevant to have a setting for this. -->
-            <div data-ng-show="importAs == 'url'">
+            <div data-ng-show="importAs == 'url' || importAs == 'registry'">
               <label class="control-label" data-translate="">thesaurusUrl</label>
               <input type="url" name="url" data-ng-model="thesaurusUrl" id="gn-thesaurus-url"
                     class="form-control" placeholder="http://"/>
             </div>
+
+            <!-- Registry selection -->
+            <div data-ng-show="importAs == 'registry'"
+                 data-gn-registry-browser="thesaurusUrl"/>
+
             <br/>
             <div
               data-schema-info-combo="codelist"

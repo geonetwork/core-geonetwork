@@ -1,0 +1,38 @@
+<div>
+  <h3><span data-translate="">registryUrl</span> {{url}}</h3>
+
+  <div class="form-group">
+    <label class="form-label"
+           data-translate="">
+      registryChooseLanguages
+    </label>
+    <ul>
+      <li data-ng-repeat="l in languages">
+        <label><input type="checkbox"
+                      data-ng-model="selectedLanguages[l.key]"
+                      value="{{l.key}}"/> {{l.label}}</label>
+      </li>
+    </ul>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label"
+           data-translate="">
+    registryChooseType
+    </label>
+    <select class="form-control"
+            data-ng-options="t.key as t.label for t in itemClass"
+            data-ng-model="selectedClass"/>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label"
+           data-translate="">
+      registryChooseItem
+    </label>
+    <select class="form-control"
+            data-ng-options="i.codelist.id as i.codelist.label.text for i in itemCollection"
+            data-ng-model="selectedCollection"/>
+  </div>
+
+</div>

@@ -25,9 +25,11 @@
   goog.provide('gn_thesaurus_controller');
 
   goog.require('gn_multilingual_field_directive');
+  goog.require('gn_registry_directive');
 
   var module = angular.module('gn_thesaurus_controller', [
     'blueimp.fileupload',
+    'gn_registry_directive',
     'gn_multilingual_field_directive']);
 
 
@@ -115,6 +117,7 @@
        */
       $scope.keywordFilter = '';
 
+      var defaultRegistryUrl = 'http://inspire.ec.europa.eu';
       $scope.maxNumberOfKeywords = 50;
       $scope.availableResultCounts = [50, 100, 200, 500, 1000];
       $scope.setResultsCount = function(count) {
@@ -212,6 +215,9 @@
 
         $scope.thesaurusImportType = 'theme';
         $scope.importAs = type;
+        if ($scope.importAs === 'registry') {
+          $scope.thesaurusUrl = defaultRegistryUrl;
+        }
         $scope.thesaurusSelected = {
           title: '',
           filename: '',
