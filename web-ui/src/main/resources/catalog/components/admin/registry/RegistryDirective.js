@@ -32,8 +32,8 @@
      * Usage:
      * <div data-gn-registry-browser="registryUrl"></div>
      */
-  module.directive('gnRegistryBrowser', ['gnRegistryService',
-    function(gnRegistryService) {
+  module.directive('gnRegistryBrowser', ['gnLangs', 'gnRegistryService',
+    function(gnLangs, gnRegistryService) {
       return {
         restrict: 'A',
         replace: true,
@@ -67,10 +67,28 @@
             return null;
           };
 
+          /**
+           * Select the UI language if available or
+           * the first one.
+           */
+          function selectPreferredLanguage() {
+            var preferredLang = gnLangs.getIso2Lang(gnLangs.getCurrent());
+
+            for (var i = 0; i < scope.languages.length; i ++) {
+              if (preferredLang === scope.languages[i].key) {
+                scope.selectedLanguages[scope.languages[i].key] = true;
+                return;
+              }
+            }
+            scope.selectedLanguages[scope.languages[0].key] = true;
+          };
+
           function init() {
             if (scope.registryUrl === '') {
               return;
             }
+
+
             // On init,
             // * load language first (select the first one)
             // * load available itemClass (select the firs one)
@@ -80,9 +98,9 @@
                 scope.selectedClass = null;
                 scope.selectedCollection = null;
                 scope.itemCollection = [];
-                
+
                 if (languages.length > 0) {
-                  scope.selectedLanguages[languages[0].key] = true;
+                  selectPreferredLanguage();
 
                   gnRegistryService.loadItemClass(scope.registryUrl).then(
                     function (itemClass) {
