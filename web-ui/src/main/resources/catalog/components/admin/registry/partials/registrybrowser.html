@@ -1,18 +1,42 @@
 <div>
-  <h3><span data-translate="">registryUrl</span> {{url}}</h3>
+  <div class="form-group">
+    <label class="control-label"
+           data-translate="">registryUrl</label>
+    <div class="input-group">
+
+      <input type="url"
+             data-ng-model="registryUrl"
+             class="form-control"
+             placeholder="https://"/>
+      <span class="input-group-btn">
+        <div class="btn btn-default"
+                data-ng-click="setDefault()"
+                data-translate="">registryUseInspireOne</div>
+      </span>
+    </div>
+    <p class="help-block ng-scope" data-translate="">registry-help</p>
+  </div>
 
   <div class="form-group">
     <label class="form-label"
            data-translate="">
       registryChooseLanguages
     </label>
-    <ul>
-      <li data-ng-repeat="l in languages">
-        <label><input type="checkbox"
-                      data-ng-model="selectedLanguages[l.key]"
-                      value="{{l.key}}"/> {{l.label}}</label>
-      </li>
-    </ul>
+    <div class="row">
+      <div class="col-md-6">
+        <ul>
+          <li data-ng-repeat="l in languages">
+            <label><input type="checkbox"
+                          name="registryLanguage"
+                          data-ng-model="selectedLanguages[l.key]"
+                          value="{{l.key}}"/> {{l.label}}</label>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <p class="help-block ng-scope" data-translate="">registryChooseLanguages-help</p>
+      </div>
+    </div>
   </div>
 
   <div class="form-group">
@@ -32,6 +56,7 @@
     </label>
     <i class="fa fa-spinner fa-spin" data-ng-show="loadingCollection"/>
     <select class="form-control"
+            name="registryUrl"
             data-ng-options="i.codelist.id as i.codelist.label.text for i in itemCollection"
             data-ng-model="selectedCollection"/>
   </div>

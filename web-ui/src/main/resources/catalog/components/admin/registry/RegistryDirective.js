@@ -37,9 +37,7 @@
       return {
         restrict: 'A',
         replace: true,
-        scope: {
-          url: '=gnRegistryBrowser'
-        },
+        scope: {},
         templateUrl: '../../catalog/components/admin/registry/partials/' +
             'registrybrowser.html',
         link: function(scope, element, attrs) {
@@ -52,6 +50,13 @@
           scope.selectedLanguages = {};
           scope.loadingCollection = false;
 
+          scope.registryUrl = '';
+          scope.defaultRegistry = 'http://inspire.ec.europa.eu';
+
+          scope.setDefault = function() {
+            scope.registryUrl = scope.defaultRegistry;
+          }
+
           function getMainLanguage() {
             for (var p in scope.selectedLanguages) {
               if (scope.selectedLanguages.hasOwnProperty(p) &&
@@ -63,24 +68,29 @@
           };
 
           function init() {
-            if (scope.url === '') {
+            if (scope.registryUrl === '') {
               return;
             }
             // On init,
             // * load language first (select the first one)
             // * load available itemClass (select the firs one)
-            gnRegistryService.loadLanguages(scope.url).then(
+            gnRegistryService.loadLanguages(scope.registryUrl).then(
               function (languages) {
                 scope.languages = languages;
+                scope.selectedClass = null;
+                scope.selectedCollection = null;
+                scope.itemCollection = [];
+                
                 if (languages.length > 0) {
                   scope.selectedLanguages[languages[0].key] = true;
 
-                  gnRegistryService.loadItemClass(scope.url).then(
+                  gnRegistryService.loadItemClass(scope.registryUrl).then(
                     function (itemClass) {
                       scope.itemClass = itemClass;
 
                       if (itemClass.length > 0) {
                         scope.selectedClass = itemClass[0].key;
+                        loadCollection();
                       } else {
                         console.warn('ItemClass are required. ' +
                           'None found in ' + itemClass)
@@ -95,7 +105,7 @@
             );
           }
 
-          scope.$watch('url', function (n, o) {
+          scope.$watch('registryUrl', function (n, o) {
             if (n !== o && n != null) {
               init();
             }
@@ -109,26 +119,24 @@
             return 0;
           }
 
-          scope.$watch('selectedClass', function (n, o) {
-            if (n !== o && n != null) {
-              scope.loadingCollection = true;
-              gnRegistryService.loadItemCollection(
-                scope.url,
-                scope.selectedClass,
-                getMainLanguage()).then(
-                function (itemCollection) {
-                  scope.itemCollection =
-                    itemCollection.data.register.containeditems;
-                  scope.itemCollection.sort(compareItem);
-                  scope.selectedCollection =
-                    scope.itemCollection[0].codelist.id;
-                  scope.loadingCollection = false;
-                }, function(error) {
-                  scope.loadingCollection = false;
-                }
-              );
-            }
-          });
+          function loadCollection() {
+            scope.loadingCollection = true;
+            gnRegistryService.loadItemCollection(
+              scope.registryUrl,
+              scope.selectedClass,
+              getMainLanguage()).then(
+              function (itemCollection) {
+                scope.itemCollection =
+                  itemCollection.data.register.containeditems;
+                scope.itemCollection.sort(compareItem);
+                scope.selectedCollection =
+                  scope.itemCollection[0].codelist.id;
+                scope.loadingCollection = false;
+              }, function(error) {
+                scope.loadingCollection = false;
+              }
+            );
+          }
 
           init();
         }

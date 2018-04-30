@@ -117,7 +117,6 @@
        */
       $scope.keywordFilter = '';
 
-      var defaultRegistryUrl = 'http://inspire.ec.europa.eu';
       $scope.maxNumberOfKeywords = 50;
       $scope.availableResultCounts = [50, 100, 200, 500, 1000];
       $scope.setResultsCount = function(count) {
@@ -215,9 +214,6 @@
 
         $scope.thesaurusImportType = 'theme';
         $scope.importAs = type;
-        if ($scope.importAs === 'registry') {
-          $scope.thesaurusUrl = defaultRegistryUrl;
-        }
         $scope.thesaurusSelected = {
           title: '',
           filename: '',

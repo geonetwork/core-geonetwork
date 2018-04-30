@@ -314,7 +314,7 @@
 
             <!-- TODO : Add thesaurus combo from repository.
             It could be relevant to have a setting for this. -->
-            <div data-ng-show="importAs == 'url' || importAs == 'registry'">
+            <div data-ng-show="importAs == 'url'">
               <label class="control-label" data-translate="">thesaurusUrl</label>
               <input type="url" name="url" data-ng-model="thesaurusUrl" id="gn-thesaurus-url"
                     class="form-control" placeholder="http://"/>
@@ -396,7 +396,7 @@
           ><span class="fa fa-plus"></span> {{"createThesaurus"|translate}}
           </button>
           <button type="button" class="btn btn-primary" data-ng-hide="importAs == 'new'"
-                  data-ng-disabled="queue.length === 0 && thesaurusUrl == ''"
+                  data-ng-disabled="queue.length === 0 && thesaurusUrl == '' && registryUrl == ''"
                   data-ng-click="importThesaurus('#gn-upload-thesaurus')"
           ><span class="fa fa-upload"></span> {{"uploadThesaurus"|translate}}
           </button>
