@@ -199,9 +199,12 @@
           organisation: '',
           enabled: true
         };
+
         $scope.userGroups = null;
         $scope.userIsAdmin = false;
         $scope.userIsEnabled = true;
+
+        updateGroupsByProfile($scope.userGroups);
 
         $timeout(function() {
           $scope.setUserProfile();
@@ -331,7 +334,8 @@
         'UserAdmin', 'Reviewer',
         'Editor', 'RegisteredUser',
         'Guest'];
-      $scope.$watch('userGroups', function(groups) {
+
+      var updateGroupsByProfile = function(groups) {
         var res = [];
         angular.forEach(profiles, function(profile) {
           res[profile] = [];
@@ -349,8 +353,11 @@
         //We need to change the pointer,
         // not only the value, so ng-options is aware
         $scope.groupsByProfile = res;
-      });
+      };
 
+      $scope.$watch('userGroups', function(groups) {
+        updateGroupsByProfile(groups);
+      });
 
       /**
        * Compute user profile based on group/profile select
