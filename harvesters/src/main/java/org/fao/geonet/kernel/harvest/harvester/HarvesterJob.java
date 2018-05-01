@@ -26,8 +26,14 @@ package org.fao.geonet.kernel.harvest.harvester;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.utils.Log;
-import org.quartz.*;
+import org.quartz.DisallowConcurrentExecution;
+import org.quartz.InterruptableJob;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.UnableToInterruptJobException;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -52,8 +58,14 @@ public class HarvesterJob implements Job, InterruptableJob {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
+        if (harvester.isHarvesterTypeDisabled()) {
+            log.info("Cancelling harvester " + harvesterId + " execution because harvester type "
+                + harvester.getType() + " is disabled in the system settings");
+            context.setResult(OperResult.OK);
+            return;
+        }
         try {
-          _this = Thread.currentThread();
+            _this = Thread.currentThread();
             harvester.harvest();
         } catch (Throwable t) {
             throw new JobExecutionException(t, false);
@@ -79,16 +91,16 @@ public class HarvesterJob implements Job, InterruptableJob {
     @Override
     public void interrupt() throws UnableToInterruptJobException {
         harvester.cancelMonitor.set(true);
-        
+
         // Following the suggestion of InterruptableJob
         // Sometimes the harvester is frozen
         // give some time, but if it does not finish properly...
         // just kill it!!
-         new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 super.run();
-                
+
                 //Wait for proper shutdown (a minute, more than enough!)
                 try {
                     Thread.sleep(60 * 1000);
@@ -97,12 +109,12 @@ public class HarvesterJob implements Job, InterruptableJob {
                 }
 
                 //Still running?
-                if(_this.isAlive()) {
+                if (_this.isAlive()) {
                     //Then kill it!
-                    log.error("Forcefully stopping harvester thread '" + 
-                            getHarvesterId() + "'.");
-                    try {                
-                       _this.interrupt();
+                    log.error("Forcefully stopping harvester thread '" +
+                        getHarvesterId() + "'.");
+                    try {
+                        _this.interrupt();
                     } catch (Throwable e) {
                         log.error(e);
                     }
@@ -110,8 +122,8 @@ public class HarvesterJob implements Job, InterruptableJob {
             }
         }.start();
     }
-    
+
     public Thread getThread() {
-      return _this;
+        return _this;
     }
 }
