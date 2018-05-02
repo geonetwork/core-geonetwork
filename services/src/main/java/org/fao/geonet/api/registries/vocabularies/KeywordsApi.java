@@ -592,7 +592,7 @@ public class KeywordsApi {
             @ApiResponse(code = 200, message = "Thesaurus uploaded in SKOS format."),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
         })
-//        @PreAuthorize("hasRole('UserAdmin')")
+        @PreAuthorize("hasRole('UserAdmin')")
         @ResponseBody
         @ResponseStatus(HttpStatus.OK)
     public Element uploadThesaurus(
@@ -630,6 +630,7 @@ public class KeywordsApi {
         long start = System.currentTimeMillis();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        // Different options for upload
         boolean fileUpload = file!=null&&!file.isEmpty();
         boolean urlUpload = !StringUtils.isEmpty(url);
         boolean registryUpload = !StringUtils.isEmpty(registryUrl);
@@ -638,11 +639,12 @@ public class KeywordsApi {
         Path rdfFile = null;
         String fname = null;
 
+        // Specific upload steps
         if (urlUpload) {
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus from URL: " + url);
 
-            rdfFile = getRdfContentFromUrl(url, context);
+            rdfFile = getXMLContentFromUrl(url, context);
             fname = url.substring(url.lastIndexOf("/") + 1, url.length()).replaceAll("\\s+", "");
 
             // File with no extension in URL
@@ -659,7 +661,9 @@ public class KeywordsApi {
 
             rdfFile = convFile.toPath();
             fname = file.getOriginalFilename();
+
         } else if (registryUpload) {
+
             if(ArrayUtils.isEmpty(lang)) {
                 throw new OperationAbortedEx("No array language provided");
             }
@@ -670,10 +674,12 @@ public class KeywordsApi {
 
             rdfFile = extractSKOSFromRegistry(registryUrl, itemName, lang, context);
             fname = itemName + ".rdf";
+
         } else {
 
             Log.debug(Geonet.THESAURUS, "No URL or file name provided for thesaurus upload.");
             throw new OperationAbortedEx("Thesaurus source not provided");
+
         }
 
         if (fname == null || "".equals(fname)) {
@@ -736,33 +742,40 @@ public class KeywordsApi {
      */
     private Path extractSKOSFromRegistry(String registryUrl, String itemName, String[] lang, ServiceContext context)
             throws URISyntaxException, IOException, MalformedURLException, JDOMException, NoSuchFileException, Exception {
+
         if(lang!=null) {
-            Path skosXML;
+
             Element pre = new Element("pre");
             Element documents = new Element("documents");
             pre.addContent(documents);
+
+            // Combine together codeLists from different languages
             for (String language : lang) {
                 String laguageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
-                Path localRdf = getRdfContentFromUrl(laguageFileUrl, context);
+                Path localRdf = getXMLContentFromUrl(laguageFileUrl, context);
                 Element codeList = Xml.loadFile(localRdf);
                 documents.addContent(codeList);
             }
+
+            // Convert to SKOS
             GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
             Path skosTransform = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/registry-to-skos.xsl");
             Element transform = Xml.transform(pre, skosTransform);
+
             // Convert to file and return
             Path rdfFile = Files.createTempFile("thesaurus", ".rdf");
             XMLOutputter xmlOutput = new XMLOutputter();
             xmlOutput.setFormat(Format.getCompactFormat());
             xmlOutput.output(transform, new FileWriter(rdfFile.toFile()));
             return rdfFile;
+
         }
 
         return null;
     }
 
     /**
-     * Gets the rdf content from url.
+     * Gets the XML content from url.
      *
      * @param url the url
      * @param context the context
@@ -771,17 +784,14 @@ public class KeywordsApi {
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws MalformedURLException the malformed URL exception
      */
-    private Path getRdfContentFromUrl(String url, ServiceContext context) throws URISyntaxException, IOException, MalformedURLException {
+    private Path getXMLContentFromUrl(String url, ServiceContext context) throws URISyntaxException, IOException, MalformedURLException {
         Path rdfFile;
         URI uri = new URI(url);
         rdfFile = Files.createTempFile("thesaurus", ".rdf");
-
         XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).
                 createXmlRequest(uri.toURL());
         httpReq.setAddress(uri.getPath());
-
         Lib.net.setupProxy(context, httpReq);
-
         httpReq.executeLarge(rdfFile);
         return rdfFile;
     }
