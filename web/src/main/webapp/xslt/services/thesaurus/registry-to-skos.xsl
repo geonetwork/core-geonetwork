@@ -34,7 +34,9 @@
                 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:registry="http://inspire.ec.europa.eu/codelist_register/codelist"
+                xmlns:regcd="http://inspire.ec.europa
+                .eu/codelist_register/codelist"
+                xmlns:regmdcd="http://inspire.ec.europa.eu/metadata-codelist_register/metadata-codelist"
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -67,8 +69,10 @@
                 select="format-dateTime(current-dateTime(),$df)"/>
 
   <xsl:variable name="thesaurusId"
-                select="/documents/registry:codelist[1]/@id"/>
+                select="/documents/*[1]/@id"/>
 
+  <xsl:variable name="status"
+                select="'http://inspire.ec.europa.eu/registry/status/valid'"/>
 
   <xsl:template match="/documents">
 
@@ -76,26 +80,24 @@
     <rdf:RDF>
       <skos:ConceptScheme rdf:about="{$thesaurusId}">
         <xsl:apply-templates mode="concept-scheme"
-                             select="registry:codelist/registry:label|
-                                     registry:codelist/registry:definition"/>
+                             select="*/*:label|
+                                     */*:definition"/>
         <dcterms:issued><xsl:value-of select="$now"/></dcterms:issued>
         <dcterms:modified><xsl:value-of select="$now"/></dcterms:modified>
-
       </skos:ConceptScheme>
-
 
       <!-- We assume that the first codelist contains the full
       list of items to describes and that the following contains
       translations for each items of the first one. -->
       <xsl:apply-templates mode="concept"
-                           select="registry:codelist[1]/registry:containeditems/registry:value"/>
+                           select="*[1]/*:containeditems/*:value"/>
 
     </rdf:RDF>
   </xsl:template>
 
 
   <xsl:template mode="concept-scheme"
-                match="registry:codelist/registry:label">
+                match="*/*:label[@xml:lang = ../*:language]">
     <dc:title>
       <xsl:copy-of select="@xml:lang"/>
       <xsl:value-of select="."/>
@@ -103,33 +105,43 @@
   </xsl:template>
 
   <xsl:template mode="concept-scheme"
-                match="registry:codelist/registry:definition">
+                match="*/*:definition[@xml:lang = ../*:language]">
     <dc:description>
       <xsl:copy-of select="@xml:lang"/>
       <xsl:value-of select="."/>
     </dc:description>
   </xsl:template>
 
+  <xsl:template mode="concept-scheme"
+                match="*"/>
 
 
   <xsl:template mode="concept"
-                match="registry:containeditems/registry:value">
+                match="*:containeditems/*:value[*:status/@id = $status]">
     <xsl:variable name="conceptId"
                   select="@id"/>
-
     <skos:Concept rdf:about="{$conceptId}">
-      <xsl:for-each select="//registry:containeditems/registry:value[@id =$conceptId]">
-        <skos:prefLabel>
-          <xsl:copy-of select="registry:label/@xml:lang"/>
-          <xsl:value-of select="registry:label"/>
-        </skos:prefLabel>
-        <skos:scopeNote>
-          <xsl:copy-of select="registry:definition/@xml:lang"/>
-          <xsl:value-of select="registry:definition"/>
-        </skos:scopeNote>
+      <xsl:for-each select="//*:containeditems/*:value[@id = $conceptId]">
+        <!-- Only add the label if the codelist requested language match.
+        If you request something in french and no translation are available,
+        english is set. -->
+        <xsl:if test="*:label/@xml:lang = ../../*:language">
+          <skos:prefLabel>
+            <xsl:copy-of select="*:label/@xml:lang"/>
+            <xsl:value-of select="*:label"/>
+          </skos:prefLabel>
+        </xsl:if>
+        <xsl:if test="*:definition/@xml:lang = ../../*:language">
+          <skos:scopeNote>
+            <xsl:copy-of select="*:definition/@xml:lang"/>
+            <xsl:value-of select="*:definition"/>
+          </skos:scopeNote>
+        </xsl:if>
       </xsl:for-each>
       <skos:inScheme rdf:resource="{$thesaurusId}"/>
     </skos:Concept>
   </xsl:template>
 
+  <xsl:template mode="concept"
+                match="*"/>
 </xsl:stylesheet>

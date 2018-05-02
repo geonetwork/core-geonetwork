@@ -669,7 +669,7 @@
        * Load the list of thesaurus from the server
        */
       function loadThesaurus() {
-        $http.get('thesaurus@json').success(function(data) {
+        $http.get('thesaurus?_content_type=json').success(function(data) {
           $scope.thesaurus = data[0];
         }).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {

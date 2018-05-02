@@ -841,7 +841,7 @@ public class KeywordsApi {
      */
     private Path extractSKOSFromRegistry(String registryUrl, String itemName, String[] lang, ServiceContext context)
             throws Exception {
-        if(lang!=null) {
+        if(lang != null) {
             Element documents = new Element("documents");
             for (String language : lang) {
                 String laguageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
