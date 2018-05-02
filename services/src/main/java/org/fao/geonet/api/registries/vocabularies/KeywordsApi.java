@@ -23,31 +23,13 @@
 
 package org.fao.geonet.api.registries.vocabularies;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -56,6 +38,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.OperationAbortedEx;
@@ -98,16 +81,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.constants.Jeeves;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -461,7 +459,7 @@ public class KeywordsApi {
             notes = "Download the thesaurus in SKOS format."
         )
         @RequestMapping(
-            value = "/{thesaurus}",
+            value = "/{thesaurus:.+}",
             method = RequestMethod.GET,
             produces = {
                 MediaType.TEXT_XML_VALUE
@@ -518,7 +516,7 @@ public class KeywordsApi {
             notes = "Delete a thesaurus."
         )
         @RequestMapping(
-            value = "/{thesaurus}",
+            value = "/{thesaurus:.+}",
             method = RequestMethod.DELETE)
         @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Thesaurus deleted."),
@@ -528,7 +526,7 @@ public class KeywordsApi {
         @PreAuthorize("hasRole('UserAdmin')")
         @ResponseBody
         @ResponseStatus(HttpStatus.OK)
-    public Element deleteThesaurus(
+    public void deleteThesaurus(
             @ApiParam(
                     value = "Thesaurus to delete.",
                     required = true)
@@ -541,8 +539,14 @@ public class KeywordsApi {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
 
-        // Load file
         Thesaurus thesaurusObject = manager.getThesaurusByName(thesaurus);
+        if (thesaurusObject == null) {
+            throw new ResourceNotFoundException(String.format(
+              "Thesaurus with identifier '%s' not found in the catalogue. Should be one of: %s",
+              thesaurus,
+              manager.getThesauriMap().keySet().toString()
+            ));
+        }
         Path item = thesaurusObject.getFile();
 
         // Remove old file from thesaurus manager
@@ -559,11 +563,10 @@ public class KeywordsApi {
                 repo.delete(thesaurusId);
             }
         } else {
-            throw new IllegalArgumentException("Thesaurus not found --> " + thesaurus);
+            throw new IllegalArgumentException(String.format(
+                "Thesaurus RDF file was not found for thesaurus with identifier ''.",
+                thesaurus));
         }
-
-        return new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
     }
 
 
@@ -573,7 +576,7 @@ public class KeywordsApi {
      * @param file the file
      * @param url the url
      * @param registryUrl the registry url
-     * @param lang the lang
+     * @param registryLanguage the languages to retrieve from the registry
      * @param type the type
      * @param dir the dir
      * @param stylesheet the stylesheet
@@ -582,36 +585,26 @@ public class KeywordsApi {
      * @throws Exception the exception
      */
     @ApiOperation(
-            value = "Uploads a new thesaurus",
+            value = "Uploads a new thesaurus from a file",
             nickname = "uploadThesaurus",
             notes = "Uploads a new thesaurus."
         )
         @RequestMapping(
-            method = RequestMethod.POST)
+            method = RequestMethod.POST
+        )
         @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Thesaurus uploaded in SKOS format."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+            @ApiResponse(code = 201, message = "Thesaurus uploaded in SKOS format."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
         })
-        @PreAuthorize("hasRole('UserAdmin')")
+
+        @PreAuthorize("hasRole('Reviewer')")
         @ResponseBody
-        @ResponseStatus(HttpStatus.OK)
-    public Element uploadThesaurus(
+        @ResponseStatus(value = HttpStatus.CREATED)
+    public String uploadThesaurus(
             @ApiParam(
                     value = "If set, do a file upload.")
             @RequestParam(value = "file", required = false)
             MultipartFile file,
-            @ApiParam(
-                    value = "If set, try to download from the Internet.")
-            @RequestParam(value = "url", required = false)
-            String url,
-            @ApiParam(
-                    value = "If set, try to download from a registry.")
-            @RequestParam(value = "registryUrl", required = false)
-            String registryUrl,
-            @ApiParam(
-                    value = "Languages to download from a registry.")
-            @RequestParam(value = "lang", required = false)
-            String[] lang,
             @ApiParam(
                     value = "Local or external (default).")
             @RequestParam(value = "type", defaultValue = "external")
@@ -632,6 +625,126 @@ public class KeywordsApi {
 
         // Different options for upload
         boolean fileUpload = file!=null&&!file.isEmpty();
+
+        // Upload RDF file
+        Path rdfFile = null;
+        String fname = null;
+
+        if (fileUpload) {
+
+            Log.debug(Geonet.THESAURUS, "Uploading thesaurus file: " + file.getOriginalFilename());
+
+            File convFile = new File(file.getOriginalFilename());
+            file.transferTo(convFile);
+
+            rdfFile = convFile.toPath();
+            fname = file.getOriginalFilename();
+        } else {
+
+            Log.debug(Geonet.THESAURUS, "No file provided for thesaurus upload.");
+            throw new OperationAbortedEx("Thesaurus source not provided");
+        }
+
+        if (fname == null || "".equals(fname)) {
+            throw new OperationAbortedEx("File upload from URL or file return null");
+        }
+
+        long fsize;
+        if (rdfFile != null && Files.exists(rdfFile)) {
+            fsize = Files.size(rdfFile);
+        } else {
+            throw new OperationAbortedEx("Thesaurus file doesn't exist");
+        }
+
+        // -- check that the archive actually has something in it
+        if (fsize == 0) {
+            throw new OperationAbortedEx("Thesaurus file has zero size");
+        }
+
+        int extensionIdx = fname.lastIndexOf('.');
+
+        if (fname.endsWith(".rdf") || fname.endsWith(".xml")) {
+            Log.debug(Geonet.THESAURUS, "Uploading thesaurus: " + fname);
+
+            // Rename .xml to .rdf for all thesaurus
+            fname = fname.substring(0, extensionIdx) + ".rdf";
+            uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
+        } else {
+            Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
+            throw new Exception("Incorrect extension for thesaurus named: "
+                    + fname);
+        }
+
+        long end = System.currentTimeMillis();
+        long duration = (end - start) / 1000;
+
+        return String.format("Thesaurus '%s' loaded in %d sec.",
+            fname, duration);
+    }
+
+
+
+
+
+    /**
+     * Upload thesaurus.
+     *
+     * @param url the url
+     * @param registryUrl the registry url
+     * @param registryLanguage the languages to retrieve from the registry
+     * @param type the type
+     * @param dir the dir
+     * @param stylesheet the stylesheet
+     * @param request the request
+     * @return the element
+     * @throws Exception the exception
+     */
+    @ApiOperation(
+        value = "Uploads a new thesaurus from URL or Registry",
+        nickname = "uploadThesaurusFromUrl",
+        notes = "Uploads a new thesaurus."
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Thesaurus uploaded in SKOS format."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
+    @PreAuthorize("hasRole('Reviewer')")
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public String uploadThesaurusFromUrl(
+        @ApiParam(
+            value = "If set, try to download from the Internet.")
+        @RequestParam(value = "url", required = false)
+            String url,
+        @ApiParam(
+            value = "If set, try to download from a registry.")
+        @RequestParam(value = "registryUrl", required = false)
+            String registryUrl,
+        @ApiParam(
+            value = "Languages to download from a registry.")
+        @RequestParam(value = "registryLanguage", required = false)
+            String[] registryLanguage,
+        @ApiParam(
+            value = "Local or external (default).")
+        @RequestParam(value = "type", defaultValue = "external")
+            String type,
+        @ApiParam(
+            value = "Type of thesaurus, usually one of the ISO thesaurus type codelist value. Default is theme.")
+        @RequestParam(value = "dir", defaultValue = "theme")
+            String dir,
+        @ApiParam(
+            value = "XSL to be use to convert the thesaurus before load. Default _none_.")
+        @RequestParam(value = "stylesheet", defaultValue = "_none_")
+            String stylesheet,
+        HttpServletRequest request
+    ) throws Exception {
+
+        long start = System.currentTimeMillis();
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
         boolean urlUpload = !StringUtils.isEmpty(url);
         boolean registryUpload = !StringUtils.isEmpty(registryUrl);
 
@@ -652,27 +765,17 @@ public class KeywordsApi {
                 fname += ".rdf";
             }
 
-        } else if (fileUpload) {
-
-            Log.debug(Geonet.THESAURUS, "Uploading thesaurus file: " + file.getOriginalFilename());
-
-            File convFile = new File(file.getOriginalFilename());
-            file.transferTo(convFile);
-
-            rdfFile = convFile.toPath();
-            fname = file.getOriginalFilename();
 
         } else if (registryUpload) {
-
-            if(ArrayUtils.isEmpty(lang)) {
-                throw new OperationAbortedEx("No array language provided");
+            if(ArrayUtils.isEmpty(registryLanguage)) {
+                throw new OperationAbortedEx("You MUST define one or more registry language.");
             }
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus from registry : " + registryUrl);
 
             String itemName = registryUrl.substring( (registryUrl.lastIndexOf("/")+1), registryUrl.length() );
 
-            rdfFile = extractSKOSFromRegistry(registryUrl, itemName, lang, context);
+            rdfFile = extractSKOSFromRegistry(registryUrl, itemName, registryLanguage, context);
             fname = itemName + ".rdf";
 
         } else {
@@ -698,8 +801,6 @@ public class KeywordsApi {
             throw new OperationAbortedEx("Thesaurus file has zero size");
         }
 
-        Element uploadResult = new Element("record").setText("Thesaurus uploaded");
-
         int extensionIdx = fname.lastIndexOf('.');
 
         if (fname.endsWith(".rdf") || fname.endsWith(".xml")) {
@@ -708,23 +809,18 @@ public class KeywordsApi {
             // Rename .xml to .rdf for all thesaurus
             fname = fname.substring(0, extensionIdx) + ".rdf";
             uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
-            uploadResult.addContent(new Element("Thesaurus").setText(fname));
         } else {
             Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
             throw new Exception("Incorrect extension for thesaurus named: "
-                    + fname);
+                + fname);
         }
 
         long end = System.currentTimeMillis();
         long duration = (end - start) / 1000;
-        Log.debug(Geonet.THESAURUS, "Uploaded in " + duration + " s.");
 
-        Element response = new Element("response");
-        response.setAttribute("time", duration + "");
-        if (uploadResult != null) response.addContent(uploadResult);
-        return response;
+        return String.format("Thesaurus '%s' loaded in %d sec.",
+            fname, duration);
     }
-
     /**
      * Extract SKOS from registry.
      *
