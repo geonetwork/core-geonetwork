@@ -300,7 +300,7 @@
           <!-- File import form -->
           <form id="gn-upload-thesaurus" name="gn-upload-thesaurus"
                 data-ng-show="importAs == 'file' || importAs == 'url' || importAs == 'registry'"
-                action="{{'thesaurus.upload?_content_type=json&_csrf=' + csrf}}"
+                action="{{'../api/registries/vocabularies?_csrf=' + csrf}}"
                 method="POST" enctype="multipart/form-data"
                 data-file-upload="thesaurusUploadOptions">
             <span data-ng-show="importAs == 'file'"
@@ -308,7 +308,7 @@
                   ng-class="{disabled: disabled}">
               <i class="fa fa-plus fa-white"/>
               <span data-translate="">chooseThesaurus</span>
-              <input type="file" id="gn-thesaurus-file" name="fname" multiple="true"
+              <input type="file" id="gn-thesaurus-file" name="file" multiple="true"
                     ng-disabled="disabled"/>
             </span>
 

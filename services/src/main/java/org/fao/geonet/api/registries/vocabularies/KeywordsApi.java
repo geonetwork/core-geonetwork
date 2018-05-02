@@ -824,6 +824,9 @@ public class KeywordsApi {
     /**
      * Extract SKOS from registry.
      *
+     * Download for each language the codelist from the registry. Combine
+     * them into one XML document which is then XSLT processed for SKOS conversion.
+     *
      * @param registryUrl the registry url
      * @param itemName the item name
      * @param lang the selected languages
@@ -837,15 +840,9 @@ public class KeywordsApi {
      * @throws Exception the exception
      */
     private Path extractSKOSFromRegistry(String registryUrl, String itemName, String[] lang, ServiceContext context)
-            throws URISyntaxException, IOException, MalformedURLException, JDOMException, NoSuchFileException, Exception {
-
+            throws Exception {
         if(lang!=null) {
-
-            Element pre = new Element("pre");
             Element documents = new Element("documents");
-            pre.addContent(documents);
-
-            // Combine together codeLists from different languages
             for (String language : lang) {
                 String laguageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
                 Path localRdf = getXMLContentFromUrl(laguageFileUrl, context);
@@ -856,8 +853,7 @@ public class KeywordsApi {
             // Convert to SKOS
             GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
             Path skosTransform = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/registry-to-skos.xsl");
-            Element transform = Xml.transform(pre, skosTransform);
-
+            Element transform = Xml.transform(documents, skosTransform);
             // Convert to file and return
             Path rdfFile = Files.createTempFile("thesaurus", ".rdf");
             XMLOutputter xmlOutput = new XMLOutputter();

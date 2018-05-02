@@ -222,11 +222,24 @@
           type: 'local'
         };
 
+        $scope.registryUrl = '';
+        $scope.selectedClass = '';
+        $scope.selectedCollection = '';
+        $scope.itemClass = [];
+        $scope.languages = [];
+        $scope.itemCollection = [];
+        $scope.item = [];
+        $scope.selectedLanguages = {};
+
+        $scope.clear($scope.queue);
+
         $('#thesaurusModal').modal();
         $('#thesaurusModal').on('shown.bs.modal', function() {
           var id = $scope.importAs === 'new' ? '#gn-thesaurus-title' :
               ($scope.importAs === 'file' ? '#gn-thesaurus-file' :
                   '#gn-thesaurus-url');
+
+
           $(id).focus();
         });
       };
@@ -294,11 +307,18 @@
        * Thesaurus uploaded with error, broadcast it.
        */
       uploadThesaurusError = function(e, data) {
-        $rootScope.$broadcast('StatusUpdated', {
-          title: $translate.instant('thesaurusUploadError'),
-          error: data.jqXHR.responseJSON,
-          timeout: 0,
-          type: 'danger'});
+        var r = data.jqXHR || data;
+        if (r.status === 201) {
+          uploadThesaurusDone(data);
+        } else {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate.instant('thesaurusUploadError'),
+            error: r.responseJSON || r.data,
+            timeout: 0,
+            type: 'danger'});
+
+          loadThesaurus();
+        }
       };
 
       /**
@@ -319,12 +339,13 @@
         $(formId)[0].enctype = ($scope.importAs === 'file' ?
             'multipart/form-data' : '');
         if ($scope.importAs === 'file') {
+          // unset registry URL value which may contains a ? added in ng-options
+          $(formId)[0].registryUrl.value = '';
           $scope.submit();
         } else {
-          $http.get('thesaurus.upload?' + $(formId).serialize())
-              .success(uploadThesaurusDone)
-              .error(function(data) {
-                uploadThesaurusError(null, data);
+          $http.put('../api/registries/vocabularies?' + $(formId).serialize())
+              .then(uploadThesaurusDone, function(r) {
+                uploadThesaurusError(null, r);
               });
         }
       };
@@ -342,7 +363,7 @@
        * (this is done after a confirm dialog)
        */
       $scope.confirmDeleteThesaurus = function() {
-        $http.get('thesaurus.remove?ref=' +
+        $http.delete('../api/registries/vocabularies/' +
                   $scope.delEntryId)
             .success(function(data) {
               $scope.thesaurusSelected = null;

@@ -37,7 +37,7 @@
       return {
         restrict: 'A',
         replace: true,
-        scope: {},
+        // scope: {},
         templateUrl: '../../catalog/components/admin/registry/partials/' +
             'registrybrowser.html',
         link: function(scope, element, attrs) {
@@ -129,10 +129,18 @@
             }
           });
 
+          scope.$watch('selectedClass', function (n, o) {
+            if (scope.registryUrl != '' && n !== o && n != null) {
+              loadCollection();
+            }
+          });
+
           function compareItem(a,b) {
-            if (a.codelist.label.text < b.codelist.label.text)
+            if (a[scope.selectedClass].label.text <
+              b[scope.selectedClass].label.text)
               return -1;
-            if (a.codelist.label.text > b.codelist.label.text)
+            if (a[scope.selectedClass].label.text >
+              b[scope.selectedClass].label.text)
               return 1;
             return 0;
           }
@@ -148,7 +156,7 @@
                   itemCollection.data.register.containeditems;
                 scope.itemCollection.sort(compareItem);
                 scope.selectedCollection =
-                  scope.itemCollection[0].codelist.id;
+                  scope.itemCollection[0][scope.selectedClass].id;
                 scope.loadingCollection = false;
               }, function(error) {
                 scope.loadingCollection = false;

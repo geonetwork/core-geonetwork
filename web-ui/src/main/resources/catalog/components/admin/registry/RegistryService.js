@@ -65,6 +65,7 @@
         var itemClass = [];
         var deferred = $q.defer();
 
+        itemClass.push({key: 'metadata-codelist', label: 'metadata-codelist'})
         itemClass.push({key: 'codelist', label: 'codelist'})
         deferred.resolve(itemClass);
 
