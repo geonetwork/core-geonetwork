@@ -1178,6 +1178,8 @@
     "allLanguage-help": "Display all languages",
     "oneLanguage": "One",
     "oneLanguage-help": "Choose one language to edit using the selector",
+    "ui-mod-geocoder": "Gazetteer",
+    "ui-geocoder-help": "Insert the url of Gazetteer service and the behaviour (alt or default)",
     "ui-mapExtent": "DEPRECATED! Map Extent",
     "ui-mapExtent-help": "DEPRECATED! Extent coordinates to use for maps other that viewer and search maps.",
     "ui-mapBackgroundLayer": "DEPRECATED! Map Background Layer",

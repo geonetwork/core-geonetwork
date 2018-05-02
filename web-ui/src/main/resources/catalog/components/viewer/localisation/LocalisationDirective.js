@@ -39,7 +39,8 @@
     '$timeout',
     'gnGlobalSettings',
     'gnViewerSettings',
-    function($timeout, gnGlobalSettings, gnViewerSettings) {
+    'gnGazetteerProvider',
+    function($timeout, gnGlobalSettings, gnViewerSettings, gnGazetteerProvider) {
       return {
         restrict: 'A',
         require: 'gnLocalisationInput',
@@ -54,7 +55,6 @@
           function($scope, $http, gnGetCoordinate) {
 
             var parent = $scope.$parent;
-            var lang = gnGlobalSettings.lang;
 
             $scope.modelOptions =
                 angular.copy(gnGlobalSettings.modelOptions);
@@ -63,10 +63,8 @@
               map.getView().fit(extent, map.getSize());
             };
             this.onClick = function(loc, map) {
-              zoomTo(loc.extent, map);
-              $scope.query = loc.name;
-              $scope.collapsed = true;
-            };
+              return gnGazetteerProvider.onClick($scope, loc, map);
+            }
 
             $scope.zoomToYou = function(map) {
               if (navigator.geolocation) {
@@ -91,59 +89,9 @@
              *
              * @param {string} query string value of the search input
              */
-            this.search = function(query) {
-              if (query.length < 1) return;
-              var coord = gnGetCoordinate(
-                  $scope.map.getView().getProjection().getWorldExtent(), query);
-
-              if (coord) {
-                function moveTo(map, zoom, center) {
-                  var view = map.getView();
-
-                  view.setZoom(zoom);
-                  view.setCenter(center);
-                }
-                moveTo($scope.map, 5, ol.proj.transform(coord,
-                    'EPSG:4326', $scope.map.getView().getProjection()));
-                return;
-              }
-              var formatter = function(loc) {
-                var props = [];
-                ['toponymName', 'adminName1', 'countryName'].
-                    forEach(function(p) {
-                      if (loc[p]) { props.push(loc[p]); }
-                    });
-                return (props.length == 0) ? '' : '—' + props.join(', ');
-              };
-
-              var url = gnViewerSettings.geocoder;
-              $http.get(url, {
-                params: {
-                  lang: lang,
-                  style: 'full',
-                  type: 'json',
-                  maxRows: 10,
-                  name_startsWith: query,
-                  username: 'georchestra'
-                }
-              }).
-                  success(function(response) {
-                    var loc;
-                    $scope.results = [];
-                    for (var i = 0; i < response.geonames.length; i++) {
-                      loc = response.geonames[i];
-                      if (loc.bbox) {
-                        $scope.results.push({
-                          name: loc.name,
-                          formattedName: formatter(loc),
-                          extent: ol.proj.transformExtent([loc.bbox.west,
-                            loc.bbox.south, loc.bbox.east, loc.bbox.north],
-                          'EPSG:4326', $scope.map.getView().getProjection())
-                        });
-                      }
-                    }
-                  });
-            };
+            this.search = function (loc, query) {
+              return gnGazetteerProvider.search($scope, loc, $scope.query);
+            }
           }],
         link: function(scope, element, attrs, ctrl) {
 
