@@ -89,8 +89,6 @@
       <span data-translate="" class="hidden-sm hidden-xs">edit</span>
     </a>
 
-    <div class="gnMdfeedback"></div>
-
     <div data-ng-show="usingFormatter"
          id="gn-metadata-display"
          class="gn-metadata-display">
@@ -423,7 +421,9 @@
                   data-gn-user={{user.username}}
                   data-ng-if="isUserFeedbackEnabled">
           </div>
+
         </div>
+        <div data-gn-md-feedback="mdView.current.record"></div>
 
         <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>

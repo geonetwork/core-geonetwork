@@ -25,6 +25,7 @@ package org.fao.geonet.api.userfeedback;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -36,6 +37,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -43,16 +45,21 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
+import org.fao.geonet.util.MailUtil;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +80,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
 
 /**
  * User Feedback REST API.
@@ -489,6 +500,140 @@ public class UserFeedbackAPI {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @ApiOperation(
+        value = "Send an email to catalogue administrator or record's contact",
+        notes = "",
+        nickname = "sendEmailToContact")
+    @RequestMapping(
+        value = "/records/{metadataUuid}/alert",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity sendEmailToContact(
+        @ApiParam(
+            value = "Metadata record UUID.",
+            required = true
+        )
+        @PathVariable(value = "metadataUuid")
+        final String metadataUuid,
+        @ApiParam(
+            value = "Recaptcha validation key.",
+            required = false
+        )
+        @RequestParam(required = false, defaultValue = "")
+        final String recaptcha,
+        @ApiParam(
+            value = "User name.",
+            required = true
+        )
+        @RequestParam
+        final String name,
+        @ApiParam(
+            value = "User organisation.",
+            required = true
+        )
+        @RequestParam
+        final String org,
+        @ApiParam(
+            value = "User email address.",
+            required = true
+        )
+        @RequestParam
+        final String email,
+        @ApiParam(
+            value = "A comment or question.",
+            required = true
+        )
+        @RequestParam
+        final String comments,
+        @ApiParam(
+            value = "User phone number.",
+            required = false
+        )
+        @RequestParam(required = false, defaultValue = "")
+        final String phone,
+        @ApiParam(
+            value = "Email subject.",
+            required = false
+        )
+        @RequestParam(required = false, defaultValue = "User feedback")
+        final String subject,
+        @ApiParam(
+            value = "User function.",
+            required = false
+        )
+        @RequestParam(required = false, defaultValue = "-")
+        final String function,
+        @ApiParam(
+            value = "Comment type.",
+            required = false
+        )
+        @RequestParam(required = false, defaultValue = "-")
+        final String type,
+        @ApiParam(
+            value = "Comment category.",
+            required = false
+        )
+        @RequestParam(required = false, defaultValue = "-")
+        final String category,
+        @ApiParam(
+            value = "List of record's contact to send this email.",
+            required = false
+        )
+        @RequestParam(required = false, defaultValue = "")
+        final String metadataEmail,
+        @ApiIgnore final HttpServletRequest request
+    ) throws IOException {
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
+        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        boolean recaptchaEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+
+        if (recaptchaEnabled) {
+            boolean validRecaptcha = RecaptchaChecker.verify(recaptcha,
+                sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+            if (!validRecaptcha) {
+                return new ResponseEntity<>(
+                    messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
+            }
+        }
+
+
+
+        String to = sm.getValue(SYSTEM_FEEDBACK_EMAIL);
+        String catalogueName = sm.getValue(SYSTEM_SITE_NAME_PATH);
+
+        List<String> toAddress = new LinkedList<String>();
+        toAddress.add(to);
+        if (isNotBlank(metadataEmail)) {
+            //Check metadata email belongs to metadata security!!
+            Metadata md = metadataRepository.findOneByUuid(metadataUuid);
+            if(md.getData().indexOf(metadataEmail) > 0) {
+                toAddress.add(metadataEmail);
+            }
+        }
+
+        String title = XslUtil.getIndexField(null, metadataUuid, "title", "");
+
+        MailUtil.sendMail(toAddress,
+            String.format(
+                messages.getString("user_feedback_title"),
+                catalogueName, title, subject),
+            String.format(
+                messages.getString("user_feedback_text"),
+                name, org, function, email, phone, title, type, category, comments,
+                sm.getNodeURL(), metadataUuid),
+            sm);
+
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     /**
