@@ -45,6 +45,7 @@
   goog.require('gn_scroll_spy');
   goog.require('gn_share');
   goog.require('gn_thesaurus');
+  goog.require('gn_topiccategory');
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
@@ -52,7 +53,8 @@
        'gn_import_controller', 'gn_batchedit_controller',
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
+       'gn_scroll_spy', 'gn_thesaurus', 'gn_topiccategory',
+       'ui.bootstrap.datetimepicker',
        'ngRoute', 'gn_mdactions_service', 'pascalprecht.translate']);
 
   var tplFolder = '../../catalog/templates/editor/';
@@ -64,13 +66,8 @@
       $routeProvider.
           when('/metadata/:id', {
             templateUrl: tplFolder + 'editor.html',
-            controller: 'GnEditorController'}).
-          when('/metadata/:id/tab/:tab', {
-            templateUrl: tplFolder + 'editor.html',
-            controller: 'GnEditorController'}).
-          when('/metadata/:id/tab/:tab/:displayAttributes', {
-            templateUrl: tplFolder + 'editor.html',
-            controller: 'GnEditorController'}).
+            controller: 'GnEditorController',
+            reloadOnSearch: false}).
           when('/create', {
             templateUrl: gnGlobalSettings.gnCfg.mods.editor.createPageTpl,
             controller: 'GnNewMetadataController'}).
@@ -230,10 +227,10 @@
                   id: $routeParams.id,
                   formId: '#gn-editor-' + $routeParams.id,
                   containerId: '#gn-editor-container-' + $routeParams.id,
-                  tab: $routeParams.tab || defaultTab,
-                  displayAttributes: $routeParams.displayAttributes === 'true',
-                  displayTooltips: $routeParams.displayTooltips === 'true',
-                  displayTooltipsMode: $routeParams.displayTooltipsMode || '',
+                  tab: $location.search()['tab'] || defaultTab,
+                  displayAttributes: $location.search()['displayAttributes'] === 'true',
+                  displayTooltips: $location.search()['displayTooltips'] === 'true',
+                  displayTooltipsMode: $location.search()['displayTooltipsMode'] || '',
                   compileScope: $scope,
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
@@ -261,8 +258,25 @@
                   editorFormUrl += '&displayTooltips=true';
                 }
 
+                if (gnCurrentEdit.displayTooltipsMode != '') {
+                  editorFormUrl += '&displayTooltipsMode='
+                    + gnCurrentEdit.displayTooltipsMode ;
+                }
+
                 gnEditor.load(editorFormUrl).then(function() {
                   // $scope.onFormLoad();
+                  // Once the editor form is loaded, then
+                  // user might have set a target element
+                  // to scroll to.
+                  var target = $location.search()['scrollTo'];
+                  if (target) {
+                    $timeout(function () {
+                      gnUtilityService.scrollTo(target);
+                    }, 300);
+                    // Delayed a bit, the time to the form
+                    // and all directives to be rendered which
+                    // may affect element positions.
+                  }
                 });
 
                 window.onbeforeunload = function() {
@@ -334,6 +348,8 @@
         // Disable form + indicator ?
         //        $($scope.formId + ' > fieldset').fadeOut(duration);
         $scope.save(true);
+
+        $location.search('tab', tabIdentifier);
       };
 
       /**

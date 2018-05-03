@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -33,25 +34,34 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.mef.*;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
 
 /**
  * @author Jesse on 11/6/2014.
@@ -112,17 +122,48 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
             if (file != null &&
                 file.getFileName() != null &&
                 file.getFileName().toString() != null &&
-                file.getFileName().toString().endsWith(".xml")) {
+                    (file.getFileName().toString().endsWith(".xml") || MEFLib.isValidArchiveExtensionForMEF(file.getFileName().toString()))) {
+
+                Element xml;
+                Path filePath = file.toAbsolutePath().normalize();
+                if(MEFLib.isValidArchiveExtensionForMEF(file.getFileName().toString())) {
+                    log.debug("reading file: " + filePath);
+                    try {
+                        String xsl = params.getImportXslt();
+                        MEFLib.Version version = MEFLib.getMEFVersion(file);
+                        List<String> ids = MEFLib.doImport(
+                                version == MEFLib.Version.V1 ? "mef" : "mef2",
+                                MEFLib.UuidAction.OVERWRITE,
+                                (xsl.equals("none") || xsl == null) ? "_none_" : xsl,
+                                params.getUuid(),
+                                MetadataType.lookup(params.recordType),
+                                Iterables.toArray(params.getCategories(), String.class),
+                                params.getOwnerIdGroup(),
+                                params.getValidate() != NOVALIDATION,
+                                false, context, file);
+                        for (String id : ids) {
+                            log.debug("Metadata imported from MEF: " + id);
+                            aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+                            listOfRecordsToIndex.add(Integer.valueOf(id));
+                            result.totalMetadata++;
+                        }
+                    } catch (Exception e) {
+                        log.debug("Error retrieving MEF from file " + filePath + ", ignoring");
+                        e.printStackTrace();
+                        result.unretrievable++;
+                        return FileVisitResult.CONTINUE; // skip this one
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
                 result.totalMetadata++;
                 if (log.isDebugEnabled() && result.totalMetadata % 1000 == 0) {
                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
                     log.debug(String.format("%d records inserted in %d s (%d records/s).",
-                        result.totalMetadata,
-                        elapsedTime,
-                        result.totalMetadata / elapsedTime));
+                            result.totalMetadata,
+                            elapsedTime,
+                            result.totalMetadata / elapsedTime));
                 }
-                Element xml;
-                Path filePath = file.toAbsolutePath().normalize();
 
                 try {
                     log.debug("reading file: " + filePath);

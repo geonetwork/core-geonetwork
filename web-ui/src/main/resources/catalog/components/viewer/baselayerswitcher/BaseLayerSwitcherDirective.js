@@ -36,8 +36,8 @@
    * given map
    */
   module.directive('gnBaselayerswitcher', [
-    'gnViewerSettings',
-    function(gnViewerSettings) {
+    'gnViewerSettings', 'gnOwsContextService', '$rootScope',
+    function(gnViewerSettings, gnOwsContextService, $rootScope) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/baselayerswitcher/' +
@@ -48,13 +48,22 @@
         link: function(scope, element, attrs) {
           scope.layers = gnViewerSettings.bgLayers;
           scope.dropup = angular.isDefined(attrs.dropup);
-          scope.map.getLayers().insertAt(0, scope.layers[0]);
+          if(scope.layers.indexOf(scope.map.getLayers().item(0)) < 0) {
+            scope.map.getLayers().insertAt(0, scope.layers[0]);
+          }
           scope.setBgLayer = function(layer) {
             layer.setVisible(true);
             var layers = scope.map.getLayers();
             layers.removeAt(0);
             layers.insertAt(0, layer);
             return false;
+          };
+          scope.reset = function() {
+            $rootScope.$broadcast('owsContextReseted');
+            gnOwsContextService.loadContextFromUrl(
+              gnViewerSettings.defaultContext,
+              scope.map,
+              gnViewerSettings.additionalMapLayers);
           };
         }
       };

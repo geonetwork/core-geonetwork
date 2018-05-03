@@ -237,6 +237,7 @@
     <name>gmd:centerPoint</name>
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
+    <name>gmd:axisDimensionProperties</name>
     <name>gmd:identifier</name>
     <name>gmd:topicCategory</name>
   </fieldsWithFieldset>
@@ -1328,14 +1329,20 @@
                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
-                    <directiveAttributes data-tag-name="gml:beginPosition"/>
+                    <directiveAttributes
+                      data-tag-name="gml:beginPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/>
+
                   </key>
                   <key label="endPosition"
                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
-                      data-tag-name="gml:endPosition"/>
+                      data-tag-name="gml:endPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+
+
                   </key>
                 </values>
                 <snippet>
@@ -3184,11 +3191,10 @@
     <section name="identification">
       <!-- Update existing title in metadata record -->
       <field name="title"
-             xpath="gmd:identificationInfo/*/
-                      gmd:citation/gmd:CI_Citation/gmd:title"
+             xpath="gmd:identificationInfo/*/gmd:citation/*/gmd:title"
+             insertMode="gn_replace"
              indexField="title">
-        <template>
-          <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
 
       <!-- Insert a new keyword in the first gmd:descriptiveKeywords found.

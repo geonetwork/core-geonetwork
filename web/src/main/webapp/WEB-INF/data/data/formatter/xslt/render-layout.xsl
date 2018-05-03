@@ -22,6 +22,7 @@
   <xsl:template mode="getMetadataAbstract" match="*"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
   <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
@@ -43,6 +44,12 @@
           </xsl:with-param>
           <xsl:with-param name="description">
             <xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/>
+          </xsl:with-param>
+          <xsl:with-param name="type">
+            <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
+          </xsl:with-param>
+          <xsl:with-param name="thumbnail">
+            <xsl:apply-templates mode="getMetadataThumbnail" select="$metadata"/>
           </xsl:with-param>
         </xsl:call-template>
       </xsl:otherwise>
@@ -248,12 +255,10 @@
       <xsl:variable name="title"
                     select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
 
-      <div id="gn-tab-{@id}" class="tab-pane">
-        <xsl:if test="count(following-sibling::tab) > 0">
-          <h1 class="view-header">
-            <xsl:value-of select="$title"/>
-          </h1>
-        </xsl:if>
+      <xsl:if test="count(following-sibling::tab) = 0">
+        <h1 class="view-header">
+          <xsl:value-of select="$title"/>
+        </h1>
         <xsl:choose>
           <xsl:when test="normalize-space($content) = ''">
             No information
@@ -262,7 +267,22 @@
             <xsl:copy-of select="$content"/>&#160;
           </xsl:otherwise>
         </xsl:choose>
-      </div>
+      </xsl:if>
+      <xsl:if test="count(following-sibling::tab) > 0">
+        <div id="gn-tab-{@id}" class="tab-pane">
+          <h1 class="view-header">
+            <xsl:value-of select="$title"/>
+          </h1>
+        <xsl:choose>
+          <xsl:when test="normalize-space($content) = ''">
+            No information
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="$content"/>&#160;
+          </xsl:otherwise>
+        </xsl:choose>
+        </div>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 

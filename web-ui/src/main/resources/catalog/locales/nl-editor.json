@@ -290,6 +290,8 @@
     "uploadFile": "Bestand toevoegen",
     "uuidAction": "Import acties",
     "validate-help": "Controleer metadata met de standaard validatieregels",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Validatie rapport",
     "runValidation": "Start validatieproces",
     "whoCanAccess": "Wie heeft toegang",

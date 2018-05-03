@@ -96,19 +96,23 @@
       <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
     </div>
     <div>
-      <label class="control-label" data-translate="">csw-outputSchema</label>
-      <input type="text" class="form-control gn-csw-criteria" id="csw-outputSchemaInput"
-             data-ng-model="harvesterSelected.site.outputSchema"/>
-
-      <label class="control-label" data-translate="">csw-outputSchemaOptions</label>
-      <select data-ng-model="harvesterSelected.site.outputSchema"
-              class="form-control gn-csw-criteria"
-              id="csw-outputSchemaOptionsSelect">
-        <option value="http://www.opengis.net/cat/csw/2.0.2" data-translate="">csw-dublinCore
-        </option>
-        <option value="http://www.isotc211.org/2005/gmd" data-translate="">csw-iso19139</option>
-      </select>
-
+      <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-8 gn-nopadding-left gn-nopadding-right">
+          <label class="control-label" data-translate="">csw-outputSchema</label>
+          <input type="text" class="form-control gn-csw-criteria" id="csw-outputSchemaInput"
+                 data-ng-model="harvesterSelected.site.outputSchema"/>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs gn-nopadding-right">
+          <label class="control-label" data-translate="">csw-outputSchemaOptions</label>
+          <select data-ng-model="harvesterSelected.site.outputSchema"
+                  class="form-control gn-csw-criteria"
+                  id="csw-outputSchemaOptionsSelect">
+            <option value="" disabled="" data-translate="">csw-recommendedValues</option>
+            <option value="http://www.opengis.net/cat/csw/2.0.2" data-translate="">csw-dublinCore</option>
+            <option value="http://www.isotc211.org/2005/gmd" data-translate="">csw-iso19139</option>
+          </select>
+        </div>
+      </div>
       <p class="help-block" data-translate="">csw-outputSchemaHelp</p>
     </div>
   </fieldset>

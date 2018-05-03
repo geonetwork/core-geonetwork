@@ -80,7 +80,7 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -101,7 +101,7 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -129,31 +129,31 @@ public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
         ThreddsParams params = (ThreddsParams) p;
         super.setParams(params);
 
-        settingMan.add("id:" + siteId, "url", params.url);
-        settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + optionsId, "lang", params.lang);
-        settingMan.add("id:" + optionsId, "topic", params.topic);
-        settingMan.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
-        settingMan.add("id:" + optionsId, "createServiceMd", params.createServiceMd);
-        settingMan.add("id:" + optionsId, "createCollectionDatasetMd", params.createCollectionDatasetMd);
-        settingMan.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
-        settingMan.add("id:" + optionsId, "ignoreHarvestOnCollections", params.ignoreHarvestOnCollections);
-        settingMan.add("id:" + optionsId, "collectionGeneration", params.collectionMetadataGeneration);
-        settingMan.add("id:" + optionsId, "collectionFragmentStylesheet", params.collectionFragmentStylesheet);
-        settingMan.add("id:" + optionsId, "collectionMetadataTemplate", params.collectionMetadataTemplate);
-        settingMan.add("id:" + optionsId, "createCollectionSubtemplates", params.createCollectionSubtemplates);
-        settingMan.add("id:" + optionsId, "outputSchemaOnCollectionsDIF", params.outputSchemaOnCollectionsDIF);
-        settingMan.add("id:" + optionsId, "outputSchemaOnCollectionsFragments", params.outputSchemaOnCollectionsFragments);
-        settingMan.add("id:" + optionsId, "ignoreHarvestOnAtomics", params.ignoreHarvestOnAtomics);
-        settingMan.add("id:" + optionsId, "atomicGeneration", params.atomicMetadataGeneration);
-        settingMan.add("id:" + optionsId, "modifiedOnly", params.modifiedOnly);
-        settingMan.add("id:" + optionsId, "atomicFragmentStylesheet", params.atomicFragmentStylesheet);
-        settingMan.add("id:" + optionsId, "atomicMetadataTemplate", params.atomicMetadataTemplate);
-        settingMan.add("id:" + optionsId, "createAtomicSubtemplates", params.createAtomicSubtemplates);
-        settingMan.add("id:" + optionsId, "outputSchemaOnAtomicsDIF", params.outputSchemaOnAtomicsDIF);
-        settingMan.add("id:" + optionsId, "outputSchemaOnAtomicsFragments", params.outputSchemaOnAtomicsFragments);
-        settingMan.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
-        settingMan.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
+        harvesterSettingsManager.add("id:" + siteId, "url", params.url);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + optionsId, "lang", params.lang);
+        harvesterSettingsManager.add("id:" + optionsId, "topic", params.topic);
+        harvesterSettingsManager.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
+        harvesterSettingsManager.add("id:" + optionsId, "createServiceMd", params.createServiceMd);
+        harvesterSettingsManager.add("id:" + optionsId, "createCollectionDatasetMd", params.createCollectionDatasetMd);
+        harvesterSettingsManager.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
+        harvesterSettingsManager.add("id:" + optionsId, "ignoreHarvestOnCollections", params.ignoreHarvestOnCollections);
+        harvesterSettingsManager.add("id:" + optionsId, "collectionGeneration", params.collectionMetadataGeneration);
+        harvesterSettingsManager.add("id:" + optionsId, "collectionFragmentStylesheet", params.collectionFragmentStylesheet);
+        harvesterSettingsManager.add("id:" + optionsId, "collectionMetadataTemplate", params.collectionMetadataTemplate);
+        harvesterSettingsManager.add("id:" + optionsId, "createCollectionSubtemplates", params.createCollectionSubtemplates);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnCollectionsDIF", params.outputSchemaOnCollectionsDIF);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnCollectionsFragments", params.outputSchemaOnCollectionsFragments);
+        harvesterSettingsManager.add("id:" + optionsId, "ignoreHarvestOnAtomics", params.ignoreHarvestOnAtomics);
+        harvesterSettingsManager.add("id:" + optionsId, "atomicGeneration", params.atomicMetadataGeneration);
+        harvesterSettingsManager.add("id:" + optionsId, "modifiedOnly", params.modifiedOnly);
+        harvesterSettingsManager.add("id:" + optionsId, "atomicFragmentStylesheet", params.atomicFragmentStylesheet);
+        harvesterSettingsManager.add("id:" + optionsId, "atomicMetadataTemplate", params.atomicMetadataTemplate);
+        harvesterSettingsManager.add("id:" + optionsId, "createAtomicSubtemplates", params.createAtomicSubtemplates);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnAtomicsDIF", params.outputSchemaOnAtomicsDIF);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchemaOnAtomicsFragments", params.outputSchemaOnAtomicsFragments);
+        harvesterSettingsManager.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
     }
 
     //---------------------------------------------------------------------------

@@ -77,6 +77,7 @@
               '../../catalog/components/metadataactions/partials/related.html';
         },
         link: function(scope, element, attrs) {
+          scope.location = window.location;
           gnGridRelatedList.promise.then(function() {
             var related = gnGridRelatedList.list[scope.uuid];
             if (related) {

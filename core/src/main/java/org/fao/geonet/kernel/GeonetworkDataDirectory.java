@@ -69,7 +69,6 @@ public class GeonetworkDataDirectory {
     private Path webappDir;
     private Path systemDataDir;
     private Path luceneDir;
-    private Path spatialIndexPath;
     private Path configDir;
     private Path thesauriDir;
     private Path schemaPluginsDir;
@@ -292,8 +291,6 @@ public class GeonetworkDataDirectory {
         // Set subfolder data directory
         luceneDir = setDir(jeevesServlet, webappName, handlerConfig, luceneDir, ".lucene" + KEY_SUFFIX,
             Geonet.Config.LUCENE_DIR, "index");
-        spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, spatialIndexPath, "spatial" + KEY_SUFFIX,
-            null, "spatialindex");
 
         configDir = setDir(jeevesServlet, webappName, handlerConfig, configDir, ".config" + KEY_SUFFIX,
             Geonet.Config.CONFIG_DIR, "config");
@@ -529,24 +526,6 @@ public class GeonetworkDataDirectory {
      */
     public void setLuceneDir(Path luceneDir) {
         this.luceneDir = luceneDir;
-    }
-
-    /**
-     * Get the directory to store the metadata spatial index. If the spatial index is to be stored
-     * locally this is the directory to use.
-     *
-     * @return the directory to store the metadata spatial index
-     */
-    public Path getSpatialIndexPath() {
-        return spatialIndexPath;
-    }
-
-    /**
-     * Set the directory to store the metadata spatial index. If the spatial index is to be stored
-     * locally this is the directory to use.
-     */
-    public void setSpatialIndexPath(Path spatialIndexPath) {
-        this.spatialIndexPath = spatialIndexPath;
     }
 
     /**

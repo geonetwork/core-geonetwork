@@ -83,22 +83,51 @@
     var layer = this.layer,
         map = this.map,
         coordinates = this.coordinates;
-    
-    var uuid = layer.get('MDuuid');
 
-   
+    var uuid;
+    if(layer.get('md')) {
+      uuid = layer.get('md').getUuid();
+    } else if(layer.get('metadataUuid')) {
+      uuid = layer.get('metadataUuid');
+    }
+
+    var infoFormat = layer.ncInfo ? 'text/xml' :
+                'application/vnd.ogc.gml';
+
+    //check if infoFormat is available in getCapabilities
+    if(layer.get('capRequest') &&
+      layer.get('capRequest').GetFeatureInfo &&
+      angular.isArray(layer.get('capRequest').GetFeatureInfo.Format) &&
+      layer.get('capRequest').GetFeatureInfo.Format.length > 0) {
+      if($.inArray(infoFormat,
+          layer.get('capRequest').GetFeatureInfo.Format) == -1) {
+        //use a valid format
+        infoFormat = layer.get('capRequest').GetFeatureInfo.Format[0];
+
+        //if xml available, use it:
+        if(!$.inArray('text/xml',
+            layer.get('capRequest').GetFeatureInfo.Format) >= 0) {
+          infoFormat = 'text/xml';
+        }
+      }
+    }
+
+    layer.infoFormat = infoFormat;
+
     var uri = layer.getSource().getGetFeatureInfoUrl(
         coordinates,
         map.getView().getResolution(),
         map.getView().getProjection(),
-        {
-          INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
-        }
-        );
+        { INFO_FORMAT: infoFormat });
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
-    this.promise = this.$http.get(uri).then(function(response) {
+    this.promise = this.$http.get(uri,{
+      "data": "",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }).then(function(response) {
       this.loading = false;
       if (layer.ncInfo) {
         var doc = ol.xml.parse(response.data);
@@ -129,7 +158,7 @@
 
         this.dictionary = null;
 
-        if(!angular.isUndefined(uuid)) {
+        if(uuid) {
           this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
           .then(function(response) {
             if(response.data['decodeMap']!=null) {
@@ -201,7 +230,7 @@
             var desc = dictionary[columns[i]['field']][1];
             columns[i]['title']  = title;
             columns[i]['titleTooltip']  = desc;
-          } 
+          }
         }
       }
 

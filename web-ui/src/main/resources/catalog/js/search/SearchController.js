@@ -26,11 +26,14 @@
 
   goog.provide('gn_search_controller');
 
+
+  goog.require('gn_catalog_service');
   goog.require('gn_searchsuggestion_service');
 
   var module = angular.module('gn_search_controller', [
     'ui.bootstrap.typeahead',
-    'gn_searchsuggestion_service'
+    'gn_searchsuggestion_service',
+    'gn_catalog_service'
   ]);
 
   /**
@@ -44,8 +47,9 @@
     'suggestService',
     'gnAlertService',
     'gnSearchSettings',
+    'gnConfig',
     function($scope, $q, $http, suggestService,
-             gnAlertService, gnSearchSettings) {
+             gnAlertService, gnSearchSettings, gnConfig) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -55,6 +59,13 @@
         sortbyDefault: gnSearchSettings.sortbyDefault,
         hitsperpageValues: gnSearchSettings.hitsperpageValues
       };
+
+      $scope.isUserFeedbackEnabled = false;
+
+      statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
+      if (statusSystemRating == 'advanced') {
+        $scope.isUserFeedbackEnabled = true;
+      }
 
       /** Facets configuration */
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;

@@ -328,6 +328,11 @@ div.gn-scroll-spy {
       max-height: 76vh;
       overflow: auto;
       min-height: 500px;
+      .gn-modal-content {
+        // height of modal body - 2 * padding - height of button(s)
+        max-height: calc(~"76vh - 30px - 30px");
+        overflow: auto;
+      }
     }
   }
   .modal-dialog {
@@ -396,7 +401,7 @@ img.thumb-small {
 }
 
 
-.tt-dropdown-menu {
+.tt-menu {
   width: 422px;
   margin-top: 4px;
   padding: 8px 0;

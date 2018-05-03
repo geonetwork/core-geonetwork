@@ -2335,7 +2335,7 @@
     <description>Main theme(s) of the datset</description>
     <condition>mandatory</condition>
   </element>
-  <element name="gmd:MD_TopicCategoryCode">
+  <element name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <label>Tematisk hovedkategori</label>
     <description>Grov overordnet gruppering av tematiske kategorier for å
       muliggjøre søk på geografiske datasett. Kan også anvendes for å

@@ -23,10 +23,21 @@
 
 package org.fao.geonet.web;
 
-import jeeves.constants.Jeeves;
+import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
+
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -40,15 +51,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
+import jeeves.constants.Jeeves;
+import jeeves.server.sources.http.ServletPathFinder;
 
 /**
  * Handles requests where there is no locale and a redirect to a correct (and localized) service is
@@ -156,7 +160,25 @@ public class LocaleRedirects {
                 queryString = "?" + headers;
             }
         }
-        return request.getContextPath() + "/" + node + "/" + lang + "/" + service + queryString;
+        String contextPath = request.getContextPath();
+
+        String serviceURL = contextPath + "/" + node + "/" + lang + "/" + service + queryString;
+
+        return addAbsolutePath(serviceURL);
+    }
+
+    /**
+     * When defined, by adding the Site URL we avoid the
+     * referrer issue in some configurations with Apache Server
+        * @param serviceURL
+        * @return
+     */
+    private String addAbsolutePath(String serviceURL) {
+        SettingManager sm = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if(sm.getValue(Settings.SYSTEM_SERVER_HOST)!=null) {
+            return (new SettingInfo()).getSiteUrl() + serviceURL;
+        }
+        return serviceURL;
     }
 
     private String lang(String langParam, String langCookie, String langHeader) {

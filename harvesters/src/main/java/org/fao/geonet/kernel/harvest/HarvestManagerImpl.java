@@ -213,7 +213,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         }
 
         // TODO use a parameter in mask to avoid call again in base
-        // and use it for call settingMan.get
+        // and use it for call harvesterSettingsManager.get
         // don't forget to clean parameter when update or delete
 
         Profile profile = context.getUserSession().getProfile();

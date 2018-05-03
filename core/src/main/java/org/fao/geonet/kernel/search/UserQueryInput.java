@@ -104,6 +104,12 @@ public class UserQueryInput {
         SearchParameter.DENOMINATORFROM,
         SearchParameter.DENOMINATORTO,
         SearchParameter.DENOMINATOR,
+        SearchParameter.RATING,
+        SearchParameter.RATINGFROM,
+        SearchParameter.RATINGTO,
+        SearchParameter.FEEDBACKCOUNT,
+        SearchParameter.FEEDBACKCOUNTFROM,
+        SearchParameter.FEEDBACKCOUNTTO,
         SearchParameter.CREATIONDATEFROM,
         SearchParameter.CREATIONDATETO);
     /**
@@ -114,19 +120,26 @@ public class UserQueryInput {
         LuceneIndexField.REVISION_DATE,
         LuceneIndexField.PUBLICATION_DATE,
         LuceneIndexField.CREATE_DATE,
-        LuceneIndexField.DENOMINATOR);
+        LuceneIndexField.DENOMINATOR,
+        SearchParameter.RATING,
+        SearchParameter.FEEDBACKCOUNT);
     private static final List<String> RANGE_FIELDS_FROM = Arrays.asList(
         SearchParameter.DATEFROM,
         SearchParameter.REVISIONDATEFROM,
         SearchParameter.PUBLICATIONDATEFROM,
         SearchParameter.CREATIONDATEFROM,
-        SearchParameter.DENOMINATORFROM);
+        SearchParameter.DENOMINATORFROM,
+        SearchParameter.RATINGFROM,
+        SearchParameter.FEEDBACKCOUNTFROM
+        );
     private static final List<String> RANGE_FIELDS_TO = Arrays.asList(
         SearchParameter.DATETO,
         SearchParameter.REVISIONDATETO,
         SearchParameter.PUBLICATIONDATETO,
         SearchParameter.CREATIONDATETO,
-        SearchParameter.DENOMINATORTO);
+        SearchParameter.DENOMINATORTO,
+        SearchParameter.RATINGTO,
+        SearchParameter.FEEDBACKCOUNTTO);
     private static Map<String, String> searchParamToLuceneField = new LinkedHashMap<String, String>();
 
     static {

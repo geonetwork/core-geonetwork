@@ -31,6 +31,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -259,12 +260,12 @@ public class Aligner extends BaseAligner {
 
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
-                    boolean localRating = settingManager.getValueAsBool(Settings.SYSTEM_LOCALRATING_ENABLE, false);
+                    String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
                     if (id == null) {
                         //record doesn't exist (so it doesn't belong to this harvester)
                         log.info("Adding record with uuid " + ri.uuid);
-                        addMetadata(ri, localRating, ri.uuid);
+                        addMetadata(ri, localRating.equals(RatingsSetting.BASIC), ri.uuid);
                     }
                     else if (localUuids.getID(ri.uuid) == null) {
                         //record doesn't belong to this harvester but exists
@@ -272,13 +273,13 @@ public class Aligner extends BaseAligner {
 
                         switch(params.getOverrideUuid()){
                         case OVERRIDE:
-                            updateMetadata(ri, Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                            updateMetadata(ri, Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), localRating.equals(RatingsSetting.BASIC), params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
                             log.info("Overriding record with uuid " + ri.uuid);
                             result.updatedMetadata++;
                             break;
                         case RANDOM:
                             log.info("Generating random uuid for remote record with uuid " + ri.uuid);
-                            addMetadata(ri, localRating, UUID.randomUUID().toString());
+                            addMetadata(ri, localRating.equals(RatingsSetting.BASIC), UUID.randomUUID().toString());
                             break;
                         case SKIP:
                             log.info("Skipping record with uuid " + ri.uuid);
@@ -289,7 +290,7 @@ public class Aligner extends BaseAligner {
                     } else {
                         //record exists and belongs to this harvester
                         log.info("Updating record with uuid " + ri.uuid);
-                        updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                        updateMetadata(ri, id, localRating.equals(RatingsSetting.BASIC), params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
                     }
                 }
             } catch (Throwable t) {

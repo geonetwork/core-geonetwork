@@ -290,6 +290,8 @@
     "uploadFile": "Upload a file from your computer",
     "uuidAction": "Procesando identificador de la entrada",
     "validate-help": "Comprobar la entrada con las reglas de validación estándar",
+    "validate-inspire": "Validación Inspire",
+    "validate-inspire-help": "Verificar el registro sin cumplir con las reglas de validación de Inspire",
     "validationReport": "Validación",
     "runValidation": "Ejecutar validación",
     "whoCanAccess": "Quién tiene acceso",
@@ -359,6 +361,6 @@
     "inputGeometryReadOnlyHint": "La geometría es de sólo lectura.",
     "selectKeyword": "Añadir palabras clave",
     "saveLinkToSibling": "Guardar un enlace a otro recurso",
-    "confirmCloseInvalidTitle": "Confirm editor close",
-    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
+    "confirmCloseInvalidTitle": "Confirmar cierre del editor",
+    "confirmCloseInvalidMetadata": "Se ha encontrado que los metadato actuales no son válidos. Cerrar el editor hará que no se publique (esto se puede cambiar en la configuración de la aplicación). <br> <br> ¿Está seguro de que desea continuar?"
 }

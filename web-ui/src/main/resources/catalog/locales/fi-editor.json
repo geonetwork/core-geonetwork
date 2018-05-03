@@ -290,6 +290,8 @@
     "uploadFile": "Lataa tiedosto",
     "uuidAction": "Resurssitunnisteen prosessointi",
     "validate-help": "Validoi dokumentti",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Validointi",
     "runValidation": "Validoi",
     "whoCanAccess": "Tarkista pääsyoikeudet",

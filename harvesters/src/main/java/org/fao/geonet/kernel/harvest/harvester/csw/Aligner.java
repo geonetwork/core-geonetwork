@@ -236,7 +236,7 @@ public class Aligner extends BaseAligner {
 
                     switch (params.getOverrideUuid()) {
                         case OVERRIDE:
-                            updateMetadata(ri, Integer.toString(metadataManager.findOneByUuid(ri.uuid).getId()));
+                            updateMetadata(ri, Integer.toString(metadataManager.findOneByUuid(ri.uuid).getId()), true);
                             log.debug("Overriding record with uuid " + ri.uuid);
                             result.updatedMetadata++;
                             break;
@@ -252,7 +252,7 @@ public class Aligner extends BaseAligner {
                     }
                 } else {
                     //record exists and belongs to this harvester
-                    updateMetadata(ri, id);
+                    updateMetadata(ri, id, false);
 
                 }
 
@@ -355,15 +355,15 @@ public class Aligner extends BaseAligner {
     //--- Private methods : updateMetadata
     //---
     //--------------------------------------------------------------------------
-    private void updateMetadata(RecordInfo ri, String id) throws Exception {
+    private void updateMetadata(RecordInfo ri, String id, Boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
-        if (date == null) {
+        if (date == null && !force) {
             if (log.isDebugEnabled()) {
                 log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
             }
         } else {
-            if (!ri.isMoreRecentThan(date)) {
+            if (!force && !ri.isMoreRecentThan(date)) {
                 if (log.isDebugEnabled()) {
                     log.debug("  - Metadata XML not changed for uuid:" + ri.uuid);
                 }
@@ -392,6 +392,14 @@ public class Aligner extends BaseAligner {
                 boolean index = false;
                 String language = context.getLanguage();
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
+                
+                if(force) {
+                    //change ownership of metadata to new harvester
+                    metadata.getHarvestInfo().setUuid(params.getUuid());
+                    metadata.getSourceInfo().setSourceId(params.getUuid());
+
+                    context.getBean(MetadataRepository.class).save(metadata);
+                }
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -403,7 +411,7 @@ public class Aligner extends BaseAligner {
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id, Math.random() < 0.01, null);
+                dataMan.indexMetadata(id, true, null);
                 result.updatedMetadata++;
             }
         }

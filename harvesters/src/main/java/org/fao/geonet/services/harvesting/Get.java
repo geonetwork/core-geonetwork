@@ -30,15 +30,21 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.jdom.Content;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -70,18 +76,18 @@ public class Get implements Service {
         String sortField = org.fao.geonet.Util.getParam(params, "sortField", "site[1]/name[1]");
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        final SettingManager settingManager = gc.getApplicationContext().getBean(SettingManager.class);
+        String[] disabledTypes = StringUtils.split(
+            StringUtils.defaultIfBlank(
+                settingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES),
+                "").toLowerCase().replace(',', ' '),
+            " ");
 
         List<String> ids;
         if (idEls.isEmpty()) {
             ids = Collections.singletonList(null);
         } else {
-            ids = Lists.transform(idEls, new Function<Element, String>() {
-                @Nullable
-                @Override
-                public String apply(Element input) {
-                    return input.getTextTrim();
-                }
-            });
+            ids = idEls.stream().map(Element::getTextTrim).collect(Collectors.toList());
         }
         final HarvestManager harvestManager = gc.getBean(HarvestManager.class);
         Element result = new Element("nodes");
@@ -90,9 +96,18 @@ public class Get implements Service {
 
             if (node != null) {
                 if (idEls.isEmpty() || id.equals("-1")) {
-                    result = node;
+                    List<Element> childNodes = node.getChildren();
+                    for (Element childNode : childNodes) {
+                        String harvesterType = childNode.getAttributeValue("type");
+                        if (Arrays.stream(disabledTypes).noneMatch(disabledType -> disabledType.equalsIgnoreCase(harvesterType))) {
+                            result.addContent((Content) childNode.clone());
+                        }
+                    }
                 } else {
-                    result.addContent(node.detach());
+                    String harvesterType = node.getAttributeValue("type");
+                    if (Arrays.stream(disabledTypes).noneMatch(disabledType -> disabledType.equalsIgnoreCase(harvesterType))) {
+                        result.addContent(node.detach());
+                    }
                 }
             } else {
                 throw new ObjectNotFoundEx("No Harvester found with id: " + id);

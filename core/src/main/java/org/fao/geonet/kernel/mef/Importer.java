@@ -286,7 +286,7 @@ public class Importer {
                 // String schema = null;
                 String rating = null;
                 String popularity = null;
-                String groupId = null;
+//                String groupId = null;
                 Element categs = null;
                 final Element privileges;
 
@@ -464,7 +464,7 @@ public class Importer {
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
 
-                        if (finalGroupId == null) {
+                        if (finalGroupId == null || finalGroupId.equals("")) {
                             Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
                             if (ownerGroup != null) {
                                 metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
@@ -541,7 +541,7 @@ public class Importer {
         }
     }
 
-    public static void importRecord(String uuid,
+    public static String importRecord(String uuid,
                                     MEFLib.UuidAction uuidAction, List<Element> md, String schema, int index,
                                     String source, String sourceName, Map<String, String> sourceTranslations, ServiceContext context,
                                     List<String> id, String createDate, String changeDate,
@@ -612,6 +612,8 @@ public class Importer {
         dm.activateWorkflowIfConfigured(context, metadataId, groupId);
 
         id.add(index, metadataId);
+
+        return uuid;
 
     }
 

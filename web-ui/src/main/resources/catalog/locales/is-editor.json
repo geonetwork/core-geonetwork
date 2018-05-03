@@ -290,6 +290,8 @@
     "uploadFile": "Hlaða upp skrá úr tölvunni þinni",
     "uuidAction": "Auðkenning á færslum er í vinnslu",
     "validate-help": "Athugaðu færslu gegn stöðluðum fullgildingar reglum",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Fullgilding",
     "runValidation": "Keyra staðfestingarprófunina",
     "whoCanAccess": "Sem hefur aðgang",
