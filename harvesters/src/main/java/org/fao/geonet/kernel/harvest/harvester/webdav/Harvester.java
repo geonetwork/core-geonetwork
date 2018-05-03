@@ -343,7 +343,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setType(MetadataType.METADATA);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(Integer.parseInt(
+                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid()).
