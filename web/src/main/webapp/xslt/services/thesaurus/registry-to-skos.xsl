@@ -71,8 +71,8 @@
   <xsl:variable name="thesaurusId"
                 select="/documents/*[1]/@id"/>
 
-  <xsl:variable name="status"
-                select="'http://inspire.ec.europa.eu/registry/status/valid'"/>
+  <xsl:variable name="statusSuffix"
+                select="'registry/status/valid'"/>
 
   <xsl:template match="/documents">
 
@@ -117,7 +117,7 @@
 
 
   <xsl:template mode="concept"
-                match="*:containeditems/*:value[*:status/@id = $status]">
+                match="*:containeditems/*:value[ends-with(*:status/@id, $statusSuffix)]">
     <xsl:variable name="conceptId"
                   select="@id"/>
     <skos:Concept rdf:about="{$conceptId}">
