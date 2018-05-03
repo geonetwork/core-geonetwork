@@ -9,7 +9,7 @@
     <li ng-if="::layer" ng-repeat="layer in layers">
       <a href="" ng-click="setBgLayer(layer)" ng-if="::!layer.get('loading')">
         <span class="fa"
-              ng-class="(layer==map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+              ng-class="(layer == map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
         {{layer.get('title')}}
       </a>
       <a ng-if="::layer.get('loading')">
@@ -20,8 +20,8 @@
   </ul>
 </div>
 <br/>
-<div data-ng-click="reset($event)">
-  <button class="btn btn-default gn-md-thumbnail">
+<div>
+  <button class="btn btn-default gn-md-thumbnail" data-ng-click="reset()">
     <span
       class="gn-img-thumbnail-caption" data-translate="">resetContext</span>
   </button>
