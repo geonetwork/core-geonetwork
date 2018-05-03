@@ -74,6 +74,12 @@
   <xsl:variable name="statusSuffix"
                 select="'registry/status/valid'"/>
 
+  <xsl:variable name="hasBroaderNarrowerLinks"
+                select="count(//*[1]/*:containeditems/*:value/*:parents) > 0"/>
+
+
+
+
   <xsl:template match="/documents">
 
 
@@ -84,6 +90,13 @@
                                      */*:definition"/>
         <dcterms:issued><xsl:value-of select="$now"/></dcterms:issued>
         <dcterms:modified><xsl:value-of select="$now"/></dcterms:modified>
+
+        <!-- Add top concepts for all items with no parent -->
+        <xsl:if test="$hasBroaderNarrowerLinks">
+          <xsl:for-each select="*[1]/*:containeditems/*:value[not(*:parents)]">
+            <skos:hasTopConcept rdf:resource="{@id}"/>
+          </xsl:for-each>
+        </xsl:if>
       </skos:ConceptScheme>
 
       <!-- We assume that the first codelist contains the full
@@ -118,8 +131,13 @@
 
   <xsl:template mode="concept"
                 match="*:containeditems/*:value[ends-with(*:status/@id, $statusSuffix)]">
+
     <xsl:variable name="conceptId"
                   select="@id"/>
+
+    <xsl:variable name="items"
+                  select="/documents/*[1]/*:containeditems/*:value"/>
+
     <skos:Concept rdf:about="{$conceptId}">
       <xsl:for-each select="//*:containeditems/*:value[@id = $conceptId]">
         <!-- Only add the label if the codelist requested language match.
@@ -139,6 +157,18 @@
         </xsl:if>
       </xsl:for-each>
       <skos:inScheme rdf:resource="{$thesaurusId}"/>
+
+
+      <!-- Add broader and narrower links -->
+      <xsl:if test="$hasBroaderNarrowerLinks">
+        <xsl:for-each select="*:parents/*:parent">
+          <skos:broader rdf:resource="{@id}"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="$items[*:parents/*:parent/@id = $conceptId]">
+          <skos:narrower rdf:resource="{@id}"/>
+        </xsl:for-each>
+      </xsl:if>
     </skos:Concept>
   </xsl:template>
 
