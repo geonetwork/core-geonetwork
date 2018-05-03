@@ -75,7 +75,7 @@
                 select="'registry/status/valid'"/>
 
   <xsl:variable name="hasBroaderNarrowerLinks"
-                select="count(//*[1]/*:containeditems/*:value/*:parents) > 0"/>
+                select="count(//*[1]/*:containeditems/*/*:parents) > 0"/>
 
 
 
@@ -93,7 +93,7 @@
 
         <!-- Add top concepts for all items with no parent -->
         <xsl:if test="$hasBroaderNarrowerLinks">
-          <xsl:for-each select="*[1]/*:containeditems/*:value[not(*:parents)]">
+          <xsl:for-each select="*[1]/*:containeditems/*[not(*:parents)]">
             <skos:hasTopConcept rdf:resource="{@id}"/>
           </xsl:for-each>
         </xsl:if>
@@ -103,7 +103,7 @@
       list of items to describes and that the following contains
       translations for each items of the first one. -->
       <xsl:apply-templates mode="concept"
-                           select="*[1]/*:containeditems/*:value"/>
+                           select="*[1]/*:containeditems/*"/>
 
     </rdf:RDF>
   </xsl:template>
@@ -130,16 +130,16 @@
 
 
   <xsl:template mode="concept"
-                match="*:containeditems/*:value[ends-with(*:status/@id, $statusSuffix)]">
+                match="*:containeditems/*[ends-with(*:status/@id, $statusSuffix)]">
 
     <xsl:variable name="conceptId"
                   select="@id"/>
 
     <xsl:variable name="items"
-                  select="/documents/*[1]/*:containeditems/*:value"/>
+                  select="/documents/*[1]/*:containeditems/*"/>
 
     <skos:Concept rdf:about="{$conceptId}">
-      <xsl:for-each select="//*:containeditems/*:value[@id = $conceptId]">
+      <xsl:for-each select="//*:containeditems/*[@id = $conceptId]">
         <!-- Only add the label if the codelist requested language match.
         If you request something in french and no translation are available,
         english is set. -->

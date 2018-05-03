@@ -103,12 +103,13 @@
                 if (languages.length > 0) {
                   selectPreferredLanguage();
 
-                  gnRegistryService.loadItemClass(scope.registryUrl).then(
+                  gnRegistryService.loadItemClass(
+                    scope.registryUrl, getMainLanguage()).then(
                     function (itemClass) {
                       scope.itemClass = itemClass;
 
                       if (itemClass.length > 0) {
-                        scope.selectedClass = itemClass[0].key;
+                        scope.selectedClassUrl = itemClass[0].key;
                         loadCollection();
                       } else {
                         console.warn('ItemClass are required. ' +
@@ -130,7 +131,7 @@
             }
           });
 
-          scope.$watch('selectedClass', function (n, o) {
+          scope.$watch('selectedClassUrl', function (n, o) {
             if (scope.registryUrl != '' && n !== o && n != null) {
               loadCollection();
             }
@@ -146,36 +147,55 @@
             return 0;
           }
 
-          function loadCollection() {
-            scope.loadingCollection = true;
-            scope.itemCollection = [];
+          // Some classes are directly a list of concept.
+          // This is the case of INSPIRE themes for example.
+          scope.isSimple = false;
+          function isSimpleList() {
+            if (scope.selectedClass === 'theme') {
+              scope.isSimple = true;
+            } else {
+              scope.isSimple = false;
+            }
+            return scope.isSimple;
+          }
 
-            gnRegistryService.loadItemCollection(
-              scope.registryUrl,
-              scope.selectedClass,
-              getMainLanguage()).then(
-              function (itemCollection) {
-                if (angular.isUndefined(itemCollection.data.register)) {
+          function loadCollection() {
+            scope.selectedClass =
+              scope.selectedClassUrl.substring(
+                scope.selectedClassUrl.lastIndexOf('/') + 1);
+
+
+            if (isSimpleList()) {
+              scope.selectedCollection = scope.selectedClassUrl;
+            } else {
+              scope.loadingCollection = true;
+              scope.itemCollection = [];
+              gnRegistryService.loadItemCollection(
+                scope.selectedClassUrl,
+                getMainLanguage()).then(
+                function (itemCollection) {
+                  if (angular.isUndefined(itemCollection.data.register)) {
+                    $rootScope.$broadcast('StatusUpdated', {
+                      title: $translate.instant('registryNoItemFound'),
+                      timeout: 3,
+                      type: 'warning'});
+                  } else {
+                    scope.itemCollection =
+                      itemCollection.data.register.containeditems;
+                    scope.itemCollection.sort(compareItem);
+                    scope.selectedCollection =
+                      scope.itemCollection[0][scope.selectedClass].id;
+                  }
+                  scope.loadingCollection = false;
+                }, function(error) {
+                  scope.loadingCollection = false;
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('registryNoItemFound'),
+                    title: $translate.instant('registryFailedToLoadItem'),
                     timeout: 3,
-                    type: 'warning'});
-                } else {
-                  scope.itemCollection =
-                    itemCollection.data.register.containeditems;
-                  scope.itemCollection.sort(compareItem);
-                  scope.selectedCollection =
-                    scope.itemCollection[0][scope.selectedClass].id;
+                    type: 'danger'});
                 }
-                scope.loadingCollection = false;
-              }, function(error) {
-                scope.loadingCollection = false;
-                $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate.instant('registryFailedToLoadItem'),
-                  timeout: 3,
-                  type: 'danger'});
-              }
-            );
+              );
+            }
           }
 
           init();

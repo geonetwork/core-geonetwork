@@ -61,30 +61,41 @@
         return deferred.promise;
       };
 
-      this.loadItemClass = function (url) {
+      this.loadItemClass = function (url, lang) {
         var itemClass = [];
+
         var deferred = $q.defer();
 
-        itemClass.push({key: 'metadata-codelist', label: 'metadata-codelist'})
-        itemClass.push({key: 'codelist', label: 'codelist'})
-        deferred.resolve(itemClass);
+        $http({
+          url: url + '/registry/registry.' + lang + responseFormat,
+          method: 'GET',
+          cache: true
+        }).then(function (r) {
+          angular.forEach(r.data.registry.registers, function (value, key) {
+            itemClass.push({
+              key: value.register.id,
+              label: value.register.label.text})
+          });
+          deferred.resolve(itemClass);
+        }, function (r) {
+          deferred.reject(r);
+        });
 
         return deferred.promise;
       };
 
-      this.loadItemCollection = function (url, clazz, lang) {
+      this.loadItemCollection = function (url, lang) {
+        var clazz = url.substring(url.lastIndexOf('/') + 1);
         return $http({
-          url: url + '/' +
-               clazz + '/' + clazz + '.' + lang + responseFormat,
+          url: url + '/' + clazz + '.' + lang + responseFormat,
           method: 'GET',
           cache: true
         })
       };
 
-      this.loadItem = function (url, clazz, collection, lang) {
+      this.loadItem = function (url, collection, lang) {
         return $http({
           url: url + '/' +
-               clazz + '/' +
                collection + '/' + collection + '.' + lang + responseFormat,
           method: 'GET',
           cache: true
