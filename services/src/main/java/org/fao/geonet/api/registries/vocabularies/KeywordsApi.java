@@ -574,9 +574,6 @@ public class KeywordsApi {
      * Upload thesaurus.
      *
      * @param file the file
-     * @param url the url
-     * @param registryUrl the registry url
-     * @param registryLanguage the languages to retrieve from the registry
      * @param type the type
      * @param dir the dir
      * @param stylesheet the stylesheet
@@ -590,7 +587,8 @@ public class KeywordsApi {
             notes = "Uploads a new thesaurus."
         )
         @RequestMapping(
-            method = RequestMethod.POST
+            method = RequestMethod.POST,
+            produces = MediaType.TEXT_PLAIN_VALUE
         )
         @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Thesaurus uploaded in SKOS format."),
@@ -705,7 +703,8 @@ public class KeywordsApi {
         notes = "Uploads a new thesaurus."
     )
     @RequestMapping(
-        method = RequestMethod.PUT
+        method = RequestMethod.PUT,
+        produces = MediaType.TEXT_PLAIN_VALUE
     )
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Thesaurus uploaded in SKOS format."),
