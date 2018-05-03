@@ -1233,7 +1233,10 @@
     "registry-help": "<a href='http://inspire.ec.europa.eu/registry'>Re3gistry software</a> is a tool to publish registers. Registers provide a means to assign identifiers to items and their labels, definitions and descriptions (in different languages). The INSPIRE registry provides a central access point to a number of centrally managed INSPIRE registers.",
     "registryChooseLanguages": "Choose one or more language",
     "registryChooseLanguages-help": "Select languages you need depending on the languages you are using in your metadata. Depending on the number of languages selected, a multilingual thesaurus will be created.",
+    "registryUrl": "Registry URL",
     "registryChooseType": "Choose registry item class",
     "registryChooseItem": "Choose registry collection",
-    "registryUseInspireOne": "Use INSPIRE registry"
+    "registryUseInspireOne": "Use INSPIRE registry",
+    "registryFailedToLoadItem": "Failed to load item collection.",
+    "registryNoItemFound": "No collection found. Choose another item class."
 }

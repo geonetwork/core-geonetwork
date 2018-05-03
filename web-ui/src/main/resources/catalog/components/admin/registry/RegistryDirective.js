@@ -32,8 +32,9 @@
      * Usage:
      * <div data-gn-registry-browser="registryUrl"></div>
      */
-  module.directive('gnRegistryBrowser', ['gnLangs', 'gnRegistryService',
-    function(gnLangs, gnRegistryService) {
+  module.directive('gnRegistryBrowser', [
+    'gnLangs', 'gnRegistryService', '$rootScope', '$translate',
+    function(gnLangs, gnRegistryService, $rootScope, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -147,19 +148,32 @@
 
           function loadCollection() {
             scope.loadingCollection = true;
+            scope.itemCollection = [];
+
             gnRegistryService.loadItemCollection(
               scope.registryUrl,
               scope.selectedClass,
               getMainLanguage()).then(
               function (itemCollection) {
-                scope.itemCollection =
-                  itemCollection.data.register.containeditems;
-                scope.itemCollection.sort(compareItem);
-                scope.selectedCollection =
-                  scope.itemCollection[0][scope.selectedClass].id;
+                if (angular.isUndefined(itemCollection.data.register)) {
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate.instant('registryNoItemFound'),
+                    timeout: 3,
+                    type: 'warning'});
+                } else {
+                  scope.itemCollection =
+                    itemCollection.data.register.containeditems;
+                  scope.itemCollection.sort(compareItem);
+                  scope.selectedCollection =
+                    scope.itemCollection[0][scope.selectedClass].id;
+                }
                 scope.loadingCollection = false;
               }, function(error) {
                 scope.loadingCollection = false;
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('registryFailedToLoadItem'),
+                  timeout: 3,
+                  type: 'danger'});
               }
             );
           }

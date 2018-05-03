@@ -51,6 +51,7 @@
     '$http',
     '$rootScope',
     '$translate',
+    '$q',
     'gnConfig',
     'gnSearchManagerService',
     'gnUtilityService',
@@ -59,6 +60,7 @@
         $http,
         $rootScope,
         $translate,
+        $q,
         gnConfig,
         gnSearchManagerService,
         gnUtilityService,
@@ -342,8 +344,11 @@
           // unset registry URL value which may contains a ? added in ng-options
           $(formId)[0].registryUrl.value = '';
           $scope.submit();
+          var defer = $q.defer();
+          defer.resolve();
+          return defer.promise;
         } else {
-          $http.put('../api/registries/vocabularies?' + $(formId).serialize())
+          return $http.put('../api/registries/vocabularies?' + $(formId).serialize())
               .then(uploadThesaurusDone, function(r) {
                 uploadThesaurusError(null, r);
               });

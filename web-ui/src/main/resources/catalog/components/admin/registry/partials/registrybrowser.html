@@ -57,6 +57,7 @@
     <i class="fa fa-spinner fa-spin" data-ng-show="loadingCollection"/>
     <select class="form-control"
             name="registryUrl"
+            data-ng-hide="loadingCollection"
             data-ng-options="i[selectedClass].id as i[selectedClass].label.text for i in itemCollection track by i[selectedClass].id"
             data-ng-model="selectedCollection"/>
   </div>

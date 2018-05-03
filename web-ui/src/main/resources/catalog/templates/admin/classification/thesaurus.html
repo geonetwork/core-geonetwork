@@ -397,8 +397,11 @@
           </button>
           <button type="button" class="btn btn-primary" data-ng-hide="importAs == 'new'"
                   data-ng-disabled="queue.length === 0 && thesaurusUrl == '' && registryUrl == ''"
-                  data-ng-click="importThesaurus('#gn-upload-thesaurus')"
-          ><span class="fa fa-upload"></span> {{"uploadThesaurus"|translate}}
+                  data-gn-click-and-spin="importThesaurus('#gn-upload-thesaurus')"
+          >
+            <span class="fa fa-upload">
+
+            </span> {{"uploadThesaurus"|translate}}
           </button>
         </div>
       </div>
