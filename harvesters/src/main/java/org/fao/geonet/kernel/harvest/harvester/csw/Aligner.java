@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -310,15 +311,8 @@ public class Aligner extends BaseAligner {
         //
         // insert metadata
         //
-        if (params.getOwnerId() == null) {
-            if (context.getUserSession() != null) {
-                ownerId = context.getUserSession().getUserIdAsInt();
-            } else {
-                ownerId = 1;
-            }
-        } else {
-            ownerId = Integer.parseInt(params.getOwnerId());
-        }
+
+        ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
         Metadata metadata = new Metadata().setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).

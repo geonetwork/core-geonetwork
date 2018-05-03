@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
@@ -405,7 +406,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setType(MetadataType.METADATA);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(Integer.parseInt(
+                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid()).
@@ -735,7 +737,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 setType(MetadataType.METADATA);
             metadata.getSourceInfo().
                 setSourceId(params.getUuid()).
-                setOwner(Integer.parseInt(params.getOwnerId()));
+                setOwner(Integer.parseInt(
+                        params.getOwnerIdUser() !=  null ? params.getOwnerIdUser() : params.getOwnerId()));
             metadata.getHarvestInfo().
                 setHarvested(true).
                 setUuid(params.getUuid()).

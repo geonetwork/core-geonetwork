@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -558,7 +559,8 @@ public class Aligner extends BaseAligner {
             setChangeDate(new ISODate(changeDate));
         metadata.getSourceInfo().
             setSourceId(siteId).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(Integer.parseInt(
+                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
