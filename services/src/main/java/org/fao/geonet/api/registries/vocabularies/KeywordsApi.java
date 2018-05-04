@@ -30,6 +30,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -643,7 +644,7 @@ public class KeywordsApi {
             throw new OperationAbortedEx("Thesaurus source not provided");
         }
 
-        if (fname == null || "".equals(fname)) {
+        if (StringUtils.isEmpty(fname)) {
             throw new OperationAbortedEx("File upload from URL or file return null");
         }
 
@@ -659,13 +660,14 @@ public class KeywordsApi {
             throw new OperationAbortedEx("Thesaurus file has zero size");
         }
 
-        int extensionIdx = fname.lastIndexOf('.');
+        String extension = FilenameUtils.getExtension(fname);
 
-        if (fname.endsWith(".rdf") || fname.endsWith(".xml")) {
+        if (extension.equalsIgnoreCase("rdf") ||
+            extension.equalsIgnoreCase("xml")) {
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus: " + fname);
 
             // Rename .xml to .rdf for all thesaurus
-            fname = fname.substring(0, extensionIdx) + ".rdf";
+            fname = fname.replace(extension, "rdf");
             uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
         } else {
             Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
@@ -784,7 +786,7 @@ public class KeywordsApi {
 
         }
 
-        if (fname == null || "".equals(fname)) {
+        if (StringUtils.isEmpty(fname)) {
             throw new OperationAbortedEx("File upload from URL or file return null");
         }
 
@@ -800,13 +802,14 @@ public class KeywordsApi {
             throw new OperationAbortedEx("Thesaurus file has zero size");
         }
 
-        int extensionIdx = fname.lastIndexOf('.');
+        String extension = FilenameUtils.getExtension(fname);
 
-        if (fname.endsWith(".rdf") || fname.endsWith(".xml")) {
+        if (extension.equalsIgnoreCase("rdf") ||
+            extension.equalsIgnoreCase("xml")) {
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus: " + fname);
 
             // Rename .xml to .rdf for all thesaurus
-            fname = fname.substring(0, extensionIdx) + ".rdf";
+            fname = fname.replace(extension, "rdf");
             uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
         } else {
             Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
