@@ -71,12 +71,16 @@
           method: 'GET',
           cache: true
         }).then(function (r) {
-          angular.forEach(r.data.registry.registers, function (value, key) {
-            itemClass.push({
-              key: value.register.id,
-              label: value.register.label.text})
-          });
-          deferred.resolve(itemClass);
+          if (angular.isUndefined(r.data.registry)) {
+            deferred.reject(r);
+          } else {
+            angular.forEach(r.data.registry.registers, function (value, key) {
+              itemClass.push({
+                key: value.register.id,
+                label: value.register.label.text})
+            });
+            deferred.resolve(itemClass);
+          }
         }, function (r) {
           deferred.reject(r);
         });

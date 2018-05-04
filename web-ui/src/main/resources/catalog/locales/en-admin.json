@@ -1238,5 +1238,8 @@
     "registryChooseItem": "Choose registry collection",
     "registryUseInspireOne": "Use INSPIRE registry",
     "registryFailedToLoadItem": "Failed to load item collection.",
-    "registryNoItemFound": "No collection found. Choose another item class."
+    "registryNoItemFound": "No collection found. Choose another item class.",
+    "registryNoLanguage": "One language is required.",
+    "registryNoClassFound": "No class found in that registry. Check the URL?",
+    "registryFailedToLoadClass": "No class found in that registry. Check the URL?"
 }

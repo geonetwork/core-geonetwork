@@ -45,7 +45,7 @@
     registryChooseType
     </label>
     <select class="form-control"
-            data-ng-options="t.key as t.label for t in itemClass track by t.key"
+            data-ng-options="t as t.label for t in itemClass track by t.key"
             data-ng-model="selectedClassUrl"/>
   </div>
 
@@ -62,6 +62,6 @@
             data-ng-model="selectedCollection"/>
   </div>
 
-  <input type="hidden" name="registryUrl" data-ng-model="selectedCollection">
+  <input type="hidden" name="registryUrl" value="{{selectedCollection}}">
 
 </div>

@@ -27,13 +27,7 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:dcterms="http://purl.org/dc/terms/"
-                xmlns:foaf="http://xmlns.com/foaf/0.1/"
-                xmlns:grg="http://www.isotc211.org/schemas/grg/"
-                xmlns:owl="http://www.w3.org/2002/07/owl#"
-                xmlns:void="http://rdfs.org/ns/void#"
-                xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:regcd="http://inspire.ec.europa
                 .eu/codelist_register/codelist"
                 xmlns:regmdcd="http://inspire.ec.europa.eu/metadata-codelist_register/metadata-codelist"
@@ -71,23 +65,49 @@
   <xsl:variable name="thesaurusId"
                 select="/documents/*[1]/@id"/>
 
+  <xsl:variable name="registerEnglishTitle"
+                select="/documents/*[*:language = 'en']/*:label[@xml:lang = 'en']"/>
+
   <xsl:variable name="statusSuffix"
                 select="'registry/status/valid'"/>
 
   <xsl:variable name="hasBroaderNarrowerLinks"
                 select="count(//*[1]/*:containeditems/*/*:parents) > 0"/>
 
+  <xsl:variable name="thesaurusTitles">
+    <title thesaurus="GEMET - INSPIRE themes, version 1.0"
+           register="INSPIRE theme register"/>
+  </xsl:variable>
 
+  <xsl:variable name="thesaurusTitle"
+                select="$thesaurusTitles/title[@register = $registerEnglishTitle]/@thesaurus"/>
 
 
   <xsl:template match="/documents">
 
 
-    <rdf:RDF>
+    <rdf:RDF xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/"
+             xmlns:dcterms="http://purl.org/dc/terms/">
       <skos:ConceptScheme rdf:about="{$thesaurusId}">
-        <xsl:apply-templates mode="concept-scheme"
-                             select="*/*:label|
+
+        <!-- Thesaurus title can be forced to another value
+        than the register title. For example, INSPIRE theme
+        thesaurus title as a well known name that has to be
+        used. -->
+        <xsl:choose>
+          <xsl:when test="normalize-space($thesaurusTitle) = ''">
+            <xsl:apply-templates mode="concept-scheme"
+                                 select="*/*:label|
                                      */*:definition"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <dc:title><xsl:value-of select="$thesaurusTitle"/></dc:title>
+          </xsl:otherwise>
+        </xsl:choose>
+
+
         <dcterms:issued><xsl:value-of select="$now"/></dcterms:issued>
         <dcterms:modified><xsl:value-of select="$now"/></dcterms:modified>
 
@@ -111,11 +131,13 @@
 
   <xsl:template mode="concept-scheme"
                 match="*/*:label[@xml:lang = ../*:language]">
+
     <dc:title>
       <xsl:copy-of select="@xml:lang"/>
       <xsl:value-of select="."/>
     </dc:title>
   </xsl:template>
+
 
   <xsl:template mode="concept-scheme"
                 match="*/*:definition[@xml:lang = ../*:language]">
@@ -125,8 +147,11 @@
     </dc:description>
   </xsl:template>
 
+
   <xsl:template mode="concept-scheme"
                 match="*"/>
+
+
 
 
   <xsl:template mode="concept"

@@ -109,17 +109,26 @@
                       scope.itemClass = itemClass;
 
                       if (itemClass.length > 0) {
-                        scope.selectedClassUrl = itemClass[0].key;
+                        scope.selectedClassUrl = itemClass[0];
                         loadCollection();
                       } else {
-                        console.warn('ItemClass are required. ' +
-                          'None found in ' + itemClass)
+                        $rootScope.$broadcast('StatusUpdated', {
+                          title: $translate.instant('registryNoClassFound'),
+                          timeout: 3,
+                          type: 'warning'});
                       }
+                    }, function () {
+                      $rootScope.$broadcast('StatusUpdated', {
+                        title: $translate.instant('registryFailedToLoadClass'),
+                        timeout: 3,
+                        type: 'danger'});
                     }
                   );
                 } else {
-                  console.warn('Languages are required. ' +
-                    'None found in ' + languages)
+                  $rootScope.$broadcast('StatusUpdated', {
+                    title: $translate.instant('registryNoLanguage'),
+                    timeout: 3,
+                    type: 'warning'});
                 }
               }
             );
@@ -149,9 +158,12 @@
 
           // Some classes are directly a list of concept.
           // This is the case of INSPIRE themes for example.
+          // TODO: Should be identified by analysing registry response ?
           scope.isSimple = false;
           function isSimpleList() {
-            if (scope.selectedClass === 'theme') {
+            if (scope.selectedClass.match(
+              'theme|applicationschema|featureconcept|' +
+                'document|glossary|layer|media-types|producers')) {
               scope.isSimple = true;
             } else {
               scope.isSimple = false;
@@ -160,18 +172,19 @@
           }
 
           function loadCollection() {
+            scope.loadingCollection = true;
             scope.selectedClass =
-              scope.selectedClassUrl.substring(
-                scope.selectedClassUrl.lastIndexOf('/') + 1);
+              scope.selectedClassUrl.key.substring(
+                scope.selectedClassUrl.key.lastIndexOf('/') + 1);
 
 
             if (isSimpleList()) {
-              scope.selectedCollection = scope.selectedClassUrl;
+              scope.selectedCollection = scope.selectedClassUrl.key;
+              scope.loadingCollection = false;
             } else {
-              scope.loadingCollection = true;
               scope.itemCollection = [];
               gnRegistryService.loadItemCollection(
-                scope.selectedClassUrl,
+                scope.selectedClassUrl.key,
                 getMainLanguage()).then(
                 function (itemCollection) {
                   if (angular.isUndefined(itemCollection.data.register)) {
