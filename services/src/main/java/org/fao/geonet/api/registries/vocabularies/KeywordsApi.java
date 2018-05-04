@@ -23,13 +23,30 @@
 
 package org.fao.geonet.api.registries.vocabularies;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -40,9 +57,9 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
@@ -65,7 +82,6 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +90,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -82,31 +99,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -129,6 +130,7 @@ public class KeywordsApi {
     /** The language utils. */
     @Autowired
     LanguageUtils languageUtils;
+
 
     /**
      * Search keywords.
@@ -589,7 +591,7 @@ public class KeywordsApi {
         )
         @RequestMapping(
             method = RequestMethod.POST,
-            produces = MediaType.TEXT_PLAIN_VALUE
+            produces = MediaType.TEXT_XML_VALUE
         )
         @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Thesaurus uploaded in SKOS format."),
@@ -641,23 +643,23 @@ public class KeywordsApi {
         } else {
 
             Log.debug(Geonet.THESAURUS, "No file provided for thesaurus upload.");
-            throw new OperationAbortedEx("Thesaurus source not provided");
+            throw new MissingServletRequestParameterException("Thesaurus source not provided", "file");
         }
 
         if (StringUtils.isEmpty(fname)) {
-            throw new OperationAbortedEx("File upload from URL or file return null");
+            throw new Exception("File upload from URL or file return null");
         }
 
         long fsize;
         if (rdfFile != null && Files.exists(rdfFile)) {
             fsize = Files.size(rdfFile);
         } else {
-            throw new OperationAbortedEx("Thesaurus file doesn't exist");
+            throw new MissingServletRequestParameterException("Thesaurus file doesn't exist", "file");
         }
 
         // -- check that the archive actually has something in it
         if (fsize == 0) {
-            throw new OperationAbortedEx("Thesaurus file has zero size");
+            throw new MissingServletRequestParameterException("Thesaurus file has zero size", "file");
         }
 
         String extension = FilenameUtils.getExtension(fname);
@@ -706,7 +708,7 @@ public class KeywordsApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        produces = MediaType.TEXT_PLAIN_VALUE
+        produces = MediaType.TEXT_XML_VALUE
     )
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Thesaurus uploaded in SKOS format."),
@@ -769,7 +771,7 @@ public class KeywordsApi {
 
         } else if (registryUpload) {
             if(ArrayUtils.isEmpty(registryLanguage)) {
-                throw new OperationAbortedEx("You MUST define one or more registry language.");
+                throw new MissingServletRequestParameterException("Select at least one language.", "language");
             }
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus from registry : " + registryUrl);
@@ -782,24 +784,24 @@ public class KeywordsApi {
         } else {
 
             Log.debug(Geonet.THESAURUS, "No URL or file name provided for thesaurus upload.");
-            throw new OperationAbortedEx("Thesaurus source not provided");
+            throw new MissingServletRequestParameterException("Thesaurus source not provided", "url");
 
         }
 
         if (StringUtils.isEmpty(fname)) {
-            throw new OperationAbortedEx("File upload from URL or file return null");
+            throw new ResourceNotFoundException("File upload from URL or file return null");
         }
 
         long fsize;
         if (rdfFile != null && Files.exists(rdfFile)) {
             fsize = Files.size(rdfFile);
         } else {
-            throw new OperationAbortedEx("Thesaurus file doesn't exist");
+            throw new ResourceNotFoundException("Thesaurus file doesn't exist");
         }
 
         // -- check that the archive actually has something in it
         if (fsize == 0) {
-            throw new OperationAbortedEx("Thesaurus file has zero size");
+            throw new ResourceNotFoundException("Thesaurus file has zero size");
         }
 
         String extension = FilenameUtils.getExtension(fname);
@@ -813,8 +815,7 @@ public class KeywordsApi {
             uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
         } else {
             Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
-            throw new Exception("Incorrect extension for thesaurus named: "
-                + fname);
+            throw new MissingServletRequestParameterException("Incorrect extension for thesaurus", fname);
         }
 
         long end = System.currentTimeMillis();
@@ -834,11 +835,6 @@ public class KeywordsApi {
      * @param lang the selected languages
      * @param context the context
      * @return the path
-     * @throws URISyntaxException the URI syntax exception
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws MalformedURLException the malformed URL exception
-     * @throws JDOMException the JDOM exception
-     * @throws NoSuchFileException the no such file exception
      * @throws Exception the exception
      */
     private Path extractSKOSFromRegistry(String registryUrl, String itemName, String[] lang, ServiceContext context)
@@ -846,10 +842,15 @@ public class KeywordsApi {
         if(lang != null) {
             Element documents = new Element("documents");
             for (String language : lang) {
-                String laguageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
-                Path localRdf = getXMLContentFromUrl(laguageFileUrl, context);
-                Element codeList = Xml.loadFile(localRdf);
-                documents.addContent(codeList);
+                try {
+                    String laguageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
+                    Path localRdf = getXMLContentFromUrl(laguageFileUrl, context);
+                    Element codeList = Xml.loadFile(localRdf);
+                    documents.addContent(codeList);
+                } catch(Exception e) {
+                    Log.debug(Geonet.THESAURUS, "Thesaurus not found for the requested translation: " + itemName + " " + language);
+                    throw new ResourceNotFoundException("Thesaurus not found for the requested translation: " + itemName + " " + language);
+                }
             }
 
             // Convert to SKOS
@@ -942,7 +943,7 @@ public class KeywordsApi {
             thesaurusMan.addThesaurus(gst, false);
         } else {
             IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
-            throw new Exception("Unknown format (Must be in SKOS format).");
+            throw new WebApplicationException("Unknown format (Must be in SKOS format).");
         }
     }
 
