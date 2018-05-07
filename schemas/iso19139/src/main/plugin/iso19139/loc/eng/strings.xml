@@ -326,6 +326,10 @@
   <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
   <emodnetAddQualityIndicators>Add quality indicators</emodnetAddQualityIndicators>
 
+  <orAddresourceProvider>or add a resource provider if none found in EDMO</orAddresourceProvider>
+  <orAddoriginator>or add an originator if none found in EDMO</orAddoriginator>
+
+
 
   <!-- Sextant -->
   <sextant>Sextant</sextant>
@@ -382,8 +386,8 @@
   <sdn>Default</sdn>
   <sdn-abstract>Overview</sdn-abstract>
   <sdn-short-name>External shortname</sdn-short-name>
-  <sdn-OriginatorTitle>Originator</sdn-OriginatorTitle>
-  <sdn-ResourceProviderTitle>Resource provider</sdn-ResourceProviderTitle>
+  <sdn-OriginatorTitle>Originator (EDMO)</sdn-OriginatorTitle>
+  <sdn-ResourceProviderTitle>Resource provider (EDMO)</sdn-ResourceProviderTitle>
   <sdn-identification>Identification</sdn-identification>
   <sdn-contact>Contacts</sdn-contact>
   <sdn-spatial>Spatial &amp; temporal ref.</sdn-spatial>
