@@ -2061,6 +2061,38 @@
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
           </action>
 
+          <action type="add"
+                  name="orAddoriginator"
+                  forceLabel="true"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_Responsibility>
+                    <gmd:organisationName>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString></gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="originator">originator</gmd:CI_RoleCode>
+                    </gmd:role>
+                  </gmd:CI_Responsibility>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </action>
 
           <field name="sdn-ResourceProviderTitle"
                  templateModeOnly="true"
@@ -2127,6 +2159,38 @@
               data-template-type="contact"
               data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~resourceProvider"/>
+          </action>
+          <action type="add"
+                  name="orAddresourceProvider"
+                  forceLabel="true"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_Responsibility>
+                    <gmd:organisationName>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString></gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="resourceProvider">resourceProvider</gmd:CI_RoleCode>
+                    </gmd:role>
+                  </gmd:CI_Responsibility>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
           </action>
 
         </section>
