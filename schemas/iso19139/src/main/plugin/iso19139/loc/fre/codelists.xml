@@ -1501,6 +1501,11 @@
       <label>unrestricted</label>
       <description></description>
     </entry>
+    <entry>
+      <code>otherRestrictions</code>
+      <label>Other restrictions</label>
+      <description>Limitation not listed</description>
+    </entry>
   </codelist>
 
 

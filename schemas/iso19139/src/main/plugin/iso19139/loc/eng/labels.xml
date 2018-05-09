@@ -1830,6 +1830,12 @@
     <description>Other information required to complete the citation that is not recorded
       elsewhere</description>
   </element>
+  <element name="gmd:otherConstraints" context="gmd:MD_LegalConstraints" id="72.0">
+    <label>Other legal constraints</label>
+    <description>Other restrictions and legal prerequisites for accessing and using the
+      resource</description>
+    <condition>conditional</condition>
+  </element>
   <element name="gmd:otherConstraints" id="72.0">
     <label>Other constraints</label>
     <description>Other restrictions and legal prerequisites for accessing and using the

@@ -302,25 +302,15 @@
           </gmd:useLimitation>
           <gmd:accessConstraints>
             <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                    codeListValue="otherRestrictions"/>
+                                    codeListValue=""/>
+          </gmd:accessConstraints>
+          <gmd:accessConstraints>
+            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
           </gmd:accessConstraints>
           <gmd:useConstraints>
             <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
                                     codeListValue="SeaDataNet licence"/>
           </gmd:useConstraints>
-          <gmd:otherConstraints>
-            <gco:CharacterString>no limitations</gco:CharacterString>
-          </gmd:otherConstraints>
-        </gmd:MD_LegalConstraints>
-      </gmd:resourceConstraints>
-
-
-      <!-- MANDATORY: constant, for INSPIRE compliance -->
-      <gmd:resourceConstraints>
-        <gmd:MD_LegalConstraints>
-          <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
-          </gmd:accessConstraints>
           <gmd:otherConstraints>
             <gco:CharacterString>no limitations</gco:CharacterString>
           </gmd:otherConstraints>
