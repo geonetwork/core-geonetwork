@@ -1455,8 +1455,8 @@
         <span data-gn-batch-process-button="{$process-name}"
               data-params="{$process-params}"
               data-icon="{$btnClass}"
-              data-name="{$strings/*[name() = $process-name]}"
-              data-help="{$strings/*[name() = concat($process-name, 'Help')]}"/>
+              data-name="{normalize-space($strings/*[name() = $process-name])}"
+              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
       </div>
     </div>
   </xsl:template>
