@@ -113,9 +113,17 @@
 
   module.controller('GnEditorBoardController', [
     '$scope',
+    '$rootScope',
     '$location',
     'gnSearchSettings',
-    function($scope, $location, gnSearchSettings) {
+    function($scope, $rootScope, $location, gnSearchSettings) {
+
+      // Refresh list when privileges are updated
+      $scope.$on('PrivilegesUpdated', function(event, data) {
+        if(data && data===true) {
+          $rootScope.$broadcast('search');
+        }
+      });
 
       gnSearchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/' +
