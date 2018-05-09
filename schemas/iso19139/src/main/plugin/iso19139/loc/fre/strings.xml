@@ -316,12 +316,15 @@
   <sextant-add-scale>Ajouter une échelle</sextant-add-scale>
   <sextant-add-resolution>Ajouter une résolution</sextant-add-resolution>
 
-  <sdnSpatialRepresentationType>Spatial representation type</sdnSpatialRepresentationType>
+  <sdnSpatialRepresentationType>Type de représentation spatiale</sdnSpatialRepresentationType>
 
-  <add-vector-info>This resource is a vector</add-vector-info>
-  <add-vector-infoHelp>Add information related to a vector dataset (eg. spatial representation type, scale). It will remove information about grid.</add-vector-infoHelp>
-  <add-grid-info>This resource is a grid</add-grid-info>
-  <add-grid-infoHelp>Add information related to a grid (eg. number of dimension). It will remove information about vector.</add-grid-infoHelp>
+
+  <add-vector-info>Cette ressource est une donnée vecteur</add-vector-info>
+  <change-to-vector-info>Modifier le type de donnée. C'est un vecteur ?</change-to-vector-info>
+  <add-vector-infoHelp>Ajoute des informations sur la donnée de type vecteur (eg. type de représentation, échelle). Cela supprime les informations concernant les raster.</add-vector-infoHelp>
+  <add-grid-info>Cette ressource est un raster</add-grid-info>
+  <change-to-grid-info>Modifier le type de donnée. C'est un raster ?</change-to-grid-info>
+  <add-grid-infoHelp>Ajoute des informations sue la donnée de type raster (eg. nombre de dimensions). Cela supprime les information sur les vecteur.</add-grid-infoHelp>
 
   <hr>
     <div class="row">
@@ -332,14 +335,14 @@
   </hr>
 
   <change-spatial-type-alert>
-    <div class="row">
+    <!--<div class="row">
       <div class="col-md-offset-2 alert alert-danger">
         Changing the resource type from grid to vector or from vector to grid
         will remove information about the current dataset to add the new field
         required for the selected type. Check that you are not going to lose important information
         when changing the spatial representation type of the current record.
       </div>
-    </div>
+    </div>-->
   </change-spatial-type-alert>
 
   <sdn>Default</sdn>

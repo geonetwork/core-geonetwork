@@ -1068,3 +1068,35 @@ gn-bounding-polygon {
 .gn-table-min-width {
   width: 200px;
 }
+
+
+/**
+Choose vector or grid action.
+Align on same line and move to the center of the form
+ */
+.gn-process-add-vector-info,
+.gn-process-add-grid-info {
+  width: 50%;
+  float: left;
+}
+.gn-process-add-vector-info {
+  .col-xs-offset-2 {
+    width: 0px;
+    margin-left: 60%;
+  }
+}
+.gn-process-add-grid-info {
+  .col-xs-offset-2 {
+    width: 0px;
+    margin-left: 0px;
+  }
+}
+.gn-process-change-to-vector-info,
+.gn-process-change-to-grid-info {
+  width: 100%;
+  .btn-default {
+    color: @btn-danger-color;
+    background-color: @btn-danger-bg;
+    border-color: @btn-danger-border;
+  }
+}

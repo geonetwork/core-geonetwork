@@ -144,7 +144,7 @@ Stylesheet used to add vector information field to a metadata record.
               </gmd:MD_Dimension>
             </gmd:axisDimensionProperties>
             <gmd:cellGeometry>
-              <gmd:MD_CellGeometryCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CellGeometryCode" codeListValue="point"/>
+              <gmd:MD_CellGeometryCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CellGeometryCode" codeListValue="surface"/>
             </gmd:cellGeometry>
             <gmd:transformationParameterAvailability>
               <gco:Boolean>false</gco:Boolean>

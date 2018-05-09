@@ -1450,15 +1450,13 @@
     <xsl:param name="process-params"/>
     <xsl:param name="btnClass" required="no"/>
 
-    <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
-
-    <div class="row form-group gn-field gn-extra-field">
+    <div class="row form-group gn-field gn-extra-field gn-process-{$process-name}">
       <div class="col-xs-10 col-xs-offset-2">
         <span data-gn-batch-process-button="{$process-name}"
               data-params="{$process-params}"
               data-icon="{$btnClass}"
-              data-name="{$strings/*[name() = $process-name]}"
-              data-help="{$strings/*[name() = concat($process-name, 'Help')]}"/>
+              data-name="{normalize-space($strings/*[name() = $process-name])}"
+              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
       </div>
     </div>
   </xsl:template>
