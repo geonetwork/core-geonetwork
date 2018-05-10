@@ -255,7 +255,10 @@
       <xsl:variable name="title"
                     select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
 
-      <xsl:if test="count(following-sibling::tab) = 0">
+      <div id="gn-tab-{@id}">
+        <xsl:if test="count(following-sibling::tab) > 0">
+          <xsl:attribute name="class" select="'tab-pane'"/>
+        </xsl:if>
         <h1 class="view-header">
           <xsl:value-of select="$title"/>
         </h1>
@@ -267,22 +270,7 @@
             <xsl:copy-of select="$content"/>&#160;
           </xsl:otherwise>
         </xsl:choose>
-      </xsl:if>
-      <xsl:if test="count(following-sibling::tab) > 0">
-        <div id="gn-tab-{@id}" class="tab-pane">
-          <h1 class="view-header">
-            <xsl:value-of select="$title"/>
-          </h1>
-        <xsl:choose>
-          <xsl:when test="normalize-space($content) = ''">
-            No information
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="$content"/>&#160;
-          </xsl:otherwise>
-        </xsl:choose>
-        </div>
-      </xsl:if>
+      </div>
     </xsl:if>
   </xsl:template>
 
