@@ -48,15 +48,31 @@
         link: function(scope, element, attrs) {
           scope.layers = gnViewerSettings.bgLayers;
           scope.dropup = angular.isDefined(attrs.dropup);
+
+          // FIXME check why the current map background layer is never found in scope.layers
           if(scope.layers.indexOf(scope.map.getLayers().item(0)) < 0) {
+            removeAllBackgroundLayers(scope.map.getLayers());
             scope.map.getLayers().insertAt(0, scope.layers[0]);
+            scope.layers[0].setVisible(true);
           }
+
+          function removeAllBackgroundLayers(layersOlCollection) {
+            var mapBackgroundLayers = [];
+            layersOlCollection.forEach(function (elem) {
+              if (elem.background) {
+                mapBackgroundLayers.push(elem);
+              }
+            });
+            for (var i = 0; i < mapBackgroundLayers.length; i++) {
+              layersOlCollection.remove(mapBackgroundLayers[i]);
+            }
+          }
+
           scope.setBgLayer = function(layer) {
             layer.setVisible(true);
             var layers = scope.map.getLayers();
-            layers.removeAt(0);
+            removeAllBackgroundLayers(layers);
             layers.insertAt(0, layer);
-            return false;
           };
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');
