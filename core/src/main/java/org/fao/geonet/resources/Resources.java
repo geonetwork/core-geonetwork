@@ -28,6 +28,7 @@ import com.google.common.io.Files;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -446,7 +447,7 @@ public class Resources {
 
             String extension = Files.getFileExtension(src.getFileName().toString());
             des = Resources.locateLogosDir(context).resolve(destName + "." + extension);
-            IO.copyDirectoryOrFile(src, des, false);
+            FileUtils.copyFile(src.toFile(), des.toFile());
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
 
