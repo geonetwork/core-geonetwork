@@ -555,7 +555,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
 
@@ -586,7 +586,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
         }
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
@@ -841,7 +841,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
             }
         }
         metadata.getMetadataCategories().clear();
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, true);
         metadata = metadataRepository.findOne(id);
 
         Element general = info.getChild("general");
@@ -869,7 +869,7 @@ public class Aligner extends BaseAligner<GeonetParams> {
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
         if (((ArrayList<Group>) params.getGroupCopyPolicy()).size() == 0) {
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }

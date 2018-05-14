@@ -114,25 +114,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     private static final String SCHEDULER_ID = "abstractHarvester";
     public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
 
-    /**
-     * Used to make sure we don't wait forever for any task
-     *
-     *
-        try {
-            if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
-                //DO WORK
-            } else {
-                log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-            }
-        } catch (InterruptedException e) {
-            log.error(e);
-        } finally {
-            if(lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
-        }
-
-     */
     protected final ReentrantLock lock = new ReentrantLock(false);
 
     /**
@@ -147,20 +128,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected Integer LONG_WAIT = 30;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Static API methods
-    //---
-    //---------------------------------------------------------------------------
-
-
-    /**
-     * TODO javadoc.
-     *
-     * @param type
-     * @param context
-     * @return
-     */
     public static AbstractHarvester<?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
         //--- raises an exception if type is null
         if (type == null) {
@@ -189,9 +156,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         this.settingManager = context.getBean(SettingManager.class);
     }
 
-    /**
-     * For the log name
-     */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
     private String initializeLog() {

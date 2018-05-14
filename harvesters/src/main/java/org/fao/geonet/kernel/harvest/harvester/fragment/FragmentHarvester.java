@@ -398,7 +398,7 @@ public class FragmentHarvester extends BaseAligner {
             setUuid(params.uuid).
             setUri(harvestUri);
 
-        addCategories(metadata, params.categories, localCateg, context, log, null, false);
+        addCategories(metadata, params.categories, localCateg, context, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
@@ -406,7 +406,7 @@ public class FragmentHarvester extends BaseAligner {
 
         // Note: we use fragmentAllPrivs here because subtemplates need to be 
         // visible/accessible to all
-        addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context, log);
+        addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context);
         dataMan.indexMetadata(id, true, null);
 
         dataMan.flush();
@@ -581,13 +581,13 @@ public class FragmentHarvester extends BaseAligner {
         if (isSubtemplate) {
           // Note: we use fragmentAllPrivs here because subtemplates need to be 
           // visible/accessible to all
-          addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context, log);
+          addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context);
         } else {
-          addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
+          addPrivileges(id, params.privileges, localGroups, dataMan, context);
         }
 
         metadata.getMetadataCategories().clear();
-        addCategories(metadata, params.categories, localCateg, context, log, null, true);
+        addCategories(metadata, params.categories, localCateg, context, null, true);
 
         if (isSubtemplate) { 
             dataMan.setSubtemplateTypeAndTitleExt(iId, title);
@@ -641,7 +641,7 @@ public class FragmentHarvester extends BaseAligner {
         if (log.isDebugEnabled()) {
             log.debug("	- Set privileges, category, template and harvested");
         }
-        addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
+        addPrivileges(id, params.privileges, localGroups, dataMan, context);
 
         dataMan.indexMetadata(id, true, null);
 

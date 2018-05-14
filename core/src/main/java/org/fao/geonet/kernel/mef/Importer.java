@@ -280,14 +280,12 @@ public class Importer {
                 String changeDate = null;
                 String sourceName = null;
                 Map<String, String> sourceTranslations = Maps.newHashMap();
-                String recordSource = source;
                 // Schema in info.xml is not used here anymore.
                 // It is used in handleMetadataFiles as the first option to pick a
                 // metadata file from those in a metadata dir in a MEF2
                 // String schema = null;
                 String rating = null;
                 String popularity = null;
-//                String groupId = null;
                 Element categs = null;
                 final Element privileges;
 
@@ -328,10 +326,6 @@ public class Importer {
                                 .setAttribute("name", c));
                         }
                     }
-                    if (StringUtils.isEmpty(source)) {
-                        recordSource = context.getBean(SettingManager.class).getSiteId();
-                    }
-
                     privileges = new Element("group");
                     privileges.addContent(new Element("operation")
                         .setAttribute("name", "view"));
@@ -374,12 +368,8 @@ public class Importer {
                         if (Log.isDebugEnabled(Geonet.MEF)) {
                             Log.debug(Geonet.MEF, "Assign to local catalog");
                         }
-                        recordSource = context.getBean(SettingManager.class).getSiteId();
                     } else {
                         // --- If siteId is not set, set to current node
-                        if (StringUtils.isEmpty(source)) {
-                            recordSource = context.getBean(SettingManager.class).getSiteId();
-                        }
                         sourceName = general.getChildText("siteName");
                         sourceTranslations = translationXmlToLangMap(general.getChildren("siteTranslations"));
                         if (Log.isDebugEnabled(Geonet.MEF))
@@ -604,8 +594,7 @@ public class Importer {
         // insert metadata
         //
         int userid = context.getUserSession().getUserIdAsInt();
-        String docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        String docType = null, category = null; boolean ufo = false, indexImmediate = false;
 
         String metadataId = dm.insertMetadata(context, schema, md.get(index), uuid,
             userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);

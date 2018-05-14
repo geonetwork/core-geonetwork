@@ -70,9 +70,7 @@ import jeeves.server.context.ServiceContext;
  */
 public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
-    //FIXME Put on a different file?
     private LocalFilesystemParams params;
-
 
     @Override
     protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -119,7 +117,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
      */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this, log);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
         } else {
@@ -132,8 +130,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             }
         }
         result = visitor.getResult();
-        log.debug(String.format("Scan directory is done. %d files analyzed.",
-            result.totalMetadata));
+        log.debug(String.format("Scan directory is done. %d files analyzed.", result.totalMetadata));
         Set<Integer> idsForHarvestingResult = visitor.getListOfRecords();
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
 
@@ -169,16 +166,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
     void updateMetadata(Element xml, final String id, GroupMapper localGroups,
                         final CategoryMapper localCateg, String changeDate, BaseAligner aligner) throws Exception {
-        updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner, true);
-    }
 
-    void updateMetadata(Element xml, final String id, GroupMapper localGroups,
-                        final CategoryMapper localCateg, String changeDate, BaseAligner aligner, boolean indexAfterUpdate) throws Exception {
         log.debug("  - Updating metadata with id: " + id);
-
-        //
-        // update metadata
-        //
 
         String language = context.getLanguage();
 
@@ -187,38 +176,21 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         metadata.getMetadataCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         dataMan.flush();
 
-        if (indexAfterUpdate == true) {
-            dataMan.indexMetadata(id, true, null);
-        }
-    }
-
-
-    /**
-     * Inserts a metadata into the database. If index param is true, Lucene index is updated after
-     * insertion, else the indexation step is skipped
-     *
-     * @param createDate TODO
-     */
-    String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
-                       String createDate, BaseAligner aligner) throws Exception {
-        return addMetadata(xml, uuid, schema, localGroups, localCateg, createDate, aligner, true);
+        dataMan.indexMetadata(id, true, null);
     }
 
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg,
                        String createDate, BaseAligner aligner, boolean index) throws Exception {
+
         log.debug("  - Adding metadata with remote uuid: " + uuid);
 
-
-        //
-        // insert metadata
-        //
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
@@ -235,13 +207,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             setHarvested(true).
             setUuid(params.getUuid());
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.flush();
 
@@ -294,7 +266,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
     private void runBeforeScript() throws IOException, InterruptedException {
 		if (StringUtils.isEmpty(params.beforeScript)) {
-			return;  // Nothing to run
+			return;
 		}
 		log.info("Running the before script: " + params.beforeScript);
         List<String> args = new ArrayList<String>(Arrays.asList(params.beforeScript.split(" ")));

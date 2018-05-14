@@ -442,7 +442,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
@@ -458,7 +458,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         String id = String.valueOf(metadata.getId());
         uuids.add(uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         return uuids;
     }
@@ -863,7 +863,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             if (log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if (log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context);
 
             if (log.isDebugEnabled()) log.debug("    - Set Harvested.");
 
