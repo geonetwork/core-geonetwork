@@ -732,6 +732,10 @@ public final class XslUtil {
         return DefaultEncoder.getInstance().encodeForJavaScript(str);
     }
 
+    public static String encodeForHTML(String str) {
+        return DefaultEncoder.getInstance().encodeForHTML(str);
+    }
+
     public static String md5Hex(String str) {
         return org.apache.commons.codec.digest.DigestUtils.md5Hex(str);
     }
