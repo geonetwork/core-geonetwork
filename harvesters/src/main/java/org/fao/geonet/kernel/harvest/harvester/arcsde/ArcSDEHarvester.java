@@ -362,10 +362,10 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         metadata.getMetadataCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         dataMan.flush();
 
@@ -410,13 +410,13 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         } catch (NumberFormatException e) {
         }
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.indexMetadata(id, true, null);
 
