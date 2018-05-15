@@ -42,8 +42,10 @@
   module.controller('GnHarvestSettingsController', [
     '$scope', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService', '$timeout',
+    'Metadata',
     function($scope, $http, $translate, $injector, $rootScope,
-             gnSearchManagerService, gnUtilityService, $timeout) {
+             gnSearchManagerService, gnUtilityService, $timeout,
+             Metadata) {
 
       $scope.searchObj = {
         internal: true,
@@ -447,6 +449,24 @@
               // TODO
             });
       };
+
+
+      // OGCWxS
+      var ogcwxsGet = function() {
+        $scope.ogcwxsTemplates = [];
+        gnSearchManagerService.search('qi?_content_type=json&' +
+          'fast=index&from=1&to=200&_isTemplate=y').
+        then(function(data) {
+          $scope.ogcwxsTemplates = [];
+          for (var i = 0; i < data.metadata.length; i++) {
+            $scope.ogcwxsTemplates.push(new Metadata(data.metadata[i]));
+          }
+        }, function(data) {
+        });
+      };
+      ogcwxsGet();
+
+
 
       // TODO: Should move to OAIPMH
       $scope.oaipmhSets = null;

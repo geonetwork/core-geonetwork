@@ -51,6 +51,32 @@
       <p class="help-block" data-translate="">ogcwxs-createThumbnailsHelp</p>
     </div>
 
+
+
+    <!-- Template selection -->
+    <h3 data-translate="">ogcwxsBuildRecordFromTemplates</h3>
+    <div>
+      <label class="control-label">
+        <span data-translate="">ogcwxs-serviceTemplateUuid</span>
+      </label>
+      <select class="form-control"
+              data-ng-model="harvesterSelected.options.serviceTemplateUuid"
+              data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates"> </select>
+      <p class="help-block" data-translate="">ogcwxs-serviceTemplateUuidHelp</p>
+    </div>
+    <div>
+      <label class="control-label">
+        <span data-translate="">ogcwxs-datasetTemplateUuid</span>
+      </label>
+      <select class="form-control"
+              data-ng-model="harvesterSelected.options.datasetTemplateUuid"
+              data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates"> </select>
+      <p class="help-block" data-translate="">ogcwxs-datasetTemplateUuidHelp</p>
+    </div>
+
+
+
+    <h3 data-translate="">ogcwxsBuildRecordFromGetCapabilities</h3>
     <div>
       <label class="control-label">
         <input type="checkbox" data-ng-model="harvesterSelected.options.useLayer"/>
@@ -77,14 +103,6 @@
         lang="lang"></div>
     </div>
 
-
-    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
-         data-label="ogcwxs-serviceCategory"/>
-
-    <div data-gn-category="harvesterSelected.options.datasetCategory" data-lang="{{lang}}"
-         data-label="ogcwxs-datasetCategory"/>
-
-
     <div>
       <label class="control-label" data-translate="">ogcwxs-metadataLanguage</label>
       <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"
@@ -96,6 +114,20 @@
       <input type="text" class="form-control"
              data-ng-model="harvesterSelected.options.outputSchema"/>
     </div>
+
+
+
+
+
+    <h3 data-translate="">ogcwxsRecordExtraInfo</h3>
+
+    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+         data-label="ogcwxs-serviceCategory"/>
+
+    <div data-gn-category="harvesterSelected.options.datasetCategory" data-lang="{{lang}}"
+         data-label="ogcwxs-datasetCategory"/>
+
+
 
     <div>
       <label class="control-label">
