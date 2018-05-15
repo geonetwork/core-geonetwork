@@ -497,13 +497,14 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <srv:couplingType>
-      <srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType"
-                           codeListValue="tight">
-        <xsl:choose>
-          <xsl:when test="name(.)='wps:Capabilities' or name(.)='wps1:Capabilities' or name(.)='wps2:Capabilities'">loosely
-          </xsl:when>
-          <xsl:otherwise>tight</xsl:otherwise>
-        </xsl:choose>
+      <srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType">
+        <xsl:attribute name="codeListValue">
+          <xsl:choose>
+            <xsl:when test="name(.)='wps:Capabilities' or name(.)='wps1:Capabilities' or name(.)='wps2:Capabilities'">loosely
+            </xsl:when>
+            <xsl:otherwise>tight</xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
       </srv:SV_CouplingType>
     </srv:couplingType>
 

@@ -134,6 +134,8 @@ public class OgcWxSHarvester extends AbstractHarvester<HarvestResult> {
         harvesterSettingsManager.add("id:" + optionsId, "topic", params.topic);
         harvesterSettingsManager.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
         harvesterSettingsManager.add("id:" + optionsId, "useLayer", params.useLayer);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetTemplateUuid", params.datasetTemplateUuid);
+        harvesterSettingsManager.add("id:" + optionsId, "serviceTemplateUuid", params.serviceTemplateUuid);
         harvesterSettingsManager.add("id:" + optionsId, "useLayerMd", params.useLayerMd);
         harvesterSettingsManager.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
         harvesterSettingsManager.add("id:" + optionsId, "outputSchema", params.outputSchema);

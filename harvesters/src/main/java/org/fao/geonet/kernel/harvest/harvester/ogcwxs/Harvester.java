@@ -28,7 +28,8 @@ import com.google.common.collect.Lists;
 
 import jeeves.server.context.ServiceContext;
 
-import org.apache.commons.lang.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
@@ -313,85 +314,128 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         // md5 the full capabilities URL
         String uuid = Sha1Encoder.encodeString(this.capabilitiesUrl); // is the service identifier
 
-        //--- Loading stylesheet
-        Path styleSheet = schemaMan.getSchemaDir(params.outputSchema).
-            resolve(Geonet.Path.CONVERT_STYLESHEETS).
-            resolve("OGCWxSGetCapabilitiesto19119").
-            resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilities-to-ISO19119_ISO19139.xsl");
+        // Metadata creation could be based on 2 scenarios:
+        // 1. Use the GetCapabilities and process it using XSLT to create ISO19139 records
+        // 2. Use existing metadata templates and merge GetCapabilities information into those templates to build new metadata records.
 
-        if (log.isDebugEnabled()) log.debug("  - XSLT transformation using " + styleSheet);
 
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("lang", params.lang);
-        param.put("topic", params.topic);
-        param.put("uuid", uuid);
+        boolean usingTemplate = StringUtils.isNotBlank(params.serviceTemplateUuid);
 
         Element md = null;
-        try {
-            md = Xml.transform(capa, styleSheet, param);
-        } catch (IllegalStateException e) {
-            String message = String.format(
-                "Failed to convert GetCapabilities '%s' to metadata record. Error is: '%s'. Service response is: %s.",
-                this.capabilitiesUrl, e.getMessage(), Xml.getString(capa));
-            log.error(message);
-            throw new IllegalStateException(message, e);
-        }
+        String schema;
 
-        String schema = dataMan.autodetectSchema(md, null); // ie. iso19139;
-
-        if (schema == null) {
-            log.warning("Skipping metadata with unknown schema.");
-            result.unknownSchema++;
-        }
+        if (usingTemplate) {
+            Element record = new Element("record");
+            String serviceTemplateId = dataMan.getMetadataId(params.serviceTemplateUuid);
+            Element serviceTemplate = dataMan.getMetadata(serviceTemplateId);
+            record.addContent(serviceTemplate);
 
 
-        //--- Create metadata for layers only if user ask for
-        if (params.useLayer || params.useLayerMd) {
-            // Load CRS
-            // TODO
+            Element getCapabilities = new Element("getCapabilities");
+            getCapabilities.addContent(capa);
 
-            //--- Select layers, featureTypes and Coverages (for layers having no child named layer = not take group of layer into account)
-            // and add the metadata
-            XPath xp = XPath.newInstance("//Layer[count(./*[name(.)='Layer'])=0] | " +
-                "//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
-                "//wfs:FeatureType | " +
-                "//wcs:CoverageOfferingBrief | " +
-                "//sos:ObservationOffering");
-            xp.addNamespace("wfs", "http://www.opengis.net/wfs");
-            xp.addNamespace("wcs", "http://www.opengis.net/wcs");
-            xp.addNamespace("wms", "http://www.opengis.net/wms");
-            xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
 
-            @SuppressWarnings("unchecked")
-            List<Element> layers = xp.selectNodes(capa);
-            if (layers.size() > 0) {
-                log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
+            Element root = new Element("root");
+            root.addContent(record);
+            root.addContent(getCapabilities);
 
-                for (Element layer : layers) {
-                    WxSLayerRegistry s = addLayerMetadata(layer, capa);
-                    if (s != null) {
-                        uuids.add(s.uuid);
-                        layersRegistry.add(s);
+            Path styleSheet = schemaMan.getSchemaDir(params.outputSchema).
+                resolve(Geonet.Path.CONVERT_STYLESHEETS).
+                resolve("ogcwxs-info-injection.xsl");
+            try {
+                Map<String, Object> param = new HashMap<String, Object>();
+                md = Xml.transform(root, styleSheet, param);
+            } catch (IllegalStateException e) {
+                String message = String.format(
+                    "Failed to inject GetCapabilities '%s' to service template. Error is: '%s'. Service response is: %s.",
+                    this.capabilitiesUrl, e.getMessage(), Xml.getString(capa));
+                log.error(message);
+                throw new IllegalStateException(message, e);
+            }
+            schema = dataMan.autodetectSchema(md, null); // ie. iso19139;
+
+
+        } else {
+            //--- Loading stylesheet
+            Path styleSheet = schemaMan.getSchemaDir(params.outputSchema).
+                resolve(Geonet.Path.CONVERT_STYLESHEETS).
+                resolve("OGCWxSGetCapabilitiesto19119").
+                resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilities-to-ISO19119_ISO19139.xsl");
+
+            if (log.isDebugEnabled()) log.debug("  - XSLT transformation using " + styleSheet);
+
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("lang", params.lang);
+            param.put("topic", params.topic);
+            param.put("uuid", uuid);
+
+            try {
+                md = Xml.transform(capa, styleSheet, param);
+            } catch (IllegalStateException e) {
+                String message = String.format(
+                    "Failed to convert GetCapabilities '%s' to metadata record. Error is: '%s'. Service response is: %s.",
+                    this.capabilitiesUrl, e.getMessage(), Xml.getString(capa));
+                log.error(message);
+                throw new IllegalStateException(message, e);
+            }
+
+            schema = dataMan.autodetectSchema(md, null); // ie. iso19139;
+
+            if (schema == null) {
+                log.warning("Skipping metadata with unknown schema.");
+                result.unknownSchema++;
+            }
+
+
+            //--- Create metadata for layers only if user ask for
+            if (params.useLayer || params.useLayerMd) {
+                // Load CRS
+                // TODO
+
+                //--- Select layers, featureTypes and Coverages (for layers having no child named layer = not take group of layer into account)
+                // and add the metadata
+                XPath xp = XPath.newInstance("//Layer[count(./*[name(.)='Layer'])=0] | " +
+                    "//wms:Layer[count(./*[name(.)='Layer'])=0] | " +
+                    "//wfs:FeatureType | " +
+                    "//wcs:CoverageOfferingBrief | " +
+                    "//sos:ObservationOffering");
+                xp.addNamespace("wfs", "http://www.opengis.net/wfs");
+                xp.addNamespace("wcs", "http://www.opengis.net/wcs");
+                xp.addNamespace("wms", "http://www.opengis.net/wms");
+                xp.addNamespace("sos", "http://www.opengis.net/sos/1.0");
+
+                @SuppressWarnings("unchecked")
+                List<Element> layers = xp.selectNodes(capa);
+                if (layers.size() > 0) {
+                    log.info("  - Number of layers, featureTypes or Coverages found : " + layers.size());
+
+                    for (Element layer : layers) {
+                        WxSLayerRegistry s = addLayerMetadata(layer, capa);
+                        if (s != null) {
+                            uuids.add(s.uuid);
+                            layersRegistry.add(s);
+                        }
                     }
+
+                    // Update ISO19119 for data/service links creation (ie. operatesOn element)
+                    // The editor will support that but it will make quite heavy XML.
+                    md = addOperatesOnUuid(md, layersRegistry);
                 }
+            }
 
-                // Update ISO19119 for data/service links creation (ie. operatesOn element)
-                // The editor will support that but it will make quite heavy XML.
-                md = addOperatesOnUuid(md, layersRegistry);
+            // Apply custom transformation if requested
+            Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+            String importXslFile = params.getImportXslt();
+            if (importXslFile != null && !importXslFile.equals("none")) {
+                if (!importXslFile.endsWith("xsl")) {
+                    importXslFile = importXslFile + ".xsl";
+                }
+                importXsl = importXsl.resolve(importXslFile);
+                log.info("Applying custom import XSL " + importXsl.getFileName());
+                md = Xml.transform(md, importXsl);
             }
         }
 
-        // Apply custom transformation if requested
-        Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-        String importXslFile = params.getImportXslt();
-        if ( importXslFile != null && ! importXslFile.equals("none")) {
-            if(! importXslFile.endsWith("xsl")) {
-                importXslFile = importXslFile+".xsl";
-            }
-            importXsl = importXsl.resolve(importXslFile);
-            log.info("Applying custom import XSL " + importXsl.getFileName());
-            md = Xml.transform(md, importXsl);
-        }
 
         // Save iso19119 metadata in DB
         log.info("  - Adding metadata for services with " + uuid);
@@ -443,7 +487,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 loadThumbnail(layer);
             }
         }
-
         return uuids;
     }
 
