@@ -416,7 +416,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
@@ -432,7 +432,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         String id = String.valueOf(metadata.getId());
         uuids.add(uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         // Add Thumbnails only after metadata insertion to avoid concurrent transaction
         // and loaded thumbnails could eventually failed anyway.
@@ -764,7 +764,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if (log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if (log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context);
 
             if (log.isDebugEnabled()) log.debug("    - Set Harvested.");
 

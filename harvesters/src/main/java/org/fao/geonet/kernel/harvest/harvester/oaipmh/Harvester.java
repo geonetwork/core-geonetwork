@@ -384,13 +384,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.flush();
 
@@ -521,10 +521,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
             metadata.getMetadataCategories().clear();
-            addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+            addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
             dataMan.flush();
             dataMan.indexMetadata(id, Math.random() < 0.01, null);

@@ -348,7 +348,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setHarvested(true).
             setUuid(params.getUuid()).
             setUri(rf.getPath());
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         try {
             metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
@@ -358,7 +358,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.flush();
 
@@ -510,10 +510,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
-            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
+            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context);
 
             metadata.getMetadataCategories().clear();
-            addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+            addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
             dataMan.flush();
 

@@ -116,7 +116,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
      */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
         } else {
@@ -184,10 +184,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         metadata.getMetadataCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         dataMan.flush();
 
@@ -231,13 +231,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             setHarvested(true).
             setUuid(params.getUuid());
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.flush();
 
