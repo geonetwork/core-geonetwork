@@ -977,7 +977,6 @@
     <!-- Get variable from attribute (eg. codelist) or node (eg. gco:CharacterString).-->
     <xsl:variable name="valueToEdit"
                   select="if ($value/*) then $value/text() else $value"/>
-
     <!-- If a form field has suggestion list in helper
     then the element is hidden and the helper directive is added.
     ListOfValues could be a codelist (with entry children) or
@@ -1387,6 +1386,14 @@
                   <xsl:value-of select="if ($label) then $label else $optionValue"/>
                 </option>
               </xsl:for-each>
+
+
+              <xsl:if test="count($attributeSpec/gn:text[@value = $attributeValue]) = 0">
+                <option value="{$attributeValue}" selected="">
+                  <xsl:value-of select="$attributeValue"/>
+                </option>
+
+              </xsl:if>
             </select>
           </xsl:when>
           <xsl:otherwise>
