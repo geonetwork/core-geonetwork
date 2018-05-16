@@ -40,6 +40,7 @@
                 xmlns:wms="http://www.opengis.net/wms"
                 xmlns:wps="http://www.opengeospatial.net/wps"
                 xmlns:wps1="http://www.opengis.net/wps/1.0.0"
+                xmlns:wps2="http://www.opengis.net/wps/2.0"
                 xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
                 xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
                 xmlns:saxon="http://saxon.sf.net/"
@@ -56,6 +57,10 @@
   <xsl:param name="uuid"
              select="''"/>
 
+  <xsl:variable name="nilReasonValue"
+                select="'synchronized'"/>
+
+  <xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 
   <xsl:variable name="record"
                 select="/root/record"/>
@@ -74,249 +79,289 @@
     </xsl:choose>
   </xsl:variable>
 
-  <!-- Define mapping between GetCapabilities document and
-  where to insert information in the template used.
 
-  The target element MUST exist in the template.
-  The matching value in the GetCapabilities document replace the matching element.
-  If the matching element is text, the value is inserted in the attribute or element.
-  If the matching element is an element, a template is used to convert the element
-  to the corresponding element.
 
-  target attribute MUST be a full Xpath without search clause ie. [...].
-  source attribute is the matching element in the GetCapabilities document.
-  mode: insert (as a child of target)|after (target)
-  name: customize name of the generated element. Useful for contact which may have different
-  element names in the standard depending on the location.
 
-  TODO: Add a check of all none matching element.
-  TODO: Handle updates to not insert things twice.
+
+
+  <!-- XSLT to inject GetCapabilities information into an existing metadata record.
+
+  Some assumptions are made on the input metadata record.
+  Some elements MUST exist in the input document in order to trigger insertion:
+  * Mandatory element:
+    * fileIdentifier (to insert the UUID).
+    * dateStamp (may be replaced by INSPIRE MetadataDate).
+    dateStamp is also used to insert metadata contact just before it.
+    * title
+    * citation date used to insert INSPIRE last revision date.
+    * abstract
+    * DQ/scope used to insert INSPIRE conformant section after it.
+  * Optional ones:
+    * metadata language (may be replaced by INSPIRE ResponseLanguage)
+    * fees
+    * serviceType
+    * service
+    * MD_DigitalTransferOptions (at least an empty section should exist to trigger insertion of service URL)
+
+  Other element inserted from the capabilities:
+  * Resource contact
+  * Keywords
+  * Resource constraints
+  * srv:extent
+  * srv:containsOperations
+  * srv:couplingType
+
+
+  Elements inserted from the getCapabilities document are flagged with a
+  nilReason attribute with value 'synchronized'. Those elements are ignore
+  on next processing round.
   -->
-  <xsl:variable name="properties">
-    <!-- Insert title. -->
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString"
-             source="/(*/ows:ServiceIdentification/ows:Title|
-                     */ows11:ServiceIdentification/ows11:Title|
-                     */wfs:Service/wfs:Title|
-                     */wms:Service/wms:Title|
-                     */Service/Title|
-                     */wcs:Service/wcs:label)/text()"/>
-
-    <!-- Insert title. -->
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract/gco:CharacterString"
-             source="/(*/ows:ServiceIdentification/ows:Abstract|
-                     */ows11:ServiceIdentification/ows11:Abstract|
-                     */wfs:Service/wfs:Abstract|
-                     */wms:Service/wms:Abstract|
-                     */Service/Abstract|
-                     */wcs:Service/wcs:description)/text()"/>
-
-    <!-- Insert keywords. -->
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords"
-             source="/(*/ows:ServiceIdentification/ows:Keywords|
-                     */ows11:ServiceIdentification/ows11:Keywords|
-                     */wms:Service/wms:KeywordList|
-                     */wfs:Service/wfs:keywords|
-                     */Service/KeywordList|
-                     */wcs:Service/wcs:keywords|
-                     *//inspire_vs:ExtendedCapabilities/inspire_common:MandatoryKeyword)"
-              mode="after"/>
-
-
-    <!-- Insert language. -->
-    <!-- TODO: Get from harvester parameters?-->
-    <element target="/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue"
-             source="//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language/text()"
-             default="eng"/>
-
-    <!-- Match gmd:contact and replace it by the corresponding contact information.
-    Note: gmd:contact MUST be part of the template. -->
-    <element target="/gmd:MD_Metadata/gmd:contact"
-             source="/(*/Service/ContactInformation|
-                      */wfs:Service/wfs:ContactInformation|
-                      */wms:Service/wms:ContactInformation|
-                      */ows:ServiceProvider|
-                      */owsg:ServiceProvider|
-                      */ows11:ServiceProvider)"
-             name="gmd:contact"/>
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact"
-             source="/(*//ContactInformation|
-                       *//wcs:responsibleParty|
-                       *//wms:responsibleParty|
-                       *//wms:Service/wms:ContactInformation|
-                       *//ows:ServiceProvider|
-                       *//ows11:ServiceProvider)"
-             name="gmd:pointOfContact"/>
-
-
-
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints"
-             source="/(*//wms:AccessConstraints)"/>
-
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:accessProperties/gmd:MD_StandardOrderProcess/gmd:fees/gco:CharacterString"
-             source="/(*//*:Fees)"/>
-
-    <!-- INSPIRE extension elements -->
-    <!-- Insert dateStamp or let the system set it to now. -->
-    <element target="/gmd:MD_Metadata/gmd:dateStamp"
-             source="//inspire_vs:ExtendedCapabilities/inspire_common:MetadataDate/text()"/>
-
-
-
-    <!-- Insert GetCapabilities URL.
-     A transfertOptions (even empty) section MUST be set. -->
-    <element target="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions"
-             source="/(.//wms:GetCapabilities/wms:DCPType/wms:HTTP/wms:Get/wms:OnlineResource|
-                       .//wfs:GetCapabilities/wfs:DCPType/wfs:HTTP/wfs:Get|
-                       .//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get|
-                       .//ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get|
-                       .//GetCapabilities/DCPType/HTTP/Get/OnlineResource[1]|
-                       .//wcs:GetCapabilities//wcs:OnlineResource[1])"
-             mode="insert"/>
-
-    <!-- Insert INSPIRE conformity section.
-     scope is mandatory so the DQ report will be inserted after. -->
-    <element target="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope"
-             source="//inspire_vs:ExtendedCapabilities/inspire_common:Conformity[
-                            inspire_common:Degree='conformant' or
-                            inspire_common:Degree='notConformant']"
-             mode="after"/>
-
-
-    <!-- Insert INSPIRE last revision date. -->
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date"
-             source="//inspire_vs:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision"
-             mode="after"/>
-
-
-    <!-- Some elements are not declared here but are processed by a mode copy template
-     like srv:serviceType, srv:extent, couplingType, srv:containsOperations. -->
-
-<!-- This does not work as we need to aggregate all boxes
-    <element target="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent"
-             source="/(*//ows:WGS84BoundingBox|
-                       *//wcs:lonLatEnvelope|
-                       *//wms:EX_GeographicBoundingBox|
-                       *//wfs:LatLongBoundingBox|
-                       *//LatLonBoundingBox)"/>
--->
-
-  </xsl:variable>
-
-
-
   <xsl:template match="/">
-    <xsl:apply-templates mode="copy-or-inject"
+    <xsl:apply-templates mode="copy"
                          select="/root/record/*"/>
   </xsl:template>
 
 
 
-  <xsl:template mode="copy-or-inject"
+  <xsl:template mode="copy"
                 match="gmd:fileIdentifier/gco:CharacterString/text()">
     <xsl:value-of select="$uuid"/>
   </xsl:template>
 
 
+  <!-- INSPIRE extension elements -->
+  <!-- Insert dateStamp or set it to now. -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:dateStamp/text()">
+    <xsl:variable name="date"
+                  select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:MetadataDate/text())"/>
 
-  <xsl:template mode="copy-or-inject"
-                match="*|@*"
-                priority="5">
-
-    <xsl:variable name="xpath"
-                  select="concat(
-                            replace(
-                              string-join(ancestor::*/name(), '/'),
-                            'root/record', ''),
-                          '/',
-                          if (. instance of attribute()) then '@' else '',
-                          name(.))"/>
-    <xsl:variable name="match"
-                  select="$properties/element[@target = $xpath]"/>
-    <xsl:variable name="isMatch"
-                  select="count($match) > 0"/>
-    <xsl:message>* <xsl:value-of select="$xpath"/></xsl:message>
-
-    <xsl:choose>
-      <xsl:when test="$isMatch">
-        <xsl:variable name="capabilitiesValue"
-                      select="saxon:evaluate(concat('$p1', $match/@source), $getCapabilities)"/>
-
-        <xsl:message> = <xsl:value-of select="$capabilitiesValue"/> </xsl:message>
-
-        <xsl:choose>
-          <!-- Make a copy of the template value when no match found. -->
-          <xsl:when test="not($capabilitiesValue)">
-            <xsl:apply-templates mode="copy"
-                                 select="."/>
-          </xsl:when>
-          <!-- Inject text in attribute value -->
-          <xsl:when test=". instance of attribute()">
-            <xsl:attribute name="{name(.)}"
-                           select="$capabilitiesValue"/>
-          </xsl:when>
-          <!-- Inject element or multiple values in element -->
-          <xsl:when test="count($capabilitiesValue) > 1 or $capabilitiesValue instance of element()">
-
-            <xsl:choose>
-              <xsl:when test="$match/@mode = 'insert'">
-                <!-- Insert source as a child after copying
-                existing children of the target. -->
-                <xsl:copy>
-                  <xsl:apply-templates mode="copy-or-inject"
-                                       select="*|@*"/>
-                  <xsl:comment>Node inserted as child of <xsl:value-of select="$xpath"/>
-                               from <xsl:value-of select="normalize-space($match/@source)"/>.</xsl:comment>
-                  <xsl:apply-templates mode="convert"
-                                       select="$capabilitiesValue"/>
-                </xsl:copy>
-              </xsl:when>
-              <xsl:when test="$match/@mode = 'after'">
-                <!-- Insert source after copying
-                existing target. -->
-                <xsl:copy>
-                  <xsl:apply-templates mode="copy-or-inject"
-                                       select="*|@*"/>
-                </xsl:copy>
-                <xsl:comment>Node inserted after <xsl:value-of select="$xpath"/>
-                             from <xsl:value-of select="normalize-space($match/@source)"/>.</xsl:comment>
-                <xsl:apply-templates mode="convert"
-                                     select="$capabilitiesValue"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:comment>Value set from <xsl:value-of select="normalize-space($match/@source)"/>.</xsl:comment>
-                <xsl:choose>
-                  <xsl:when test="$match/@name">
-                    <xsl:element name="{$match/@name}">
-                      <xsl:apply-templates mode="convert"
-                                           select="$capabilitiesValue"/>
-                    </xsl:element>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:apply-templates mode="convert"
-                                         select="$capabilitiesValue"/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:when>
-          <!-- Inject text in element -->
-          <xsl:otherwise>
-            <xsl:copy>
-              <xsl:comment>Value of <xsl:value-of select="$xpath"/>
-                set from <xsl:value-of select="normalize-space($match/@source)"/>.</xsl:comment>
-              <xsl:value-of select="$capabilitiesValue"/>
-            </xsl:copy>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates mode="copy"
-                             select="."/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:value-of select="if ($date != '')
+                          then $date
+                          else format-dateTime(current-dateTime(),$df)"/>
   </xsl:template>
 
+
+
+
+  <!-- Insert title. -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
+    <xsl:copy>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+      <xsl:value-of select="$getCapabilities/(*/ows:ServiceIdentification/ows:Title|
+                       */ows11:ServiceIdentification/ows11:Title|
+                       */wfs:Service/wfs:Title|
+                       */wms:Service/wms:Title|
+                       */Service/Title|
+                       */wcs:Service/wcs:label)/text()"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+  <!-- Insert abstract. -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract/gco:CharacterString">
+    <xsl:copy>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+      <xsl:value-of select="$getCapabilities/(*/ows:ServiceIdentification/ows:Abstract|
+                       */ows11:ServiceIdentification/ows11:Abstract|
+                       */wfs:Service/wfs:Abstract|
+                       */wms:Service/wms:Abstract|
+                       */Service/Abstract|
+                       */wcs:Service/wcs:description)/text()"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+
+
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue">
+    <xsl:variable name="language"
+                  select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language/text())"/>
+
+    <xsl:value-of select="if ($language != '') then $language else 'eng'"/>
+  </xsl:template>
+
+
+  <!--
+  Metadata contact (the one from the capabilities is added just before the datestamp which is mandatory).
+  -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:dateStamp">
+    <xsl:variable name="contacts"
+                  select="$getCapabilities/(*/Service/ContactInformation|
+                          */wfs:Service/wfs:ContactInformation|
+                          */wms:Service/wms:ContactInformation|
+                          */ows:ServiceProvider|
+                          */owsg:ServiceProvider|
+                          */ows11:ServiceProvider)"/>
+    <xsl:for-each select="$contacts">
+      <gmd:contact>
+        <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+        <xsl:apply-templates mode="convert"
+                             select="$contacts"/>
+      </gmd:contact>
+    </xsl:for-each>
+
+    <xsl:copy-of select="."/>
+  </xsl:template>
+
+
+
+
+
+  <xsl:template mode="copy"
+                match="gmd:identificationInfo/*">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates mode="copy" select="gmd:citation"/>
+      <xsl:apply-templates mode="copy" select="gmd:abstract"/>
+      <xsl:apply-templates mode="copy" select="gmd:purpose"/>
+      <xsl:apply-templates mode="copy" select="gmd:credit"/>
+      <xsl:apply-templates mode="copy" select="gmd:status"/>
+
+
+      <!-- Insert contact. -->
+      <xsl:variable name="contacts"
+                    select="$getCapabilities//(ContactInformation|
+                           wcs:responsibleParty|
+                           wms:responsibleParty|
+                           wms:Service/wms:ContactInformation|
+                           ows:ServiceProvider|
+                           ows11:ServiceProvider)"/>
+
+      <xsl:for-each select="$contacts">
+        <gmd:pointOfContact>
+          <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+          <xsl:apply-templates mode="convert"
+                               select="."/>
+        </gmd:pointOfContact>
+      </xsl:for-each>
+      <xsl:apply-templates mode="copy" select="gmd:pointOfContact"/>
+
+
+
+      <xsl:apply-templates mode="copy" select="gmd:resourceMaintenance"/>
+      <xsl:apply-templates mode="copy" select="gmd:graphicOverview"/>
+      <xsl:apply-templates mode="copy" select="gmd:resourceFormat"/>
+
+
+      <!-- Insert keywords. -->
+      <xsl:variable name="keywords"
+                    select="$getCapabilities/(*/ows:ServiceIdentification/ows:Keywords|
+                       */ows11:ServiceIdentification/ows11:Keywords|
+                       */wms:Service/wms:KeywordList|
+                       */wfs:Service/wfs:keywords|
+                       */Service/KeywordList|
+                       */wcs:Service/wcs:keywords|
+                       *//inspire_vs:ExtendedCapabilities/inspire_common:MandatoryKeyword)"/>
+      <xsl:for-each select="$keywords">
+        <xsl:apply-templates mode="convert"
+                             select="."/>
+      </xsl:for-each>
+      <xsl:apply-templates mode="copy" select="gmd:descriptiveKeywords"/>
+
+
+      <xsl:apply-templates mode="copy" select="gmd:resourceSpecificUsage"/>
+
+      <!-- Insert constraints. -->
+      <xsl:variable name="constraints"
+                    select="$getCapabilities/(*//wms:AccessConstraints)"/>
+      <xsl:for-each select="$constraints">
+        <xsl:apply-templates mode="convert"
+                             select="."/>
+      </xsl:for-each>
+
+      <xsl:apply-templates mode="copy" select="gmd:resourceConstraints"/>
+      <xsl:apply-templates mode="copy" select="gmd:aggregationInfo"/>
+      <xsl:apply-templates mode="copy" select="gmd:spatialRepresentationType"/>
+      <xsl:apply-templates mode="copy" select="gmd:spatialResolution"/>
+      <xsl:apply-templates mode="copy" select="gmd:language"/>
+      <xsl:apply-templates mode="copy" select="gmd:characterSet"/>
+      <xsl:apply-templates mode="copy" select="gmd:topicCategory"/>
+      <xsl:apply-templates mode="copy" select="gmd:environmentDescription"/>
+      <xsl:apply-templates mode="copy" select="gmd:extent"/>
+      <xsl:apply-templates mode="copy" select="gmd:supplementalInformation"/>
+
+      <xsl:apply-templates mode="copy" select="srv:serviceType"/>
+      <xsl:apply-templates mode="copy" select="srv:serviceTypeVersion"/>
+      <xsl:apply-templates mode="copy" select="srv:accessProperties"/>
+      <xsl:apply-templates mode="copy" select="srv:restrictions"/>
+      <xsl:apply-templates mode="copy" select="srv:keywords"/>
+
+      <xsl:call-template name="build-extent"/>
+      <xsl:apply-templates mode="copy" select="srv:extent"/>
+
+      <xsl:apply-templates mode="copy" select="srv:coupledResource"/>
+      <xsl:apply-templates mode="copy" select="srv:couplingType"/>
+
+      <xsl:call-template name="build-containsOperations"/>
+      <xsl:apply-templates mode="copy" select="srv:containsOperations"/>
+
+      <xsl:apply-templates mode="copy" select="srv:operatesOn"/>
+
+      <xsl:apply-templates mode="copy" select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+                                     namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+
+  <!-- TODO this assume that the element exists in the input record and the element is not mandatory. -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:accessProperties/gmd:MD_StandardOrderProcess/gmd:fees/gco:CharacterString/text()">
+    <xsl:value-of select="$getCapabilities//*:Fees"/>
+  </xsl:template>
+
+
+
+
+
+  <!-- Insert GetCapabilities URL.
+   A transfertOptions (even empty) section MUST be set. -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+    <xsl:copy>
+      <xsl:apply-templates mode="convert"
+                           select="$getCapabilities/(.//wms:GetCapabilities/wms:DCPType/wms:HTTP/wms:Get/wms:OnlineResource|
+                         .//wfs:GetCapabilities/wfs:DCPType/wfs:HTTP/wfs:Get|
+                         .//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get|
+                         .//ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get|
+                         .//GetCapabilities/DCPType/HTTP/Get/OnlineResource[1]|
+                         .//wcs:GetCapabilities//wcs:OnlineResource[1])"/>
+      <xsl:apply-templates mode="copy"
+                           select="*|@*"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+
+  <!-- Insert INSPIRE conformity section.
+   scope is mandatory so the DQ report will be inserted after. -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope">
+    <xsl:copy-of select="."/>
+    <xsl:apply-templates mode="convert"
+                         select="$getCapabilities//inspire_vs:ExtendedCapabilities/inspire_common:Conformity[
+                            inspire_common:Degree='conformant' or
+                            inspire_common:Degree='notConformant']"/>
+  </xsl:template>
+
+
+
+  <!-- Insert INSPIRE last revision date. -->
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date">
+    <xsl:copy-of select="."/>
+    <xsl:variable name="lastRevision"
+                  select="$getCapabilities//inspire_vs:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision"/>
+    <xsl:for-each select="$lastRevision">
+      <xsl:apply-templates mode="convert"
+                           select="."/>
+    </xsl:for-each>
+  </xsl:template>
 
 
 
@@ -344,6 +389,7 @@
                        KeywordList|
                        wcs:keywords">
     <gmd:descriptiveKeywords>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:MD_Keywords>
         <gmd:keyword>
           <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
@@ -359,6 +405,7 @@
     <!-- Add keyword part of a vocabulary -->
     <xsl:for-each-group select="wms:Keyword[@vocabulary]" group-by="@vocabulary">
       <gmd:descriptiveKeywords>
+        <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
         <gmd:MD_Keywords>
           <xsl:for-each select="../wms:Keyword[@vocabulary = current-grouping-key()]">
             <gmd:keyword>
@@ -391,6 +438,7 @@
     <!-- Add other WMS keywords -->
     <xsl:if test="wms:Keyword[not(@vocabulary)]">
       <gmd:descriptiveKeywords>
+        <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
         <gmd:MD_Keywords>
           <xsl:for-each select="wms:Keyword[not(@vocabulary)]">
             <gmd:keyword>
@@ -412,6 +460,7 @@
   <xsl:template mode="convert"
                 match="inspire_common:MandatoryKeyword[@xsi:type='inspire_common:classificationOfSpatialDataService']">
     <gmd:descriptiveKeywords>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:MD_Keywords>
         <xsl:for-each select="inspire_common:KeywordValue">
           <gmd:keyword>
@@ -453,6 +502,7 @@
   <xsl:template mode="convert"
                 match="wms:AccessConstraints">
     <gmd:resourceConstraints>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:MD_LegalConstraints>
         <xsl:choose>
           <xsl:when test=". = 'copyright'
@@ -497,6 +547,7 @@
 
     <xsl:if test="lower-case(.) = 'none'">
       <gmd:resourceConstraints>
+        <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
         <gmd:MD_Constraints>
           <gmd:useLimitation>
             <gco:CharacterString>no conditions apply</gco:CharacterString>
@@ -509,11 +560,11 @@
 
 
 
-
   <xsl:template mode="convert"
                 match="wms:OnlineResource|
                        wfs:Get">
     <gmd:onLine>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:CI_OnlineResource>
         <gmd:linkage>
           <gmd:URL><xsl:value-of select="@xlink:href|@onlineResource"/></gmd:URL>
@@ -550,6 +601,7 @@
   <xsl:template mode="convert"
                 match="inspire_common:Conformity">
     <gmd:report>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:DQ_DomainConsistency>
         <gmd:result>
           <gmd:DQ_ConformanceResult>
@@ -612,6 +664,7 @@
   <xsl:template mode="convert"
                 match="inspire_common:DateOfLastRevision">
     <gmd:date>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:CI_Date>
         <gmd:date>
           <gco:Date>
@@ -661,9 +714,9 @@
 
           WPS 1.0.0 : none
            -->
-  <xsl:template mode="copy"
-                match="srv:extent">
+  <xsl:template name="build-extent">
     <srv:extent>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:EX_Extent>
         <gmd:geographicElement>
           <gmd:EX_GeographicBoundingBox>
@@ -772,12 +825,15 @@
   </xsl:template>
 
 
+  <xsl:template mode="convert"
+                match="*|@*"/>
 
 
-  <xsl:template mode="copy-or-inject"
+  <xsl:template mode="copy"
                 match="srv:serviceType">
 
     <srv:serviceType>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gco:LocalName codeSpace="www.w3c.org">
         <xsl:choose>
           <xsl:when test="$getCapabilities//*:ExtendedCapabilities/inspire_common:SpatialDataServiceType">
@@ -793,6 +849,7 @@
     </srv:serviceType>
 
     <srv:serviceTypeVersion>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gco:CharacterString>
         <xsl:value-of select='$getCapabilities/*/@version'/>
       </gco:CharacterString>
@@ -800,15 +857,17 @@
   </xsl:template>
 
 
-  <xsl:template mode="copy-or-inject"
+  <xsl:template mode="copy"
                 match="srv:couplingType">
 
     <srv:couplingType>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType">
         <xsl:attribute name="codeListValue">
           <xsl:choose>
             <xsl:when test="name(.)='wps:Capabilities' or
-                            name(.)='wps1:Capabilities'">loosely</xsl:when>
+              name(.)='wps1:Capabilities' or
+              name(.)='wps2:Capabilities'">loosely</xsl:when>
             <xsl:otherwise>tight</xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
@@ -817,8 +876,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="copy-or-inject"
-                match="srv:containsOperations">
+  <xsl:template name="build-containsOperations">
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
              Operation could be OGC standard operation described in specification
@@ -826,7 +884,7 @@
              as one operation.
          -->
 
-    <xsl:for-each select="$getCapabilities/(
+    <xsl:for-each select="$getCapabilities//(
                                 Capability/Request/*|
                                 wfs:Capability/wfs:Request/*|
                                 wms:Capability/wms:Request/*|
@@ -837,6 +895,7 @@
                                 wps1:ProcessOfferings/*)">
       <!-- Some services provide information about ows:ExtendedCapabilities TODO ? -->
       <srv:containsOperations>
+        <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
         <srv:SV_OperationMetadata>
           <srv:operationName>
             <gco:CharacterString>
@@ -928,7 +987,7 @@
                   </gco:CharacterString>
                 </gmd:description>
                 <gmd:function>
-                  <CI_OnLineFunctionCode codeList="./resources/codeList.xml#CI_OnLineFunctionCode"
+                  <gmd:CI_OnLineFunctionCode codeList="./resources/codeList.xml#CI_OnLineFunctionCode"
                                          codeListValue="information"/>
                 </gmd:function>
               </gmd:CI_OnlineResource>
@@ -953,7 +1012,7 @@
                   </gco:CharacterString>
                 </gmd:protocol>
                 <gmd:function>
-                  <CI_OnLineFunctionCode codeList="./resources/codeList.xml#CI_OnLineFunctionCode"
+                  <gmd:CI_OnLineFunctionCode codeList="./resources/codeList.xml#CI_OnLineFunctionCode"
                                          codeListValue="information"/>
                 </gmd:function>
               </gmd:CI_OnlineResource>
@@ -976,12 +1035,18 @@
   </xsl:template>
 
 
+  <!-- Remove values added in the past -->
+  <xsl:template mode="copy"
+                match="*[@gco:nilReason = $nilReasonValue]"
+                priority="999"/>
+
+
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template mode="copy"
                 match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"
-                           mode="copy-or-inject"/>
+                           mode="copy"/>
     </xsl:copy>
   </xsl:template>
 

@@ -32,6 +32,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -307,17 +308,44 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         // 1. Use the GetCapabilities and process it using XSLT to create ISO19139 records
         // 2. Use existing metadata templates and merge GetCapabilities information into those templates to build new metadata records.
 
-
         boolean usingTemplate = StringUtils.isNotBlank(params.serviceTemplateUuid);
 
         Element md = null;
         String schema;
 
+        Map<String, Object> xsltParams = new HashMap<String, Object>();
+        xsltParams.put("lang", params.lang);
+        xsltParams.put("topic", params.topic);
+        xsltParams.put("uuid", uuid);
+
         if (usingTemplate) {
+            // Check first that this record has not been generated in the past.
+            // The UUID is a hash of the capabilities URL
+            MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+            Metadata existingRecord = metadataRepository.findOneByUuid(uuid);
+            Element existingRecordXml;
+
+            if (existingRecord != null) {
+                // Use record generated on previous run
+                existingRecordXml = existingRecord.getXmlData(false);
+            } else {
+                // Search the template in the catalogue
+                // Return an exception if not found.
+                String serviceTemplateId = dataMan.getMetadataId(params.serviceTemplateUuid);
+                if (serviceTemplateId == null) {
+                    String message = String.format(
+                        "Template with UUID '%s' not found in the catalogue. Choose another template.",
+                        params.serviceTemplateUuid);
+                    log.error(message);
+                    throw new IllegalStateException(message);
+                }
+
+                // Use the template as a basis
+                existingRecordXml = dataMan.getMetadata(serviceTemplateId);
+            }
+
             Element record = new Element("record");
-            String serviceTemplateId = dataMan.getMetadataId(params.serviceTemplateUuid);
-            Element serviceTemplate = dataMan.getMetadata(serviceTemplateId);
-            record.addContent(serviceTemplate);
+            record.addContent(existingRecordXml);
 
 
             Element getCapabilities = new Element("getCapabilities");
@@ -332,8 +360,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 resolve(Geonet.Path.CONVERT_STYLESHEETS).
                 resolve("ogcwxs-info-injection.xsl");
             try {
-                Map<String, Object> param = new HashMap<String, Object>();
-                md = Xml.transform(root, styleSheet, param);
+                md = Xml.transform(root, styleSheet, xsltParams);
             } catch (IllegalStateException e) {
                 String message = String.format(
                     "Failed to inject GetCapabilities '%s' to service template. Error is: '%s'. Service response is: %s.",
@@ -353,13 +380,8 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
             if (log.isDebugEnabled()) log.debug("  - XSLT transformation using " + styleSheet);
 
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("lang", params.lang);
-            param.put("topic", params.topic);
-            param.put("uuid", uuid);
-
             try {
-                md = Xml.transform(capa, styleSheet, param);
+                md = Xml.transform(capa, styleSheet, xsltParams);
             } catch (IllegalStateException e) {
                 String message = String.format(
                     "Failed to convert GetCapabilities '%s' to metadata record. Error is: '%s'. Service response is: %s.",
