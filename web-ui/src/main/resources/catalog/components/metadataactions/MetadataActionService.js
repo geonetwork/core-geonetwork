@@ -304,7 +304,7 @@
        * @return {*}
        */
       this.publish = function(md, bucket, flag, scope) {
-        $rootScope.$broadcast('operationOnSelectionStart');
+        scope.$broadcast('operationOnSelectionStart');
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
@@ -317,7 +317,7 @@
             .then(
             function(data) {
               scope.$emit('PrivilegesUpdated', true);
-              $rootScope.$broadcast('operationOnSelectionStop');
+              scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
                 msg: translations.privilegesUpdated,
                 timeout: 0,
@@ -327,7 +327,7 @@
               }
             }, function(data) {
               scope.$emit('PrivilegesUpdated', false);
-              $rootScope.$broadcast('operationOnSelectionStop');
+              scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
                 title: translations.privilegesUpdatedError,
                 error: data,
