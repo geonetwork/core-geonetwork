@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
-import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,11 +40,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 
@@ -56,92 +53,201 @@ import org.fao.geonet.domain.User;
 @Table(name = "GUF_UserFeedbacks")
 public class UserFeedback extends GeonetEntity implements Serializable {
 
-    /**
-     * Comments made by external users should be approved.
-     */
-    public enum UserRatingStatus {
 
-        /** The published. */
+    public enum UserRatingStatus {
         PUBLISHED,
-        /** The waiting for approval. */
         WAITING_FOR_APPROVAL;
     }
 
-    /** The Constant serialVersionUID. */
+
     private static final long serialVersionUID = -5537639171291203188L;
 
-    /** The uuid. */
-    @Id
     private String uuid;
-
-    /** The comment. */
-    @Column
     private String commentText;
-
-    /** The relation between a user feedback and the ratings. */
-    @OneToMany(cascade = CascadeType.ALL)
     private List<Rating> detailedRatingList;
+    private Metadata metadata;
+    private UserFeedback parent;
+    private User authorId;
+    private String authorName;
+    private String authorOrganization;
+    private String authorEmail;
+    private int authorPrivacy;
+    private Set<Keyword> keywords;
+    private UserRatingStatus status;
+    private User approver;
+    private Date creationDate;
 
-    /** The metadata. */
+
+    @Id
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    @Column
+    public String getCommentText() {
+        return commentText;
+    }
+
+
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<Rating> getDetailedRatingList() {
+        return detailedRatingList;
+    }
+
+
     @ManyToOne
     @JoinColumn(name = "metadata_uuid", referencedColumnName = "uuid")
-    private Metadata metadata;
+    public Metadata getMetadata() {
+        return metadata;
+    }
 
-    /** The parent. */
+
     @ManyToOne
     @JoinColumn(name = "parent_uuid", referencedColumnName = "uuid")
-    private UserFeedback parent;
+    public UserFeedback getParent() {
+        return parent;
+    }
 
-    /** The author id. */
+
     @ManyToOne
     @Nullable
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    private User authorId;
+    public User getAuthorId() {
+        return authorId;
+    }
 
-    /** The author name. */
+
     @Column
     @Nullable
-    private String authorName;
+    public String getAuthorName() {
+        return authorName;
+    }
 
-    /** The author organization. */
+
     @Column
     @Nullable
-    private String authorOrganization;
+    public String getAuthorOrganization() {
+        return authorOrganization;
+    }
 
-    /** The author email. */
+
     @Column
     @Nullable
-    private String authorEmail;
+    public String getAuthorEmail() {
+        return authorEmail;
+    }
 
-    /** The author privacy. */
+
     @Column
     @Nullable
-    private int authorPrivacy;
+    public int getAuthorPrivacy() {
+        return authorPrivacy;
+    }
 
-    /** The keywords. */
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "GUF_userfeedback_keyword", joinColumns = @JoinColumn(name = "userfeedback_uuid", referencedColumnName = "uuid"), inverseJoinColumns = @JoinColumn(name = "keyword_id", referencedColumnName = "id"))
-    private Set<Keyword> keywords;
+    public Set<Keyword> getKeywords() {
+        return keywords;
+    }
 
-    /** The status. */
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRatingStatus status;
+    public UserRatingStatus getStatus() {
+        return status;
+    }
 
-    /** The approver. */
+
     @ManyToOne
     @Nullable
     @JoinColumn(name = "approver_id", referencedColumnName = "id")
-    private User approver;
+    public User getApprover() {
+        return approver;
+    }
 
-    /** The date. */
-    private Date creationDate;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
+    @Column
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+
+    public void setUuid(String uuid) {
+        if (uuid == null || uuid.equals("")) {
+            this.uuid = UUID.randomUUID().toString();
+        } else {
+            this.uuid = uuid;
+        }
+    }
+
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+
+    public void setDetailedRatingList(List<Rating> detailedRatingList) {
+        this.detailedRatingList = detailedRatingList;
+    }
+
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
+
+
+    public void setParent(UserFeedback parent) {
+        this.parent = parent;
+    }
+
+
+    public void setAuthorId(User authorId) {
+        this.authorId = authorId;
+    }
+
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+
+    public void setAuthorOrganization(String authorOrganization) {
+        this.authorOrganization = authorOrganization;
+    }
+
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
+    }
+
+
+    public void setAuthorPrivacy(int authorPrivacy) {
+        this.authorPrivacy = authorPrivacy;
+    }
+
+
+    public void setKeywords(Set<Keyword> keywords) {
+        this.keywords = keywords;
+    }
+
+
+    public void setStatus(UserRatingStatus status) {
+        this.status = status;
+    }
+
+
+    public void setApprover(User approver) {
+        this.approver = approver;
+    }
+
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+
     @Override
     public boolean equals(Object obj) {
 
@@ -161,137 +267,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
         return uuid == null ? false : uuid.equals(rhs.uuid);
     }
 
-    /**
-     * Gets the approver.
-     *
-     * @return the approver
-     */
-    public User getApprover() {
-        return approver;
-    }
 
-    /**
-     * Gets the author email.
-     *
-     * @return the author email
-     */
-    public String getAuthorEmail() {
-        return authorEmail;
-    }
-
-    /**
-     * Gets the author id.
-     *
-     * @return the author id
-     */
-    public User getAuthorId() {
-        return authorId;
-    }
-
-    /**
-     * Gets the author name.
-     *
-     * @return the author name
-     */
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    /**
-     * Gets the author organization.
-     *
-     * @return the author organization
-     */
-    public String getAuthorOrganization() {
-        return authorOrganization;
-    }
-
-    /**
-     * Gets the author privacy.
-     *
-     * @return the author privacy
-     */
-    public int getAuthorPrivacy() {
-        return authorPrivacy;
-    }
-
-    /**
-     * Gets the comment.
-     *
-     * @return the comment
-     */
-    public String getCommentText() {
-        return commentText;
-    }
-
-    /**
-     * Gets the date.
-     *
-     * @return the date
-     */
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    /**
-     * Gets the detailed rating list.
-     *
-     * @return the detailed rating list
-     */
-    public List<Rating> getDetailedRatingList() {
-        return detailedRatingList;
-    }
-
-    /**
-     * Gets the keywords.
-     *
-     * @return the keywords
-     */
-    public Set<Keyword> getKeywords() {
-        return keywords;
-    }
-
-    /**
-     * Gets the metadata.
-     *
-     * @return the metadata
-     */
-    public Metadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * Gets the parent.
-     *
-     * @return the parent
-     */
-    public UserFeedback getParent() {
-        return parent;
-    }
-
-    /**
-     * Gets the status.
-     *
-     * @return the status
-     */
-    public UserRatingStatus getStatus() {
-        return status;
-    }
-
-    /**
-     * Gets the uuid.
-     *
-     * @return the uuid
-     */
-    public String getUuid() {
-        return uuid;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         int hashCode = 17;
@@ -299,142 +275,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
         return hashCode;
     }
 
-    /**
-     * Sets the approver.
-     *
-     * @param approver the new approver
-     */
-    public void setApprover(User approver) {
-        this.approver = approver;
-    }
 
-    /**
-     * Sets the author email.
-     *
-     * @param authorEmail the new author email
-     */
-    public void setAuthorEmail(String authorEmail) {
-        this.authorEmail = authorEmail;
-    }
-
-    /**
-     * Sets the author id.
-     *
-     * @param authorId the new author id
-     */
-    public void setAuthorId(User authorId) {
-        this.authorId = authorId;
-    }
-
-    /**
-     * Sets the author name.
-     *
-     * @param authorName the new author name
-     */
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
-    /**
-     * Sets the author organization.
-     *
-     * @param authorOrganization the new author organization
-     */
-    public void setAuthorOrganization(String authorOrganization) {
-        this.authorOrganization = authorOrganization;
-    }
-
-    /**
-     * Sets the author privacy.
-     *
-     * @param authorPrivacy the new author privacy
-     */
-    public void setAuthorPrivacy(int authorPrivacy) {
-        this.authorPrivacy = authorPrivacy;
-    }
-
-
-    /**
-     * Sets the comment.
-     *
-     * @param comment the new comment
-     */
-    public void setCommentText(String commentText) {
-        this.commentText = commentText;
-    }
-
-    /**
-     * Sets the date.
-     *
-     * @param date the new date
-     */
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    /**
-     * Sets the detailed rating list.
-     *
-     * @param detailedRatingList the new detailed rating list
-     */
-    public void setDetailedRatingList(List<Rating> detailedRatingList) {
-        this.detailedRatingList = detailedRatingList;
-    }
-
-    /**
-     * Sets the keywords.
-     *
-     * @param keywords the new keywords
-     */
-    public void setKeywords(Set<Keyword> keywords) {
-        this.keywords = keywords;
-    }
-
-    /**
-     * Sets the metadata.
-     *
-     * @param metadata the new metadata
-     */
-    public void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
-    }
-
-    /**
-     * Sets the parent.
-     *
-     * @param parent the new parent
-     */
-    public void setParent(UserFeedback parent) {
-        this.parent = parent;
-    }
-
-    /**
-     * Sets the status.
-     *
-     * @param status the new status
-     */
-    public void setStatus(UserRatingStatus status) {
-        this.status = status;
-    }
-
-    /**
-     * Sets the uuid.
-     *
-     * @param uuid the new uuid
-     */
-    public void setUuid(String uuid) {
-        if (uuid == null || uuid.equals("")) {
-            this.uuid = UUID.randomUUID().toString();
-        } else {
-            this.uuid = uuid;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getUuid());
