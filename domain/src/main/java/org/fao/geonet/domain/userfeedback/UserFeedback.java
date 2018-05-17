@@ -76,7 +76,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
 
     /** The comment. */
     @Column
-    private String comment;
+    private String commentText;
 
     /** The relation between a user feedback and the ratings. */
     @OneToMany(cascade = CascadeType.ALL)
@@ -135,12 +135,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     private User approver;
 
     /** The date. */
-    private Date date;
-
-    /** The citation. */
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "citation_id", referencedColumnName = "id")
-    private Citation citation;
+    private Date creationDate;
 
     /*
      * (non-Javadoc)
@@ -221,21 +216,12 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     }
 
     /**
-     * Gets the citation.
-     *
-     * @return the citation
-     */
-    public Citation getCitation() {
-        return citation;
-    }
-
-    /**
      * Gets the comment.
      *
      * @return the comment
      */
-    public String getComment() {
-        return comment;
+    public String getCommentText() {
+        return commentText;
     }
 
     /**
@@ -243,9 +229,8 @@ public class UserFeedback extends GeonetEntity implements Serializable {
      *
      * @return the date
      */
-//    @AttributeOverride(name = "dateAndTime", column = @Column(name = "date", columnDefinition = "varchar", nullable = false, length = 30))
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     /**
@@ -368,22 +353,14 @@ public class UserFeedback extends GeonetEntity implements Serializable {
         this.authorPrivacy = authorPrivacy;
     }
 
-    /**
-     * Sets the citation.
-     *
-     * @param citation the new citation
-     */
-    public void setCitation(Citation citation) {
-        this.citation = citation;
-    }
 
     /**
      * Sets the comment.
      *
      * @param comment the new comment
      */
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
     }
 
     /**
@@ -391,8 +368,8 @@ public class UserFeedback extends GeonetEntity implements Serializable {
      *
      * @param date the new date
      */
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     /**
