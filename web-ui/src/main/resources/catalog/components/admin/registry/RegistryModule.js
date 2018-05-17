@@ -22,41 +22,12 @@
  */
 
 (function() {
-  goog.provide('gn_classification_controller');
+  goog.provide('gn_registry');
 
+  goog.require('gn_registry_directive');
+  goog.require('gn_registry_service');
 
-  goog.require('gn_categories_controller');
-  goog.require('gn_thesaurus_controller');
-  goog.require('gn_registry');
-
-  var module = angular.module('gn_classification_controller',
-      ['gn_thesaurus_controller', 'gn_categories_controller', 'gn_registry']);
-
-
-  /**
-   *
-   */
-  module.controller('GnClassificationController',
-      ['$scope', '$http',
-       function($scope, $http) {
-
-          $scope.pageMenu = {
-           folder: 'classification/',
-           defaultTab: 'thesaurus',
-           tabs:
-           [{
-             type: 'thesaurus',
-             label: 'manageThesaurus',
-             icon: 'fa-book',
-             href: '#/classification/thesaurus'
-           },{
-             type: 'categories',
-             label: 'manageCategory',
-             icon: 'fa-tags',
-             href: '#/classification/categories'
-           }]
-          };
-
-       }]);
-
+  angular.module('gn_registry', [
+    'gn_registry_directive', 'gn_registry_service'
+  ]);
 })();
