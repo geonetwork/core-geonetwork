@@ -455,11 +455,32 @@
       var ogcwxsGet = function() {
         $scope.ogcwxsTemplates = [];
         gnSearchManagerService.search('qi?_content_type=json&' +
-          'fast=index&from=1&to=200&_isTemplate=y').
+          'fast=index&from=1&to=200&_isTemplate=y&type=service').
         then(function(data) {
-          $scope.ogcwxsTemplates = [];
+          // List of template including an empty one if user
+          // wants to build the service metadata record
+          // from the GetCapabilities only
+          $scope.ogcwxsTemplates = [{
+            getTitle:function (){return ''},
+            'geonet:info': {'uuid': ''}}];
           for (var i = 0; i < data.metadata.length; i++) {
             $scope.ogcwxsTemplates.push(new Metadata(data.metadata[i]));
+          }
+        }, function(data) {
+        });
+
+        $scope.ogcwxsDatasetTemplates = [];
+        gnSearchManagerService.search('qi?_content_type=json&' +
+          'fast=index&from=1&to=200&_isTemplate=y&type=dataset').
+        then(function(data) {
+          // List of template including an empty one if user
+          // wants to build the service metadata record
+          // from the GetCapabilities only
+          $scope.ogcwxsDatasetTemplates = [{
+            getTitle:function (){return ''},
+            'geonet:info': {'uuid': ''}}];
+          for (var i = 0; i < data.metadata.length; i++) {
+            $scope.ogcwxsDatasetTemplates.push(new Metadata(data.metadata[i]));
           }
         }, function(data) {
         });
