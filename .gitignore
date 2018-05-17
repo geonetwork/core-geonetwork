@@ -1,5 +1,3 @@
-.DS_Store
-.checkstyle
 *.iml
 rebel.xml
 e2e-tests/images/
@@ -25,20 +23,16 @@ changes-*
 web/coverage.ec
 */target/
 */*/target/
-*/.externalToolBuilders
 web/src/main/webapp/data/
 web/src/main/webapp/WEB-INF/lucene/
 web/src/main/webapp/WEB-INF/metadata_subversion/
-.classpath
-.settings
-.project
 schematrons/.build
 docs/*/users/build
 docs/schema-loc-*.rst
-.props/
 web/src/main/webapp/WEB-INF/server.prop
 *.iml
-.idea/
+.*/
+*/.*
 eclipse/
 web/src/main/webapp/WEB-INF/data/data/metadata_data
 web/src/main/webapp/WEB-INF/data/data/metadata_subversion
@@ -52,8 +46,7 @@ datadir/
 *.factorypath
 web/src/main/webapp/WEB-INF/data/removed/
 web/.springBeans
-*/.fbExcludeFilterFile
-*/*/.fbExcludeFilterFile
+*/*/.*
 web/images/
 *.launch
 idea/
@@ -87,3 +80,4 @@ web/src/main/webapp/WEB-INF/data/node_less_files
 web/src/main/webapp/WEB-INF/data/node_less_files/gn_dynamic_style.json
 schemas/*/doc/*/*.rst
 *.old
+web-ui-docs/package-lock.json
