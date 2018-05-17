@@ -89,12 +89,12 @@ public class TransferApi {
 
         List<OwnerResponse> ownerList = new ArrayList<>();
         for (User u : users) {
-            List<Metadata> userRecords = metadataRepository.findAll(
+            long userRecordsCount = metadataRepository.count(
                 MetadataSpecs.hasOwner(u.getId())
             );
-            if (userRecords.size() > 0) {
+            if (userRecordsCount > 0) {
                 ownerList.add(
-                    new OwnerResponse(u, userRecords.size())
+                    new OwnerResponse(u, userRecordsCount)
                 );
             }
         }
