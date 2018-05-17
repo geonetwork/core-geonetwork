@@ -46,7 +46,7 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @param p the p
      * @return the list
      */
-    List<UserFeedback> findByAuthorIdOrderByDateDesc(int authorId, Pageable p);
+    List<UserFeedback> findByAuthorIdOrderByCreationDateDesc(int authorId, Pageable p);
 
     /**
      * Find by metadata uuid.
@@ -64,7 +64,7 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @param p the p
      * @return the list
      */
-    List<UserFeedback> findByMetadata_UuidAndStatusOrderByDateDesc(String metadataUuid, UserRatingStatus status, Pageable p);
+    List<UserFeedback> findByMetadata_UuidAndStatusOrderByCreationDateDesc(String metadataUuid, UserRatingStatus status, Pageable p);
 
     /**
      * Find by metadata uuid order by date desc.
@@ -73,7 +73,7 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @param p the p
      * @return the list
      */
-    List<UserFeedback> findByMetadata_UuidOrderByDateDesc(String metadataUuid, Pageable p);
+    List<UserFeedback> findByMetadata_UuidOrderByCreationDateDesc(String metadataUuid, Pageable p);
 
     /**
      * Find by order by date desc.
@@ -81,8 +81,8 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @param p the p
      * @return the list
      */
-    @Query("SELECT uf from GUF_UserFeedback uf order by uf.date DESC ")
-    List<UserFeedback> findByOrderByDateDesc(Pageable p);
+    @Query("SELECT uf from GUF_UserFeedback uf order by uf.creationDate DESC ")
+    List<UserFeedback> findByOrderByCreationDateDesc(Pageable p);
 
 
     /**
@@ -92,7 +92,7 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @param p the p
      * @return the list
      */
-    List<UserFeedback> findByStatusOrderByDateDesc(UserFeedback.UserRatingStatus status, Pageable p);
+    List<UserFeedback> findByStatusOrderByCreationDateDesc(UserFeedback.UserRatingStatus status, Pageable p);
 
     /**
      * Find by uuid.

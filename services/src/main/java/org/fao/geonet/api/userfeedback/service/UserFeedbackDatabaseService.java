@@ -138,7 +138,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
                 pageSize = new PageRequest(0, maxSize);
             }
 
-            result = userFeedbackRepository.findByStatusOrderByDateDesc(UserRatingStatus.PUBLISHED, pageSize);
+            result = userFeedbackRepository.findByStatusOrderByCreationDateDesc(UserRatingStatus.PUBLISHED, pageSize);
         } else {
 
             Pageable pageSize = null;
@@ -147,7 +147,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
                 pageSize = new PageRequest(0, maxSize);
             }
 
-            result = userFeedbackRepository.findByOrderByDateDesc(pageSize);
+            result = userFeedbackRepository.findByOrderByCreationDateDesc(pageSize);
         }
 
         return result;
@@ -191,7 +191,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             if (maxSize > 0) {
                 pageSize = new PageRequest(0, maxSize);
             }
-            result = userFeedbackRepository.findByMetadata_UuidAndStatusOrderByDateDesc(metadataUuid,
+            result = userFeedbackRepository.findByMetadata_UuidAndStatusOrderByCreationDateDesc(metadataUuid,
                     UserRatingStatus.PUBLISHED, pageSize);
         } else {
             Pageable pageSize = null;
@@ -199,7 +199,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             if (maxSize > 0) {
                 pageSize = new PageRequest(0, maxSize);
             }
-            result = userFeedbackRepository.findByMetadata_UuidOrderByDateDesc(metadataUuid, pageSize);
+            result = userFeedbackRepository.findByMetadata_UuidOrderByCreationDateDesc(metadataUuid, pageSize);
         }
 
         return result;
@@ -232,8 +232,8 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         final Metadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
         userFeedback.setMetadata(metadata);
 
-        if (userFeedback.getDate() == null) {
-            userFeedback.setDate(new ISODate(System.currentTimeMillis()).toDate());
+        if (userFeedback.getCreationDate() == null) {
+            userFeedback.setCreationDate(new ISODate(System.currentTimeMillis()).toDate());
         }
 
         userFeedbackRepository.save(userFeedback);

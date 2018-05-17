@@ -161,7 +161,7 @@ public class UserFeedbackUtils {
             userfeedback.setUuid(inputDto.getUuid());
         }
 
-        userfeedback.setComment(inputDto.getComment());
+        userfeedback.setCommentText(inputDto.getComment());
 
         // Detailed rating list
         List<Rating> ratingList = null;
@@ -215,7 +215,7 @@ public class UserFeedbackUtils {
             userfeedback.setParent(parent);
         }
 
-        userfeedback.setDate(new ISODate(System.currentTimeMillis()).toDate());
+        userfeedback.setCreationDate(new ISODate(System.currentTimeMillis()).toDate());
 
         if (author != null) {
             userfeedback.setAuthorId(author);
@@ -239,7 +239,6 @@ public class UserFeedbackUtils {
 
         // Fields to implement
         userfeedback.setKeywords(null);
-        userfeedback.setCitation(null);
         userfeedback.setApprover(null);
 
         return userfeedback;
@@ -256,9 +255,9 @@ public class UserFeedbackUtils {
         final UserFeedbackDTO userfeedbackDto = new UserFeedbackDTO();
 
         userfeedbackDto.setUuid(input.getUuid());
-        userfeedbackDto.setComment(input.getComment());
+        userfeedbackDto.setComment(input.getCommentText());
         userfeedbackDto.setMetadataUUID(input.getMetadata().getUuid());
-        userfeedbackDto.setDate(new ISODate(input.getDate().getTime()).getDateAndTime());
+        userfeedbackDto.setDate(new ISODate(input.getCreationDate().getTime()).getDateAndTime());
 
         if (input.getAuthorId() != null) {
             userfeedbackDto.setAuthorUserId(input.getAuthorId().getId());
@@ -330,8 +329,8 @@ public class UserFeedbackUtils {
 
             for (final UserFeedback userFeedback : list) {
 
-                if (maxDate == null || userFeedback.getDate() != null && userFeedback.getDate().after(maxDate.toDate())) {
-                    maxDate = new ISODate(userFeedback.getDate().getTime());
+                if (maxDate == null || userFeedback.getCreationDate() != null && userFeedback.getCreationDate().after(maxDate.toDate())) {
+                    maxDate = new ISODate(userFeedback.getCreationDate().getTime());
                 }
 
                 if (userFeedback.getDetailedRatingList() != null && userFeedback.getDetailedRatingList().size() > 0) {
