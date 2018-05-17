@@ -57,8 +57,20 @@
   <xsl:param name="uuid"
              select="''"/>
 
+  <!-- Layer name to process -->
+  <xsl:param name="Name"
+             select="''"/>
+
+  <xsl:variable name="isBuildingDatasetRecord"
+                select="$Name != ''"/>
+
   <xsl:variable name="nilReasonValue"
                 select="'synchronized'"/>
+
+  <!-- Max number of coordinate system to add
+    to the metadata record. Avoid to have too many CRS when
+    OGC server list all epsg database. -->
+  <xsl:variable name="maxCRS">21</xsl:variable>
 
   <xsl:variable name="df">[Y0001]-[M01]-[D01]T[H01]:[m01]:[s01]</xsl:variable>
 
@@ -68,6 +80,19 @@
                 select="/root/getCapabilities"/>
   <xsl:variable name="rootName"
                 select="$getCapabilities/*/local-name()"/>
+  <xsl:variable name="serviceTitle"
+                select="$getCapabilities/(*/ows:ServiceIdentification/ows:Title|
+                       */ows11:ServiceIdentification/ows11:Title|
+                       */wfs:Service/wfs:Title|
+                       */wms:Service/wms:Title|
+                       */Service/Title|
+                       */wcs:Service/wcs:label)/text()"/>
+  <xsl:variable name="layerTitle"
+                select="$getCapabilities/(
+                                  *//wms:Layer[wms:Name=$Name]/wms:Title|
+                                  *//Layer[Name=$Name]/Title|
+                                  *//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:label|
+                                  *//wfs:FeatureType[wfs:Name=$Name]/wfs:Title)/text()"/>
   <xsl:variable name="ows">
     <xsl:choose>
       <xsl:when test="($rootName='WFS_Capabilities' and namespace-uri($getCapabilities/*)='http://www.opengis.net/wfs' and $getCapabilities/*/@version='1.1.0')
@@ -149,14 +174,18 @@
                 match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
     <xsl:copy>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-      <xsl:value-of select="$getCapabilities/(*/ows:ServiceIdentification/ows:Title|
-                       */ows11:ServiceIdentification/ows11:Title|
-                       */wfs:Service/wfs:Title|
-                       */wms:Service/wms:Title|
-                       */Service/Title|
-                       */wcs:Service/wcs:label)/text()"/>
+      <xsl:value-of select="$serviceTitle"/>
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
+    <xsl:copy>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+      <xsl:value-of select="$layerTitle"/>
+    </xsl:copy>
+  </xsl:template>
+
 
 
   <!-- Insert abstract. -->
@@ -170,6 +199,18 @@
                        */wms:Service/wms:Abstract|
                        */Service/Abstract|
                        */wcs:Service/wcs:description)/text()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template mode="copy"
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString">
+    <xsl:copy>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+      <xsl:value-of select="$getCapabilities/(
+                                  *//wms:Layer[wms:Name=$Name]/wms:Abstract|
+                                  *//Layer[Name=$Name]/Abstract|
+                                  *//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:description|
+                                  *//wfs:FeatureType[wfs:Name=$Name]/wfs:Abstract)/text()"/>
     </xsl:copy>
   </xsl:template>
 
@@ -250,13 +291,19 @@
 
       <!-- Insert keywords. -->
       <xsl:variable name="keywords"
-                    select="$getCapabilities/(*/ows:ServiceIdentification/ows:Keywords|
-                       */ows11:ServiceIdentification/ows11:Keywords|
-                       */wms:Service/wms:KeywordList|
-                       */wfs:Service/wfs:keywords|
-                       */Service/KeywordList|
-                       */wcs:Service/wcs:keywords|
-                       *//inspire_vs:ExtendedCapabilities/inspire_common:MandatoryKeyword)"/>
+                    select="if ($Name != '')
+                            then $getCapabilities//(
+                              Layer[Name = $Name]/KeywordList|
+                              wms:Layer[wms:Name = $Name]/wms:KeywordList|
+                              wfs:FeatureType[wfs:Name=$Name]/ows:Keywords|
+                              wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:keywords)
+                            else $getCapabilities/(*/ows:ServiceIdentification/ows:Keywords|
+                               */ows11:ServiceIdentification/ows11:Keywords|
+                               */wms:Service/wms:KeywordList|
+                               */wfs:Service/wfs:keywords|
+                               */Service/KeywordList|
+                               */wcs:Service/wcs:keywords|
+                               *//inspire_vs:ExtendedCapabilities/inspire_common:MandatoryKeyword)"/>
       <xsl:for-each select="$keywords">
         <xsl:apply-templates mode="convert"
                              select="."/>
@@ -276,31 +323,129 @@
 
       <xsl:apply-templates mode="copy" select="gmd:resourceConstraints"/>
       <xsl:apply-templates mode="copy" select="gmd:aggregationInfo"/>
-      <xsl:apply-templates mode="copy" select="gmd:spatialRepresentationType"/>
+
+
+      <!-- For layers, add spatial representation type for WFS and WCS. -->
+      <xsl:if test="$isBuildingDatasetRecord">
+        <xsl:choose>
+          <xsl:when test="//wfs:FeatureType">
+            <spatialRepresentationType>
+              <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+              <MD_SpatialRepresentationTypeCode
+                codeList="./resources/codeList.xml#MD_SpatialRepresentationTypeCode"
+                codeListValue="vector"/>
+            </spatialRepresentationType>
+          </xsl:when>
+          <xsl:when test="//wcs:CoverageOfferingBrief">
+            <spatialRepresentationType>
+              <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+              <MD_SpatialRepresentationTypeCode
+                codeList="./resources/codeList.xml#MD_SpatialRepresentationTypeCode"
+                codeListValue="grid"/>
+            </spatialRepresentationType>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="copy" select="gmd:spatialRepresentationType"/>
+          </xsl:otherwise>
+        </xsl:choose>
+
+
+        <xsl:variable name="minScale"
+                      select="$getCapabilities//(
+                                        Layer[Name=$Name]/MinScaleDenominator|
+                                        wms:Layer[wms:Name=$Name]/wms:MinScaleDenominator)"/>
+        <xsl:variable name="minScaleHint"
+                      select="$getCapabilities//Layer[Name=$Name]/ScaleHint/@min"/>
+        <xsl:if test="$minScale or $minScaleHint">
+          <spatialResolution>
+            <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+            <MD_Resolution>
+              <equivalentScale>
+                <MD_RepresentativeFraction>
+                  <denominator>
+                    <gco:Integer>
+                      <xsl:value-of
+                        select="if ($minScale) then $minScale else format-number(round($minScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/>
+                    </gco:Integer>
+                  </denominator>
+                </MD_RepresentativeFraction>
+              </equivalentScale>
+            </MD_Resolution>
+          </spatialResolution>
+        </xsl:if>
+        <xsl:variable name="maxScale"
+                      select="$getCapabilities//(
+                                Layer[Name=$Name]/MaxScaleDenominator|
+                                wms:Layer[wms:Name=$Name]/wms:MaxScaleDenominator)"/>
+        <xsl:variable name="maxScaleHint"
+                      select="$getCapabilities//Layer[Name=$Name]/ScaleHint/@max"/>
+        <xsl:if test="$maxScale or $maxScaleHint">
+          <spatialResolution>
+            <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+            <MD_Resolution>
+              <equivalentScale>
+                <MD_RepresentativeFraction>
+                  <denominator>
+                    <gco:Integer>
+                      <xsl:value-of select="if ($maxScale)
+                                      then $maxScale
+                                      else if ($maxScaleHint = 'Infinity')
+                                        then $maxScaleHint
+                                        else  format-number(round($maxScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/>
+                    </gco:Integer>
+                  </denominator>
+                </MD_RepresentativeFraction>
+              </equivalentScale>
+            </MD_Resolution>
+          </spatialResolution>
+        </xsl:if>
+      </xsl:if>
+
       <xsl:apply-templates mode="copy" select="gmd:spatialResolution"/>
       <xsl:apply-templates mode="copy" select="gmd:language"/>
       <xsl:apply-templates mode="copy" select="gmd:characterSet"/>
       <xsl:apply-templates mode="copy" select="gmd:topicCategory"/>
       <xsl:apply-templates mode="copy" select="gmd:environmentDescription"/>
+
+      <xsl:if test="$isBuildingDatasetRecord">
+        <xsl:call-template name="build-extent">
+          <xsl:with-param name="type" select="'gmd:extent'"/>
+        </xsl:call-template>
+      </xsl:if>
       <xsl:apply-templates mode="copy" select="gmd:extent"/>
       <xsl:apply-templates mode="copy" select="gmd:supplementalInformation"/>
 
-      <xsl:apply-templates mode="copy" select="srv:serviceType"/>
-      <xsl:apply-templates mode="copy" select="srv:serviceTypeVersion"/>
-      <xsl:apply-templates mode="copy" select="srv:accessProperties"/>
-      <xsl:apply-templates mode="copy" select="srv:restrictions"/>
-      <xsl:apply-templates mode="copy" select="srv:keywords"/>
 
-      <xsl:call-template name="build-extent"/>
-      <xsl:apply-templates mode="copy" select="srv:extent"/>
+      <xsl:if test="not($isBuildingDatasetRecord)">
+        <xsl:apply-templates mode="copy" select="srv:serviceType"/>
+        <xsl:apply-templates mode="copy" select="srv:serviceTypeVersion"/>
+        <xsl:apply-templates mode="copy" select="srv:accessProperties"/>
+        <xsl:apply-templates mode="copy" select="srv:restrictions"/>
+        <xsl:apply-templates mode="copy" select="srv:keywords"/>
 
-      <xsl:apply-templates mode="copy" select="srv:coupledResource"/>
-      <xsl:apply-templates mode="copy" select="srv:couplingType"/>
+        <xsl:call-template name="build-extent"/>
+        <xsl:apply-templates mode="copy" select="srv:extent"/>
 
-      <xsl:call-template name="build-containsOperations"/>
-      <xsl:apply-templates mode="copy" select="srv:containsOperations"/>
+        <xsl:apply-templates mode="copy" select="srv:coupledResource"/>
+        <srv:couplingType>
+          <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+          <srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType">
+            <xsl:attribute name="codeListValue">
+              <xsl:choose>
+                <xsl:when test="name(.)='wps:Capabilities' or
+                                name(.)='wps1:Capabilities' or
+                                name(.)='wps2:Capabilities'">loosely</xsl:when>
+                <xsl:otherwise>tight</xsl:otherwise>
+              </xsl:choose>
+            </xsl:attribute>
+          </srv:SV_CouplingType>
+        </srv:couplingType>
 
-      <xsl:apply-templates mode="copy" select="srv:operatesOn"/>
+        <xsl:call-template name="build-containsOperations"/>
+        <xsl:apply-templates mode="copy" select="srv:containsOperations"/>
+
+        <xsl:apply-templates mode="copy" select="srv:operatesOn"/>
+      </xsl:if>
 
       <xsl:apply-templates mode="copy" select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
                                      namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
@@ -569,6 +714,13 @@
         <gmd:linkage>
           <gmd:URL><xsl:value-of select="@xlink:href|@onlineResource"/></gmd:URL>
         </gmd:linkage>
+        <xsl:if test="$isBuildingDatasetRecord">
+          <gmd:name>
+            <gco:CharacterString>
+              <xsl:value-of select="$Name"/>
+            </gco:CharacterString>
+          </gmd:name>
+        </xsl:if>
         <gmd:protocol>
           <gco:CharacterString>
             <xsl:choose>
@@ -582,7 +734,16 @@
         </gmd:protocol>
 
         <gmd:description>
-          <gco:CharacterString>GetCapabilities URL</gco:CharacterString>
+          <gco:CharacterString>
+            <xsl:choose>
+              <xsl:when test="$isBuildingDatasetRecord">
+                <xsl:value-of select="$layerTitle"/>
+              </xsl:when>
+              <xsl:otherwise>
+                GetCapabilities URL
+              </xsl:otherwise>
+            </xsl:choose>
+          </gco:CharacterString>
         </gmd:description>
       </gmd:CI_OnlineResource>
     </gmd:onLine>
@@ -715,13 +876,116 @@
           WPS 1.0.0 : none
            -->
   <xsl:template name="build-extent">
-    <srv:extent>
+    <xsl:param name="type" select="'srv:extent'"/>
+
+    <xsl:element name="{$type}">
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:EX_Extent>
         <gmd:geographicElement>
           <gmd:EX_GeographicBoundingBox>
 
             <xsl:choose>
+              <xsl:when test="$Name != ''">
+                <xsl:choose>
+                  <xsl:when test="$ows='true' or $rootName='WCS_Capabilities'">
+                    <xsl:variable name="boxes">
+                      <xsl:choose>
+                        <xsl:when test="$ows='true'">
+                          <xsl:for-each
+                            select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:LowerCorner">
+                            <xmin>
+                              <xsl:value-of select="substring-before(., ' ')"/>
+                            </xmin>
+                            <ymin>
+                              <xsl:value-of select="substring-after(., ' ')"/>
+                            </ymin>
+                          </xsl:for-each>
+                          <xsl:for-each
+                            select="//wfs:FeatureType[wfs:Name=$Name]/ows:WGS84BoundingBox/ows:UpperCorner">
+                            <xmax>
+                              <xsl:value-of select="substring-before(., ' ')"/>
+                            </xmax>
+                            <ymax>
+                              <xsl:value-of select="substring-after(., ' ')"/>
+                            </ymax>
+                          </xsl:for-each>
+                        </xsl:when>
+                        <xsl:when test="name(.)='WCS_Capabilities'">
+                          <xsl:for-each
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[1]">
+                            <xmin>
+                              <xsl:value-of select="substring-before(., ' ')"/>
+                            </xmin>
+                            <ymin>
+                              <xsl:value-of select="substring-after(., ' ')"/>
+                            </ymin>
+                          </xsl:for-each>
+                          <xsl:for-each
+                            select="//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:lonLatEnvelope/gml:pos[2]">
+                            <xmax>
+                              <xsl:value-of select="substring-before(., ' ')"/>
+                            </xmax>
+                            <ymax>
+                              <xsl:value-of select="substring-after(., ' ')"/>
+                            </ymax>
+                          </xsl:for-each>
+                        </xsl:when>
+                      </xsl:choose>
+                    </xsl:variable>
+
+                    <westBoundLongitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="$boxes/*[name(.)='xmin']"/>
+                      </gco:Decimal>
+                    </westBoundLongitude>
+                    <eastBoundLongitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="$boxes/*[name(.)='xmax']"/>
+                      </gco:Decimal>
+                    </eastBoundLongitude>
+                    <southBoundLatitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="$boxes/*[name(.)='ymin']"/>
+                      </gco:Decimal>
+                    </southBoundLatitude>
+                    <northBoundLatitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="$boxes/*[name(.)='ymax']"/>
+                      </gco:Decimal>
+                    </northBoundLatitude>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <westBoundLongitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@minx|
+                      //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:westBoundLongitude|
+                      //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@minx"/>
+                      </gco:Decimal>
+                    </westBoundLongitude>
+                    <eastBoundLongitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxx|
+                      //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:eastBoundLongitude|
+                      //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@maxx"/>
+                      </gco:Decimal>
+                    </eastBoundLongitude>
+                    <southBoundLatitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@miny|
+                      //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:southBoundLatitude|
+                      //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@miny"/>
+                      </gco:Decimal>
+                    </southBoundLatitude>
+                    <northBoundLatitude>
+                      <gco:Decimal>
+                        <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxy|
+                        //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:northBoundLatitude|
+                        //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@maxy"/>
+                      </gco:Decimal>
+                    </northBoundLatitude>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:when>
               <xsl:when test="$ows='true' or $rootName='WCS_Capabilities'">
 
                 <xsl:variable name="boxes">
@@ -821,12 +1085,35 @@
           </gmd:EX_GeographicBoundingBox>
         </gmd:geographicElement>
       </gmd:EX_Extent>
-    </srv:extent>
+    </xsl:element>
   </xsl:template>
 
 
   <xsl:template mode="convert"
                 match="*|@*"/>
+
+
+
+  <xsl:template mode="copy"
+                match="gmd:referenceSystemInfo">
+    <xsl:for-each
+      select="$getCapabilities//wms:Layer[wms:Name=$Name]/wms:CRS[position() &lt; $maxCRS]|
+              $getCapabilities//Layer[Name=$Name]/SRS[position() &lt; $maxCRS]">
+      <referenceSystemInfo>
+        <MD_ReferenceSystem>
+          <referenceSystemIdentifier>
+            <RS_Identifier>
+              <code>
+                <gco:CharacterString>
+                  <xsl:value-of select="."/>
+                </gco:CharacterString>
+              </code>
+            </RS_Identifier>
+          </referenceSystemIdentifier>
+        </MD_ReferenceSystem>
+      </referenceSystemInfo>
+    </xsl:for-each>
+  </xsl:template>
 
 
   <xsl:template mode="copy"
@@ -854,25 +1141,6 @@
         <xsl:value-of select='$getCapabilities/*/@version'/>
       </gco:CharacterString>
     </srv:serviceTypeVersion>
-  </xsl:template>
-
-
-  <xsl:template mode="copy"
-                match="srv:couplingType">
-
-    <srv:couplingType>
-      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-      <srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType">
-        <xsl:attribute name="codeListValue">
-          <xsl:choose>
-            <xsl:when test="name(.)='wps:Capabilities' or
-              name(.)='wps1:Capabilities' or
-              name(.)='wps2:Capabilities'">loosely</xsl:when>
-            <xsl:otherwise>tight</xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
-      </srv:SV_CouplingType>
-    </srv:couplingType>
   </xsl:template>
 
 
