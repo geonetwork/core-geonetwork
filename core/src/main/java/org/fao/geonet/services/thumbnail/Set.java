@@ -68,6 +68,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Controller
 @ReadWriteController
+@Deprecated
 public class Set {
     private static final ImageObserver IMAGE_OBSERVER = new ImageObserver() {
         @Override
