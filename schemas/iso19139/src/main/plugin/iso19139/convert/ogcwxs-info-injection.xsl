@@ -731,7 +731,7 @@
 
   <xsl:template mode="convert"
                 match="wms:OnlineResource|
-                       wfs:Get">
+                       wfs:Get|ows:Get">
     <gmd:onLine>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:CI_OnlineResource>

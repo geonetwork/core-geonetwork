@@ -314,7 +314,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         localGroups = new GroupMapper(context);
 
         // md5 the full capabilities URL
-        String uuid = Sha1Encoder.encodeString(this.capabilitiesUrl); // is the service identifier
+        String uuid = Sha1Encoder.encodeString(capabilitiesUrl); // is the service identifier
 
         // Metadata creation could be based on 2 scenarios:
         // 1. Use the GetCapabilities and process it using XSLT to create ISO records
@@ -628,11 +628,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             reg.name = layer.getChild("name", gml).getValue();
         }
 
-        log.info("  - Loading layer: " + reg.name);
-
         //--- md5 the full capabilities URL + the layer, coverage or feature name
-        reg.uuid = Sha1Encoder.encodeString(this.capabilitiesUrl + "#" + reg.name); // the dataset identifier
+        reg.uuid = Sha1Encoder.encodeString(this.params.url + "#" + reg.name); // the dataset identifier
 
+        log.info("  - Loading layer: " + reg.name + " with UUID " + reg.uuid + " (hash of capabilities URL + layer name).");
 
         if (params.useLayerMd && (
             params.ogctype.substring(0, 3).equals("WMS") ||
@@ -759,6 +758,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 Map<String, Object> param = new HashMap<String, Object>();
                 param.put("uuid", reg.uuid);
                 param.put("Name", reg.name);
+                param.put("serviceType", params.ogctype.substring(0, 3));
                 param.put("lang", params.lang);
                 param.put("topic", params.topic);
 
