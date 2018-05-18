@@ -521,8 +521,17 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if(force) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
-                metadata.getSourceInfo().setSourceId(params.getUuid());
+                metadata.getSourceInfo().setSourceId(params.getUuid());            
+                
+                metadata.getSourceInfo().setOwner(Integer.parseInt(
+                        StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
 
+                try {
+                    metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+                } catch (NumberFormatException e) {
+                	log.debug("Owner group is not an integer: '" + params.getOwnerIdGroup() + "'");
+                }
+                
                 context.getBean(MetadataRepository.class).save(metadata);
             }
             
@@ -531,6 +540,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
             repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context);
+
 
             metadata.getMetadataCategories().clear();
             addCategories(metadata, params.getCategories(), localCateg, context, null, true);

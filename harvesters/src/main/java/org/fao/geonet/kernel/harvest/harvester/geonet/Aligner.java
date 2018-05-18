@@ -858,6 +858,15 @@ public class Aligner extends BaseAligner {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
+
+                metadata.getSourceInfo().setOwner(Integer.parseInt(
+                        StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
+
+                try {
+                    metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+                } catch (NumberFormatException e) {
+                	log.debug("Owner group is not an integer: '" + params.getOwnerIdGroup() + "'");
+                }
     
                 metadataRepository.save(metadata);
             }
