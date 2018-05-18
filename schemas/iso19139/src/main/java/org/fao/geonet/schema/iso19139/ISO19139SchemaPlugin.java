@@ -321,7 +321,7 @@ public class ISO19139SchemaPlugin
                 // in service metadata. This information could be used to add
                 // interactive map button when viewing service metadata.
                 Element coupledResource = new Element("coupledResource", SRV);
-                coupledResource.setAttribute("nilReason", "synchronized", ISO19139Namespaces.GCO);
+                coupledResource.setAttribute("nilReason", "synchronizedFromOGC", ISO19139Namespaces.GCO);
                 Element scr = new Element("SV_CoupledResource", SRV);
 
 
@@ -363,7 +363,7 @@ public class ISO19139SchemaPlugin
 
                 // Add operatesOn element at the end of identification section.
                 Element op = new Element("operatesOn", SRV);
-                op.setAttribute("nilReason", "synchronized", GCO);
+                op.setAttribute("nilReason", "synchronizedFromOGC", GCO);
                 op.setAttribute("uuidref", uuid);
 
                 String hRefLink = baseUrl + "api/records/" + uuid + "/formatters/xml";
