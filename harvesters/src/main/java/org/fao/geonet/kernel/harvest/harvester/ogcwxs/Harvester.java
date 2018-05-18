@@ -25,9 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
 import jeeves.server.context.ServiceContext;
-
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
@@ -50,11 +48,12 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
@@ -66,11 +65,12 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -80,14 +80,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 
 //=============================================================================
@@ -101,8 +97,11 @@ import javax.annotation.Nullable;
  * OGC services supported are : <ul> <li>WMS</li> <li>WFS</li> <li>WCS</li> <li>WPS</li>
  * <li>SOS</li> </ul>
  *
- * Metadata produced are : <ul> <li>ISO19119 for service's metadata</li> <li>ISO19139 for data's
- * metadata</li> </ul>
+ * Metadata produced are : <ul>
+ *     <li>ISO19119 for service's metadata</li>
+ *     <li>ISO19139 for data's metadata</li>
+ *     <li>ISO19115-3 only if using template mode</li>
+ *     </ul>
  *
  * Note : Layer stands for "Layer" for WMS, "FeatureType" for WFS and "Coverage" for WCS.
  *
@@ -307,7 +306,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         String uuid = Sha1Encoder.encodeString(this.capabilitiesUrl); // is the service identifier
 
         // Metadata creation could be based on 2 scenarios:
-        // 1. Use the GetCapabilities and process it using XSLT to create ISO19139 records
+        // 1. Use the GetCapabilities and process it using XSLT to create ISO records
         // 2. Use existing metadata templates and merge GetCapabilities information into those templates to build new metadata records.
 
         boolean usingTemplate = StringUtils.isNotBlank(params.serviceTemplateUuid);
@@ -373,7 +372,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
                 // Update ISO19119 for data/service links creation (ie. operatesOn element)
                 // The editor will support that but it will make quite heavy XML.
-                md = addOperatesOnUuid(md, layersRegistry);
+                md = addOperatesOnUuid(md, schema, layersRegistry);
             }
         }
 
@@ -472,6 +471,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         Metadata existingRecord = metadataRepository.findOneByUuid(uuid);
         Element existingRecordXml;
         Element md;
+        String schema = null;
 
         if (existingRecord != null) {
             if (log.isDebugEnabled()) {
@@ -479,6 +479,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             }
             // Use record generated on previous run
             existingRecordXml = existingRecord.getXmlData(false);
+            schema = existingRecord.getDataInfo().getSchemaId();
         } else {
             // Search the template in the catalogue
             // Return an exception if not found.
@@ -493,6 +494,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
             // Use the template as a basis
             existingRecordXml = dataMan.getMetadata(templateId);
+            schema = dataMan.getMetadataSchema(templateId);
         }
 
         Element record = new Element("record");
@@ -509,9 +511,18 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         root.addContent(record);
         root.addContent(getCapabilities);
 
-        Path styleSheet = schemaMan.getSchemaDir(params.outputSchema).
+        Path styleSheet = schemaMan.getSchemaDir(schema).
             resolve(Geonet.Path.CONVERT_STYLESHEETS).
             resolve("ogcwxs-info-injection.xsl");
+
+        if (!Files.exists(styleSheet)) {
+            String message = String.format(
+                "Transformation does not exist for this template schema '%s'. Choose another template or create the XSLT in %s/convert/ogcwxs-info-injection.xsl.",
+                schema, schema);
+            log.error(message);
+            throw new IllegalStateException(message);
+        }
+
         try {
             md = Xml.transform(root, styleSheet, xsltParams);
         } catch (IllegalStateException e) {
@@ -532,97 +543,27 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
      * @param md             iso19119 metadata
      * @param layersRegistry uuid to be added as an uuidref attribute
      */
-    private Element addOperatesOnUuid(Element md, List<WxSLayerRegistry> layersRegistry) {
+    private Element addOperatesOnUuid(Element md, String schema, List<WxSLayerRegistry> layersRegistry) {
 
-        Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-        Namespace gco = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
-        Namespace srv = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
-        Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
-
-        Element root = md.getChild("identificationInfo", gmd)
-            .getChild("SV_ServiceIdentification", srv);
-
-
-        /*
-           * TODO
-           *
-              For each queryable layer queryable = "1" et /ROOT/Capability/Request/*[name()!='getCapabilities']
-                  or queryable = "0" et /ROOT/Capability/Request/*[name()!='getCapabilities' and name!='GetFeatureInfo']
-              should do
-                  srv:coupledResource/srv:SV_CoupledResource/srv:OperationName = /ROOT/Capability/Request/child::name()
-                  srv:coupledResource/srv:SV_CoupledResource/srv:identifier = UUID of the data metadata
-                  srv:coupledResource/srv:SV_CoupledResource/gco:ScopedName = Layer/Name
-              But is this really useful in ISO19119 ?
-           */
-
-        if (root != null) {
-            if (log.isDebugEnabled()) log.debug("  - add SV_CoupledResource and OperatesOnUuid");
-
-            // Coupling type MUST be present as it is the insertion point
-            // for coupledResource
-            Element couplingType = root.getChild("couplingType", srv);
-            int coupledResourceIdx = root.indexOf(couplingType);
-
-            for (WxSLayerRegistry layer : layersRegistry) {
-                // Create coupled resources elements to register all layername
-                // in service metadata. This information could be used to add
-                // interactive map button when viewing service metadata.
-                Element coupledResource = new Element("coupledResource", srv);
-                coupledResource.setAttribute("nilReason", "synchronized", ISO19139Namespaces.GCO);
-                Element scr = new Element("SV_CoupledResource", srv);
-
-
-                // Create operation according to service type
-                Element operation = new Element("operationName", srv);
-                Element operationValue = new Element("CharacterString", gco);
-
-                if (params.ogctype.startsWith("WMS"))
-                    operationValue.setText("GetMap");
-                else if (params.ogctype.startsWith("WFS"))
-                    operationValue.setText("GetFeature");
-                else if (params.ogctype.startsWith("WCS"))
-                    operationValue.setText("GetCoverage");
-                else if (params.ogctype.startsWith("SOS"))
-                    operationValue.setText("GetObservation");
-                operation.addContent(operationValue);
-
-                // Create identifier (which is the metadata identifier)
-                Element id = new Element("identifier", srv);
-                Element idValue = new Element("CharacterString", gco);
-                idValue.setText(layer.uuid);
-                id.addContent(idValue);
-
-                // Create scoped name element as defined in CSW 2.0.2 ISO profil
-                // specification to link service metadata to a layer in a service.
-                Element scopedName = new Element("ScopedName", gco);
-                scopedName.setText(layer.name);
-
-                scr.addContent(operation);
-                scr.addContent(id);
-                scr.addContent(scopedName);
-                coupledResource.addContent(scr);
-
-                // Add coupled resource before coupling type element
-                if (coupledResourceIdx != -1) {
-                    root.addContent(coupledResourceIdx, coupledResource);
-                }
-
-
-                // Add operatesOn element at the end of identification section.
-                Element op = new Element("operatesOn", srv);
-                op.setAttribute("nilReason", "synchronized", ISO19139Namespaces.GCO);
-                op.setAttribute("uuidref", layer.uuid);
-
-                String hRefLink = context.getBean(SettingManager.class).getNodeURL() + "api/records/" + layer.uuid + "/formatters/xml";
-                op.setAttribute("href", hRefLink, xlink);
-
-
-                root.addContent(op);
-
-            }
+        Map<String, String> layers = new HashMap<>();
+        for (WxSLayerRegistry wxSLayerRegistry : layersRegistry) {
+            layers.put(wxSLayerRegistry.uuid, wxSLayerRegistry.name);
         }
 
+        SchemaPlugin plugin = dataMan.getSchema(schema).getSchemaPlugin();
+        boolean isISOPlugin = plugin instanceof ISOPlugin;
 
+        if (isISOPlugin) {
+            if (log.isDebugEnabled()) {
+                log.debug("  - add SV_CoupledResource and OperatesOnUuid to service metadata record.");
+            }
+            ((ISOPlugin) plugin).addOperatesOn(md, layers, params.ogctype,
+                context.getBean(SettingManager.class).getNodeURL());
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("  - Can't add SV_CoupledResource and OperatesOnUuid to service metadata record. This is not an ISOPlugin record.");
+            }
+        }
         return md;
     }
 
@@ -753,7 +694,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                         // TODO:
                     }
 
-                    schema = dataMan.autodetectSchema(xml, null); // ie. ISO19139 or DC
+                    schema = dataMan.autodetectSchema(xml, null);
 
                     // Extract uuid from loaded xml document
                     // FIXME : uuid could be duplicate if metadata already exist in catalog
@@ -885,22 +826,23 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             try {
                 // Load bbox info for later use (eg. WMS thumbnails creation)
 
-                ElementFilter bboxFinder = new ElementFilter("EX_GeographicBoundingBox", ISO19139Namespaces.GMD);
-                @SuppressWarnings("unchecked")
-                Iterator<Element> bboxes = xml.getDescendants(bboxFinder);
+                SchemaPlugin plugin = dataMan.getSchema(schema).getSchemaPlugin();
+                boolean isISOPlugin = plugin instanceof ISOPlugin;
 
-                while (bboxes.hasNext()) {
-                    Element box = bboxes.next();
-                    // FIXME : Could be null. Default bbox if from root layer
-                    try {
-                        reg.minx = Double.valueOf(box.getChild("westBoundLongitude", ISO19139Namespaces.GMD).getChild("Decimal", ISO19139Namespaces.GCO).getText());
-                        reg.miny = Double.valueOf(box.getChild("southBoundLatitude", ISO19139Namespaces.GMD).getChild("Decimal", ISO19139Namespaces.GCO).getText());
-                        reg.maxx = Double.valueOf(box.getChild("eastBoundLongitude", ISO19139Namespaces.GMD).getChild("Decimal", ISO19139Namespaces.GCO).getText());
-                        reg.maxy = Double.valueOf(box.getChild("northBoundLatitude", ISO19139Namespaces.GMD).getChild("Decimal", ISO19139Namespaces.GCO).getText());
-                    } catch (NullPointerException e) {}
-                }
-                if (reg.minx == null && reg.miny == null && reg.maxx == null && reg.maxy == null) {
-                    log.warning("  - Failed to extract layer bbox from metadata. It looks to be null.");
+                if (isISOPlugin) {
+                    List<ISOPlugin.Extent> extents = ((ISOPlugin) plugin).getExtents(xml);
+                    if (extents.size() > 0) {
+                        reg.minx = extents.get(0).xmin;
+                        reg.maxx = extents.get(0).xmax;
+                        reg.miny = extents.get(0).ymin;
+                        reg.maxy = extents.get(0).ymax;
+                    } else {
+                        log.warning("  - Failed to extract layer bbox from metadata. It looks to be null.");
+                    }
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("  - Can't get bounding boxes for that record. This is not an ISOPlugin record.");
+                    }
                 }
             } catch (Exception e) {
                 log.warning("  - Failed to extract layer bbox from metadata : " + e.getMessage());
@@ -922,7 +864,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
     /**
      * Call GeoNetwork service to load thumbnails and create small and big ones.
-     *
+     *  TODO: Migrate to API
      * @param layer layer for which the thumbnail needs to be generated
      */
     private void loadThumbnail(WxSLayerRegistry layer) {
