@@ -61,6 +61,10 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 /**
  * Utility methods for managing resources that are site dependent. In other words that can be added
  * to or modified by Geonetwork and therefore should not be overwritten if the geonetwork webapp is
@@ -447,7 +451,10 @@ public class Resources {
 
             String extension = Files.getFileExtension(src.getFileName().toString());
             des = Resources.locateLogosDir(context).resolve(destName + "." + extension);
-            FileUtils.copyFile(src.toFile(), des.toFile());
+
+            if (java.nio.file.Files.exists(src)) {
+                java.nio.file.Files.copy(src, des, REPLACE_EXISTING, NOFOLLOW_LINKS);
+            }
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
 
