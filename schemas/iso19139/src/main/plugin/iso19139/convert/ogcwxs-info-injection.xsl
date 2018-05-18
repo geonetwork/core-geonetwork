@@ -149,7 +149,8 @@
 
 
   <xsl:template mode="copy"
-                match="gmd:fileIdentifier/gco:CharacterString/text()">
+                match="gmd:fileIdentifier/gco:CharacterString/text()"
+                priority="1999">
     <xsl:value-of select="$uuid"/>
   </xsl:template>
 
@@ -157,7 +158,8 @@
   <!-- INSPIRE extension elements -->
   <!-- Insert dateStamp or set it to now. -->
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:dateStamp/text()">
+                match="gmd:MD_Metadata/gmd:dateStamp/text()"
+                priority="1999">
     <xsl:variable name="date"
                   select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:MetadataDate/text())"/>
 
@@ -171,18 +173,26 @@
 
   <!-- Insert title. -->
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
+                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title"
+                priority="1999">
+
     <xsl:copy>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-      <xsl:value-of select="$serviceTitle"/>
+      <gco:CharacterString>
+        <xsl:value-of select="$serviceTitle"/>
+      </gco:CharacterString>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString">
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"
+                priority="1999">
+
     <xsl:copy>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-      <xsl:value-of select="$layerTitle"/>
+      <gco:CharacterString>
+        <xsl:value-of select="$layerTitle"/>
+      </gco:CharacterString>
     </xsl:copy>
   </xsl:template>
 
@@ -190,27 +200,34 @@
 
   <!-- Insert abstract. -->
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract/gco:CharacterString">
+                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
+                priority="1999">
     <xsl:copy>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-      <xsl:value-of select="$getCapabilities/(*/ows:ServiceIdentification/ows:Abstract|
+      <gco:CharacterString>
+        <xsl:value-of select="$getCapabilities/(*/ows:ServiceIdentification/ows:Abstract|
                        */ows11:ServiceIdentification/ows11:Abstract|
                        */wfs:Service/wfs:Abstract|
                        */wms:Service/wms:Abstract|
                        */Service/Abstract|
                        */wcs:Service/wcs:description)/text()"/>
+      </gco:CharacterString>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString">
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"
+                priority="1999">
+
     <xsl:copy>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-      <xsl:value-of select="$getCapabilities/(
+      <gco:CharacterString>
+        <xsl:value-of select="$getCapabilities/(
                                   *//wms:Layer[wms:Name=$Name]/wms:Abstract|
                                   *//Layer[Name=$Name]/Abstract|
                                   *//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:description|
                                   *//wfs:FeatureType[wfs:Name=$Name]/wfs:Abstract)/text()"/>
+      </gco:CharacterString>
     </xsl:copy>
   </xsl:template>
 
@@ -218,7 +235,8 @@
 
 
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue">
+                match="gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue"
+                priority="1999">
     <xsl:variable name="language"
                   select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language/text())"/>
 
@@ -329,20 +347,20 @@
       <xsl:if test="$isBuildingDatasetRecord">
         <xsl:choose>
           <xsl:when test="//wfs:FeatureType">
-            <spatialRepresentationType>
+            <gmd:spatialRepresentationType>
               <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-              <MD_SpatialRepresentationTypeCode
+              <gmd:MD_SpatialRepresentationTypeCode
                 codeList="./resources/codeList.xml#MD_SpatialRepresentationTypeCode"
                 codeListValue="vector"/>
-            </spatialRepresentationType>
+            </gmd:spatialRepresentationType>
           </xsl:when>
           <xsl:when test="//wcs:CoverageOfferingBrief">
-            <spatialRepresentationType>
+            <gmd:spatialRepresentationType>
               <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-              <MD_SpatialRepresentationTypeCode
+              <gmd:MD_SpatialRepresentationTypeCode
                 codeList="./resources/codeList.xml#MD_SpatialRepresentationTypeCode"
                 codeListValue="grid"/>
-            </spatialRepresentationType>
+            </gmd:spatialRepresentationType>
           </xsl:when>
           <xsl:otherwise>
             <xsl:apply-templates mode="copy" select="gmd:spatialRepresentationType"/>
@@ -357,21 +375,21 @@
         <xsl:variable name="minScaleHint"
                       select="$getCapabilities//Layer[Name=$Name]/ScaleHint/@min"/>
         <xsl:if test="$minScale or $minScaleHint">
-          <spatialResolution>
+          <gmd:spatialResolution>
             <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-            <MD_Resolution>
-              <equivalentScale>
-                <MD_RepresentativeFraction>
-                  <denominator>
+            <gmd:MD_Resolution>
+              <gmd:equivalentScale>
+                <gmd:MD_RepresentativeFraction>
+                  <gmd:denominator>
                     <gco:Integer>
                       <xsl:value-of
                         select="if ($minScale) then $minScale else format-number(round($minScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/>
                     </gco:Integer>
-                  </denominator>
-                </MD_RepresentativeFraction>
-              </equivalentScale>
-            </MD_Resolution>
-          </spatialResolution>
+                  </gmd:denominator>
+                </gmd:MD_RepresentativeFraction>
+              </gmd:equivalentScale>
+            </gmd:MD_Resolution>
+          </gmd:spatialResolution>
         </xsl:if>
         <xsl:variable name="maxScale"
                       select="$getCapabilities//(
@@ -380,12 +398,12 @@
         <xsl:variable name="maxScaleHint"
                       select="$getCapabilities//Layer[Name=$Name]/ScaleHint/@max"/>
         <xsl:if test="$maxScale or $maxScaleHint">
-          <spatialResolution>
+          <gmd:spatialResolution>
             <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
-            <MD_Resolution>
-              <equivalentScale>
-                <MD_RepresentativeFraction>
-                  <denominator>
+            <gmd:MD_Resolution>
+              <gmd:equivalentScale>
+                <gmd:MD_RepresentativeFraction>
+                  <gmd:denominator>
                     <gco:Integer>
                       <xsl:value-of select="if ($maxScale)
                                       then $maxScale
@@ -393,11 +411,11 @@
                                         then $maxScaleHint
                                         else  format-number(round($maxScaleHint div math:sqrt(2) * 72 div 2.54 * 100), '0')"/>
                     </gco:Integer>
-                  </denominator>
-                </MD_RepresentativeFraction>
-              </equivalentScale>
-            </MD_Resolution>
-          </spatialResolution>
+                  </gmd:denominator>
+                </gmd:MD_RepresentativeFraction>
+              </gmd:equivalentScale>
+            </gmd:MD_Resolution>
+          </gmd:spatialResolution>
         </xsl:if>
       </xsl:if>
 
@@ -456,8 +474,14 @@
 
   <!-- TODO this assume that the element exists in the input record and the element is not mandatory. -->
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:accessProperties/gmd:MD_StandardOrderProcess/gmd:fees/gco:CharacterString/text()">
-    <xsl:value-of select="$getCapabilities//*:Fees"/>
+                match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:accessProperties/gmd:MD_StandardOrderProcess/gmd:fees"
+                priority="1999">
+    <xsl:copy>
+      <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+      <gco:CharacterString>
+        <xsl:value-of select="$getCapabilities//*:Fees"/>
+      </gco:CharacterString>
+    </xsl:copy>
   </xsl:template>
 
 
@@ -933,56 +957,56 @@
                       </xsl:choose>
                     </xsl:variable>
 
-                    <westBoundLongitude>
+                    <gmd:westBoundLongitude>
                       <gco:Decimal>
                         <xsl:value-of select="$boxes/*[name(.)='xmin']"/>
                       </gco:Decimal>
-                    </westBoundLongitude>
-                    <eastBoundLongitude>
+                    </gmd:westBoundLongitude>
+                    <gmd:eastBoundLongitude>
                       <gco:Decimal>
                         <xsl:value-of select="$boxes/*[name(.)='xmax']"/>
                       </gco:Decimal>
-                    </eastBoundLongitude>
-                    <southBoundLatitude>
+                    </gmd:eastBoundLongitude>
+                    <gmd:southBoundLatitude>
                       <gco:Decimal>
                         <xsl:value-of select="$boxes/*[name(.)='ymin']"/>
                       </gco:Decimal>
-                    </southBoundLatitude>
-                    <northBoundLatitude>
+                    </gmd:southBoundLatitude>
+                    <gmd:northBoundLatitude>
                       <gco:Decimal>
                         <xsl:value-of select="$boxes/*[name(.)='ymax']"/>
                       </gco:Decimal>
-                    </northBoundLatitude>
+                    </gmd:northBoundLatitude>
                   </xsl:when>
                   <xsl:otherwise>
-                    <westBoundLongitude>
+                    <gmd:westBoundLongitude>
                       <gco:Decimal>
                         <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@minx|
                       //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:westBoundLongitude|
                       //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@minx"/>
                       </gco:Decimal>
-                    </westBoundLongitude>
-                    <eastBoundLongitude>
+                    </gmd:westBoundLongitude>
+                    <gmd:eastBoundLongitude>
                       <gco:Decimal>
                         <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxx|
                       //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:eastBoundLongitude|
                       //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@maxx"/>
                       </gco:Decimal>
-                    </eastBoundLongitude>
-                    <southBoundLatitude>
+                    </gmd:eastBoundLongitude>
+                    <gmd:southBoundLatitude>
                       <gco:Decimal>
                         <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@miny|
                       //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:southBoundLatitude|
                       //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@miny"/>
                       </gco:Decimal>
-                    </southBoundLatitude>
-                    <northBoundLatitude>
+                    </gmd:southBoundLatitude>
+                    <gmd:northBoundLatitude>
                       <gco:Decimal>
                         <xsl:value-of select="//Layer[Name=$Name]/LatLonBoundingBox/@maxy|
                         //wms:Layer[wms:Name=$Name]/wms:EX_GeographicBoundingBox/wms:northBoundLatitude|
                         //wfs:FeatureType[wfs:Name=$Name]/wfs:LatLongBoundingBox/@maxy"/>
                       </gco:Decimal>
-                    </northBoundLatitude>
+                    </gmd:northBoundLatitude>
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:when>
@@ -1095,23 +1119,25 @@
 
 
   <xsl:template mode="copy"
-                match="gmd:referenceSystemInfo">
+                match="gmd:referenceSystemInfo"
+                priority="1999">
     <xsl:for-each
       select="$getCapabilities//wms:Layer[wms:Name=$Name]/wms:CRS[position() &lt; $maxCRS]|
               $getCapabilities//Layer[Name=$Name]/SRS[position() &lt; $maxCRS]">
-      <referenceSystemInfo>
-        <MD_ReferenceSystem>
-          <referenceSystemIdentifier>
-            <RS_Identifier>
-              <code>
+      <gmd:referenceSystemInfo>
+        <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+        <gmd:MD_ReferenceSystem>
+          <gmd:referenceSystemIdentifier>
+            <gmd:RS_Identifier>
+              <gmd:code>
                 <gco:CharacterString>
                   <xsl:value-of select="."/>
                 </gco:CharacterString>
-              </code>
-            </RS_Identifier>
-          </referenceSystemIdentifier>
-        </MD_ReferenceSystem>
-      </referenceSystemInfo>
+              </gmd:code>
+            </gmd:RS_Identifier>
+          </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+      </gmd:referenceSystemInfo>
     </xsl:for-each>
   </xsl:template>
 
