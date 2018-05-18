@@ -33,9 +33,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -54,7 +57,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -443,13 +445,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
-        // Add Thumbnails only after metadata insertion to avoid concurrent transaction
-        // and loaded thumbnails could eventually failed anyway.
-        if (params.ogctype.startsWith("WMS") && params.createThumbnails) {
-            for (WxSLayerRegistry layer : layersRegistry) {
-                loadThumbnail(layer);
-            }
-        }
         return uuids;
     }
 
@@ -836,12 +831,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if (log.isDebugEnabled()) log.debug("    - Set Harvested.");
 
             try {
-                // Load bbox info for later use (eg. WMS thumbnails creation)
-
+                // Load bbox info for WMS thumbnails creation
                 SchemaPlugin plugin = dataMan.getSchema(schema).getSchemaPlugin();
                 boolean isISOPlugin = plugin instanceof ISOPlugin;
 
-                if (isISOPlugin) {
+                if (params.ogctype.startsWith("WMS") && params.createThumbnails && isISOPlugin) {
                     List<ISOPlugin.Extent> extents = ((ISOPlugin) plugin).getExtents(xml);
                     if (extents.size() > 0) {
                         reg.minx = extents.get(0).xmin;
@@ -850,6 +844,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                         reg.maxy = extents.get(0).ymax;
                     } else {
                         log.warning("  - Failed to extract layer bbox from metadata. It looks to be null.");
+                    }
+
+                    xml = loadThumbnail(reg, xml, schema);
+                    if (xml != null) {
+                        dataMan.updateMetadata(context, reg.id, xml,
+                            false, false, false,
+                            context.getLanguage(),
+                            dataMan.extractDateModified(schema, xml), false);
                     }
                 } else {
                     if (log.isDebugEnabled()) {
@@ -875,52 +877,40 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
     }
 
     /**
-     * Call GeoNetwork service to load thumbnails and create small and big ones.
-     *  TODO: Migrate to API
      * @param layer layer for which the thumbnail needs to be generated
+     * @param schema
+     * @return The thumbnail URL or an empty string
      */
-    private void loadThumbnail(WxSLayerRegistry layer) {
+    private Element loadThumbnail(WxSLayerRegistry layer, Element xml, String schema) {
         if (log.isDebugEnabled())
             log.debug("  - Creating thumbnail for layer metadata: " + layer.name + " id: " + layer.id);
-        Set s = new org.fao.geonet.services.thumbnail.Set();
 
         try {
-            String filename = getMapThumbnail(layer);
+            Path filename = getMapThumbnail(layer);
 
-            if (filename != null) {
-                if (log.isDebugEnabled()) log.debug("  - File: " + filename);
-
-                Element par = new Element("request");
-                par.addContent(new Element("id").setText(layer.id));
-                par.addContent(new Element("version").setText("10"));
-                par.addContent(new Element("type").setText("large"));
-
-                Element fname = new Element("fname").setText(filename);
-                fname.setAttribute("content-type", "image/png");
-                fname.setAttribute("type", "file");
-                fname.setAttribute("size", "");
-
-                par.addContent(fname);
-                par.addContent(new Element("add").setText("Add"));
-                par.addContent(new Element("createSmall").setText("on"));
-                par.addContent(new Element("smallScalingFactor").setText("180"));
-                par.addContent(new Element("smallScalingDir").setText("width"));
-
-                // Call the services
-                s.execOnHarvest(par, context, dataMan);
-
-                dataMan.flush();
-
+            // Add downloaded file to metadata store
+            FilesystemStore store = new FilesystemStore();
+            MetadataResource resource = store.putResource(context, layer.uuid,
+                filename,
+                MetadataResourceVisibility.PUBLIC);
+            Path xslProcessing = schemaMan
+                .getSchemaDir(schema).resolve("process")
+                .resolve("thumbnail-add.xsl");
+            if (Files.exists(xslProcessing)) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("url", resource.getUrl());
+                xml = Xml.transform(xml, xslProcessing, params);
+                // Add overview URL in record
                 result.thumbnails++;
-            } else {
-                result.thumbnailsFailed++;
+                return xml;
             }
+            return null;
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
             e.printStackTrace();
             result.thumbnailsFailed++;
         }
-
+        return null;
     }
 
     /**
@@ -929,9 +919,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
      *
      * @param layer layer for which the thumbnail needs to be generated
      */
-    private String getMapThumbnail(WxSLayerRegistry layer) {
+    private Path getMapThumbnail(WxSLayerRegistry layer) {
         String filename = layer.uuid + ".png";
-        Path dir = context.getUploadDir();
+        Path file = context.getUploadDir().resolve(filename);
         Double r = WIDTH /
             (layer.maxx - layer.minx) *
             (layer.maxy - layer.miny);
@@ -995,7 +985,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 // Save image document to temp directory
                 // TODO: Check OGC exception
 
-                try (OutputStream fo = Files.newOutputStream(dir.resolve(filename));
+                try (OutputStream fo = Files.newOutputStream(file);
                      InputStream in = httpResponse.getBody()) {
                     BinaryFile.copy(in, fo);
                 }
@@ -1012,7 +1002,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             req.releaseConnection();
         }
 
-        return filename;
+        return file;
     }
 
     /**
