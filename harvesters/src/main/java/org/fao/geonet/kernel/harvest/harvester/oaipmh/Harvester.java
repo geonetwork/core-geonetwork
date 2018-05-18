@@ -246,7 +246,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                     records.add(new RecordInfo(h, s.prefix));
             }
 
-            log.info("Records added to result list : " + records.size());
+            log.debug("Records added to result list : " + records.size());
 
             return records;
         } catch (NoRecordsMatchException e) {
@@ -268,7 +268,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
     //---------------------------------------------------------------------------
 
     private void align(XmlRequest t, Set<RecordInfo> records) throws Exception {
-        log.info("Start of alignment for : " + params.getName());
+        log.debug("Start of alignment for : " + params.getName());
 
         //-----------------------------------------------------------------------
         //--- retrieve all local categories and groups
@@ -328,7 +328,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         dataMan.forceIndexChanges();
 
-        log.info("End of alignment for : " + params.getName());
+        log.debug("End of alignment for : " + params.getName());
     }
 
     /**
@@ -383,6 +383,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         try {
             metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         } catch (NumberFormatException e) {
+        	log.debug("Owner group is not an integer: '" + params.getOwnerIdGroup() + "'");
         }
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
@@ -434,7 +435,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                     params.getValidate().validate(dataMan, context, md);
                     return (Element) md.detach();
                 } catch (Exception e) {
-                    log.info("Skipping metadata that does not validate. Remote id : " + ri.id);
+                    log.debug("Skipping metadata that does not validate. Remote id : " + ri.id);
                     result.doesNotValidate++;
                 }
         }

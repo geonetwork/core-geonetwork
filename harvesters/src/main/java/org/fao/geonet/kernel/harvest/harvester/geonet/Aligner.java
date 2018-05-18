@@ -193,7 +193,7 @@ public class Aligner extends BaseAligner {
     //--------------------------------------------------------------------------
 
     public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {
-        log.info("Start of alignment for : " + params.getName());
+        log.debug("Start of alignment for : " + params.getName());
 
         //-----------------------------------------------------------------------
         //--- retrieve all local categories and groups
@@ -310,7 +310,7 @@ public class Aligner extends BaseAligner {
 
         dataMan.forceIndexChanges();
 
-        log.info("End of alignment for : " + params.getName());
+        log.debug("End of alignment for : " + params.getName());
 
         return result;
     }
@@ -545,7 +545,7 @@ public class Aligner extends BaseAligner {
         try {
             params.getValidate().validate(dataMan, context, md);
         } catch (Exception e) {
-            log.info("Ignoring invalid metadata uuid: " + uuid);
+            log.debug("Ignoring invalid metadata uuid: " + uuid);
             result.doesNotValidate++;
             return null;
         }
@@ -575,6 +575,7 @@ public class Aligner extends BaseAligner {
         try {
             metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         } catch (NumberFormatException e) {
+        	log.debug("Owner group is not an integer: '" + params.getOwnerIdGroup() + "'");
         }
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
@@ -630,7 +631,7 @@ public class Aligner extends BaseAligner {
             //--- if we don't find any match, maybe the remote group has been removed
 
             if (oper == null)
-                log.info("    - Remote group has been removed or no privileges exist : " + remoteGroup.name);
+                log.debug("    - Remote group has been removed or no privileges exist : " + remoteGroup.name);
             else {
                 String localGrpId = localGroups.getID(remoteGroup.name);
 
@@ -643,7 +644,7 @@ public class Aligner extends BaseAligner {
                         localGrpId = createGroup(remoteGroup.name);
 
                         if (localGrpId == null)
-                            log.info("    - Specified group was not found remotely : " + remoteGroup.name);
+                            log.debug("    - Specified group was not found remotely : " + remoteGroup.name);
                         else {
                             if (log.isDebugEnabled())
                                 log.debug("    - Setting privileges for group : " + remoteGroup.name);
@@ -819,7 +820,7 @@ public class Aligner extends BaseAligner {
         try {
             params.getValidate().validate(dataMan, context, md);
         } catch (Exception e) {
-            log.info("Ignoring invalid metadata uuid: " + ri.uuid);
+            log.debug("Ignoring invalid metadata uuid: " + ri.uuid);
             result.doesNotValidate++;
             return;
         }

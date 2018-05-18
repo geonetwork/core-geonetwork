@@ -406,7 +406,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
 
         //--- display catalog read in log file
-        log.info("Catalog read from " + params.url + " is \n" + factory.writeXML(catalog));
+        log.debug("Catalog read from " + params.url + " is \n" + factory.writeXML(catalog));
         Path serviceStyleSheet = context.getAppPath().
             resolve(Geonet.Path.IMPORT_STYLESHEETS).
             resolve("ThreddsCatalog-to-ISO19119_ISO19139.xsl");
@@ -417,7 +417,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         if (url.getPort() != -1) hostUrl += ":" + url.getPort();
 
         //--- Crawl all datasets in the thredds catalogue
-        log.info("Crawling the datasets in the catalog....");
+        log.debug("Crawling the datasets in the catalog....");
         List<InvDataset> dsets = catalog.getDatasets();
         for (InvDataset ds : dsets) {
             if (cancelMonitor.get()) {
@@ -429,18 +429,18 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         //--- show how many datasets have been processed
         int totalDs = result.collectionDatasetRecords + result.atomicDatasetRecords;
-        log.info("Processed " + totalDs + " datasets.");
+        log.debug("Processed " + totalDs + " datasets.");
 
         if (params.createServiceMd) {
             //--- process services found by crawling the catalog
-            log.info("Processing " + services.size() + " services...");
+            log.debug("Processing " + services.size() + " services...");
             processServices(cata, serviceStyleSheet);
 
             //--- finally create a service record for the thredds catalog itself and
             //--- add uuids of services that it provides to operatesOn element
             //--- (not sure that this is what we should do here really - the catalog
             //--- is a dataset and a service??
-            log.info("Creating service metadata for thredds catalog...");
+            log.debug("Creating service metadata for thredds catalog...");
             Map<String, Object> param = new HashMap<String, Object>();
             param.put("lang", params.lang);
             param.put("topic", params.topic);
@@ -477,7 +477,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
      **/
 
     private void crawlDatasets(InvDataset catalogDs) throws Exception {
-        log.info("Crawling through " + catalogDs.getName());
+        log.debug("Crawling through " + catalogDs.getName());
 
         // HACK!! Get real dataset hidden by netcdf library when catalog ref name
         // equals top dataset name in referenced catalog
@@ -495,10 +495,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
 
         if (harvestMetadata(realDs)) {
-            log.info("Harvesting dataset: " + realDs.getName());
+            log.debug("Harvesting dataset: " + realDs.getName());
             harvest(realDs);
         } else {
-            log.info("Skipping dataset: " + realDs.getName());
+            log.debug("Skipping dataset: " + realDs.getName());
         }
 
         // Release resources allocated when crawling catalog references
@@ -528,7 +528,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             result.unknownSchema++;
         }
 
-        log.info("  - Adding metadata with " + uuid + " schema is set to " + schema + "\n XML is " + Xml.getString(md));
+        log.debug("  - Adding metadata with " + uuid + " schema is set to " + schema + "\n XML is " + Xml.getString(md));
 
         deleteExistingMetadata(uri);
 
@@ -693,7 +693,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
     private void createMetadataUsingFragments(InvDataset ds) {
         try {
-            log.info("Retrieving thredds/netcdf metadata...");
+            log.debug("Retrieving thredds/netcdf metadata...");
 
             //--- Create root element to collect dataset metadata to be passed to xsl transformation
             Element dsMetadata = new Element("root");
@@ -819,9 +819,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             //--- namespaces) in the catalog - this is a place holder for getting
             //--- this info in future
             List<InvMetadata> mds = ds.getMetadata();
-            log.info("Dataset has " + mds.size() + " metadata elements");
-            for (InvMetadata md : mds) {
-                log.info("Found metadata " + md.toString());
+            log.debug("Dataset has " + mds.size() + " metadata elements");
+            if(log.isDebugEnabled()) {
+	            for (InvMetadata md : mds) {
+	                log.debug("Found metadata " + md.toString());
+	            }
             }
 
             //--- check and see whether this dataset is DIF writeable
@@ -830,12 +832,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             Element dif = null;
 
             if (difWriter.isDatasetUseable(ds, sBuff)) {
-                log.info("Yay! Dataset has DIF compatible metadata " + sBuff.toString());
+                log.debug("Yay! Dataset has DIF compatible metadata " + sBuff.toString());
 
                 dif = difWriter.writeOneEntry(ds, sBuff);
 
             } else {
-                log.info("Dataset does not have DIF compatible metadata so we will write a relaxed DIF entry\n" + sBuff.toString());
+                log.debug("Dataset does not have DIF compatible metadata so we will write a relaxed DIF entry\n" + sBuff.toString());
 
                 dif = difWriter.writeOneRelaxedEntry(ds, sBuff);
                 addCoordSys = true;
@@ -845,7 +847,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             String uuid = dif.getChild("Entry_ID", difNS).getText();
 
             boolean isCollection = ds.hasNestedDatasets();
-            log.info("Dataset is a collection dataset? " + isCollection);
+            log.debug("Dataset is a collection dataset? " + isCollection);
 
             //--- now convert DIF entry into an ISO entry using the appropriate
             //--- difToIso converter (only schemas with a DIF converter are
@@ -855,13 +857,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 Path difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnCollectionsDIF).
                     resolve(Geonet.Path.DIF_STYLESHEETS).
                     resolve("DIFToISO.xsl");
-                log.info("Transforming collection dataset to " + params.outputSchemaOnCollectionsDIF);
+                log.debug("Transforming collection dataset to " + params.outputSchemaOnCollectionsDIF);
                 md = Xml.transform(dif, difToIsoStyleSheet);
             } else {
                 Path difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnAtomicsDIF).
                     resolve(Geonet.Path.DIF_STYLESHEETS).
                     resolve("DIFToISO.xsl");
-                log.info("Transforming atomic dataset to " + params.outputSchemaOnAtomicsDIF);
+                log.debug("Transforming atomic dataset to " + params.outputSchemaOnAtomicsDIF);
                 md = Xml.transform(dif, difToIsoStyleSheet);
             }
 
@@ -873,7 +875,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if (addCoordSys) {
                 boolean globalAttributes = false;
                 if (!isCollection) { // open up atomic dataset for info
-                    log.info("Opening dataset to get global attributes");
+                    log.debug("Opening dataset to get global attributes");
                     //--- if not a dataset collection then
                     //--- open and check global attributes for metadata conventions
                     try {
@@ -893,8 +895,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                         }
                         ncD.close();
                     } catch (Exception e) {
-                        log.info("Exception raised in netcdfDataset ops: " + e);
-                        e.printStackTrace();
+                        log.error("Exception raised in netcdfDataset ops: " + e);
+                        log.error(e);
                     }
                 }
 
@@ -904,14 +906,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 //--- ISO: gmd:keywords
                 boolean foundNetcdfInfo = false;
                 if (!globalAttributes && !isCollection) {
-                    log.info("No global attributes describing metadata so opening dataset to get coordinate systems");
+                    log.debug("No global attributes describing metadata so opening dataset to get coordinate systems");
                     try {
                         NetcdfDatasetInfo ncDI = new NetcdfDatasetInfo("thredds:" + ds.getCatalogUrl());
-                        log.info("Coordinate systems builder is " + ncDI.getConventionUsed());
+                        log.debug("Coordinate systems builder is " + ncDI.getConventionUsed());
                         if (!ncDI.getConventionUsed().equals("None")) {
                             Document doc = ncDI.makeDocument();
                             Element coords = doc.detachRootElement();
-                            log.info("Coordinate systems of dataset are: \n" + Xml.getString(coords));
+                            log.debug("Coordinate systems of dataset are: \n" + Xml.getString(coords));
                             setCoordsStyleSheet(isCollection);
                             addKeywordsAndDataParams(coords, md);
                             foundNetcdfInfo = true;
@@ -921,8 +923,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                         }
                         ncDI.close();
                     } catch (Exception e) {
-                        log.info("Exception raised in netcdfDatasetInfo ops: " + e);
-                        e.printStackTrace();
+                        log.error("Exception raised in netcdfDatasetInfo ops: " + e);
+                        log.error(e);
                     }
                 }
 
@@ -951,7 +953,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                                 varX.setAttribute("vocabhref", vHref);
                                 coords.addContent(varX);
                             }
-                            log.info("Coordinate systems from ThreddsMetadata are: \n" + Xml.getString(coords));
+                            log.debug("Coordinate systems from ThreddsMetadata are: \n" + Xml.getString(coords));
                             setCoordsStyleSheet(isCollection);
                             addKeywordsAndDataParams(coords, md);
                         }
@@ -1016,7 +1018,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         addKeywords(md, keywords);
         if (cdmCoordsToIsoMcpDataParametersStyleSheet != null) {
             Element dataParameters = Xml.transform(coords, cdmCoordsToIsoMcpDataParametersStyleSheet);
-            log.info("mcp:DataParameters are: \n" + Xml.getString(dataParameters));
+            log.debug("mcp:DataParameters are: \n" + Xml.getString(dataParameters));
             addDataParameters(md, dataParameters);
         }
     }

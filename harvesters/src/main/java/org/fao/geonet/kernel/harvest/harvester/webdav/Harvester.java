@@ -166,7 +166,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
         }
         try {
-            Log.info(Log.SERVICE, "webdav harvest subtype : " + params.subtype);
+            Log.debug(Log.SERVICE, "webdav harvest subtype : " + params.subtype);
             rr.init(cancelMonitor, log, context, params);
             List<RemoteFile> files = rr.retrieve();
             if (log.isDebugEnabled()) log.debug("Remote files found : " + files.size());
@@ -178,7 +178,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
     }
 
     private void align(final List<RemoteFile> files) throws Exception {
-        log.info("Start of alignment for : " + params.getName());
+        log.debug("Start of alignment for : " + params.getName());
         //-----------------------------------------------------------------------
         //--- retrieve all local categories and groups
         //--- retrieve harvested uuids for given harvesting node
@@ -226,7 +226,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 updateMetadata(rf, records.get(0), false);
             }
         }
-        log.info("End of alignment for : " + params.getName());
+        log.debug("End of alignment for : " + params.getName());
     }
 
     /**
@@ -354,6 +354,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         try {
             metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         } catch (NumberFormatException e) {
+        	log.debug("Owner group is not an integer: '" + params.getOwnerIdGroup() + "'");
         }
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
@@ -381,7 +382,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 params.getValidate().validate(dataMan, context, md);
                 return (Element) md.detach();
             } catch (Exception e) {
-                log.info("Skipping metadata that does not validate. Path is : " + rf.getPath());
+                log.debug("Skipping metadata that does not validate. Path is : " + rf.getPath());
                 result.doesNotValidate++;
             }
         } catch (NoSchemaMatchesException e) {
@@ -403,7 +404,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             dataMan.validate(schema, md);
             return true;
         } catch (Exception e) {
-            log.info("Validation failed. Error: "+e.getMessage());
+            log.error("Validation failed. Error: "+e.getMessage());
             return false;
         }
     }

@@ -177,7 +177,7 @@ public class Aligner extends BaseAligner {
             return result;
         }
 
-        log.info("Start of alignment for : " + params.getName());
+        log.debug("Start of alignment for : " + params.getName());
 
         //-----------------------------------------------------------------------
         //--- retrieve all local categories and groups
@@ -268,7 +268,7 @@ public class Aligner extends BaseAligner {
         }
         dataMan.forceIndexChanges();
 
-        log.info("End of alignment for : " + params.getName());
+        log.debug("End of alignment for : " + params.getName());
 
         return result;
     }
@@ -301,8 +301,6 @@ public class Aligner extends BaseAligner {
             log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
         }
 
-        log.info("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
-
         if (!params.xslfilter.equals("")) {
             md = processMetadata(context,
                 md, processName, processParams, log);
@@ -330,6 +328,7 @@ public class Aligner extends BaseAligner {
         try {
             metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         } catch (NumberFormatException e) {
+        	log.debug("Owner group is not an integer: '" + params.getOwnerIdGroup() + "'");
         }
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
@@ -458,7 +457,7 @@ public class Aligner extends BaseAligner {
             try {
                 params.getValidate().validate(dataMan, context, response);
             } catch (Exception e) {
-                log.info("Ignoring invalid metadata with uuid " + uuid);
+                log.debug("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;
                 return null;
             }
@@ -566,7 +565,7 @@ public class Aligner extends BaseAligner {
                                     Logger log) {
         Path filePath = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(processName + ".xsl");
         if (!Files.exists(filePath)) {
-            log.info("     processing instruction  " + processName + ". Metadata not filtered.");
+            log.debug("     processing instruction  " + processName + ". Metadata not filtered.");
         } else {
             Element processedMetadata;
             try {

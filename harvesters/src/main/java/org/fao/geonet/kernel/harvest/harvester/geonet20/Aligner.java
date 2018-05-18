@@ -127,7 +127,7 @@ public class Aligner {
     //--------------------------------------------------------------------------
 
     public HarvestResult align(Element result, String siteId) throws Exception {
-        log.info("Start of alignment for site-id=" + siteId);
+        log.debug("Start of alignment for site-id=" + siteId);
 
         this.result = new HarvestResult();
         this.result.siteId = siteId;
@@ -201,7 +201,7 @@ public class Aligner {
             }
         }
 
-        log.info("End of alignment for site-id=" + siteId);
+        log.debug("End of alignment for site-id=" + siteId);
 
         return this.result;
     }
@@ -245,6 +245,7 @@ public class Aligner {
         try {
             metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         } catch (NumberFormatException e) {
+        	log.debug("Owner group is not an integer: '" + params.getOwnerIdGroup() + "'");
         }
 
         @SuppressWarnings("unchecked")
@@ -417,7 +418,7 @@ public class Aligner {
                 params.getValidate().validate(dataMan, context, md);
                 return (Element) md.detach();
             } catch (Exception e) {
-                log.info("Ignoring invalid metadata: " + id);
+                log.debug("Ignoring invalid metadata: " + id);
                 result.doesNotValidate++;
             }
 
