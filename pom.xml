@@ -1338,5 +1338,6 @@
     <slf4j.version>1.7.7</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
+    <gn.schemas.version>3.4</gn.schemas.version>
   </properties>
 </project>
