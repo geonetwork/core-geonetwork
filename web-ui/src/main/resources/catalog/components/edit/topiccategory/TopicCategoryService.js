@@ -101,9 +101,16 @@
                     }
                     return 0;
                   },
-                  limit: 100, 
+                  limit: 100,
                   prefetch: {
                     url: getTopicCategoriesSearchUrl(config.schema),
+                    prepare: function (settings) {
+                      settings.headers = {
+                        'Accept-Language': config.lang
+                      };
+
+                      return settings;
+                    },
                     cache: false,
                     transform: function(response) {
                       var r = parseTopicCategoriesResponse(response, config.dataToExclude);
