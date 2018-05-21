@@ -63,7 +63,9 @@
 
     <div>
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.useLayer"/>
+        <input type="checkbox"
+               data-ng-disabled="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS)') == null"
+               data-ng-model="harvesterSelected.options.useLayer"/>
         <span data-translate="">ogcwxs-createMetadataForEachLayer</span>
       </label>
       <p class="help-block" data-translate="">ogcwxs-createMetadataForEachLayerHelp</p>
@@ -97,7 +99,9 @@
 
         <div>
           <label class="control-label">
-            <input type="checkbox" data-ng-model="harvesterSelected.options.createThumbnails"/>
+            <input type="checkbox"
+                   data-ng-disabled="harvesterSelected.site.ogctype.indexOf('WMS') !== 0"
+                   data-ng-model="harvesterSelected.options.createThumbnails"/>
             <span data-translate="">ogcwxs-createThumbnails</span>
           </label>
           <p class="help-block" data-translate="">ogcwxs-createThumbnailsHelp</p>
