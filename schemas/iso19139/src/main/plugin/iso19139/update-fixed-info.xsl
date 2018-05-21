@@ -604,6 +604,30 @@
   </xsl:template>
 
 
+  <!-- Remove geographic/temporal extent if doesn't contain child elements.
+       Used to clean up the element, for example when removing the the temporal extent
+       in the editor, to avoid an element like <gmd:extent><gmd:EX_Extent></gmd:EX_Extent></gmd:extent>,
+       that causes a validation error in schematron iso: [ISOFTDS19139:2005-TableA1-Row23] - Extent element required
+  -->
+  <xsl:template match="gmd:extent|srv:extent">
+    <xsl:choose>
+      <xsl:when test="gmd:EX_Extent">
+        <xsl:if test="count(gmd:EX_Extent/*) > 0">
+          <xsl:copy>
+            <xsl:apply-templates select="@*|node()" />
+          </xsl:copy>
+        </xsl:if>
+      </xsl:when>
+
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()" />
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
   <!-- ================================================================= -->
   <!-- copy everything else as is -->
 
