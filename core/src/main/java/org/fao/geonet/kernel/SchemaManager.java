@@ -36,6 +36,7 @@ import jeeves.server.overrides.ConfigurationOverrides;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
@@ -227,6 +228,9 @@ public class SchemaManager {
                     }
                 }
             }
+
+            checkAppSupported(schemaPluginCatRoot);
+
             checkDependencies(schemaPluginCatRoot);
         }
 
@@ -974,6 +978,7 @@ public class SchemaManager {
         extractMetadata(mds, xmlIdFile);
         mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
         mds.setOperationFilters(extractOperationFilters(xmlIdFile));
+
         Log.debug(Geonet.SCHEMA_MANAGER, "  UUID is read/write mode: " + mds.isReadwriteUUID());
 
         putSchemaInfo(
@@ -1315,6 +1320,44 @@ public class SchemaManager {
 
     }
 
+    private void checkAppSupported(Element schemaPluginCatRoot) throws Exception {
+        List<String> removes = new ArrayList<String>();
+
+        final SystemInfo systemInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
+
+        String version = systemInfo.getVersion();
+
+        // process each schema to see whether its dependencies are present
+        for (String schemaName : hmSchemas.keySet()) {
+            Schema schema = hmSchemas.get(schemaName);
+            String minorAppVersionSupported = schema.getMetadataSchema().getAppMinorVersionSupported();
+
+            if (version.compareTo(minorAppVersionSupported) < 0) {
+                Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName + " requires min Geonetwork version: " + minorAppVersionSupported + ", current is: " + version + ". Skip load schema.");
+                removes.add(schemaName);
+                continue;
+            }
+
+            String majorAppVersionSupported = schema.getMetadataSchema().getAppMajorVersionSupported();
+            if (StringUtils.isNotEmpty(majorAppVersionSupported) &&
+                version.compareTo(majorAppVersionSupported) > 0) {
+                Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName + " requires max Geonetwork version: " + majorAppVersionSupported + ", current is: " + version + ". Skip load schema.");
+                removes.add(schemaName);
+                continue;
+            }
+
+        }
+
+        // now remove any that failed the app version test
+        for (String removeSchema : removes) {
+            hmSchemas.remove(removeSchema);
+            deleteSchemaFromPluginCatalog(removeSchema, schemaPluginCatRoot);
+        }
+
+    }
+
+
+
     /**
      * Get list of schemas that depend on supplied schema name.
      *
@@ -1404,6 +1447,9 @@ public class SchemaManager {
         mds.setStandardUrl(root.getChildText("standardUrl", GEONET_SCHEMA_NS));
         mds.setTitles(getSchemaIdentMultilingualProperty(root, "title"));
         mds.setDescriptions(getSchemaIdentMultilingualProperty(root, "description"));
+
+        mds.setAppMinorVersionSupported(root.getChildText("appMinorVersionSupported", GEONET_SCHEMA_NS));
+        mds.setAppMajorVersionSupported(root.getChildText("appMajorVersionSupported", GEONET_SCHEMA_NS));
     }
 
     private Map<String, String> getSchemaIdentMultilingualProperty(Element root, String propName) {

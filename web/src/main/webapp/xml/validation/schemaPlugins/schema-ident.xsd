@@ -76,6 +76,8 @@
       <xs:element name="name" type="xs:string" minOccurs="1"/>
       <xs:element name="id" type="xs:string" minOccurs="1"/>
       <xs:element name="version" type="xs:string" minOccurs="1"/>
+      <xs:element name="appMinorVersionSupported" type="xs:string" minOccurs="1"/>
+      <xs:element name="appMajorVersionSupported" type="xs:string" minOccurs="0"/>
       <xs:element name="title" type="gns:title" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="description" type="gns:description" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="standardUrl" type="gns:standardUrl" minOccurs="0" maxOccurs="unbounded"/>
