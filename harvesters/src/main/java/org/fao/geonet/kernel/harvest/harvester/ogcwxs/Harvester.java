@@ -370,7 +370,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             // have been cloned in buildRecord (and cloning remove parent
             // and make xpath evaluation to return empty results)
             Document document = new Document();
-            document.addContent(capa);
+            Element clone = (Element) capa.clone();
+            document.addContent(clone);
             List<Element> layers = xp.selectNodes(document);
             if (layers.size() > 0) {
                 log.info("  - Number of layers, featureTypes, Coverages or process found : " + layers.size());
@@ -617,7 +618,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             reg.name = layer.getChild("name", wcs).getValue();
         } else if (params.ogctype.substring(0, 3).equals("WPS")) {
             Namespace ows = Namespace.getNamespace("http://www.opengis.net/ows/2.0");
-            reg.name = layer.getChild("identifier", ows).getValue();
+            reg.name = layer.getChild("Identifier", ows).getValue();
         } else if (params.ogctype.substring(0, 3).equals("SOS")) {
             Namespace gml = Namespace.getNamespace("http://www.opengis.net/gml");
             reg.name = layer.getChild("name", gml).getValue();
@@ -667,9 +668,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 //                  <ows:Identifier>ndrserviceb1</ows:Identifier>
 //                  <ows:Metadata xlin:role="Process description" xlin:href="http://35.195.144.11:80/WPS/WebProcessingService?service=WPS&amp;request=DescribeProcess&amp;version=2.0.0&amp;identifier=ndrserviceb1"/>
 //                </wps:ProcessSummary>
-                org.jdom.Attribute href = layer.getAttribute("href", xlink);
-                if (href != null) {
-                    mdXml = href.getValue();
+                Namespace ows = Namespace.getNamespace("http://www.opengis.net/ows/2.0");
+                Element metadata = layer.getChild("Metadata", ows);
+                if (metadata != null) {
+                    org.jdom.Attribute href = metadata.getAttribute("href", xlink);
+                    if (href != null) {
+                        mdXml = href.getValue();
+                    }
                 }
             } else {
                 mdUrlXpath = XPath.newInstance(
@@ -697,7 +702,23 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                     if (xml.getName().equals("GetRecordByIdResponse")) {
                         xml = (Element) xml.getChildren().get(0);
                     } else if (xml.getName().equals("ProcessOfferings")) {
-                        // TODO:
+                        // Convert WPS process metadata to ISO record
+                        boolean isUsingTemplate = StringUtils.isNotEmpty(params.datasetTemplateUuid);
+
+                        Map<String, Object> xsltParams = new HashMap<String, Object>();
+                        xsltParams.put("lang", params.lang);
+                        xsltParams.put("topic", params.topic);
+                        xsltParams.put("Name", reg.name);
+                        xsltParams.put("serviceType", params.ogctype.substring(0, 3));
+                        xsltParams.put("uuid", reg.uuid);
+
+                        if (isUsingTemplate) {
+                            xml = buildRecordFromTemplateOrExisting(reg.uuid, xsltParams, xml, params.datasetTemplateUuid);
+                        } else {
+                            log.warning(String.format(
+                                "    Building record for WPS process is only supported when a template for the layer is defined. Choose a template. Process '%s' was not converted to metadata record.",
+                                reg.name));
+                        }
                     }
 
                     schema = dataMan.autodetectSchema(xml, null);
@@ -797,7 +818,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             metadata.getSourceInfo().
                 setSourceId(params.getUuid()).
                 setOwner(Integer.parseInt(
-                        params.getOwnerIdUser() !=  null ? params.getOwnerIdUser() : params.getOwnerId()));
+                        StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
             metadata.getHarvestInfo().
                 setHarvested(true).
                 setUuid(params.getUuid()).

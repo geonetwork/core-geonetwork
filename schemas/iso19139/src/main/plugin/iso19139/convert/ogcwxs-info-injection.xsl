@@ -36,6 +36,7 @@
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:owsg="http://www.opengeospatial.net/ows"
                 xmlns:ows11="http://www.opengis.net/ows/1.1"
+                xmlns:ows2="http://www.opengis.net/ows/2.0"
                 xmlns:wcs="http://www.opengis.net/wcs"
                 xmlns:wms="http://www.opengis.net/wms"
                 xmlns:wps="http://www.opengeospatial.net/wps"
@@ -92,6 +93,7 @@
                                   *//wms:Layer[wms:Name=$Name]/wms:Title|
                                   *//Layer[Name=$Name]/Title|
                                   *//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:label|
+                                  *//wps2:Process[ows2:Identifier=$Name]/ows2:Title|
                                   *//wfs:FeatureType[wfs:Name=$Name]/wfs:Title)/text()"/>
   <xsl:variable name="ows">
     <xsl:choose>
@@ -149,9 +151,11 @@
 
 
   <xsl:template mode="copy"
-                match="gmd:fileIdentifier/gco:CharacterString/text()"
+                match="gmd:fileIdentifier/gco:CharacterString"
                 priority="1999">
-    <xsl:value-of select="$uuid"/>
+    <xsl:copy>
+      <xsl:value-of select="$uuid"/>
+    </xsl:copy>
   </xsl:template>
 
 
@@ -222,11 +226,20 @@
     <xsl:copy>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gco:CharacterString>
-        <xsl:value-of select="$getCapabilities/(
-                                  *//wms:Layer[wms:Name=$Name]/wms:Abstract|
-                                  *//Layer[Name=$Name]/Abstract|
-                                  *//wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:description|
-                                  *//wfs:FeatureType[wfs:Name=$Name]/wfs:Abstract)/text()"/>
+        <xsl:value-of select="$getCapabilities//(
+                                  wms:Layer[wms:Name=$Name]/wms:Abstract|
+                                  Layer[Name=$Name]/Abstract|
+                                  wcs:CoverageOfferingBrief[wcs:name=$Name]/wcs:description|
+                                  wfs:FeatureType[wfs:Name=$Name]/wfs:Abstract|
+                                  wps2:Process[ows2:Identifier=$Name]/ows2:Abstract)/text()
+                                  "/>
+
+
+        <xsl:variable name="processes"
+                      select="$getCapabilities//wps2:Process[ows2:Identifier=$Name]/(wps2:Input|wps2:Output)"/>
+        <xsl:for-each select="$processes">
+          * <xsl:value-of select="concat(local-name(.), ':', ows2:Title, ', ', ows2:Abstract, '(', string-join(wps2:LiteralData/wps2:Format/@mimeType, ', '), ')')"/>
+        </xsl:for-each>
       </gco:CharacterString>
     </xsl:copy>
   </xsl:template>
