@@ -32,13 +32,14 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
+                xmlns:wms="http://www.opengis.net/wms"
                 xmlns:wfs="http://www.opengis.net/wfs"
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:owsg="http://www.opengeospatial.net/ows"
                 xmlns:ows11="http://www.opengis.net/ows/1.1"
                 xmlns:ows2="http://www.opengis.net/ows/2.0"
                 xmlns:wcs="http://www.opengis.net/wcs"
-                xmlns:wms="http://www.opengis.net/wms"
                 xmlns:wps="http://www.opengeospatial.net/wps"
                 xmlns:wps1="http://www.opengis.net/wps/1.0.0"
                 xmlns:wps2="http://www.opengis.net/wps/2.0"
@@ -81,12 +82,15 @@
                 select="/root/getCapabilities"/>
   <xsl:variable name="rootName"
                 select="$getCapabilities/*/local-name()"/>
+  <xsl:variable name="rootNameWithNs"
+                select="$getCapabilities/*/name()"/>
   <xsl:variable name="serviceTitle"
                 select="$getCapabilities/(*/ows:ServiceIdentification/ows:Title|
                        */ows11:ServiceIdentification/ows11:Title|
                        */wfs:Service/wfs:Title|
                        */wms:Service/wms:Title|
                        */Service/Title|
+                       */csw:Capabilities/ows:ServiceIdentification/ows:Title|
                        */wcs:Service/wcs:label)/text()"/>
   <xsl:variable name="layerTitle"
                 select="$getCapabilities/(
@@ -214,6 +218,7 @@
                        */wfs:Service/wfs:Abstract|
                        */wms:Service/wms:Abstract|
                        */Service/Abstract|
+                       */csw:Capabilities/ows:ServiceIdentification/ows:Abstract|
                        */wcs:Service/wcs:description)/text()"/>
       </gco:CharacterString>
     </xsl:copy>
@@ -291,6 +296,21 @@
       <xsl:apply-templates mode="copy" select="gmd:citation"/>
       <xsl:apply-templates mode="copy" select="gmd:abstract"/>
       <xsl:apply-templates mode="copy" select="gmd:purpose"/>
+
+      <!-- CSW Add queryables in purpose -->
+      <xsl:if test="$rootNameWithNs = 'csw:Capabilities'">
+        <gmd:purpose>
+          <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+          <gco:CharacterString>
+            <xsl:for-each
+              select="$getCapabilities//ows:Constraint[@name='SupportedISOQueryables' or @name='AdditionalQueryables']/ows:Value">
+              <xsl:value-of select="."/>
+              <xsl:if test="position()!=last()">,</xsl:if>
+            </xsl:for-each>
+          </gco:CharacterString>
+        </gmd:purpose>
+      </xsl:if>
+
       <xsl:apply-templates mode="copy" select="gmd:credit"/>
       <xsl:apply-templates mode="copy" select="gmd:status"/>
 
@@ -316,8 +336,30 @@
 
 
       <xsl:apply-templates mode="copy" select="gmd:resourceMaintenance"/>
-      <xsl:apply-templates mode="copy" select="gmd:graphicOverview"/>
+
+      <!-- Do not copy thumbnail generated for WMS which will be updated later on. -->
+      <xsl:apply-templates mode="copy" select="gmd:graphicOverview[not(contains(*/gmd:fileName/gco:CharacterString, concat('attachments/', $uuid, '.png')))]"/>
       <xsl:apply-templates mode="copy" select="gmd:resourceFormat"/>
+
+      <!-- CSW Add output schema -->
+      <xsl:if test="$rootNameWithNs = 'csw:Capabilities'">
+        <xsl:for-each-group select="//ows:Parameter[@name='outputSchema']/ows:Value" group-by=".">
+          <gmd:resourceFormat>
+            <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
+            <gmd:MD_Format>
+              <gmd:name>
+                <gco:CharacterString>
+                  <xsl:value-of select="."/>
+                </gco:CharacterString>
+              </gmd:name>
+              <gmd:version gco:nilReason="inapplicable">
+                <gco:CharacterString/>
+              </gmd:version>
+            </gmd:MD_Format>
+          </gmd:resourceFormat>
+        </xsl:for-each-group>
+      </xsl:if>
+
 
 
       <!-- Insert keywords. -->
@@ -443,6 +485,7 @@
           <xsl:with-param name="type" select="'gmd:extent'"/>
         </xsl:call-template>
       </xsl:if>
+
       <xsl:apply-templates mode="copy" select="gmd:extent"/>
       <xsl:apply-templates mode="copy" select="gmd:supplementalInformation"/>
 
@@ -454,7 +497,11 @@
         <xsl:apply-templates mode="copy" select="srv:restrictions"/>
         <xsl:apply-templates mode="copy" select="srv:keywords"/>
 
-        <xsl:call-template name="build-extent"/>
+
+        <xsl:if test="$rootNameWithNs != 'csw:Capabilities'">
+          <!-- This can not be find in CSW capabilities-->
+          <xsl:call-template name="build-extent"/>
+        </xsl:if>
         <xsl:apply-templates mode="copy" select="srv:extent"/>
 
         <xsl:apply-templates mode="copy" select="srv:coupledResource"/>
