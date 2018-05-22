@@ -899,6 +899,9 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
             // Add downloaded file to metadata store
             FilesystemStore store = new FilesystemStore();
+            try {
+                store.delResource(context, layer.uuid, filename.getFileName().toString());
+            } catch (Exception e) {}
             MetadataResource resource = store.putResource(context, layer.uuid,
                 filename,
                 MetadataResourceVisibility.PUBLIC);
@@ -967,7 +970,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 "&STYLES=" +
                 "&BBOX=" + bboxParamValue;
 
-        if (log.isDebugEnabled()) log.debug("Retrieving remote document: " + url);
+        log.info("Retrieving remote document: " + url);
 
         HttpGet req = new HttpGet(url);
 

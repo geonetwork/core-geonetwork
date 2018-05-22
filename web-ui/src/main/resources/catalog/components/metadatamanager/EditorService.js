@@ -333,6 +333,14 @@
                find('input[id="' + id + '"]').val();
              };
 
+             var extent = [], value = getInputValue('extent');
+             try {
+               extent = angular.fromJson(value);
+             } catch (e) {
+               console.warn(
+                 'Failed to parse the following extent as JSON: ' +
+               value);
+             }
              angular.extend(gnCurrentEdit, {
                isService: getInputValue('isService') == 'true',
                isTemplate: getInputValue('template'),
@@ -353,8 +361,7 @@
                tab: getInputValue('currTab'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
-               extent:
-               angular.fromJson(getInputValue('extent')),
+               extent: extent,
                isMinor: getInputValue('minor') === 'true',
                layerConfig:
                angular.fromJson(getInputValue('layerConfig')),
