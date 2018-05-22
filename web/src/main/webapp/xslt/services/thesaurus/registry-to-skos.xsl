@@ -79,6 +79,9 @@
            register="INSPIRE theme register"/>
   </xsl:variable>
 
+  <xsl:variable name="isInspireThemes"
+                select="$thesaurusId = 'http://inspire.ec.europa.eu/theme'"/>
+
   <xsl:variable name="thesaurusTitle"
                 select="$thesaurusTitles/title[@register = $registerEnglishTitle]/@thesaurus"/>
 
@@ -181,6 +184,10 @@
           </skos:scopeNote>
         </xsl:if>
       </xsl:for-each>
+
+      <xsl:if test="$isInspireThemes">
+        <skos:altLabel><xsl:value-of select="tokenize($conceptId, '/')[last()]"/></skos:altLabel>
+      </xsl:if>
       <skos:inScheme rdf:resource="{$thesaurusId}"/>
 
 
