@@ -910,7 +910,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 .resolve("thumbnail-add.xsl");
             if (Files.exists(xslProcessing)) {
                 Map<String, Object> params = new HashMap<>();
-                params.put("url", resource.getUrl());
+                params.put("thumbnail_url", resource.getUrl());
                 xml = Xml.transform(xml, xslProcessing, params);
                 // Add overview URL in record
                 result.thumbnails++;
@@ -970,7 +970,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 "&STYLES=" +
                 "&BBOX=" + bboxParamValue;
 
-        log.info("Retrieving remote document: " + url);
+        log.info("Retrieving thumbnail from URL: " + url);
 
         HttpGet req = new HttpGet(url);
 

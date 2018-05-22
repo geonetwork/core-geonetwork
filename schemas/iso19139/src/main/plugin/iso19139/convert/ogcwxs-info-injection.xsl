@@ -66,8 +66,16 @@
   <xsl:variable name="isBuildingDatasetRecord"
                 select="$Name != ''"/>
 
+  <!-- Service type is used for layer only. It allows to combine
+  information from a WMS and a WFS in the same metadata record
+  as far as the service URL is the same. For example this works
+  for GeoServer which provides a /ows URL to access both WMS and WFS service.
+  -->
+  <xsl:param name="serviceType"
+             select="'OGC'"/>
+
   <xsl:variable name="nilReasonValue"
-                select="'synchronized'"/>
+                select="concat('synchronizedFrom', $serviceType)"/>
 
   <!-- Max number of coordinate system to add
     to the metadata record. Avoid to have too many CRS when
@@ -338,7 +346,9 @@
       <xsl:apply-templates mode="copy" select="gmd:resourceMaintenance"/>
 
       <!-- Do not copy thumbnail generated for WMS which will be updated later on. -->
-      <xsl:apply-templates mode="copy" select="gmd:graphicOverview[not(contains(*/gmd:fileName/gco:CharacterString, concat('attachments/', $uuid, '.png')))]"/>
+      <xsl:if test="$serviceType = 'WMS'">
+        <xsl:apply-templates mode="copy" select="gmd:graphicOverview[not(contains(*/gmd:fileName/gco:CharacterString, concat('attachments/', $uuid, '.png')))]"/>
+      </xsl:if>
       <xsl:apply-templates mode="copy" select="gmd:resourceFormat"/>
 
       <!-- CSW Add output schema -->
@@ -620,9 +630,11 @@
     <gmd:descriptiveKeywords>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:MD_Keywords>
-        <gmd:keyword>
-          <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
-        </gmd:keyword>
+        <xsl:for-each select="*">
+          <gmd:keyword>
+            <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+          </gmd:keyword>
+        </xsl:for-each>
       </gmd:MD_Keywords>
     </gmd:descriptiveKeywords>
   </xsl:template>
@@ -791,7 +803,9 @@
 
   <xsl:template mode="convert"
                 match="wms:OnlineResource|
-                       wfs:Get|ows:Get">
+                       OnlineResource|
+                       wfs:Get|
+                       ows:Get">
     <gmd:onLine>
       <xsl:attribute name="gco:nilReason" select="$nilReasonValue"/>
       <gmd:CI_OnlineResource>
