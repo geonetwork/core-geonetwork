@@ -567,7 +567,7 @@ public class KeywordsApi {
             }
         } else {
             throw new IllegalArgumentException(String.format(
-                "Thesaurus RDF file was not found for thesaurus with identifier ''.",
+                "Thesaurus RDF file was not found for thesaurus with identifier '%s'.",
                 thesaurus));
         }
     }
