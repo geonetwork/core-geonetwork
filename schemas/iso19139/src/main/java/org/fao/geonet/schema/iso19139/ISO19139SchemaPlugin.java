@@ -388,8 +388,8 @@ public class ISO19139SchemaPlugin
             try {
                 extents.add(new Extent(
                     Double.valueOf(box.getChild("westBoundLongitude", GMD).getChild("Decimal", GCO).getText()),
-                    Double.valueOf(box.getChild("southBoundLatitude", GMD).getChild("Decimal", GCO).getText()),
                     Double.valueOf(box.getChild("eastBoundLongitude", GMD).getChild("Decimal", GCO).getText()),
+                    Double.valueOf(box.getChild("southBoundLatitude", GMD).getChild("Decimal", GCO).getText()),
                     Double.valueOf(box.getChild("northBoundLatitude", GMD).getChild("Decimal", GCO).getText())
                     ));
             } catch (NullPointerException e) {}
