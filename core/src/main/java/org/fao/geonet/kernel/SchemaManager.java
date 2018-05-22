@@ -51,10 +51,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.PrefixUrlRewrite;
-import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.*;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
@@ -1326,24 +1323,34 @@ public class SchemaManager {
         final SystemInfo systemInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
 
         String version = systemInfo.getVersion();
+        Version appVersion = Version.parseVersionNumber(version);
 
         // process each schema to see whether its dependencies are present
         for (String schemaName : hmSchemas.keySet()) {
             Schema schema = hmSchemas.get(schemaName);
             String minorAppVersionSupported = schema.getMetadataSchema().getAppMinorVersionSupported();
 
-            if (version.compareTo(minorAppVersionSupported) < 0) {
-                Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName + " requires min Geonetwork version: " + minorAppVersionSupported + ", current is: " + version + ". Skip load schema.");
+            Version schemaMinorAppVersion = Version.parseVersionNumber(minorAppVersionSupported);
+
+            if (appVersion.compareTo(schemaMinorAppVersion) < 0) {
+                Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName +
+                    " requires min Geonetwork version: " + minorAppVersionSupported + ", current is: " +
+                    version + ". Skip load schema.");
                 removes.add(schemaName);
                 continue;
             }
 
             String majorAppVersionSupported = schema.getMetadataSchema().getAppMajorVersionSupported();
-            if (StringUtils.isNotEmpty(majorAppVersionSupported) &&
-                version.compareTo(majorAppVersionSupported) > 0) {
-                Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName + " requires max Geonetwork version: " + majorAppVersionSupported + ", current is: " + version + ". Skip load schema.");
-                removes.add(schemaName);
-                continue;
+            if (StringUtils.isNotEmpty(majorAppVersionSupported)) {
+                Version schemaMajorAppVersion = Version.parseVersionNumber(majorAppVersionSupported);
+
+                if (appVersion.compareTo(schemaMajorAppVersion) > 0) {
+                    Log.error(Geonet.SCHEMA_MANAGER, "Schema " + schemaName +
+                        " requires max Geonetwork version: " + majorAppVersionSupported + ", current is: " +
+                        version + ". Skip load schema.");
+                    removes.add(schemaName);
+                    continue;
+                }
             }
 
         }
