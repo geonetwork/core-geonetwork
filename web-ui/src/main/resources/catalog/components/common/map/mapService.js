@@ -680,6 +680,12 @@
               });
             }
 
+            if(layerParams.useProxy 
+                && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+              options.url = gnGlobalSettings.proxyUrl 
+                              + encodeURIComponent(options.url);
+            }
+
             var layerOptions = {
               url: options.url,
               type: 'WMS',
@@ -876,9 +882,14 @@
                   }
                 }
               }
-
+              
+              url = url || getCapLayer.url;
+              if(getCapLayer.useProxy 
+                  && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+                url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
+              }
               var layer = this.createOlWMS(map, layerParam, {
-                url: url || getCapLayer.url,
+                url: url,
                 label: getCapLayer.Title,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
@@ -1045,21 +1056,24 @@
                 metadata = layer.MetadataURL[0].OnlineResource;
               }
 
-              var vectorFormat = new ol.format.WFS();
 
-              if (getCapLayer.outputFormats) {
-                $.each(getCapLayer.outputFormats.format,
-                    function(f, output) {
-                      if (output.indexOf('json') > 0 ||
-                         output.indexOf('JSON') > 0) {
-                        vectorFormat = ol.format.JSONFeature(
-                           {srsName_: getCapLayer.defaultSRS});
-                      }
-                    });
+              var vectorFormat = null;
+              
+              if(getCapLayer.version == '1.0.0') {
+                vectorFormat = new ol.format.WFS( 
+                {
+                    gmlFormat : new ol.format.GML2({
+                        featureNS: getCapLayer.name.prefix,
+                        featureType: getCapLayer.name.localPart,
+                        srsName: map.getView().getProjection().getCode()
+                      }) 
+                  }
+               );
+              } else {
+                  //Default format
+                  var vectorFormat = new ol.format.WFS();
               }
-
-              //TODO different strategy depending on the format
-
+              
               var vectorSource = new ol.source.Vector({
                 format: vectorFormat,
                 loader: function(extent, resolution, projection) {
@@ -1075,11 +1089,32 @@
                       gnUrlUtils.toKeyValue({
                         service: 'WFS',
                         request: 'GetFeature',
-                        version: '1.1.0',
+                        version: getCapLayer.version,
                         srsName: map.getView().getProjection().getCode(),
                         bbox: extent.join(','),
                         typename: getCapLayer.name.prefix + ':' +
                                    getCapLayer.name.localPart}));
+                  
+                  //Fix, ArcGIS fails if there is a bbox:
+                  if(getCapLayer.version == '1.1.0') {
+                    urlGetFeature = gnUrlUtils.append(parts[0],
+                        gnUrlUtils.toKeyValue({
+                          service: 'WFS',
+                          request: 'GetFeature',
+                          version: getCapLayer.version,
+                          srsName: map.getView().getProjection().getCode(),
+                          typename: getCapLayer.name.prefix + ':' +
+                                     getCapLayer.name.localPart}));
+                  }
+                  
+
+                  
+                  //If this goes through the proxy, don't remove parameters
+                  if(getCapLayer.useProxy 
+                      && urlGetFeature.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+                    urlGetFeature = gnGlobalSettings.proxyUrl 
+                                        + encodeURIComponent(urlGetFeature);
+                  }
 
                   $.ajax({
                     url: urlGetFeature
@@ -1088,19 +1123,6 @@
                         // TODO: Check WFS exception
                         vectorSource.addFeatures(vectorFormat.
                             readFeatures(response));
-
-                        var extent = ol.extent.createEmpty();
-                        var features = vectorSource.getFeatures();
-                        for (var i = 0; i < features.length; ++i) {
-                          var feature = features[i];
-                          var geometry = feature.getGeometry();
-                          if (!goog.isNull(geometry)) {
-                            ol.extent.extend(extent, geometry.getExtent());
-                          }
-                        }
-
-                        map.getView().fit(extent, map.getSize());
-
                       })
                       .then(function() {
                         this.loadingLayer = false;
@@ -1137,6 +1159,7 @@
               });
               layer.set('errors', errors);
               layer.set('featureTooltip', true);
+              layer.set('url', url);
               ngeoDecorateLayer(layer);
               layer.displayInLayerManager = true;
               layer.set('label', getCapLayer.name.prefix + ':' +
@@ -1240,6 +1263,12 @@
           addWmsFromScratch: function(map, url, name, createOnly, md, version) {
             var defer = $q.defer();
             var $this = this;
+            
+            if(getCapLayer.useProxy 
+                && urlGetFeature.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+              urlGetFeature = gnGlobalSettings.proxyUrl 
+                                  + encodeURIComponent(urlGetFeature);
+            }
 
             try {
               // Avoid double encoding
