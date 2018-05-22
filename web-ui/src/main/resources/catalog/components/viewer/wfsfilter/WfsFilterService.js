@@ -265,9 +265,10 @@
             }
             field.aggs = newField.aggs;
             field.display = newField.display;
-
             // add a flag for tokenized fields
             field.isTokenized = tokenizedFields[field.name] != null;
+            field.suffix = newField.suffix
+            field.hidden = newField.hidden
           }
           if (!keep) {
             toRemoveIdx.unshift(idx);
