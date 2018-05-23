@@ -7,6 +7,7 @@
   </skos:ConceptScheme>
   <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/theme/ad">
     <skos:prefLabel xml:lang="en">Addresses</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Adressen</skos:prefLabel>
     <skos:scopeNote xml:lang="en">Location of properties based on address identifiers, usually by road name, house number, postal code.</skos:scopeNote>
     <skos:altLabel>ad</skos:altLabel>
     <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/theme" />
