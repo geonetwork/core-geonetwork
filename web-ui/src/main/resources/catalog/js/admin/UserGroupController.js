@@ -511,19 +511,21 @@
        * Delete a user.
        */
       $scope.deleteUser = function(formId) {
-        $http.delete('../api/users/' +
-            $scope.userSelected.id)
-            .success(function(data) {
-              $scope.unselectUser();
-              loadUsers();
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('userDeleteError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
+        if (window.confirm($translate.instant('userDeleteConfirm'))) {
+          $http.delete('../api/users/' +
+              $scope.userSelected.id)
+              .success(function(data) {
+                $scope.unselectUser();
+                loadUsers();
+              })
+              .error(function(data) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('userDeleteError'),
+                  error: data,
+                  timeout: 0,
+                  type: 'danger'});
+              });
+        }
       };
 
 
@@ -640,19 +642,21 @@
       };
 
       $scope.deleteGroup = function(formId) {
-        $http.delete('../api/groups/' +
-                $scope.groupSelected.id)
-            .success(function(data) {
-              $scope.unselectGroup();
-              loadGroups();
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('groupDeleteError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
+        if (window.confirm($translate.instant('groupDeleteConfirm'))) {
+          $http.delete('../api/groups/' +
+                  $scope.groupSelected.id)
+              .success(function(data) {
+                $scope.unselectGroup();
+                loadGroups();
+              })
+              .error(function(data) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('groupDeleteError'),
+                  error: data,
+                  timeout: 0,
+                  type: 'danger'});
+              });
+        }
       };
 
       $scope.unselectGroup = function() {
