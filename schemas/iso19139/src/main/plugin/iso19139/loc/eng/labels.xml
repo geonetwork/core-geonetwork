@@ -23,11 +23,10 @@
   -->
 
 <labels xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="../../../labels.xsd" xmlns:gco="http://www.isotc211.org/2005/gco"
-	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
-	xmlns:gmx="http://www.isotc211.org/2005/gmx">
-
+        xsi:noNamespaceSchemaLocation="../../../labels.xsd" xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
+        xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
+        xmlns:gmx="http://www.isotc211.org/2005/gmx">
 
   <element name="gmd:MD_ScopeCode">
     <label>Scope code</label>
@@ -865,7 +864,7 @@
   <element name="gmd:description" id="561.0">
     <label>Description</label>
     <description>Description of the event, including related parameters or
-            tolerances</description>
+      tolerances</description>
   </element>
   <element name="gmd:description" id="561.0" context="gmd:MD_AbstractClass">
     <label>Description</label>
@@ -875,7 +874,7 @@
     <condition>mandatory</condition>
     <label>Description</label>
     <description>Description of the event, including related parameters or
-            tolerances</description>
+      tolerances</description>
   </element>
   <element name="gmd:description" id="93.0" context="LI_Source">
     <label>Description</label>
@@ -886,7 +885,7 @@
     <label>Description</label>
     <description>Spatial and temporal extent for the referring object</description>
     <_condition>Conditional / geographicElement and temporalElement and verticalElement not
-            documented?</_condition>
+      documented?</_condition>
   </element>
   <element name="gmd:description" id="401.0" context="gmd:CI_OnlineResource">
     <label>Description</label>
@@ -2298,843 +2297,10 @@
       property, and any special restrictions or limitations or warnings on using the
       resource</description>
   </element>
-
-	<element name="gmd:name" context="gmd:CI_Series" id="404.0">
-		<label>Name</label>
-		<description>Name of the series, or aggregate dataset, of which the dataset is a
-            part</description>
-	</element>
-	<element name="gmd:name" context="gmd:MD_CodeDomain" id="537.0">
-		<label>Name</label>
-		<description>Name of the code domain</description>
-	</element>
-	<element name="gmd:name" context="gmd:MD_CodeValue" id="546.0">
-		<label>Name</label>
-		<description>Value name</description>
-	</element>
-	<element name="gmd:name" context="gmd:MD_Attribute" id="551.0">
-		<label>Name</label>
-		<description>Attribute name</description>
-	</element>
-	<element name="gmd:name" context="gmd:MD_Role" id="556.0">
-		<label>Name</label>
-		<description>Role name</description>
-	</element>
-	<element name="gmd:name">
-		<label>Name</label>
-		<description />
-	</element>
-	<element name="gmd:nameOfMeasure" id="100.0">
-		<label>Name of measure</label>
-		<description>Name of the test applied to the data</description>
-		<!-- ISO19138 Data quality basic measures Annex C - under revision ISO
-			19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
-		<helper rel="gmd:measureDescription">
-			<option value="">-- Completeness --</option>
-			<option value="Excess item"
-				title="Indication that an item is incorrectly present in the data"
-				id="ISO19138:2006:measure:1">Excess item</option>
-			<option value="Number of excess items"
-				title="Number of items within the dataset, that should not have been in the dataset"
-				id="ISO19138:2006:measure:2">Number of excess items</option>
-			<option value="Rate of excess items"
-				title="Number of excess items in the dataset in relation to the number of items that should have been present"
-				id="ISO19138:2006:measure:3">Rate of excess items</option>
-			<option value="Number of duplicate feature instances"
-				title="Total number of exact duplications of feature instances within the data. Count of all items in the data that are incorrectly extracted with duplicate geometrie"
-				id="ISO19138:2006:measure:4">Number of duplicate feature instances</option>
-			<option value="Missing item"
-				title="Indicator that shows that a specific item is missing in the data"
-				id="ISO19138:2006:measure:5">Missing item</option>
-			<option value="Number of missing items"
-				title="Count of all items that should have been in the dataset and are missing"
-				id="ISO19138:2006:measure:6">Number of missing items</option>
-			<option value="Rate of missing items"
-				title="Number of missing items in the dataset in relation to the number of items that should have been present"
-				id="ISO19138:2006:measure:7">Rate of missing items</option>
-			<option value="">-- Logical consistency / Conceptual consistency
-				--
-			</option>
-			<option value="Conceptual schema noncompliance"
-				title="Indication that an item is not compliant to the rules of the relevant conceptual schema"
-				id="ISO19138:2006:measure:8">Conceptual schema noncompliance</option>
-			<option value="Conceptual schema compliance"
-				title="Indication that an item complies with the rules of the relevant conceptual schema"
-				id="ISO19138:2006:measure:9">Conceptual schema compliance</option>
-			<option
-				value="Number of items noncompliant to the rules of the conceptual schema"
-				title="Count of all items in the dataset that are noncompliant to the rules of the conceptual schema. If the conceptual schema explicitly or implicitly describes rules, these rules have to be followed. Violations against such rules can e.g. be invalid placement of features within a defined tolerance, duplication of features and invalid overlap of features."
-				id="ISO19138:2006:measure:10">Number of items noncompliant to the rules of the conceptual
-				schema
-			</option>
-			<option value="Number of invalid overlaps of surfaces"
-				title="Total number of erroneous overlaps within the data Which surfaces may overlap and which must not is application dependent. Not all overlapping surfaces are necessarily erroneous. When reporting this data quality measure the types of feature classes corresponding to the illegal overlapping surfaces have to be reported as well."
-				id="ISO19138:2006:measure:11">Number of invalid overlaps of surfaces</option>
-			<option
-				value="Non-compliance rate with respect to the rules of the conceptual schema"
-				title="Number of items in the dataset that are noncompliant to the rules of the conceptual schema in relation to the total number of these items supposed to be in the dataset"
-				id="ISO19138:2006:measure:12">Non-compliance rate with respect to the rules of the conceptual
-				schema
-			</option>
-			<option value=" Compliance rate with the rules of the conceptual schema"
-				title="number of items in the dataset in compliance with the rules of the conceptual schema in relation to the total number of items"
-				id="ISO19138:2006:measure:13"> Compliance rate with the rules of the conceptual schema</option>
-			<option value="">-- Logical consistency / Domain consistency --
-			</option>
-			<option value="Value domain non-conformance"
-				title="Indication of if an item is not in conformance with its value domain"
-				id="ISO19138:2006:measure:14">Value domain non-conformance</option>
-			<option value="Value domain conformance"
-				title="Indication of if an item is conforming to its value domain"
-				id="ISO19138:2006:measure:15">Value domain conformance</option>
-			<option value="Number of items not in conformance with their value domain"
-				title="Count of all items in the dataset that are not in conformance with their value domain."
-				id="ISO19138:2006:measure:16">Number of items not in conformance with their value domain
-			</option>
-			<option value="Value domain conformance rate"
-				title="Number of items in the dataset that are in conformance with their value domain in relation to the total number of items in the dataset"
-				id="ISO19138:2006:measure:17">Value domain conformance rate</option>
-			<option value="Value domain non-conformance rate"
-				title="the number of items in the dataset that are not in conformance with their value domain in relation to the total number of items"
-				id="ISO19138:2006:measure:18">Value domain non-conformance rate</option>
-			<option value="Physical structure conflicts"
-				title="Count of all items in the dataset that are stored in conflict with the physical structure of the dataset"
-				id="ISO19138:2006:measure:19">Physical structure conflicts</option>
-			<option value="Physical structure conflict rate"
-				title="Number of items in the dataset that are stored in conflict with the physical structure of the dataset divided by the total number of items"
-				id="ISO19138:2006:measure:20">Physical structure conflict rate</option>
-			<option value="">-- Logical consistency / Topological consistency
-				--
-			</option>
-			<option value="Number of faulty point-curve connections"
-				title="Number of faulty point-curve connections in the dataset. A point-curve connection exists where different curves touch. These curves have an intrinsic topological relationship that has to reflect the true constellation. If the point-curve connection contradicts the universe of discourse, the point-curve connection is faulty with respect to this data quality measure. The data quality measure counts the number of errors of this kind."
-				id="ISO19138:2006:measure:21">Number of faulty point-curve connections</option>
-			<option value="Rate of faulty point-curve connections"
-				title="Number of faulty link node connections in relation to the number of supposed link node connections"
-				id="ISO19138:2006:measure:22">Rate of faulty point-curve connections</option>
-			<option value="Number of missing connection due to undershoots"
-				title="Count of items in the dataset, within the parameter tolerance, that are mismatched due to undershoots"
-				id="ISO19138:2006:measure:23">Number of missing connection due to undershoots</option>
-			<option value="Number of missing connections due to overshoots"
-				title="Count of items in the dataset, within the parameter tolerance, that are mismatched due to overshoots"
-				id="ISO19138:2006:measure:24">Number of missing connections due to overshoots</option>
-			<option value="Number of invalid slivers"
-				title="Count of all items in the dataset that are invalid sliver surfaces. A sliver is an unintended area that occurs when adjacent surfaces are not digitized properly. The borders of the adjacent surfaces may unintentionally gap or overlap by small amounts to cause a topological error."
-				id="ISO19138:2006:measure:25">Number of invalid slivers</option>
-			<option value="Number of invalid self intersect errors"
-				title="Count of all items in the data that illegally intersect with themselves"
-				id="ISO19138:2006:measure:26">Number of invalid self intersect errors</option>
-			<option value="Number of invalid self overlap errors"
-				title="Count of all items in the data that illegally self overlap"
-				id="ISO19138:2006:measure:27">Number of invalid self overlap errors</option>
-			<option value="">-- Positional accuracy / Absolute or external
-				accuracy / General measures --
-			</option>
-			<option value="Mean value of positional uncertainties"
-				title="Mean value of the positional uncertainties for a set of positions where the positional uncertainties are defined as the distance between a measured position and what is considered as the corresponding true position"
-				id="ISO19138:2006:measure:28">Mean value of positional uncertainties</option>
-			<option value="Mean value of positional uncertainties excluding outliers"
-				title="For a set of points where the distance does not exceed a defined threshold the arithmetical average of distances between their measured positions and what is considered as the corresponding true positions"
-				id="ISO19138:2006:measure:29">Mean value of positional uncertainties excluding outliers
-			</option>
-			<option value="Number of positional uncertainties above a given threshold"
-				title="Number of positional uncertainties above a given threshold for a set of positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position"
-				id="ISO19138:2006:measure:30">Number of positional uncertainties above a given threshold
-			</option>
-			<option value="Rate of positional errors above a given threshold"
-				title="Number of positional uncertainties above a given threshold for a set of positions in relation to the total number of measured positions. The errors are defined as the distance between a measured position and what is considered as the corresponding true position."
-				id="ISO19138:2006:measure:31">Rate of positional errors above a given threshold</option>
-			<option value="Covariance matrix"
-				title="A symmetrical square matrix with variances of point coordinates on the main diagonal and covariances between these coordinates as off-diagonal elements."
-				id="ISO19138:2006:measure:32">Covariance matrix</option>
-			<option value="">-- Positional accuracy / Absolute or external
-				accuracy / Vertical --
-			</option>
-			<option value="Linear error probable"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 50%."
-				id="ISO19138:2006:measure:33">Linear error probable</option>
-			<option value="Standard linear error"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 68.3%."
-				id="ISO19138:2006:measure:34">Standard linear error</option>
-			<option value="Linear map accuracy at 90% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 90%."
-				id="ISO19138:2006:measure:35">Linear map accuracy at 90% significance level</option>
-			<option value="Linear map accuracy at 95% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 95%."
-				id="ISO19138:2006:measure:36">Linear map accuracy at 95% significance level</option>
-			<option value="Linear map accuracy at 99% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99%."
-				id="ISO19138:2006:measure:37">Linear map accuracy at 99% significance level</option>
-			<option value="Near certainty linear error"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 99.8%."
-				id="ISO19138:2006:measure:38">Near certainty linear error</option>
-			<option value="Root mean square error"
-				title="Standard deviation, where the true value is not estimated from the observations but known a priori."
-				id="ISO19138:2006:measure:39">Root mean square error</option>
-			<option
-				value="Absolute linear error at 90% significance level of biased vertical data (Alternative 1)"
-				title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
-				id="ISO19138:2006:measure:40">Absolute linear error at 90% significance level of biased
-				vertical data (Alternative 1)
-			</option>
-			<option
-				value="Absolute linear error at 90% significance level of biased vertical data"
-				title="The absolute vertical accuracy of the data’s coordinates, expressed in terms of linear error at 90% probability given that a bias is present."
-				id="ISO19138:2006:measure:41">Absolute linear error at 90% significance level of biased
-				vertical data
-			</option>
-			<option value="">-- Positional accuracy / Absolute or external
-				accuracy / Horizontal --
-			</option>
-			<option value="Circular standard deviation"
-				title="Radius describing a circle, in which the true point location lies with the probability of 39.4%."
-				id="ISO19138:2006:measure:42">Circular standard deviation</option>
-			<option value="Circular error probable"
-				title="Radius describing a circle, in which the true point location lies with the probability of 50%."
-				id="ISO19138:2006:measure:43">Circular error probable</option>
-			<option value=" Circular map accuracy standard"
-				title="Radius describing a circle, in which the true point location lies with the probability of 90%."
-				id="ISO19138:2006:measure:44"> Circular map accuracy standard</option>
-			<option value="Circular error at 95% significance level"
-				title="Radius describing a circle, in which the true point location lies with the probability of 95%."
-				id="ISO19138:2006:measure:45">Circular error at 95% significance level</option>
-			<option value="Circular near certainty error"
-				title="Radius describing a circle, in which the true point location lies with the probability of 99.8%."
-				id="ISO19138:2006:measure:46">Circular near certainty error</option>
-			<option value="Root mean square error of planimetry"
-				title="Radius of a circle around the given point, in which the true value lies with probability P."
-				id="ISO19138:2006:measure:47">Root mean square error of planimetry</option>
-			<option
-				value="Absolute circular error at 90% significance level of biased data (Alternative 2)"
-				title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
-				id="ISO19138:2006:measure:48">Absolute circular error at 90% significance level of biased data
-				(Alternative 2)
-			</option>
-			<option
-				value="Absolute circular error at 90% significance level of biased data"
-				title="The absolute horizontal accuracy of the data’s coordinates, expressed in terms of circular error at 90% probability given that a bias is present."
-				id="ISO19138:2006:measure:49">Absolute circular error at 90% significance level of biased data
-			</option>
-			<option value="Uncertainty ellipse"
-				title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point"
-				id="ISO19138:2006:measure:50">Uncertainty ellipse</option>
-			<option value="Confidence ellipse"
-				title="2D ellipse with the two main axes indicating the direction and magnitude of the highest and the lowest uncertainty of a 2D point"
-				id="ISO19138:2006:measure:51">Confidence ellipse</option>
-			<option value="">-- Positional accuracy / Relative or internal
-				accuracy --
-			</option>
-			<option value="Relative vertical error"
-				title="Evaluation of the random errors of one relief feature to another in the same dataset or on the same map/chart. It is a function of the random errors in the two elevations with respect to a common vertical datum."
-				id="ISO19138:2006:measure:52">Relative vertical error</option>
-			<option value="Relative horizontal error"
-				title="Evaluation of the random errors in the horizontal position of one feature to another in the same dataset or on the same map/chart."
-				id="ISO19138:2006:measure:53">Relative horizontal error</option>
-			<option value="">-- Temporal accuracy / Accuracy of a time
-				measurement --
-			</option>
-			<option value="Time accuracy at 68.3% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 68.3%."
-				id="ISO19138:2006:measure:54">Time accuracy at 68.3% significance level</option>
-			<option value="Time accuracy at 50% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 50%."
-				id="ISO19138:2006:measure:55">Time accuracy at 50% significance level</option>
-			<option value="Time accuracy at 90% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 90%."
-				id="ISO19138:2006:measure:56">Time accuracy at 90% significance level</option>
-			<option value="Time accuracy at 95% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 95%."
-				id="ISO19138:2006:measure:57">Time accuracy at 95% significance level</option>
-			<option value="Time accuracy at 99% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99%."
-				id="ISO19138:2006:measure:58">Time accuracy at 99% significance level</option>
-			<option value="Time accuracy at 99.8% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the time instance lies with probability 99.8%."
-				id="ISO19138:2006:measure:59">Time accuracy at 99.8% significance level</option>
-			<option value="">-- Thematic accuracy / Classification
-				correctness --
-			</option>
-			<option value="Number of incorrectly classified features"
-				title="Number of incorrectly classified features" id="ISO19138:2006:measure:60">Number of
-				incorrectly classified features
-			</option>
-			<option value="Misclassification rate"
-				title="number of incorrectly classified features in relation to the number of features that are supposed to be there"
-				id="ISO19138:2006:measure:61">Misclassification rate</option>
-			<option value="Misclassification matrix"
-				title="matrix that indicates the number of items of class (i) classified as class (j)."
-				id="ISO19138:2006:measure:62">Misclassification matrix</option>
-			<option value="Relative misclassification matrix"
-				title="matrix that indicates the number of items of class (i) classified as class (i) divided by the number of items of class (i)"
-				id="ISO19138:2006:measure:63">Relative misclassification matrix</option>
-			<option value="Kappa coefficient"
-				title="Coefficient to quantify the proportion of agreement of assignments to classes by removing misclassifications"
-				id="ISO19138:2006:measure:64">Kappa coefficient</option>
-			<option value="">-- Thematic accuracy / Non-quantitative
-				attribute correctness --
-			</option>
-			<option value="Number of incorrect attribute values"
-				title="Total number of erroneous attribute values within the relevant part of the dataset"
-				id="ISO19138:2006:measure:65">Number of incorrect attribute values</option>
-			<option value="Rate of correct attribute values"
-				title="Number of correct attribute values in relation to the total number of attribute values"
-				id="ISO19138:2006:measure:66">Rate of correct attribute values</option>
-			<option value="Rate of incorrect attribute values"
-				title="Number of attribute values where incorrect values are assigned in relation to the total number of attribute values"
-				id="ISO19138:2006:measure:67">Rate of incorrect attribute values</option>
-			<option value="">-- Thematic accuracy / Quantitative attribute
-				accuracy --
-			</option>
-			<option value="Attribute value uncertainty at 68.3% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 68.3%."
-				id="ISO19138:2006:measure:68">Attribute value uncertainty at 68.3% significance level</option>
-			<option value="Attribute value uncertainty at 50% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 50%."
-				id="ISO19138:2006:measure:69">Attribute value uncertainty at 50% significance level</option>
-			<option value="Attribute value uncertainty at 90% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 90%."
-				id="ISO19138:2006:measure:70">Attribute value uncertainty at 90% significance level</option>
-			<option value="Attribute value uncertainty at 95% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 95%."
-				id="ISO19138:2006:measure:71">Attribute value uncertainty at 95% significance level</option>
-			<option value="Attribute value uncertainty at 99% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99%."
-				id="ISO19138:2006:measure:72">Attribute value uncertainty at 99% significance level</option>
-			<option value="Attribute value uncertainty at 99.8% significance level"
-				title="Half length of the interval defined by an upper and a lower limit, in which the true value for the quantitative attribute lies with probability 99.8%."
-				id="ISO19138:2006:measure:73">Attribute value uncertainty at 99.8% significance level</option>
-		</helper>
-	</element>
-	<element name="gmd:northBoundLatitude" id="347.0">
-		<label>North bound</label>
-		<description>Northern-most, coordinate of the limit of the dataset extent expressed in
-            latitude in decimal degrees (positive north)</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:numberOfDimensions" id="158.0">
-		<label>Number of dimensions</label>
-		<description>Number of independent spatial-temporal axes</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:obligation" id="311.0">
-		<label>Obligation</label>
-		<description>Obligation of the extended element</description>
-	</element>
-	<element name="gmd:offLine" id="278.0">
-		<label>Offline</label>
-		<description>Information about offline media on which the resource can be
-            obtained</description>
-	</element>
-	<element name="gmd:offset" id="267.0">
-		<label>Offset</label>
-		<description>The physical value corresponding to a cell value of zero</description>
-	</element>
-	<element name="gmd:onLine" id="277.0">
-		<label>OnLine resource</label>
-		<description>Information about online sources from which the resource can be
-            obtained</description>
-	</element>
-	<element name="gmd:onlineResource" id="390.0">
-		<help>Define URL to access the website</help>
-		<label>Website</label>
-		<description>On-line information that can be used to contact the individual or
-            organisation</description>
-	</element>
-	<element name="gmd:orderingInstructions" id="301.0">
-		<label>Ordering instructions</label>
-		<description>General instructions, terms and services provided by the
-            distributor</description>
-	</element>
-	<element name="gmd:organisationName" id="376.0">
-		<label>Organisation name</label>
-		<description>Name of the responsible organization</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:orientationParameterAvailability" id="172.0">
-		<label>Orientation parameter availability</label>
-		<description>Indication of whether or not orientation parameters are available</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:orientationParameterDescription" id="173.0">
-		<label>Orientation parameter description</label>
-		<description>Description of parameters used to describe sensor orientation</description>
-	</element>
-	<element name="gmd:other" id="155.0">
-		<label>Other</label>
-		<description>Class of information that does not fall into the other categories to which the
-            information applies</description>
-		<condition />
-	</element>
-	<element name="gmd:otherCitationDetails" id="370.0">
-		<label>Other citation details</label>
-		<description>Other information required to complete the citation that is not recorded
-            elsewhere</description>
-	</element>
-	<element name="gmd:otherConstraints" id="72.0">
-		<label>Other constraints</label>
-		<description>Other restrictions and legal prerequisites for accessing and using the
-            resource</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:page" id="406.0">
-		<label>Page</label>
-		<description>Details on which pages of the publication the article was
-            published</description>
-	</element>
-	<element name="gmd:parameterCitation" id="175.0">
-		<label>Parameter citation</label>
-		<description>Reference providing description of the parameters</description>
-	</element>
-	<element name="gmd:parentEntity" id="316.0">
-		<label>Parent entity</label>
-		<description>Name of the metadata entity(s) under which this extended metadata element may
-            appear. The name(s) may be standard metadata element(s) or other extended metadata
-            element(s).</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:parentIdentifier" id="5.0">
-		<label>Parent identifier</label>
-		<description>File identifier of the metadata to which this metadata is a subset
-            (child)</description>
-	</element>
-	<element name="gmd:pass" id="132.0">
-		<label>Pass</label>
-		<description>Indication of the conformance result where 0 = fail and 1 = pass</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:peakResponse" id="263.0">
-		<label>Peak response</label>
-		<description>Wavelength at which the response is the highest</description>
-	</element>
-	<element name="gmd:phone" id="526.0">
-		<label>Phone</label>
-		<description>Telephone numbers at which the organization or individual may be
-            contacted</description>
-	</element>
-	<element name="gmd:plannedAvailableDateTime" id="300.0">
-		<label>Planned available datetime</label>
-		<description>Date and time when the dataset will be available
-            (CCYY-MM-DDThh:mm:ss)</description>
-	</element>
-	<element name="gmd:pointInPixel" id="167.0">
-		<label>Point in Pixel</label>
-		<description>Point in a pixel corresponding to the Earth location of the pixel</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:pointOfContact" id="29.0">
-		<label>Point of contact</label>
-		<description>Identification of, and means of communication with, person(s) and
-        organizations(s) associated with the resource(s)</description>
-	</element>
-	<element name="gmd:polygon" id="342.0">
-		<label>Polygon</label>
-		<description>Sets of points defining the bounding polygon</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:portrayalCatalogueCitation" id="269.0">
-		<label>Portrayal catalogue citation</label>
-		<description>Bibliographic reference to the portrayal catalogue cited</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:portrayalCatalogueInfo" id="19.0">
-		<label>Portrayal catalogue info</label>
-		<description>Provides information about the catalogue of rules defined for the portrayal of
-            a resource(s)</description>
-	</element>
-	<element name="gmd:positionName" id="377.0">
-		<label>Position name</label>
-		<description>Role or position of the responsible person</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:postalCode" id="384.0">
-		<label>Postal code</label>
-		<description>ZIP or other postal code</description>
-	</element>
-	<element name="gmd:presentationForm" id="368.0">
-		<label>Presentation form</label>
-		<description>Mode in which the resource is represented</description>
-	</element>
-	<element name="gmd:processStep" id="84.0">
-		<label>Process step</label>
-		<description>Information about an event in the creation process for the data specified by
-            the scope</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:processingLevelCode" id="249.0">
-		<label>Processing level code</label>
-		<description>Image distributor_s code that identifies the level of radiometric and geometric
-            processing that has been applied</description>
-	</element>
-	<element name="gmd:processor" id="90.0">
-		<label>Processor</label>
-		<description>Identification of, and means of communication with, person(s) and
-            organization(s) associated with the process step</description>
-	</element>
-	<element name="gmd:protocol" id="398.0" alias="protocol">
-		<label>Protocol</label>
-		<description>Connection protocol to be used</description>
-    <helper>
-      <option value="WWW:LINK">Web link (URL)</option>
-      <option value="WWW:LINK-1.0-http--publication-URL">Main publication link</option>
-      <option value="WWW:LINK-1.0-http--metadata-URL">Point of truth URL of this metadata record</option>
-      <option value="FILE">Download (file)</option>
-      <option value="COPYFILE">Download (copy)</option>
-      <option value="DB">Download (database)</option>
-      <option value="WWW:DOWNLOAD-1.0-link--download">Download (link)</option>
-      <option value="OGC:WFS">Download (WFS)</option>
-      <option value="OGC:WCS">Download (WCS)</option>
-      <option value="OGC:WMS">View (WMS)</option>
-      <option value="OGC:WMTS">View (WMTS)</option>
-      <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
-      <option value="OGC:OWS-C">View (OWS Context)</option>
-    </helper>
-	</element>
-	<element name="gmd:purpose" id="26.0">
-		<label>Purpose</label>
-		<description>Summary of the intentions with which the resource(s) was
-            developed</description>
-	</element>
-	<element name="gmd:radiometricCalibrationDataAvailability" id="252.0">
-		<label>Radiometric calibration data availability</label>
-		<description>Indication of whether or not the radiometric calibration information for
-            generating the radiometrically calibrated standard data product is
-            available</description>
-	</element>
-	<element name="gmd:rationale" id="88.0">
-		<label>Rationale</label>
-		<description>Requirement or purpose for the process step</description>
-	</element>
-	<element name="gmd:rationale" id="318.0"
-		context="gmd:MD_ExtendedElementInformation">
-		<label>Rationale</label>
-		<description>Reason for creating the extended element</description>
-	</element>
-	<element name="gmd:referenceSystemIdentifier" id="187.0">
-		<label>Reference system identifier</label>
-		<description>Name of reference system</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:referenceSystemInfo" id="13.0">
-		<label>Reference System Information</label>
-		<description>Description of the spatial and temporal reference systems used in the
-            dataset</description>
-	</element>
-	<element name="gmd:report" id="80.0">
-		<label>Report</label>
-		<description>Quantitative quality information for the data specified by the
-            scope</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:resolution" id="182.0">
-		<label>Resolution</label>
-		<description>Degree of detail in the grid dataset</description>
-    <helper relAtt="uom">
-      <option value="1" title="second">seconds</option>
-      <option value="1" title="minute">minutes</option>
-      <option value="1" title="hour">hours</option>
-      <option value="1" title="day">days</option>
-      <option value="1" title="month">months</option>
-      <option value="1" title="year">years</option>
-      <option value="1" title="season">seasons</option>
-    </helper>
-	</element>
-	<element name="gmd:resourceConstraints" id="35.0">
-		<label>Resource constraints</label>
-		<description>Provides information about constraints which apply to the
-            resource(s)</description>
-	</element>
-	<element name="gmd:resourceFormat" id="32.0">
-		<label>Resource format</label>
-		<description>Provides a description of the format of the resource(s)</description>
-	</element>
-	<element name="gmd:resourceMaintenance" id="30.0">
-		<label>Resource maintenance</label>
-		<description>Provides information about the frequency of resource updates, and the scope of
-            those updates</description>
-	</element>
-	<element name="gmd:resourceSpecificUsage" id="34.0">
-		<label>Resource specific usage</label>
-		<description>Provides basic information about specific application(s) for which the
-            resource(s) has/have been or is being used by different users</description>
-	</element>
-	<element name="gmd:result" id="107.0">
-		<label>Result</label>
-		<description>Value (or set of values) obtained from applying a data quality measure or the
-            out come of evaluating the obtained value (or set of values) against a specified
-            acceptable conformance quality level</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:role" id="566.0" context="gmd:MD_Association">
-		<label>Role</label>
-		<description>Reference to the ends (roles) of a concrete association</description>
-	</element>
-	<element name="gmd:role" id="379.0">
-		<label>Role</label>
-		<description>Function performed by the responsible party</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:rule" id="317.0">
-		<label>Rule</label>
-		<description>Specifies how the extended element relates to other existing elements and
-            entities</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:scaleDenominator" id="94.0">
-		<label>Scale Denominator</label>
-		<description>Denominator of the representative fraction on a source map</description>
-	</element>
-	<element name="gmd:scaleFactor" id="266.0">
-		<label>Scale factor</label>
-		<description>Scale factor which has been applied to the cell value</description>
-	</element>
-	<element name="gmd:schemaAscii" id="324.0">
-		<description>Full application schema given as an ASCII file</description>
-		<label>Schema ASCII</label>
-	</element>
-	<element name="gmd:schemaLanguage" id="322.0">
-		<label>Schema language</label>
-		<description>Identification of the schema language used</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:scope" id="79.0">
-		<label>Scope</label>
-		<description>The specific data to which the data quality information applies</description>
-	</element>
-	<element name="gmd:sequenceIdentifier" id="257.0">
-		<label>Sequence identifier</label>
-		<description>Number that uniquely identifies instances of bands of wavelengths on which a
-            sensor operates</description>
-	</element>
-	<element name="gmd:series" id="369.0">
-		<label>Series</label>
-		<description>Information about the series, or aggregate dataset, of which the dataset is a
-            part</description>
-	</element>
-	<element name="gmd:shortName" id="308.0">
-		<label>Short name</label>
-		<description>Short form suitable for use in an implementation method such as XML or SGML.
-            NOTE other methods may be used</description>
-	</element>
-	<element name="gmd:softwareDevelopmentFile" id="326.0">
-		<label>Software development file</label>
-		<description>Full application schema given as a software development file</description>
-	</element>
-	<element name="gmd:softwareDevelopmentFileFormat" id="327.0">
-		<label>Software development file format</label>
-		<description>Software dependent format used for the application schema software dependent
-            file</description>
-	</element>
-	<element name="gmd:source" id="85.0">
-		<label>Source</label>
-		<description>Information about the source data used in creating the data specified by the
-            scope</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:source" id="319.0"
-		context="gmd:MD_ExtendedElementInformation">
-		<condition>mandatory</condition>
-		<label>Source</label>
-		<description>Name of the person or organization creating the extended element</description>
-	</element>
-	<element name="gmd:sourceCitation" id="96.0">
-		<label>Source citation</label>
-		<description>Recommended reference to be used for the source data</description>
-	</element>
-	<element name="gmd:sourceExtent" id="97.0">
-		<label>Source extent</label>
-		<description>Information about the spatial, vertical and temporal extent of the source
-            data</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:sourceReferenceSystem" id="95.0">
-		<label>Source reference system</label>
-		<description>Spatial reference system used by the source data</description>
-	</element>
-	<element name="gmd:sourceStep" id="98.0">
-		<label>Source step</label>
-		<description>Information about an event in the creation process for the source
-            data</description>
-	</element>
-	<element name="gmd:southBoundLatitude" id="346.0">
-		<label>South bound</label>
-		<description>Southern-most coordinate of the limit of the dataset extent, expressed in
-            latitude in decimal degrees (positive north)</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:spatialExtent" id="353.0">
-		<label>Spatial extent</label>
-		<description>Spatial extent component of composite spatial and temporal extent</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:spatialRepresentationInfo" id="12.0">
-		<label>Spatial representation info</label>
-		<description>Digital representation of spatial information in the dataset</description>
-	</element>
-	<element name="gmd:spatialRepresentationType" id="37.0">
-		<label>Spatial representation type</label>
-		<description>Method used to spatially represent geographic information</description>
-	</element>
-	<element name="gmd:spatialResolution" id="38.0">
-		<label>Spatial resolution</label>
-		<description>Factor which provides a general understanding of the density of spatial data in
-            the dataset</description>
-	</element>
-	<element name="gmd:specificUsage" id="63.0">
-		<label>Specific usage</label>
-		<description>Brief description of the resource and/or resource series usage</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:specification" id="130.0" context="gmd:DQ_ConformanceResult">
-		<condition>mandatory</condition>
-		<label>Specification</label>
-		<description>Citation of product specification or user requirement against which data is
-            being evaluated</description>
-	</element>
-	<element name="gmd:specification" id="288.0" context="gmd:MD_Format">
-		<label>Specification</label>
-		<description>Name of a subset, profile, or product specification of the format</description>
-	</element>
-	<element name="gmd:specification">
-		<label>Specification</label>
-	</element>
-	<element name="gmd:statement" id="83.0">
-		<label>Statement</label>
-		<description>General explanation of the data producer_s knowledge about the lineage of a
-            dataset</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:status" id="28.0">
-		<label>Status</label>
-		<description>Status of the resource(s)</description>
-	</element>
-	<element name="gmd:supplementalInformation" id="46.0">
-		<label>Supplemental Information</label>
-		<description>Any other descriptive information about the dataset</description>
-	</element>
-	<element name="gmd:temporalElement" id="337.0">
-		<label>Temporal element</label>
-		<description>Provides temporal component of the extent of the referring object</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:textGroup" id="602.0">
-		<label>TextGroup</label>
-		<description>TextGroup</description>
-	</element>
-	<element name="gmd:thesaurusName" id="55.0">
-		<label>Thesaurus name</label>
-		<description>Name of the formally registered thesaurus or a similar authoritative source of
-            keywords</description>
-	</element>
-	<element name="gmd:title" id="360.0">
-		<label>Title</label>
-		<description>Name by which the cited resource is known</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:title" id="507.0" context="gmd:MD_Legislation">
-		<label>Title</label>
-		<description>Reference to legal title</description>
-	</element>
-	<element name="gmd:toneGradation" id="265.0">
-		<label>Tone gradation</label>
-		<description>Number of discrete numerical values in the grid data</description>
-	</element>
-	<element name="gmd:topicCategory" id="41.0">
-		<label>Topic category</label>
-		<description>Main theme(s) of the datset</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:MD_TopicCategoryCode">
-		<label>Topic category code</label>
-		<description>High-level geographic data thematic classification to assist in the grouping
-            and search of available geographic data sets. Can be used to group keywords as well.
-            Listed examples are not exhaustive. NOTE It is understood there are overlaps between
-            general categories and the user is encouraged to select the one most
-            appropriate.</description>
-	</element>
-	<element name="gmd:topologyLevel" id="177.0">
-		<label>Topology level</label>
-		<description>Code which identifies the degree of complexity of the spatial
-            relationships</description>
-	</element>
-	<element name="gmd:transferOptions" id="273.0">
-		<label>Transfer options</label>
-		<description>Provides information about technical means and media by which a resource is
-            obtained from the distributor</description>
-	</element>
-	<element name="gmd:transferSize" id="276.0">
-		<label>Transfer size (in MB)</label>
-		<description>Estimated size of a unit in the specified transfer format, expressed in
-            megabytes. The transfer size is &gt; 0.0</description>
-	</element>
-	<element name="gmd:transformationDimensionDescription" id="168.0">
-		<label>Transformation dimension description</label>
-		<description>Description of the information about which grid dimensions are the spatial
-            dimensions</description>
-	</element>
-	<element name="gmd:transformationDimensionMapping" id="169.0">
-		<label>Transformation dimension mapping</label>
-		<description>Information about which grid dimensions are the spatial
-            dimensions</description>
-	</element>
-	<element name="gmd:transformationParameterAvailability" id="161.0">
-		<label>Transformation parameter availability</label>
-		<condition>mandatory</condition>
-		<description>Indication of whether or not parameters for transformation between image
-            coordinates and geographic or map coordinates exist (are available)</description>
-	</element>
-	<element name="gmd:triangulationIndicator" id="251.0">
-		<label>Triangulation indicator</label>
-		<description>Indication of whether or not triangulation has been performed upon the
-            image</description>
-	</element>
-	<element name="gmd:turnaround" id="302.0">
-		<label>Turnaround</label>
-		<description>Typical turnaround time for the filling of an order</description>
-	</element>
-	<element name="gmd:type" id="54.0">
-		<label>Type</label>
-		<description>Subject matter used to group similar keywords</description>
-	</element>
-	<element name="gmd:type" id="540.0" context="gmd:MD_CodeDomain">
-		<label>Type</label>
-		<description>Datatype of the code domain</description>
-	</element>
-	<element name="gmd:type" id="543.0" context="gmd:MD_Type">
-		<label>Type definition</label>
-		<description>Data type definition</description>
-		<help>Data type definition, formal of informal (i.e. Text12, Line)</help>
-	</element>
-	<element name="gmd:units" id="262.0">
-		<label>Value unit</label>
-		<description>Units in which sensor wavelengths are expressed</description>
-	</element>
-	<element name="gmd:unitsOfDistribution" id="275.0">
-		<label>Units of distribution</label>
-		<description>Tiles, layers, geographic areas, etc., in which data is available</description>
-	</element>
-	<element name="gmd:updateScope" id="146.0">
-		<label>Update scope</label>
-		<description>Scope of data to which maintenance is applied</description>
-	</element>
-	<element name="gmd:updateScopeDescription" id="147.0">
-		<label>Update scope description</label>
-		<description>Additional information about the range or extent of the resource</description>
-	</element>
-	<element name="gmd:usageDateTime" id="64.0">
-		<label>Usage datetime</label>
-		<description>Date and time of the first use or range of uses of the resource and/or resource
-            series (YYYY-MM-DDThh:mm:ss)</description>
-	</element>
-	<element name="gmd:useConstraints" id="71.0">
-		<label>Use constraints</label>
-		<description>Constraints applied to assure the protection of privacy or intellectual
-            property, and any special restrictions or limitations or warnings on using the
-            resource</description>
-	</element>
-	<element name="gmd:useLimitation" id="68.0">
-		<label>Use limitation</label>
-		<description>Limitation affecting the fitness for use of the resource. Example, _not to be
-            used for navigation_</description>
+  <element name="gmd:useLimitation" id="68.0">
+    <label>Use limitation</label>
+    <description>Limitation affecting the fitness for use of the resource. Example, _not to be
+      used for navigation_</description>
 
     <helper displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
@@ -3156,37 +2322,37 @@
       <option value="Creative Commons license to apply : Attribution + Non Commercial + Share Alike (BY-NC-SA) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + Non Commercial + Share Alike (BY-NC-SA) : http://creativecommons.org/licenses/?lang=en</option>
       <option value="Creative Commons license to apply : Attribution + Share Alike (BY-SA) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + Share Alike (BY-SA) : http://creativecommons.org/licenses/?lang=en</option>
     </helper>
-	</element>
-	<element name="gmd:userContactInfo" id="66.0">
-		<label>User contact info</label>
-		<description>Identification of and means of communicating with person(s) and organization(s)
-            using the resource(s)</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:userDefinedMaintenanceFrequency" id="145.0">
-		<label>User defined maintenance frequency</label>
-		<description>Maintenance period other than those defined</description>
-	</element>
-	<element name="gmd:userDeterminedLimitations" id="65.0">
-		<label>User determined limitations</label>
-		<description>Applications, determined by the user for which the resource and/or resource
-            series is not suitable</description>
-	</element>
-	<element name="gmd:userNote" id="75.0">
-		<label>User note</label>
-		<description>Explanation of the application of the legal constraints or other restrictions
-            and legal prerequisites for obtaining and using the resource or metadata</description>
-	</element>
-	<!--<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
-		<condition>mandatory</condition>
-		<label>Value</label>
-		<description>Quantitative value or values, content determined by the evaluation procedure
+  </element>
+  <element name="gmd:userContactInfo" id="66.0">
+    <label>User contact info</label>
+    <description>Identification of and means of communicating with person(s) and organization(s)
+      using the resource(s)</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:userDefinedMaintenanceFrequency" id="145.0">
+    <label>User defined maintenance frequency</label>
+    <description>Maintenance period other than those defined</description>
+  </element>
+  <element name="gmd:userDeterminedLimitations" id="65.0">
+    <label>User determined limitations</label>
+    <description>Applications, determined by the user for which the resource and/or resource
+      series is not suitable</description>
+  </element>
+  <element name="gmd:userNote" id="75.0">
+    <label>User note</label>
+    <description>Explanation of the application of the legal constraints or other restrictions
+      and legal prerequisites for obtaining and using the resource or metadata</description>
+  </element>
+  <!--<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
+        <condition>mandatory</condition>
+        <label>Value</label>
+        <description>Quantitative value or values, content determined by the evaluation procedure
             used</description>
-	</element>-->
-	<element name="gmd:value" id="544.0" context="gmd:MD_Type">
-		<label>Value</label>
-		<description>Data type value</description>
-	</element>
+    </element>-->
+  <element name="gmd:value" id="544.0" context="gmd:MD_Type">
+    <label>Value</label>
+    <description>Data type value</description>
+  </element>
   <element name="gmd:value" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_QuantitativeResult/gmd:value">
     <label>Value</label>
     <description>Quantitative value or values, content determined by the evaluation procedure
@@ -3206,718 +2372,718 @@
     <label>Value</label>
     <description />
   </element>
-	<element name="gmd:valueType" id="134.0">
-		<label>Value type</label>
-		<description>Quantitative conformance quality level value or range of values</description>
-		<helper>
-			<option value="Boolean">Boolean</option>
-			<option value="Real">Real</option>
-			<option value="Integer">Integer</option>
-			<option value="Ratio">Ratio</option>
-			<option value="Percentage">Percentage</option>
-			<option value="Measure(s) (value(s) + unit(s))">Measure(s) (value(s) + unit(s))</option>
-		</helper>
-	</element>
-	<element name="gmd:valueUnit" id="135.0">
-		<label>Value unit</label>
-		<description>Value unit for reporting a data quality result</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:version" id="208.2" context="gmd:RS_Identifier">
-		<label>Version</label>
-		<description>Version identifier for the namespace</description>
-	</element>
-	<element name="gmd:version" id="286.0">
-		<label>Version</label>
-		<description>Version of the format (date, number, etc.)</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gmd:verticalElement" id="338.0">
-		<label>Vertical element</label>
-		<description>Provides vertical component of the extent of the referring object</description>
-		<condition>conditional</condition>
-	</element>
-	<element name="gmd:voice" id="408.0">
-		<label>Voice</label>
-		<description>Telephone number by which individuals can speak to the responsible organization
-            or individual</description>
-	</element>
-	<element name="gmd:volumes" id="295.0">
-		<label>Volumes</label>
-		<description>Number of items in the media identified</description>
-	</element>
-	<element name="gmd:westBoundLongitude" id="344.0">
-		<label>West bound</label>
-		<description>Western-most coordinate of the limit of the dataset extent, expressed in
-            longitude in decimal degrees (positive east)</description>
-		<condition>mandatory</condition>
-	</element>
-	<element name="gml:beginPosition">
-		<label>Begin date</label>
-		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
-	</element>
+  <element name="gmd:valueType" id="134.0">
+    <label>Value type</label>
+    <description>Quantitative conformance quality level value or range of values</description>
+    <helper>
+      <option value="Boolean">Boolean</option>
+      <option value="Real">Real</option>
+      <option value="Integer">Integer</option>
+      <option value="Ratio">Ratio</option>
+      <option value="Percentage">Percentage</option>
+      <option value="Measure(s) (value(s) + unit(s))">Measure(s) (value(s) + unit(s))</option>
+    </helper>
+  </element>
+  <element name="gmd:valueUnit" id="135.0">
+    <label>Value unit</label>
+    <description>Value unit for reporting a data quality result</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:version" id="208.2" context="gmd:RS_Identifier">
+    <label>Version</label>
+    <description>Version identifier for the namespace</description>
+  </element>
+  <element name="gmd:version" id="286.0">
+    <label>Version</label>
+    <description>Version of the format (date, number, etc.)</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gmd:verticalElement" id="338.0">
+    <label>Vertical element</label>
+    <description>Provides vertical component of the extent of the referring object</description>
+    <condition>conditional</condition>
+  </element>
+  <element name="gmd:voice" id="408.0">
+    <label>Voice</label>
+    <description>Telephone number by which individuals can speak to the responsible organization
+      or individual</description>
+  </element>
+  <element name="gmd:volumes" id="295.0">
+    <label>Volumes</label>
+    <description>Number of items in the media identified</description>
+  </element>
+  <element name="gmd:westBoundLongitude" id="344.0">
+    <label>West bound</label>
+    <description>Western-most coordinate of the limit of the dataset extent, expressed in
+      longitude in decimal degrees (positive east)</description>
+    <condition>mandatory</condition>
+  </element>
+  <element name="gml:beginPosition">
+    <label>Begin date</label>
+    <description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+  </element>
 
-	<element name="gml:endPosition">
-		<label>End date</label>
-		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
-	</element>
+  <element name="gml:endPosition">
+    <label>End date</label>
+    <description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+  </element>
 
-	<element name="gml:relatedTime">
-		<label>Related time</label>
-		<description>Defines the relation of a given time to the object.</description>
-	</element>
+  <element name="gml:relatedTime">
+    <label>Related time</label>
+    <description>Defines the relation of a given time to the object.</description>
+  </element>
 
-	<element name="gml:coordinates">
-		<label>Coordinates</label>
-		<description>Used to record an array of tuples or coordinates.</description>
-	</element>
+  <element name="gml:coordinates">
+    <label>Coordinates</label>
+    <description>Used to record an array of tuples or coordinates.</description>
+  </element>
 
-	<element name="gml:Polygon">
-		<label>Polygon</label>
-		<description>A gml:Polygon is a special surface that is defined by a single surface patch.
-            The boundary of this patch is coplanar and the polygon uses planar interpolation in its
-            interior.</description>
-	</element>
+  <element name="gml:Polygon">
+    <label>Polygon</label>
+    <description>A gml:Polygon is a special surface that is defined by a single surface patch.
+      The boundary of this patch is coplanar and the polygon uses planar interpolation in its
+      interior.</description>
+  </element>
 
-	<element name="gml:Point">
-		<label>Point</label>
-		<description>A gml:Point is defined by a single coordinate tuple.</description>
-		<example>74. -37.</example>
-	</element>
+  <element name="gml:Point">
+    <label>Point</label>
+    <description>A gml:Point is defined by a single coordinate tuple.</description>
+    <example>74. -37.</example>
+  </element>
 
-	<element name="gml:LineString">
-		<label>Line</label>
-		<description>A gml:LineString is a special curve that consists of a single segment with
-            linear interpolation. It is defined by two or more coordinate tuples, with linear
-            interpolation between them.</description>
-	</element>
+  <element name="gml:LineString">
+    <label>Line</label>
+    <description>A gml:LineString is a special curve that consists of a single segment with
+      linear interpolation. It is defined by two or more coordinate tuples, with linear
+      interpolation between them.</description>
+  </element>
 
-	<element name="gml:LinearRing">
-		<label>Linear ring</label>
-		<description>A gml:LinearRing is defined by four or more coordinate tuples, with linear
-            interpolation between them; the first and last coordinates shall be
-            coincident.</description>
-	</element>
+  <element name="gml:LinearRing">
+    <label>Linear ring</label>
+    <description>A gml:LinearRing is defined by four or more coordinate tuples, with linear
+      interpolation between them; the first and last coordinates shall be
+      coincident.</description>
+  </element>
 
-	<element name="gml:exterior">
-		<label>Outer boundary</label>
-		<description>The outer boundary of a solid.</description>
-	</element>
+  <element name="gml:exterior">
+    <label>Outer boundary</label>
+    <description>The outer boundary of a solid.</description>
+  </element>
 
-	<element name="gml:interior">
-		<label>Inner boundary</label>
-		<description>The inner boundary of a solid</description>
-	</element>
-
-
-	<element name="gml:begin">
-		<label>Begin</label>
-		<description />
-	</element>
-	<element name="gml:end">
-		<label>End</label>
-		<description />
-	</element>
-	<element name="gml:duration">
-		<label>Duration</label>
-		<description>Conforms to the ISO 8601 syntax for temporal length as implemented by the XML Schema duration type.</description>
-	</element>
-	<element name="gml:timeInterval">
-		<label>Time interval</label>
-		<description>conforms to ISO 11404 which is based on floating point values for temporal length.
-    		ISO 11404 syntax specifies the use of a positiveInteger together with appropriate values for radix and factor. The resolution of the time interval is to one radix ^(-factor) of the specified time unit.
-    		The value of the unit is either selected from the units for time intervals from ISO 31-1:1992, or is another suitable unit.  The encoding is defined for GML in gml:TimeUnitType. The second component of this union type provides a method for indicating time units other than the six standard units given in the enumeration.</description>
-	</element>
-	<element name="gml:name">
-		<label>Name</label>
-		<description></description>
-	</element>
-	<element name="gml:metaDataProperty">
-		<label>Metadata property</label>
-		<description></description>
-	</element>
-	<element name="gml:identifier">
-		<label>Identifier</label>
-		<description></description>
-	</element>
-	<element name="gml:description">
-		<label>Description</label>
-		<description>Text description of the element</description>
-	</element>
-	<element name="gml:descriptionReference">
-		<label>Description reference</label>
-		<description></description>
-	</element>
-	<element name="gml:TimeInstant">
-		<label>Time instant</label>
-		<description />
-	</element>
-	<element name="gml:TimePosition">
-		<label>Time position</label>
-		<description />
-	</element>
-	<element name="gml:timePosition">
-		<label>Time position</label>
-		<description />
-	</element>
-	<element name="gml:TimePeriod">
-		<label>Time period</label>
-		<description />
-	</element>
-	<element name="gml:TimeNode">
-		<label>Time node</label>
-		<description />
-	</element>
-	<element name="gml:TimeEdge">
-		<label>Time edge</label>
-		<description />
-	</element>
-	<element name="gml:ProjectedCRS">
-		<label>Projected CRS</label>
-		<description />
-	</element>
-
-	<element name="gml:id">
-		<label>Identifier</label>
-		<description>Unique identifier</description>
-	</element>
-
-	<element name="gml:id" id="191.0" context="gmd:MD_CRS">
-		<label>Ellipsoid</label>
-		<description>Identity of the ellipsoid used</description>
-		<help>identity of the ellipsoid used</help>
-	</element>
-	<element name="id" id="191.0">
-		<label>Identifier</label>
-		<description>Unique identifier</description>
-	</element>
-	<element name="indeterminatePosition">
-		<label>Indeterminate position</label>
-		<description></description>
-	</element>
-	<element name="frame">
-		<label>Frame</label>
-		<description>Frame attribute provides a URI reference that identifies a description of the reference system</description>
-	</element>
-	<element name="calendarEraName">
-		<label>Name of the calendar era</label>
-		<description></description>
-	</element>
-	<element name="unit">
-		<label>Unit</label>
-		<description></description>
-	</element>
-	<element name="radix">
-		<label>Radix</label>
-		<description></description>
-	</element>
-	<element name="factor">
-		<label>Factor</label>
-		<description></description>
-	</element>
+  <element name="gml:interior">
+    <label>Inner boundary</label>
+    <description>The inner boundary of a solid</description>
+  </element>
 
 
+  <element name="gml:begin">
+    <label>Begin</label>
+    <description />
+  </element>
+  <element name="gml:end">
+    <label>End</label>
+    <description />
+  </element>
+  <element name="gml:duration">
+    <label>Duration</label>
+    <description>Conforms to the ISO 8601 syntax for temporal length as implemented by the XML Schema duration type.</description>
+  </element>
+  <element name="gml:timeInterval">
+    <label>Time interval</label>
+    <description>conforms to ISO 11404 which is based on floating point values for temporal length.
+      ISO 11404 syntax specifies the use of a positiveInteger together with appropriate values for radix and factor. The resolution of the time interval is to one radix ^(-factor) of the specified time unit.
+      The value of the unit is either selected from the units for time intervals from ISO 31-1:1992, or is another suitable unit.  The encoding is defined for GML in gml:TimeUnitType. The second component of this union type provides a method for indicating time units other than the six standard units given in the enumeration.</description>
+  </element>
+  <element name="gml:name">
+    <label>Name</label>
+    <description></description>
+  </element>
+  <element name="gml:metaDataProperty">
+    <label>Metadata property</label>
+    <description></description>
+  </element>
+  <element name="gml:identifier">
+    <label>Identifier</label>
+    <description></description>
+  </element>
+  <element name="gml:description">
+    <label>Description</label>
+    <description>Text description of the element</description>
+  </element>
+  <element name="gml:descriptionReference">
+    <label>Description reference</label>
+    <description></description>
+  </element>
+  <element name="gml:TimeInstant">
+    <label>Time instant</label>
+    <description />
+  </element>
+  <element name="gml:TimePosition">
+    <label>Time position</label>
+    <description />
+  </element>
+  <element name="gml:timePosition">
+    <label>Time position</label>
+    <description />
+  </element>
+  <element name="gml:TimePeriod">
+    <label>Time period</label>
+    <description />
+  </element>
+  <element name="gml:TimeNode">
+    <label>Time node</label>
+    <description />
+  </element>
+  <element name="gml:TimeEdge">
+    <label>Time edge</label>
+    <description />
+  </element>
+  <element name="gml:ProjectedCRS">
+    <label>Projected CRS</label>
+    <description />
+  </element>
 
-	<element name="srv:SV_ServiceIdentification">
-		<label>Service Identification (19119)</label>
-		<description>ISO 19119-2005 Service Identification</description>
-	</element>
-	<element name="srv:SV_ParameterDirection">
-		<label>Parameter direction</label>
-	</element>
-	<element name="srv:serviceType"><!-- readonly="true" -->
-		<label>Service Type</label>
-		<description>Service type name from a registry of services. For example, the values of the
-            nameSpace and name attributes of GeneralName may be 'OGC' and 'catalogue'</description>
-		<helper>
-			<option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
-			<option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
-			<option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
-			<option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
-			<option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
-			<!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service
-				type <option value="discovery">Discovery Service (discovery)</option> <option
-				value="view">View Service (view)</option> <option value="download">Download
-				Service (download)</option> <option value="transformation">Transformation
-				Service (transformation)</option> <option value="other">Other Services (other)</option> -->
-		</helper>
-	</element>
-	<element name="srv:serviceTypeVersion">
-		<label>Service Version</label>
-		<description>Provides for searching based on the version of serviceType. For example, we may
-            only be interested in OGC Catalogue V1.1 services. If version is maintained as a
-            separate attribute, users can easily search for all services of a type regardless of the
-            version</description>
-	</element>
-	<element name="srv:accessProperties">
-		<label>Access Properties</label>
-		<description>Information about the availability of the service eg. fees, availability,
-            oredering instructions</description>
-	</element>
-	<element name="srv:restrictions">
-		<label>Restrictions</label>
-		<description>Legal and security constraints on accessing the service and distributing data
-            generated by the service</description>
-	</element>
-	<element name="srv:containsOperations">
-		<label>Contains Operations</label>
-		<description>Provides information about the operations that comprise the
-            service</description>
-	</element>
-	<element name="srv:operatesOn">
-		<label>Operates On</label>
-		<description>Provides information on the datasets that the service operates on</description>
-	</element>
-	<element name="srv:operationName">
-		<label>Operation Name</label>
-		<description>A unique identifier for this interface</description>
-	</element>
-	<element name="srv:SV_OperationMetadata">
-		<label>Operation</label>
-		<description>Operation Metadata</description>
-	</element>
-	<element name="srv:DCP">
-		<label>Distributed Computing Platforms</label>
-		<description>Distributed computing platforms on which the operation has been
-            implemented</description>
-	</element>
-	<element name="srv:operationDescription">
-		<label>Operation Description</label>
-		<description>Free text description of the intent of the operation and the results of the
-            operation</description>
-	</element>
-	<element name="srv:invocationName">
-		<label>Invocation Name</label>
-		<description>The name used to invoke this interface within the context of the DCP. The name
-            is identical for all DCPs</description>
-	</element>
-	<element name="srv:parameters">
-		<label>Parameters</label>
-		<description>The parameters that are required for this interface</description>
-	</element>
-	<element name="srv:SV_Parameter">
-		<label>Parameter</label>
-		<description>The parameters that are required for this interface</description>
-	</element>
-	<element name="srv:direction">
-		<label>Direction</label>
-	</element>
-	<element name="srv:valueType">
-		<label>Value type</label>
-	</element>
-	<element name="srv:connectPoint">
-		<label>Connect Point</label>
-		<description>Handle for accessing the service interface</description>
-	</element>
-	<element name="srv:dependsOn">
-		<label>Depends On</label>
-		<description>List of operations that must be completed immediately before current operation
-            is invoked, structured as a list for capturing alternate predecessor paths and sets for
-            capturing parallel predecessor paths</description>
-	</element>
-	<element name="srv:providerName">
-		<label>Provider Name</label>
-		<description>A unique identifier for this organization</description>
-	</element>
-	<element name="srv:serviceContact">
-		<label>Service Contact</label>
-		<description>Information for contacting the service provider</description>
-	</element>
-	<element name="srv:name">
-		<label>Name</label>
-		<description>The name, as used by the service for this chain or paramater</description>
-	</element>
-	<element name="srv:description">
-		<label>Description</label>
-		<description>Narrative explanation of the services in the chain and resulting output or role
-            of the parameter</description>
-	</element>
-	<element name="srv:optionality">
-		<label>Optionality</label>
-		<description>Indication if the parameter is required</description>
-	</element>
-	<element name="srv:repeatability">
-		<label>Repeatability</label>
-		<description>Indication if more than one value of the parameter may be
-            provided</description>
-	</element>
-	<element name="srv:coupledResource">
-		<label>Coupled Resource</label>
-		<description>Details of services coupled with this one</description>
-		<inspireInfo>Optional in INSPIRE</inspireInfo>
-	</element>
-	<element name="srv:SV_CoupledResource">
-		<label>Coupled Resource</label>
-		<description>Details of services coupled with this one</description>
-	</element>
-	<element name="srv:identifier">
-		<label>Identifier</label>
-		<description>Identifier of resource to which the operation applies</description>
-	</element>
-	<element name="srv:couplingType">
-		<label>Coupling Type</label>
-		<description>Type of Coupling</description>
-	</element>
-	<element name="srv:SV_CouplingType">
-		<label>Coupling Type</label>
-		<description>Type of Coupling</description>
-	</element>
-	<element name="srv:extent">
-		<label>Extent</label>
-		<description>Geographic/Temporal Extent of Service</description>
-	</element>
-	<element name="srv:keywords">
-		<label>Keywords</label>
-		<description>Keywords describing service</description>
-	</element>
-	<element name="gmd:locale">
-		<label>Other language</label>
-		<description>Use this section to define other metadata language (multilingual metadata).</description>
-	</element>
-	<element name="gmd:describes">
-		<label>Describes</label>
-		<description>Describes</description>
-	</element>
-	<element name="gmd:propertyType">
-		<label>PropertyType</label>
-		<description>PropertyType</description>
-	</element>
-	<element name="gmd:PT_Locale">
-		<label>Locale</label>
-		<description>Locale</description>
-	</element>
-	<element name="gmd:PT_LocaleContainer">
-		<label>PT_LocaleContainer</label>
-		<description>PT_LocaleContainer</description>
-	</element>
-	<element name="gmd:featureType">
-		<label>Feature type</label>
-		<description>Subset of feature types from cited feature catalogue occurring in
-            data</description>
-	</element>
-	<element name="gmd:featureAttribute">
-		<label>Feature attribute</label>
-		<description />
-	</element>
-	<element name="gmd:DS_Association">
-		<label>DS_Association</label>
-		<description>DS_Association</description>
-	</element>
-	<element name="gmd:DS_DataSet">
-		<label>DS_DataSet</label>
-		<description>DS_DataSet</description>
-	</element>
-	<element name="gmd:DS_Initiative">
-		<label>DS_Initiative</label>
-		<description>DS_Initiative</description>
-	</element>
-	<element name="gmd:DS_OtherAggregate">
-		<label>DS_OtherAggregate</label>
-		<description>DS_OtherAggregate</description>
-	</element>
-	<element name="gmd:DS_Platform">
-		<label>DS_Platform</label>
-		<description>DS_Platform</description>
-	</element>
-	<element name="gmd:DS_ProductionSeries">
-		<label>DS_ProductionSeries</label>
-		<description>DS_ProductionSeries</description>
-	</element>
-	<element name="gmd:DS_Sensor">
-		<label>DS_Sensor</label>
-		<description>DS_Sensor</description>
-	</element>
-	<element name="gmd:DS_Series">
-		<label>DS_Series</label>
-		<description>DS_Series</description>
-	</element>
-	<element name="gmd:DS_StereoMate">
-		<label>DS_StereoMate</label>
-		<description>DS_StereoMate</description>
-	</element>
-	<element name="gmd:languageCode">
-		<label>Language</label>
-		<description>Language code</description>
-	</element>
-	<element name="gmd:LanguageCode">
-		<label>ISO Language code</label>
-		<description>Language code</description>
-	</element>
-	<element name="gmd:characterEncoding">
-		<label>Character encoding</label>
-		<description>CharacterEncoding</description>
-	</element>
-	<element name="uuidref">
-		<label>Metadata uuid</label>
-		<description>Unique identifier</description>
-	</element>
-	<element name="uom">
-		<label>Units of measure</label>
-		<description />
-		<helper>
-			<option value="m">meters</option>
-		</helper>
-	</element>
-	<element name="gco:Record">
-		<label>Record</label>
-		<description />
-	</element>
-	<element name="gco:Binary">
-		<label>Binary</label>
-		<description />
-	</element>
-	<element name="gco:MemberName">
-		<label>Member name</label>
-		<description />
-	</element>
-	<element name="gco:aName">
-		<label>Name</label>
-		<description />
-	</element>
-	<element name="gco:aName" context="gco:TypeName">
-		<label>Type name</label>
-		<description />
-		<helper>
-			<option value="BOOLEAN">BOOLEAN</option>
-			<option value="BYTE">BYTE</option>
-			<option value="CHARACTER">CHARACTER</option>
-			<option value="DATE">DATE</option>
-			<option value="DATETIME">DATETIME</option>
-			<option value="DOUBLE">DOUBLE</option>
-			<option value="FLOAT">FLOAT</option>
-			<option value="INTEGER">INTEGER</option>
-			<option value="NUMERIC">NUMERIC</option>
-			<option value="REAL">REAL</option>
-			<option value="SERIAL">SERIAL</option>
-			<option value="VARCHAR">VARCHAR</option>
-			<option value="TEXT">TEXT</option>
-		</helper>
-	</element>
-	<element name="gco:attributeType">
-		<label>Attribute type</label>
-		<description />
-	</element>
-	<element name="gco:TypeName">
-		<label>Type name</label>
-		<description />
-	</element>
-	<element name="gco:LocalName">
-		<label>Local name</label>
-		<description />
-	</element>
-	<element name="gco:ScopedName">
-		<label>Scoped name</label>
-		<description />
-	</element>
-	<element name="gmd:has">
-		<label>Has</label>
-		<description>Has</description>
-	</element>
-	<element name="gmd:MD_PixelOrientationCode">
-		<label>Pixel origin position</label>
-		<description>Point in a pixel corresponding to the Earth location of the pixel</description>
-	</element>
-	<element name="gmd:MD_ObligationCode">
-		<label>Obligation code</label>
-		<description>Obligation of the element or entity</description>
-	</element>
-	<element name="gmd:maximumOccurrence">
-		<label>Maximum occurrence</label>
-		<description>Maximum occurrence of the extended element</description>
-	</element>
-	<element name="gco:localName">
-		<label>Name</label>
-		<description />
-	</element>
-	<element name="gmd:composedOf">
-		<label>ComposedOf</label>
-		<description>ComposedOf</description>
-	</element>
-	<element name="gmd:partOf">
-		<label>PartOf</label>
-		<description>PartOf</description>
-	</element>
-	<element name="gmd:seriesMetadata">
-		<label>SeriesMetadata</label>
-		<description>SeriesMetadata</description>
-	</element>
-	<element name="gmd:subset">
-		<label>Subset</label>
-		<description>Subset</description>
-	</element>
-	<element name="gmd:superset">
-		<label>Superset</label>
-		<description>Superset</description>
-	</element>
-	<element name="gmd:CI_RoleCode">
-		<label>Role code</label>
-		<description />
-	</element>
-	<element name="gts:TM_PeriodDuration">
-		<label>Period duration</label>
-		<description>
-            The duration data type is used to specify a time interval.
+  <element name="gml:id">
+    <label>Identifier</label>
+    <description>Unique identifier</description>
+  </element>
 
-            The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
+  <element name="gml:id" id="191.0" context="gmd:MD_CRS">
+    <label>Ellipsoid</label>
+    <description>Identity of the ellipsoid used</description>
+    <help>identity of the ellipsoid used</help>
+  </element>
+  <element name="id" id="191.0">
+    <label>Identifier</label>
+    <description>Unique identifier</description>
+  </element>
+  <element name="indeterminatePosition">
+    <label>Indeterminate position</label>
+    <description></description>
+  </element>
+  <element name="frame">
+    <label>Frame</label>
+    <description>Frame attribute provides a URI reference that identifies a description of the reference system</description>
+  </element>
+  <element name="calendarEraName">
+    <label>Name of the calendar era</label>
+    <description></description>
+  </element>
+  <element name="unit">
+    <label>Unit</label>
+    <description></description>
+  </element>
+  <element name="radix">
+    <label>Radix</label>
+    <description></description>
+  </element>
+  <element name="factor">
+    <label>Factor</label>
+    <description></description>
+  </element>
 
-            * P indicates the period (required)
-            * nY indicates the number of years
-            * nM indicates the number of months
-            * nD indicates the number of days
-            * T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
-            * nH indicates the number of hours
-            * nM indicates the number of minutes
-            * nS indicates the number of seconds
-        </description>
-    </element>
-    <element name="gco:CharacterString">
-        <label>Text</label>
-        <description/>
-    </element>
-    <element name="gco:nilReason">
-        <label>Nil reason</label>
-        <description/>
-    </element>
-    <element name="srv:DCPList">
-        <label>Distributed Computing Platforms list</label>
-    </element>
-    <element name="gmd:verticalCRS">
-        <label>Vertical CRS</label>
-        <description>Provides information about the origin from which the maximum and minimum elevation values are measured</description>
-    </element>
-    <element name="gmx:FileName">
-        <label>File name</label>
-        <description>File name and source URL.</description>
-    </element>
-    <element name="src">
-        <label>Source URL</label>
-        <description>URL of the document.</description>
-    </element>
-		<element name="gmx:Anchor">
-				<label>Anchor</label>
-				<description>Supports hyper-linking capabilities and ensures a web-like implementation of CharacterStrings</description>
-		</element>
-		<element name="xlink:href">
-			<label>Link href</label>
-			<description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
-		</element>
-  	<!-- ==================================================== -->
-    <element name="hidden-elements">
-        <label>Hidden Elements</label>
-        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
-    </element>
-    <!-- ==================================================== -->
-    <element name="gmx:name">
-        <label>Name</label>
-        <description>Feature catalogue name</description>
-    </element>
-    <element name="gmx:scope">
-        <label>Scope</label>
-        <description>Scope definition</description>
-    </element>
-    <element name="gmx:versionNumber">
-        <label>Version</label>
-        <description>Catalogue version</description>
-    </element>
-    <element name="gmx:versionDate">
-        <label>Date</label>
-        <description>Catalogue date</description>
-    </element>
-    <element name="gmx:fieldOfApplication">
-        <label>Field of application</label>
-        <description>Field of application</description>
-    </element>
-    <element name="gml:axis">
-        <label>Axis</label>
-    </element>
-    <element name="gml:axisAbbrev">
-        <label>Axis abbreviation</label>
-    </element>
-    <element name="gml:axisDirection">
-        <label>Axis direction</label>
-    </element>
-    <element name="gml:maximumValue">
-        <label>Maximum value</label>
-    </element>
-    <element name="gml:minimumValue">
-        <label>Minimum value</label>
-    </element>
-    <element name="gml:scope">
-        <label>Scope</label>
-    </element>
-    <element name="gml:VerticalCRS">
-        <label>Vertical CRS</label>
-    </element>
-    <element name="gml:remarks">
-        <label>Remarks</label>
-    </element>
-    <element name="gml:domainOfValidity">
-        <label>Domain of validity</label>
-    </element>
-    <element name="gml:verticalCS">
-        <label>Vertical CS</label>
-    </element>
-    <element name="gml:VerticalCS">
-        <label>Vertical CS</label>
-    </element>
-    <element name="gml:CoordinateSystemAxis">
-        <label>Coordinate system axis</label>
-    </element>
-    <element name="gml:rangeMeaning">
-        <label>Range meaning</label>
-    </element>
-    <element name="gml:verticalDatum">
-        <label>Vertical datum</label>
-    </element>
-    <element name="gml:VerticalDatum">
-        <label>Vertical datum</label>
-    </element>
-    <element name="gml:realizationEpoch">
-        <label>Realization epoch</label>
-    </element>
-    <element name="gmd:MD_ProgressCode">
-        <label>Progress</label>
-    </element>
-    <element name="gmd:MD_MaintenanceFrequencyCode">
-        <label>Maintenance Frequency</label>
-    </element>
-    <element name="gmd:MD_SpatialRepresentationTypeCode">
-        <label>Spatial Representation Type</label>
-    </element>
-    <element name="gmd:MD_CharacterSetCode">
-        <label>Character Set</label>
-    </element>
-    <element name="gmd:MD_TopologyLevelCode">
-        <label>Topology Level</label>
-    </element>
-    <element name="gmd:MD_GeometricObjectTypeCode">
-        <label>Geometric Object Type</label>
-    </element>
-    <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
-        <label>Access Restriction</label>
-    </element>
-    <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
-        <label>Use Restriction</label>
-    </element>
-    <element name="gmd:DS_AssociationTypeCode">
-        <label>Association Type</label>
-    </element>
-    <element name="gmd:DS_InitiativeTypeCode">
-        <label>Initiative Type</label>
-    </element>
-    <element name="gco:Angle">
-      <label>Angle</label>
-    </element>
-    <element name="gco:Distance">
-      <label>Distance</label>
-    </element>
-    <element name="gco:Length">
-      <label>Length</label>
-    </element>
-    <element name="gco:Measure">
-      <label>Measure</label>
-    </element>
-    <element name="gco:Scale">
-      <label>Scale</label>
-    </element>
+
+
+  <element name="srv:SV_ServiceIdentification">
+    <label>Service Identification (19119)</label>
+    <description>ISO 19119-2005 Service Identification</description>
+  </element>
+  <element name="srv:SV_ParameterDirection">
+    <label>Parameter direction</label>
+  </element>
+  <element name="srv:serviceType"><!-- readonly="true" -->
+    <label>Service Type</label>
+    <description>Service type name from a registry of services. For example, the values of the
+      nameSpace and name attributes of GeneralName may be 'OGC' and 'catalogue'</description>
+    <helper>
+      <option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
+      <option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
+      <option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
+      <option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
+      <option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
+      <!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service
+                type <option value="discovery">Discovery Service (discovery)</option> <option
+                value="view">View Service (view)</option> <option value="download">Download
+                Service (download)</option> <option value="transformation">Transformation
+                Service (transformation)</option> <option value="other">Other Services (other)</option> -->
+    </helper>
+  </element>
+  <element name="srv:serviceTypeVersion">
+    <label>Service Version</label>
+    <description>Provides for searching based on the version of serviceType. For example, we may
+      only be interested in OGC Catalogue V1.1 services. If version is maintained as a
+      separate attribute, users can easily search for all services of a type regardless of the
+      version</description>
+  </element>
+  <element name="srv:accessProperties">
+    <label>Access Properties</label>
+    <description>Information about the availability of the service eg. fees, availability,
+      oredering instructions</description>
+  </element>
+  <element name="srv:restrictions">
+    <label>Restrictions</label>
+    <description>Legal and security constraints on accessing the service and distributing data
+      generated by the service</description>
+  </element>
+  <element name="srv:containsOperations">
+    <label>Contains Operations</label>
+    <description>Provides information about the operations that comprise the
+      service</description>
+  </element>
+  <element name="srv:operatesOn">
+    <label>Operates On</label>
+    <description>Provides information on the datasets that the service operates on</description>
+  </element>
+  <element name="srv:operationName">
+    <label>Operation Name</label>
+    <description>A unique identifier for this interface</description>
+  </element>
+  <element name="srv:SV_OperationMetadata">
+    <label>Operation</label>
+    <description>Operation Metadata</description>
+  </element>
+  <element name="srv:DCP">
+    <label>Distributed Computing Platforms</label>
+    <description>Distributed computing platforms on which the operation has been
+      implemented</description>
+  </element>
+  <element name="srv:operationDescription">
+    <label>Operation Description</label>
+    <description>Free text description of the intent of the operation and the results of the
+      operation</description>
+  </element>
+  <element name="srv:invocationName">
+    <label>Invocation Name</label>
+    <description>The name used to invoke this interface within the context of the DCP. The name
+      is identical for all DCPs</description>
+  </element>
+  <element name="srv:parameters">
+    <label>Parameters</label>
+    <description>The parameters that are required for this interface</description>
+  </element>
+  <element name="srv:SV_Parameter">
+    <label>Parameter</label>
+    <description>The parameters that are required for this interface</description>
+  </element>
+  <element name="srv:direction">
+    <label>Direction</label>
+  </element>
+  <element name="srv:valueType">
+    <label>Value type</label>
+  </element>
+  <element name="srv:connectPoint">
+    <label>Connect Point</label>
+    <description>Handle for accessing the service interface</description>
+  </element>
+  <element name="srv:dependsOn">
+    <label>Depends On</label>
+    <description>List of operations that must be completed immediately before current operation
+      is invoked, structured as a list for capturing alternate predecessor paths and sets for
+      capturing parallel predecessor paths</description>
+  </element>
+  <element name="srv:providerName">
+    <label>Provider Name</label>
+    <description>A unique identifier for this organization</description>
+  </element>
+  <element name="srv:serviceContact">
+    <label>Service Contact</label>
+    <description>Information for contacting the service provider</description>
+  </element>
+  <element name="srv:name">
+    <label>Name</label>
+    <description>The name, as used by the service for this chain or paramater</description>
+  </element>
+  <element name="srv:description">
+    <label>Description</label>
+    <description>Narrative explanation of the services in the chain and resulting output or role
+      of the parameter</description>
+  </element>
+  <element name="srv:optionality">
+    <label>Optionality</label>
+    <description>Indication if the parameter is required</description>
+  </element>
+  <element name="srv:repeatability">
+    <label>Repeatability</label>
+    <description>Indication if more than one value of the parameter may be
+      provided</description>
+  </element>
+  <element name="srv:coupledResource">
+    <label>Coupled Resource</label>
+    <description>Details of services coupled with this one</description>
+    <inspireInfo>Optional in INSPIRE</inspireInfo>
+  </element>
+  <element name="srv:SV_CoupledResource">
+    <label>Coupled Resource</label>
+    <description>Details of services coupled with this one</description>
+  </element>
+  <element name="srv:identifier">
+    <label>Identifier</label>
+    <description>Identifier of resource to which the operation applies</description>
+  </element>
+  <element name="srv:couplingType">
+    <label>Coupling Type</label>
+    <description>Type of Coupling</description>
+  </element>
+  <element name="srv:SV_CouplingType">
+    <label>Coupling Type</label>
+    <description>Type of Coupling</description>
+  </element>
+  <element name="srv:extent">
+    <label>Extent</label>
+    <description>Geographic/Temporal Extent of Service</description>
+  </element>
+  <element name="srv:keywords">
+    <label>Keywords</label>
+    <description>Keywords describing service</description>
+  </element>
+  <element name="gmd:locale">
+    <label>Other language</label>
+    <description>Use this section to define other metadata language (multilingual metadata).</description>
+  </element>
+  <element name="gmd:describes">
+    <label>Describes</label>
+    <description>Describes</description>
+  </element>
+  <element name="gmd:propertyType">
+    <label>PropertyType</label>
+    <description>PropertyType</description>
+  </element>
+  <element name="gmd:PT_Locale">
+    <label>Locale</label>
+    <description>Locale</description>
+  </element>
+  <element name="gmd:PT_LocaleContainer">
+    <label>PT_LocaleContainer</label>
+    <description>PT_LocaleContainer</description>
+  </element>
+  <element name="gmd:featureType">
+    <label>Feature type</label>
+    <description>Subset of feature types from cited feature catalogue occurring in
+      data</description>
+  </element>
+  <element name="gmd:featureAttribute">
+    <label>Feature attribute</label>
+    <description />
+  </element>
+  <element name="gmd:DS_Association">
+    <label>DS_Association</label>
+    <description>DS_Association</description>
+  </element>
+  <element name="gmd:DS_DataSet">
+    <label>DS_DataSet</label>
+    <description>DS_DataSet</description>
+  </element>
+  <element name="gmd:DS_Initiative">
+    <label>DS_Initiative</label>
+    <description>DS_Initiative</description>
+  </element>
+  <element name="gmd:DS_OtherAggregate">
+    <label>DS_OtherAggregate</label>
+    <description>DS_OtherAggregate</description>
+  </element>
+  <element name="gmd:DS_Platform">
+    <label>DS_Platform</label>
+    <description>DS_Platform</description>
+  </element>
+  <element name="gmd:DS_ProductionSeries">
+    <label>DS_ProductionSeries</label>
+    <description>DS_ProductionSeries</description>
+  </element>
+  <element name="gmd:DS_Sensor">
+    <label>DS_Sensor</label>
+    <description>DS_Sensor</description>
+  </element>
+  <element name="gmd:DS_Series">
+    <label>DS_Series</label>
+    <description>DS_Series</description>
+  </element>
+  <element name="gmd:DS_StereoMate">
+    <label>DS_StereoMate</label>
+    <description>DS_StereoMate</description>
+  </element>
+  <element name="gmd:languageCode">
+    <label>Language</label>
+    <description>Language code</description>
+  </element>
+  <element name="gmd:LanguageCode">
+    <label>ISO Language code</label>
+    <description>Language code</description>
+  </element>
+  <element name="gmd:characterEncoding">
+    <label>Character encoding</label>
+    <description>CharacterEncoding</description>
+  </element>
+  <element name="uuidref">
+    <label>Metadata uuid</label>
+    <description>Unique identifier</description>
+  </element>
+  <element name="uom">
+    <label>Units of measure</label>
+    <description />
+    <helper>
+      <option value="m">meters</option>
+    </helper>
+  </element>
+  <element name="gco:Record">
+    <label>Record</label>
+    <description />
+  </element>
+  <element name="gco:Binary">
+    <label>Binary</label>
+    <description />
+  </element>
+  <element name="gco:MemberName">
+    <label>Member name</label>
+    <description />
+  </element>
+  <element name="gco:aName">
+    <label>Name</label>
+    <description />
+  </element>
+  <element name="gco:aName" context="gco:TypeName">
+    <label>Type name</label>
+    <description />
+    <helper>
+      <option value="BOOLEAN">BOOLEAN</option>
+      <option value="BYTE">BYTE</option>
+      <option value="CHARACTER">CHARACTER</option>
+      <option value="DATE">DATE</option>
+      <option value="DATETIME">DATETIME</option>
+      <option value="DOUBLE">DOUBLE</option>
+      <option value="FLOAT">FLOAT</option>
+      <option value="INTEGER">INTEGER</option>
+      <option value="NUMERIC">NUMERIC</option>
+      <option value="REAL">REAL</option>
+      <option value="SERIAL">SERIAL</option>
+      <option value="VARCHAR">VARCHAR</option>
+      <option value="TEXT">TEXT</option>
+    </helper>
+  </element>
+  <element name="gco:attributeType">
+    <label>Attribute type</label>
+    <description />
+  </element>
+  <element name="gco:TypeName">
+    <label>Type name</label>
+    <description />
+  </element>
+  <element name="gco:LocalName">
+    <label>Local name</label>
+    <description />
+  </element>
+  <element name="gco:ScopedName">
+    <label>Scoped name</label>
+    <description />
+  </element>
+  <element name="gmd:has">
+    <label>Has</label>
+    <description>Has</description>
+  </element>
+  <element name="gmd:MD_PixelOrientationCode">
+    <label>Pixel origin position</label>
+    <description>Point in a pixel corresponding to the Earth location of the pixel</description>
+  </element>
+  <element name="gmd:MD_ObligationCode">
+    <label>Obligation code</label>
+    <description>Obligation of the element or entity</description>
+  </element>
+  <element name="gmd:maximumOccurrence">
+    <label>Maximum occurrence</label>
+    <description>Maximum occurrence of the extended element</description>
+  </element>
+  <element name="gco:localName">
+    <label>Name</label>
+    <description />
+  </element>
+  <element name="gmd:composedOf">
+    <label>ComposedOf</label>
+    <description>ComposedOf</description>
+  </element>
+  <element name="gmd:partOf">
+    <label>PartOf</label>
+    <description>PartOf</description>
+  </element>
+  <element name="gmd:seriesMetadata">
+    <label>SeriesMetadata</label>
+    <description>SeriesMetadata</description>
+  </element>
+  <element name="gmd:subset">
+    <label>Subset</label>
+    <description>Subset</description>
+  </element>
+  <element name="gmd:superset">
+    <label>Superset</label>
+    <description>Superset</description>
+  </element>
+  <element name="gmd:CI_RoleCode">
+    <label>Role code</label>
+    <description />
+  </element>
+  <element name="gts:TM_PeriodDuration">
+    <label>Period duration</label>
+    <description>
+      The duration data type is used to specify a time interval.
+
+      The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
+
+      * P indicates the period (required)
+      * nY indicates the number of years
+      * nM indicates the number of months
+      * nD indicates the number of days
+      * T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
+      * nH indicates the number of hours
+      * nM indicates the number of minutes
+      * nS indicates the number of seconds
+    </description>
+  </element>
+  <element name="gco:CharacterString">
+    <label>Text</label>
+    <description/>
+  </element>
+  <element name="gco:nilReason">
+    <label>Nil reason</label>
+    <description/>
+  </element>
+  <element name="srv:DCPList">
+    <label>Distributed Computing Platforms list</label>
+  </element>
+  <element name="gmd:verticalCRS">
+    <label>Vertical CRS</label>
+    <description>Provides information about the origin from which the maximum and minimum elevation values are measured</description>
+  </element>
+  <element name="gmx:FileName">
+    <label>File name</label>
+    <description>File name and source URL.</description>
+  </element>
+  <element name="src">
+    <label>Source URL</label>
+    <description>URL of the document.</description>
+  </element>
+  <element name="gmx:Anchor">
+    <label>Anchor</label>
+    <description>Supports hyper-linking capabilities and ensures a web-like implementation of CharacterStrings</description>
+  </element>
+  <element name="xlink:href">
+    <label>Link href</label>
+    <description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="hidden-elements">
+    <label>Hidden Elements</label>
+    <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmx:name">
+    <label>Name</label>
+    <description>Feature catalogue name</description>
+  </element>
+  <element name="gmx:scope">
+    <label>Scope</label>
+    <description>Scope definition</description>
+  </element>
+  <element name="gmx:versionNumber">
+    <label>Version</label>
+    <description>Catalogue version</description>
+  </element>
+  <element name="gmx:versionDate">
+    <label>Date</label>
+    <description>Catalogue date</description>
+  </element>
+  <element name="gmx:fieldOfApplication">
+    <label>Field of application</label>
+    <description>Field of application</description>
+  </element>
+  <element name="gml:axis">
+    <label>Axis</label>
+  </element>
+  <element name="gml:axisAbbrev">
+    <label>Axis abbreviation</label>
+  </element>
+  <element name="gml:axisDirection">
+    <label>Axis direction</label>
+  </element>
+  <element name="gml:maximumValue">
+    <label>Maximum value</label>
+  </element>
+  <element name="gml:minimumValue">
+    <label>Minimum value</label>
+  </element>
+  <element name="gml:scope">
+    <label>Scope</label>
+  </element>
+  <element name="gml:VerticalCRS">
+    <label>Vertical CRS</label>
+  </element>
+  <element name="gml:remarks">
+    <label>Remarks</label>
+  </element>
+  <element name="gml:domainOfValidity">
+    <label>Domain of validity</label>
+  </element>
+  <element name="gml:verticalCS">
+    <label>Vertical CS</label>
+  </element>
+  <element name="gml:VerticalCS">
+    <label>Vertical CS</label>
+  </element>
+  <element name="gml:CoordinateSystemAxis">
+    <label>Coordinate system axis</label>
+  </element>
+  <element name="gml:rangeMeaning">
+    <label>Range meaning</label>
+  </element>
+  <element name="gml:verticalDatum">
+    <label>Vertical datum</label>
+  </element>
+  <element name="gml:VerticalDatum">
+    <label>Vertical datum</label>
+  </element>
+  <element name="gml:realizationEpoch">
+    <label>Realization epoch</label>
+  </element>
+  <element name="gmd:MD_ProgressCode">
+    <label>Progress</label>
+  </element>
+  <element name="gmd:MD_MaintenanceFrequencyCode">
+    <label>Maintenance Frequency</label>
+  </element>
+  <element name="gmd:MD_SpatialRepresentationTypeCode">
+    <label>Spatial Representation Type</label>
+  </element>
+  <element name="gmd:MD_CharacterSetCode">
+    <label>Character Set</label>
+  </element>
+  <element name="gmd:MD_TopologyLevelCode">
+    <label>Topology Level</label>
+  </element>
+  <element name="gmd:MD_GeometricObjectTypeCode">
+    <label>Geometric Object Type</label>
+  </element>
+  <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
+    <label>Access Restriction</label>
+  </element>
+  <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
+    <label>Use Restriction</label>
+  </element>
+  <element name="gmd:DS_AssociationTypeCode">
+    <label>Association Type</label>
+  </element>
+  <element name="gmd:DS_InitiativeTypeCode">
+    <label>Initiative Type</label>
+  </element>
+  <element name="gco:Angle">
+    <label>Angle</label>
+  </element>
+  <element name="gco:Distance">
+    <label>Distance</label>
+  </element>
+  <element name="gco:Length">
+    <label>Length</label>
+  </element>
+  <element name="gco:Measure">
+    <label>Measure</label>
+  </element>
+  <element name="gco:Scale">
+    <label>Scale</label>
+  </element>
 </labels>
