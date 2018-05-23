@@ -779,7 +779,9 @@ public class KeywordsApi {
             String itemName = registryUrl.substring( (registryUrl.lastIndexOf("/")+1), registryUrl.length() );
 
             rdfFile = extractSKOSFromRegistry(registryUrl, itemName, registryLanguage, context);
-            fname = itemName + ".rdf";
+            fname = registryUrl.replaceAll("[^A-Za-z]+", "") +
+                "-" +
+                itemName + ".rdf";
 
         } else {
 
@@ -843,8 +845,8 @@ public class KeywordsApi {
             Element documents = new Element("documents");
             for (String language : lang) {
                 try {
-                    String laguageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
-                    Path localRdf = getXMLContentFromUrl(laguageFileUrl, context);
+                    String languageFileUrl = registryUrl + "/" + itemName + "." + language + ".xml";
+                    Path localRdf = getXMLContentFromUrl(languageFileUrl, context);
                     Element codeList = Xml.loadFile(localRdf);
                     documents.addContent(codeList);
                 } catch(Exception e) {
