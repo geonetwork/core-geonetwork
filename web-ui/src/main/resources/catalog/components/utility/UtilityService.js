@@ -351,15 +351,16 @@
   /**
    * Return the object value in requested lang or the first value.
    */
-  module.filter('gnLocalized', function() {
+  module.filter('gnLocalized', ['gnGlobalSettings', function(gnGlobalSettings) {
     return function(obj, lang) {
+    lang = lang || gnGlobalSettings.iso3lang;
       if (angular.isObject(obj)) {
         return obj[lang] ? obj[lang] : (obj[Object.keys(obj)[0]] || '');
       } else {
         return '';
       }
     };
-  });
+  }]);
 
   module.factory('gnRegionService', [
     '$q',
