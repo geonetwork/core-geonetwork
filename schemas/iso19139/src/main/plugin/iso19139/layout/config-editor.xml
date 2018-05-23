@@ -2271,14 +2271,6 @@
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties"
             or="axisDimensionProperties"
             in="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*"/>
-          <!--<field
-            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:cellGeometry"/>-->
-          <!--<field
-            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:transformationParameterAvailability"/>
-          <field
-            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:checkPointAvailability"/>
-          <field
-            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:pointInPixel"/>-->
           <field
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:geometricObjects"/>
 

@@ -115,7 +115,7 @@ Stylesheet used to add vector information field to a metadata record.
       <xsl:if test="not(gmd:spatialRepresentationInfo[gmd:MD_Georectified])">
         <!-- applicable for gridded datasets, used to describe time and vertical axis -->
         <gmd:spatialRepresentationInfo>
-          <gmd:MD_Georectified>
+          <gmd:MD_GridSpatialRepresentation>
             <gmd:numberOfDimensions>
               <!--  MANDATORY, CONSTANT: 4 axis always (x,y,z,t)-->
               <gco:Integer>4</gco:Integer>
@@ -149,13 +149,7 @@ Stylesheet used to add vector information field to a metadata record.
             <gmd:transformationParameterAvailability>
               <gco:Boolean>false</gco:Boolean>
             </gmd:transformationParameterAvailability>
-            <gmd:checkPointAvailability>
-              <gco:Boolean>false</gco:Boolean>
-            </gmd:checkPointAvailability>
-            <gmd:pointInPixel>
-              <gmd:MD_PixelOrientationCode>center</gmd:MD_PixelOrientationCode>
-            </gmd:pointInPixel>
-          </gmd:MD_Georectified>
+          </gmd:MD_GridSpatialRepresentation>
         </gmd:spatialRepresentationInfo>
       </xsl:if>
 

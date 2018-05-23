@@ -109,7 +109,7 @@
               <gmd:MD_Identifier>
                 <gmd:code>
                   <gmx:Anchor
-                    xlink:href="http://sextant-test.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.sextant-theme">
+                    xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.sextant-theme">
                     geonetwork.thesaurus.local.theme.sextant-theme
                   </gmx:Anchor>
                 </gmd:code>
@@ -181,8 +181,22 @@
                 priority="2"/>
 
 
+  <!-- Convert MD_Georectified to MD_GridSpatialRepresentation -->
+  <xsl:template match="gmd:MD_Georectified">
+    <gmd:MD_GridSpatialRepresentation>
+      <xsl:apply-templates select="gmd:numberOfDimensions|
+                                    gmd:axisDimensionProperties|
+                                    gmd:cellGeometry|
+                                    gmd:transformationParameterAvailability"/>
+      <!-- This implies that checkpointAvailability, cpDes, cornerPoints,
+      centerPoint, pointInPixel and transformationDimension* properties are
+      removed. -->
+    </gmd:MD_GridSpatialRepresentation>
+  </xsl:template>
+
   <!-- Remove content info section -->
   <xsl:template match="gmd:contentInfo"/>
+
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
