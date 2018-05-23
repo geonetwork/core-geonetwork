@@ -284,7 +284,7 @@ USA.
             <!-- Display error if INSPIRE Theme thesaurus is not available. -->
             <sch:assert test="count($inspire-theme) > 0">
                 INSPIRE Theme thesaurus not found (at <sch:value-of select="$thesaurusURL" />. Check installation in codelist/external/thesauri/theme.
-                Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
+                Download thesaurus from INSPIRE Registry.
             </sch:assert>
 
 
