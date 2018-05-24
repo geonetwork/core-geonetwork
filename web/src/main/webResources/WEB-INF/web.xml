@@ -150,7 +150,7 @@
     -->
     <init-param>
       <param-name>mode</param-name>
-      <param-value>DENY</param-value>
+      <param-value>SAMEORIGIN</param-value>
     </init-param>
     <!-- Allowed url. Used in ALLOW-FROM mode only -->
     <!--<init-param>
