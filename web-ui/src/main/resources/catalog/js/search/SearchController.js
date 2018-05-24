@@ -76,6 +76,9 @@
       /* Default result view template */
       $scope.resultTemplate = gnSearchSettings.resultTemplate ||
           gnSearchSettings.resultViewTpls[0].tplUrl;
+      /* Default advanced search form template */
+      $scope.advancedSearchTemplate = gnSearchSettings.advancedSearchTemplate ||
+        "../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html";
 
       $scope.getAnySuggestions = function(val) {
         return suggestService.getAnySuggestions(val);
