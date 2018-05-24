@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2018 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -20,22 +20,27 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.migration;
 
-package org.fao.geonet;
+public class DatabaseMigrationException extends RuntimeException {
+    public DatabaseMigrationException() {
+        super();
+    }
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+    public DatabaseMigrationException(String message) {
+        super(message);
+    }
 
-import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.migration.DatabaseMigrationException;
+    public DatabaseMigrationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-/**
- * A task for migrating the database from one version to another
- *
- * @author jeichar
- */
-public interface DatabaseMigrationTask {
-    void update(Connection connection) throws SQLException, DatabaseMigrationException;
+    public DatabaseMigrationException(Throwable cause) {
+        super(cause);
+    }
+
+    protected DatabaseMigrationException(String message, Throwable cause, boolean enableSuppression,
+                                         boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }
