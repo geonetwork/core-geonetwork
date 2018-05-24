@@ -23,7 +23,7 @@
   -->
 
 <xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -100,6 +100,8 @@
 
     <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
 
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+
     <!-- Required status is defined in parent element for
     some profiles like ISO19139. If not set, the element
     editing information is used.
@@ -110,6 +112,9 @@
         <xsl:when
           test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:when test="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),$isoType, $xpath)/condition = 'mandatory'">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
