@@ -8,8 +8,8 @@
   </button>
   <div data-ngeo-popover-content class="gn-baselayer-switcher-content">
     <ul class="gn-baselayer-switcher-menu" role="menu">
-      <li ng-if="::layer" ng-repeat="layer in layers">
-        <span ng-click="changeBackground(layer)" ng-if="::!layer.get('loading')">
+      <li ng-if="::layer" ng-repeat="layer in layers" ng-click="changeBackground(layer);popoverCtrl.dismissPopover()">
+        <span ng-if="::!layer.get('loading')">
           <span class="fa"
                 ng-class="(layer == map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
           {{layer.get('title')}}

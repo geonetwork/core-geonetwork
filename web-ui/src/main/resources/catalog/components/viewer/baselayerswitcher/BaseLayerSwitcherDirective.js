@@ -59,13 +59,9 @@
             return false;
           };
 
-          scope.dismissPopover = function() {
-            angular.element(element.find("[data-ngeo-popover]")[0]).scope().popoverCtrl.dismissPopover()
-          };
 
           scope.changeBackground = function (layer) {
             scope.setBgLayer(layer);
-            scope.dismissPopover();
           };
 
           scope.reset = function() {
