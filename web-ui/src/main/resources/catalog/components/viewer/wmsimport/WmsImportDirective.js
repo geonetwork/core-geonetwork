@@ -43,8 +43,10 @@
     'gnSearchManagerService',
     'Metadata',
     'gnViewerSettings',
+    'gnGlobalSettings',
     function(gnOwsCapabilities, gnMap, $translate, $timeout,
-             gnSearchManagerService, Metadata, gnViewerSettings) {
+             gnSearchManagerService, Metadata, gnViewerSettings,
+             gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -67,6 +69,14 @@
           this.addLayer = function(getCapLayer, style) {
             getCapLayer.version = $scope.capability.version;
             getCapLayer.capRequest = $scope.capability.Request;
+  
+            //check if proxy is needed
+            var url = $scope.url.split('/');
+            getCapLayer.useProxy = false;
+            url = url[0] + '/' + url[1] + '/' + url[2] + '/';
+            if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
+              getCapLayer.useProxy = true;
+            }
             if ($scope.format == 'wms') {
               var layer =
                   gnMap.addWmsToMapFromCap($scope.map, getCapLayer, style);
@@ -92,6 +102,12 @@
           scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
           scope.catServicesList = [];
           var type = scope.format.toUpperCase();
+
+          //Update require proxy
+          //this is done because gnGlobalSettings is not configured at this point
+          scope.$watch('gnGlobalSettings.requireProxy', function(settings){
+            scope.requireProxy = gnGlobalSettings.requireProxy;
+          });
 
           function addLinks(md, type) {
             angular.forEach(md.getLinksByType(type), function(link) {

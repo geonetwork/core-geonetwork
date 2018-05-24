@@ -489,7 +489,7 @@ public class AccessManager {
                 long lIntranetNet = getAddress(network.getValue());
                 long lIntranetMask = getAddress(netmask.getValue());
                 long lAddress = getAddress(ip.split(",")[0]);
-                return (lAddress & lIntranetMask) == lIntranetNet;
+                return (lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask);
             }
         } catch (Exception nfe) {
             nfe.printStackTrace();
