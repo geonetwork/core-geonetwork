@@ -21,8 +21,10 @@
     'gnMap',
     'gnConfigService',
     'gnMapsManager',
+    'gnUrlUtils',
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap, gnConfigService, gnMapsManager) {
+             gnGlobalSettings, gnMap, gnConfigService, gnMapsManager,
+             gnUrlUtils) {
 
       if(typeof sxtSettings != 'undefined') {
         gnGlobalSettings.init({},
@@ -34,6 +36,16 @@
         gnConfigService.loadPromise.then(function(data) {
           viewerSettings.bingKey = data['ui.config'].mods.map.bingKey;
         });
+
+        // get url params for backwards compatibility
+        // (angular params should be used from now on)
+        var params = gnUrlUtils.parseKeyValue(window.location.search.
+          replace(/^\?/, ''));
+        viewerSettings.owscontext = params.owscontext &&
+          decodeURIComponent(params.owscontext);
+        viewerSettings.wmsurl = params.wmsurl;
+        viewerSettings.layername = params.layername;
+        viewerSettings.layergroup = params.layergroup;
       }
 
 

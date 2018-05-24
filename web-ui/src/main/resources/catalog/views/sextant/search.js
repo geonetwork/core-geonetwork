@@ -96,7 +96,6 @@
     'gnMetadataActions',
     '$translate',
     '$q',
-    'gnUrlUtils',
     'gnGlobalSettings',
     'sxtPanierService',
     'gnOwsContextService',
@@ -105,7 +104,7 @@
              $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-             $translate, $q, gnUrlUtils, gnGlobalSettings, sxtPanierService,
+             $translate, $q, gnGlobalSettings, sxtPanierService,
              gnOwsContextService, gnConfig) {
 
       var viewerMap = gnSearchSettings.viewerMap;
@@ -115,19 +114,6 @@
       $scope.gnMetadataActions = gnMetadataActions;
 
       gnViewerSettings.storage = 'sessionStorage';
-
-      /**
-       * API, get the url params to get layers or OWC
-       */
-      if(typeof sxtSettings != 'undefined') {
-        var params = gnUrlUtils.parseKeyValue(window.location.search.
-        replace(/^\?/, ''));
-        gnViewerSettings.owsContext = params.owscontext &&
-          decodeURIComponent(params.owscontext);
-        gnViewerSettings.wmsUrl = params.wmsurl;
-        gnViewerSettings.layerName = params.layername;
-        gnViewerSettings.layerGroup = params.layergroup;
-      }
 
       if(angular.isDefined(gnSearchSettings.tabOverflow.search)) {
         var updateTabVisibility = function() {
