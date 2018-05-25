@@ -30,6 +30,9 @@ import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 import java.io.IOException;
 import java.sql.Connection;
