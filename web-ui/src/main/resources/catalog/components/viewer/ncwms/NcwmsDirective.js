@@ -32,7 +32,7 @@
    * @name gn_viewer.directive:gnNcwmsTransect
    *
    * @description
-   * If we detects in the capabilities that the layer comes from NCWMS, then
+   * If we detect in the capabilities that the layer comes from NCWMS, then
    * we add some properties to it and we display in the layermanager item
    * a additional list of tools for this specific layer.
    * The directive `gnNcwmsTransect` provides the form for all NCWMS parameters.
@@ -243,35 +243,35 @@
             }
 
             // Set default STYLES= to WMS
-            if(isOceanotron) {
-              scope.ctrl.palette = ncInfo.defaultPalette || ncInfo.palettes[0];
-              var elevation = scope.layer.get('elevation');
-              if(elevation) {
-                var range = elevation.values[0];
-                if(angular.isString(range)) {
-                  scope.elevRange = range.replace('/', elevation.units + ' / ')
-                    + elevation.units;
-                }
+            scope.ctrl.palette = ncInfo.defaultPalette || ncInfo.palettes[0];
+            var elevation = scope.layer.get('elevation');
+            if(elevation) {
+              var range = elevation.values[0];
+              if(angular.isString(range)) {
+                scope.elevRange = range.replace('/', elevation.units + ' / ')
+                  + elevation.units;
               }
+            }
 
-              scope.ctrl.elevationMinFn = function(elev) {
-                if(elev) {
-                  scope.params.ELEVATION = elev + '/' + elevationMax;
-                  scope.updateLayerParams();
-                }
-                return angular.isDefined(elev) ?
-                  (elevationMin = elev) : elevationMin;
-              };
-              scope.ctrl.elevationMaxFn = function(elev) {
-                if(elev) {
-                  scope.params.ELEVATION = elevationMin + '/' + elev;
-                  scope.updateLayerParams();
-                }
-                return angular.isDefined(elev) ?
-                  (elevationMax = elev) : elevationMax;
-              };
-              scope.params.ELEVATION = elevationMin + '/' + elevationMax;
+            scope.ctrl.elevationMinFn = function(elev) {
+              if(elev) {
+                scope.params.ELEVATION = elev + '/' + elevationMax;
+                scope.updateLayerParams();
+              }
+              return angular.isDefined(elev) ?
+                (elevationMin = elev) : elevationMin;
+            };
+            scope.ctrl.elevationMaxFn = function(elev) {
+              if(elev) {
+                scope.params.ELEVATION = elevationMin + '/' + elev;
+                scope.updateLayerParams();
+              }
+              return angular.isDefined(elev) ?
+                (elevationMax = elev) : elevationMax;
+            };
+            scope.params.ELEVATION = elevationMin + '/' + elevationMax;
 
+            if(isOceanotron) {
               var timeP = scope.layer.getSource().getParams().TIME.split('/');
               scope.ncTime.value = {
                 from: moment(timeP[0]).format(gnNcWms.DATE_INPUT_FORMAT),
