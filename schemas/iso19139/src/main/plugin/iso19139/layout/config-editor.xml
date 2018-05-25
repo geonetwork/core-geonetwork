@@ -1218,6 +1218,12 @@
             </template>
           </action>
 
+          <!-- Keywords from other thesaurus than INSPIRE Themes -->
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+            gmd:descriptiveKeywords
+            [count(gmd:MD_Keywords/gmd:thesaurusName) > 0 and not(contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes'))]"/>
+
           <section name="freeTextKeywords">
             <!-- Keywords without thesaurus information of type theme -->
             <field
