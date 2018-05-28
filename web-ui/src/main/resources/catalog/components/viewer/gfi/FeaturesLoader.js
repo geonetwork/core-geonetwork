@@ -175,7 +175,8 @@
         }),
         pagination: true,
         pageSize: pageList[1],
-        pageList: pageList
+        pageList: pageList,
+        undefinedText: ''   // SPECIFIC Sextant: do not show hyphens when no value
       };
     });
   };
