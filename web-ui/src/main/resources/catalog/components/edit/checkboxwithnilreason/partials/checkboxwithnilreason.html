@@ -1,17 +1,23 @@
 <div class="form-group gn-field">
-  <input type="hidden" class="form-control"
-         name="{{elementRef}}" value="{{xmlSnippet}}"/>
+  <label class="control-label col-sm-2"
+         data-ng-class="{'gn-required': required}"
+         data-ng-show="label !== undefined">{{label}}</label>
 
-  <label class="radio-inline">
-    <input type="radio" data-ng-model="status" value="unknown" name="radio{{key}}"/>
-    <span>{{radioLabels['unknown'] | translate}}</span>
-  </label>
-  <label class="radio-inline">
-    <input type="radio" data-ng-model="status" value="true" name="radio{{key}}"/>
-    <span>{{radioLabels['true'] | translate}}</span>
-  </label>
-  <label class="radio-inline">
-    <input type="radio" data-ng-model="status" value="false" name="radio{{key}}"/>
-    <span>{{radioLabels['false'] | translate}}</span>
-  </label>
+  <div class="col-sm-10">
+    <input type="hidden" class="form-control"
+           name="{{elementRef}}" value="{{xmlSnippet}}"/>
+
+    <label class="radio-inline">
+      <input type="radio" data-ng-model="status" value="unknown" name="radio{{key}}"/>
+      <span>{{radioLabels['unknown'] | translate}}</span>
+    </label>
+    <label class="radio-inline">
+      <input type="radio" data-ng-model="status" value="true" name="radio{{key}}"/>
+      <span>{{radioLabels['true'] | translate}}</span>
+    </label>
+    <label class="radio-inline">
+      <input type="radio" data-ng-model="status" value="false" name="radio{{key}}"/>
+      <span>{{radioLabels['false'] | translate}}</span>
+    </label>
+  </div>
 </div>

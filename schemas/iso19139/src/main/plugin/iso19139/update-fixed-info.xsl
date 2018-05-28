@@ -611,6 +611,17 @@
   -->
   <xsl:template match="gmd:extent[gmd:EX_Extent/not(*)]|srv:extent[gmd:EX_Extent/not(*)]"/>
 
+  <xsl:template match="gmd:pass[@gco:nilReason = 'unknown']">
+    <xsl:copy>
+      <xsl:copy-of select="@*[name()!='gco:nilReason']" />
+
+      <xsl:if test="not(gco:Boolean)">
+        <xsl:copy-of select="@*[name()='gco:nilReason']" />
+      </xsl:if>
+
+      <xsl:apply-templates select="node()" />
+    </xsl:copy>
+  </xsl:template>
 
   <!-- ================================================================= -->
   <!-- copy everything else as is -->

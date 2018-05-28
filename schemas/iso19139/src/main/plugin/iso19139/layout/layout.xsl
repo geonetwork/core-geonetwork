@@ -31,6 +31,7 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
@@ -630,5 +631,65 @@
                         preceding-sibling::*[1]/name() = name()]"
                 priority="2100"/>
 
+
+  <!-- In Simple view, if INSPIRE setting is enabled use gn-checkbox-with-nilreason for gmd:pass (conformity) -->
+  <xsl:template mode="mode-iso19139"
+                match="gmd:pass[$tab='default' and /root/gui/settings/system/inspire/enable = 'true']"
+                priority="5000">
+
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (@gco:isoType) then @gco:isoType else ''"/>
+    <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+    <xsl:variable name="nilReason" select="@gco:nilReason" />
+    <xsl:variable name="tagLabels">{"true": "conformant", "false": "notConformant", "unknown": "notEvaluated"}</xsl:variable>
+
+    <xsl:variable name="parentEditInfo" select="gn:element" />
+    <xsl:variable name="editInfo" select="gco:Boolean/gn:element" />
+
+    <xsl:variable name="elementId" select="concat('_X', $parentEditInfo/@ref, '_replace')" />
+
+    <xsl:variable name="isRequired" as="xs:boolean">
+      <xsl:choose>
+        <xsl:when
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:when test="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),$isoType, $xpath)/condition = 'mandatory'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+
+    <xsl:variable name="directiveAttributes">
+      <directiveAttributes>
+        <attr name="label" value="{$labelConfig/label}" />
+        <attr name="tag-name" value="gmd:pass" />
+        <attr name="nilreason" value="{$nilReason}" />
+        <attr name="labels" value="{$tagLabels}" />
+        <attr name="required" value="{$isRequired}" />
+        <attr name="id" value="#{$elementId}" />
+      </directiveAttributes>
+    </xsl:variable>
+
+    <input type="hidden" id="{$elementId}" name="{$elementId}"/>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label"
+                      select="$labelConfig"/>
+      <xsl:with-param name="value" select="gco:Boolean"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="directive" select="'gn-checkbox-with-nilreason'"/>
+      <xsl:with-param name="directiveAttributes" select="$directiveAttributes"/>
+      <xsl:with-param name="editInfo" select="$editInfo"/>
+      <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+    </xsl:call-template>
+  </xsl:template>
 
 </xsl:stylesheet>

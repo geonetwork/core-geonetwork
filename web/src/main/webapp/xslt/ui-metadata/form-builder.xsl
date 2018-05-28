@@ -65,6 +65,7 @@
 
     <!-- The AngularJS directive name eg. gn-field-duration -->
     <xsl:param name="directive" required="no" as="xs:string" select="''"/>
+    <xsl:param name="directiveAttributes" required="no" />
 
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="editInfo" required="no"/>
@@ -145,6 +146,14 @@
               </xsl:when>
               <xsl:otherwise>
                 <xsl:attribute name="data-{$directive}" select="$value"/>
+
+                <xsl:if test="$directiveAttributes">
+                  <xsl:for-each select="$directiveAttributes/directiveAttributes/attr">
+                    <xsl:message><xsl:value-of select="@name" />: <xsl:value-of select="@value" /> </xsl:message>
+                    <xsl:attribute name="data-{@name}" select="@value" />
+                  </xsl:for-each>
+                </xsl:if>
+
               </xsl:otherwise>
             </xsl:choose>
 

@@ -40,6 +40,7 @@
            scope: {
              value: '@gnCheckboxWithNilreason',
              label: '@',
+             required: '@',
              elementName: '@',
              elementRef: '@',
              tagName: '@',
