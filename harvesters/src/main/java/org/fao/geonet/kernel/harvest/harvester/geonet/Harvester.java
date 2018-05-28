@@ -158,13 +158,13 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 log.error(t);
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             } catch (Throwable t) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 t.printStackTrace();
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             }
         }
 
@@ -177,13 +177,13 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 log.error(t);
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             } catch (Throwable t) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 t.printStackTrace();
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             }
         }
 
@@ -201,11 +201,11 @@ class Harvester implements IHarvester<HarvestResult> {
              } catch (Exception t) {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
-                errors.add(new HarvestError(this.context, t, log));
+                errors.add(new HarvestError(this.context, t));
             } catch (Throwable t) {
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                errors.add(new HarvestError(this.context, t, log));
+                errors.add(new HarvestError(this.context, t));
             }
         } else {
             log.warning("Due to previous errors the align process has not been called");
@@ -256,7 +256,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     records.add(new RecordInfo(uuid, changeDate, schema, source));
                 }
             } catch (Exception e) {
-                HarvestError harvestError = new HarvestError(context, e, log);
+                HarvestError harvestError = new HarvestError(context, e);
                 harvestError.setDescription("Malformed element '"
                     + o.toString() + "'");
                 harvestError
@@ -283,10 +283,10 @@ class Harvester implements IHarvester<HarvestResult> {
             return response;
         } catch (BadSoapResponseEx e) {
             log.warning("Raised exception when searching : " + e.getMessage());
-            this.errors.add(new HarvestError(context, e, log));
+            this.errors.add(new HarvestError(context, e));
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch (BadXmlResponseEx e) {
-            HarvestError harvestError = new HarvestError(context, e, log);
+            HarvestError harvestError = new HarvestError(context, e);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". Excepted XML, returned: "
                 + e.getMessage());
@@ -294,14 +294,14 @@ class Harvester implements IHarvester<HarvestResult> {
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch (IOException e) {
-            HarvestError harvestError = new HarvestError(context, e, log);
+            HarvestError harvestError = new HarvestError(context, e);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch (Exception e) {
-            HarvestError harvestError = new HarvestError(context, e, log);
+            HarvestError harvestError = new HarvestError(context, e);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
