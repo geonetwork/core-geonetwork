@@ -784,7 +784,7 @@
         if (angular.isUndefined(this.standardName)) {
           return false;
         } else {
-          return this.standardName.indexOf('Emodnet Checkpoint') >= 0 ||
+          return this["geonet:info"].schema === 'iso19115-3' ||
               (this['geonet:info'].schema === 'iso19139' &&
               (this.standardName.indexOf('EMODNET -') >= 0 ||
               this.standardName.
