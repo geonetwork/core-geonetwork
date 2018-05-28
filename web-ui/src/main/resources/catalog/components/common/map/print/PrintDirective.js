@@ -668,6 +668,7 @@
           enableLegends: (encLegends && encLegends.length > 0),
           pages: [
             angular.extend({
+              title: '', //default
               center: getPrintRectangleCenterCoord(),
               // scale has to be one of the advertise by the print server
               scale: getOptimalScale().value,
