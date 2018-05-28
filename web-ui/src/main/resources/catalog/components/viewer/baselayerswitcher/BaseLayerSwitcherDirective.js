@@ -60,6 +60,12 @@
             layers.insertAt(0, layer);
             return false;
           };
+
+
+          scope.changeBackground = function (layer) {
+            scope.setBgLayer(layer);
+          };
+
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');
             gnOwsContextService.loadContextFromUrl(

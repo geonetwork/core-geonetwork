@@ -1,23 +1,26 @@
 <div class="btn-group baselayer"
-     data-ng-class="dropup ? 'dropup' : ''"
+     data-ngeo-popover
+     data-ngeo-popover-placement="bottom"
      data-ng-show="layers.length > 1">
-  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+  <button type="button" class="btn btn-default dropdown-toggle" data-ngeo-popover-anchor>
     <span data-translate="">backgroundMap</span>&nbsp;{{map.getLayers().item(0).get('title')}} <span
     class="caret"></span>
   </button>
-  <ul class="dropdown-menu" role="menu">
-    <li ng-if="::layer" ng-repeat="layer in layers">
-      <a href="" ng-click="setBgLayer(layer)" ng-if="::!layer.get('loading')">
-        <span class="fa"
-              ng-class="(layer == map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
-        {{layer.get('title')}}
-      </a>
-      <a ng-if="::layer.get('loading')">
-        <span class="fa fa-spin fa-spinner"></span>
-      </a>
+  <div data-ngeo-popover-content class="gn-baselayer-switcher-content">
+    <ul class="gn-baselayer-switcher-menu" role="menu">
+      <li ng-if="::layer" ng-repeat="layer in layers" ng-click="changeBackground(layer);popoverCtrl.dismissPopover()">
+        <span ng-if="::!layer.get('loading')">
+          <span class="fa"
+                ng-class="(layer == map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+          {{layer.get('title')}}
+        </span>
+        <span ng-if="::layer.get('loading')">
+          <span class="fa fa-spin fa-spinner"></span>
+        </span>
+      <li>
+    </ul>
+  </div>
 
-    <li>
-  </ul>
 </div>
 <br/>
 <div>
