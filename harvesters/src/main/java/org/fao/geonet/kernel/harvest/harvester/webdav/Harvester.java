@@ -304,7 +304,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             } catch (Exception e) {
                 log.error("  - Failed to set uuid for metadata with remote path : "
                     + rf.getPath());
-                errors.add(new HarvestError(this.context, e, this.log));
+                errors.add(new HarvestError(this.context, e));
                 result.couldNotInsert++;
                 return;
             }

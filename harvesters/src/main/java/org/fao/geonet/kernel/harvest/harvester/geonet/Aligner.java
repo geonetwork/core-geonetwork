@@ -203,8 +203,7 @@ public class Aligner extends BaseAligner {
         localGroups = new GroupMapper(context);
         localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
-        Pair<String, Map<String, Object>> filter =
-            HarvesterUtil.parseXSLFilter(params.xslfilter, log);
+        Pair<String, Map<String, Object>> filter = HarvesterUtil.parseXSLFilter(params.xslfilter);
         processName = filter.one();
         processParams = filter.two();
 
@@ -552,7 +551,7 @@ public class Aligner extends BaseAligner {
 
         if (!params.xslfilter.equals("")) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
-                md, processName, processParams, log);
+                md, processName, processParams);
         }
         // insert metadata
         // If MEF format is full, private file links needs to be updated
@@ -837,7 +836,7 @@ public class Aligner extends BaseAligner {
         } else {
             if (!params.xslfilter.equals("")) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
-                    md, processName, processParams, log);
+                    md, processName, processParams);
             }
             // update metadata
             if (log.isDebugEnabled())
