@@ -303,9 +303,14 @@ public class Aligner extends BaseAligner {
 
         log.info("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
 
+        String mdUuid = ri.uuid;
         if (!params.xslfilter.equals("")) {
-            md = processMetadata(context,
-                md, processName, processParams, log);
+            md = processMetadata(context, md, processName, processParams, log);
+            // Get new uuid if modified by XSLT process
+            mdUuid = dataMan.extractUUID(schema, md);
+            if(mdUuid == null) {
+                mdUuid = ri.uuid;
+            }
         }
         
         //
@@ -313,7 +318,8 @@ public class Aligner extends BaseAligner {
         //
 
         ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
-        Metadata metadata = new Metadata().setUuid(uuid);
+        Metadata metadata = new Metadata().setUuid(mdUuid);
+
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
