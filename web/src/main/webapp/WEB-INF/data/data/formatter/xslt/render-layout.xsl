@@ -91,7 +91,7 @@
                 <xsl:value-of select="$title"/>
               </h1>
 
-              <xsl:if test="$view != 'emodnetHydrography'">
+              <xsl:if test="$view != 'emodnetHydrography' and $view != 'sdn'">
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
                 <div gn-related="md"
@@ -123,7 +123,7 @@
 
             <br/>
             <xsl:if test="$css != 'checkpoint' and
-                          $view != 'emodnetHydrography'">
+                          $view != 'emodnetHydrography' and $view != 'sdn'">
 
               <section>
                 <h4>
