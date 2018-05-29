@@ -227,11 +227,18 @@
 
              // initialize extent & bbox on map load
              map.get('creationPromise').then(function() {
-               drawBbox();
-
-               if (gnMap.isValidExtent(scope.extent.map)) {
-                 map.getView().fit(scope.extent.map, map.getSize());
-               }
+               //map may not be displayed at this moment
+               //wait for it to be displayed
+               var unregister = scope.$watch('map.getSize()', function(){ 
+            	   if(map.getSize()) {
+            		   drawBbox();
+                       if (gnMap.isValidExtent(scope.extent.map)) {
+                         map.getView().fit(scope.extent.map, map.getSize());
+                         //stop watching this
+                         unregister();
+                       }
+            	   }
+            	});
              });
 
              var dragbox = new ol.interaction.DragBox({
