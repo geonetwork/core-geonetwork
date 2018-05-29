@@ -72,22 +72,24 @@ public class XFrameOptionsFilter implements Filter {
             mode = MODE_DENY;
         }
 
-        if (mode.equals(MODE_ALLOWFROM) && (StringUtils.isEmpty(url))) {
-            Log.info(Geonet.GEONETWORK,
-                "XFrameOptions filter url parameter is missing for mode ALLOW-FROM. Setting mode to DENY.");
-            mode = MODE_DENY;
-        } else {
-            try {
-                URL urlValue = new URL(url);
-                domain = urlValue.getHost() +
-                    ((urlValue.getPort() == -1)? "" : ":" + urlValue.getPort());
-
-            } catch (MalformedURLException ex) {
-                Log.info(Geonet.GEONETWORK, String.format(
-                    "XFrameOptions filter url parameter (%s) is not valid for mode ALLOW-FROM. Setting mode to DENY.", url));
+        // If ALLOW-FROM, make sure a valid url is given, otherwise fallback to deny
+        if (mode.equals(MODE_ALLOWFROM)) {
+            if (StringUtils.isEmpty(url)) {
+                Log.info(Geonet.GEONETWORK,
+                    "XFrameOptions filter url parameter is missing for mode ALLOW-FROM. Setting mode to DENY.");
                 mode = MODE_DENY;
-            }
+            } else {
+                try {
+                    URL urlValue = new URL(url);
+                    domain = urlValue.getHost() +
+                            ((urlValue.getPort() == -1) ? "" : ":" + urlValue.getPort());
 
+                } catch (MalformedURLException ex) {
+                    Log.info(Geonet.GEONETWORK, String.format(
+                            "XFrameOptions filter url parameter (%s) is not valid for mode ALLOW-FROM. Setting mode to DENY.", url));
+                    mode = MODE_DENY;
+                }
+            }
         }
 
         if (Log.isDebugEnabled(Geonet.GEONETWORK)) {
