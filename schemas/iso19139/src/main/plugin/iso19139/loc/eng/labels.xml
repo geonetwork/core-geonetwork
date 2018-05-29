@@ -835,7 +835,7 @@
       A)</description>
   </element>
   <element name="gmd:denominator" id="57.0">
-    <label>Denominator</label>
+    <label>Scale denominator</label>
     <description>The number below the line in a vulgar fraction</description>
     <condition>add either a denominator or a distance</condition>
     <helper>
@@ -930,7 +930,7 @@
     <condition>mandatory</condition>
   </element>
   <element name="gmd:distance" id="61.0">
-    <label>Distance</label>
+    <label>Spatial resolution</label>
     <description>Ground sample distance</description>
     <condition>Provide a distance if no equivalent Scale is documented</condition>
     <helper relAtt="uom">

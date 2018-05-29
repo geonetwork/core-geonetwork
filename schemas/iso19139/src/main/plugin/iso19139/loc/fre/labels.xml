@@ -1801,7 +1801,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
 
   </element>
   <element name="gmd:distance" id="61.0">
-    <label>Distance de résolution</label>
+    <label>Résolution spatiale</label>
     <description>Distance de référence, mesurée au sol</description>
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
