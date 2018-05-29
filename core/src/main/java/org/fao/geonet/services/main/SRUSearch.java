@@ -426,8 +426,7 @@ public class SRUSearch implements Service {
             // if there were other diag messages above (right now we return directly but this might change)
             if (diagnostics == null) diagnostics = new Element("diagnostics");
             addToDiag(diagnostics, "info:srw/diagnostic/1/1", "General system error", e.toString());
-            Log.error(Geonet.SRU, "problem at backend interaction" + e);
-            //e.printStackTrace();
+            Log.error(Geonet.SRU, "problem at backend interaction" + e, e);
         }
 
         if (diagnostics != null) response.addContent(diagnostics);

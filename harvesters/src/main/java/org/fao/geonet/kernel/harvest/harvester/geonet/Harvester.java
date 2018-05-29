@@ -163,7 +163,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t));
             }
         }
@@ -182,7 +182,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t));
             }
         }
@@ -195,7 +195,7 @@ class Harvester implements IHarvester<HarvestResult> {
             try {
                 Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
                 result = aligner.align(records, errors);
-    
+
                 Map<String, String> sources = buildSources(remoteInfo);
                 updateSources(records, sources);
              } catch (Exception t) {

@@ -334,23 +334,20 @@ public class SearchManager implements ISearchManager {
                         Constructor<? extends Analyzer> c = analyzerClass.getConstructor(clTypesArray);
                         analyzer = c.newInstance(inParamsArray);
                     } catch (Exception x) {
-                        SE_LOGGER.warn("   Failed to create analyzer with parameter: {}",x.getMessage());
-                        x.printStackTrace();
+                        SE_LOGGER.warn("   Failed to create analyzer with parameter: {}",x.getMessage(), x);
                         // Try using a default constructor without parameter
                         SE_LOGGER.warn("   Now trying without parameter");
                         analyzer = analyzerClass.newInstance();
                     }
                 } catch (Exception y) {
                     SE_LOGGER.warn("Failed to create analyzer as specified in lucene config, default analyzer will " +
-                        "be used for field {}. Exception message is: {}", field, y.getMessage());
-                    y.printStackTrace();
+                        "be used for field {}. Exception message is: {}", field, y.getMessage(), y);
                     // abandon and continue with next field defined in lucene config
                 }
             }
         } catch (Exception z) {
             SE_LOGGER.warn(" Error on analyzer initialization: {}. Check your Lucene " +
-                "configuration. Hardcoded default analyzer will be used for field {}", z.getMessage(), field);
-            z.printStackTrace();
+                "configuration. Hardcoded default analyzer will be used for field {}", z.getMessage(), field, z);
         } finally {
             // creation of analyzer has failed, default to GeoNetworkAnalyzer
             if (analyzer == null) {
@@ -545,14 +542,13 @@ public class SearchManager implements ISearchManager {
                     Constructor<? extends DocumentBoosting> c = clazz.getConstructor(clTypesArray);
                     _documentBoostClass = c.newInstance(inParamsArray);
                 } catch (Exception x) {
-                    SE_LOGGER.warn("   Failed to create document boost object with parameter: {}", x.getMessage());
-                    x.printStackTrace();
+                    SE_LOGGER.warn("   Failed to create document boost object with parameter: {}", x.getMessage(), x);
                     // Try using a default constructor without parameter
                     SE_LOGGER.warn("   Now trying without parameter");
                     _documentBoostClass = clazz.newInstance();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                SE_LOGGER.error(Geonet.SEARCH_ENGINE, "   Failed to create document boost object without parameter: " + e.getMessage(), e);
             }
         }
     }
@@ -1569,7 +1565,7 @@ public class SearchManager implements ISearchManager {
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(BeyondFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(DWithinFilter.class));
             } catch (Exception e) {
-                e.printStackTrace();
+                SP_LOGGER.error(Geonet.INDEX_ENGINE, "Unable to create types mapping, error is: " + e.getMessage(), e);
                 throw new RuntimeException("Unable to create types mapping", e);
             }
             _types = Collections.unmodifiableMap(types);
@@ -1620,8 +1616,7 @@ public class SearchManager implements ISearchManager {
                 try {
                     _writer.reset();
                 } catch (Exception e1) {
-                    SP_LOGGER.error("Unable to call reset on Spatial writer: {}", e1.getMessage());
-                    e1.printStackTrace();
+                    SP_LOGGER.error("Unable to call reset on Spatial writer: {}", e1.getMessage(), e1);
                 }
                 rebuildIndex = true;
             }
@@ -1636,8 +1631,7 @@ public class SearchManager implements ISearchManager {
             try {
                 _writer.close();
             } catch (IOException e) {
-                SP_LOGGER.error("error closing spatial index: {}", e.getMessage());
-                e.printStackTrace();
+                SP_LOGGER.error("error closing spatial index: {}", e.getMessage(), e);
             } finally {
                 _lock.unlock();
             }

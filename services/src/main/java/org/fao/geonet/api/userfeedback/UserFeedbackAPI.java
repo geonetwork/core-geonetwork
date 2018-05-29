@@ -228,7 +228,7 @@ public class UserFeedbackAPI {
 
             return utils.getAverage(userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, -1, published));
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(Log.REQUEST, "UserFeedbackAPI - getMetadataRating: " + e.getMessage(), e);
             return null;
         }
     }
@@ -423,7 +423,7 @@ public class UserFeedbackAPI {
 
             return listUserfeedback.stream().map(feedback -> UserFeedbackUtils.convertToDto(feedback)).collect(Collectors.toList());
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(Log.REQUEST, "UserFeedbackAPI - getUserFeedback: " + e.getMessage(), e);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             return null;
         }
@@ -497,7 +497,7 @@ public class UserFeedbackAPI {
 
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(Log.REQUEST, "UserFeedbackAPI - newUserFeedback: " + e.getMessage(), e);
             throw e;
         }
     }
@@ -695,7 +695,7 @@ public class UserFeedbackAPI {
         } catch (final ObjectNotFoundException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } catch (final Exception e) {
-            e.printStackTrace();
+            Log.error(Log.REQUEST, "UserFeedbackAPI - publish: " + e.getMessage(), e);
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);

@@ -135,8 +135,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             return null;
 
         } catch (Exception ex) {
-            Log.error(Geonet.RESOURCES, "DefaultResourceDownloadHandler (onDownloadMultiple): " + ex.getMessage());
-            ex.printStackTrace();
+            Log.error(Geonet.RESOURCES, "DefaultResourceDownloadHandler (onDownloadMultiple): " + ex.getMessage(), ex);
             throw new ResourceHandlerException(ex);
         }
 

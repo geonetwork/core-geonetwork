@@ -25,9 +25,11 @@ package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.net.MalformedURLException;
@@ -160,7 +162,7 @@ public class GeonetParams extends AbstractParams {
             try {
                 return new URL(host).getPath();
             } catch (MalformedURLException ex) {
-                ex.printStackTrace();
+                Log.error(Geonet.HARVEST_MAN, ex.getMessage(), ex);
             }
         }
 

@@ -1190,14 +1190,12 @@ public class DataManager implements ApplicationEventPublisherAware {
                         }
                     }
                 } catch (Exception e) {
-                    Log.error(Geonet.DATA_MANAGER, "WARNING: schematron xslt " + schemaTronXmlXslt + " failed");
+                    Log.error(Geonet.DATA_MANAGER, "WARNING: schematron xslt " + schemaTronXmlXslt + " failed", e);
 
                     // If an error occurs that prevents to verify schematron rules, add to show in report
                     Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
                     errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
                     report.addContent(errorReport);
-
-                    e.printStackTrace();
                 }
 
                 // -- append report to main XML report.
@@ -1244,8 +1242,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 try {
                     elem = Xml.selectElement(md, xpath, schemaNamespaces);
                 } catch (JDOMException je) {
-                    je.printStackTrace();
-                    Log.error(Geonet.DATA_MANAGER, "Attach xsderror message to xpath " + xpath + " failed: " + je.getMessage());
+                    Log.error(Geonet.DATA_MANAGER, "Attach xsderror message to xpath " + xpath + " failed: " + je.getMessage(), je);
                 }
                 if (elem != null) {
                     String existing = elem.getAttributeValue("xsderror", Edit.NAMESPACE);
@@ -2155,8 +2152,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 valid = valid && errors == null;
                 editLib.removeEditingInfo(md);
             } catch (Exception e) {
-                e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
+                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage(), e);
                 valid = false;
             }
         }
@@ -2165,8 +2161,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         try {
             saveValidationStatus(intMetadataId, validations);
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + metadataId + ": " + e.getMessage());
+            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + metadataId + ": " + e.getMessage(), e);
         }
 
         return valid;
@@ -2259,8 +2254,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 editLib.removeEditingInfo(md);
 
             } catch (Exception e) {
-                e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
+                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage(), e);
             }
         }
 

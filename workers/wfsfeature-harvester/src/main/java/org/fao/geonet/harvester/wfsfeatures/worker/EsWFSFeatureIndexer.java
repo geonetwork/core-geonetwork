@@ -203,10 +203,10 @@ public class EsWFSFeatureIndexer {
                     "  Report deleted in %sms.",
                     Duration.between(startTime, ZonedDateTime.now()).toMillis()));
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(String.format(
                     "Error connecting to ES at '%s'. Error is %s.",
                     index, e.getMessage()));
+            logger.error(e);
         }
     }
 
@@ -223,7 +223,7 @@ public class EsWFSFeatureIndexer {
                     state.getParameters().getTypeName(),
                     response.getErrorMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

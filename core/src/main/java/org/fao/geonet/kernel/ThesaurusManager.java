@@ -300,7 +300,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
             gst.setRepository(thesaurusRepository);
         } catch (ConfigurationException e) {
-            e.printStackTrace();
+            Log.error(Geonet.THESAURUS_MAN, "Create Thesaurus Repository error", e);
             throw e;
         }
     }
@@ -338,7 +338,7 @@ public class ThesaurusManager implements ThesaurusFinder {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.THESAURUS_MAN, "Get Thesaurus By Concept Scheme error", e);
             }
         }
 
@@ -373,8 +373,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         try (OutputStream outputRdfStream = Files.newOutputStream(thesaurusFile)) {
             getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
         } catch (Exception e) {
-            Log.error(Geonet.THESAURUS_MAN, "Register thesaurus " + aRdfDataFile + " could not be read/converted from ISO19135 record in catalog - skipping");
-            e.printStackTrace();
+            Log.error(Geonet.THESAURUS_MAN, "Register thesaurus " + aRdfDataFile + " could not be read/converted from ISO19135 record in catalog - skipping", e);
         }
 
         String theKey = gst.getKey();
@@ -506,8 +505,7 @@ public class ThesaurusManager implements ThesaurusFinder {
                     Log.error(Geonet.THESAURUS_MAN, "Error rebuilding thesaurus table : " + e.getMessage() + "\n" + Util.getStackTrace(e));
                 }
             } catch (Exception e) {
-                Log.debug(Geonet.THESAURUS_MAN, "Thesaurus table rebuilding thread threw exception");
-                e.printStackTrace();
+                Log.debug(Geonet.THESAURUS_MAN, "Thesaurus table rebuilding thread threw exception", e);
             }
         }
     }

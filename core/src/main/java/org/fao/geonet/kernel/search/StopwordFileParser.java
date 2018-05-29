@@ -84,8 +84,7 @@ public class StopwordFileParser {
                 Log.warning(Geonet.INDEX_ENGINE, "Invalid stopwords file: " + file.toAbsolutePath());
             }
         } catch (IOException x) {
-            Log.warning(Geonet.INDEX_ENGINE, x.getMessage() + " (this exception is swallowed)");
-            x.printStackTrace();
+            Log.warning(Geonet.INDEX_ENGINE, x.getMessage() + " (this exception is swallowed)", x);
         }
         if (stopwords != null) {
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE))

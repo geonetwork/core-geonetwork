@@ -58,6 +58,7 @@ import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -114,7 +115,8 @@ public class SiteApi {
                 dataMan.disableOptimizer();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: " + e.getMessage());
         }
 
@@ -132,7 +134,8 @@ public class SiteApi {
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            context.error("Reload services. Error: " + e.getMessage());
+            context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
     }

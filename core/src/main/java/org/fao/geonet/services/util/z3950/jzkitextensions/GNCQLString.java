@@ -52,10 +52,8 @@ public class GNCQLString implements QueryModel, java.io.Serializable {
             if (log.isDebugEnabled()) log.debug("Parsed CQL");
         } catch (CQLParseException cqle) {
             log.warn("Problem parsing CQL", cqle);
-            // cqle.printStackTrace();
         } catch (java.io.IOException ioe) {
             log.warn("Problem parsing CQL", ioe);
-            // ioe.printStackTrace();
         }
     }
 

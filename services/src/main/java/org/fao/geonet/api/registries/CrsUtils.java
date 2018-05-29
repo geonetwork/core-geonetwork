@@ -25,6 +25,8 @@ package org.fao.geonet.api.registries;
 
 import org.fao.geonet.api.registries.model.Crs;
 import org.fao.geonet.api.registries.model.CrsType;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.opengis.metadata.Identifier;
 import org.opengis.referencing.FactoryException;
@@ -104,7 +106,7 @@ public class CrsUtils {
                     }
                 }
             } catch (FactoryException e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
         }
         return crsList;

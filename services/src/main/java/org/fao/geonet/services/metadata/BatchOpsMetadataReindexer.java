@@ -44,9 +44,11 @@ package org.fao.geonet.services.metadata;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.Log;
 
 import java.util.List;
 import java.util.Set;
@@ -112,7 +114,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
                     try {
                         future.get();
                     } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                        Log.error(Geonet.INDEX_ENGINE, "BatchOpsMetadataReindexer error: "+e.getMessage(), e);
                     }
                 }
             }

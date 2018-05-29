@@ -347,7 +347,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 try {
                     constr.addContent(Xml.loadString(constraint, false));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.CSW_SEARCH, "Constraint is not a valid xml, error:" + e.getMessage(), e);
                     throw new NoApplicableCodeEx("Constraint is not a valid xml");
                 }
             }

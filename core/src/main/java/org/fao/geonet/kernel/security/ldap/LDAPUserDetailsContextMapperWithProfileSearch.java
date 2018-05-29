@@ -235,8 +235,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                 }
 
             } catch (NamingException e) {
-                Log.error(Geonet.LDAP, "Failed to extract profiles and groups. Error is: " + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.LDAP, "Failed to extract profiles and groups. Error is: " + e.getMessage(), e);
             }
         }
     }

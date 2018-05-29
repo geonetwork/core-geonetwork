@@ -327,8 +327,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         detected = true;
                     }
                 } catch (Exception x) {
-                    LOGGER.error("Error auto-detecting language: {}", x.getMessage());
-                    x.printStackTrace();
+                    LOGGER.error("Error auto-detecting language: {}", x.getMessage(), x);
                 }
 
 
@@ -637,8 +636,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             try {
                 buildFacetSummary(elSummary, summaryConfig, facetConfiguration, facetCollector, taxonomyReader, langCode);
             } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.warn("BuildFacetSummary error. {}" ,e.getMessage());
+                LOGGER.warn("BuildFacetSummary error. {}" ,e.getMessage(), e);
             }
 
         } else {
@@ -690,8 +688,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             for (String facet : configurationErrors.keySet()) {
                 message.append("\n  * ").append(facet);
             }
-            LOGGER.error("{}", message);
-            configurationErrors.values().iterator().next().printStackTrace();
+            LOGGER.error("{}", message,  configurationErrors.values().iterator().next());
         }
     }
 
@@ -1004,13 +1001,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             }
         } catch (Exception e) {
             // TODO why swallow
-            e.printStackTrace();
+            LOGGER.error(Geonet.SEARCH_ENGINE, "analyzeText error:" + e.getMessage(), e);
         } finally {
             if (ts != null) {
                 try {
                     ts.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error(Geonet.SEARCH_ENGINE, "analyzeText error closing TokenStream:" + e.getMessage(), e);
                 }
             }
         }
@@ -1501,11 +1498,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         Constructor<Query> c = boostClass.getConstructor(clTypesArrayAll);
                         _query = c.newInstance(inParamsArrayAll);
                     } catch (Exception e) {
-                        LOGGER.warn(" Failed to create boosting query: {}. Check Lucene configuration", e.getMessage());
-                        e.printStackTrace();
+                        LOGGER.warn(" Failed to create boosting query: {}. Check Lucene configuration", e.getMessage(), e);
                     }
                 } catch (Exception e1) {
-                    LOGGER.warn(" Error on boosting query initialization: {}. Check Lucene configuration", e1.getMessage());
+                    LOGGER.warn(" Error on boosting query initialization: {}. Check Lucene configuration", e1.getMessage(), e1);
                 }
             }
 

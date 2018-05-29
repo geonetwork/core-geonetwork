@@ -137,12 +137,12 @@ public class EsClient implements InitializingBean {
         try {
             BulkResult result = client.execute(bulk.build());
             if (!result.isSucceeded()) {
-                System.out.println(result.getErrorMessage());
-                System.out.println(result.getJsonString());
+                Log.warning("geonetwork.index", "EsClient bulkRequest: " + result.getErrorMessage());
+                Log.warning("geonetwork.index", "EsClient bulkRequest: " + result.getJsonString());
                 return false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error("geonetwork.index", "EsClient bulkRequest: " + e.getMessage(), e);
             throw e;
         }
 //        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();

@@ -42,13 +42,11 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -56,9 +54,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.IOException;
@@ -336,8 +331,9 @@ public class EsSearchManager implements ISearchManager {
                     if (metadata != null) {
                         listOfIdsToIndex.add(metadata.getId() + "");
                     } else {
-                        System.out.println(String.format(
-                            "Selection contains uuid '%s' not found in database", uuid));
+                        Log.error(Geonet.INDEX_ENGINE,
+                            String.format(
+                                "Selection contains uuid '%s' not found in database", uuid));
                     }
                 }
             }

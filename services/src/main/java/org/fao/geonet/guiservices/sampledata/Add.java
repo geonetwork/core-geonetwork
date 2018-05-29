@@ -103,7 +103,6 @@ public class Add implements Service {
                     }
                     schemaCount += MEFLib.doImport(params, context, file, null).size();
                 } catch (Exception e) {
-                    e.printStackTrace();
                     serviceStatus[0] = "false";
                     serviceError[0] = e.getMessage() + " whilst loading " + file;
                     Log.error(Geonet.DATA_MANAGER,

@@ -42,6 +42,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -359,7 +360,7 @@ public class UserSelectionsApi {
                 try {
                     umsRepository.save(e);
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    Log.error(Log.REQUEST, "UserSelectionsApi - addToUserSelection: " + e1.getMessage(), e1);
                 }
             } else {
                 return new ResponseEntity<>(u, HttpStatus.NOT_FOUND);

@@ -144,12 +144,12 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     xml = Xml.loadFile(file);
                 } catch (JDOMException e) { // JDOM problem
                     LOGGER.debug("Error loading XML from file {}, ignoring", filePath);
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                     result.badFormat++;
                     return FileVisitResult.CONTINUE; // skip this one
                 } catch (Throwable e) { // some other error
                     LOGGER.debug("Error retrieving XML from file {}, ignoring", filePath);
-                    e.printStackTrace();
+                    LOGGER.error(e.getMessage(), e);
                     result.unretrievable++;
                     return FileVisitResult.CONTINUE; // skip this one
                 }
@@ -293,8 +293,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 result.addedMetadata++;
             }
         } catch (Exception e) {
-            LOGGER.debug("Error retrieving MEF from file {}, ignoring", filePath);
-            e.printStackTrace();
+            LOGGER.debug("Error retrieving MEF from file {}, ignoring", filePath, e);
             result.unretrievable++;
         }
     }

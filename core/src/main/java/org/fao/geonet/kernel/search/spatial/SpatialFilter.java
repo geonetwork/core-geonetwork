@@ -247,7 +247,7 @@ public abstract class SpatialFilter extends Filter {
             LOGGER.debug(e.getMessage() + "{}: occurred during a search: {} on feature: {}", new Object[] {e.getMessage(), _spatialFilter,feature.getDefaultGeometry()});
         }
     }
-    
+
     /**
      * Returns all the FeatureId and ID attributes based on the query against the spatial index
      */

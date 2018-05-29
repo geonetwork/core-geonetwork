@@ -201,7 +201,7 @@ public class WatchListNotifier extends QuartzJobBean {
                             compileMessageWithIndexFields(recordMessage, record, this.language)
                         );
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.error(Geonet.USER_WATCHLIST, e.getMessage(), e);
                     }
                 }
 

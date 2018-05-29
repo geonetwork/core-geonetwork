@@ -269,7 +269,7 @@ public class Aligner extends BaseAligner {
                 mdUuid = ri.uuid;
             }
         }
-        
+
         //
         // insert metadata
         //
@@ -329,7 +329,7 @@ public class Aligner extends BaseAligner {
                     result.unchangedMetadata++;
                     return;
                 }
-                
+
                 if (!params.xslfilter.equals("")) {
                     md = processMetadata(context, md, processName, processParams);
                 }
@@ -342,7 +342,7 @@ public class Aligner extends BaseAligner {
                 boolean index = false;
                 String language = context.getLanguage();
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
-                
+
                 if(force) {
                     //change ownership of metadata to new harvester
                     metadata.getHarvestInfo().setUuid(params.getUuid());
@@ -428,7 +428,7 @@ public class Aligner extends BaseAligner {
             return response;
         } catch (Exception e) {
             LOGGER.warn("Raised exception while getting record : {}", e);
-            e.printStackTrace();
+            LOGGER.error(e.getMessage(), e);
             result.unretrievable++;
 
             //--- we don't raise any exception here. Just try to go on
@@ -496,7 +496,7 @@ public class Aligner extends BaseAligner {
                 }
             } catch (Throwable e) {
                 LOGGER.warn("      - Error when searching for resource duplicate {}. Error is: {}", uuid, e.getMessage());
-                e.printStackTrace();
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return false;
