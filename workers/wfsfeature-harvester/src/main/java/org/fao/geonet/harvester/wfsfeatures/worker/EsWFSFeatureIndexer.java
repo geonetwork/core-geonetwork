@@ -108,6 +108,8 @@ public class EsWFSFeatureIndexer {
 
     private ObjectMapper jacksonMapper = new ObjectMapper();
 
+    private int nbOfFeatures;
+
     /**
      * Create exchange states for this feature type.
      *
@@ -212,7 +214,7 @@ public class EsWFSFeatureIndexer {
         query.setCoordinateSystemReproject(wgs84);
 
         try {
-            int nbOfFeatures = 0;
+            nbOfFeatures = 0;
 
             final Phaser phaser = new Phaser();
             BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
@@ -436,7 +438,13 @@ public class EsWFSFeatureIndexer {
         }
 
         public void addAction(ObjectNode rootNode, SimpleFeature feature) throws JsonProcessingException {
-            String id = String.format("%s#%s#%s", url, typeName, feature.getID());
+            // generate a unique feature id when geotools gives us a placeholder one
+            String featureId = feature.getID();
+            if (featureId.toLowerCase().indexOf("placeholder") > -1) {
+                featureId = "fid-" + nbOfFeatures;
+            }
+
+            String id = String.format("%s#%s#%s", url, typeName, featureId);
             bulk.addAction(new Index.Builder(jacksonMapper.writeValueAsString(rootNode)).id(id).build());
             bulkSize++;
         }

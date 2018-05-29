@@ -141,7 +141,7 @@ public class WFSHarvesterExchangeState {
             throw e;
         } catch (Exception e) {
             String errorMsg = String.format(
-                    "Failed to GetCatpabilities from service using URL '%s'. Error is %s.",
+                    "Failed to GetCapabilities from service using URL '%s'. Error is %s.",
                     parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
