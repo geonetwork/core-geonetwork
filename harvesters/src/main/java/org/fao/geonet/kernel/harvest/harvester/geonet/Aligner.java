@@ -23,7 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import org.apache.commons.lang.StringUtils;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -82,67 +83,22 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-//=============================================================================
-
-public class Aligner extends BaseAligner {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
+public class Aligner extends BaseAligner<GeonetParams> {
 
     private Logger log;
 
-    //--------------------------------------------------------------------------
     private ServiceContext context;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Alignment method
-    //---
-    //--------------------------------------------------------------------------
     private XmlRequest request;
-    private GeonetParams params;
     private DataManager dataMan;
-
-    //--------------------------------------------------------------------------
     private HarvestResult result;
-
-    //--------------------------------------------------------------------------
-    //--- Privileges
-    //--------------------------------------------------------------------------
     private CategoryMapper localCateg;
-
-    //--------------------------------------------------------------------------
     private GroupMapper localGroups;
-
-    //--------------------------------------------------------------------------
     private UUIDMapper localUuids;
-
-    //--------------------------------------------------------------------------
     private String processName;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : updateMetadata
-    //---
-    //--------------------------------------------------------------------------
     private String preferredSchema;
-
-    //--------------------------------------------------------------------------
     private Map<String, Object> processParams = new HashMap<String, Object>();
-
-
     private MetadataRepository metadataRepository;
-    //--------------------------------------------------------------------------
-    //--- Public file update methods
-    //--------------------------------------------------------------------------
     private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
-
-    //--------------------------------------------------------------------------
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, XmlRequest req,
                    GeonetParams params, Element remoteInfo) {
@@ -565,8 +521,7 @@ public class Aligner extends BaseAligner {
             setChangeDate(new ISODate(changeDate));
         metadata.getSourceInfo().
             setSourceId(siteId).
-            setOwner(Integer.parseInt(
-                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
+            setOwner(getOwner());
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());

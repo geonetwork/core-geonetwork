@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author heikki doeleman
  */
-public abstract class BaseAligner {
+public abstract class BaseAligner<P extends AbstractParams> extends AbstractAligner<P> {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 

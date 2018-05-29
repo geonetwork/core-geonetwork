@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.CswOperation;
@@ -68,12 +67,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
-public class Aligner extends BaseAligner {
+public class Aligner extends BaseAligner<CswParams> {
 
     private static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
 
     private ServiceContext context;
-    private CswParams params;
     private DataManager dataMan;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -274,7 +272,7 @@ public class Aligner extends BaseAligner {
         // insert metadata
         //
 
-        ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
+        ownerId = getOwner();
         Metadata metadata = new Metadata().setUuid(mdUuid);
 
         metadata.getDataInfo().

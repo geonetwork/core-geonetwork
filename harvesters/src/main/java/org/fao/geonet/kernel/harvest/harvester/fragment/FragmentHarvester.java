@@ -72,47 +72,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FragmentHarvester extends BaseAligner {
 
-    //---------------------------------------------------------------------------
-
     static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 
-    //---------------------------------------------------------------------------
     private static final String REPLACEMENT_GROUP = "replacementGroup";
-
-    //---------------------------------------------------------------------------
     private Logger log;
-
-    //---------------------------------------------------------------------------
     private ServiceContext context;
-
-    //---------------------------------------------------------------------------
     private DataManager dataMan;
-
-    //---------------------------------------------------------------------------
     private FragmentParams params;
-
-    //---------------------------------------------------------------------------
     private String metadataGetService;
-
-    //---------------------------------------------------------------------------
     private List<Namespace> metadataTemplateNamespaces = new ArrayList<Namespace>();
-
-    //---------------------------------------------------------------------------
     private Set<String> templateIdAtts = new HashSet<String>();
-
-    //---------------------------------------------------------------------------
     private Element metadataTemplate;
-
-    //---------------------------------------------------------------------------
     private String harvestUri;
-
-    //---------------------------------------------------------------------------
     private CategoryMapper localCateg;
-
-    //---------------------------------------------------------------------------
     private GroupMapper localGroups;
-
-    //---------------------------------------------------------------------------
     private HarvestSummary harvestSummary;
 
     //---------------------------------------------------------------------------
