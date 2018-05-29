@@ -2680,6 +2680,7 @@
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties"
             or="axisDimensionProperties"
             in="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*"/>
+<<<<<<< HEAD
           <!--<field
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:cellGeometry"/>-->
           <!--<field
@@ -2688,6 +2689,8 @@
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:checkPointAvailability"/>
           <field
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:pointInPixel"/>-->
+=======
+>>>>>>> origin/sextant-6.5.3
           <field
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:geometricObjects"/>
 
@@ -2717,25 +2720,6 @@
                       <gmd:RS_Identifier>
                         <gmd:code>
                           <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
-                        </gmd:code>
-                        <gmd:codeSpace>
-                          <gco:CharacterString>EPSG</gco:CharacterString>
-                        </gmd:codeSpace>
-                        <gmd:version>
-                          <gco:CharacterString>7.4</gco:CharacterString>
-                        </gmd:version>
-                      </gmd:RS_Identifier>
-                    </gmd:referenceSystemIdentifier>
-                  </gmd:MD_ReferenceSystem>
-                </gmd:referenceSystemInfo>
-              </snippet>
-              <snippet label="addCrs41001">
-                <gmd:referenceSystemInfo>
-                  <gmd:MD_ReferenceSystem>
-                    <gmd:referenceSystemIdentifier>
-                      <gmd:RS_Identifier>
-                        <gmd:code>
-                          <gco:CharacterString>WGS 84 / Simple Mercator (EPSG 41001)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -2786,25 +2770,6 @@
                   </gmd:MD_ReferenceSystem>
                 </gmd:referenceSystemInfo>
               </snippet>
-              <snippet label="addCrs32662">
-                <gmd:referenceSystemInfo>
-                  <gmd:MD_ReferenceSystem>
-                    <gmd:referenceSystemIdentifier>
-                      <gmd:RS_Identifier>
-                        <gmd:code>
-                          <gco:CharacterString>WGS 84 / Plate Carree (EPSG 32662)</gco:CharacterString>
-                        </gmd:code>
-                        <gmd:codeSpace>
-                          <gco:CharacterString>EPSG</gco:CharacterString>
-                        </gmd:codeSpace>
-                        <gmd:version>
-                          <gco:CharacterString>7.4</gco:CharacterString>
-                        </gmd:version>
-                      </gmd:RS_Identifier>
-                    </gmd:referenceSystemIdentifier>
-                  </gmd:MD_ReferenceSystem>
-                </gmd:referenceSystemInfo>
-              </snippet>
               <snippet label="addCrs3395">
                 <gmd:referenceSystemInfo>
                   <gmd:MD_ReferenceSystem>
@@ -2812,57 +2777,6 @@
                       <gmd:RS_Identifier>
                         <gmd:code>
                           <gco:CharacterString>WGS 84 / World Mercator (EPSG 3395)</gco:CharacterString>
-                        </gmd:code>
-                        <gmd:codeSpace>
-                          <gco:CharacterString>EPSG</gco:CharacterString>
-                        </gmd:codeSpace>
-                        <gmd:version>
-                          <gco:CharacterString>7.4</gco:CharacterString>
-                        </gmd:version>
-                      </gmd:RS_Identifier>
-                    </gmd:referenceSystemIdentifier>
-                  </gmd:MD_ReferenceSystem>
-                </gmd:referenceSystemInfo>
-              </snippet>
-              <snippet label="addCrsMYOA">
-                <gmd:referenceSystemInfo>
-                  <gmd:MD_ReferenceSystem>
-                    <gmd:referenceSystemIdentifier>
-                      <gmd:RS_Identifier>
-                        <gmd:code>
-                          <gco:CharacterString>MYO Arakawa-C ORCA025 native grid</gco:CharacterString>
-                        </gmd:code>
-                      </gmd:RS_Identifier>
-                    </gmd:referenceSystemIdentifier>
-                  </gmd:MD_ReferenceSystem>
-                </gmd:referenceSystemInfo>
-              </snippet>
-              <snippet label="addCrs3411">
-                <gmd:referenceSystemInfo>
-                  <gmd:MD_ReferenceSystem>
-                    <gmd:referenceSystemIdentifier>
-                      <gmd:RS_Identifier>
-                        <gmd:code>
-                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</gco:CharacterString>
-                        </gmd:code>
-                        <gmd:codeSpace>
-                          <gco:CharacterString>EPSG</gco:CharacterString>
-                        </gmd:codeSpace>
-                        <gmd:version>
-                          <gco:CharacterString>7.4</gco:CharacterString>
-                        </gmd:version>
-                      </gmd:RS_Identifier>
-                    </gmd:referenceSystemIdentifier>
-                  </gmd:MD_ReferenceSystem>
-                </gmd:referenceSystemInfo>
-              </snippet>
-              <snippet label="addCrs3412">
-                <gmd:referenceSystemInfo>
-                  <gmd:MD_ReferenceSystem>
-                    <gmd:referenceSystemIdentifier>
-                      <gmd:RS_Identifier>
-                        <gmd:code>
-                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</gco:CharacterString>
                         </gmd:code>
                         <gmd:codeSpace>
                           <gco:CharacterString>EPSG</gco:CharacterString>
@@ -2889,19 +2803,6 @@
                         <gmd:version>
                           <gco:CharacterString>7.4</gco:CharacterString>
                         </gmd:version>
-                      </gmd:RS_Identifier>
-                    </gmd:referenceSystemIdentifier>
-                  </gmd:MD_ReferenceSystem>
-                </gmd:referenceSystemInfo>
-              </snippet>
-              <snippet label="addCrsSR-ORG29">
-                <gmd:referenceSystemInfo>
-                  <gmd:MD_ReferenceSystem>
-                    <gmd:referenceSystemIdentifier>
-                      <gmd:RS_Identifier>
-                        <gmd:code>
-                          <gco:CharacterString>WRF Lambert Conformal Conic (SR-ORG 29)</gco:CharacterString>
-                        </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
                   </gmd:MD_ReferenceSystem>

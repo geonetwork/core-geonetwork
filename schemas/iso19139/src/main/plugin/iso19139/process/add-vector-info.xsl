@@ -94,7 +94,7 @@ Stylesheet used to add vector information field to a metadata record.
 
 
   <!-- Remove any MD_Georectified spatial representation info related to grid. -->
-  <xsl:template match="gmd:spatialRepresentationInfo[gmd:MD_Georectified]"/>
+  <xsl:template match="gmd:spatialRepresentationInfo[gmd:MD_GridSpatialRepresentation]"/>
 
 
   <!-- Add spatial representation info for a vector -->

@@ -373,13 +373,11 @@
       </gmd:extent>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
-  <gmd:distributionInfo xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:date="http://exslt.org/dates-and-times" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <gmd:distributionInfo>
     <gmd:MD_Distribution>
       <!-- DOI part -->
       <gmd:distributor>
         <gmd:MD_Distributor>
-          <gmd:distributorContact/>
-          <gmd:distributorFormat/>
           <gmd:distributorTransferOptions>
             <gmd:MD_DigitalTransferOptions>
               <gmd:onLine>

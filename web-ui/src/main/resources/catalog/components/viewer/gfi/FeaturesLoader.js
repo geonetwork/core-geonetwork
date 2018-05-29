@@ -214,7 +214,8 @@
         data: data,
         pagination: true,
         pageSize: pageList[1],
-        pageList: pageList
+        pageList: pageList,
+        undefinedText: ''   // SPECIFIC Sextant: do not show hyphens when no value
       };
     });
   };
@@ -300,7 +301,6 @@
       function(url) {
 
     var indexFilters = this.indexObject.getState();
-
     var URL_SUBSTITUTE_PREFIX = 'filtre_';
     var regex = /\$\{([a-zA-Z_.-]*)\}/;
     var match = regex.exec(url);
@@ -356,7 +356,7 @@
           formatter: function(val, row, index) {
             var outputValue = val;
             if (this.urlUtils.isValid(val)) {
-              outputValue = this.formatUrlValues_(val);
+              outputValue = this.formatUrlValues_(val + (field.suffix || ''));
             }
             return outputValue;
           }.bind(this)

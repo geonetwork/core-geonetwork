@@ -105,7 +105,7 @@ public class WFSHarvesterExchangeState {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
                     parameters.getUrl(), parameters.getVersion());
             logger.info(String.format(
-                    "Connecting using GetCatapbilities URL '%s'.",
+                    "Connecting using GetCapabilities URL '%s'.",
                     getCapUrl));
 
             m.put(WFSDataStoreFactory.URL.key, getCapUrl);
@@ -115,6 +115,7 @@ public class WFSHarvesterExchangeState {
             m.put(WFSDataStoreFactory.USEDEFAULTSRS.key, false);
             m.put(WFSDataStoreFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
             m.put(WFSDataStoreFactory.LENIENT.key, true);
+            m.put(WFSDataStoreFactory.WFS_STRATEGY.key, "mapserver");
 
             if (parameters.getMaxFeatures() != -1) {
                 m.put(WFSDataStoreFactory.MAXFEATURES.key, parameters.getMaxFeatures());
@@ -141,7 +142,7 @@ public class WFSHarvesterExchangeState {
             throw e;
         } catch (Exception e) {
             String errorMsg = String.format(
-                    "Failed to GetCatpabilities from service using URL '%s'. Error is %s.",
+                    "Failed to GetCapabilities from service using URL '%s'. Error is %s.",
                     parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
