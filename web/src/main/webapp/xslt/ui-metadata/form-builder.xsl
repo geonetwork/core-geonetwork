@@ -149,7 +149,6 @@
 
                 <xsl:if test="$directiveAttributes">
                   <xsl:for-each select="$directiveAttributes/directiveAttributes/attr">
-                    <xsl:message><xsl:value-of select="@name" />: <xsl:value-of select="@value" /> </xsl:message>
                     <xsl:attribute name="data-{@name}" select="@value" />
                   </xsl:for-each>
                 </xsl:if>
