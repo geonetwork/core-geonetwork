@@ -465,7 +465,7 @@
             });
             return enc;
           },
-          'WMS': function(layer, config) {
+          'WMS': function(layer, config, proj) {
             var enc = $scope.encoders.
                 layers['Layer'].call(this, layer);
             var params = layer.getSource().getParams();
@@ -485,7 +485,7 @@
               customParams: {
                 'EXCEPTIONS': 'XML',
                 'TRANSPARENT': 'true',
-                'CRS': 'EPSG:4326', // FIXME
+                'CRS': proj.getCode(), 
                 'TIME': params.TIME
               },
               singleTile: config.singleTile || true
