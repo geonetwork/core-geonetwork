@@ -42,19 +42,8 @@ import java.util.UUID;
  * Harvest metadata from other catalogues using the CSW protocol
  */
 public class CswHarvester extends AbstractHarvester<HarvestResult> {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
 
     private CswParams params;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Add
-    //---
-    //---------------------------------------------------------------------------
 
     protected void doInit(Element node, ServiceContext context) throws BadInputEx {
         params = new CswParams(dataMan);
@@ -62,15 +51,6 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         params.create(node);
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Update
-    //---
-    //---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     */
     protected String doAdd(Element node) throws BadInputEx, SQLException {
         params = new CswParams(dataMan);
         super.setParams(params);
@@ -123,12 +103,6 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Harvest
-    //---
-    //---------------------------------------------------------------------------
-
     /**
      * Stores in the harvester settings table some values not managed by {@link AbstractHarvester}
      * @param p the harvester parameters.
@@ -164,12 +138,6 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
             }
         }
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
     /**
      * @param log

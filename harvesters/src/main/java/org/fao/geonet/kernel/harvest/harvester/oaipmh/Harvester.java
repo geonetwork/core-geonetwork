@@ -65,52 +65,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
-class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
+class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestResult> {
+
     private HarvestResult result;
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
     private Logger log;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
     private ServiceContext context;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
-    private OaiPmhParams params;
-
-    //---------------------------------------------------------------------------
     private DataManager dataMan;
-
-    //--------------------------------------------------------------------------
     private CategoryMapper localCateg;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : addMetadata
-    //---
-    //--------------------------------------------------------------------------
     private GroupMapper localGroups;
-
-    //--------------------------------------------------------------------------
     private UUIDMapper localUuids;
 
-    //--------------------------------------------------------------------------
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
     private List<HarvestError> errors = new LinkedList<HarvestError>();
-
-    //--------------------------------------------------------------------------
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, OaiPmhParams params) {
         super(cancelMonitor);
@@ -261,12 +229,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         }
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
-
     private void align(XmlRequest t, Set<RecordInfo> records) throws Exception {
         log.info("Start of alignment for : " + params.getName());
 
@@ -373,8 +335,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setCreateDate(ri.changeDate);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(
-                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
+            setOwner(getOwner());
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());

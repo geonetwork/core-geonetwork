@@ -144,33 +144,21 @@ import javax.annotation.Nullable;
  *
  * @author fxprunayre
  */
-class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
+class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestResult> {
 
 
     private static final int WIDTH = 900;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
     private static final String GETCAPABILITIES = "GetCapabilities";
     private static final String GETMAP = "GetMap";
     private static final String IMAGE_FORMAT = "image/png";
     private Logger log;
     private ServiceContext context;
-    private OgcWxSParams params;
     private DataManager dataMan;
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
     private SchemaManager schemaMan;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
     private HarvestResult result;
+
     /**
      * Store the GetCapabilities operation URL. This URL is scrambled and used to uniquelly
      * identified the service. The idea of generating a uuid based on the URL instead of a
@@ -179,6 +167,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
      */
     private String capabilitiesUrl;
     private List<WxSLayerRegistry> layersRegistry = new ArrayList<WxSLayerRegistry>();
+
     /**
      * Constructor
      *
@@ -406,8 +395,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setType(MetadataType.METADATA);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(
-                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
+            setOwner(getOwner());
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid()).
