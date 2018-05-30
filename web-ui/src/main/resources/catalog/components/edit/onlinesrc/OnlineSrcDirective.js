@@ -864,7 +864,8 @@
                       scope.gnCurrentEdit.uuid +
                       '/attachments/print-thumbnail', null, {
                         params: {
-                          jsonConfig: angular.fromJson(jsonSpec)
+                          jsonConfig: angular.fromJson(jsonSpec),
+                          rotationAngle: ((jsonSpec.layout == 'landscape')? 90 : 0)
                         }
                       }).then(function() {
                     $rootScope.$broadcast('gnFileStoreUploadDone');
