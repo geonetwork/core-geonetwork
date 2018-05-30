@@ -159,6 +159,10 @@
     <xsl:param name="langId"/>
     <xsl:param name="isoLangId"/>
 
+    <xsl:for-each select="gmd:dateStamp/*">
+      <Field name="changeDate" string="{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+
     <!-- === Data or Service Identification === -->
 
     <!-- the double // here seems needed to index MD_DataIdentification when
