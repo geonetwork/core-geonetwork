@@ -195,8 +195,8 @@ class Harvester implements IHarvester<HarvestResult> {
             try {
                 Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
                 result = aligner.align(records, errors);
-    
-                Map<String, String> sources = buildSources(remoteInfo);
+
+                Map<String, Source> sources = buildSources(remoteInfo);
                 updateSources(records, sources);
              } catch (Exception t) {
                 log.error("Unknown error trying to harvest");
@@ -311,28 +311,34 @@ class Harvester implements IHarvester<HarvestResult> {
         }
     }
 
-    private Map<String, String> buildSources(Element info) throws BadServerResponseEx {
+    private Map<String, Source> buildSources(Element info) throws BadServerResponseEx {
         Element sources = info.getChild("sources");
 
         if (sources == null)
             throw new BadServerResponseEx(info);
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Source> map = new HashMap<String, Source>();
 
         for (Object o : sources.getChildren()) {
-            Element source = (Element) o;
+            Element sourceEl = (Element) o;
 
-            String uuid = source.getChildText("uuid");
-            String name = source.getChildText("name");
+            String uuid = sourceEl.getChildText("uuid");
+            String name = sourceEl.getChildText("name");
 
-            map.put(uuid, name);
+            Source source = new Source(uuid, name, new HashMap<String, String>(), false);
+            // GeoNetwork 2.x versions doesn't provide this information
+            if (sourceEl.getChild("label") != null) {
+                source.setLabelTranslationsFromElement(sourceEl.getChild("label").getChildren());
+            }
+
+            map.put(uuid, source);
         }
 
         return map;
     }
 
     private void updateSources(Set<RecordInfo> records,
-                               Map<String, String> remoteSources) throws SQLException, MalformedURLException {
+                               Map<String, Source> remoteSources) throws SQLException, MalformedURLException {
         log.info("Aligning source logos from for : " + params.getName());
 
         //--- collect all different sources that have been harvested
@@ -349,16 +355,16 @@ class Harvester implements IHarvester<HarvestResult> {
 
         for (String sourceUuid : sources) {
             if (!siteId.equals(sourceUuid)) {
-                String sourceName = remoteSources.get(sourceUuid);
+                Source source = remoteSources.get(sourceUuid);
 
-                if (sourceName != null) {
+                if (source != null) {
                     retrieveLogo(context, params.host, sourceUuid);
                 } else {
-                    sourceName = "(unknown)";
+                    String sourceName = "(unknown)";
+                    source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), false);
                     Resources.copyUnknownLogo(context, sourceUuid);
                 }
 
-                Source source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), false);
                 context.getBean(SourceRepository.class).save(source);
             }
         }
