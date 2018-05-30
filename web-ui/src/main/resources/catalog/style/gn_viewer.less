@@ -9,6 +9,7 @@
 [gn-main-viewer],
 .gn-main-viewer {
   position: relative;
+  height:  calc(~"100vh - 102px");
 
   [role=tooltip] {
     position: absolute;
@@ -549,7 +550,7 @@
 gn-features-tables, .gn-viewer-info-pane {
   display          : block;
   position         : absolute;
-  bottom           : @gn-bottombar-height;
+  bottom           : 1em;
   left             : 1em;
   right            : 3.8em;
   background-color : rgba(255,255,255, .6);
