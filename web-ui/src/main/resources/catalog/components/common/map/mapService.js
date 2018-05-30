@@ -1264,17 +1264,6 @@
             var defer = $q.defer();
             var $this = this;
             
-            if(getCapLayer.useProxy 
-                && urlGetFeature.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-              urlGetFeature = gnGlobalSettings.proxyUrl 
-                                  + encodeURIComponent(urlGetFeature);
-            }
-
-            try {
-              // Avoid double encoding
-              name = decodeURIComponent(escape(name));
-            } catch (e) {}
-
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
@@ -1319,6 +1308,15 @@
                   o.layer = olL;
                   defer.reject(o);
                 } else {
+                	
+                  //check if proxy is needed
+                  var _url = url.split('/');
+                  _url = _url[0] + '/' + _url[1] + '/' + _url[2] + '/';
+                  if ($.inArray(_url, gnGlobalSettings.requireProxy) >= 0
+                    && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+              	       capL.useProxy = true;
+  	              }
+
                   olL = $this.createOlWMSFromCap(map, capL, url);
 
                   var finishCreation = function() {
