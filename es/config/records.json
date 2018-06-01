@@ -1056,8 +1056,8 @@
           "type": "date"
         },
         "document": {
-          "type" : "string",
-          "index" : "no",
+          "type" : "text",
+          "index" : false,
           "doc_values": false
         },
         "documentStandard": {
@@ -1210,8 +1210,8 @@
           "type": "keyword"
         },
         "validReport": {
-          "type" : "string",
-          "index" : "no",
+          "type" : "text",
+          "index" : false,
           "doc_values": false
         },
         "useLimitation": {
