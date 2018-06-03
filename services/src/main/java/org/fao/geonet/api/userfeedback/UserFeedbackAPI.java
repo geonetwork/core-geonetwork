@@ -81,7 +81,7 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
 

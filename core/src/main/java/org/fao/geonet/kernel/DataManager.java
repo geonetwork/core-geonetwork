@@ -114,12 +114,7 @@ import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.ISearchManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearchParameter;
-import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.*;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -398,6 +393,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
         }
         // get lastchangedate of all metadata in index
+        // TODOES Catch exception and retry later on
         Map<String, String> docs = getSearchManager().getDocsChangeDate();
 
         // set up results HashMap for post processing of records to be indexed
@@ -662,17 +658,17 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (getXmlSerializer().resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "1", true, true));
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "true", true, true));
                     StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
                         moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.XLINK, xlink.getValue(), true, true));
                     }
                     Processor.detachXLink(md, getServiceContext());
                 } else {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "false", true, true));
                 }
             } else {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "false", true, true));
             }
 
             fullMd = getMetadataRepository().findOne(id$);
@@ -685,7 +681,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             final String root = fullMd.getDataInfo().getRoot();
             final String uuid = fullMd.getUuid();
             final String extra = fullMd.getDataInfo().getExtra();
-            final String isHarvested = String.valueOf(Constants.toYN_EnabledChar(fullMd.getHarvestInfo().isHarvested()));
+            final boolean isHarvested = fullMd.getHarvestInfo().isHarvested();
             final String owner = String.valueOf(fullMd.getSourceInfo().getOwner());
             final Integer groupOwner = fullMd.getSourceInfo().getGroupOwner();
             final String popularity = String.valueOf(fullMd.getDataInfo().getPopularity());
@@ -704,7 +700,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE, source, true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString, true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID, uuid, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested, true, true));
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested ? "true" : "false", true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OWNER, owner, true, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DUMMY, "0", false, true));
             moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity, true, true));
@@ -843,11 +839,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
             }
 
-            if (searchManager == null) {
-                getSearchManager().index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
-            } else {
-                searchManager.index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
-            }
+            getSearchManager().index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
@@ -3523,7 +3515,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     private ISearchManager getSearchManager() {
-        return getBean(SearchManager.class);
+        return getBean(EsSearchManager.class);
     }
 
     public AccessManager getAccessManager() {
