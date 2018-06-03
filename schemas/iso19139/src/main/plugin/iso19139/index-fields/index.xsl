@@ -88,7 +88,7 @@
   <xsl:template match="gmi:MI_Metadata|gmd:MD_Metadata"
                 mode="index">
     <!-- Main variables for the document -->
-    <xsl:variable name="identifier" as="xs:string"
+    <xsl:variable name="identifier" as="xs:string?"
                   select="gmd:fileIdentifier/gco:CharacterString[. != '']"/>
 
 
