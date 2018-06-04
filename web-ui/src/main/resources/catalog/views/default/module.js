@@ -286,6 +286,7 @@
               type: config.type,
               url: config.url,
               name: config.name,
+              title: link.title
             });
             return;
           }

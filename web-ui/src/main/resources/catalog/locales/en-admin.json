@@ -1232,7 +1232,7 @@
     "ui-externalViewer-enabled": "Use an external viewer",
     "ui-externalViewer-enabled-help": "When clicking on 'add to map' buttons, the user will be redirected to a third party application. Will disable the default Geonetwork map.",
     "ui-externalViewer-urlTemplate": "URL template",
-    "ui-externalViewer-urlTemplate-help": "This URL will be used for redirection to the external viewer. Available tokens are: <code>${md.uuid}</code>, <code>${md.id}</code>, <code>${service.url}</code>, <code>${service.type}</code>, <code>${service.name}</code>.",
+    "ui-externalViewer-urlTemplate-help": "This URL will be used for redirection to the external viewer. Available tokens are: <code>${md.uuid}</code>, <code>${md.id}</code>, <code>${md.url}</code>, <code>${service.url}</code>, <code>${service.type}</code>, <code>${service.name}</code>, <code>${service.title}</code>.",
     "ui-externalViewer-valuesSeparator": "Values separator",
     "ui-externalViewer-valuesSeparator-help": "This will be used when the user requests visualization of multiple layers.",
     "ui-externalViewer-openNewWindow": "Open new window",

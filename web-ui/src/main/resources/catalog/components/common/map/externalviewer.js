@@ -43,7 +43,14 @@
   module.service('gnExternalViewer', [
     '$window',
     'gnMap',
-    function($window, gnMap) {
+    '$location',
+    function($window, gnMap, $location) {
+      /**
+       * Url pattern for metadata page
+       * @type {string}
+       */
+      var baseMdUrl = $location.absUrl().split('#')[0] + '#/metadata/';
+
       return {
         /**
          * @ngdoc method
@@ -68,19 +75,23 @@
          * @description
          * Does the actual redirection inc. url parameters replacement.
          *
-         * @param {Object} md must contain uuid and id
-         * @param {Object} service must contain url, name and type
+         * @param {Object} md expected properties: uuid, id, url
+         * @param {Object} service expected properties: url, name, type, title
          */
         viewService: function(md, service) {
           var settings = gnMap.getMapConfig().externalViewer;
           if (!this.isEnabled()) { return; }
 
+          var mdUrl = md.uuid ? baseMdUrl + md.uuid : '';
+
           var url = settings.urlTemplate
             .replace('${md.id}', md.id || '')
             .replace('${md.uuid}', md.uuid || '')
+            .replace('${md.url}', mdUrl)
             .replace('${service.url}', service.url || '')
             .replace('${service.type}', service.type || '')
-            .replace('${service.name}', service.name || '');
+            .replace('${service.name}', service.name || '')
+            .replace('${service.title}', service.title || '');
 
           $window.open(url, settings.openNewWindow ? '_blank' : undefined);
         }
