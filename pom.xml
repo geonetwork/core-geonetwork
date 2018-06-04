@@ -529,36 +529,6 @@
         <version>1.2.1</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-core</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-analyzers-common</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-misc</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-queries</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-queryparser</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.lucene</groupId>
-        <artifactId>lucene-facet</artifactId>
-        <version>${lucene.version}</version>
-      </dependency>
-      <dependency>
         <groupId>pcj</groupId>
         <artifactId>pcj</artifactId>
         <version>1.2</version>
@@ -1317,8 +1287,6 @@
     of Postgres is used and update pg.version if needed. -->
     <geotools.version>16.0</geotools.version>
     <pg.version>9.4.1211</pg.version>
-
-    <lucene.version>4.9.0</lucene.version>
 
     <spring.version>4.2.4.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>

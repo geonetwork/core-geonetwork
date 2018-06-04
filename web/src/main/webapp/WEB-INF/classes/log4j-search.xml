@@ -74,14 +74,8 @@
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
-  <logger name="geonetwork.lucene" additivity="true">
-    <level value="DEBUG"/>
-  </logger>
   <logger name="geonetwork.ldap" additivity="false">
     <level value="WARN"/>
-  </logger>
-  <logger name="geonetwork.lucene.tracking" additivity="true">
-    <level value="DEBUG"/>
   </logger>
   <logger name="geonetwork.mef" additivity="false">
     <level value="WARN"/>

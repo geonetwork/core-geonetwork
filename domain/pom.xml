@@ -41,10 +41,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.vividsolutions</groupId>
       <artifactId>jts</artifactId>
     </dependency>

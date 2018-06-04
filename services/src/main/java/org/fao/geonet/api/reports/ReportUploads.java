@@ -3,10 +3,10 @@ package org.fao.geonet.api.reports;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataFileUpload_;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserRepository;
@@ -125,32 +125,34 @@ public class ReportUploads implements IReport {
                 Set<String> fields = new HashSet<String>();
                 fields.add("linkage_name_des");
 
-                Map<String, Map<String, String>> fieldValues =
-                        LuceneSearcher.getAllMetadataFromIndexFor(
-                                context.getLanguage(), "_id",
-                                fileUpload.getMetadataId() + "",
-                                fields, false);
-
-                if (!fieldValues.isEmpty()) {
-                    uploadDescription =
-                            fieldValues.get("0").get("linkage_name_des");
-                }
-
-                // Build the record element with the information for the report
-                List<String> record = new ArrayList<>();
-                record.add(metadataUuid);
-                record.add(metadataTitle);
-                record.add(fileName);
-                record.add(uploadDescription);
-                record.add(fileUpload.getUploadDate());
-                record.add(username);
-                record.add(surname);
-                record.add(name);
-                record.add(email);
-                record.add(profile);
-                record.add(fileUpload.getDeletedDate());
-
-                csvFilePrinter.printRecord(record);
+// TODOES
+                throw new NotImplementedException("Not implemented in ES");
+//                Map<String, Map<String, String>> fieldValues =
+//                        LuceneSearcher.getAllMetadataFromIndexFor(
+//                                context.getLanguage(), "_id",
+//                                fileUpload.getMetadataId() + "",
+//                                fields, false);
+//
+//                if (!fieldValues.isEmpty()) {
+//                    uploadDescription =
+//                            fieldValues.get("0").get("linkage_name_des");
+//                }
+//
+//                // Build the record element with the information for the report
+//                List<String> record = new ArrayList<>();
+//                record.add(metadataUuid);
+//                record.add(metadataTitle);
+//                record.add(fileName);
+//                record.add(uploadDescription);
+//                record.add(fileUpload.getUploadDate());
+//                record.add(username);
+//                record.add(surname);
+//                record.add(name);
+//                record.add(email);
+//                record.add(profile);
+//                record.add(fileUpload.getDeletedDate());
+//
+//                csvFilePrinter.printRecord(record);
             }
         } finally {
             writer.flush();

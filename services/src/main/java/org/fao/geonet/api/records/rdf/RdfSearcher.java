@@ -26,10 +26,11 @@ package org.fao.geonet.api.records.rdf;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.utils.Log;
@@ -60,21 +61,22 @@ public class RdfSearcher {
 
     public List search(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager searchMan = gc.getBean(SearchManager.class);
-        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-
-        ServiceConfig config = new ServiceConfig();
-
-        searcher.search(context, searchRequest, config);
-
-        Element presentRequest = new Element("request");
-        presentRequest.addContent(new Element("fast").setText("true"));
-        presentRequest.addContent(new Element("from").setText("1"));
-        presentRequest.addContent(new Element("to").setText(searcher.getSize() + ""));
-        presentRequest.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
-        presentRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-
-        return searcher.present(context, presentRequest, config).getChildren();
+        EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
+        throw new NotImplementedException("Not implemented in ES");
+//        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+//
+//        ServiceConfig config = new ServiceConfig();
+//
+//        searcher.search(context, searchRequest, config);
+//
+//        Element presentRequest = new Element("request");
+//        presentRequest.addContent(new Element("fast").setText("true"));
+//        presentRequest.addContent(new Element("from").setText("1"));
+//        presentRequest.addContent(new Element("to").setText(searcher.getSize() + ""));
+//        presentRequest.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
+//        presentRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+//
+//        return searcher.present(context, presentRequest, config).getChildren();
     }
 
     public void close() {

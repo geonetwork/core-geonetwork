@@ -29,7 +29,6 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.transaction.TransactionStatus;
 

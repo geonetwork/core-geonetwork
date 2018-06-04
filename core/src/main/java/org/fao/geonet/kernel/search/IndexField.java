@@ -24,11 +24,11 @@
 package org.fao.geonet.kernel.search;
 
 /**
- * Names of fields in the Lucene index.
+ * Names of fields in the index.
  *
  * @author heikki doeleman
  */
-public class LuceneIndexField {
+public class IndexField {
 
     /**
      * Groups allowed to view.
@@ -103,4 +103,6 @@ public class LuceneIndexField {
     public static final String VALID = "_valid";
     public static final String WEST = "westBL";
 
+    public static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
+    public static final String INDEXING_ERROR_FIELD = "_indexingError";
 }

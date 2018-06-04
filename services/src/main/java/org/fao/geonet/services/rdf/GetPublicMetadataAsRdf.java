@@ -40,13 +40,6 @@ import java.nio.file.Path;
 public class GetPublicMetadataAsRdf implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
-
     public Element exec(Element params, ServiceContext context) throws Exception {
         Element thesaurusEl = new GetList().exec(params, context);
 

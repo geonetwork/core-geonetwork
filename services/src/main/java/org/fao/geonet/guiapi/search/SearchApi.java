@@ -26,11 +26,11 @@ package org.fao.geonet.guiapi.search;
 import io.swagger.annotations.*;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.utils.Xml;
@@ -129,28 +129,31 @@ public class SearchApi {
 
     private Element query(Map<String, String> queryFields, HttpServletRequest request){
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        SearchManager searchMan = applicationContext.getBean(SearchManager.class);
+        EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
-        Element params = new Element("params");
-        queryFields.forEach((k, v) -> params.addContent(new Element(k).setText(v)));
 
-        Element elData = SearchDefaults.getDefaultSearch(context, params);
-
-        LuceneSearcher searcher = null;
-        Element model = new Element("search");
-        model.addContent(params);
-        try {
-            searcher = (LuceneSearcher) searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-
-            ServiceConfig config =  new ServiceConfig();
-            searcher.search(context, elData, config);
-            model.addContent(searcher.getSummary());
-            if (queryFields.get("summaryOnly") == null) {
-                model.addContent(searcher.present(context, params, config));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return model;
+        // TODOES this is the proxy
+        throw new NotImplementedException("Not implemented in ES");
+//        Element params = new Element("params");
+//        queryFields.forEach((k, v) -> params.addContent(new Element(k).setText(v)));
+//
+//        Element elData = SearchDefaults.getDefaultSearch(context, params);
+//
+//        LuceneSearcher searcher = null;
+//        Element model = new Element("search");
+//        model.addContent(params);
+//        try {
+//            searcher = (LuceneSearcher) searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+//
+//            ServiceConfig config =  new ServiceConfig();
+//            searcher.search(context, elData, config);
+//            model.addContent(searcher.getSummary());
+//            if (queryFields.get("summaryOnly") == null) {
+//                model.addContent(searcher.present(context, params, config));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return model;
     }
 }

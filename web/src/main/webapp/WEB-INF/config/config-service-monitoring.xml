@@ -30,7 +30,6 @@
        expensiveHealthCheck - healthChecks that must pass or the system is non-functional but are expensive to compute so should be called infrequently by checker
      -->
     <criticalHealthCheck class=".DatabaseHealthCheck"/>
-    <criticalHealthCheck class=".LuceneIndexHealthCheck"/>
     <criticalHealthCheck class=".CswGetCapabilitiesHealthCheck"/>
     <warningHealthCheck class=".DeadlockedThreadsHealthCheck"/>
     <warningHealthCheck class=".HarvestersHealthCheck"/>
@@ -40,7 +39,6 @@
     <warningHealthCheck class=".FreeConnectionsHealthCheck"/>
     <warningHealthCheck class="jeeves.monitor.healthcheck.FreeFileHandlesHealthCheck"/>
     <expensiveHealthCheck class=".CswGetRecordsHealthCheck"/>
-    <expensiveHealthCheck class=".FieldCacheSanityHealthCheck"/>
   </monitors>
   <monitors package="org.fao.geonet.monitor.harvest">
     <counter class=".AbstractHarvesterErrorCounter"/>

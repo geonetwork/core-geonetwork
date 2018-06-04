@@ -24,16 +24,14 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.server.context.ServiceContext;
-
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
@@ -42,9 +40,6 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
@@ -53,13 +48,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * TODO javadoc.
@@ -468,7 +457,7 @@ public class SearchController {
      */
     public Pair<Element, Element> search(ServiceContext context, int startPos, int maxRecords,
                                          ResultType resultType, String outSchema, ElementSetName setName,
-                                         Element filterExpr, String filterVersion, Sort sort,
+                                         Element filterExpr, String filterVersion, Object sort,
                                          Set<String> elemNames, String typeName, int maxHitsFromSummary,
                                          String cswServiceSpecificContraint, String strategy) throws CatalogException {
 
@@ -492,31 +481,33 @@ public class SearchController {
         }
 
 
-        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
-        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
+        // TODOES ?
+        throw new NotImplementedException("SearcherLogger not implemented in ES");
+//        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
+//        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
         // retrieve actual metadata for results
-        int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
-            outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
-
-        //
-        // properties of search result
-        //
-        results.setAttribute("numberOfRecordsMatched", numMatches + "");
-        results.setAttribute("numberOfRecordsReturned", counter + "");
-        results.setAttribute("elementSet", setName.toString());
-
-        int nextRecord = counter + startPos;
-        if (nextRecord >= numMatches) {
-            //  "number of records returned to client nextRecord -
-            // position of next record in the result set
-            // (0 if no records remain)"
-            // Cf. http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
-            results.setAttribute("nextRecord", "0");
-        } else {
-            results.setAttribute("nextRecord", nextRecord + "");
-        }
-
-        return Pair.read(summary, results);
+//        int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
+//            outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
+//
+//        //
+//        // properties of search result
+//        //
+//        results.setAttribute("numberOfRecordsMatched", numMatches + "");
+//        results.setAttribute("numberOfRecordsReturned", counter + "");
+//        results.setAttribute("elementSet", setName.toString());
+//
+//        int nextRecord = counter + startPos;
+//        if (nextRecord >= numMatches) {
+//            //  "number of records returned to client nextRecord -
+//            // position of next record in the result set
+//            // (0 if no records remain)"
+//            // Cf. http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
+//            results.setAttribute("nextRecord", "0");
+//        } else {
+//            results.setAttribute("nextRecord", nextRecord + "");
+//        }
+//
+//        return Pair.read(summary, results);
     }
 
     /**

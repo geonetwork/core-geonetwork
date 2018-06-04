@@ -24,15 +24,13 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.base.Joiner;
-
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
@@ -41,39 +39,24 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.util.*;
 
 /**
  *
@@ -99,12 +82,13 @@ public class MetadataUtils {
         List<RelatedItemType> listOfTypes = new ArrayList<RelatedItemType>(Arrays.asList(type));
 
         // Get the cached version (use by classic GUI)
-        Element md = Show.getCached(context.getUserSession(), id);
-        if (md == null) {
+        // TODOES ?
+//        Element md = Show.getCached(context.getUserSession(), id);
+//        if (md == null) {
             // Get from DB
-            md = dm.getMetadata(context, id, forEditing, withValidationErrors,
+           Element md = dm.getMetadata(context, id, forEditing, withValidationErrors,
                 keepXlinkAttributes);
-        }
+//        }
 
         String schemaIdentifier = dm.getMetadataSchema(id);
         SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
@@ -243,47 +227,48 @@ public class MetadataUtils {
 
     private static Element search(String uuid, String type, ServiceContext context, String from, String to, String fast) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager searchMan = gc.getBean(SearchManager.class);
-
+        EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
+        throw new NotImplementedException("Not implemented in ES");
         // perform the search
-        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-            Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
-
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            // Creating parameters for search, fast only to retrieve uuid
-            Element parameters = new Element(Jeeves.Elem.REQUEST);
-            if ("children".equals(type))
-                parameters.addContent(new Element("parentUuid").setText(uuid));
-            else if ("services".equals(type))
-                parameters.addContent(new Element("operatesOn").setText(uuid));
-            else if ("hasfeaturecats".equals(type))
-                parameters.addContent(new Element("hasfeaturecat").setText(uuid));
-            else if ("hassources".equals(type))
-                parameters.addContent(new Element("hassource").setText(uuid));
-            else if ("associated".equals(type)) {
-                parameters.addContent(new Element("agg_associated").setText(uuid));
-                parameters.addContent(new Element(Geonet.SearchResult.EXTRA_DUMP_FIELDS).setText("agg_*"));
-            }
-            else if ("datasets".equals(type) || "fcats".equals(type) ||
-                "sources".equals(type) || "siblings".equals(type) ||
-                "parent".equals(type))
-                parameters.addContent(new Element("uuid").setText(uuid));
-
-            parameters.addContent(new Element("fast").addContent("index"));
-            parameters.addContent(new Element("sortBy").addContent("title"));
-            parameters.addContent(new Element("sortOrder").addContent("reverse"));
-            parameters.addContent(new Element("buildSummary").addContent("false"));
-            parameters.addContent(new Element("from").addContent(from));
-            parameters.addContent(new Element("to").addContent(to));
-
-            ServiceConfig config = new ServiceConfig();
-            searcher.search(context, parameters, config);
-
-            Element response = new Element(type);
-            Element relatedElement = searcher.present(context, parameters, config);
-            response.addContent(relatedElement);
-            return response;
-        }
+        // TODOES
+//        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+//            Log.debug(Geonet.SEARCH_ENGINE, "Searching for: " + type);
+//
+//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+//            // Creating parameters for search, fast only to retrieve uuid
+//            Element parameters = new Element(Jeeves.Elem.REQUEST);
+//            if ("children".equals(type))
+//                parameters.addContent(new Element("parentUuid").setText(uuid));
+//            else if ("services".equals(type))
+//                parameters.addContent(new Element("operatesOn").setText(uuid));
+//            else if ("hasfeaturecats".equals(type))
+//                parameters.addContent(new Element("hasfeaturecat").setText(uuid));
+//            else if ("hassources".equals(type))
+//                parameters.addContent(new Element("hassource").setText(uuid));
+//            else if ("associated".equals(type)) {
+//                parameters.addContent(new Element("agg_associated").setText(uuid));
+//                parameters.addContent(new Element(Geonet.SearchResult.EXTRA_DUMP_FIELDS).setText("agg_*"));
+//            }
+//            else if ("datasets".equals(type) || "fcats".equals(type) ||
+//                "sources".equals(type) || "siblings".equals(type) ||
+//                "parent".equals(type))
+//                parameters.addContent(new Element("uuid").setText(uuid));
+//
+//            parameters.addContent(new Element("fast").addContent("index"));
+//            parameters.addContent(new Element("sortBy").addContent("title"));
+//            parameters.addContent(new Element("sortOrder").addContent("reverse"));
+//            parameters.addContent(new Element("buildSummary").addContent("false"));
+//            parameters.addContent(new Element("from").addContent(from));
+//            parameters.addContent(new Element("to").addContent(to));
+//
+//            ServiceConfig config = new ServiceConfig();
+//            searcher.search(context, parameters, config);
+//
+//            Element response = new Element(type);
+//            Element relatedElement = searcher.present(context, parameters, config);
+//            response.addContent(relatedElement);
+//            return response;
+//        }
     }
 
     /**
@@ -297,37 +282,39 @@ public class MetadataUtils {
                                          HttpServletRequest request,
                                          Element query) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        SearchManager searchMan = applicationContext.getBean(SearchManager.class);
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        ServiceConfig _config = new ServiceConfig();
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-
-            Set<String> uuids = new HashSet<>();
-
-            // perform the search
-            searcher.search(context, query, _config);
-
-            // If element type found, then get their uuid
-            if (searcher.getSize() != 0) {
-                Element elt = searcher.present(context, query, _config);
-
-                // Get ISO records only
-                @SuppressWarnings("unchecked")
-                List<Element> isoElt = elt.getChildren();
-                for (Element md : isoElt) {
-                    // -- Only metadata record should be processed
-                    if (!md.getName().equals("summary")) {
-                        String mdUuid = md.getChild(Edit.RootChild.INFO,
-                            Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
-                        if (Log.isDebugEnabled(Geonet.MEF))
-                            Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
-                        uuids.add(mdUuid);
-                    }
-                }
-            }
-            Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
-            return uuids;
-        }
+        EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
+// TODOES
+        throw new NotImplementedException("Not implemented in ES");
+//        ServiceContext context = ApiUtils.createServiceContext(request);
+//        ServiceConfig _config = new ServiceConfig();
+//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+//
+//            Set<String> uuids = new HashSet<>();
+//
+//            // perform the search
+//            searcher.search(context, query, _config);
+//
+//            // If element type found, then get their uuid
+//            if (searcher.getSize() != 0) {
+//                Element elt = searcher.present(context, query, _config);
+//
+//                // Get ISO records only
+//                @SuppressWarnings("unchecked")
+//                List<Element> isoElt = elt.getChildren();
+//                for (Element md : isoElt) {
+//                    // -- Only metadata record should be processed
+//                    if (!md.getName().equals("summary")) {
+//                        String mdUuid = md.getChild(Edit.RootChild.INFO,
+//                            Edit.NAMESPACE).getChildText(Edit.Info.Elem.UUID);
+//                        if (Log.isDebugEnabled(Geonet.MEF))
+//                            Log.debug(Geonet.MEF, "    Adding: " + mdUuid);
+//                        uuids.add(mdUuid);
+//                    }
+//                }
+//            }
+//            Log.info(Geonet.MEF, "  Found " + uuids.size() + " record(s).");
+//            return uuids;
+//        }
     }
 
     /**

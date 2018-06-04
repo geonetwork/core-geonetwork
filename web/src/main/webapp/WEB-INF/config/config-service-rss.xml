@@ -67,7 +67,7 @@
         * icon
         ]]>
       </documentation>
-      <class name=".services.config.Get"/>
+      <!--<class name=".services.config.Get"/>-->
       <output sheet="../xslt/services/rss/opensearch.xsl"
               contentType="text/xml; charset=UTF-8"/>
     </service>

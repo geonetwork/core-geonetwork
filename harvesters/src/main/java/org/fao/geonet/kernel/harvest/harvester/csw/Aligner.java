@@ -46,7 +46,6 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
@@ -267,7 +266,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 mdUuid = ri.uuid;
             }
         }
-        
+
         //
         // insert metadata
         //
@@ -327,7 +326,7 @@ public class Aligner extends BaseAligner<CswParams> {
                     result.unchangedMetadata++;
                     return;
                 }
-                
+
                 if (!params.xslfilter.equals("")) {
                     md = processMetadata(context, md, processName, processParams);
                 }
@@ -340,7 +339,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 boolean index = false;
                 String language = context.getLanguage();
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
-                
+
                 if(force) {
                     //change ownership of metadata to new harvester
                     metadata.getHarvestInfo().setUuid(params.getUuid());
@@ -444,9 +443,6 @@ public class Aligner extends BaseAligner<CswParams> {
      * When harvesting, some users would like to have the capability to exclude "duplicate"
      * description of the same dataset.
      *
-     * The check is made searching the identifier field in the index using {@link
-     * org.fao.geonet.kernel.search.LuceneSearcher#getAllMetadataFromIndexFor(String, String,
-     * String, java.util.Set, boolean)}
      *
      * @param uuid     the metadata unique identifier
      * @param response the XML document to check
@@ -477,8 +473,10 @@ public class Aligner extends BaseAligner<CswParams> {
                         String identifier = identifierNode.getTextTrim();
                         LOGGER.debug("    - Searching for duplicates for resource identifier: {}", identifier);
 
-                        Map<String, Map<String, String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField,
-                            identifier, Collections.singleton("_uuid"), true);
+                        // TODOES
+                        Map<String, Map<String, String>> values = new HashMap<>();
+//                            LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField,
+//                            identifier, Collections.singleton("_uuid"), true);
                         LOGGER.debug("    - Number of resources with same identifier: {}", values.size());
                         for (Map<String, String> recordFieldValues : values.values()) {
                             String indexRecordUuid = recordFieldValues.get("_uuid");

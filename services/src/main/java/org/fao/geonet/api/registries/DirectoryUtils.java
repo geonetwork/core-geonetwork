@@ -10,13 +10,10 @@ import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.EsSearchManager;
+
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.subtemplate.Get;
 import org.fao.geonet.util.Sha1Encoder;
-import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -37,6 +34,7 @@ import jeeves.xlink.XLink;
  */
 public class DirectoryUtils {
     private static final String LOGGER = DirectoryApi.LOGGER;
+    public static final char SEPARATOR = '~';
 
     /**
      * Save entries and metadata
@@ -388,7 +386,7 @@ public class DirectoryUtils {
             if (StringUtils.isNotEmpty(value)) {
                 properties.append("&amp;").append("process=")
                     .append(xpath)
-                    .append(Get.SEPARATOR)
+                    .append(SEPARATOR)
                     .append(value);
             }
         }
@@ -403,30 +401,31 @@ public class DirectoryUtils {
     private static String search(ServiceContext context, Map<String, String> searchParameters) {
         ServiceConfig _config = new ServiceConfig();
 
-        SearchManager searchMan = context.getBean(SearchManager.class);
-
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            // Creating parameters for search, fast only to retrieve uuid
-            Element parameters = new Element(Jeeves.Elem.REQUEST);
-            parameters.addContent(new Element("fast").addContent("index"));
-            parameters.addContent(new Element("_isTemplate").addContent("s"));
-            for (Map.Entry<String, String> e : searchParameters.entrySet()) {
-                parameters.addContent(
-                    new Element(e.getKey()).addContent(e.getValue()));
-            }
-            parameters.addContent(new Element("from").addContent(1 + ""));
-            parameters.addContent(new Element("to").addContent(1 + ""));
-
-            searcher.search(context, parameters, _config);
-
-            Element response = searcher.present(context, parameters, _config);
-            Element record = response.getChild("metadata");
-            if (record != null) {
-                return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        EsSearchManager searchMan = context.getBean(EsSearchManager.class);
+        // TODOES
+//
+//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+//            // Creating parameters for search, fast only to retrieve uuid
+//            Element parameters = new Element(Jeeves.Elem.REQUEST);
+//            parameters.addContent(new Element("fast").addContent("index"));
+//            parameters.addContent(new Element("_isTemplate").addContent("s"));
+//            for (Map.Entry<String, String> e : searchParameters.entrySet()) {
+//                parameters.addContent(
+//                    new Element(e.getKey()).addContent(e.getValue()));
+//            }
+//            parameters.addContent(new Element("from").addContent(1 + ""));
+//            parameters.addContent(new Element("to").addContent(1 + ""));
+//
+//            searcher.search(context, parameters, _config);
+//
+//            Element response = searcher.present(context, parameters, _config);
+//            Element record = response.getChild("metadata");
+//            if (record != null) {
+//                return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 }

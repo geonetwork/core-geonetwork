@@ -915,8 +915,6 @@
     "CswGetRecordsHealthCheck": "CSW GetRecords operation",
     "DatabaseHealthCheck": "Database Connection",
     "DeadlockedThreadsHealthCheck": "Dead locked threads",
-    "FieldCacheSanityHealthCheck": "Default field cache sanity",
-    "LuceneIndexHealthCheck": "Lucene index",
     "IndexHealthCheck": "Remote index",
     "NoIndexErrorsHealthCheck": "Metadata index errors",
     "FreeConnectionsHealthCheck" : "Available connections in database",

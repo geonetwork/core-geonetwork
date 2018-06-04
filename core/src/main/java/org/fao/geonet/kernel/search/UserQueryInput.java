@@ -116,11 +116,11 @@ public class UserQueryInput {
      * TODO : use enum instead ?
      */
     private static final List<String> RANGE_FIELDS = Arrays.asList(
-        LuceneIndexField.CHANGE_DATE,
-        LuceneIndexField.REVISION_DATE,
-        LuceneIndexField.PUBLICATION_DATE,
-        LuceneIndexField.CREATE_DATE,
-        LuceneIndexField.DENOMINATOR,
+        IndexField.CHANGE_DATE,
+        IndexField.REVISION_DATE,
+        IndexField.PUBLICATION_DATE,
+        IndexField.CREATE_DATE,
+        IndexField.DENOMINATOR,
         SearchParameter.RATING,
         SearchParameter.FEEDBACKCOUNT);
     private static final List<String> RANGE_FIELDS_FROM = Arrays.asList(
@@ -144,17 +144,17 @@ public class UserQueryInput {
 
     static {
         // Populate map for search parameter to Lucene mapping
-        searchParamToLuceneField.put(SearchParameter.SITEID, LuceneIndexField.SOURCE);
-        searchParamToLuceneField.put(SearchParameter.INSPIRE, LuceneIndexField.INSPIRE_CAT);
-        searchParamToLuceneField.put(SearchParameter.THEMEKEY, LuceneIndexField.KEYWORD);
-        searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, LuceneIndexField.TOPIC_CATEGORY);
-        searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField.CAT);
-        searchParamToLuceneField.put(SearchParameter.OP_VIEW, LuceneIndexField._OP0);
-        searchParamToLuceneField.put(SearchParameter.OP_DOWNLOAD, LuceneIndexField._OP1);
-        searchParamToLuceneField.put(SearchParameter.OP_EDITING, LuceneIndexField._OP2);
-        searchParamToLuceneField.put(SearchParameter.OP_NOTIFY, LuceneIndexField._OP3);
-        searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC, LuceneIndexField._OP5);
-        searchParamToLuceneField.put(SearchParameter.OP_FEATURED, LuceneIndexField._OP6);
+        searchParamToLuceneField.put(SearchParameter.SITEID, IndexField.SOURCE);
+        searchParamToLuceneField.put(SearchParameter.INSPIRE, IndexField.INSPIRE_CAT);
+        searchParamToLuceneField.put(SearchParameter.THEMEKEY, IndexField.KEYWORD);
+        searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, IndexField.TOPIC_CATEGORY);
+        searchParamToLuceneField.put(SearchParameter.CATEGORY, IndexField.CAT);
+        searchParamToLuceneField.put(SearchParameter.OP_VIEW, IndexField._OP0);
+        searchParamToLuceneField.put(SearchParameter.OP_DOWNLOAD, IndexField._OP1);
+        searchParamToLuceneField.put(SearchParameter.OP_EDITING, IndexField._OP2);
+        searchParamToLuceneField.put(SearchParameter.OP_NOTIFY, IndexField._OP3);
+        searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC, IndexField._OP5);
+        searchParamToLuceneField.put(SearchParameter.OP_FEATURED, IndexField._OP6);
     }
 
     private String similarity;
