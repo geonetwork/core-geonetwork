@@ -354,9 +354,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata = _metadataRepository.save(metadata);
         final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Lists.newArrayList(
-            EsSearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID),
-            EsSearchManager.makeField("_isTemplate", "n"),
-            EsSearchManager.makeField("_owner", "" + ownerId)
+            _searchManager.makeField("_uuid", PHOTOGRAPHIC_UUID),
+            _searchManager.makeField("_isTemplate", "n"),
+            _searchManager.makeField("_owner", "" + ownerId)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
             MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);
