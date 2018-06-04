@@ -28,8 +28,8 @@
       []);
 
   module.factory('gnSavedSelectionConfig', [
-    '$location', 'Metadata', 'gnMap', 'gnSearchSettings',
-    function($location, Metadata, gnMap, gnSearchSettings) {
+    '$location', 'Metadata', 'gnMap', 'gnSearchSettings', 'gnExternalViewer',
+    function($location, Metadata, gnMap, gnSearchSettings, gnExternalViewer) {
       var viewerMap = gnSearchSettings.viewerMap;
 
       var searchRecordsInSelection = function(uuid, records) {
@@ -64,6 +64,19 @@
 
                 var md = new Metadata(record);
                 angular.forEach(md.getLinksByType('OGC:WMS'), function(link) {
+                  if (gnExternalViewer.isEnabled()) {
+                    gnExternalViewer.viewService({
+                      id: md.getId(),
+                      uuid: md.getUuid()
+                    }, {
+                      url: link.url,
+                      type: 'wms',
+                      name: link.name,
+                      title: link.title
+                    })
+                    return;
+                  }
+
                   if (gnMap.isLayerInMap(viewerMap,
                       link.name, link.url)) {
                     return;
