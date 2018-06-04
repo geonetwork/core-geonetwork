@@ -97,7 +97,7 @@ public class Geonet20Harvester extends AbstractHarvester {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -123,7 +123,7 @@ public class Geonet20Harvester extends AbstractHarvester {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -150,20 +150,20 @@ public class Geonet20Harvester extends AbstractHarvester {
         GeonetParams params = (GeonetParams) p;
         super.setParams(params);
 
-        settingMan.add("id:" + siteId, "host", params.host);
+        harvesterSettingsManager.add("id:" + siteId, "host", params.host);
 
         //--- store search nodes
 
         for (Search s : params.getSearches()) {
-            String searchID = settingMan.add(path, "search", "");
+            String searchID = harvesterSettingsManager.add(path, "search", "");
 
-            settingMan.add("id:" + searchID, "freeText", s.freeText);
-            settingMan.add("id:" + searchID, "title", s.title);
-            settingMan.add("id:" + searchID, "abstract", s.abstrac);
-            settingMan.add("id:" + searchID, "keywords", s.keywords);
-            settingMan.add("id:" + searchID, "digital", s.digital);
-            settingMan.add("id:" + searchID, "hardcopy", s.hardcopy);
-            settingMan.add("id:" + searchID, "siteId", s.siteId);
+            harvesterSettingsManager.add("id:" + searchID, "freeText", s.freeText);
+            harvesterSettingsManager.add("id:" + searchID, "title", s.title);
+            harvesterSettingsManager.add("id:" + searchID, "abstract", s.abstrac);
+            harvesterSettingsManager.add("id:" + searchID, "keywords", s.keywords);
+            harvesterSettingsManager.add("id:" + searchID, "digital", s.digital);
+            harvesterSettingsManager.add("id:" + searchID, "hardcopy", s.hardcopy);
+            harvesterSettingsManager.add("id:" + searchID, "siteId", s.siteId);
         }
     }
 

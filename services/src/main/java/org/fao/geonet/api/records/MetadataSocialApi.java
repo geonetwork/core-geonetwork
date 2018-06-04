@@ -40,6 +40,7 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.kernel.DataManager;
@@ -145,9 +146,9 @@ public class MetadataSocialApi {
         DataManager dataManager = appContext.getBean(DataManager.class);
         HarvestManager hm = appContext.getBean(HarvestManager.class);
         SettingManager settingManager = appContext.getBean(SettingManager.class);
-        boolean localRating = settingManager.getValueAsBool(SYSTEM_LOCALRATING_ENABLE, false);
+        String localRating = settingManager.getValue(SYSTEM_LOCALRATING_ENABLE);
 
-        if (localRating || harvUuid == null) {
+        if (localRating.equals(RatingsSetting.BASIC) || harvUuid == null) {
             //--- metadata is local, just rate it
             rating = dataManager.rateMetadata(metadata.getId(), ip, rating);
         } else {

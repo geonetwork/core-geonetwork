@@ -92,6 +92,7 @@
             if (!layerSelected) {
               return;
             }
+            layerSelected.capRequest = scope.capabilities.Request||null;
             gnWmsService.addLayerToMap(layerSelected,
                 gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();

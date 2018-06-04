@@ -114,14 +114,14 @@
               scope.map.once('postcompose', function(event) {
                 var canvas = event.context.canvas;
 
-                var resizedCanvas = document.createElement("canvas");
-                var resizedContext = resizedCanvas.getContext("2d");
+                var resizedCanvas = document.createElement('canvas');
+                var resizedContext = resizedCanvas.getContext('2d');
                 scaleFactor = scaleFactor || 1;
                 resizedCanvas.height = canvas.height * scaleFactor;
                 resizedCanvas.width = canvas.width * scaleFactor;
 
                 resizedContext.drawImage(canvas, 0, 0,
-                  resizedCanvas.width, resizedCanvas.height);
+                    resizedCanvas.width, resizedCanvas.height);
 
                 var data = resizedCanvas.toDataURL('image/png');
                 defer.resolve(data);
@@ -242,27 +242,6 @@
             }
             $('#owc-file-input')[0].value = '';
           });
-
-          // load context from url or from storage
-          var key = 'owsContext_' +
-              window.location.host + window.location.pathname;
-
-          var storage = gnViewerSettings.mapConfig.storage ?
-              window[gnViewerSettings.mapConfig.storage] : window.localStorage;
-
-          if (gnViewerSettings.mapConfig.storage !== '' &&
-              storage.getItem(key)) {
-            var c = storage.getItem(key);
-            gnOwsContextService.loadContext(c, scope.map);
-          } else if (gnViewerSettings.owsContext) {
-            gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
-                scope.map);
-          } else if (gnViewerSettings.defaultContext) {
-            gnOwsContextService.loadContextFromUrl(
-                gnViewerSettings.defaultContext,
-                scope.map,
-                gnViewerSettings.additionalMapLayers);
-          }
 
           // store the current context in local storage to reload it
           // automatically on next connexion

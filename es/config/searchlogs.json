@@ -23,9 +23,6 @@
         "language": {
           "type": "keyword"
         },
-        "path": {
-          "type": "keyword"
-        },
         "query": {
           "type": "keyword"
         },

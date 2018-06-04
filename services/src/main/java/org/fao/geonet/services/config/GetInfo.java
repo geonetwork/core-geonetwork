@@ -155,17 +155,12 @@ public class GetInfo implements Service {
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path luceneDir = dataDirectory.getLuceneDir();
         indexProperties.put("index.path", luceneDir.toAbsolutePath().normalize().toString());
-        Path lDir = dataDirectory.getSpatialIndexPath();
         if (Files.exists(luceneDir)) {
             long size = sizeOfDirectory(luceneDir) / 1024;
             indexProperties.put("index.size", "" + size); // lucene + Shapefile
             // if exist
         }
 
-        if (Files.exists(lDir)) {
-            long size = sizeOfDirectory(lDir) / 1024;
-            indexProperties.put("index.size.lucene", "" + size);
-        }
         indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
     }
 

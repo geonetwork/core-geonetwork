@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -237,7 +238,8 @@ public class Aligner {
             setCreateDate(new ISODate(createDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(Integer.parseInt(
+                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());

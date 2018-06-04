@@ -254,7 +254,7 @@
       <label>Autor</label>
       <description>Part autora del recurs</description>
     </entry>
-		<!-- ISO PROFIL CHE ONLY 
+		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>editor</code>
 			<label>Editor</label>
@@ -1214,7 +1214,7 @@
       <description>Pamflet o fullet amb Informació descriptiva</description>
     </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- ISO PROFIL CHE ONLY 
+		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>zip100</code>
 			<label>Zip100</label>
@@ -1528,7 +1528,7 @@
 			<label>Publication</label>
 			<description>Publication</description>
 		</entry>-->
-		
+
 		<!-- Used for facet translation only and not displayed in editor -->
     <entry hideInEditMode="true">
       <code>map</code>
@@ -1608,7 +1608,7 @@
 		</entry>-->
   </codelist>
 	<!-- ==================================================== -->
-  <codelist name="gmd:MD_TopicCategoryCode">
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <entry>
       <code>farming</code>
       <label>Agricultura</label>

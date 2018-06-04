@@ -81,6 +81,16 @@ public class ISO19110SchemaPlugin
     }
 
     @Override
+    public Element addOperatesOn(Element serviceRecord, Map<String, String> layers, String serviceType, String baseUrl) {
+        return serviceRecord;
+    }
+
+    @Override
+    public List<Extent> getExtents(Element record) {
+        return new ArrayList<>();
+    }
+
+    @Override
     public Map<String, Namespace> getCswTypeNames() {
         return allTypenames;
     }

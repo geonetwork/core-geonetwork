@@ -642,6 +642,10 @@ public class Geonetwork implements ApplicationHandler {
             logger.info("Using shapefile " + file.getAbsolutePath());
         }
         ShapefileDataStore ids = new ShapefileDataStore(file.toURI().toURL());
+        // It looks like we're facing this issue
+        // https://osgeo-org.atlassian.net/browse/GEOT-5830
+        // And spatial search does not return any results.
+        ids.setFidIndexed(false);
         ids.setNamespaceURI("http://geonetwork.org");
         ids.setMemoryMapped(false);
         ids.setCharset(Charset.forName(Constants.ENCODING));

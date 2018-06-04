@@ -48,10 +48,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
-import org.jdom.Comment;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.springframework.context.ApplicationContext;
 
 import java.nio.file.Files;
@@ -120,6 +117,21 @@ public class SearchController {
             Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
 
+            // Add schemaLocation from schema config if not present in the metadata
+            Attribute schemaLocAtt = scm.getSchemaLocation(
+                schema, context);
+
+            if (schemaLocAtt != null) {
+                if (res.getAttribute(
+                    schemaLocAtt.getName(),
+                    schemaLocAtt.getNamespace()) == null) {
+                    res.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    res.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    res.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                }
+            }
 
             // apply stylesheet according to setName and schema
             //

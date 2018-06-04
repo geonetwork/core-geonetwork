@@ -28,9 +28,9 @@ import org.fao.geonet.domain.User;
 public class OwnerResponse {
     int id;
     String name;
-    int records;
+    long records;
 
-    public OwnerResponse(User u, int size) {
+    public OwnerResponse(User u, long size) {
         this.id = u.getId();
         this.name = String.format("%s %s (%s)",
             u.getName(), u.getSurname(), u.getUsername()
@@ -54,7 +54,7 @@ public class OwnerResponse {
         this.name = name;
     }
 
-    public int getRecords() {
+    public long getRecords() {
         return records;
     }
 

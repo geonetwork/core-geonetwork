@@ -171,7 +171,7 @@ public class Aligner extends BaseAligner {
                 result.totalMetadata++;
 
             }catch (Throwable t) {
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
                 log.error("Unable to process record from csw (" + this.params.getName() + ")");
                 log.error("   Record failed: " + ri.uuid);
             }

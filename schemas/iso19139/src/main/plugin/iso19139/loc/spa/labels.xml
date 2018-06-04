@@ -2234,7 +2234,7 @@
     <description>Tema(s) principal(es) del conjunto de datos</description>
     <condition>mandatory</condition>
   </element>
-  <element name="gmd:MD_TopicCategoryCode">
+  <element name="gmd:MD_TopicCategoryCode" alias="topicCategory">
     <label>Código de la categoría temática</label>
     <description>Clasificación temática de alto nivel para datos geográficos para ayudar a la
       agrupación y búsqueda de los conjuntos de datos geográficos disponibles. También se puede

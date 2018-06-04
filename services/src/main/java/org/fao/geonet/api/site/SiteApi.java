@@ -363,7 +363,7 @@ public class SiteApi {
     })
     public void saveSettings(
         @ApiIgnore
-        @ApiParam(hidden = true)
+        @ApiParam(hidden = false)
         @RequestParam
             Map<String, String> allRequestParams,
         HttpServletRequest request,

@@ -109,6 +109,10 @@
     <xsl:value-of select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue"/>
   </xsl:template>
 
+  <xsl:template mode="getMetadataThumbnail" match="gmd:MD_Metadata">
+    <xsl:value-of select="gmd:identificationInfo/*/gmd:graphicOverview[1]/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+  </xsl:template>
+
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
     <section class="gn-md-side-overview">
       <h4>
@@ -723,7 +727,7 @@
           <ul>
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
               <li>
-                <a href="#uuid={@uuidref}">
+                <a href="#/metadata/{@uuidref}">
                   <i class="fa fa-link">&#160;</i>
                   <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/>
                 </a>

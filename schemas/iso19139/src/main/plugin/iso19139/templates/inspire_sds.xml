@@ -253,7 +253,7 @@
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
       <srv:serviceType>
-        <gco:LocalName codeSpace="www.w3c.org">W3C:HTML:LINK</gco:LocalName>
+        <gco:LocalName codeSpace="www.w3c.org">other</gco:LocalName>
       </srv:serviceType>
       <srv:serviceTypeVersion>
         <gco:CharacterString>1.1.1</gco:CharacterString>

@@ -119,11 +119,13 @@
     <property name="useCodeAsDefaultMessage" value="true" />
   </bean>
 
-
   <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
         init-method="init">
   </bean>
   
-    <bean id="cssStyleSettingService" class="org.fao.geonet.api.cssstyle.service.CssStyleSettingDatabaseService">
+  <bean id="cssStyleSettingService" class="org.fao.geonet.api.cssstyle.service.CssStyleSettingDatabaseService">
   </bean>
+
+  <bean id="userFeedbackService" class="org.fao.geonet.api.userfeedback.service.UserFeedbackDatabaseService" />
+
 </beans>

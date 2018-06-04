@@ -237,6 +237,7 @@
     <name>gmd:centerPoint</name>
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
+    <name>gmd:axisDimensionProperties</name>
     <name>gmd:identifier</name>
     <name>gmd:topicCategory</name>
   </fieldsWithFieldset>
@@ -1217,6 +1218,12 @@
             </template>
           </action>
 
+          <!-- Keywords from other thesaurus than INSPIRE Themes -->
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+            gmd:descriptiveKeywords
+            [count(gmd:MD_Keywords/gmd:thesaurusName) > 0 and not(contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes'))]"/>
+
           <section name="freeTextKeywords">
             <!-- Keywords without thesaurus information of type theme -->
             <field
@@ -1328,14 +1335,20 @@
                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
-                    <directiveAttributes data-tag-name="gml:beginPosition"/>
+                    <directiveAttributes
+                      data-tag-name="gml:beginPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition/@indeterminatePosition"/>
+
                   </key>
                   <key label="endPosition"
                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
-                      data-tag-name="gml:endPosition"/>
+                      data-tag-name="gml:endPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+
+
                   </key>
                 </values>
                 <snippet>
@@ -1353,7 +1366,30 @@
               </template>
             </field>
 
-            <field name="temporalRangeSection" templateModeOnly="true" notDisplayedIfMissing="true"
+          <action type="add" name="extent" or="extent" btnLabel="temporalRangeSection"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement) = 0">
+            <template>
+              <snippet>
+                <gmd:extent>
+                  <gmd:EX_Extent>
+                    <gmd:temporalElement>
+                      <gmd:EX_TemporalExtent>
+                        <gmd:extent>
+                          <gml:TimePeriod gml:id="">
+                            <gml:beginPosition/>
+                            <gml:endPosition/>
+                          </gml:TimePeriod>
+                        </gmd:extent>
+                      </gmd:EX_TemporalExtent>
+                    </gmd:temporalElement>
+                  </gmd:EX_Extent>
+                </gmd:extent>
+              </snippet>
+            </template>
+          </action>
+
+          <field name="temporalRangeSection" templateModeOnly="true" notDisplayedIfMissing="true"
                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement"
                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
@@ -1389,6 +1425,29 @@
                 </snippet>
               </template>
             </field>
+
+          <action type="add" name="extent" or="extent" btnLabel="temporalRangeSection"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement) = 0">
+            <template>
+              <snippet>
+                <srv:extent>
+                  <gmd:EX_Extent>
+                    <gmd:temporalElement>
+                      <gmd:EX_TemporalExtent>
+                        <gmd:extent>
+                          <gml:TimePeriod gml:id="">
+                            <gml:beginPosition/>
+                            <gml:endPosition/>
+                          </gml:TimePeriod>
+                        </gmd:extent>
+                      </gmd:EX_TemporalExtent>
+                    </gmd:temporalElement>
+                  </gmd:EX_Extent>
+                </srv:extent>
+              </snippet>
+            </template>
+          </action>
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
             gmd:date"/>
@@ -3184,11 +3243,10 @@
     <section name="identification">
       <!-- Update existing title in metadata record -->
       <field name="title"
-             xpath="gmd:identificationInfo/*/
-                      gmd:citation/gmd:CI_Citation/gmd:title"
+             xpath="gmd:identificationInfo/*/gmd:citation/*/gmd:title"
+             insertMode="gn_replace"
              indexField="title">
-        <template>
-          <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
 
       <!-- Insert a new keyword in the first gmd:descriptiveKeywords found.

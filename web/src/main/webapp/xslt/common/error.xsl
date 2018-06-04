@@ -22,7 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                version="2.0">
 
   <xsl:output indent="yes" method="text" encoding="UTF-8" media-type="application/json"/>
 
@@ -47,7 +49,7 @@
         {<xsl:apply-templates mode="error" select="*"/>}
       </xsl:when>
       <xsl:otherwise>
-        "<xsl:value-of select="replace(replace(translate(., '&quot;', ''), '&lt;script&gt;', '', 'i'), '&lt;/script&gt;', '', 'i')"/>"
+        "<xsl:value-of select="java:encodeForHTML(.)"/>"
       </xsl:otherwise>
     </xsl:choose>
     <!-- Last element of interest for error is request. Next one is the record. -->

@@ -30,7 +30,9 @@
 
   <xsl:template mode="content" match="/">
 
-    <div data-ng-show="authenticated" data-ng-view="">
+    <div data-ng-show="authenticated"
+         data-ng-view=""
+         data-ng-controller="GnEditorHotKeyController">
     </div>
   </xsl:template>
 </xsl:stylesheet>

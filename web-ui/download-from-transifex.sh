@@ -28,6 +28,8 @@ l=(
     'ca::ca'
     'fi::fi'
     'is::is'
+    'ru::ru'
+    'zh::zh'
 )
 
 for index in "${l[@]}" ; do
@@ -35,7 +37,7 @@ for index in "${l[@]}" ; do
     VALUE="${index##*::}"
   echo "Language $VALUE"
   for mod in admin core editor search
-  do 
+  do
     cp $TRANSLATION_DIR$mod/$VALUE.json $SRC_DIR/$KEY-$mod.json
   done;
 done

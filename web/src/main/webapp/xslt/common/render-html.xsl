@@ -37,9 +37,14 @@
   <xsl:template name="render-html">
     <xsl:param name="content"/>
     <xsl:param name="title"
-               select="''"/>
+               select="/root/gui/systemConfig/settings/system/site/name"/>
     <xsl:param name="description"
-               select="''"/>
+               select="/root/gui/systemConfig/settings/strings/mainpage2"/>
+    <xsl:param name="thumbnail"
+               select="concat(/root/gui/url,'/images/logos/favicon.png')"/>
+    <xsl:param name="type"
+               select="'dataset'"/>
+
 
     <html>
       <head>
@@ -51,7 +56,20 @@
         <meta name="description" content="{normalize-space($description)}"/>
         <meta name="keywords" content=""/>
 
+        <meta property="og:title" content="{$title}" />
+        <meta property="og:description" content="{normalize-space($description)}" />
+        <meta property="og:site_name" content="{/root/gui/systemConfig/settings/system/site/name}" />
+        <meta property="og:image" content="{$thumbnail}" />
 
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:image" content="{$thumbnail}" />
+        <meta name="twitter:title" content="{$title}" />
+        <meta name="twitter:description" content="{normalize-space($description)}" />
+        <meta name="twitter:site" content="{/root/gui/systemConfig/settings/system/site/name}" />
+
+        <xsl:if test="/root/info/record/uuid">
+          <link rel="canonical" href="{$nodeUrl}api/records/{/root/info/record/uuid}" />
+        </xsl:if>
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="{/root/gui/url}/images/logos/favicon.png"/>
         <link href="{$nodeUrl}eng/rss.search?sortBy=changeDate"
@@ -81,25 +99,25 @@
                 crossorigin="anonymous">
           &#160;
         </script>
-      
+
         <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
                 crossorigin="anonymous">
           &#160;
         </script>
-      
+
         <script type="text/javascript">
           // attach click to tab
           $('.nav-tabs-advanced a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
           });
-          // hide empty tab     
+          // hide empty tab
           $('.nav-tabs-advanced a').each(function() {
-      
+
             var tabLink = $(this).attr('href');
-      
+
             if (tabLink) {
               if ($(tabLink).length === 0) {
                 $(this).parent().hide();
@@ -114,3 +132,5 @@
     </html>
   </xsl:template>
 </xsl:stylesheet>
+
+

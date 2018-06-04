@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -70,40 +71,12 @@ import org.jdom.xpath.XPath;
 
 import jeeves.server.context.ServiceContext;
 
-//=============================================================================
-
 public class Aligner extends BaseAligner {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
 
-    private Logger log;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Alignment method
-    //---
-    //--------------------------------------------------------------------------
     private ServiceContext context;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods : addMetadata
-    //---
-    //--------------------------------------------------------------------------
     private CswParams params;
     private DataManager dataMan;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //--------------------------------------------------------------------------
     private CategoryMapper localCateg;
-
-    //--------------------------------------------------------------------------
     private GroupMapper localGroups;
     private UUIDMapper localUuids;
 
@@ -118,11 +91,13 @@ public class Aligner extends BaseAligner {
     private GetRecordByIdRequest request;
     private String processName;
     private Map<String, Object> processParams = new HashMap<String, Object>();
-    public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, CswServer server, CswParams params) throws OperationAbortedEx {
+    private Logger log;
+
+    public Aligner(AtomicBoolean cancelMonitor, ServiceContext sc, CswServer server, CswParams params, Logger log) throws OperationAbortedEx {
         super(cancelMonitor);
-        this.log = log;
         this.context = sc;
         this.params = params;
+        this.log = log;
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
@@ -192,8 +167,7 @@ public class Aligner extends BaseAligner {
 
         dataMan.flush();
 
-        Pair<String, Map<String, Object>> filter =
-            HarvesterUtil.parseXSLFilter(params.xslfilter, log);
+        Pair<String, Map<String, Object>> filter = HarvesterUtil.parseXSLFilter(params.xslfilter);
         processName = filter.one();
         processParams = filter.two();
 
@@ -207,9 +181,7 @@ public class Aligner extends BaseAligner {
 
             if (!exists(records, uuid)) {
                 String id = localUuids.getID(uuid);
-
-                if (log.isDebugEnabled())
-                    log.debug("  - Removing old metadata with local id:" + id);
+                log.debug("  - Removing old metadata with local id:" + id);
                 dataMan.deleteMetadata(context, id);
 
                 dataMan.flush();
@@ -262,16 +234,16 @@ public class Aligner extends BaseAligner {
 
                 result.totalMetadata++;
             } catch (Throwable t) {
-                errors.add(new HarvestError(this.context, t, log));
+                errors.add(new HarvestError(this.context, t));
                 log.error("Unable to process record from csw (" + this.params.getName() + ")");
-                log.error("   Record failed: " + ri.uuid + ". Error is: " + t.getMessage());
+                log.error("   Record failed: " +  ri.uuid + ". Error is: " + t.getMessage());
             } finally {
                 result.originalMetadata++;
             }
         }
         dataMan.forceIndexChanges();
 
-        log.info("End of alignment for : " + params.getName());
+        log.debug("End of alignment for : " + params.getName());
 
         return result;
     }
@@ -292,37 +264,29 @@ public class Aligner extends BaseAligner {
         String schema = dataMan.autodetectSchema(md, null);
 
         if (schema == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
-            }
+            log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
             result.unknownSchema++;
 
             return;
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
-        }
-
         log.info("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
 
+        String mdUuid = ri.uuid;
         if (!params.xslfilter.equals("")) {
-            md = processMetadata(context,
-                md, processName, processParams, log);
+            md = processMetadata(context, md, processName, processParams);
+            // Get new uuid if modified by XSLT process
+            mdUuid = dataMan.extractUUID(schema, md);
+            if(mdUuid == null) {
+                mdUuid = ri.uuid;
+            }
         }
         
         //
         // insert metadata
         //
-        if (params.getOwnerId() == null) {
-            if (context.getUserSession() != null) {
-                ownerId = context.getUserSession().getUserIdAsInt();
-            } else {
-                ownerId = 1;
-            }
-        } else {
-            ownerId = Integer.parseInt(params.getOwnerId());
-        }
+         ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
+       
 
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
@@ -366,19 +330,13 @@ public class Aligner extends BaseAligner {
         String date = localUuids.getChangeDate(ri.uuid);
 
         if (date == null && !force) {
-            if (log.isDebugEnabled()) {
-                log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
-            }
+            log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
         } else {
             if (!force && !ri.isMoreRecentThan(date)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("  - Metadata XML not changed for uuid:" + ri.uuid);
-                }
+                log.debug("  - Metadata XML not changed for uuid:" + ri.uuid);
                 result.unchangedMetadata++;
             } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("  - Updating local metadata for uuid:" + ri.uuid);
-                }
+                log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 Element md = retrieveMetadata(ri.uuid);
 
                 if (md == null) {
@@ -387,8 +345,7 @@ public class Aligner extends BaseAligner {
                 }
                 
                 if (!params.xslfilter.equals("")) {
-                    md = processMetadata(context,
-                        md, processName, processParams, log);
+                    md = processMetadata(context, md, processName, processParams);
                 }
 
                 //
@@ -448,12 +405,11 @@ public class Aligner extends BaseAligner {
         request.addId(uuid);
 
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Getting record from : " + request.getHost() + " (uuid:" + uuid + ")");
-            }
+            log.debug("Getting record from : " + request.getHost() + " (uuid:" + uuid + ")");
+
             Element response = request.execute();
             if (log.isDebugEnabled()) {
-                log.debug("Record got:\n" + Xml.getString(response));
+                log.debug("Record got: " + Xml.getString(response) + "\n");
             }
 
             @SuppressWarnings("unchecked")
@@ -486,7 +442,7 @@ public class Aligner extends BaseAligner {
 
             return response;
         } catch (Exception e) {
-            log.warning("Raised exception while getting record : " + e);
+            log.warning("Raised exception while getting record : " +  e);
             e.printStackTrace();
             result.unretrievable++;
 
@@ -570,14 +526,12 @@ public class Aligner extends BaseAligner {
      * @param md
      * @param processName
      * @param processParams
-     * @param log
      * @return
      */
     private Element processMetadata(ServiceContext context,
                                     Element md,
                                     String processName,
-                                    Map<String, Object> processParams,
-                                    Logger log) {
+                                    Map<String, Object> processParams) {
         Path filePath = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(processName + ".xsl");
         if (!Files.exists(filePath)) {
             log.info("     processing instruction  " + processName + ". Metadata not filtered.");
@@ -585,11 +539,10 @@ public class Aligner extends BaseAligner {
             Element processedMetadata;
             try {
                 processedMetadata = Xml.transform(md, filePath, processParams);
-                if (log.isDebugEnabled()) log.debug("     metadata filtered.");
+                log.debug("     metadata filtered.");
                 md = processedMetadata;
             } catch (Exception e) {
-                log.warning("     processing error (" + processName + "): "
-                        + e.getMessage());
+                log.warning("     processing error " + processName + "}): " + e.getMessage());
             }
         }
         return md;

@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -49,6 +50,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -222,8 +224,7 @@ public class Aligner extends BaseAligner {
         localGroups = new GroupMapper(context);
         localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
-        Pair<String, Map<String, Object>> filter =
-            HarvesterUtil.parseXSLFilter(params.xslfilter, log);
+        Pair<String, Map<String, Object>> filter = HarvesterUtil.parseXSLFilter(params.xslfilter);
         processName = filter.one();
         processParams = filter.two();
 
@@ -280,37 +281,44 @@ public class Aligner extends BaseAligner {
 
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
-                    boolean localRating = settingManager.getValueAsBool(Settings.SYSTEM_LOCALRATING_ENABLE, false);
+                    String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
                     final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
                     if (id == null) {
                         //record doesn't exist (so it doesn't belong to this harvester)
-                        log.info("Adding record with uuid " + ri.uuid);
-                        addMetadata(ri, localRating, ri.uuid);
+                        log.debug("Adding record with uuid " + ri.uuid);
+                        addMetadata(ri, localRating.equals(RatingsSetting.BASIC), ri.uuid);
                     }
                     else if (localUuids.getID(ri.uuid) == null) {
                         //record doesn't belong to this harvester but exists
                         result.datasetUuidExist++;
                         switch(params.getOverrideUuid()){
                         case OVERRIDE:
-                            updateMetadata(ri, Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                            updateMetadata(ri, 
+                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), 
+                                    localRating.equals(RatingsSetting.BASIC), 
+                                    params.useChangeDateForUpdate(), 
+                                    localUuids.getChangeDate(ri.uuid), true);
                             log.info("Overriding record with uuid " + ri.uuid);
                             result.updatedMetadata++;
                             break;
                         case RANDOM:
                             log.info("Generating random uuid for remote record with uuid " + ri.uuid);
-                            addMetadata(ri, localRating, UUID.randomUUID().toString());
+                            addMetadata(ri, localRating.equals(RatingsSetting.BASIC), UUID.randomUUID().toString());
                             break;
                         case SKIP:
-                            log.info("Skipping record with uuid " + ri.uuid);
+                            log.debug("Skipping record with uuid " + ri.uuid);
                             result.uuidSkipped++;
                         default:
                             break;
                         }
                     } else {
                         //record exists and belongs to this harvester
-                        log.info("Updating record with uuid " + ri.uuid);
-                        updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                        log.debug("Updating record with uuid " + ri.uuid);
+                        updateMetadata(ri, id, 
+                                localRating.equals(RatingsSetting.BASIC), 
+                                params.useChangeDateForUpdate(), 
+                                localUuids.getChangeDate(ri.uuid), false);
                     }
                         
                 }
@@ -565,7 +573,7 @@ public class Aligner extends BaseAligner {
 
         if (!params.xslfilter.equals("")) {
             md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
-                md, processName, processParams, log);
+                md, processName, processParams);
         }
         // insert metadata
         // If MEF format is full, private file links needs to be updated
@@ -580,7 +588,8 @@ public class Aligner extends BaseAligner {
             setChangeDate(new ISODate(changeDate));
         metadata.getSourceInfo().
             setSourceId(siteId).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(Integer.parseInt(
+                    StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
@@ -732,17 +741,30 @@ public class Aligner extends BaseAligner {
         return id + "";
     }
 
+    /**
+     *  Updates the record on the database. The force parameter allows you to force an update even
+     * if the date is not more updated, to make sure transformation and attributes assigned by the
+     * harvester are applied. Also, it changes the ownership of the record so it is assigned to the
+     * new harvester that last updated it.
+        * @param ri
+        * @param id
+        * @param localRating
+        * @param useChangeDate
+        * @param localChangeDate
+        * @param force
+        * @throws Exception
+     */
     private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating,
-                                final boolean useChangeDate, String localChangeDate) throws Exception {
+                                final boolean useChangeDate, String localChangeDate, Boolean force) throws Exception {
         final Element md[] = {null};
         final Element publicFiles[] = {null};
         final Element privateFiles[] = {null};
 
-        if (localUuids.getID(ri.uuid) == null) {
+        if (localUuids.getID(ri.uuid) == null && !force) {
             if (log.isDebugEnabled())
                 log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
         } else {
-            if (!useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
+            if (force || !useChangeDate || ri.isMoreRecentThan(localChangeDate)) {
                 Path mefFile = retrieveMEF(ri.uuid);
 
                 try {
@@ -771,7 +793,7 @@ public class Aligner extends BaseAligner {
                         }
 
                         public void handleInfo(Element info, int index) throws Exception {
-                            updateMetadata(ri, id, md[index], info, localRating);
+                            updateMetadata(ri, id, md[index], info, localRating, force);
                             publicFiles[index] = info.getChild("public");
                             privateFiles[index] = info.getChild("private");
                         }
@@ -811,7 +833,8 @@ public class Aligner extends BaseAligner {
         }
     }
 
-    private void updateMetadata(RecordInfo ri, String id, Element md, Element info, boolean localRating) throws Exception {
+    private void updateMetadata(RecordInfo ri, String id, Element md, 
+            Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
 
@@ -826,7 +849,7 @@ public class Aligner extends BaseAligner {
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
         AbstractMetadata metadata;
-        if (!ri.isMoreRecentThan(date)) {
+        if (!force && !ri.isMoreRecentThan(date)) {
             if (log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:" + ri.uuid);
             result.unchangedMetadata++;
@@ -837,7 +860,7 @@ public class Aligner extends BaseAligner {
         } else {
             if (!params.xslfilter.equals("")) {
                 md = HarvesterUtil.processMetadata(dataMan.getSchema(ri.schema),
-                    md, processName, processParams, log);
+                    md, processName, processParams);
             }
             // update metadata
             if (log.isDebugEnabled())
@@ -852,8 +875,15 @@ public class Aligner extends BaseAligner {
                 updateDateStamp);
             metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
+        
+            if(force) {
+                //change ownership of metadata to new harvester
+                metadata.getHarvestInfo().setUuid(params.getUuid());
+                metadata.getSourceInfo().setSourceId(params.getUuid());
+    
+                metadataManager.save(metadata);
+            }
         }
-
         metadata.getMetadataCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
         metadata = metadataRepository.findOne(id);

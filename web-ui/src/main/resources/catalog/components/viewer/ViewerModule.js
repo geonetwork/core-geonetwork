@@ -25,97 +25,12 @@
   goog.provide('gn_viewer');
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
   goog.require('gn_geometry');
   goog.require('gn_graticule');
+  goog.require('gn_heatmap');
   goog.require('gn_index');
   goog.require('gn_layermanager');
   goog.require('gn_localisation');
@@ -134,6 +49,7 @@
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
   goog.require('gn_wps');
+  goog.require('gn_gazetteer');
 
   /**
    * @ngdoc overview
@@ -166,7 +82,9 @@
     'gn_wps',
     'gn_featurestable',
     'gn_geometry',
-    'gn_profile'
+    'gn_profile',
+    'gn_heatmap',
+    'gn_gazetteer'
   ]);
 
   module.controller('gnViewerController', [
@@ -181,16 +99,6 @@
         gnMap) {
 
       var map = $scope.searchObj.viewerMap;
-
-      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-        gnMap.addWmsFromScratch(map, gnViewerSettings.wmsUrl,
-            gnViewerSettings.layerName, true).
-
-            then(function(layer) {
-              layer.set('group', gnViewerSettings.layerGroup);
-              map.addLayer(layer);
-            });
-      }
 
       // Display pop up on feature over
       var div = document.createElement('div');
