@@ -29,11 +29,13 @@
   goog.require('gn_map_service');
   goog.require('gn_map_wmsqueue');
   goog.require('gn_maps_manager');
+  goog.require('gn_external_viewer');
 
   angular.module('gn_map', [
     'gn_map_service',
     'gn_map_directive',
     'gn_map_wmsqueue',
-    'gn_maps_manager'
+    'gn_maps_manager',
+    'gn_external_viewer'
   ]);
 })();
