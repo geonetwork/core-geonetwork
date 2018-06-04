@@ -82,18 +82,47 @@
           var settings = gnMap.getMapConfig().externalViewer;
           if (!this.isEnabled()) { return; }
 
-          var mdUrl = md.uuid ? baseMdUrl + md.uuid : '';
+          md.url = md.uuid ? baseMdUrl + md.uuid : '';
+
+          this._toView.push({
+            md: md,
+            service: service
+          });
+
+          // ask for a commit (will be executed once all services are requested
+          var commitFunction = this._commit.bind(this);
+          setTimeout(commitFunction);
+        },
+
+        _toView: [],
+
+        /**
+         * internal method: called once all services have been requested
+         */
+        _commit: function() {
+          if (!this._toView.length) { return; }
+
+          var settings = gnMap.getMapConfig().externalViewer;
+
+          var getValues = function(object, key) {
+            return this._toView.map(function (entry) {
+              return entry[object][key] || '';
+            }).join(settings.valuesSeparator || ',') || ''
+          }.bind(this);
 
           var url = settings.urlTemplate
-            .replace('${md.id}', md.id || '')
-            .replace('${md.uuid}', md.uuid || '')
-            .replace('${md.url}', mdUrl)
-            .replace('${service.url}', service.url || '')
-            .replace('${service.type}', service.type || '')
-            .replace('${service.name}', service.name || '')
-            .replace('${service.title}', service.title || '');
+            .replace('${md.id}', getValues('md', 'id'))
+            .replace('${md.uuid}', getValues('md', 'uuid'))
+            .replace('${md.url}', getValues('md', 'url'))
+            .replace('${service.url}', getValues('service', 'url'))
+            .replace('${service.type}', getValues('service', 'type'))
+            .replace('${service.name}', getValues('service', 'name'))
+            .replace('${service.title}', getValues('service', 'title'));
 
           $window.open(url, settings.openNewWindow ? '_blank' : undefined);
+
+          // reset list of services to view
+          this._toView.length = 0;
         }
       };
     }
