@@ -888,13 +888,6 @@
         <env>inspire</env>
       </properties>
     </profile>
-    <profile>
-      <id>es</id>
-      <properties>
-        <es.spring.profile>es</es.spring.profile>
-      </properties>
-    </profile>
-
   </profiles>
 
   <properties>
@@ -913,5 +906,6 @@
     <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
     <wro4jOutput>${project.build.directory}/wro4j-output/</wro4jOutput>
+    <es.spring.profile>es</es.spring.profile>
   </properties>
 </project>
