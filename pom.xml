@@ -1196,6 +1196,7 @@
     <module>es</module>
     <module>workers</module>
     <module>messaging</module>
+    <module>estest</module>
   </modules>
 
   <profiles>
