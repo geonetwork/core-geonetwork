@@ -46,10 +46,11 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specifications;
@@ -65,9 +66,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.fao.geonet.kernel.search.IndexFields.DOC_TYPE;
+import static org.fao.geonet.kernel.search.IndexFields.HARVESTER_ID;
+import static org.fao.geonet.kernel.search.IndexFields.HARVESTER_UUID;
+import static org.fao.geonet.kernel.search.IndexFields.SCOPE;
+import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
+
 public class EsSearchManager implements ISearchManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
+
     public static final String ID = "id";
-    public static final String DOC_TYPE = "docType";
+
     public static final String SCHEMA_INDEX_XSLT_FOLDER = "index-fields";
     public static final String SCHEMA_INDEX_XSTL_FILENAME = "index.xsl";
     public static final String FIELDNAME = "name";
@@ -76,7 +85,6 @@ public class EsSearchManager implements ISearchManager {
     @Value("${es.index.records}")
     private String index = "records";
 
-
     @Autowired
     private EsClient client;
 
@@ -84,16 +92,18 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     public SettingManager settingManager;
 
-    public String getIndex() {
-        return index;
-    }
+
 
     private int commitInterval = 200;
 
     // public for test, to be private or protected
     public Map<String, String> listOfDocumentsToIndex = new HashMap<>();
 
-    public Path getXSLTForIndexing(Path schemaDir) {
+    public String getIndex() {
+        return index;
+    }
+
+    private Path getXSLTForIndexing(Path schemaDir) {
         Path xsltForIndexing = schemaDir
             .resolve(SCHEMA_INDEX_XSLT_FOLDER).resolve(SCHEMA_INDEX_XSTL_FILENAME);
         if (!Files.exists(xsltForIndexing)) {
@@ -116,9 +126,7 @@ public class EsSearchManager implements ISearchManager {
                 doc.addContent((Element) field.clone());
             }
         } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE,
-                String.format("Indexing stylesheet contains errors: %s \n\t Marking the metadata as _indexingError=1 in index",
-                    e.getMessage()));
+            LOGGER.error("Indexing stylesheet contains errors: {} \n\t Marking the metadata as _indexingError=1 in index", e.getMessage());
             doc.addContent(new Element(IndexFields.INDEXING_ERROR_FIELD).setText("1"));
             doc.addContent(new Element(IndexFields.INDEXING_ERROR_MSG).setText("GNIDX-XSL||" + e.getMessage()));
             StringBuilder sb = new StringBuilder();
@@ -127,7 +135,7 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
-    private static void allText(Element metadata, StringBuilder sb) {
+    private void allText(Element metadata, StringBuilder sb) {
         String text = metadata.getText().trim();
         if (text.length() > 0) {
             if (sb.length() > 0)
@@ -141,32 +149,14 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
-    private static void addMoreFields(Element doc, List<Element> fields) {
+    private void addMoreFields(Element doc, List<Element> fields) {
         for (Element field : fields) {
             doc.addContent(new Element(field.getAttributeValue(FIELDNAME))
                 .setText(field.getAttributeValue(FIELDSTRING)));
         }
     }
 
-//    public static String convertDate(Object date) {
-//        if (date != null) {
-//            return new ISODate((Date) date).toString();
-//        } else {
-//            return null;
-//        }
-//    }
-
-    public static Integer convertInteger(Object value) {
-        if (value == null) {
-            return null;
-        } else if (value instanceof Number) {
-            return ((Number) value).intValue();
-        } else {
-            return Integer.valueOf(value.toString());
-        }
-    }
-
-    public static Element makeField(String name, String value) {
+    public Element makeField(String name, String value) {
         Element field = new Element("Field");
         field.setAttribute(EsSearchManager.FIELDNAME, name);
         field.setAttribute(EsSearchManager.FIELDSTRING, value == null ? "" : value);
@@ -176,12 +166,10 @@ public class EsSearchManager implements ISearchManager {
     /**
      * Creates a new XML field for the Lucene index and add it to the document.
      */
-    public static void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
+    public void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
         Element field = makeField(name, value);
         xmlDoc.addContent(field);
     }
-
-
 
 
     @Override
@@ -198,8 +186,6 @@ public class EsSearchManager implements ISearchManager {
         return null;
     }
 
-
-
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
@@ -207,10 +193,8 @@ public class EsSearchManager implements ISearchManager {
         Element docs = new Element("docs");
         Element allFields = new Element("doc");
         allFields.addContent(new Element(ID).setText(id));
-        allFields.addContent(new Element(DOC_TYPE).setText("metadata"));
         addMDFields(allFields, schemaDir, metadata, root);
         addMoreFields(allFields, moreFields);
-
 
         docs.addContent(allFields);
         ObjectMapper mapper = new ObjectMapper();
@@ -219,12 +203,11 @@ public class EsSearchManager implements ISearchManager {
         // ES does not allow a _source field
         String catalog = doc.get("source").asText();
         doc.remove("source");
-        doc.put("sourceCatalogue", catalog);
-        doc.put("scope", settingManager.getSiteName());
-        doc.put("harvesterUuid", settingManager.getSiteId());
-        doc.put("harvesterId", settingManager.getNodeURL());
-        Map<String, String> docListToIndex = new HashMap<>();
-        docListToIndex.put(id, mapper.writeValueAsString(doc));
+        doc.put(DOC_TYPE,"metadata");
+        doc.put(SOURCE_CATALOGUE, catalog);
+        doc.put(SCOPE, settingManager.getSiteName());
+        doc.put(HARVESTER_UUID, settingManager.getSiteId());
+        doc.put(HARVESTER_ID, settingManager.getNodeURL());
         listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
         if (listOfDocumentsToIndex.size() == commitInterval) {
             sendDocumentsToIndex();
@@ -340,15 +323,13 @@ public class EsSearchManager implements ISearchManager {
                     if (metadata != null) {
                         listOfIdsToIndex.add(metadata.getId() + "");
                     } else {
-                        System.out.println(String.format(
-                            "Selection contains uuid '%s' not found in database", uuid));
+                        LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
                     }
                 }
             }
             for(String id : listOfIdsToIndex) {
                 dataMan.indexMetadata(id + "", false, this);
             }
-            sendDocumentsToIndex();
         } else {
             final Specifications<Metadata> metadataSpec =
                 Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
@@ -359,9 +340,8 @@ public class EsSearchManager implements ISearchManager {
             for(Integer id : metadataIds) {
                 dataMan.indexMetadata(id + "", false, this);
             }
-            sendDocumentsToIndex();
         }
-
+        sendDocumentsToIndex();
         return true;
     }
 
