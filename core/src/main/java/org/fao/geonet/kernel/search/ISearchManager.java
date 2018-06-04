@@ -96,4 +96,6 @@ public interface ISearchManager {
     void rescheduleOptimizer(Calendar beginAt, int interval) throws Exception;
 
     void disableOptimizer() throws Exception;
+
+    long getNumDocs() throws Exception;
 }

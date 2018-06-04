@@ -47,9 +47,6 @@
     <property name="cacheAllRegionsInMemory" value="true"/>
     <property name="thesaurusName" value="external.place.regions"/>
   </bean>
-  <bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
-    <property name="cacheAllRegionsInMemory" value="false"/>
-  </bean>
 
   <bean id="resourceUploadHandler"
         class="org.fao.geonet.services.resources.handlers.DefaultResourceUploadHandler"/>
@@ -122,7 +119,7 @@
   <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
         init-method="init">
   </bean>
-  
+
   <bean id="cssStyleSettingService" class="org.fao.geonet.api.cssstyle.service.CssStyleSettingDatabaseService">
   </bean>
 

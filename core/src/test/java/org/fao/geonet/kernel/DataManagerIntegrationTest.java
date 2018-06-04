@@ -41,8 +41,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -254,13 +253,13 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
-        final SearchManager searchManager = context.getBean(SearchManager.class);
+        final EsSearchManager searchManager = context.getBean(EsSearchManager.class);
         final long startMdCount = _metadataRepository.count();
         final String lang = "eng";
-        final int startIndexDocs = numDocs(searchManager, lang);
+        final long startIndexDocs = numDocs(searchManager, lang);
 
         int md1 = importMetadata(this, context);
-        final int numDocsPerMd = numDocs(searchManager, lang) - startIndexDocs;
+        final long numDocsPerMd = numDocs(searchManager, lang) - startIndexDocs;
         int md2 = importMetadata(this, context);
 
 
@@ -293,11 +292,8 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(0, Xml.selectNodes(updateMd, "*//gmd:PT_Locale[string-length(@id) > 2]").size());
     }
 
-    private int numDocs(SearchManager searchManager, String lang) throws IOException, InterruptedException {
-        IndexAndTaxonomy indexReader = searchManager.getNewIndexReader(lang);
-        final int startIndexDocs = indexReader.indexReader.numDocs();
-        indexReader.close();
-        return startIndexDocs;
+    private long numDocs(EsSearchManager searchManager, String lang) throws Exception {
+        return searchManager.getNumDocs();
     }
 
 }

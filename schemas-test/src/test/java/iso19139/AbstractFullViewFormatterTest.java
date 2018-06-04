@@ -24,23 +24,18 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
-
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.guiservices.metadata.GetRelated;
-import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.api.records.formatters.AbstractFormatterTest;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterParams;
 import org.fao.geonet.api.records.formatters.groovy.Environment;
 import org.fao.geonet.api.records.formatters.groovy.EnvironmentImpl;
 import org.fao.geonet.api.records.formatters.groovy.Functions;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -133,13 +128,6 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
 
         public Format(FormatType formatType) throws Exception {
             this.formatType = formatType;
-            GetRelated related = Mockito.mock(GetRelated.class);
-            Element relatedXml = Xml.loadFile(AbstractFullViewFormatterTest.class.getResource("relations.xml"));
-            Mockito.when(related.getRelated(Mockito.<ServiceContext>any(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
-            _applicationContext.getBeanFactory().registerSingleton("getRelated", related);
-
-
         }
 
         public Functions getFunctions() {

@@ -32,7 +32,6 @@
   <file name=".*/WEB-INF/config.xml">
     <replaceText xpath="general/uploadDir">../../data/tmp</replaceText>
     <replaceText xpath="general/maxUploadSize">100</replaceText>
-    <replaceText xpath="appHandler/luceneDir">WEB-INF/lucene</replaceText>
     <replaceText xpath="appHandler/dataDir">WEB-INF/data</replaceText>
     <replaceText xpath="appHandler/param[name = 'preferredSchema']">iso19139</replaceText>
     <replaceXML xpath="resources">

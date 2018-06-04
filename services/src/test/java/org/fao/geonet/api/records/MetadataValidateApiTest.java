@@ -21,8 +21,8 @@ import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
@@ -58,7 +58,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     MetadataValidationRepository metadataValidationRepository;
     @Autowired
-    private SearchManager searchManager;
+    private EsSearchManager searchManager;
 
     @Test
     public void subTemplateValidIsTrue() throws Exception {
@@ -215,17 +215,13 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         return dbInsertedMetadata;
     }
 
-    private int countTemplateIndexed(String uuid, String validStatus) throws Exception {
+    private long countTemplateIndexed(String uuid, String validStatus) throws Exception {
         return countTemplateIndexed(uuid, validStatus, "s");
     }
 
-    private int countTemplateIndexed(String uuid, String validStatus, String type) throws Exception {
-        MetaSearcher searcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-        Element request = new Element("request")
-                .addContent(new Element(Geonet.IndexFieldNames.UUID).setText(uuid))
-                .addContent(new Element(Geonet.IndexFieldNames.IS_TEMPLATE).setText(type))
-                .addContent(new Element(Geonet.IndexFieldNames.VALID).setText(validStatus));
-        searcher.search(context, request, new ServiceConfig());
-        return searcher.getSize();
+    private long countTemplateIndexed(String uuid, String validStatus, String type) throws Exception {
+        return searchManager.getNumDocs("+" + Geonet.IndexFieldNames.UUID + ":" + uuid +
+            " +" + Geonet.IndexFieldNames.IS_TEMPLATE + ":" + type +
+            " +" + Geonet.IndexFieldNames.VALID + ":" + validStatus);
     }
 }

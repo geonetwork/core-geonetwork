@@ -23,30 +23,20 @@
 
 package org.fao.geonet.util;
 
-import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.vividsolutions.jts.geom.*;
+import jeeves.component.ProfileManager;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
@@ -57,7 +47,6 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -84,19 +73,25 @@ import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import jeeves.component.ProfileManager;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -106,6 +101,60 @@ import net.objecthunter.exp4j.ExpressionBuilder;
  * @author jesse
  */
 public final class XslUtil {
+
+
+    public static MultiPolygon parseGml(Parser parser, String gml) throws IOException, SAXException,
+        ParserConfigurationException {
+        Object value = parser.parse(new StringReader(gml));
+        if (value instanceof HashMap) {
+            @SuppressWarnings("rawtypes")
+            HashMap map = (HashMap) value;
+            List<Polygon> geoms = new ArrayList<Polygon>();
+            for (Object entry : map.values()) {
+                addToList(geoms, entry);
+            }
+            if (geoms.isEmpty()) {
+                return null;
+            } else if (geoms.size() > 1) {
+                GeometryFactory factory = geoms.get(0).getFactory();
+                return factory.createMultiPolygon(geoms.toArray(new Polygon[0]));
+            } else {
+                return toMultiPolygon(geoms.get(0));
+            }
+
+        } else if (value == null) {
+            return null;
+        } else {
+            return toMultiPolygon((Geometry) value);
+        }
+    }
+
+
+    public static void addToList(List<Polygon> geoms, Object entry) {
+        if (entry instanceof Polygon) {
+            geoms.add((Polygon) entry);
+        } else if (entry instanceof Collection) {
+            @SuppressWarnings("rawtypes")
+            Collection collection = (Collection) entry;
+            for (Object object : collection) {
+                geoms.add((Polygon) object);
+            }
+        }
+    }
+
+    public static MultiPolygon toMultiPolygon(Geometry geometry) {
+        if (geometry instanceof Polygon) {
+            Polygon polygon = (Polygon) geometry;
+
+            return geometry.getFactory().createMultiPolygon(
+                new Polygon[]{polygon});
+        } else if (geometry instanceof MultiPolygon) {
+            return (MultiPolygon) geometry;
+        }
+        String message = geometry.getClass() + " cannot be converted to a polygon. Check Metadata";
+        Log.error(Geonet.INDEX_ENGINE, message);
+        throw new IllegalArgumentException(message);
+    }
 
     private static final char TS_DEFAULT = ' ';
     private static final char CS_DEFAULT = ',';
@@ -352,29 +401,31 @@ public final class XslUtil {
         String id = uuid.toString();
         String fieldname = field.toString();
         String language = (lang.toString().equals("") ? null : lang.toString());
-        try {
-            String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
-            if (fieldValue == null) {
-                return getIndexFieldById(appName, uuid, field, lang);
-            } else {
-                return fieldValue;
-            }
-        } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
-            return "";
-        }
+        throw new NotImplementedException("getIndexField not implemented in ES");
+//        try {
+//            String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
+//            if (fieldValue == null) {
+//                return getIndexFieldById(appName, uuid, field, lang);
+//            } else {
+//                return fieldValue;
+//            }
+//        } catch (Exception e) {
+//            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+//            return "";
+//        }
     }
 
     public static String getIndexFieldById(Object appName, Object id, Object field, Object lang) {
         String fieldname = field.toString();
         String language = (lang.toString().equals("") ? null : lang.toString());
-        try {
-            String fieldValue = LuceneSearcher.getMetadataFromIndexById(language, id.toString(), fieldname);
-            return fieldValue == null ? "" : fieldValue;
-        } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
-            return "";
-        }
+        throw new NotImplementedException("getIndexFieldById not implemented in ES");
+//        try {
+//            String fieldValue = LuceneSearcher.getMetadataFromIndexById(language, id.toString(), fieldname);
+//            return fieldValue == null ? "" : fieldValue;
+//        } catch (Exception e) {
+//            Log.error(Geonet.GEONETWORK, "Failed to get index field value caused by " + e.getMessage());
+//            return "";
+//        }
     }
 
     /**

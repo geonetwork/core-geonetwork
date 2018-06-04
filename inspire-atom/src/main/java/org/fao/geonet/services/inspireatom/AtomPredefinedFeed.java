@@ -33,8 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.sources.http.ServletPathFinder;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 
 import org.fao.geonet.ApplicationContextHolder;
@@ -48,8 +48,8 @@ import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -144,70 +144,70 @@ public class AtomPredefinedFeed {
     private Element getDatasetFeed(ServiceContext context, final String spIdentifier) throws Exception {
 
         ServiceConfig config = new ServiceConfig();
-        SearchManager searchMan = context.getBean(SearchManager.class);
-
-        // Search for the dataset identified by spIdentifier
-        Metadata datasetMd = null;
-        Document dsLuceneSearchParams = createDefaultLuceneSearcherParams();
-        dsLuceneSearchParams.getRootElement().addContent(new Element("identifier").setText(spIdentifier));
-        dsLuceneSearchParams.getRootElement().addContent(new Element("type").setText("dataset"));
-
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE))
-        {
-            searcher.search(context, dsLuceneSearchParams.getRootElement(), config);
-            Element searchResult = searcher.present(context, dsLuceneSearchParams.getRootElement(), config);
-
-            XPath xp = XPath.newInstance("//response/metadata/geonet:info/uuid/text()");
-            xp.addNamespace("geonet", "http://www.fao.org/geonetwork");
-
-            Text uuidTxt = (Text) xp.selectSingleNode(new Document(searchResult));
-            String datasetMdUuid = uuidTxt.getText();
-
-            MetadataRepository repo = context.getBean(MetadataRepository.class);
-            datasetMd = repo.findOneByUuid(datasetMdUuid);
-
-        } finally {
-            if (datasetMd == null) {
-                throw new ObjectNotFoundEx("metadata " + spIdentifier + " not found");
-            }
-        }
-
-        // check user's rights
-        try {
-            Lib.resource.checkPrivilege(context, String.valueOf(datasetMd.getId()), ReservedOperation.view);
-        } catch (Exception e) {
-            // This does not return a 403 as expected Oo
-            throw new UnAuthorizedException("Access denied to metadata " +datasetMd.getUuid(), e);
-        }
-
-        String serviceMdUuid = null;
-        Document luceneParamSearch = createDefaultLuceneSearcherParams();
-        luceneParamSearch.getRootElement().addContent(new Element("operatesOn").setText(datasetMd.getUuid()));
-
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            searcher.search(context, luceneParamSearch.getRootElement(), config);
-            Element searchResult = searcher.present(context, luceneParamSearch.getRootElement(), config);
-
-            XPath xp = XPath.newInstance("//response/metadata/geonet:info/uuid/text()");
-            xp.addNamespace("geonet", "http://www.fao.org/geonetwork");
-
-            Text uuidTxt = (Text) xp.selectSingleNode(new Document(searchResult));
-            serviceMdUuid = uuidTxt.getText();
-        } finally {
-            if (serviceMdUuid == null) {
-                throw new ObjectNotFoundEx("No related service metadata found");
-            }
-        }
-
-        DataManager dm = context.getBean(DataManager.class);
-        SettingManager sm = context.getBean(SettingManager.class);
-
-        Map<String, Object> params = getDefaultXSLParams(sm, context);
-
-        Element inputDoc = InspireAtomUtil.prepareDatasetFeedEltBeforeTransform(datasetMd.getXmlData(false), serviceMdUuid);
-
-        Element transformed = InspireAtomUtil.convertDatasetMdToAtom("iso19139", inputDoc, dm, params);
-        return transformed;
+        EsSearchManager searchMan = context.getBean(EsSearchManager.class);
+        throw new NotImplementedException("Not implemented in ES");
+//        // Search for the dataset identified by spIdentifier
+//        Metadata datasetMd = null;
+//        Document dsLuceneSearchParams = createDefaultLuceneSearcherParams();
+//        dsLuceneSearchParams.getRootElement().addContent(new Element("identifier").setText(spIdentifier));
+//        dsLuceneSearchParams.getRootElement().addContent(new Element("type").setText("dataset"));
+//
+//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE))
+//        {
+//            searcher.search(context, dsLuceneSearchParams.getRootElement(), config);
+//            Element searchResult = searcher.present(context, dsLuceneSearchParams.getRootElement(), config);
+//
+//            XPath xp = XPath.newInstance("//response/metadata/geonet:info/uuid/text()");
+//            xp.addNamespace("geonet", "http://www.fao.org/geonetwork");
+//
+//            Text uuidTxt = (Text) xp.selectSingleNode(new Document(searchResult));
+//            String datasetMdUuid = uuidTxt.getText();
+//
+//            MetadataRepository repo = context.getBean(MetadataRepository.class);
+//            datasetMd = repo.findOneByUuid(datasetMdUuid);
+//
+//        } finally {
+//            if (datasetMd == null) {
+//                throw new ObjectNotFoundEx("metadata " + spIdentifier + " not found");
+//            }
+//        }
+//
+//        // check user's rights
+//        try {
+//            Lib.resource.checkPrivilege(context, String.valueOf(datasetMd.getId()), ReservedOperation.view);
+//        } catch (Exception e) {
+//            // This does not return a 403 as expected Oo
+//            throw new UnAuthorizedException("Access denied to metadata " +datasetMd.getUuid(), e);
+//        }
+//
+//        String serviceMdUuid = null;
+//        Document luceneParamSearch = createDefaultLuceneSearcherParams();
+//        luceneParamSearch.getRootElement().addContent(new Element("operatesOn").setText(datasetMd.getUuid()));
+//
+//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+//            searcher.search(context, luceneParamSearch.getRootElement(), config);
+//            Element searchResult = searcher.present(context, luceneParamSearch.getRootElement(), config);
+//
+//            XPath xp = XPath.newInstance("//response/metadata/geonet:info/uuid/text()");
+//            xp.addNamespace("geonet", "http://www.fao.org/geonetwork");
+//
+//            Text uuidTxt = (Text) xp.selectSingleNode(new Document(searchResult));
+//            serviceMdUuid = uuidTxt.getText();
+//        } finally {
+//            if (serviceMdUuid == null) {
+//                throw new ObjectNotFoundEx("No related service metadata found");
+//            }
+//        }
+//
+//        DataManager dm = context.getBean(DataManager.class);
+//        SettingManager sm = context.getBean(SettingManager.class);
+//
+//        Map<String, Object> params = getDefaultXSLParams(sm, context);
+//
+//        Element inputDoc = InspireAtomUtil.prepareDatasetFeedEltBeforeTransform(datasetMd.getXmlData(false), serviceMdUuid);
+//
+//        Element transformed = InspireAtomUtil.convertDatasetMdToAtom("iso19139", inputDoc, dm, params);
+//        return transformed;
     }
 
 

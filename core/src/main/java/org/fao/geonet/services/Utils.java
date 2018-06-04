@@ -24,26 +24,17 @@
 package org.fao.geonet.services;
 
 import jeeves.server.context.ServiceContext;
-
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.jdom.Element;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 
 public class Utils {
 
@@ -99,32 +90,35 @@ public class Utils {
 
     public static String lookupMetadataIdFromFileId(GeonetContext gc, String fileId) throws IOException,
         InterruptedException {
-        SearchManager searchManager = gc.getBean(SearchManager.class);
+        EsSearchManager searchManager = gc.getBean(EsSearchManager.class);
 
         return lookupMetadataIdFromFileId(fileId, searchManager);
     }
 
-    public static String lookupMetadataIdFromFileId(String fileId, SearchManager searchManager) throws IOException, InterruptedException {
-        TermQuery query = new TermQuery(new Term("fileId", fileId));
+    public static String lookupMetadataIdFromFileId(String fileId, EsSearchManager searchManager) throws IOException, InterruptedException {
+        // TODOES
+        throw new NotImplementedException("lookupMetadataIdFromFileId not implemented in ES. This is not used by the REST API see ApiUtils#getRecord. Maybe can be removed");
 
-        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
-        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
-
-        try {
-            IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs tdocs = searcher.search(query, 1);
-
-            if (tdocs.totalHits > 0) {
-
-                Set<String> id = Collections.singleton("_id");
-                Document element = reader.document(tdocs.scoreDocs[0].doc, id);
-                return element.get("_id");
-            }
-
-            return null;
-        } finally {
-            searchManager.releaseIndexReader(indexAndTaxonomy);
-        }
+//        TermQuery query = new TermQuery(new Term("fileId", fileId));
+//
+//        IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(null, -1);
+//        GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
+//
+//        try {
+//            IndexSearcher searcher = new IndexSearcher(reader);
+//            TopDocs tdocs = searcher.search(query, 1);
+//
+//            if (tdocs.totalHits > 0) {
+//
+//                Set<String> id = Collections.singleton("_id");
+//                Document element = reader.document(tdocs.scoreDocs[0].doc, id);
+//                return element.get("_id");
+//            }
+//
+//            return null;
+//        } finally {
+//            searchManager.releaseIndexReader(indexAndTaxonomy);
+//        }
     }
 
     /**

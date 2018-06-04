@@ -27,14 +27,14 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
@@ -235,14 +235,9 @@ public class SelectionManager {
                 request = (Element) request.clone();
                 request.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                SearchManager searchMan = gc.getBean(SearchManager.class);
-                try {
-                    searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-                    ServiceConfig sc = new ServiceConfig();
-                    ((LuceneSearcher) searcher).search(context, request, sc);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
+                // TODOES
+                throw new NotImplementedException("Create selection from search not implemented in ES");
             } else {
                 searcher = session.getProperty(Geonet.Session.SEARCH_RESULT + type);
             }

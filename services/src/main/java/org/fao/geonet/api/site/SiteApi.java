@@ -34,7 +34,6 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
-import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -46,15 +45,14 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
@@ -84,7 +82,6 @@ import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 /**
  *
@@ -106,17 +103,6 @@ public class SiteApi {
         DataManager dataMan = gc.getBean(DataManager.class);
         SettingManager settingMan = gc.getBean(SettingManager.class);
         SettingInfo si = context.getBean(SettingInfo.class);
-
-        try {
-            if (si.getLuceneIndexOptimizerSchedulerEnabled()) {
-                dataMan.rescheduleOptimizer(si.getLuceneIndexOptimizerSchedulerAt(), si.getLuceneIndexOptimizerSchedulerInterval());
-            } else {
-                dataMan.disableOptimizer();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new OperationAbortedEx("Parameters saved but cannot restart Lucene Index Optimizer: " + e.getMessage());
-        }
 
         LogUtils.refreshLogConfiguration();
 
@@ -522,7 +508,7 @@ public class SiteApi {
         HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        SearchManager searchMan = ApplicationContextHolder.get().getBean(SearchManager.class);
+        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
 
         searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
 

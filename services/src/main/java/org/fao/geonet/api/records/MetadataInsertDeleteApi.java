@@ -25,8 +25,10 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import io.swagger.annotations.*;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -47,7 +49,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -70,36 +72,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
-
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.api.ApiParams.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
@@ -161,7 +145,7 @@ public class MetadataInsertDeleteApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataManager = appContext.getBean(DataManager.class);
-        SearchManager searchManager = appContext.getBean(SearchManager.class);
+        EsSearchManager searchManager = appContext.getBean(EsSearchManager.class);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
             metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE &&
@@ -222,7 +206,7 @@ public class MetadataInsertDeleteApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataManager = appContext.getBean(DataManager.class);
         AccessManager accessMan = appContext.getBean(AccessManager.class);
-        SearchManager searchManager = appContext.getBean(SearchManager.class);
+        EsSearchManager searchManager = appContext.getBean(EsSearchManager.class);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 

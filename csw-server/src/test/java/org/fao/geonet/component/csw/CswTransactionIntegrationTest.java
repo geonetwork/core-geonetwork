@@ -24,15 +24,13 @@
 package org.fao.geonet.component.csw;
 
 import com.google.common.collect.Lists;
-
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
@@ -53,9 +51,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_CSW;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_OGC;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Test Csw Transaction handling.
@@ -79,7 +75,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     private MetadataRepository _metadataRepository;
     @Autowired
-    private SearchManager _searchManager;
+    private EsSearchManager _searchManager;
     @Autowired
     private Transaction _transaction;
     @Autowired
@@ -356,9 +352,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata = _metadataRepository.save(metadata);
         final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Lists.newArrayList(
-            SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
-            SearchManager.makeField("_isTemplate", "n", true, true),
-            SearchManager.makeField("_owner", "" + ownerId, true, true)
+            EsSearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID),
+            EsSearchManager.makeField("_isTemplate", "n"),
+            EsSearchManager.makeField("_owner", "" + ownerId)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
             MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);

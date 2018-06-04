@@ -25,24 +25,12 @@ package org.fao.geonet.services.main;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.search.LuceneIndexField;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-
-import static org.fao.geonet.kernel.SelectionManager.SELECTION_BUCKET;
-import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 
 //=============================================================================
 
@@ -65,9 +53,6 @@ public class XmlSearch implements Service {
     /**
      * Run a search and return results as XML.
      *
-     * @param params All search parameters defined in {@link LuceneIndexField}. <br/> To return only
-     *               results summary, set summaryOnly parameter to 1. Default is 0 (ie.results and
-     *               summary).
      */
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

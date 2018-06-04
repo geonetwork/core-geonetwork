@@ -39,16 +39,12 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -56,9 +52,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.IOException;
@@ -177,6 +170,9 @@ public class EsSearchManager implements ISearchManager {
         Element field = makeField(name, value);
         xmlDoc.addContent(field);
     }
+
+
+
 
     @Override
     public void init(ServiceConfig handlerConfig) throws Exception {
@@ -484,6 +480,11 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public void disableOptimizer() {
 
+    }
+
+    @Override
+    public long getNumDocs() throws Exception {
+         return getNumDocs("");
     }
 
     public long getNumDocs(String query) throws Exception {

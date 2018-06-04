@@ -24,58 +24,22 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import com.vividsolutions.jts.geom.Geometry;
-
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldType.NumericType;
-import org.apache.lucene.facet.taxonomy.TaxonomyReader;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.queries.ChainedFilter;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
-import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
-import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.exceptions.SearchExpiredEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
-import org.fao.geonet.kernel.search.DuplicateDocFilter;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.search.LuceneIndexField;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.LuceneUtils;
+import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
-import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
-import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
@@ -89,31 +53,18 @@ import org.springframework.context.ApplicationContext;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
-import javax.annotation.Nonnull;
-
-//=============================================================================
-
+// TODOES
 public class CatalogSearcher implements MetadataRecordSelector {
     //	private final Set<String> _tokenizedFieldSet;
     private final Set<String> _selector;
     private final Set<String> _uuidselector;
     private final GMLConfiguration _configuration;
-    private Query _query;
-    private Filter _filter;
-    private Sort _sort;
-    private LuceneSearcher.LanguageSelection _lang;
+//    private Query _query;
+//    private Filter _filter;
+//    private Sort _sort;
+//    private LuceneSearcher.LanguageSelection _lang;
     private long _searchToken;
     private ApplicationContext _applicationContext;
     public CatalogSearcher(GMLConfiguration configuration,
@@ -130,32 +81,34 @@ public class CatalogSearcher implements MetadataRecordSelector {
     /**
      * Allow search on current user's groups only adding a BooleanClause to the search.
      */
-    public static Query getGroupsQuery(ServiceContext context) throws Exception {
+    public static Object getGroupsQuery(ServiceContext context) throws Exception {
         AccessManager am = context.getBean(AccessManager.class);
         Set<Integer> hs = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
-        BooleanQuery query = new BooleanQuery();
-
-
-        BooleanClause.Occur occur = LuceneUtils
-            .convertRequiredAndProhibitedToOccur(false, false);
-        for (Integer groupId : hs) {
-            TermQuery tq = new TermQuery(new Term(ReservedOperation.view.getLuceneIndexCode(), groupId.toString()));
-            query.add(tq, occur);
-        }
-
-        // If user is authenticated, add the current user to the query because
-        // if an editor unchecked all
-        // visible options in privileges panel for all groups, then the metadata
-        // records could not be found anymore, even by its editor.
-        if (context.getUserSession().getUserId() != null) {
-            TermQuery tq = new TermQuery(new Term("_owner", context
-                .getUserSession().getUserId()));
-            query.add(tq, occur);
-        }
-
-        return query;
+//        BooleanQuery query = new BooleanQuery();
+//
+//
+//        BooleanClause.Occur occur = LuceneUtils
+//            .convertRequiredAndProhibitedToOccur(false, false);
+//        for (Integer groupId : hs) {
+//            TermQuery tq = new TermQuery(new Term(ReservedOperation.view.getLuceneIndexCode(), groupId.toString()));
+//            query.add(tq, occur);
+//        }
+//
+//        // If user is authenticated, add the current user to the query because
+//        // if an editor unchecked all
+//        // visible options in privileges panel for all groups, then the metadata
+//        // records could not be found anymore, even by its editor.
+//        if (context.getUserSession().getUserId() != null) {
+//            TermQuery tq = new TermQuery(new Term("_owner", context
+//                .getUserSession().getUserId()));
+//            query.add(tq, occur);
+//        }
+//
+//        return query;
+        return null;
     }
+
 
     // ---------------------------------------------------------------------------
     // ---
@@ -166,47 +119,49 @@ public class CatalogSearcher implements MetadataRecordSelector {
     /**
      * Creates a lucene Query object from a lucene query string using Lucene query syntax.
      */
-    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
+    public static Object getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, Object _luceneConfig) {
+//    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
 //        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
-        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
-        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
-        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
-            String name = field.getName();
-            int precisionStep = field.getPrecisionStep();
-            NumberFormat format = NumberFormat.getNumberInstance();
-            NumericType type = NumericType.valueOf(field.getType().toUpperCase());
-            NumericConfig config = new NumericConfig(precisionStep, format, type);
-            numericMap.put(name, config);
-        }
-        parser.setNumericConfigMap(numericMap);
-        Query q = parser.parse(cswServiceSpecificConstraint, "title");
-
-        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
-        List<String> SECURITY_FIELDS = Arrays.asList(
-            LuceneIndexField.OWNER,
-            LuceneIndexField.GROUP_OWNER);
-
-        BooleanQuery bq;
-        if (q instanceof BooleanQuery) {
-            bq = (BooleanQuery) q;
-            List<BooleanClause> clauses = bq.clauses();
-
-            Iterator<BooleanClause> it = clauses.iterator();
-            while (it.hasNext()) {
-                BooleanClause bc = it.next();
-
-                for (String fieldName : SECURITY_FIELDS) {
-                    if (bc.getQuery().toString().contains(fieldName + ":")) {
-                        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                            Log.debug(Geonet.CSW_SEARCH, "LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
-                        it.remove();
-
-                        break;
-                    }
-                }
-            }
-        }
-        return q;
+//        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
+//        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
+//        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
+//            String name = field.getName();
+//            int precisionStep = field.getPrecisionStep();
+//            NumberFormat format = NumberFormat.getNumberInstance();
+//            NumericType type = NumericType.valueOf(field.getType().toUpperCase());
+//            NumericConfig config = new NumericConfig(precisionStep, format, type);
+//            numericMap.put(name, config);
+//        }
+//        parser.setNumericConfigMap(numericMap);
+//        Query q = parser.parse(cswServiceSpecificConstraint, "title");
+//
+//        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
+//        List<String> SECURITY_FIELDS = Arrays.asList(
+//            LuceneIndexField.OWNER,
+//            LuceneIndexField.GROUP_OWNER);
+//
+//        BooleanQuery bq;
+//        if (q instanceof BooleanQuery) {
+//            bq = (BooleanQuery) q;
+//            List<BooleanClause> clauses = bq.clauses();
+//
+//            Iterator<BooleanClause> it = clauses.iterator();
+//            while (it.hasNext()) {
+//                BooleanClause bc = it.next();
+//
+//                for (String fieldName : SECURITY_FIELDS) {
+//                    if (bc.getQuery().toString().contains(fieldName + ":")) {
+//                        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+//                            Log.debug(Geonet.CSW_SEARCH, "LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
+//                        it.remove();
+//
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        return q;
+        return null;
     }
 
     /**
@@ -216,7 +171,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
      */
     public Pair<Element, List<ResultItem>> search(ServiceContext context,
                                                   Element filterExpr, String filterVersion, String typeName,
-                                                  Sort sort, ResultType resultType, int startPosition, int maxRecords,
+                                                  Object sort, ResultType resultType, int startPosition, int maxRecords,
                                                   int maxHitsInSummary, String cswServiceSpecificContraint) throws CatalogException {
         if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "CatalogSearch search");
@@ -245,52 +200,32 @@ public class CatalogSearcher implements MetadataRecordSelector {
             Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n" + Xml.getString(luceneExpr));
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager sm = gc.getBean(SearchManager.class);
-        IndexAndTaxonomy indexAndTaxonomy = null;
+        EsSearchManager sm = gc.getBean(EsSearchManager.class);
+//        IndexAndTaxonomy indexAndTaxonomy = null;
         try {
             if (luceneExpr != null) {
                 convertPhrases(luceneExpr);
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                     Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
             }
-            _lang = LuceneSearcher.determineLanguage(context, filterExpr, sm.getSettingInfo());
+//            _lang = LuceneSearcher.determineLanguage(context, filterExpr, sm.getSettingInfo());
 
-            indexAndTaxonomy = sm.getIndexReader(_lang.presentationLanguage, _searchToken);
-            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
-            if (_searchToken != -1L && indexAndTaxonomy.version != _searchToken) {
-                throw new SearchExpiredEx("Search has expired/timed out - start a new search");
-            }
-            _searchToken = indexAndTaxonomy.version;
-            GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
-            return performSearch(context, luceneExpr, filterExpr, filterVersion, sort, resultType, startPosition, maxRecords,
-                maxHitsInSummary, cswServiceSpecificContraint, reader, indexAndTaxonomy.taxonomyReader);
+//            indexAndTaxonomy = sm.getIndexReader(_lang.presentationLanguage, _searchToken);
+//            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
+//            if (_searchToken != -1L && indexAndTaxonomy.version != _searchToken) {
+//                throw new SearchExpiredEx("Search has expired/timed out - start a new search");
+//            }
+//            _searchToken = indexAndTaxonomy.version;
+//            GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
+//            return performSearch(context, luceneExpr, filterExpr, filterVersion, sort, resultType, startPosition, maxRecords,
+//                maxHitsInSummary, cswServiceSpecificContraint, reader, indexAndTaxonomy.taxonomyReader);
         } catch (Exception e) {
             Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
             Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n" + Util.getStackTrace(e));
             throw new NoApplicableCodeEx("Raised exception while searching metadata : " + e);
-        } finally {
-            try {
-                if (indexAndTaxonomy != null) {
-                    sm.releaseIndexReader(indexAndTaxonomy);
-                }
-            } catch (Exception ex) {
-                // eat it as it probably doesn't matter,
-                // but say what happened anyway
-                Log.error(Geonet.CSW_SEARCH, "Error while releasing index searcher ", ex);
-            }
         }
+        return null;
     }
-
-    // ---------------------------------------------------------------------------
-    private LuceneConfig getLuceneConfig() {
-        return _applicationContext.getBean(LuceneConfig.class);
-    }
-
-    // ---------------------------------------------------------------------------
-    // ---
-    // --- Private methods
-    // ---
-    // ---------------------------------------------------------------------------
 
     /**
      * <p> Gets results in current searcher </p>
@@ -300,40 +235,38 @@ public class CatalogSearcher implements MetadataRecordSelector {
     public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager sm = gc.getBean(SearchManager.class);
-        LuceneConfig luceneConfig = getLuceneConfig();
-        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, _searchToken);
-
-        try {
-            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
-            if (indexAndTaxonomy.version != _searchToken && !(!luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD)))) {
-                throw new SearchExpiredEx("Search has expired/timed out - start a new search");
-            }
-            GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
-            Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang.presentationLanguage,
-                luceneConfig.getSummaryTypes().get(ResultType.RESULTS.toString()), luceneConfig,
-                _reader, _query, wrapSpatialFilter(), _sort, null, false);
-            TopDocs tdocs = searchResults.one();
-            Element summary = searchResults.two();
-
-            int numHits = Integer.parseInt(summary.getAttributeValue("count"));
-
-            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
-
-            // --- retrieve results
-            List<String> response = new ArrayList<String>();
-
-            for (ScoreDoc sdoc : tdocs.scoreDocs) {
-                Document doc = _reader.document(sdoc.doc, _uuidselector);
-                String uuid = doc.get("_uuid");
-                if (uuid != null)
-                    response.add(uuid);
-            }
-            return response;
-        } finally {
-            sm.releaseIndexReader(indexAndTaxonomy);
-        }
+//        SearchManager sm = gc.getBean(SearchManager.class);
+//        IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, _searchToken);
+//
+//        try {
+//            Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
+//            if (indexAndTaxonomy.version != _searchToken && !(!luceneConfig.useNRTManagerReopenThread() || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD)))) {
+//                throw new SearchExpiredEx("Search has expired/timed out - start a new search");
+//            }
+//            GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
+//            Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang.presentationLanguage,
+//                luceneConfig.getSummaryTypes().get(ResultType.RESULTS.toString()), luceneConfig,
+//                _reader, _query, wrapSpatialFilter(), _sort, null, false);
+//            TopDocs tdocs = searchResults.one();
+//            Element summary = searchResults.two();
+//
+//            int numHits = Integer.parseInt(summary.getAttributeValue("count"));
+//
+//            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+//                Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+//
+//            // --- retrieve results
+//            List<String> response = new ArrayList<String>();
+//
+//            for (ScoreDoc sdoc : tdocs.scoreDocs) {
+//                Document doc = _reader.document(sdoc.doc, _uuidselector);
+//                String uuid = doc.get("_uuid");
+//                if (uuid != null)
+//                    response.add(uuid);
+//            }
+//            return response;
+//        }
+        return null;
     }
 
     /**
@@ -411,20 +344,20 @@ public class CatalogSearcher implements MetadataRecordSelector {
             String text = elem.getAttributeValue("txt");
 
 
-            Set<String> tokenizedFieldSet = getLuceneConfig().getTokenizedField();
-            if (tokenizedFieldSet.contains(field) && text.indexOf(' ') != -1) {
-                elem.setName("PhraseQuery");
-
-                StringTokenizer st = new StringTokenizer(text, " ");
-
-                while (st.hasMoreTokens()) {
-                    Element term = new Element("TermQuery");
-                    term.setAttribute("fld", field);
-                    term.setAttribute("txt", st.nextToken());
-
-                    elem.addContent(term);
-                }
-            }
+//            Set<String> tokenizedFieldSet = getLuceneConfig().getTokenizedField();
+//            if (tokenizedFieldSet.contains(field) && text.indexOf(' ') != -1) {
+//                elem.setName("PhraseQuery");
+//
+//                StringTokenizer st = new StringTokenizer(text, " ");
+//
+//                while (st.hasMoreTokens()) {
+//                    Element term = new Element("TermQuery");
+//                    term.setAttribute("fld", field);
+//                    term.setAttribute("txt", st.nextToken());
+//
+//                    elem.addContent(term);
+//                }
+//            }
         } else {
             @SuppressWarnings("unchecked")
             List<Element> children = elem.getChildren();
@@ -481,164 +414,164 @@ public class CatalogSearcher implements MetadataRecordSelector {
      * @param filterExpr                  CSW Filter
      * @param cswServiceSpecificContraint Service specific constraint
      */
-    private Pair<Element, List<ResultItem>> performSearch(ServiceContext context, Element luceneExpr,
-                                                          @Nonnull Element filterExpr, String filterVersion, Sort sort,
-                                                          ResultType resultType, int startPosition, int maxRecords,
-                                                          int maxHitsInSummary, String cswServiceSpecificContraint,
-                                                          GeonetworkMultiReader reader, TaxonomyReader taxonomyReader)
-        throws Exception {
-
-        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
-            Log.debug(Geonet.CSW_SEARCH, "CatalogSearcher performSearch()");
-        }
-        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
-            Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n" + Xml.getString(filterExpr));
-        }
-
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SearchManager sm = gc.getBean(SearchManager.class);
-
-        if (luceneExpr != null) {
-            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
-        } else {
-            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
-        }
-
-
-        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
-
-        Query data;
-        LuceneConfig luceneConfig = getLuceneConfig();
-        if (luceneExpr == null) {
-            data = null;
-            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
-        } else {
-            PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang.analyzerLanguage, true);
-            SettingInfo.SearchRequestLanguage requestedLanguageOnly = sm.getSettingInfo().getRequestedLanguageOnly();
-            data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
-                analyzer, luceneConfig, _lang.presentationLanguage, requestedLanguageOnly);
-            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());
-        }
-
-        Query cswCustomFilterQuery = null;
-        Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
-        if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, luceneConfig);
-            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
-        }
-
-        Query groups = getGroupsQuery(context);
-        if (sort == null) {
-            List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
-            sort = LuceneSearcher.makeSort(fields, _lang.presentationLanguage, requestedLanguageOnTop);
-        }
-
-        // --- put query on groups in AND with lucene query
-
-        BooleanQuery query = new BooleanQuery();
-
-        // FIXME : DO I need to fix that here ???
-        // BooleanQuery.setMaxClauseCount(1024); // FIXME : using MAX_VALUE
-        // solve
-        // // partly the org.apache.lucene.search.BooleanQuery$TooManyClauses
-        // // problem.
-        // // Improve index content.
-
-        BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-        if (data != null) {
-            query.add(data, occur);
-        }
-        query.add(groups, occur);
-
-        if (cswCustomFilterQuery != null) {
-            query.add(cswCustomFilterQuery, occur);
-        }
-
-        // --- proper search
-        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
-            Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
-
-        int numHits = startPosition + maxRecords;
-
-        updateRegionsInSpatialFilter(context, filterExpr);
-        // TODO Handle NPE creating spatial filter (due to constraint)
-        _filter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
-
-        boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
-        // get as many results as instructed or enough for search summary
-        if (buildSummary) {
-            numHits = Math.max(maxHitsInSummary, numHits);
-        }
-        // record globals for reuse
-        _query = query;
-        _sort = sort;
-
-        ServiceConfig config = new ServiceConfig();
-        String geomWkt = null;
-
-
-        Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-            maxRecords, _lang.presentationLanguage,
-            luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
-            reader, _query, wrapSpatialFilter(),
-            _sort, taxonomyReader, buildSummary
-        );
-        TopDocs hits = searchResults.one();
-        Element summary = searchResults.two();
-
-        numHits = Integer.parseInt(summary.getAttributeValue("count"));
-        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
-            Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
-        }
-
-        try {
-            // Rewrite the drilldown query to a query that can be used by the search logger
-            Query loggerQuery = _query.rewrite(sm.getIndexReader(_lang.presentationLanguage, _searchToken).indexReader);
-            LuceneSearcher.logSearch(context, config, loggerQuery, numHits, _sort, geomWkt, sm);
-        } catch (Throwable x) {
-            Log.warning(Geonet.SEARCH_ENGINE, "Error rewriting Lucene query: " + _query);
-            //System.out.println("** error rewriting query: "+x.getMessage());
-        }
-
-        // --- retrieve results
-
-        List<ResultItem> results = new ArrayList<ResultItem>();
-
-        // Get hits according to request (when using summary topdocs returned by
-        // LuceneSearcher already contains all docs)
-        int i = 0;
-        int iMax = hits.scoreDocs.length;
-        for (; i < iMax; i++) {
-            Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
-            String id = doc.get("_id");
-            ResultItem ri = new ResultItem(id);
-            results.add(ri);
-            for (String field : getFieldMapper().getMappedFields()) {
-                String value = doc.get(field);
-                if (value != null) {
-                    ri.add(field, value);
-                }
-            }
-        }
-        summary.setName("Summary");
-        summary.setNamespace(Csw.NAMESPACE_GEONET);
-        return Pair.read(summary, results);
-    }
-
-    private Filter wrapSpatialFilter() {
-        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query);
-        Filter cFilter = null;
-        if (_filter == null) {
-            cFilter = duplicateRemovingFilter;
-        } else {
-            Filter[] filters = new Filter[]{duplicateRemovingFilter, _filter};
-            cFilter = new ChainedFilter(filters, ChainedFilter.AND);
-        }
-        cFilter = new CachingWrapperFilter(cFilter);
-        return cFilter;
-    }
+//    private Pair<Element, List<ResultItem>> performSearch(ServiceContext context, Element luceneExpr,
+//                                                          @Nonnull Element filterExpr, String filterVersion, Sort sort,
+//                                                          ResultType resultType, int startPosition, int maxRecords,
+//                                                          int maxHitsInSummary, String cswServiceSpecificContraint,
+//                                                          GeonetworkMultiReader reader, TaxonomyReader taxonomyReader)
+//        throws Exception {
+//
+//        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+//            Log.debug(Geonet.CSW_SEARCH, "CatalogSearcher performSearch()");
+//        }
+//        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+//            Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n" + Xml.getString(filterExpr));
+//        }
+//
+//        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+//        SearchManager sm = gc.getBean(SearchManager.class);
+//
+//        if (luceneExpr != null) {
+//            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+//                Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
+//        } else {
+//            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+//                Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
+//        }
+//
+//
+//        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
+//
+//        Query data;
+//        LuceneConfig luceneConfig = getLuceneConfig();
+//        if (luceneExpr == null) {
+//            data = null;
+//            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
+//        } else {
+//            PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang.analyzerLanguage, true);
+//            SettingInfo.SearchRequestLanguage requestedLanguageOnly = sm.getSettingInfo().getRequestedLanguageOnly();
+//            data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
+//                analyzer, luceneConfig, _lang.presentationLanguage, requestedLanguageOnly);
+//            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());
+//        }
+//
+//        Query cswCustomFilterQuery = null;
+//        Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
+//        if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
+//            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, luceneConfig);
+//            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
+//        }
+//
+//        Query groups = getGroupsQuery(context);
+//        if (sort == null) {
+//            List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
+//            sort = LuceneSearcher.makeSort(fields, _lang.presentationLanguage, requestedLanguageOnTop);
+//        }
+//
+//        // --- put query on groups in AND with lucene query
+//
+//        BooleanQuery query = new BooleanQuery();
+//
+//        // FIXME : DO I need to fix that here ???
+//        // BooleanQuery.setMaxClauseCount(1024); // FIXME : using MAX_VALUE
+//        // solve
+//        // // partly the org.apache.lucene.search.BooleanQuery$TooManyClauses
+//        // // problem.
+//        // // Improve index content.
+//
+//        BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+//        if (data != null) {
+//            query.add(data, occur);
+//        }
+//        query.add(groups, occur);
+//
+//        if (cswCustomFilterQuery != null) {
+//            query.add(cswCustomFilterQuery, occur);
+//        }
+//
+//        // --- proper search
+//        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+//            Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
+//
+//        int numHits = startPosition + maxRecords;
+//
+//        updateRegionsInSpatialFilter(context, filterExpr);
+//        // TODO Handle NPE creating spatial filter (due to constraint)
+//        _filter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
+//
+//        boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
+//        // get as many results as instructed or enough for search summary
+//        if (buildSummary) {
+//            numHits = Math.max(maxHitsInSummary, numHits);
+//        }
+//        // record globals for reuse
+//        _query = query;
+//        _sort = sort;
+//
+//        ServiceConfig config = new ServiceConfig();
+//        String geomWkt = null;
+//
+//
+//        Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
+//            maxRecords, _lang.presentationLanguage,
+//            luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
+//            reader, _query, wrapSpatialFilter(),
+//            _sort, taxonomyReader, buildSummary
+//        );
+//        TopDocs hits = searchResults.one();
+//        Element summary = searchResults.two();
+//
+//        numHits = Integer.parseInt(summary.getAttributeValue("count"));
+//        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+//            Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
+//        }
+//
+//        try {
+//            // Rewrite the drilldown query to a query that can be used by the search logger
+//            Query loggerQuery = _query.rewrite(sm.getIndexReader(_lang.presentationLanguage, _searchToken).indexReader);
+//            LuceneSearcher.logSearch(context, config, loggerQuery, numHits, _sort, geomWkt, sm);
+//        } catch (Throwable x) {
+//            Log.warning(Geonet.SEARCH_ENGINE, "Error rewriting Lucene query: " + _query);
+//            //System.out.println("** error rewriting query: "+x.getMessage());
+//        }
+//
+//        // --- retrieve results
+//
+//        List<ResultItem> results = new ArrayList<ResultItem>();
+//
+//        // Get hits according to request (when using summary topdocs returned by
+//        // LuceneSearcher already contains all docs)
+//        int i = 0;
+//        int iMax = hits.scoreDocs.length;
+//        for (; i < iMax; i++) {
+//            Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
+//            String id = doc.get("_id");
+//            ResultItem ri = new ResultItem(id);
+//            results.add(ri);
+//            for (String field : getFieldMapper().getMappedFields()) {
+//                String value = doc.get(field);
+//                if (value != null) {
+//                    ri.add(field, value);
+//                }
+//            }
+//        }
+//        summary.setName("Summary");
+//        summary.setNamespace(Csw.NAMESPACE_GEONET);
+//        return Pair.read(summary, results);
+//    }
+//
+//    private Filter wrapSpatialFilter() {
+//        Filter duplicateRemovingFilter = new DuplicateDocFilter(_query);
+//        Filter cFilter = null;
+//        if (_filter == null) {
+//            cFilter = duplicateRemovingFilter;
+//        } else {
+//            Filter[] filters = new Filter[]{duplicateRemovingFilter, _filter};
+//            cFilter = new ChainedFilter(filters, ChainedFilter.AND);
+//        }
+//        cFilter = new CachingWrapperFilter(cFilter);
+//        return cFilter;
+//    }
 
     /**
      * Process all spatial filters by replacing the region placeholders (filters with gml:id
@@ -745,7 +678,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
         encoder.setOmitXMLDeclaration(true);
         encoder.setNamespaceAware(true);
 
-        encoder.encode(SpatialIndexWriter.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
+        encoder.encode(XslUtil.toMultiPolygon(fullGeom), org.geotools.gml3.GML.MultiPolygon, out);
         Element geomElem = org.fao.geonet.csw.common.util.Xml.loadString(out.toString(Constants.ENCODING), false);
         parentElement.setContent(index, geomElem);
     }

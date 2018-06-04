@@ -29,7 +29,6 @@ import org.fao.geonet.Assert;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.kernel.search.AbstractLanguageSearchOrderIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;

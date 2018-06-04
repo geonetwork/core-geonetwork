@@ -61,6 +61,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
@@ -394,7 +395,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
         // get lastchangedate of all metadata in index
         // TODOES Catch exception and retry later on
-        Map<String, String> docs = getSearchManager().getDocsChangeDate();
+        Map<String, String> docs = getEsEsSearchManager().getDocsChangeDate();
 
         // set up results HashMap for post processing of records to be indexed
         ArrayList<String> toIndex = new ArrayList<String>();
@@ -466,7 +467,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         // remove from index metadata not in DBMS
         for (String id : docs.keySet()) {
-            getSearchManager().delete(id);
+            getEsEsSearchManager().delete(id);
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "- removed record (" + id + ") from index");
@@ -481,7 +482,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
 
         // get all metadata with XLinks
-        Set<Integer> toIndex = getSearchManager().getDocsWithXLinks();
+        Set<Integer> toIndex = getEsEsSearchManager().getDocsWithXLinks();
 
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
@@ -612,13 +613,13 @@ public class DataManager implements ApplicationEventPublisherAware {
             indexMetadata(metadataId, false, null);
         }
 
-        getSearchManager().forceIndexChanges();
+        getEsEsSearchManager().forceIndexChanges();
     }
 
     /**
      * TODO javadoc.
      */
-    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, ISearchManager searchManager) throws Exception {
+    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, EsSearchManager EsSearchManager) throws Exception {
         waitLoopLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
@@ -658,17 +659,17 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (getXmlSerializer().resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "true", true, true));
+                    moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "true"));
                     StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.XLINK, xlink.getValue(), true, true));
+                        moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.XLINK, xlink.getValue()));
                     }
                     Processor.detachXLink(md, getServiceContext());
                 } else {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "false", true, true));
+                    moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "false"));
                 }
             } else {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "false", true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "false"));
             }
 
             fullMd = getMetadataRepository().findOne(id$);
@@ -693,41 +694,41 @@ public class DataManager implements ApplicationEventPublisherAware {
                 Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
             }
 
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT, root, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA, schema, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE, changeDate, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE, source, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID, uuid, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested ? "true" : "false", true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OWNER, owner, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DUMMY, "0", false, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.RATING, rating, true, true));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.ROOT, root));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.SCHEMA, schema));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE, changeDate));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.SOURCE, source));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.UUID, uuid));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested ? "true" : "false"));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.OWNER, owner));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.DUMMY, "0"));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.RATING, rating));
             if (RatingsSetting.ADVANCED.equals(getSettingManager().getValue(Settings.SYSTEM_LOCALRATING_ENABLE))) {
                 UserFeedbackRepository userFeedbackRepository = getApplicationContext().getBean(UserFeedbackRepository.class);
                 int nbOfFeedback = userFeedbackRepository.findByMetadata_Uuid(uuid).size();
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.FEEDBACKCOUNT, nbOfFeedback + "", true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.FEEDBACKCOUNT, nbOfFeedback + ""));
             }
 
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER, displayOrder, true, false));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra, false, true));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER, displayOrder));
+            moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra));
 
             // If the metadata has an atom document, index related information
             InspireAtomFeedRepository inspireAtomFeedRepository = getApplicationContext().getBean(InspireAtomFeedRepository.class);
             InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
 
             if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
-                moreFields.add(SearchManager.makeField("any", feed.getAtom(), false, true));
+                moreFields.add(EsSearchManager.makeField("has_atom", "y"));
+                moreFields.add(EsSearchManager.makeField("any", feed.getAtom()));
             }
 
             if (owner != null) {
                 User user = getApplicationContext().getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
                 if (user != null) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
-                        .getName() + "|" + user.getProfile(), true, false));
+                    moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
+                        .getName() + "|" + user.getProfile()));
                 }
             }
 
@@ -738,10 +739,10 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (groupOwner != null) {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
+                    moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner)));
                     final boolean preferGroup = getSettingManager().getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
                     if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
+                        moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite()));
                     }
                     if (group.getLogo() != null && preferGroup) {
                         logoUUID = group.getLogo();
@@ -756,7 +757,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 final Path logoPath = harvesterLogosDir.resolve(logoUUID);
                 if (Files.exists(logoPath)) {
                     added = true;
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/harvesting/" + logoPath.getFileName(), true, false));
+                    moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/harvesting/" + logoPath.getFileName()));
                 }
             }
 
@@ -766,7 +767,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 final Path logosDir = Resources.locateLogosDir(serviceContext);
                 final Path logoPath = logosDir.resolve(logoUUID);
                 if (Files.exists(logoPath)) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID, true, false));
+                    moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID));
                 }
             }
 
@@ -780,11 +781,11 @@ public class DataManager implements ApplicationEventPublisherAware {
                 int groupId = operationAllowedId.getGroupId();
                 int operationId = operationAllowedId.getOperationId();
 
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId), true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId)));
                 if (operationId == ReservedOperation.view.getId()) {
                     Group g = groupRepository.findOne(groupId);
                     if (g != null) {
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName(), true, true));
+                        moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName()));
 
                         if (g.getId() == ReservedGroup.all.getId()) {
                             isPublishedToAll = true;
@@ -795,13 +796,13 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
 
             if (isPublishedToAll) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "y", true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "y"));
             } else {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "n", true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "n"));
             }
 
             for (MetadataCategory category : fullMd.getMetadataCategories()) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName()));
             }
 
             final MetadataStatusRepository statusRepository = getApplicationContext().getBean(MetadataStatusRepository.class);
@@ -812,9 +813,9 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
                 String status = String.valueOf(stat.getId().getStatusId());
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.STATUS, status));
                 String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate, true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate));
             }
 
             // getValidationInfo
@@ -825,7 +826,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 .class);
             List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
             if (validationInfo.isEmpty()) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1"));
             } else {
                 String isValid = "1";
                 for (MetadataValidation vi : validationInfo) {
@@ -834,12 +835,12 @@ public class DataManager implements ApplicationEventPublisherAware {
                     if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
                         isValid = "0";
                     }
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(), true, true));
+                    moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode()));
                 }
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
+                moreFields.add(EsSearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid));
             }
 
-            getSearchManager().index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
+            getEsEsSearchManager().index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
@@ -861,24 +862,6 @@ public class DataManager implements ApplicationEventPublisherAware {
     protected ServiceContext getServiceContext() {
         ServiceContext context = ServiceContext.get();
         return context == null ? servContext : context;
-    }
-
-    /**
-     *
-     * @param beginAt
-     * @param interval
-     * @throws Exception
-     */
-    public void rescheduleOptimizer(Calendar beginAt, int interval) throws Exception {
-        getSearchManager().rescheduleOptimizer(beginAt, interval);
-    }
-
-    /**
-     *
-     * @throws Exception
-     */
-    public void disableOptimizer() throws Exception {
-        getSearchManager().disableOptimizer();
     }
 
     /**
@@ -1522,6 +1505,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             getMetadataRepository().incrementPopularity(iId);
 
             // And register the metadata to be indexed in the near future
+            // TODOES incrementPopularity only
             final IndexingList list = srvContext.getBean(IndexingList.class);
             list.add(iId);
         } else {
@@ -1566,6 +1550,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         // And register the metadata to be indexed in the near future
         final IndexingList list = getApplicationContext().getBean(IndexingList.class);
         list.add(metadataId);
+        // TODOES update only rating ((SolrEsEsSearchManager) sm).updateRating(metadataId, newRating);
 
         return rating;
     }
@@ -1919,8 +1904,8 @@ public class DataManager implements ApplicationEventPublisherAware {
      * Returns all the keywords in the system.
      */
     public Element getKeywords() throws Exception {
-        // TODO ES
-//        Collection<String> keywords = getSearchManager().getTerms("keyword");
+        // TODOES Move this to search manager
+//        Collection<String> keywords = getEsEsSearchManager().getTerms("keyword");
         Element el = new Element("keywords");
 
 //        for (Object keyword : keywords) {
@@ -2013,11 +1998,13 @@ public class DataManager implements ApplicationEventPublisherAware {
                 indexMetadata(metadataId, true, null);
             }
             MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
-            for (Integer id: result.keySet()) {
-                IndexingList list = context.getBean(IndexingList.class);
-                list.add(id);
-            }
+
+            // TODOES Get related record
+//            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
+//            for (Integer id: result.keySet()) {
+//                IndexingList list = context.getBean(IndexingList.class);
+//                list.add(id);
+//            }
         }
 
         // Return an up to date metadata record
@@ -2304,7 +2291,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         if (! getSettingManager().getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION) &&
                 metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
+            // TODOES-HIGH
+//            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
+            Map<Integer, Metadata> result = new HashMap<>();
             if (result.size() > 0) {
                 throw new Exception("this template is referenced.");
             }
@@ -2347,15 +2336,18 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     private MetaSearcher searcherForReferencingMetadata(ServiceContext context, Metadata metadata) throws Exception {
-        MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-        Element parameters =  new Element(Jeeves.Elem.REQUEST);
-        parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
-        parameters.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
-        parameters.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
-        parameters.addContent(new Element(SearchParameter.ISTEMPLATE).addContent("y or n"));
-        ServiceConfig config = new ServiceConfig();
-        searcher.search(context, parameters, config);
-        return searcher;
+
+        // TODOES
+        throw new NotImplementedException("searcherForReferencingMetadata not implemented in ES");
+//        MetaSearcher searcher = context.getBean(EsSearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+//        Element parameters =  new Element(Jeeves.Elem.REQUEST);
+//        parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
+//        parameters.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+//        parameters.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
+//        parameters.addContent(new Element(SearchParameter.ISTEMPLATE).addContent("y or n"));
+//        ServiceConfig config = new ServiceConfig();
+//        searcher.search(context, parameters, config);
+//        return searcher;
     }
 
     //--------------------------------------------------------------------------
@@ -2382,7 +2374,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         //--- update search criteria
-        getSearchManager().delete(metadataId + "");
+        getEsEsSearchManager().delete(metadataId + "");
 //        _entityManager.flush();
 //        _entityManager.clear();
     }
@@ -2396,7 +2388,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
         //--- update search criteria
-        getSearchManager().delete(metadataId + "");
+        getEsEsSearchManager().delete(metadataId + "");
     }
 
     /**
@@ -3474,7 +3466,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     public void forceIndexChanges() throws IOException {
-        getSearchManager().forceIndexChanges();
+        getEsEsSearchManager().forceIndexChanges();
     }
 
     public int batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
@@ -3488,7 +3480,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         // Remove records from the index
-        getSearchManager().delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
+        getEsEsSearchManager().delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
             @Nullable
             @Override
             public String apply(@Nonnull Integer input) {
@@ -3514,7 +3506,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         return getApplicationContext().getBean(requiredType);
     }
 
-    private ISearchManager getSearchManager() {
+    private ISearchManager getEsEsSearchManager() {
         return getBean(EsSearchManager.class);
     }
 

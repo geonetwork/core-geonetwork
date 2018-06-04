@@ -86,13 +86,7 @@
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="fileAppender"/>
   </logger>
-  <logger name="geonetwork.lucene">
-    <level value="WARN"/>
-  </logger>
   <logger name="geonetwork.ldap">
-    <level value="WARN"/>
-  </logger>
-  <logger name="geonetwork.lucene.tracking">
     <level value="WARN"/>
   </logger>
   <logger name="geonetwork.mef">

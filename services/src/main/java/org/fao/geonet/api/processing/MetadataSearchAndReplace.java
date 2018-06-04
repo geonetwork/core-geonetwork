@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api.processing;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
@@ -34,7 +35,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -156,84 +156,86 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
         MetadataDataInfo info = metadataEntity.getDataInfo();
 
         // Get metadata title from the index
-        String metadataTitle = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(), id, "title");
-        if (StringUtils.isEmpty(metadataTitle)) metadataTitle = metadataEntity.getUuid();
-
-        if (info == null) {
-            report.incrementNullRecords();
-        } else if (!accessMan.isOwner(context, id)) {
-            report.addNotEditableMetadataId(iId);
-        } else {
-
-            // -----------------------------------------------------------------------
-            // --- check processing exist for current schema
-            String schema = info.getSchemaId();
-            String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
-            File xslProcessing = new File(filePath);
-            if (!xslProcessing.exists()) {
-                context.info("  Processing instruction not found for " + schema
-                    + " schema.");
-
-                report.addNoProcessFoundMetadataId(iId);
-                return null;
-            }
-            // --- Process metadata
-            Element processedMetadata = null;
-
-            try {
-                Element md = dataMan.getMetadataNoInfo(context, id);
-                processedMetadata = Xml.transformWithXmlParam(md, filePath, paramNameXml, paramXml);
-
-                // Get changes
-                Path filePath2 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-extract-changes.xsl");
-                List<Element> changesEl = Xml.transform(processedMetadata, filePath2).getChildren("change");
-
-                boolean hasChanges = (changesEl.size() > 0);
-
-
-                if (hasChanges) {
-                    report.addMetadataChanges(iId, changesEl);
-                } else {
-                    report.addMetadataInfos(iId, "No changes.");
-                }
-
-                // --- save metadata and return status
-                if (changesEl.size() > 0 && !isTesting) {
-                    Path filePath3 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-clean-changes.xsl");
-
-                    // Remove empty elements or vacuum record
-                    if (!StringUtils.isEmpty(this.vacuumMode)) {
-                        // Search and replace, then vacuum record
-                        if ("record".equals(this.vacuumMode)) {
-                            processedMetadata = Xml.transform(processedMetadata, filePath3);
-
-                            Path vacuumXsltPath = schemaMan.getSchemaDir(schema).resolve("process/vacuum.xsl");
-                            if (vacuumXsltPath.toFile().exists()) {
-                                processedMetadata = Xml.transform(processedMetadata, vacuumXsltPath);
-                            }
-                        } else if ("element".equals(this.vacuumMode)) {
-                            // Clean geonet:changes elements and remove
-                            // elements having an empty new value.
-                            Map<String, Object> params = new HashMap<>(1);
-                            params.put("removeEmptyElement", "true");
-                            processedMetadata = Xml.transform(processedMetadata, filePath3, params);
-                        }
-                    } else {
-                        // Clean geonet:changes elements
-                        processedMetadata = Xml.transform(processedMetadata, filePath3);
-                    }
-
-
-                    dataMan.updateMetadata(context, id, processedMetadata,
-                        false, true, true,
-                        context.getLanguage(),
-                        new ISODate().toString(), true);
-                }
-            } catch (Exception e) {
-                report.addMetadataError(iId, e);
-            }
-            return processedMetadata;
-        }
-        return null;
+        // TODOES - Probably use XslUtil for getting field value ?
+        throw new NotImplementedException("Not implemented in ES");
+//        String metadataTitle = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(), id, "title");
+//        if (StringUtils.isEmpty(metadataTitle)) metadataTitle = metadataEntity.getUuid();
+//
+//        if (info == null) {
+//            report.incrementNullRecords();
+//        } else if (!accessMan.isOwner(context, id)) {
+//            report.addNotEditableMetadataId(iId);
+//        } else {
+//
+//            // -----------------------------------------------------------------------
+//            // --- check processing exist for current schema
+//            String schema = info.getSchemaId();
+//            String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
+//            File xslProcessing = new File(filePath);
+//            if (!xslProcessing.exists()) {
+//                context.info("  Processing instruction not found for " + schema
+//                    + " schema.");
+//
+//                report.addNoProcessFoundMetadataId(iId);
+//                return null;
+//            }
+//            // --- Process metadata
+//            Element processedMetadata = null;
+//
+//            try {
+//                Element md = dataMan.getMetadataNoInfo(context, id);
+//                processedMetadata = Xml.transformWithXmlParam(md, filePath, paramNameXml, paramXml);
+//
+//                // Get changes
+//                Path filePath2 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-extract-changes.xsl");
+//                List<Element> changesEl = Xml.transform(processedMetadata, filePath2).getChildren("change");
+//
+//                boolean hasChanges = (changesEl.size() > 0);
+//
+//
+//                if (hasChanges) {
+//                    report.addMetadataChanges(iId, changesEl);
+//                } else {
+//                    report.addMetadataInfos(iId, "No changes.");
+//                }
+//
+//                // --- save metadata and return status
+//                if (changesEl.size() > 0 && !isTesting) {
+//                    Path filePath3 = schemaMan.getSchemaDir(schema).resolve("process/massive-content-update-clean-changes.xsl");
+//
+//                    // Remove empty elements or vacuum record
+//                    if (!StringUtils.isEmpty(this.vacuumMode)) {
+//                        // Search and replace, then vacuum record
+//                        if ("record".equals(this.vacuumMode)) {
+//                            processedMetadata = Xml.transform(processedMetadata, filePath3);
+//
+//                            Path vacuumXsltPath = schemaMan.getSchemaDir(schema).resolve("process/vacuum.xsl");
+//                            if (vacuumXsltPath.toFile().exists()) {
+//                                processedMetadata = Xml.transform(processedMetadata, vacuumXsltPath);
+//                            }
+//                        } else if ("element".equals(this.vacuumMode)) {
+//                            // Clean geonet:changes elements and remove
+//                            // elements having an empty new value.
+//                            Map<String, Object> params = new HashMap<>(1);
+//                            params.put("removeEmptyElement", "true");
+//                            processedMetadata = Xml.transform(processedMetadata, filePath3, params);
+//                        }
+//                    } else {
+//                        // Clean geonet:changes elements
+//                        processedMetadata = Xml.transform(processedMetadata, filePath3);
+//                    }
+//
+//
+//                    dataMan.updateMetadata(context, id, processedMetadata,
+//                        false, true, true,
+//                        context.getLanguage(),
+//                        new ISODate().toString(), true);
+//                }
+//            } catch (Exception e) {
+//                report.addMetadataError(iId, e);
+//            }
+//            return processedMetadata;
+//        }
+//        return null;
     }
 }

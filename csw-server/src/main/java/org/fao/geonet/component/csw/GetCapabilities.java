@@ -25,7 +25,8 @@ package org.fao.geonet.component.csw;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
+import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -42,7 +43,6 @@ import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
-import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -58,20 +58,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * TODO javadoc.
@@ -85,8 +76,6 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     //---------------------------------------------------------------------------
 
     static final String NAME = "GetCapabilities";
-    @Autowired
-    private LuceneConfig _luceneConfig;
     @Autowired
     private CatalogConfiguration _catalogConfig;
     @Autowired
@@ -494,7 +483,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         String[] properties = {"keyword"};
         try {
             values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords(),
-                cswServiceSpecificContraint, _luceneConfig);
+                cswServiceSpecificContraint);
         } catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
             // If GetDomain operation failed, just add nothing to the capabilities document template.

@@ -22,28 +22,15 @@
 //==============================================================================
 package org.fao.geonet.inspireatom.util;
 
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -52,6 +39,10 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.*;
 
 
 /**
@@ -265,32 +256,34 @@ public class InspireAtomUtil {
     }
 
     public static List<Metadata> searchMetadataByType(ServiceContext context,
-                                                      SearchManager searchMan,
+                                                      ISearchManager searchMan,
                                                       String type) {
 
         Element request = new Element(Jeeves.Elem.REQUEST);
         request.addContent(new Element("type").setText(type));
         request.addContent(new Element("fast").setText("true"));
 
+        // TODOES
+        throw new NotImplementedException("Not implemented in ES");
         // perform the search and return the results read from the index
-        MetaSearcher searcher = null;
-        try {
-            searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-            searcher.search(context, request, new ServiceConfig());
-
-            Map<Integer, Metadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
-            return new ArrayList<>(allMdInfo.values());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ArrayList<>();
-        } finally {
-            if (searcher != null) searcher.close();
-        }
+//        MetaSearcher searcher = null;
+//        try {
+//            searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+//            searcher.search(context, request, new ServiceConfig());
+//
+//            Map<Integer, Metadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
+//            return new ArrayList<>(allMdInfo.values());
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            return new ArrayList<>();
+//        } finally {
+//            if (searcher != null) searcher.close();
+//        }
     }
 
 
     public static String retrieveDatasetUuidFromIdentifier(ServiceContext context,
-                                                           SearchManager searchMan,
+                                                           ISearchManager searchMan,
                                                            String datasetIdCode) {
 
         String uuid = "";
@@ -301,19 +294,19 @@ public class InspireAtomUtil {
         request.addContent(new Element("fast").setText("true"));
 
         // perform the search and return the results read from the index
+        throw new NotImplementedException("Not implemented in ES");
+//        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+//            searcher.search(context, request, new ServiceConfig());
+//
+//            List<String> uuids = ((LuceneSearcher) searcher).getAllUuids(1, context);
+//            if (uuids.size() > 0) {
+//                uuid = uuids.get(0);
+//            }
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
 
-        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
-            searcher.search(context, request, new ServiceConfig());
-
-            List<String> uuids = ((LuceneSearcher) searcher).getAllUuids(1, context);
-            if (uuids.size() > 0) {
-                uuid = uuids.get(0);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return uuid;
+//        return uuid;
     }
 
     public static Element prepareServiceFeedEltBeforeTransform(final String schema,

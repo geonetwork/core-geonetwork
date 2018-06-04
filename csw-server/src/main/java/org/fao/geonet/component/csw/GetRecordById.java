@@ -30,9 +30,8 @@ import com.google.common.base.Optional;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
@@ -161,28 +160,30 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                 // Check if the current user has access
                 // to the requested MD
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+                // TODOES
+                throw new NotImplementedException("CSW not implemented in ES");
 
-                final SettingInfo settingInfo = gc.getBean(SearchManager.class).getSettingInfo();
-                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
-                Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
-                    displayLanguage);
-
-                if (md != null) {
-                    final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
-                        .getBeansOfType(GetRecordByIdMetadataTransformer.class);
-                    for (GetRecordByIdMetadataTransformer transformer : transformers.values()) {
-                        final Optional<Element> transformedMd = transformer.apply(context, md, outSchema);
-                        if (transformedMd.isPresent()) {
-                            md = transformedMd.get();
-                        }
-                    }
-
-                    response.addContent(md);
-
-                    if (_catalogConfig.isIncreasePopularity()) {
-                        gc.getBean(DataManager.class).increasePopularity(context, id);
-                    }
-                }
+//                final SettingInfo settingInfo = gc.getBean(SearchManager.class).getSettingInfo();
+//                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
+//                Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
+//                    displayLanguage);
+//
+//                if (md != null) {
+//                    final Map<String, GetRecordByIdMetadataTransformer> transformers = context.getApplicationContext()
+//                        .getBeansOfType(GetRecordByIdMetadataTransformer.class);
+//                    for (GetRecordByIdMetadataTransformer transformer : transformers.values()) {
+//                        final Optional<Element> transformedMd = transformer.apply(context, md, outSchema);
+//                        if (transformedMd.isPresent()) {
+//                            md = transformedMd.get();
+//                        }
+//                    }
+//
+//                    response.addContent(md);
+//
+//                    if (_catalogConfig.isIncreasePopularity()) {
+//                        gc.getBean(DataManager.class).increasePopularity(context, id);
+//                    }
+//                }
             }
         } catch (Exception e) {
             context.error("Raised : " + e);
