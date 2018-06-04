@@ -1227,5 +1227,14 @@
     "wfsIndexingMetadataNotFound": "Metadata could not be found.",
     "wfsIndexingMetadataUuid": "Metadata UUID",
     "wfsIndexingRefreshError": "An error occurred when refreshing the list:",
-    "wfsIndexingError": "Error encountered"
+    "wfsIndexingError": "Error encountered",
+    "ui-externalViewer": "External viewer",
+    "ui-externalViewer-enabled": "Use an external viewer",
+    "ui-externalViewer-enabled-help": "When clicking on 'add to map' buttons, the user will be redirected to a third party application. Will disable the default Geonetwork map.",
+    "ui-externalViewer-urlTemplate": "URL template",
+    "ui-externalViewer-urlTemplate-help": "This URL will be used for redirection to the external viewer. Available tokens are: <code>${md.uuid}</code>, <code>${md.id}</code>, <code>${service.url}</code>, <code>${service.type}</code>, <code>${service.name}</code>.",
+    "ui-externalViewer-valuesSeparator": "Values separator",
+    "ui-externalViewer-valuesSeparator-help": "This will be used when the user requests visualization of multiple layers.",
+    "ui-externalViewer-openNewWindow": "Open new window",
+    "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window. Please note that many browsers will not allow opening links in the same tab."
 }
