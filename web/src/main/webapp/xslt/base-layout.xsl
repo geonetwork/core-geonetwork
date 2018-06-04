@@ -38,7 +38,7 @@
   <xsl:include href="skin/default/skin.xsl"/>
 
   <xsl:template match="/">
-    <html ng-app="{$angularModule}" lang="{$lang}" id="ng-app">
+    <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
         <title>
           <xsl:value-of select="concat($env/system/site/name, ' - ', $env/system/site/organization)"
