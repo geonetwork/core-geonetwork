@@ -75,7 +75,6 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.catalogue['data.dataDir']", is(not(isEmptyOrNullString()))))
-            .andExpect(jsonPath("$.index['index.path']", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.main['java.version']", is(not(isEmptyOrNullString()))))
             .andExpect(jsonPath("$.database['db.url']", is(not(isEmptyOrNullString()))));
     }

@@ -219,10 +219,7 @@ public class Geonetwork implements ApplicationHandler {
 
         //------------------------------------------------------------------------
         //--- initialize search and editing
-
         logger.info("  - Search...");
-
-
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(EsSearchManager.class);

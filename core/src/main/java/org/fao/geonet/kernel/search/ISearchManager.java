@@ -41,11 +41,9 @@ import jeeves.server.context.ServiceContext;
  * Base interface for the search (Lucene or Solr).
  */
 public interface ISearchManager {
-    void init(ServiceConfig handlerConfig) throws Exception;
+    void init() throws Exception;
 
     void end() throws Exception;
-
-    MetaSearcher newSearcher(String stylesheetName) throws Exception;
 
     /**
      * Indexes a metadata record.
@@ -92,10 +90,6 @@ public interface ISearchManager {
      * deletes a list of documents.
      */
     void delete(List<String> txts) throws Exception;
-
-    void rescheduleOptimizer(Calendar beginAt, int interval) throws Exception;
-
-    void disableOptimizer() throws Exception;
 
     long getNumDocs() throws Exception;
 }

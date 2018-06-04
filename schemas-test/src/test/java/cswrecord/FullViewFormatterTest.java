@@ -30,6 +30,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -47,6 +48,8 @@ import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
  */
 public class FullViewFormatterTest extends AbstractFormatterTest {
 
+    // TODOES
+    @Ignore
     @Test
     public void testBasicFormat() throws Exception {
 
