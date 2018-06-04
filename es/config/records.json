@@ -1012,7 +1012,7 @@
           "synInspireThemeType": {
             "match": "inspireTheme*",
             "mapping": {
-              "type":     "string",
+              "type":     "text",
               "fielddata": true,
               "analyzer": "synInspireThemes",
               "search_analyzer": "keyword"
@@ -1023,7 +1023,7 @@
           "inspireServiceType": {
             "match": "inspireServiceType",
             "mapping": {
-              "type":     "string",
+              "type":     "text",
               "fielddata": true,
               "analyzer": "keepInspireServiceTypes",
               "search_analyzer": "keyword"
