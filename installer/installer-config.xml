@@ -151,17 +151,9 @@
         target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.sch"
         override="true"/>
 
-      <!-- Inspire thesaurus files -->
+      <!-- GEMET thesaurus files. For INSPIRE, user will use the admin and load them from INSPIRE Registry -->
       <singlefile src="../web/target/thesauri/gemet.rdf"
                   target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/gemet.rdf"
-                  override="true"/>
-
-      <singlefile src="../web/target/thesauri/inspire-service-taxonomy.rdf"
-                  target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-service-taxonomy.rdf"
-                  override="true"/>
-
-      <singlefile src="../web/target/thesauri/inspire-theme.rdf"
-                  target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-theme.rdf"
                   override="true"/>
 
       <!-- SQL script with Inspire Settings enabled -->

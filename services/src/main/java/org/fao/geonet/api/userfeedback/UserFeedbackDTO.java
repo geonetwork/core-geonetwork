@@ -24,9 +24,12 @@ package org.fao.geonet.api.userfeedback;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.fao.geonet.domain.ISODate;
 
 /**
  * A DTO to represent a user feedback entity optimized for GUI and front end use.
@@ -42,29 +45,17 @@ public class UserFeedbackDTO implements Serializable {
     /** The comment. */
     private String comment;
 
+    /** All ratings **/
+    private Map<Integer, Integer> rating = new HashMap<>();
+
     /** The rating AVG. */
     private Integer ratingAVG;
 
-    /** The rating COMPLETE. */
-    private Integer ratingCOMPLETE;
-
-    /** The rating READABILITY. */
-    private Integer ratingREADABILITY;
-
-    /** The rating FINDABILITY. */
-    private Integer ratingFINDABILITY;
-
-    /** The rating DATAQUALITY. */
-    private Integer ratingDATAQUALITY;
-
-    /** The rating SERVICEQUALITY. */
-    private Integer ratingSERVICEQUALITY;
-
-    /** The rating OTHER. */
-    private Integer ratingOTHER;
-
     /** The metadata UUID. */
     private String metadataUUID;
+
+    /** The metadata title. */
+    private String metadataTitle;
 
     /** The author user id. */
     private Integer authorUserId;
@@ -90,12 +81,10 @@ public class UserFeedbackDTO implements Serializable {
     /** The parent uuid. */
     private String parentUuid;
 
+    private String captcha;
+
     /** The date. */
-    private Date date;
-
-    /** The metadata title. */
-    private String metadataTitle;
-
+    private String date;
     /** The keywords. */
     @JsonProperty("keywords")
     private List<String> keywords;
@@ -162,7 +151,7 @@ public class UserFeedbackDTO implements Serializable {
      *
      * @return the date
      */
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -173,15 +162,6 @@ public class UserFeedbackDTO implements Serializable {
      */
     public List<String> getKeywords() {
         return keywords;
-    }
-
-    /**
-     * Gets the metadata title.
-     *
-     * @return the metadata title
-     */
-    public String getMetadataTitle() {
-        return metadataTitle;
     }
 
     /**
@@ -209,60 +189,6 @@ public class UserFeedbackDTO implements Serializable {
      */
     public Integer getRatingAVG() {
         return ratingAVG;
-    }
-
-    /**
-     * Gets the rating COMPLETE.
-     *
-     * @return the rating COMPLETE
-     */
-    public Integer getRatingCOMPLETE() {
-        return ratingCOMPLETE;
-    }
-
-    /**
-     * Gets the rating DATAQUALITY.
-     *
-     * @return the rating DATAQUALITY
-     */
-    public Integer getRatingDATAQUALITY() {
-        return ratingDATAQUALITY;
-    }
-
-    /**
-     * Gets the rating FINDABILITY.
-     *
-     * @return the rating FINDABILITY
-     */
-    public Integer getRatingFINDABILITY() {
-        return ratingFINDABILITY;
-    }
-
-    /**
-     * Gets the rating OTHER.
-     *
-     * @return the rating OTHER
-     */
-    public Integer getRatingOTHER() {
-        return ratingOTHER;
-    }
-
-    /**
-     * Gets the rating READABILITY.
-     *
-     * @return the rating READABILITY
-     */
-    public Integer getRatingREADABILITY() {
-        return ratingREADABILITY;
-    }
-
-    /**
-     * Gets the rating SERVICEQUALITY.
-     *
-     * @return the rating SERVICEQUALITY
-     */
-    public Integer getRatingSERVICEQUALITY() {
-        return ratingSERVICEQUALITY;
     }
 
     /**
@@ -360,7 +286,7 @@ public class UserFeedbackDTO implements Serializable {
      *
      * @param date the new date
      */
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -371,15 +297,6 @@ public class UserFeedbackDTO implements Serializable {
      */
     public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
-    }
-
-    /**
-     * Sets the metadata title.
-     *
-     * @param metadataTitle the new metadata title
-     */
-    public void setMetadataTitle(String metadataTitle) {
-        this.metadataTitle = metadataTitle;
     }
 
     /**
@@ -428,60 +345,6 @@ public class UserFeedbackDTO implements Serializable {
     }
 
     /**
-     * Sets the rating COMPLETE.
-     *
-     * @param ratingCOMPLETE the new rating COMPLETE
-     */
-    public void setRatingCOMPLETE(Integer ratingCOMPLETE) {
-        this.ratingCOMPLETE = ratingCOMPLETE;
-    }
-
-    /**
-     * Sets the rating DATAQUALITY.
-     *
-     * @param ratingDATAQUALITY the new rating DATAQUALITY
-     */
-    public void setRatingDATAQUALITY(Integer ratingDATAQUALITY) {
-        this.ratingDATAQUALITY = ratingDATAQUALITY;
-    }
-
-    /**
-     * Sets the rating FINDABILITY.
-     *
-     * @param ratingFINDABILITY the new rating FINDABILITY
-     */
-    public void setRatingFINDABILITY(Integer ratingFINDABILITY) {
-        this.ratingFINDABILITY = ratingFINDABILITY;
-    }
-
-    /**
-     * Sets the rating OTHER.
-     *
-     * @param ratingOTHER the new rating OTHER
-     */
-    public void setRatingOTHER(Integer ratingOTHER) {
-        this.ratingOTHER = ratingOTHER;
-    }
-
-    /**
-     * Sets the rating READABILITY.
-     *
-     * @param ratingREADABILITY the new rating READABILITY
-     */
-    public void setRatingREADABILITY(Integer ratingREADABILITY) {
-        this.ratingREADABILITY = ratingREADABILITY;
-    }
-
-    /**
-     * Sets the rating SERVICEQUALITY.
-     *
-     * @param ratingSERVICEQUALITY the new rating SERVICEQUALITY
-     */
-    public void setRatingSERVICEQUALITY(Integer ratingSERVICEQUALITY) {
-        this.ratingSERVICEQUALITY = ratingSERVICEQUALITY;
-    }
-
-    /**
      * Sets the show approve button.
      *
      * @param showApproveButton the new show approve button
@@ -499,4 +362,27 @@ public class UserFeedbackDTO implements Serializable {
         this.uuid = uuid;
     }
 
+    public Map<Integer, Integer> getRating() {
+        return rating;
+    }
+
+    public void setRating(Map<Integer, Integer> rating) {
+        this.rating = rating;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
+    }
+
+    public String getMetadataTitle() {
+        return metadataTitle;
+    }
+
+    public void setMetadataTitle(String metadataTitle) {
+        this.metadataTitle = metadataTitle;
+    }
 }

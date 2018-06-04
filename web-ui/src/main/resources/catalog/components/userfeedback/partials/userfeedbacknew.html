@@ -2,7 +2,7 @@
 
   <button class="btn btn-default btn-sm" data-toggle="modal"
     data-target="#gn-userfeedback-addcomment" data-ng-click="initPopup()">
-    <i class="fa fa-plus"></i>&nbsp;
+    <i class="fa fa-comment"></i>&nbsp;
     <span data-translate="">GUFplusAddRating</span>
   </button>
 
@@ -17,12 +17,14 @@
             aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" id="myModalLabel" data-translate="">GUFaddRating</h4>
+          <h4 class="modal-title">
+            <i class="fa fa-comments"></i>&nbsp;
+            <span data-translate="">GUFaddRating</span>
+            <strong>{{metadataTitle}}</strong>
+          </h4>
         </div>
         <div class="modal-body row">
           <div class="col-md-7">
-            <h2>{{rating.metadataTitle}}</h2>
-
             <div class="panel-group" id="accordion" role="tablist"
               aria-multiselectable="true">
               <div class="panel panel-default">
@@ -40,71 +42,22 @@
                     <div class="gn-userfeedback-title">
                       <h3 data-translate="">GUFcategories</h3>
                     </div>
-                    <h3>
-                      <span data-translate="">GUFcomplete</span> <span
-                        class="fa fa-info-circle"
-                        data-title="{{'GUFcompleteInfo' | translate}}"></span>
-                    </h3>
-                    <div data-rating="" data-ng-model="uf.ratingCOMPLETE"
-                      data-max="5" data-state-on="'fa fa-fw fa-star'"
-                      data-state-off="'fa fa-fw fa-star-o'"
-                      data-on-hover="hoveringOver(value)"
-                      data-on-leave="overStar = null"
-                      data-ng-click="rateForRecord(rate); updateRate()"
-                      class="text-muted"
-                      title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
-                    <h3>
-                      <span data-translate="">GUFfindability</span> <span
-                        class="fa fa-info-circle"
-                        data-title="{{'GUFfindabilityInfo' | translate}}"></span>
-                    </h3>
-                    <div data-rating="" data-ng-model="uf.ratingFINDABILITY"
-                      data-max="5" data-state-on="'fa fa-fw fa-star'"
-                      data-state-off="'fa fa-fw fa-star-o'"
-                      data-on-hover="hoveringOver(value)"
-                      data-on-leave="overStar = null"
-                      data-ng-click="rateForRecord(rate); updateRate()"
-                      class="text-muted"
-                      title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
-                    <h3>
-                      <span data-translate="">GUFreadability</span> <span
-                        class="fa fa-info-circle"
-                        data-title="{{'GUFreadabilityInfo' | translate}}"></span>
-                    </h3>
-                    <div data-rating="" data-ng-model="uf.ratingREADABILITY"
-                      data-max="5" data-state-on="'fa fa-fw fa-star'"
-                      data-state-off="'fa fa-fw fa-star-o'"
-                      data-on-hover="hoveringOver(value)"
-                      data-on-leave="overStar = null"
-                      data-ng-click="rateForRecord(rate); updateRate()"
-                      class="text-muted"
-                      title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
-                    <h3>
-                      <span data-translate="">GUFdataquality</span> <span
-                        class="fa fa-info-circle"
-                        data-title="{{'GUFdataqualityInfo' | translate}}"></span>
-                    </h3>
-                    <div data-rating="" data-ng-model="uf.ratingDATAQUALITY"
-                      data-max="5" data-state-on="'fa fa-fw fa-star'"
-                      data-state-off="'fa fa-fw fa-star-o'"
-                      data-on-hover="hoveringOver(value)"
-                      data-on-leave="overStar = null"
-                      data-ng-click="rateForRecord(rate); updateRate()"
-                      class="text-muted"
-                      title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
-                    <h3>
-                      <span data-translate="">GUFservicequality</span> <span
-                        class="fa fa-info-circle"
-                        data-title="{{'GUFservicequalityInfo' | translate}}"></span>
-                    </h3>
-                    <div data-rating="" data-ng-model="uf.ratingSERVICEQUALITY"
-                      data-max="5" data-state-on="'fa fa-fw fa-star'"
-                      data-state-off="'fa fa-fw fa-star-o'"
-                      data-on-hover="hoveringOver(value)"
-                      data-on-leave="overStar = null"
-                      data-ng-click="rateForRecord(rate); updateRate()"
-                      class="text-muted"
-                      title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
+
+                    <div data-ng-repeat="c in ratingCategories">
+                      <h3 title="{{c.label[lang].description}}">
+                        {{c.label[lang].label}}
+                      </h3>
+                      <div data-rating=""
+                           data-ng-model="uf.rating[c.id]"
+                           data-max="5"
+                           data-state-on="'fa fa-fw fa-star'"
+                           data-state-off="'fa fa-fw fa-star-o'"
+                           data-on-hover="hoveringOver(value)"
+                           data-on-leave="overStar = null"
+                           data-ng-click="updateRate()"
+                           class="text-muted"
+                           title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -127,6 +80,7 @@
                     <p class="text-muted" data-translate="">GUFaddYourReviewInfo</p>
                     <textarea class="form-control" rows="8"
                       data-ng-model="uf.comment" required></textarea>
+                    <!-- TODO: Add check on text length-->
                   </div>
                 </div>
               </div>
@@ -164,6 +118,7 @@
               <h3 data-translate="">GUFcurrentScore</h3>
             </div>
             <div
+              data-ng-show="uf.ratingAVG > 0"
               class="gn-userfeedback-score gn-userfeedback-score-{{uf.ratingAVG}}">
               {{uf.ratingAVG}} / 5 <span class="fa fa-fw fa-star">&nbsp;</span>
             </div>
@@ -205,6 +160,16 @@
           </div>
         </div>
         <div class="modal-footer">
+          <div class="form-group" data-ng-if="recaptchaEnabled">
+            <div vc-recaptcha class="col-lg-8"
+                 theme="'light'"
+                 key="recaptchaKey"></div>
+
+            <span class="col-lg-8" style="color: red;" data-ng-show="resolveRecaptcha" data-translate="">
+              resolveCaptcha
+            </span>
+          </div>
+
           <input type="hidden" data-ng-model="uf.ratingAVG">
           <button type="button" class="btn btn-default" data-dismiss="modal"
             data-translate="">GUFclose</button>

@@ -81,7 +81,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -106,7 +106,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -140,25 +140,25 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
     protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
         CswParams params = (CswParams) p;
 
-        settingMan.add("id:" + siteId, "capabUrl", params.capabUrl);
-        settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
-        settingMan.add("id:" + siteId, "queryScope", params.queryScope);
-        settingMan.add("id:" + siteId, "hopCount", params.hopCount);
-        settingMan.add("id:" + siteId, "xslfilter", params.xslfilter);
-        settingMan.add("id:" + siteId, "outputSchema", params.outputSchema);
+        harvesterSettingsManager.add("id:" + siteId, "capabUrl", params.capabUrl);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        harvesterSettingsManager.add("id:" + siteId, "queryScope", params.queryScope);
+        harvesterSettingsManager.add("id:" + siteId, "hopCount", params.hopCount);
+        harvesterSettingsManager.add("id:" + siteId, "xslfilter", params.xslfilter);
+        harvesterSettingsManager.add("id:" + siteId, "outputSchema", params.outputSchema);
 
         //--- store dynamic search nodes
-        String searchID = settingMan.add(path, "search", "");
+        String searchID = harvesterSettingsManager.add(path, "search", "");
 
         if (params.eltSearches != null) {
             for (Element element : params.eltSearches) {
                 if (!element.getName().startsWith("parser")) {
                     Element value = element.getChild("value");
                     if (value != null) {
-                        settingMan.add("id:" + searchID, element.getName(), value.getText());
+                        harvesterSettingsManager.add("id:" + searchID, element.getName(), value.getText());
                     } else {
-                        settingMan.add("id:" + searchID, element.getName(), element.getText());
+                        harvesterSettingsManager.add("id:" + searchID, element.getName(), element.getText());
                     }
                 }
             }

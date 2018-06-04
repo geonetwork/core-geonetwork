@@ -79,7 +79,7 @@ public class GeoPRESTHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -99,7 +99,7 @@ public class GeoPRESTHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -126,15 +126,15 @@ public class GeoPRESTHarvester extends AbstractHarvester<HarvestResult> {
                                   String siteId, String optionsId) throws SQLException {
         GeoPRESTParams params = (GeoPRESTParams) p;
 
-        settingMan.add("id:" + siteId, "baseUrl", params.baseUrl);
-        settingMan.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + siteId, "baseUrl", params.baseUrl);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
 
         //--- store search nodes
 
         for (Search s : params.getSearches()) {
-            String searchID = settingMan.add(path, "search", "");
+            String searchID = harvesterSettingsManager.add(path, "search", "");
 
-            settingMan.add("id:" + searchID, "freeText", s.freeText);
+            harvesterSettingsManager.add("id:" + searchID, "freeText", s.freeText);
         }
     }
 

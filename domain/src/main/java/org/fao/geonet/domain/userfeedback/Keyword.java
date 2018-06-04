@@ -44,77 +44,50 @@ import org.fao.geonet.domain.GeonetEntity;
 @SequenceGenerator(name = Keyword.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Keyword extends GeonetEntity implements Serializable {
 
-    /** The Constant ID_SEQ_NAME. */
+    /** The sequence name */
     static final String ID_SEQ_NAME = "gufkey_id_seq";
 
-    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -5828055384917117874L;
 
-    /** The id. */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Keyword.ID_SEQ_NAME)
+
     private long id;
-
-    /** The value. */
-    @Column
     private String value;
-
-    /** The userfeedbacks. */
-    @ManyToMany(mappedBy = "keywords")
     private List<UserFeedback> userfeedbacks;
 
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Keyword.ID_SEQ_NAME)
     public long getId() {
         return id;
     }
 
-    /**
-     * Gets the userfeedbacks.
-     *
-     * @return the userfeedbacks
-     */
-    public List<UserFeedback> getUserfeedbacks() {
-        return userfeedbacks;
-    }
 
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
+    @Column
     public String getValue() {
         return value;
     }
 
-    /**
-     * Sets the id.
-     *
-     * @param id the new id
-     */
+
+    @ManyToMany(mappedBy = "keywords")
+    public List<UserFeedback> getUserfeedbacks() {
+        return userfeedbacks;
+    }
+
+
     public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * Sets the userfeedbacks.
-     *
-     * @param userfeedbacks the new userfeedbacks
-     */
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+
     public void setUserfeedbacks(List<UserFeedback> userfeedbacks) {
         this.userfeedbacks = userfeedbacks;
     }
 
-    /**
-     * Sets the value.
-     *
-     * @param value the new value
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
+
 
 }

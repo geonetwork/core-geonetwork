@@ -199,9 +199,12 @@
           organisation: '',
           enabled: true
         };
+
         $scope.userGroups = null;
         $scope.userIsAdmin = false;
         $scope.userIsEnabled = true;
+
+        updateGroupsByProfile($scope.userGroups);
 
         $timeout(function() {
           $scope.setUserProfile();
@@ -331,7 +334,8 @@
         'UserAdmin', 'Reviewer',
         'Editor', 'RegisteredUser',
         'Guest'];
-      $scope.$watch('userGroups', function(groups) {
+
+      var updateGroupsByProfile = function(groups) {
         var res = [];
         angular.forEach(profiles, function(profile) {
           res[profile] = [];
@@ -349,8 +353,11 @@
         //We need to change the pointer,
         // not only the value, so ng-options is aware
         $scope.groupsByProfile = res;
-      });
+      };
 
+      $scope.$watch('userGroups', function(groups) {
+        updateGroupsByProfile(groups);
+      });
 
       /**
        * Compute user profile based on group/profile select
@@ -529,6 +536,8 @@
 
       $scope.addGroup = function() {
         $scope.unselectGroup();
+        // reset logo upload control
+        $scope.clear($scope.queue);
         $scope.groupSelected = {
           id: -99,
           name: '',
@@ -549,16 +558,36 @@
       };
 
 
-      var uploadImportMdDone = function() {
+      var uploadGroupLogoDone = function(e, data) {
+        $scope.groupSelected.logo= data.files[0].name;
+        $scope.clear(data.files[0]);
+        createOrModifyGroup();
+      };
+      var uploadGroupLogoError = function(event, data) {
+        var req = data.response().jqXHR;
+        var contentType = req.getResponseHeader('Content-Type');
+        var errorText = req.responseText;
+        var errorCode = null;
+        if ('application/json' === contentType) {
+          var parsedError = JSON.parse(req.responseText);
+        }
+        $rootScope.$broadcast('StatusUpdated', {
+          title: $translate.instant('groupUpdateError'),
+          error: parsedError || errorText,
+          timeout: 0,
+          type: 'danger'});
+      };
+
+      var createOrModifyGroupSuccess = function() {
         $scope.unselectGroup();
         loadGroups();
         $rootScope.$broadcast('StatusUpdated', {
           msg: $translate.instant('groupUpdated'),
           timeout: 2,
           type: 'success'});
-
       };
-      var uploadImportMdError = function(data) {
+
+      var createOrModifyGroupError = function(data) {
         $rootScope.$broadcast('StatusUpdated', {
           title: $translate.instant('groupUpdateError'),
           error: data,
@@ -566,28 +595,48 @@
           type: 'danger'});
       };
 
+      var createOrModifyGroup = function() {
+        if ($scope.groupSelected.defaultCategory === '') {
+          $scope.groupSelected.defaultCategory = null;
+        }
+        $http.put('../api/groups' + (
+          $scope.groupSelected.id != -99 ?
+            '/' + $scope.groupSelected.id : ''
+        ), $scope.groupSelected)
+          .success(createOrModifyGroupSuccess)
+          .error(createOrModifyGroupError);
+      };
+
+
+
       $scope.deleteGroupLogo = function() {
         $scope.groupSelected.logo = null;
         $scope.updatingGroup();
       };
 
       // upload directive options
-      $scope.mdImportUploadOptions = {
+      $scope.groupLogoUploadOptions = {
         autoUpload: false,
-        done: uploadImportMdDone,
-        fail: uploadImportMdError
+        url: "../api/logos?_csrf=" + $scope.csrf,
+        dataType: "text",
+        maxNumberOfFiles: 1,
+        done: uploadGroupLogoDone,
+        fail: uploadGroupLogoError
       };
 
+      $scope.$on('fileuploadchange', function(e, data) {
+        // limit fileupload to only one file.
+        angular.forEach($scope.queue, function(item) {
+          $scope.clear(item);
+        });
+      });
+
       $scope.saveGroup = function() {
-        if ($scope.groupSelected.defaultCategory === '') {
-          $scope.groupSelected.defaultCategory = null;
+        if($scope.queue.length > 0) {
+          $scope.submit();
+        } else {
+          createOrModifyGroup();
         }
-        $http.put('../api/groups' + (
-            $scope.groupSelected.id != -99 ?
-            '/' + $scope.groupSelected.id : ''
-            ), $scope.groupSelected)
-            .success(uploadImportMdDone)
-            .error(uploadImportMdError);
       };
 
       $scope.deleteGroup = function(formId) {
@@ -618,6 +667,7 @@
         // that breaks the group management.
         // TODO: Use custom controllers for groups and users management
         $scope.groupSelected = angular.copy(g);
+        $scope.clear($scope.queue);
         delete $scope.groupSelected.langlabel;
 
         // Retrieve records in that group

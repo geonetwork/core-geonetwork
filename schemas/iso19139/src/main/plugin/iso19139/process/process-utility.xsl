@@ -90,18 +90,8 @@
     </xsl:variable>
         
     <xsl:variable name="fullUrl"><xsl:value-of select="concat($url, $sep, 'SERVICE=', $type, '&amp;VERSION=', $version, '&amp;REQUEST=GetCapabilities')"/></xsl:variable>
-        
-    <xsl:choose>
-      <xsl:when test="$proxyhost != ''">
-        <xsl:copy-of
-          select="document(concat($protocol, '://', $baseHost, ':', 
-                            $basePort, $baseUrl, '/proxy?url=', encode-for-uri($fullUrl)))"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of
-          select="document($fullUrl)"/>
-      </xsl:otherwise>
-    </xsl:choose>
+
+    <xsl:copy-of select="java:getUrlContent($fullUrl)"/>
 
   </xsl:function>
 

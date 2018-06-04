@@ -23,17 +23,28 @@
 package org.fao.geonet.api.userfeedback;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.Rating;
+import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
+import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
+import static org.fao.geonet.util.XslUtil.md5Hex;
 
 /**
  * Utilities to convert Entities to DTOs and to calculate AVG in ratings.
@@ -45,108 +56,28 @@ public class UserFeedbackUtils {
      */
     public class RatingAverage {
 
-        /** The metadata title. */
-        private String metadataTitle;
-
-        /** The rating average. */
-        private int ratingAverage;
-
-        /** The rating count. */
         private int ratingCount;
 
-        /** The avg COMPLETE. */
-        private int avgCOMPLETE;
-
-        /** The avg READABILITY. */
-        private int avgREADABILITY;
-
-        /** The avg FINDABILITY. */
-        private int avgFINDABILITY;
-
-        /** The avg DATAQUALITY. */
-        private int avgDATAQUALITY;
-
-        /** The avg SERVICEQUALITY. */
-        private int avgSERVICEQUALITY;
-
-        /** The avg OTHER. */
-        private int avgOTHER;
+        /** The rating average. */
+        private Map<Integer, Integer> ratingAverages = new HashMap<>();
 
         /** The userfeedback count. */
         private int userfeedbackCount;
 
         /** The last comment. */
-        private Date lastComment;
+        private String lastComment;
 
         /**
          * Instantiates a new rating average.
-         *
-         * @param metadataTitle the metadata title
-         * @param ratingAverage the rating average
+         * @param ratingAverages the average for all rating categories
          * @param userfeedbackCount the userfeedback count
          * @param lastComment the last comment
-         * @param ratingCount the rating count
          */
-        public RatingAverage(String metadataTitle, int ratingAverage, int userfeedbackCount, Date lastComment, int ratingCount) {
-            this.metadataTitle = metadataTitle;
-            this.ratingAverage = ratingAverage;
+        public RatingAverage(Map<Integer, Integer> ratingAverages, int userfeedbackCount, String lastComment, int ratingCount) {
+            this.ratingAverages = ratingAverages;
             this.userfeedbackCount = userfeedbackCount;
             this.lastComment = lastComment;
             this.ratingCount = ratingCount;
-        }
-
-        /**
-         * Gets the avg COMPLETE.
-         *
-         * @return the avg COMPLETE
-         */
-        public Integer getAvgCOMPLETE() {
-            return avgCOMPLETE;
-        }
-
-        /**
-         * Gets the avg DATAQUALITY.
-         *
-         * @return the avg DATAQUALITY
-         */
-        public Integer getAvgDATAQUALITY() {
-            return avgDATAQUALITY;
-        }
-
-        /**
-         * Gets the avg FINDABILITY.
-         *
-         * @return the avg FINDABILITY
-         */
-        public Integer getAvgFINDABILITY() {
-            return avgFINDABILITY;
-        }
-
-        /**
-         * Gets the avg OTHER.
-         *
-         * @return the avg OTHER
-         */
-        public Integer getAvgOTHER() {
-            return avgOTHER;
-        }
-
-        /**
-         * Gets the avg READABILITY.
-         *
-         * @return the avg READABILITY
-         */
-        public Integer getAvgREADABILITY() {
-            return avgREADABILITY;
-        }
-
-        /**
-         * Gets the avg SERVICEQUALITY.
-         *
-         * @return the avg SERVICEQUALITY
-         */
-        public Integer getAvgSERVICEQUALITY() {
-            return avgSERVICEQUALITY;
         }
 
         /**
@@ -154,17 +85,8 @@ public class UserFeedbackUtils {
          *
          * @return the last comment
          */
-        public Date getLastComment() {
+        public String getLastComment() {
             return lastComment;
-        }
-
-        /**
-         * Gets the metadata title.
-         *
-         * @return the metadata title
-         */
-        public String getMetadataTitle() {
-            return metadataTitle;
         }
 
         /**
@@ -172,17 +94,8 @@ public class UserFeedbackUtils {
          *
          * @return the rating average
          */
-        public int getRatingAverage() {
-            return ratingAverage;
-        }
-
-        /**
-         * Gets the rating count.
-         *
-         * @return the rating count
-         */
-        public int getRatingCount() {
-            return ratingCount;
+        public Map<Integer, Integer> getRatingAverages() {
+            return ratingAverages;
         }
 
         /**
@@ -195,93 +108,21 @@ public class UserFeedbackUtils {
         }
 
         /**
-         * Sets the avg COMPLETE.
-         *
-         * @param avgCOMPLETE the new avg COMPLETE
-         */
-        public void setAvgCOMPLETE(Integer avgCOMPLETE) {
-            this.avgCOMPLETE = avgCOMPLETE;
-        }
-
-        /**
-         * Sets the avg DATAQUALITY.
-         *
-         * @param avgDATAQUALITY the new avg DATAQUALITY
-         */
-        public void setAvgDATAQUALITY(Integer avgDATAQUALITY) {
-            this.avgDATAQUALITY = avgDATAQUALITY;
-        }
-
-        /**
-         * Sets the avg FINDABILITY.
-         *
-         * @param avgFINDABILITY the new avg FINDABILITY
-         */
-        public void setAvgFINDABILITY(Integer avgFINDABILITY) {
-            this.avgFINDABILITY = avgFINDABILITY;
-        }
-
-        /**
-         * Sets the avg OTHER.
-         *
-         * @param avgOTHER the new avg OTHER
-         */
-        public void setAvgOTHER(Integer avgOTHER) {
-            this.avgOTHER = avgOTHER;
-        }
-
-        /**
-         * Sets the avg READABILITY.
-         *
-         * @param avgREADABILITY the new avg READABILITY
-         */
-        public void setAvgREADABILITY(Integer avgREADABILITY) {
-            this.avgREADABILITY = avgREADABILITY;
-        }
-
-        /**
-         * Sets the avg SERVICEQUALITY.
-         *
-         * @param avgSERVICEQUALITY the new avg SERVICEQUALITY
-         */
-        public void setAvgSERVICEQUALITY(Integer avgSERVICEQUALITY) {
-            this.avgSERVICEQUALITY = avgSERVICEQUALITY;
-        }
-
-        /**
          * Sets the last comment.
          *
          * @param lastComment the new last comment
          */
-        public void setLastComment(Date lastComment) {
+        public void setLastComment(String lastComment) {
             this.lastComment = lastComment;
-        }
-
-        /**
-         * Sets the metadata title.
-         *
-         * @param metadataTitle the new metadata title
-         */
-        public void setMetadataTitle(String metadataTitle) {
-            this.metadataTitle = metadataTitle;
         }
 
         /**
          * Sets the rating average.
          *
-         * @param ratingAverage the new rating average
+         * @param ratingAverages the new rating average
          */
-        public void setRatingAverage(int ratingAverage) {
-            this.ratingAverage = ratingAverage;
-        }
-
-        /**
-         * Sets the rating count.
-         *
-         * @param ratingCount the new rating count
-         */
-        public void setRatingCount(int ratingCount) {
-            this.ratingCount = ratingCount;
+        public void setRatingAverages(Map<Integer, Integer> ratingAverages) {
+            this.ratingAverages = ratingAverages;
         }
 
         /**
@@ -293,6 +134,13 @@ public class UserFeedbackUtils {
             this.userfeedbackCount = userfeedbackCount;
         }
 
+        public int getRatingCount() {
+            return ratingCount;
+        }
+
+        public void setRatingCount(int ratingCount) {
+            this.ratingCount = ratingCount;
+        }
     }
 
     /**
@@ -313,7 +161,7 @@ public class UserFeedbackUtils {
             userfeedback.setUuid(inputDto.getUuid());
         }
 
-        userfeedback.setComment(inputDto.getComment());
+        userfeedback.setCommentText(inputDto.getComment());
 
         // Detailed rating list
         List<Rating> ratingList = null;
@@ -323,88 +171,37 @@ public class UserFeedbackUtils {
         int avg = 0;
         int avgCount = 0;
 
-        if (inputDto.getRatingCOMPLETE() != null && inputDto.getRatingCOMPLETE() != 0) {
-
-            final Rating r = new Rating();
-
-            r.setRating(inputDto.getRatingCOMPLETE());
-            r.setCategory(Rating.Category.COMPLETE);
-
-            avg = avg + r.getRating();
-            avgCount++;
-
-            ratingList.add(r);
-        }
-        if (inputDto.getRatingFINDABILITY() != null && inputDto.getRatingFINDABILITY() != 0) {
-
-            final Rating r = new Rating();
-
-            r.setRating(inputDto.getRatingFINDABILITY());
-            r.setCategory(Rating.Category.FINDABILITY);
-
-            avg = avg + r.getRating();
-            avgCount++;
-
-            ratingList.add(r);
-        }
-        if (inputDto.getRatingREADABILITY() != null && inputDto.getRatingREADABILITY() != 0) {
-
-            final Rating r = new Rating();
-
-            r.setRating(inputDto.getRatingREADABILITY());
-            r.setCategory(Rating.Category.READABILITY);
-
-            avg = avg + r.getRating();
-            avgCount++;
-
-            ratingList.add(r);
-        }
-        if (inputDto.getRatingDATAQUALITY() != null && inputDto.getRatingDATAQUALITY() != 0) {
-
-            final Rating r = new Rating();
-
-            r.setRating(inputDto.getRatingDATAQUALITY());
-            r.setCategory(Rating.Category.DATAQUALITY);
-
-            avg = avg + r.getRating();
-            avgCount++;
-
-            ratingList.add(r);
-        }
-        if (inputDto.getRatingSERVICEQUALITY() != null && inputDto.getRatingSERVICEQUALITY() != 0) {
-
-            final Rating r = new Rating();
-
-            r.setRating(inputDto.getRatingSERVICEQUALITY());
-            r.setCategory(Rating.Category.SERVICEQUALITY);
-
-            avg = avg + r.getRating();
-            avgCount++;
-
-            ratingList.add(r);
-        }
-        if (inputDto.getRatingOTHER() != null && inputDto.getRatingOTHER() != 0) {
-
-            final Rating r = new Rating();
-
-            r.setRating(inputDto.getRatingOTHER());
-            r.setCategory(Rating.Category.OTHER);
-
-            avg = avg + r.getRating();
-            avgCount++;
-
-            ratingList.add(r);
+        RatingCriteriaRepository ratingCriteriaRepository = ApplicationContextHolder.get().getBean(RatingCriteriaRepository.class);
+        List<RatingCriteria> criteriaList = ratingCriteriaRepository.findAll();
+        if (inputDto.getRating() != null) {
+            Iterator<Integer> iterator = inputDto.getRating().keySet().iterator();
+            while (iterator.hasNext()) {
+                Integer criteriaId = iterator.next();
+                RatingCriteria criteria = ratingCriteriaRepository.findById(criteriaId);
+                if (criteria != null) {
+                    Rating rating = new Rating();
+                    rating.setUserfeedback(userfeedback);
+                    rating.setCategory(criteria);
+                    rating.setRating(inputDto.getRating().get(criteriaId));
+                    ratingList.add(rating);
+                } else {
+                    // Criteria not found
+                }
+            }
         }
 
-        if (avgCount > 0 && avg > 0) {
-            avg = avg / avgCount;
+        if (inputDto.getRatingAVG() != null) {
+            RatingCriteria criteria = ratingCriteriaRepository.findById(AVERAGE_ID);
+            if (criteria != null) {
+                Rating rating = new Rating();
+                rating.setUserfeedback(userfeedback);
+                rating.setCategory(criteria);
+                rating.setRating(inputDto.getRatingAVG());
+                ratingList.add(rating);
+            } else {
+                // Criteria not found
+            }
         }
-
-        // Calculate and add the AVG
-        final Rating r = new Rating();
-        r.setRating(avg);
-        r.setCategory(Rating.Category.AVG);
-        ratingList.add(r);
 
         // Associated metadata
         final Metadata metadata = new Metadata();
@@ -418,7 +215,7 @@ public class UserFeedbackUtils {
             userfeedback.setParent(parent);
         }
 
-        userfeedback.setDate(new Date(System.currentTimeMillis()));
+        userfeedback.setCreationDate(new ISODate(System.currentTimeMillis()).toDate());
 
         if (author != null) {
             userfeedback.setAuthorId(author);
@@ -442,7 +239,6 @@ public class UserFeedbackUtils {
 
         // Fields to implement
         userfeedback.setKeywords(null);
-        userfeedback.setCitation(null);
         userfeedback.setApprover(null);
 
         return userfeedback;
@@ -459,9 +255,9 @@ public class UserFeedbackUtils {
         final UserFeedbackDTO userfeedbackDto = new UserFeedbackDTO();
 
         userfeedbackDto.setUuid(input.getUuid());
-        userfeedbackDto.setComment(input.getComment());
+        userfeedbackDto.setComment(input.getCommentText());
         userfeedbackDto.setMetadataUUID(input.getMetadata().getUuid());
-        userfeedbackDto.setDate(input.getDate());
+        userfeedbackDto.setDate(new ISODate(input.getCreationDate().getTime()).getDateAndTime());
 
         if (input.getAuthorId() != null) {
             userfeedbackDto.setAuthorUserId(input.getAuthorId().getId());
@@ -473,36 +269,26 @@ public class UserFeedbackUtils {
         }
 
         final List<Rating> ratingList = input.getDetailedRatingList();
-
+        Map<Integer, Integer> ratings = new HashMap<>();
         for (final Rating rating : ratingList) {
-            if (rating.getCategory().equals(Rating.Category.AVG)) {
+            Integer id = rating.getCategory().getId();
+            if (id == RatingCriteria.AVERAGE_ID) {
                 userfeedbackDto.setRatingAVG(rating.getRating());
-            }
-            if (rating.getCategory().equals(Rating.Category.COMPLETE)) {
-                userfeedbackDto.setRatingCOMPLETE(rating.getRating());
-            }
-            if (rating.getCategory().equals(Rating.Category.FINDABILITY)) {
-                userfeedbackDto.setRatingFINDABILITY(rating.getRating());
-            }
-            if (rating.getCategory().equals(Rating.Category.READABILITY)) {
-                userfeedbackDto.setRatingREADABILITY(rating.getRating());
-            }
-            if (rating.getCategory().equals(Rating.Category.DATAQUALITY)) {
-                userfeedbackDto.setRatingDATAQUALITY(rating.getRating());
-            }
-            if (rating.getCategory().equals(Rating.Category.SERVICEQUALITY)) {
-                userfeedbackDto.setRatingSERVICEQUALITY(rating.getRating());
-            }
-            if (rating.getCategory().equals(Rating.Category.OTHER)) {
-                userfeedbackDto.setRatingOTHER(rating.getRating());
+            } else {
+                ratings.put(id, rating.getRating());
             }
         }
+        userfeedbackDto.setRating(ratings);
 
         if (input.getAuthorPrivacy() == 0) {
             userfeedbackDto.setAuthorName("Anonymous");
             userfeedbackDto.setAuthorOrganization("");
         } else {
             userfeedbackDto.setAuthorName(input.getAuthorName());
+            // Add md5 email hash for gravatar
+            if (isNotBlank(input.getAuthorEmail())) {
+                userfeedbackDto.setAuthorEmail(md5Hex(input.getAuthorEmail()));
+            }
             userfeedbackDto.setAuthorOrganization(input.getAuthorOrganization());
         }
 
@@ -516,16 +302,7 @@ public class UserFeedbackUtils {
             userfeedbackDto.setPublished(false);
         }
 
-        String metadataTitle;
-        try {
-            final Element element = input.getMetadata().getXmlData(false);
-            final XPath xpath = XPath.newInstance("gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
-            metadataTitle = xpath.valueOf(element);
-        } catch (final Exception e) {
-            metadataTitle = "Metadata comments";
-        }
-
-        userfeedbackDto.setMetadataTitle(metadataTitle);
+        userfeedbackDto.setMetadataTitle(XslUtil.getIndexField(null, userfeedbackDto.getMetadataUUID(), "title", ""));
 
         return userfeedbackDto;
     }
@@ -537,57 +314,45 @@ public class UserFeedbackUtils {
      * @return the average
      */
     public RatingAverage getAverage(List<UserFeedback> list) {
-        int avg = 0; // AVG
-        int countAvg = 0; // Elements in AVG
-        Date maxDate = null; // LAST COMMENT DATE
-        String metadataTitle = null;
+        // Number of average rating taken into account
+        // You can have 6 feedbacks, 4 with rating.
+        int ratingCount = 0;
+        ISODate maxDate = null; // LAST COMMENT DATE
         RatingAverage v = null;
 
         if (list.size() > 0) {
-
-            if (list.get(0).getMetadata() != null) {
-
-                try {
-                    final Element element = list.get(0).getMetadata().getXmlData(false);
-                    final XPath xpath = XPath
-                            .newInstance("gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString");
-                    metadataTitle = xpath.valueOf(element);
-                } catch (final Exception e) {
-                    metadataTitle = "Metadata comments";
-                }
-            } else {
-                metadataTitle = "Metadata comments";
-            }
-
-            // metadataTitle =
-            // list.get(0).getMetadata().getXmlData(false).getAttributeValue("");
+            Map<Integer, Integer> ratingAverages = new HashMap<>();
+            RatingCriteriaRepository criteriaRepository = ApplicationContextHolder.get().getBean(RatingCriteriaRepository.class);
+            List<RatingCriteria> criteriaList = criteriaRepository.findAll();
+            // Init map of averages
+            criteriaList.forEach(e -> ratingAverages.put(e.getId(), 0));
 
             for (final UserFeedback userFeedback : list) {
 
-                if (maxDate == null || userFeedback.getDate() != null && userFeedback.getDate().after(maxDate)) {
-                    maxDate = userFeedback.getDate();
+                if (maxDate == null || userFeedback.getCreationDate() != null && userFeedback.getCreationDate().after(maxDate.toDate())) {
+                    maxDate = new ISODate(userFeedback.getCreationDate().getTime());
                 }
 
                 if (userFeedback.getDetailedRatingList() != null && userFeedback.getDetailedRatingList().size() > 0) {
 
                     for (final Rating rating : userFeedback.getDetailedRatingList()) {
-
-                        if (rating.getCategory().equals(Rating.Category.AVG) && rating.getRating() > 0) {
-                            countAvg++;
-                            avg = avg + rating.getRating();
+                        Integer criteriaId = rating.getCategory().getId();
+                        Integer value = rating.getRating();
+                        if (value != null && value > 0 && ratingAverages.get(criteriaId) != null) {
+                            ratingAverages.put(criteriaId, (ratingAverages.get(criteriaId) + value) / 2);
+                        }
+                        if (criteriaId == AVERAGE_ID) {
+                            ratingCount ++;
                         }
                     }
 
                 }
             }
-            if (avg > 0 && countAvg > 0) {
-                avg = avg / countAvg;
-            }
 
-            v = new RatingAverage(metadataTitle, avg, list.size(), maxDate, countAvg);
+            v = new RatingAverage(ratingAverages, list.size(), maxDate.getDateAndTime(), ratingCount);
 
         } else {
-            v = new RatingAverage("Metadata comments", 0, 0, null, 0);
+            v = new RatingAverage(new HashMap<>(), 0, null, ratingCount);
         }
 
         return v;

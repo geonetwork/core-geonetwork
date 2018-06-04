@@ -618,6 +618,9 @@
       getId: function() {
         return this['geonet:info'].id;
       },
+      getTitle: function() {
+        return this.title || this.defaultTitle;
+      },
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
