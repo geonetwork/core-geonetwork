@@ -76,14 +76,24 @@ public class EsSearchManager implements ISearchManager {
     @Value("${es.index.records}")
     private String index = "records";
 
-    public String getIndex() {
-        return index;
-    }
 
     @Autowired
     private EsClient client;
 
-    public static Path getXSLTForIndexing(Path schemaDir) {
+    // public for test, to be private or protected
+    @Autowired
+    public SettingManager settingManager;
+
+    public String getIndex() {
+        return index;
+    }
+
+    private int commitInterval = 200;
+
+    // public for test, to be private or protected
+    public Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+
+    public Path getXSLTForIndexing(Path schemaDir) {
         Path xsltForIndexing = schemaDir
             .resolve(SCHEMA_INDEX_XSLT_FOLDER).resolve(SCHEMA_INDEX_XSTL_FILENAME);
         if (!Files.exists(xsltForIndexing)) {
@@ -94,7 +104,7 @@ public class EsSearchManager implements ISearchManager {
         return xsltForIndexing;
     }
 
-    private static void addMDFields(Element doc, Path schemaDir, Element metadata, String root) {
+    private void addMDFields(Element doc, Path schemaDir, Element metadata, String root) {
         final Path styleSheet = getXSLTForIndexing(schemaDir);
         try {
             Element fields = Xml.transform(metadata, styleSheet);
@@ -188,14 +198,11 @@ public class EsSearchManager implements ISearchManager {
         return null;
     }
 
-    private int commitInterval = 200;
-    private Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+
 
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
-
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
         Element docs = new Element("docs");
         Element allFields = new Element("doc");
