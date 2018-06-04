@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -31,7 +32,6 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -58,19 +58,9 @@ import org.springframework.data.jpa.domain.Specifications;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static org.fao.geonet.kernel.search.IndexFields.DOC_TYPE;
-import static org.fao.geonet.kernel.search.IndexFields.HARVESTER_ID;
-import static org.fao.geonet.kernel.search.IndexFields.HARVESTER_UUID;
-import static org.fao.geonet.kernel.search.IndexFields.SCOPE;
-import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
+import static org.fao.geonet.kernel.search.IndexFields.*;
 
 public class EsSearchManager implements ISearchManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
@@ -114,7 +104,7 @@ public class EsSearchManager implements ISearchManager {
         return xsltForIndexing;
     }
 
-    private void addMDFields(Element doc, Path schemaDir, Element metadata, String root) {
+    private void addMDFields(Element doc, Path schemaDir, Element metadata) {
         final Path styleSheet = getXSLTForIndexing(schemaDir);
         try {
             Element fields = Xml.transform(metadata, styleSheet);
@@ -163,27 +153,13 @@ public class EsSearchManager implements ISearchManager {
         return field;
     }
 
-    /**
-     * Creates a new XML field for the Lucene index and add it to the document.
-     */
-    public void addField(Element xmlDoc, String name, String value, boolean store, boolean index) {
-        Element field = makeField(name, value);
-        xmlDoc.addContent(field);
-    }
-
 
     @Override
-    public void init(ServiceConfig handlerConfig) throws Exception {
+    public void init() throws Exception {
     }
 
     @Override
-    public void end() throws Exception {
-    }
-
-    @Override
-    public MetaSearcher newSearcher(String stylesheetName) throws Exception {
-        //TODO
-        return null;
+    public void end() {
     }
 
     @Override
@@ -193,7 +169,7 @@ public class EsSearchManager implements ISearchManager {
         Element docs = new Element("docs");
         Element allFields = new Element("doc");
         allFields.addContent(new Element(ID).setText(id));
-        addMDFields(allFields, schemaDir, metadata, root);
+        addMDFields(allFields, schemaDir, metadata);
         addMoreFields(allFields, moreFields);
 
         docs.addContent(allFields);
@@ -201,13 +177,19 @@ public class EsSearchManager implements ISearchManager {
         ObjectNode doc = documentToJson(docs).get(id);
 
         // ES does not allow a _source field
-        String catalog = doc.get("source").asText();
-        doc.remove("source");
+        JsonNode source = doc.get("source");
+        if (source != null) {
+            String catalog = source.asText();
+            doc.remove("source");
+            doc.put(SOURCE_CATALOGUE, catalog);
+        }
         doc.put(DOC_TYPE,"metadata");
-        doc.put(SOURCE_CATALOGUE, catalog);
+        // TODO: Remove this which is related to the dashboard application
         doc.put(SCOPE, settingManager.getSiteName());
         doc.put(HARVESTER_UUID, settingManager.getSiteId());
         doc.put(HARVESTER_ID, settingManager.getNodeURL());
+        Map<String, String> docListToIndex = new HashMap<>();
+        docListToIndex.put(id, mapper.writeValueAsString(doc));
         listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
         if (listOfDocumentsToIndex.size() == commitInterval) {
             sendDocumentsToIndex();
@@ -460,16 +442,6 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void rescheduleOptimizer(Calendar beginAt, int interval) {
-
-    }
-
-    @Override
-    public void disableOptimizer() {
-
-    }
-
-    @Override
     public long getNumDocs() throws Exception {
          return getNumDocs("");
     }
@@ -478,7 +450,20 @@ public class EsSearchManager implements ISearchManager {
         if (StringUtils.isBlank(query)) {
             query = "*:*";
         }
-        String searchQuery = "{\"query\": {\"filtered\": {\"query_string\": \"" + query + "\"}}}";
+        String searchQuery = String.format("{" +
+            "  \"query\": {" +
+            "    \"bool\": {" +
+            "      \"must\": {" +
+            "        \"match_all\": {}" +
+            "      }," +
+            "      \"filter\": {" +
+            "        \"query_string\":{" +
+            "         \"query\": \"%s\"" +
+            "        }" +
+            "      }" +
+            "    }" +
+            "  }" +
+            "}", query);
         Search search = new Search.Builder(searchQuery).addIndex(index).addType(index).build();
         SearchResult searchResult = client.getClient().execute(search);
         return searchResult.getTotal();

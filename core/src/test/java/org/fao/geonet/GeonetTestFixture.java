@@ -118,7 +118,7 @@ public class GeonetTestFixture {
 
                     templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 
-                    _applicationContext.getBean(EsSearchManager.class).init(null);
+                    _applicationContext.getBean(EsSearchManager.class).init();
                     Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
                 }
             }

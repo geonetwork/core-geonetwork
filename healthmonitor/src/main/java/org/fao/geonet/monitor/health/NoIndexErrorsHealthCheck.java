@@ -29,7 +29,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.search.IndexField;
+import org.fao.geonet.kernel.search.IndexFields;
 
 /**
  * Verifies that all metadata have been correctly indexed (without errors)
@@ -44,7 +44,7 @@ public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
                 EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
-                long numDocs = searchMan.getNumDocs("+" + IndexField.INDEXING_ERROR_FIELD + ":1");
+                long numDocs = searchMan.getNumDocs("+" + IndexFields.INDEXING_ERROR_FIELD + ":1");
 
                 if (numDocs > 0) {
                     return Result.unhealthy("Found " + numDocs + " metadata that had errors during indexing");

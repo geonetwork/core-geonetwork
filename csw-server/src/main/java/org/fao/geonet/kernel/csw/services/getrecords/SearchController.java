@@ -467,22 +467,22 @@ public class SearchController {
 
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
 
-        // search for results, filtered and sorted
-        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
-            typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
-
-        Element summary = summaryAndSearchResults.one();
-        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
-        if (numMatches != 0 && startPos > numMatches) {
-            throw new InvalidParameterValueEx("startPosition", String.format(
-                "Start position (%d) can't be greater than number of matching records (%d for current search).",
-                startPos, numMatches
-            ));
-        }
-
-
         // TODOES ?
         throw new NotImplementedException("SearcherLogger not implemented in ES");
+        // search for results, filtered and sorted
+//        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
+//            typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
+//
+//        Element summary = summaryAndSearchResults.one();
+//        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
+//        if (numMatches != 0 && startPos > numMatches) {
+//            throw new InvalidParameterValueEx("startPosition", String.format(
+//                "Start position (%d) can't be greater than number of matching records (%d for current search).",
+//                startPos, numMatches
+//            ));
+//        }
+
+
 //        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
 //        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
         // retrieve actual metadata for results

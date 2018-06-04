@@ -27,6 +27,7 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.search.AbstractLanguageSearchOrderIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -37,8 +38,11 @@ import java.util.List;
  * Test Xml Search Service.
  * <p/>
  * Created by Jesse on 1/27/14.
+ *
+ * TODOES
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:csw-integration-test-context.xml")
+@Ignore
+@ContextConfiguration(inheritLocations = true)
 public class CswGetRecords_SearchOrderIntegrationTest extends AbstractLanguageSearchOrderIntegrationTest {
     @Autowired
     private GetRecords _getRecords;

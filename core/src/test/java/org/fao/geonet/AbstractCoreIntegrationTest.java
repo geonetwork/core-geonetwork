@@ -96,7 +96,7 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
  */
 @ContextConfiguration(
     inheritLocations = true,
-    locations = {"classpath:core-repository-test-context.xml", "classpath:web-test-context.xml"}
+    locations = {"classpath:core-repository-test-context.xml"}
 )
 public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
     @Autowired

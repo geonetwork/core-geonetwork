@@ -1001,7 +1001,7 @@
           "synInspireAnnexesType": {
             "match": "inspireAnnex*",
             "mapping": {
-              "type":     "string",
+              "type":     "text",
               "fielddata": true,
               "analyzer": "synInspireAnnexes",
               "search_analyzer": "keyword"

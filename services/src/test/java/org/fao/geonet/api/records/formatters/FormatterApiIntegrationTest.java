@@ -52,6 +52,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -140,7 +141,9 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
 
     }
 
+    // TODOES
     @Test
+    @Ignore
     public void testLastModified() throws Exception {
         String stage = systemInfo.getStagingProfile();
         systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
@@ -255,7 +258,9 @@ public class FormatterApiIntegrationTest extends AbstractServiceIntegrationTest 
         }
     }
 
+    // TODOES
     @Test
+    @Ignore
     public void testExec() throws Exception {
         final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false, false);
         for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
