@@ -30,7 +30,11 @@
 
     this.convertLuceneParams = function(p) {
       var params = {};
-      var query = {};
+      var query = {
+        bool: {
+          must: []
+        }
+      };
 
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket', 'sortBy', 'resultType', 'facet.q', 'any'];
       var mappingFields = {
@@ -63,21 +67,27 @@
         }
         params.sort.push('_score');
       }
-      var match = Object.keys(p).reduce(function(output, current) {
+
+      var termss = Object.keys(p).reduce(function(output, current) {
         var value = p[current];
         if(excludeFields.indexOf(current) < 0) {
           var newName = mappingFields[current] || current;
+          if(!angular.isArray(value)) {
+            value = [value];
+          }
           output[newName] = value;
         }
         return output;
       }, {});
 
-      if(Object.keys(match).length) {
-        query.term = match;
+      for (var prop in termss) {
+        var terms = {};
+        terms[prop] = termss[prop];
+        query.bool.must.push({
+          terms: terms
+        });
       }
-      if(Object.keys(query).length) {
-        params.query = query;
-      }
+      params.query = query;
 
       gnESFacet.addFacets(params, 'mainsearch');
 

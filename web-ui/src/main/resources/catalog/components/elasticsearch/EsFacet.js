@@ -40,7 +40,14 @@
       var config = this.configs[type];
 
       var aggs = {};
-      var fieldNames = ['tag', 'codelist_spatialRepresentationType'];
+      var fieldNames = [
+        'tag',
+        'codelist_spatialRepresentationType'
+        //'sourceCatalogue',
+        //'docType',
+        //'publicationYearForResource',
+        //'topic'
+      ];
       fieldNames.forEach(function(fieldName) {
         aggs[fieldName] = {
           terms: {
