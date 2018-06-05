@@ -214,13 +214,11 @@ public class EsSearchManager implements ISearchManager {
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
 
-        Element docs = new Element("docs");
-        Element allFields = new Element("doc");
-        allFields.addContent(new Element(ID).setText(id));
-        addMDFields(allFields, schemaDir, metadata);
-        addMoreFields(allFields, moreFields);
+        Element docs = new Element("doc");
+        docs.addContent(new Element(ID).setText(id));
+        addMDFields(docs, schemaDir, metadata);
+        addMoreFields(docs, moreFields);
 
-        docs.addContent(allFields);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode doc = documentToJson(docs);
 
@@ -232,9 +230,6 @@ public class EsSearchManager implements ISearchManager {
             doc.put(SOURCE_CATALOGUE, catalog);
         }
         doc.put(DOC_TYPE,"metadata");
-        // TODO: Remove this which is related to the dashboard application
-        Map<String, String> docListToIndex = new HashMap<>();
-        docListToIndex.put(id, mapper.writeValueAsString(doc));
         listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
         if (listOfDocumentsToIndex.size() == commitInterval) {
             sendDocumentsToIndex();
