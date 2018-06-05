@@ -3,12 +3,12 @@
   <!--Collapse all button for first panel-->
   <div class="btn-group width-100 flex-row flex-center" ng-hide="isTabMode">
     <button type="button" class="btn btn-default btn-sm gn-facet-toggle-btn"
-      ng-click="expandAll()" title="{{'expandAllFacet' | translate}}">
+      ng-click="ctrl.expandAll()" title="{{'expandAllFacet' | translate}}">
       <i class="fa fa-plus-circle"/>
       <span translate>expandAllFacetLabel</span>
     </button>
     <button type="button" class="btn btn-default btn-sm gn-facet-toggle-btn"
-      ng-click="collapseAll()" title="{{'collapseAllFacet' | translate}}">
+      ng-click="ctrl.collapseAll()" title="{{'collapseAllFacet' | translate}}">
       <i class="fa fa-minus-circle"/>
       <span translate>collapseAllFacetLabel</span>
     </button>
@@ -18,13 +18,13 @@
        data-ng-repeat="facet in ctrl.list"
        class="gn-facet">
 
-    <h4 data-gn-collapsible="fLvlCollapse[fLabel]">
-      <i class="fa fa-fw" data-ng-class="fLvlCollapse[facet.name] ? 'fa-arrow-circle-right' : 'fa-arrow-circle-down'"></i>
+    <h4 data-gn-collapsible="ctrl.fLvlCollapse[facet.name]">
+      <i class="fa fa-fw" data-ng-class="ctrl.fLvlCollapse[facet.name] ? 'fa-arrow-circle-right' : 'fa-arrow-circle-down'"></i>
       {{facet.name | translate}}
     </h4>
 
     <div data-es-facet="facet"
-         data-ng-class="{'collapse': fLvlCollapse[facet.name]}">
+         data-ng-class="{'collapse': ctrl.fLvlCollapse[facet.name]}">
     </div>
   </div>
 </div>

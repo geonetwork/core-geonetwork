@@ -26,7 +26,7 @@
 
   var module = angular.module('gn_es_facet', []);
 
-  var MAX_ROWS = 10
+  var MAX_ROWS = 10;
 
   module.service('gnESFacet', ['gnGlobalSettings', function(gnGlobalSettings) {
 
@@ -40,13 +40,15 @@
       var config = this.configs[type];
 
       var aggs = {};
-      var fieldName = 'tag';
-      aggs[fieldName] = {
-        terms: {
-          field: fieldName,
-          size: MAX_ROWS
-        }
-      };
+      var fieldNames = ['tag', 'codelist_spatialRepresentationType'];
+      fieldNames.forEach(function(fieldName) {
+        aggs[fieldName] = {
+          terms: {
+            field: fieldName,
+            size: MAX_ROWS
+          }
+        };
+      });
       return aggs;
     };
 
@@ -64,12 +66,14 @@
         if(reqAgg.hasOwnProperty('terms')) {
           facetModel.type = 'terms';
           facetModel.size = reqAgg.terms.size;
-          for (var i = 0; i < respAgg.buckets.length; i++) {
-            facetModel.items.push({
-              name: respAgg.buckets[i].key,
-              count: respAgg.buckets[i].doc_count
-            });
-          }
+          respAgg.buckets.forEach(function(bucket) {
+            if(bucket.key) {
+              facetModel.items.push({
+                name: bucket.key,
+                count: bucket.doc_count
+              });
+            }
+          });
         }
 
         listModel.push(facetModel);
