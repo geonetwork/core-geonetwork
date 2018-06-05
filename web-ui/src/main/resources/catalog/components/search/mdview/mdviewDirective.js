@@ -56,6 +56,47 @@
     }]
   );
 
+
+
+  module.directive('gnMoreLikeThis', [
+    '$http', 'gnSearchSettings', function($http, gnSearchSettings) {
+      return {
+        scope: {
+          md: '=gnMoreLikeThis'
+        },
+        templateUrl: function(elem, attrs) {
+          return attrs.template ||
+            '../../catalog/components/search/mdview/partials/' +
+            'morelikethis.html';
+        },
+        link: function(scope, element, attrs, controller) {
+
+          function loadMore() {
+            if (scope.md == null) {
+              return;
+            }
+            $http.post('../../index/records/_search', {
+              "query": {
+                "more_like_this" : {
+                  "fields" : ["resourceTitle", "resourceAbstract", "tag.raw"],
+                  "like" : scope.md.resourceTitle,
+                  "min_term_freq" : 1,
+                  "max_query_terms" : 12
+                }
+              }
+            }).then(function (r) {
+              scope.similarDocuments = r.data.hits;
+            })
+          }
+          scope.$watch('md', function() {
+            loadMore();
+          });
+
+        }
+      };
+    }]);
+
+
   module.directive('gnMetadataDisplay', [
     'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
       return {

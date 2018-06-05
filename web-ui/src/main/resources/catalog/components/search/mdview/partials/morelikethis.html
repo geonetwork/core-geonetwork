@@ -1,0 +1,17 @@
+<div>
+  <h4 data-transalte="">MoreLikeThis</h4>
+  <div class="list-group">
+    <a data-ng-repeat="record in similarDocuments.hits"
+       href="#/metadata/{{record._source.uuid}}"
+       class="list-group-item flex-row flex-align-center"
+       data-ng-hide="md.uuid === record._source.uuid">
+      <span>
+      {{record._source.resourceTitle}}
+      </span>
+      <div class="flex-spacer"></div>
+      <img data-ng-show="record._source.overviewUrl"
+           style="max-width: 95px;"
+           src="{{record._source.overviewUrl.length ? record._source.overviewUrl[0] : record._source.overviewUrl}}">
+    </a>
+  </div>
+</div>
