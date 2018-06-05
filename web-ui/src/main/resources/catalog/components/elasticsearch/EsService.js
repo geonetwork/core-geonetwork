@@ -98,11 +98,55 @@
       params.query = query;
 
       gnESFacet.addFacets(params, 'mainsearch');
-
-      console.log(params);
       return params;
 
-    }
+    };
+
+    this.getSuggestParams = function(field, query) {
+      var phrase = {
+        query: query,
+        max_expansions: 1
+      };
+      var match = {};
+      match[field] = phrase;
+      var params = {
+        query: {
+          match_phrase_prefix: match
+        },
+        _source: [field]
+      };
+      return params;
+    };
+
+    this.getSuggestAnyParams = function(query) {
+
+      var anyFields = ['resourceTitle', 'resourceAbstract'];
+      var params = {
+        query: {
+          multi_match: {
+            fields: anyFields,
+            query: query,
+            type: 'phrase_prefix'
+          }
+        },
+        _source: anyFields
+      };
+
+/*
+      params = {
+        suggest: {
+          any: {
+            text: query,
+            term: {
+              field: 'resourceTitle'
+            }
+          }
+        }
+      };
+*/
+
+      return params;
+    };
 
     function getFieldName(mapping, name) {
       return mapping[name] || name;
