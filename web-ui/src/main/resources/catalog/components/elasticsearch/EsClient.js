@@ -29,12 +29,38 @@
 
   var ES_API_URL = '../../index/records/';
 
-  module.service('gnESClient', ['$http', 'gnESFacet', function($http, gnESFacet) {
+  module.service('gnESClient', [
+    '$http',
+    'gnESFacet',
+    'gnESService',
+    function($http, gnESFacet, gnESService) {
 
     this.search = function(params) {
       return callApi('_search', params).then(
         function(response) {
           return gnESFacet.getUIModel(response, params);
+        }
+      );
+    };
+
+    this.suggest = function(field, query) {
+      var params = gnESService.getSuggestParams(field, query);
+      return callApi('_search', params).then(
+        function(response) {
+          return response.data.hits.hits.map(function(md) {
+            return md._source[field];
+          });
+        }
+      );
+    };
+
+    this.suggestAny = function(query) {
+      var params = gnESService.getSuggestAnyParams(query);
+      return callApi('_search', params).then(
+        function(response) {
+          return response.data.hits.hits.map(function(md) {
+            return md._source[field];
+          });
         }
       );
     };
