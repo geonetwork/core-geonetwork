@@ -624,7 +624,7 @@
 
           // Check index status. TODO: Disable functionnalities depending on it
           $http.get('../api/site/index/status').then(function(r) {
-            if (r.data.state !== 'GREEN') {
+            if (r.data.state.id.match(/^(green|yellow)$/) == null) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: r.data.state.title + " / " + r.data.message ,
                 type: r.data.state.icon});
