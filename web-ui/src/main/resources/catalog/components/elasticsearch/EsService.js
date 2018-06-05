@@ -35,6 +35,7 @@
           must: []
         }
       };
+      var query_string;
 
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket', 'sortBy', 'resultType', 'facet.q', 'any'];
       var mappingFields = {
@@ -54,7 +55,7 @@
         p.any.split(' ').forEach(function(v) {
           anys.push('+*' + v + '*');
         });
-        query.query_string = {
+        query_string = {
           query: anys.join(' ')
         };
       }
@@ -87,6 +88,13 @@
           terms: terms
         });
       }
+
+      if(query_string) {
+        query.bool.must.push({
+          query_string: query_string
+        });
+      }
+
       params.query = query;
 
       gnESFacet.addFacets(params, 'mainsearch');
