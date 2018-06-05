@@ -28,6 +28,7 @@
     </dependency>
   </dependencies>
 
+
   <build>
     <plugins>
       <plugin>
@@ -39,6 +40,28 @@
             <goals>
               <goal>test-jar</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-xls</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/test-classes/index-fields
+              </outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/plugin/iso19139/index-fields</directory>
+                </resource>
+              </resources>
+            </configuration>
           </execution>
         </executions>
       </plugin>
