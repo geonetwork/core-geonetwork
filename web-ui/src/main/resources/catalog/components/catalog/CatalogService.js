@@ -734,28 +734,24 @@
        * @return {{metadata: Array, resource: Array}}
        */
       getAllContacts: function() {
-        if (angular.isUndefined(this.allContacts) &&
-            angular.isDefined(this.responsibleParty)) {
-          this.allContacts = {metadata: [], resource: []};
-          for (var i = 0; i < this.responsibleParty.length; i++) {
-            var s = this.responsibleParty[i].split('|');
-            var contact = {
-              role: s[0] || '',
-              org: s[2] || '',
-              logo: s[3] || '',
-              email: s[4] || '',
-              name: s[5] || '',
-              position: s[6] || '',
-              address: s[7] || '',
-              phone: s[8] || ''
-            };
-            if (s[1] === 'resource') {
-              this.allContacts.resource.push(contact);
-            } else if (s[1] === 'metadata') {
-              this.allContacts.metadata.push(contact);
-            }
-          }
+
+        this.allContacts = {"metadata":[],"resource":[]};
+
+        if (angular.isArray(this.contact)){
+          this.allContacts.metadata=this.contact;
+        } else {
+          this.allContacts.metadata=[this.contact];
         }
+
+        if (angular.isArray(this.contactForResource)){
+          this.allContacts.resource=this.contactForResource;
+        } else {
+          this.allContacts.resource=[this.contactForResource];
+        }
+
+
+        console.log(this.allContacts.resource[0]);
+
         return this.allContacts;
       },
       /**
