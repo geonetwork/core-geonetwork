@@ -25,9 +25,11 @@
 <beans
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://www.springframework.org/schema/beans"
+  xmlns:util="http://www.springframework.org/schema/util"
   xmlns:context="http://www.springframework.org/schema/context"
   xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
@@ -53,7 +55,23 @@
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
   <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
-  <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
+
+
+  <util:map id="indexList">
+    <entry key="records" value="${es.index.records}"/>
+    <entry key="features" value="${es.index.features}"/>
+    <entry key="searchlogs" value="${es.index.searchlogs}"/>
+  </util:map>
+
+  <bean id="EsSearchManager"
+        class="org.fao.geonet.kernel.search.EsSearchManager"
+        lazy-init="false">
+    <property name="indexList" ref="indexList"/>
+  </bean>
+
+  <bean id="esClient"
+        class="org.fao.geonet.index.es.EsClient"/>
+
   <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager"
         lazy-init="true"/>
   <bean id="SettingInfo" class="org.fao.geonet.kernel.setting.SettingInfo" lazy-init="true"/>
@@ -67,6 +85,31 @@
         scope="singleton"/>
   <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false"
         scope="singleton"/>
+
+
+  <bean name="indexStatus"
+        class="org.fao.geonet.index.Status"
+        scope="singleton">
+    <constructor-arg value="index"/>
+  </bean>
+
+  <bean name="indexStatusChecker"
+        class="org.fao.geonet.index.es.EsServerStatusChecker"/>
+
+  <!-- Task for index status checker -->
+  <bean name="indexStatusJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="jobClass"
+              value="org.fao.geonet.index.es.EsServerStatusChecker"/>
+  </bean>
+
+  <!-- Scheduling of the index status checker -->
+  <bean id="indexStatusTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="indexStatusJob"/>
+    <property name="cronExpression" value="${es.index.checker.interval}"/>
+    <property name="startDelay" value="0"/>
+  </bean>
 
 
   <!-- List of records to index in a moment ...-->
@@ -115,6 +158,7 @@
     </property>
     <property name="triggers">
       <list>
+        <ref bean="indexStatusTrigger"/>
         <ref bean="indexingTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
         <ref bean="backupMetadataCronTrigger" />

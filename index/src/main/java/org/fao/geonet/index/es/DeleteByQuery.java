@@ -1,4 +1,4 @@
-package org.fao.geonet.es;
+package org.fao.geonet.index.es;
 
 import io.searchbox.action.AbstractMultiTypeActionBuilder;
 import io.searchbox.action.GenericResultAbstractAction;

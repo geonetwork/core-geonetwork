@@ -42,6 +42,8 @@ import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.index.Status;
+import org.fao.geonet.index.es.EsServerStatusChecker;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.EsSearchManager;
@@ -529,6 +531,22 @@ public class SiteApi {
         searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
 
         return new HttpEntity<>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation(
+        value = "Index status",
+        notes = "",
+        nickname = "indexes")
+    @RequestMapping(
+        path = "/index/status",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseBody
+    public Status indexStatus(
+        HttpServletRequest request
+    ) throws Exception {
+        EsServerStatusChecker serverStatusChecker = ApplicationContextHolder.get().getBean(EsServerStatusChecker.class);
+        return serverStatusChecker.getStatus();
     }
 
     @ApiOperation(

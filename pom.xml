@@ -1009,22 +1009,16 @@
         <version>2.2.7</version>
       </dependency>
 
-      <!--<dependency>
-        <groupId>org.elasticsearch</groupId>
-        <artifactId>elasticsearch</artifactId>
-        <version>${es.version}</version>
-      </dependency>-->
-      <!--Require Lucene 5 <dependency>
-        <groupId>org.elasticsearch.client</groupId>
-        <artifactId>transport</artifactId>
-        <version>${es.version}</version>
-      </dependency>-->
       <dependency>
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
         <version>5.3.3</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        <version>${es.version}</version>
+      </dependency>
       <!-- Apache commons csv -->
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -1167,6 +1161,7 @@
     <module>workers</module>
     <module>messaging</module>
     <module>estest</module>
+    <module>index</module>
   </modules>
 
   <profiles>

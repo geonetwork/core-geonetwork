@@ -620,6 +620,19 @@
 
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
+
+
+          // Check index status. TODO: Disable functionnalities depending on it
+          $http.get('../api/site/index/status').then(function(r) {
+            if (r.data.state !== 'GREEN') {
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: r.data.state.title + " / " + r.data.message ,
+                type: r.data.state.icon});
+            }
+            gnConfig['indexStatus'] = r.data;
+          });
+
+          // Get basic info about current content
           var url = 'qi?_content_type=json&summaryOnly=true';
           angular.forEach(gnGlobalSettings.gnCfg.mods.search.filters,
               function(v, k) {

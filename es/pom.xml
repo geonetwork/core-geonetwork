@@ -80,7 +80,6 @@
     </profile>
   </profiles>
   <modules>
-    <module>es-core</module>
     <module>es-dashboards</module>
   </modules>
 

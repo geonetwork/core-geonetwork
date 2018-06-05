@@ -49,7 +49,7 @@
   </bean>
 
   <bean id="esClient"
-        class="org.fao.geonet.es.EsClient"/>
+        class="org.fao.geonet.index.es.EsClient"/>
 
 
   <cm:camelContext id="harvest-wfs"
