@@ -85,19 +85,18 @@
   };
 
   FacetController.prototype.filter = function(facet, item) {
-    var value = this.facetsCtrl.sParams[facet.name];
+    var params = this.facetsCtrl.sParams;
+    var value = params[facet.name];
     if(value) {
-      if(angular.isArray(value)) {
-        value.push(item.name);
-      }
-      else {
-        console.warn('array');
+      if(!angular.isArray(value)) {
+        params[facet.name] = [value];
       }
     }
     else {
-      this.facetsCtrl.sParams[facet.name] = item.name;
+      params[facet.name] = [];
     }
-    this.$scope.$emit('resetSearch', this.facetsCtrl.sParams);
+    params[facet.name].push(item.name);
+    this.$scope.$emit('resetSearch', params);
   };
 
   FacetController.prototype.isInSearch = function(facet, item) {
