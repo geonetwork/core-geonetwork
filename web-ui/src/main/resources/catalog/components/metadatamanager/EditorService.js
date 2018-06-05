@@ -394,6 +394,7 @@
 
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
              '&ref=' + ref + '&name=' + name + attributeAction)
               .success(function(data) {
                // Append HTML snippet after current element - compile Angular
@@ -431,6 +432,7 @@
            insertRef, position) {
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
              '&ref=' + ref +
              '&name=' + parent +
              '&child=' + name).success(function(data) {
@@ -460,7 +462,9 @@
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
-             '/editor/elements?ref=' + ref + '&parent=' + parent)
+             '/editor/elements?ref=' + ref + 
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
+             '&parent=' + parent)
               .success(function(data) {
                // For a fieldset, domref is equal to ref.
                // For an input, it may be different because
