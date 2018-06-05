@@ -432,60 +432,9 @@
       checkIsIndexing();
 
       $scope.rebuildIndex = function() {
-        return $http.get('admin.index.rebuild?reset=yes')
+        return $http.put('../api/site/index')
             .success(function(data) {
               checkIsIndexing();
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('rebuildIndexError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
-      };
-      $scope.indexInEs = function() {
-        return $http.put('../api/site/index/es')
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('indexInEsDone'),
-                timeout: 2,
-                type: 'success'});
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('indexInEsDoneError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
-      };
-
-      $scope.optimizeIndex = function() {
-        return $http.get('admin.index.optimize')
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('indexOptimizationInProgress'),
-                timeout: 2,
-                type: 'success'});
-              // TODO: Does this is asynch and make the search unavailable?
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('rebuildIndexError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
-      };
-
-      $scope.reloadLuceneConfig = function() {
-        return $http.get('admin.index.config.reload')
-            .success(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('luceneConfigReloaded'),
-                timeout: 2,
-                type: 'success'});
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {

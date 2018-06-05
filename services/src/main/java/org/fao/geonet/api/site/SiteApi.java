@@ -534,63 +534,6 @@ public class SiteApi {
     }
 
     @ApiOperation(
-        value = "Index in Elastic",
-        notes = "",
-        nickname = "indexes")
-    @RequestMapping(
-        path = "/index/es",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('Editor')")
-    @ResponseBody
-    public HttpEntity indexEs(
-        @ApiParam(value = "Drop and recreate index",
-            required = false)
-        @RequestParam(required = false, defaultValue = "true")
-            boolean reset,
-        @ApiParam(value = "Records having only XLinks",
-            required = false)
-        @RequestParam(required = false, defaultValue = "false")
-            boolean havingXlinkOnly,
-//        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
-//            required = false,
-//            example = "")
-//        @RequestParam(required = false)
-//        String[] uuids,
-        @ApiParam(
-            value = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
-        @RequestParam(
-            required = false
-        )
-            String bucket,
-        HttpServletRequest request
-    ) throws Exception {
-        ServiceContext context = ApiUtils.createServiceContext(request);
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-
-        searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
-
-        return new HttpEntity<>(HttpStatus.CREATED);
-    }
-
-    @ApiOperation(
-        value = "Delete index in Elastic",
-        notes = "",
-        nickname = "deleteIndexes")
-    @RequestMapping(
-        path = "/index/es",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('Editor')")
-    @ResponseBody
-    public HttpEntity deleteIndexEs() throws Exception {
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        searchMan.clearIndex();
-        return new HttpEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @ApiOperation(
         value = "Get build details",
         notes = "To know when and how this version of the application was built.",
         nickname = "getSystemInfo")
