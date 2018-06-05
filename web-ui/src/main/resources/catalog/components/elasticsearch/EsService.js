@@ -26,10 +26,12 @@
 
   var module = angular.module('gn_es_service', []);
 
-  module.service('gnESService', ['$http', function($http) {
-  
+  module.service('gnESService', ['gnESFacet', function(gnESFacet) {
+
     this.convertLuceneParams = function(p) {
       var params = {};
+      var query = {};
+
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket', 'sortBy', 'resultType', 'facet.q', 'any'];
       var mappingFields = {
         title: 'resourceTitle',
@@ -43,6 +45,24 @@
       if(p.to) {
         params.size = p.to - p.from;
       }
+      if(p.any) {
+        var anys = [];
+        p.any.split(' ').forEach(function(v) {
+          anys.push('+*' + v + '*');
+        });
+        query.query_string = {
+          query: anys.join(' ')
+        };
+      }
+      if(p.sortBy) {
+        var sort = {};
+        params.sort = [];
+        if(p.sortBy != 'relevance') {
+          sort[getFieldName(mappingFields, p.sortBy)] = 'asc';
+          params.sort.push(sort);
+        }
+        params.sort.push('_score');
+      }
       var match = Object.keys(p).reduce(function(output, current) {
         var value = p[current];
         if(excludeFields.indexOf(current) < 0) {
@@ -52,13 +72,22 @@
         return output;
       }, {});
 
-      params.query = {
-          term: match
-      };
+      if(Object.keys(match).length) {
+        query.term = match;
+      }
+      if(Object.keys(query).length) {
+        params.query = query;
+      }
+
+      gnESFacet.addFacets(params, 'mainsearch');
+
       console.log(params);
       return params;
 
+    }
 
+    function getFieldName(mapping, name) {
+      return mapping[name] || name;
     }
 
   }]);

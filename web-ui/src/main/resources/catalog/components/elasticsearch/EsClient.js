@@ -29,10 +29,14 @@
 
   var ES_API_URL = '../../index/records/';
 
-  module.service('gnESClient', ['$http', function($http) {
-  
+  module.service('gnESClient', ['$http', 'gnESFacet', function($http, gnESFacet) {
+
     this.search = function(params) {
-      return callApi('_search', params);
+      return callApi('_search', params).then(
+        function(response) {
+          return gnESFacet.getUIModel(response, params);
+        }
+      );
     };
 
     function callApi(service, params) {
