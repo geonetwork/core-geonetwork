@@ -66,12 +66,14 @@ public class GeonetTestFixture {
 
     private volatile static FileSystemPool.CreatedFs templateFs;
     private volatile static SchemaManager templateSchemaManager;
+    @Autowired
     private static EsSearchManager templateSearchManager;
     @Autowired
     protected DataStore dataStore;
     @Autowired
     private ConfigurableApplicationContext _applicationContext;
     private FileSystemPool.CreatedFs currentFs;
+
 
     public void tearDown() throws IOException {
         IO.setFileSystemThreadLocal(null);

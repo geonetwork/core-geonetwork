@@ -231,7 +231,8 @@ public class EsSearchManager implements ISearchManager {
         }
         doc.put(DOC_TYPE,"metadata");
         listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
-        if (listOfDocumentsToIndex.size() == commitInterval) {
+
+        if (listOfDocumentsToIndex.size() == commitInterval || forceRefreshReaders) {
             sendDocumentsToIndex();
         }
     }
