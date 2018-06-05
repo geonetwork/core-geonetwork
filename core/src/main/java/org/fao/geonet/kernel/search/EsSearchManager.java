@@ -29,21 +29,26 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonElement;
 import io.searchbox.client.JestResult;
+import io.searchbox.cluster.Health;
 import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
+import io.searchbox.indices.CreateIndex;
+import io.searchbox.indices.IndicesExists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.es.EsClient;
+import org.fao.geonet.exceptions.NotFoundEx;
+import org.fao.geonet.index.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
@@ -55,6 +60,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -73,24 +79,19 @@ public class EsSearchManager implements ISearchManager {
     public static final String FIELDSTRING = "string";
 
     @Value("${es.index.records}")
-    private String index = "records";
+    private String defaultIndex = "records";
 
     @Autowired
-    private EsClient client;
-
-    // public for test, to be private or protected
-    @Autowired
-    public SettingManager settingManager;
-
-
+    public EsClient client;
 
     private int commitInterval = 200;
 
     // public for test, to be private or protected
     public Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+    private Map<String, String> indexList;
 
-    public String getIndex() {
-        return index;
+    public String getDefaultIndex() {
+        return defaultIndex;
     }
 
     private Path getXSLTForIndexing(Path schemaDir) {
@@ -156,6 +157,53 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void init() throws Exception {
+        if (indexList != null) {
+            indexList.keySet().forEach(e -> {
+                createIndexIfNotExist(e, indexList.get(e));
+            });
+        }
+    }
+
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
+
+    public static final String INDEX_DIRECTORY = "index";
+
+    private void createIndexIfNotExist(String indexId, String indexName) {
+        try {
+            // Check index exist first
+            final IndicesExists request = new IndicesExists.Builder(indexId)
+                .build();
+            JestResult result = client.getClient().execute(request);
+            if (result.getResponseCode() == 200) {
+                return;
+            } else if (result.getResponseCode() == 404) {
+                // Check version of the index - how ?
+
+                // Create it if not
+                Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexName + ".json");
+                if (Files.exists(indexConfiguration)) {
+
+                    CreateIndex createIndex = new CreateIndex.Builder(indexName)
+                        .settings(FileUtils.readFileToString(indexConfiguration.toFile()))
+                        .build();
+
+                    result = client.getClient().execute(createIndex);
+                    if (result.isSucceeded()) {
+
+                    } else {
+                        throw new IllegalStateException(result.getErrorMessage());
+                    }
+                } else {
+                    throw new FileNotFoundException(String.format(
+                        "Index configuration file '%s' not found in data directory for building index with name '%s'. Create one or copy the default one.",
+                        indexConfiguration.toAbsolutePath(),
+                        indexName));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -185,9 +233,8 @@ public class EsSearchManager implements ISearchManager {
         }
         doc.put(DOC_TYPE,"metadata");
         // TODO: Remove this which is related to the dashboard application
-        doc.put(SCOPE, settingManager.getSiteName());
-        doc.put(HARVESTER_UUID, settingManager.getSiteId());
-        doc.put(HARVESTER_ID, settingManager.getNodeURL());
+        Map<String, String> docListToIndex = new HashMap<>();
+        docListToIndex.put(id, mapper.writeValueAsString(doc));
         listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
         if (listOfDocumentsToIndex.size() == commitInterval) {
             sendDocumentsToIndex();
@@ -197,7 +244,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() throws IOException {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
-                client.bulkRequest(index, listOfDocumentsToIndex);
+                client.bulkRequest(defaultIndex, listOfDocumentsToIndex);
                 listOfDocumentsToIndex.clear();
             }
         }
@@ -301,9 +348,7 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public void clearIndex() throws Exception {
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        client.deleteByQuery(index,
-            "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
+        client.deleteByQuery(defaultIndex,"*:*");
     }
 
 //    public void iterateQuery(SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
@@ -329,7 +374,7 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
         String query = "{\"query\": {\"filtered\": {\"query_string\": \"*:*\"}}}";
-        Search search = new Search.Builder(query).addIndex(index).addType(index).build();
+        Search search = new Search.Builder(query).addIndex(defaultIndex).addType(defaultIndex).build();
         // TODO: limit to needed field
 //        params.setFields(ID, Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
         SearchResult searchResult = client.getClient().execute(search);
@@ -345,7 +390,7 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public ISODate getDocChangeDate(String mdId) throws Exception {
         // TODO: limit to needed field
-        Get get = new Get.Builder(index, mdId).type(index).build();
+        Get get = new Get.Builder(defaultIndex, mdId).type(defaultIndex).build();
         JestResult result = client.getClient().execute(get);
         if (result != null) {
             JsonElement date =
@@ -404,7 +449,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void delete(String txt) throws Exception {
-        client.deleteByQuery(index, txt);
+        client.deleteByQuery(defaultIndex, txt);
 //        client.commit();
     }
 
@@ -437,7 +482,7 @@ public class EsSearchManager implements ISearchManager {
             "    }" +
             "  }" +
             "}", query);
-        Search search = new Search.Builder(searchQuery).addIndex(index).addType(index).build();
+        Search search = new Search.Builder(searchQuery).addIndex(defaultIndex).addType(defaultIndex).build();
         SearchResult searchResult = client.getClient().execute(search);
         return searchResult.getTotal();
     }
@@ -530,4 +575,11 @@ public class EsSearchManager implements ISearchManager {
         return getDocIds(query, 0, hitsNumber);
     }
 
+    public void setIndexList(Map<String, String>  indexList) {
+        this.indexList = indexList;
+    }
+
+    public Map<String, String>  getIndexList() {
+        return indexList;
+    }
 }

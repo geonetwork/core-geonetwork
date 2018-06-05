@@ -22,9 +22,12 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-lazy-init="true"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
   <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
@@ -65,12 +68,17 @@
     </property>
   </bean>
 
+  <util:map id="indexList">
+    <entry key="records" value="${es.index.records}"/>
+    <entry key="features" value="${es.index.features}"/>
+    <entry key="searchlogs" value="${es.index.searchlogs}"/>
+  </util:map>
 
   <bean id="EsSearchManager"
         class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
 
   <bean id="esClient"
-        class="org.fao.geonet.es.EsClient"/>
+        class="org.fao.geonet.index.es.EsClient"/>
 
   <bean id="forceInitRepositoriesForTestingBean"
         class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>

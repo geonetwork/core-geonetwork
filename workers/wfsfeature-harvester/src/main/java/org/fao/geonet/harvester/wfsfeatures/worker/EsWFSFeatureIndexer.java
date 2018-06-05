@@ -37,7 +37,7 @@ import io.searchbox.core.Index;
 import org.apache.camel.Exchange;
 import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.log4j.Logger;
-import org.fao.geonet.es.EsClient;
+import org.fao.geonet.index.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;

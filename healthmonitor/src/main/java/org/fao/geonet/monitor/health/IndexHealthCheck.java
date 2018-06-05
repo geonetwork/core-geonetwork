@@ -46,7 +46,7 @@ public class IndexHealthCheck implements HealthCheckFactory {
 
                 try {
                     Search search = new Search.Builder("")
-                        .addIndex(searchMan.getIndex())
+                        .addIndex(searchMan.getDefaultIndex())
                         .build();
                     final SearchResult result = searchMan.getClient().getClient().execute(search);
 

@@ -21,16 +21,20 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.es;
+package org.fao.geonet.index.es;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.cluster.Health;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.Index;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,10 +79,11 @@ public class EsClient implements InitializingBean {
                 .readTimeout(-1)
                 .build());
             client = factory.getObject();
-//            Depends on java.lang.NoSuchFieldError: LUCENE_5_2_1
-//            client = new PreBuiltTransportClient(Settings.EMPTY)
-//                .addTransportAddress(new InetSocketTransportAddress(
-//                    InetAddress.getByName("127.0.0.1"), 9300));
+            // TODOES Migrate to RestHighLevelClient
+//            RestHighLevelClient client = new RestHighLevelClient(
+//                RestClient.builder(
+//                    new HttpHost("localhost", 9200, "http"),
+//                    new HttpHost("localhost", 9201, "http")));
 
             synchronized (EsClient.class) {
                 instance = this;
@@ -273,5 +278,10 @@ public class EsClient implements InitializingBean {
 
     protected void finalize() {
         client.shutdownClient();
+    }
+
+    public String getServerStatus() throws Exception {
+        JestResult result = getClient().execute(new Health.Builder().build());
+        return result.getJsonObject().get("status").getAsString();
     }
 }

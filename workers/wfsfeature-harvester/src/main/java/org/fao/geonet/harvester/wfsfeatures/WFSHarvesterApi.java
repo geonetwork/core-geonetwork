@@ -29,7 +29,7 @@ import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
-import org.fao.geonet.es.EsClient;
+import org.fao.geonet.index.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer;
