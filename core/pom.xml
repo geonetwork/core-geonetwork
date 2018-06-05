@@ -493,6 +493,33 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>com.github.alexcojocaru</groupId>
+        <artifactId>elasticsearch-maven-plugin</artifactId>
+        <version>6.0</version>
+        <configuration>
+          <version>6.2.4</version>
+          <clusterName>test</clusterName>
+          <transportPort>9300</transportPort>
+          <httpPort>9200</httpPort>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-elasticsearch</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>runforked</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop-elasticsearch</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.5</version>
         <executions>

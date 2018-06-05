@@ -75,7 +75,10 @@
   </util:map>
 
   <bean id="EsSearchManager"
-        class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
+        class="org.fao.geonet.kernel.search.EsSearchManager"
+        lazy-init="false">
+    <property name="indexList" ref="indexList"/>
+  </bean>
 
   <bean id="esClient"
         class="org.fao.geonet.index.es.EsClient"/>
