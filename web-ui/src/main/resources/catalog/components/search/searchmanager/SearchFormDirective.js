@@ -194,13 +194,14 @@
       $scope.finalParams = finalParams;
 
       var esParams = gnESService.convertLuceneParams(finalParams);
-      gnESClient.search(esParams).then(function(response) {
-        var hits = response.data.hits;
+      gnESClient.search(esParams).then(function(data) {
+        var hits = data.hits;
         var records = hits.hits.map(function(r) {
           return new Metadata(r._source);
         });
         $scope.searchResults.records = records;
         $scope.searchResults.count = hits.total;
+        $scope.searchResults.facets = data.facets;
       });
 
       gnSearchManagerService.gnSearch(
