@@ -118,6 +118,7 @@
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
         if (f) {
+          $('#gn-metadata-display').find('*').remove();
           gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
             $http.get(url, {
               headers: {
@@ -125,8 +126,8 @@
               }
             }).then(
                 function(response,status) {
+                  console.log(response.status);
                   if (response.status!=200){
-                    $('#gn-metadata-display').find('*').remove();
                     $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
                   } else {
                     var snippet = response.data.replace(
@@ -147,7 +148,6 @@
                 }
               },
             function(data) {
-              $('#gn-metadata-display').find('*').remove();
               $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
             });
           });
