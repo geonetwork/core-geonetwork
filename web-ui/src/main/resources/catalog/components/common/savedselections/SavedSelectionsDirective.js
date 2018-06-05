@@ -165,7 +165,7 @@
               var foundRecords = [];
               angular.forEach(r.metadata, function(md) {
                 if (md) {
-                  var uuid = md['geonet:info'].uuid;
+                  var uuid = md.uuid;
                   selections.records[uuid] = md;
                   foundRecords.push(uuid);
                 }
@@ -442,7 +442,7 @@
          function link(scope, element, attrs, controller) {
            scope.selectionsWithRecord = [];
            scope.selections = {};
-           scope.uuid = scope.record['geonet:info'].uuid;
+           scope.uuid = scope.record.uuid;
 
            $rootScope.$on('savedSelectionsUpdate', function(e, n, o) {
              scope.selections = n;

@@ -63,7 +63,7 @@
           var updateCkb = function(records) {
             var checked = true;
             records.forEach(function(md) {
-              checked = checked && md['geonet:info'].selected;
+              checked = checked && md.selected;
             });
           };
 

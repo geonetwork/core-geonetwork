@@ -33,6 +33,7 @@
   goog.require('gn_resultsview');
   goog.require('gn_search_controller');
   goog.require('gn_viewer');
+  goog.require('gn_es');
 
   var module = angular.module('gn_search', [
     'gn_module',
@@ -44,6 +45,7 @@
     'gn_mdactions',
     'ui.bootstrap.buttons',
     'ui.bootstrap.tabs',
+    'gn_es',
     'ngeo'
   ]);
 

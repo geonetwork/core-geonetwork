@@ -52,7 +52,7 @@
    */
   var searchFormController =
       function($scope, $location, gnSearchManagerService,
-               gnFacetService, Metadata, gnSearchLocation) {
+               gnFacetService, Metadata, gnSearchLocation, gnESClient, gnESService) {
     var defaultParams = {
       fast: 'index',
       _content_type: 'json'
@@ -192,10 +192,22 @@
 
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
+
+      var esParams = gnESService.convertLuceneParams(finalParams);
+      gnESClient.search(esParams).then(function(response) {
+        var hits = response.data.hits;
+        var records = hits.hits.map(function(r) {
+          return new Metadata(r._source);
+        });
+        $scope.searchResults.records = records;
+        $scope.searchResults.count = hits.total;
+      });
+
       gnSearchManagerService.gnSearch(
                               finalParams, null,
                               $scope.searchObj.internal).then(
           function(data) {
+            return;
             $scope.searchResults.records = [];
             for (var i = 0; i < data.metadata.length; i++) {
               $scope.searchResults.records.push(new Metadata(data.metadata[i]));
@@ -383,7 +395,9 @@
     'gnSearchManagerService',
     'gnFacetService',
     'Metadata',
-    'gnSearchLocation'
+    'gnSearchLocation',
+    'gnESClient',
+    'gnESService'
   ];
 
   /**
