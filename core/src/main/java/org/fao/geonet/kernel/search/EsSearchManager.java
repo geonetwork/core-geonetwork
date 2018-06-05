@@ -174,7 +174,7 @@ public class EsSearchManager implements ISearchManager {
 
         docs.addContent(allFields);
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode doc = documentToJson(docs).get(id);
+        ObjectNode doc = documentToJson(docs);
 
         // ES does not allow a _source field
         JsonNode source = doc.get("source");
@@ -188,8 +188,6 @@ public class EsSearchManager implements ISearchManager {
         doc.put(SCOPE, settingManager.getSiteName());
         doc.put(HARVESTER_UUID, settingManager.getSiteId());
         doc.put(HARVESTER_ID, settingManager.getNodeURL());
-        Map<String, String> docListToIndex = new HashMap<>();
-        docListToIndex.put(id, mapper.writeValueAsString(doc));
         listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
         if (listOfDocumentsToIndex.size() == commitInterval) {
             sendDocumentsToIndex();
@@ -208,73 +206,48 @@ public class EsSearchManager implements ISearchManager {
     /**
      * Convert document to JSON.
      */
-    public Map<String, ObjectNode> documentToJson(Element xml) {
-        ObjectMapper mapper = new ObjectMapper();
+    public ObjectNode documentToJson(Element xml) {
+        ObjectNode doc = new ObjectMapper().createObjectNode();
 
-        List<Element> records = xml.getChildren("doc");
-        Map<String, ObjectNode> listOfXcb = new HashMap<>();
+        List<String> elementNames = new ArrayList();
+        List<Element> fields = xml.getChildren();
 
-        // Loop on docs
-        for (int i = 0; i < records.size(); i++) {
-            Element record = records.get(i);
-            if (record != null && record instanceof Element) {
-                ObjectNode doc = mapper.createObjectNode();
-                String id = null;
-                List<String> elementNames = new ArrayList();
-                List<Element> fields = record.getChildren();
+        // Loop on doc fields
+        for (Element currentField: fields) {
+            String name = currentField.getName();
 
-                // Loop on doc fields
-                for (int j = 0; j < fields.size(); j++) {
-                    Element currentField = fields.get(j);
-                    String name = currentField.getName();
+            if (elementNames.contains(name)) {
+                continue;
+            }
 
-                    if (!elementNames.contains(name)) {
-                        // Register list of already processed names
-                        elementNames.add(name);
+            // Register list of already processed names
+            elementNames.add(name);
+            // Field starting with _ not supported in Kibana
+            // Those are usually GN internal fields
+            String propertyName = name.startsWith("_") ? name.substring(1) : name;
+            List<Element> nodeElements = xml.getChildren(name);
 
-                        List<Element> nodeElements = record.getChildren(name);
-                        boolean isArray = nodeElements.size() > 1;
-
-                        // Field starting with _ not supported in Kibana
-                        // Those are usually GN internal fields
-                        String propertyName = name.startsWith("_") ?
-                            name.substring(1) : name;
-
-                        ArrayNode arrayNode = null;
-                        if (isArray) {
-                            arrayNode = doc.putArray(propertyName);
-                        }
-
-                        // Group fields in array if needed
-                        for (int k = 0; k < nodeElements.size(); k++) {
-                            Element node = nodeElements.get(k);
-
-                            if (name.equals("id")) {
-                                id = node.getTextNormalize();
-                            }
-
-                            if (name.equals("geom")) {
-                                continue;
-                            }
-
-                            if (isArray) {
-                                arrayNode.add(node.getTextNormalize());
-                            } else if (name.equals("geojson")) {
-                                doc.put("geom", node.getTextNormalize());
-                            } else if (
-                                // Skip some fields causing errors / TODO
-                                !name.startsWith("conformTo_")) {
-                                doc.put(
-                                    propertyName,
-                                    node.getTextNormalize());
-                            }
-                        }
-                    }
+            boolean isArray = nodeElements.size() > 1;
+            if (isArray) {
+                ArrayNode arrayNode = doc.putArray(propertyName);
+                for (Element node : nodeElements) {
+                    arrayNode.add(node.getTextNormalize());
                 }
-                listOfXcb.put(id, doc);
+                continue;
+            }
+            if (name.equals("geom")) {
+                continue;
+            }
+
+            if (name.equals("geojson")) {
+                doc.put("geom", nodeElements.get(0).getTextNormalize());
+                continue;
+            }
+            if (!name.startsWith("conformTo_")) { // Skip some fields causing errors / TODO
+                doc.put(propertyName, nodeElements.get(0).getTextNormalize());
             }
         }
-        return listOfXcb;
+        return doc;
     }
     @Override
     public void forceIndexChanges() throws IOException {
