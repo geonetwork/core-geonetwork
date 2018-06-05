@@ -58,19 +58,20 @@
            title="{{md.title || md.defaultTitle}}">
 
           <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
-          {{(md.title || md.defaultTitle) | characters:80}}</a>
+          {{(md.resourceTitle) | characters:80}}</a>
       </h3>
     </div>
 
     <!--start middle row-->
-    <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+    <div title="{{md.resourceAbstract | striptags}}"
          data-ng-click="openRecord($index, md, searchResults.records)">
       <!-- Thumbnail -->
       <div class="gn-md-thumbnail"
-            data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">
+            data-ng-class="{'gn-md-no-thumbnail': !md.overviewUrl[0]}">
+            <!--data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">-->
         <img class="gn-img-thumbnail"
-             data-ng-src="{{md.getThumbnails().list[0].url}}"
-             data-ng-if="md.getThumbnails().list[0].url"/>
+             data-ng-src="{{md.overviewUrl[0]}}"
+             data-ng-if="md.overviewUrl[0]"/>
 
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="md.status_text.length > 0"
@@ -83,7 +84,7 @@
 
         <div class="text-justify gn-md-abstract ellipsis">
           <div>
-            <p>{{(md.abstract || md.defaultAbstract) | striptags}}</p>
+            <p>{{md.resourceAbstract  | striptags}}</p>
           </div>
         </div>
 

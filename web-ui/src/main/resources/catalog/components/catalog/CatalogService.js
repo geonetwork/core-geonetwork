@@ -607,22 +607,19 @@
         applicationProfile: linkInfos[6]
       };
     }
-    function parseLink(sLink) {
-
-    };
 
     Metadata.prototype = {
       getUuid: function() {
-        return this['geonet:info'].uuid;
+        return this.uuid;
       },
       getId: function() {
-        return this['geonet:info'].id;
+        return this.id;
       },
       getTitle: function() {
         return this.title || this.defaultTitle;
       },
       isPublished: function() {
-        return this['geonet:info'].isPublishedToAll === 'true';
+        return this.isPublishedToAll === 'true';
       },
       isValid: function() {
         return this.valid === '1';
@@ -631,19 +628,19 @@
         return (this.valid > -1);
       },
       isOwned: function() {
-        return this['geonet:info'].owner === 'true';
+        return this.owner === 'true';
       },
       getOwnerId: function() {
-        return this['geonet:info'].ownerId;
+        return this.ownerId;
       },
       getGroupOwner: function() {
-        return this['geonet:info'].owner;
+        return this.owner;
       },
       getSchema: function() {
-        return this['geonet:info'].schema;
+        return this.schema;
       },
       publish: function() {
-        this['geonet:info'].isPublishedToAll = this.isPublished() ?
+        this.isPublishedToAll = this.isPublished() ?
             'false' : 'true';
       },
 

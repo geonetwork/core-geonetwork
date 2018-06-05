@@ -97,12 +97,12 @@
       <div class="col-md-8 gn-record">
         <h1>
           <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
-          {{mdView.current.record.title || mdView.current.record.defaultTitle}}
+          {{mdView.current.record.resourceTitle || mdView.current.record.resourceAltTitle}}
 
         </h1>
 
         <div class="alert alert-info"
-             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
+             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.resourceAbstract) | linky | newlines"/>
 
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="mdView.current.record.status_text.length > 0"
