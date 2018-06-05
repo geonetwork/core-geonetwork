@@ -39,7 +39,7 @@
   .list-group {
     border-left: 1px dotted rgba(0, 0, 0, 0.2);
     margin-left: .5em;
-    padding-left: 1em;
+    padding-left: 0.5em;
     margin-bottom: 0;
     font-size: 13px;
 
@@ -70,9 +70,26 @@
       flex-direction: row;
       min-width: 0px;
       flex-shrink: 1;
+      margin-left: 0;
+      & > .gn-facet-label {
+        margin-left: 1.2em;
+      }
       &.gn-facet-active {
         color: @gray-darker
       }
+      &:before {
+        content: ' ';
+        font-family: FontAwesome;
+        width: 10px;
+        text-align: center;
+        position: absolute;
+        left: 3px;
+        top: 0px;
+      }
+      &.gn-facet-active:before {
+        content: "\f00c";
+      }
+
     }
     input {
       margin: 0px;

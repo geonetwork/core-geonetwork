@@ -1,29 +1,15 @@
 <div data-ng-class="{'is-date': !!ctrl.facet.dates}">
-  <div class="list-group">
-    <div class="list-group-item"
+  <ul class="list-group">
+    <li class="list-group-item"
          data-ng-repeat="item in ctrl.facet.items"
-         data-ng-click="onCheckboxClick(ctrl.facet, item)"
-         data-ng-class="{'selected': isFacetSelected(ctrl.facet.name, item.name)}">
-      <i class="fa"
-         data-ng-class="output[ctrl.facet.name].values[item.name] ? 'fa-check-square' : 'fa-square-o'"></i>{{::item.name}}&nbsp;({{::item.count | number:0}})
-    </div>
-    <!--
-     <div data-ng-if="field.tree"
-            gn-wfs-filter-facets-tree="field"
-            gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
-       </div>
+         data-ng-click="ctrl.filter(ctrl.facet, item)">
+      <label data-ng-class="{'gn-facet-active': ctrl.isInSearch(ctrl.facet, item)}">
+        <span class="gn-facet-label">{{::item.name}}</span>&nbsp;
+        <span class="gn-facet-count">({{::item.count}})</span>
 
-
-       <div ng-if="field.dates"
-            gn-facet-daterange="output[field.name].values"
-            available-dates="field.dates"
-            show-graph="{{field.display == 'graph'}}"
-            graph-expanded="field.expanded"
-            dates-count="field.datesCount"
-            callback="onUpdateDateRange(field, from, to)">
-       </div>
-   -->
-  </div>
+      </label>
+    </li>
+  </ul>
   <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
     <span translate>more</span>...
   </a>
