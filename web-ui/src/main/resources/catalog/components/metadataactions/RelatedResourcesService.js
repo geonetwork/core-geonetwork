@@ -204,7 +204,7 @@
             'MAP' : {
               iconClass: 'fa-map',
               label: 'mapLink',
-              action: addMapToMap
+              action: gnExternalViewer.isEnabled() ? null : addMapToMap
             },
             'DB' : {
               iconClass: 'fa-database',
@@ -219,7 +219,7 @@
             'KML' : {
               iconClass: 'fa-globe',
               label: 'addToMap',
-              action: addKMLToMap
+              action: gnExternalViewer.isEnabled() ? null : addKMLToMap
             },
             'MDFCATS' : {
               iconClass: 'fa-table',

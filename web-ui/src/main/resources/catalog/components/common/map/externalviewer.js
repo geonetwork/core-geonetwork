@@ -42,14 +42,20 @@
    */
   module.service('gnExternalViewer', [
     '$window',
-    'gnMap',
+    'gnGlobalSettings',
     '$location',
-    function($window, gnMap, $location) {
+    function($window, gnGlobalSettings, $location) {
       /**
        * Url pattern for metadata page
        * @type {string}
        */
       var baseMdUrl = $location.absUrl().split('#')[0] + '#/metadata/';
+
+      /**
+       * Settings related to external viewer
+       * @type {Object}
+       */
+      var settings = gnGlobalSettings.gnCfg.mods.map.externalViewer;
 
       return {
         /**
@@ -64,7 +70,7 @@
          * @return {boolean} true if enabled
          */
         isEnabled: function() {
-          return !!gnMap.getMapConfig().externalViewer.enabled;
+          return !!settings.enabled;
         },
 
         /**
@@ -79,7 +85,6 @@
          * @param {Object} service expected properties: url, name, type, title
          */
         viewService: function(md, service) {
-          var settings = gnMap.getMapConfig().externalViewer;
           if (!this.isEnabled()) { return; }
 
           md.url = md.uuid ? baseMdUrl + md.uuid : '';
@@ -101,8 +106,6 @@
          */
         _commit: function() {
           if (!this._toView.length) { return; }
-
-          var settings = gnMap.getMapConfig().externalViewer;
 
           var getValues = function(object, key) {
             return this._toView.map(function (entry) {
