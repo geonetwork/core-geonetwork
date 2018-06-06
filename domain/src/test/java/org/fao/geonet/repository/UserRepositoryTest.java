@@ -23,26 +23,34 @@
 
 package org.fao.geonet.repository;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import org.fao.geonet.domain.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.*;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 public class UserRepositoryTest extends AbstractSpringDataTest {
     @Autowired
@@ -57,7 +65,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     private EntityManager _entityManager;
 
     public static User newUser(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
+    	String val = String.format("%04d", inc.incrementAndGet());
         User user = new User().setName("name" + val).setUsername("username" + val);
         user.getSecurity().setPassword("1234567");
         return user;
