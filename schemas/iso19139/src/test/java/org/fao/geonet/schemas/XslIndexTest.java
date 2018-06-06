@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class XslIndexTest {
 
@@ -26,24 +27,46 @@ public class XslIndexTest {
         Element metadata = Xml.loadFile(this.getClass().getResource("xsl/process/input.xml"));
         Path styleSheetToTest = Paths.get(this.getClass().getResource("/index-fields/index.xsl").toURI());
 
-        Element xmlDoc = Xml.transform(metadata, styleSheetToTest);
-        ObjectNode jsonDoc = toJson(xmlDoc);
+        ObjectNode jsonDoc=null;
+        long begin;
+        long time = 0;
+        for (int i = 0; i < 20; i ++) {
+            begin = System.currentTimeMillis();
+            Element xmlDoc = Xml.transform(metadata, styleSheetToTest);
+            jsonDoc = toJson(xmlDoc);
+            if (i > 5) {
+                time = time + System.currentTimeMillis() - begin;
+            }
+        }
         HashMap result = new ObjectMapper().convertValue(jsonDoc, HashMap.class);
         assertEquals(3, ((List)result.get("linkUrl")).size());
         assertEquals("FAO - NRCW", result.get("Org"));
 
         Path styleSheetWithCollectorToTest = Paths.get(this.getClass().getResource("/index-fields/index_with_collector.xsl").toURI());
         HashMap params = new HashMap<String, Object>();
-        JSONIndexesCollector jsonIndexesCollector = new JSONIndexesCollector();
-        params.put("jic", jsonIndexesCollector);
-        Xml.transform(metadata, styleSheetWithCollectorToTest, params);
+
+        long time_with_collector = 0;
+
+        JSONIndexesCollector jsonIndexesCollector = null;
+        for (int i = 0; i < 20; i ++) {
+            begin = System.currentTimeMillis();
+            jsonIndexesCollector = new JSONIndexesCollector();
+            params.put("jic", jsonIndexesCollector);
+            Xml.transform(metadata, styleSheetWithCollectorToTest, params);
+            if (i > 5) {
+                time_with_collector = time_with_collector + System.currentTimeMillis() - begin;
+            }
+        }
         HashMap resultWithcollector = new ObjectMapper().convertValue(jsonIndexesCollector.doc, HashMap.class);
 
         for (Object key : result.keySet()) {
-            System.out.println(key);
-            if ((resultWithcollector.get(key)) == null) throw new Exception(""+key);
+            if ("harvestedDate".equalsIgnoreCase(key.toString())) {
+                continue;
+            }
             assertEquals(result.get(key), resultWithcollector.get(key));
         }
+        //assertTrue(time_with_collector * 3.5 < time);
+        throw new Exception("" + time_with_collector + " vs " + time);
     }
 
     private ObjectNode toJson(Element xmlDoc) {
