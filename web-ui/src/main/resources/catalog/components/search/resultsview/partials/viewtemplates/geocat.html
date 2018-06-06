@@ -12,13 +12,13 @@
         <h4>
           <input gn-selection-md type="checkbox" ng-model="md.selected"
                  ng-change="change()"/>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('dataset')>=0"
+          <span data-placement="right" gn-tooltip ng-if="md.resourceType[0].indexOf('dataset')>=0"
                 class="fa fa-database" title="dataset"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('software')>=0"
+          <span data-placement="right" gn-tooltip ng-if="md.resourceType[0].indexOf('software')>=0"
                 class="fa fa-hdd-o" title="software"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('basicgeodata')>=0"
+          <span data-placement="right" gn-tooltip ng-if="md.resourceType[0].indexOf('basicgeodata')>=0"
                 class="fa fa-globe" title="geodata"></span>
-          <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('service')>=0"
+          <span data-placement="right" gn-tooltip ng-if="md.resourceType[0].indexOf('service')>=0"
                 class="fa fa-globe" title="service"></span>
           <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview"
              title="{{md.resourceTitle}}">{{md.resourceTitle}}</a>

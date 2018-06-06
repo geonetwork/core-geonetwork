@@ -31,13 +31,13 @@
           data-ng-class="isSelected(md) ? 'active' : ''"
           data-ng-click="onClick(md)">
         <div data-ng-if="options.mode == 'title'">
-          <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
+          <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
           {{md.resourceTitle}}
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
           <div class="col-lg-12"
                title="{{md.resourceAbstract}}">
-            <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
+            <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
             <strong>{{md.resourceTitle}}</strong>
             <p ng-if="::md.resourceAbstract" class="small">{{md.resourceAbstract | characters:200}}</p>
           </div>
