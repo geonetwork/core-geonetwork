@@ -369,6 +369,7 @@
   "wpsErrorCodeReturned": "The server returned status code",
   "time" : "Time",
   "features": "feature(s)",
+  "noUsers": "No users",
   "downloadLayer": "Download data",
   "featureCount": "Feature count",
   "fbContact": "Contact",
