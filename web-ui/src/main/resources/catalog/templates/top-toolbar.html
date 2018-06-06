@@ -30,7 +30,7 @@
         </a>
       </li>
       <li data-ng-if="gnCfg.mods.map.enabled">
-        <a data-gn-active-tb-item="{{gnCfg.mods.map.appUrl}}"
+        <a data-gn-active-tb-item="{{gnCfg.mods.map.externalViewer.baseUrl || gnCfg.mods.map.appUrl}}"
            title="{{'map' | translate}}">
           <i class="fa fa-globe"></i>
           <span class="hidden-sm" data-translate="">makeYourMap</span>
