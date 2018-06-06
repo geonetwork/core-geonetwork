@@ -431,6 +431,15 @@ public class Geonetwork implements ApplicationHandler {
                 ApplicationContextHolder.set(_applicationContext);
                 GeonetWro4jFilter filter = (GeonetWro4jFilter) servletContext.getAttribute(GeonetWro4jFilter.GEONET_WRO4J_FILTER_KEY);
 
+                // Force reload cache, to avoid issues with CSRF token added in 3.2.2 if reusing old cache
+                final MockHttpServletRequest servletRequestReload = new MockHttpServletRequest(servletContext, "GET", "/static/wroAPI/reloadCache");
+                final MockHttpServletResponse responseReload = new MockHttpServletResponse();
+                try {
+                    filter.doFilter(servletRequestReload, responseReload, new MockFilterChain());
+                } catch (Throwable t) {
+                    Log.info(Geonet.GEONETWORK, "Error while reloading WRO4J cache", t);
+                }
+
                 @SuppressWarnings("unchecked")
                 List<String> wro4jUrls = _applicationContext.getBean("wro4jUrlsToInitialize", List.class);
 
