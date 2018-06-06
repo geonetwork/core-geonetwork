@@ -261,7 +261,7 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function (link, md) {
           var config = {
-            uuid: md ? md.getUuid() : null,
+            uuid: md ? md.uuid : null,
             type: link.protocol.indexOf('WMTS') > -1 ? 'wmts' : 'wms',
             url: $filter('gnLocalized')(link.url) || link.url
           };

@@ -54,7 +54,7 @@
     <div class="row gn-md-title"
          data-ng-click="openRecord($index, md, searchResults.records)">
       <h3>
-        <a data-ng-href="#/metadata/{{md.getUuid()}}"
+        <a data-ng-href="#/metadata/{{md.uuid}}"
            title="{{md.resourceTitle}}">
 
           <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
@@ -105,7 +105,7 @@
 
     <!--start bottom row-->
     <div>
-      <div gn-grid-related gn-grid-related-uuid="::md.getUuid()"
+      <div gn-grid-related gn-grid-related-uuid="::md.uuid"
            template="../../catalog/views/default/templates/gridRelated.html"></div>
       <gn-links-btn></gn-links-btn>
     </div>

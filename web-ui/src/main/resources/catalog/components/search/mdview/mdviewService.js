@@ -66,7 +66,7 @@
         }
 
         // Set the route
-        this.setLocationUuid(md.getUuid());
+        this.setLocationUuid(md.uuid);
         gnUtilityService.scrollTo();
 
         angular.extend(md, {
@@ -128,16 +128,16 @@
         var that = this;
         var loadMdView = function() {
           gnMdViewObj.loadDetailsFinished = false;
-          var uuid = gnSearchLocation.getUuid();
+          var uuid = gnSearchLocation.uuid;
           if (uuid) {
             if (!gnMdViewObj.current.record ||
-                gnMdViewObj.current.record.getUuid() !== uuid) {
+                gnMdViewObj.current.record.uuid !== uuid) {
 
               // Check if the md is in current search
               if (angular.isArray(gnMdViewObj.records)) {
                 for (var i = 0; i < gnMdViewObj.records.length; i++) {
                   var md = gnMdViewObj.records[i];
-                  if (md.getUuid() === uuid) {
+                  if (md.uuid === uuid) {
                     that.feedMd(i, md, gnMdViewObj.records);
                     return;
                   }
@@ -181,7 +181,7 @@
       this.initFormatter = function(selector) {
         var $this = this;
         var loadFormatter = function() {
-          var uuid = gnSearchLocation.getUuid();
+          var uuid = gnSearchLocation.uuid;
           if (uuid) {
             gnMdFormatter.load(uuid,
                 selector, $this.getCurrentMdScope());
@@ -242,7 +242,7 @@
 
         return promiseMd.then(function(md) {
           if (angular.isString(fUrl)) {
-            url = fUrl.replace('{{uuid}}', md.getUuid());
+            url = fUrl.replace('{{uuid}}', md.uuid);
           }
           else if (angular.isFunction(fUrl)) {
             url = fUrl(md);

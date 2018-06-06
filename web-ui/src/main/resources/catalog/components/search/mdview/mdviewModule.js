@@ -56,7 +56,7 @@
       $scope.usingFormatter = false;
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
-      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
+      $scope.recordIdentifierRequested = gnSearchLocation.uuid;
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
 

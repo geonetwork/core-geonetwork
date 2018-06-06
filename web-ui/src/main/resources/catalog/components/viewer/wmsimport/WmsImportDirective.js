@@ -114,7 +114,7 @@
               if (link.url) {
                 scope.catServicesList.push({
                   title: md.resourceTitle,
-                  uuid: md.getUuid(),
+                  uuid: md.uuid,
                   name: link.name,
                   desc: link.desc,
                   type: type,

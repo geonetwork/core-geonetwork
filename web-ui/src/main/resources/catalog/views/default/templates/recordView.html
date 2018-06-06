@@ -63,7 +63,7 @@
           </a>
         </li>
         <li>
-          <a data-ng-href="{{gnUrl}}api/records/{{md.getUuid()}}/formatters/xml"
+          <a data-ng-href="{{gnUrl}}api/records/{{md.uuid}}/formatters/xml"
                  target="_blank">
             <i class="fa fa-file-code-o"></i>&nbsp;
             <span data-translate="">xmlView</span>
@@ -87,7 +87,7 @@
 
     <a class="btn btn-primary gn-md-edit-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
-       data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
+       data-ng-href="catalog.edit#/metadata/{{mdView.current.record.id}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.uuid}}"
        title="{{'edit' | translate}}">
       <i class="fa fa-pencil"></i>
       <span data-translate="" class="hidden-sm hidden-xs">edit</span>
