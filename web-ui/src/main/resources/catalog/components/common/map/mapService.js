@@ -1576,40 +1576,26 @@
           createOlWMTSFromCap: function(map, getCapLayer, capabilities) {
 
             var legend, attribution, metadata;
-            if (getCapLayer) {
-              var layer = getCapLayer;
+            if (getCapLayer && capabilities) {
 
-              var url, urls = capabilities.operationsMetadata.GetTile.
-                  DCP.HTTP.Get;
+              //Asking WMTS service about capabilities
+              var cap = {
+                  Contents: capabilities,
+                  OperationsMetadata: capabilities.operationsMetadata
+              };
 
-              var useKvp = false;
-              var useRest = false;
+              var options = ol.source.WMTS.optionsFromCapabilities(cap, {
+                layer: getCapLayer.Identifier,
+                matrixSet: map.getView().getProjection()
+              });
 
-              for (var i = 0; i < urls.length; i++) {
-                if (urls[i].Constraint[0].AllowedValues.Value[0].
-                    toLowerCase() == 'kvp') {
-                  url = urls[i].href;
-                  useKvp = true;
-                  break;
-                }
-              }
+              //Configuring url for service
+              var url = capabilities.operationsMetadata.GetCapabilities.DCP.HTTP.Get[0].href;
 
-              if (!useKvp) {
-                for (var i = 0; i < urls.length; i++) {
-                  if (urls[i].Constraint[0].AllowedValues.Value[0].
-                      toLowerCase() == 'restful') {
-                    useRest = true;
-                    break;
-                  }
-                }
-              }
-
-              var urlCap = capabilities.operationsMetadata.GetCapabilities.
-                  DCP.HTTP.Get[0].href;
-
+              //Configuring url for capabilities
+              var urlCap = capabilities.operationsMetadata.GetCapabilities.DCP.HTTP.Get[0].href;
               var urlCapType = capabilities.operationsMetadata.GetCapabilities.
-                  DCP.HTTP.Get[0].
-                  Constraint[0].AllowedValues.Value[0].toLowerCase();
+              DCP.HTTP.Get[0].Constraint[0].AllowedValues.Value[0].toLowerCase();
 
               if (urlCapType == 'restful') {
                 if (urlCap.indexOf('/1.0.0/WMTSCapabilities.xml') == -1) {
@@ -1625,116 +1611,26 @@
                       version: '1.0.0'}));
               }
 
-              var style = layer.Style[0].Identifier;
-
-              var projection = map.getView().getProjection();
-
-              // Try to guess which matrixId to use depending projection
-              var matrixSetsId;
-              for (var i = 0; i < layer.TileMatrixSetLink.length; i++) {
-                if (layer.TileMatrixSetLink[i].TileMatrixSet ==
-                    projection.getCode()) {
-                  matrixSetsId = layer.TileMatrixSetLink[i].TileMatrixSet;
-                  break;
-                }
-              }
-              if (!matrixSetsId) {
-                matrixSetsId = layer.TileMatrixSetLink[0].TileMatrixSet;
-              }
-
-              var matrixSet;
-              for (var i = 0; i < capabilities.TileMatrixSet.length; i++) {
-                if (capabilities.TileMatrixSet[i].Identifier == matrixSetsId) {
-                  matrixSet = capabilities.TileMatrixSet[i];
-                }
-              }
-              var nbMatrix = matrixSet.TileMatrix.length;
-
-              var projectionExtent = projection.getExtent();
-              var resolutions = new Array(nbMatrix);
-              var matrixIds = new Array(nbMatrix);
-
-              // sort tile resolutions if number
-              var tileMatrices;
-              if (matrixSet.TileMatrix.length &&
-                  Number.isInteger(matrixSet.TileMatrix[0].Identifier)) {
-                tileMatrices = matrixSet.TileMatrix.splice(0)
-                    .sort(function(a, b) {
-                      var id1 = parseInt(a.Identifier);
-                      var id2 = parseInt(b.Identifier);
-                      return id1 > id2 ? 1 :
-                      (id1 < id2 ? -1 : 0);
-                    });
-              }
-              else {
-                tileMatrices = matrixSet.TileMatrix;
-              }
-
-              for (var z = 0; z < nbMatrix; ++z) {
-                var matrix = tileMatrices[z];
-                var size = ol.extent.getWidth(projectionExtent) /
-                    matrix.TileWidth;
-                resolutions[z] = matrix.ScaleDenominator * 0.00028 /
-                    projection.getMetersPerUnit();
-                matrixIds[z] = matrix.Identifier;
-              }
-
-              var sourceConfig = {
-                layer: layer.Identifier,
-                matrixSet: matrixSet.Identifier,
-                format: layer.Format[0] || 'image/png',
-                projection: projection,
-                tileGrid: new ol.tilegrid.WMTS({
-                  origin: ol.extent.getTopLeft(projection.getExtent()),
-                  resolutions: resolutions,
-                  matrixIds: matrixIds
-                }),
-                style: style
-              };
-
-              if (useRest) {
-                var urls = [];
-                for (var i = 0; i < layer.ResourceURL.length; i++) {
-                  urls.push(layer.ResourceURL[i].template);
-                }
-                if (layer.ResourceURL.length > 0) {
-                  url = encodeURI(layer.ResourceURL[0].template);
-                }
-
-                if (layer.ResourceURL.length > 0) {
-                  url = encodeURI(layer.ResourceURL[0].template);
-                }
-
-                angular.extend(sourceConfig, {
-                  urls: urls,
-                  requestEncoding: 'REST'
-                });
-              } else {
-                angular.extend(sourceConfig, {
-                  url: url
-                });
-
-              }
-
-              var source = new ol.source.WMTS(sourceConfig);
-
+              //Create layer
               var olLayer = new ol.layer.Tile({
-                extent: projection.getExtent(),
-                name: layer.Identifier,
-                title: layer.Title,
-                label: layer.Title,
-                source: source,
+                extent: map.getView().getProjection().getExtent(),
+                name: getCapLayer.Identifier,
+                title: getCapLayer.Title,
+                label: getCapLayer.Title,
+                source: new ol.source.WMTS(options),
                 url: url,
                 urlCap: urlCap,
                 cextent: gnOwsCapabilities.getLayerExtentFromGetCap(map,
                     getCapLayer)
               });
+
+              //Add GN extras to layer
               ngeoDecorateLayer(olLayer);
               olLayer.displayInLayerManager = true;
 
-              // add link to metadata
-              if (angular.isArray(layer.MetadataURL)) {
-                var metadata = layer.MetadataURL[0].OnlineResource;
+              //Like add a link to metadata
+              if (angular.isArray(getCapLayer.MetadataURL)) {
+                var metadata = getCapLayer.MetadataURL[0].OnlineResource;
                 olLayer.set('metadataUrl', metadata);
 
                 var params = gnUrlUtils.parseKeyValue(
@@ -1742,7 +1638,7 @@
                 var uuid = params.uuid || params.id;
                 if (!uuid) {
                   var res = new RegExp(/\#\/metadata\/(.*)/g).
-                      exec(metadata);
+                  exec(metadata);
                   if (angular.isArray(res) && res.length == 2) {
                     uuid = res[1];
                   }
@@ -1753,6 +1649,10 @@
               }
 
               return olLayer;
+            } else {
+              //With no capabilities, how are we supposed to...?
+              //Should we show something on screen?
+              console.warn("Called createOlWMTSFromCap with no capabilities...");
             }
           },
 
