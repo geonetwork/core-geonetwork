@@ -603,20 +603,16 @@
                     <location><xsl:value-of select="concat($s, ',', $w)"/></location>
                   </xsl:when>
                   <xsl:otherwise>
-                    <geom>
-                      <xsl:text>{"type": "polygon",</xsl:text>
-                      <xsl:text>"coordinates": [</xsl:text>
-                      <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $e, ',', $s, ']')"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $e, ',', $n, ']')"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $w, ',', $n, ']')"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
-                      <xsl:text>]}</xsl:text>
-                    </geom>
+                    <xsl:variable name="geom">
+                      <xsl:text>POLYGON((</xsl:text>
+                      <xsl:value-of select="concat($w, ' ', $s, ',')"/>
+                      <xsl:value-of select="concat($e, ' ', $s, ',')"/>
+                      <xsl:value-of select="concat($e, ' ', $n, ',')"/>
+                      <xsl:value-of select="concat($w, ' ', $n, ',')"/>
+                      <xsl:value-of select="concat($w, ' ', $s, '')"/>
+                      <xsl:text>))</xsl:text>
+                    </xsl:variable>
+                    <geom><xsl:value-of select="$geom"/></geom>
 
                     <location><xsl:value-of select="concat(
                                               (number($s) + number($n)) div 2,

@@ -278,11 +278,11 @@ public class EsSearchManager implements ISearchManager {
                 }
                 continue;
             }
-            if (name.equals("geom")) {
-                continue;
-            }
+//            if (name.equals("geom")) {
+//                continue;
+//            }
 
-            if (name.equals("geojson")) {
+            if (name.equals("geom")) {
                 doc.put("geom", nodeElements.get(0).getTextNormalize());
                 continue;
             }
