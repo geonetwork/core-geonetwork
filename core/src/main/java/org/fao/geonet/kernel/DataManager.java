@@ -80,6 +80,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -3501,5 +3502,50 @@ public class DataManager implements ApplicationEventPublisherAware {
             return false;
         }
     };
+
+    public boolean rebuildIndex(ServiceContext context, boolean xlinks,
+                                boolean reset, String bucket) throws Exception {
+        DataManager dataMan = context.getBean(DataManager.class);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+
+        if (reset) {
+            getEsSearchManager().clearIndex();
+        }
+
+        if (StringUtils.isNotBlank(bucket)) {
+            ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
+            UserSession session = context.getUserSession();
+            SelectionManager sm = SelectionManager.getManager(session);
+
+            synchronized (sm.getSelection(bucket)) {
+                for (Iterator<String> iter = sm.getSelection(bucket).iterator();
+                     iter.hasNext(); ) {
+                    String uuid = (String) iter.next();
+//                    String id = dataMan.getMetadataId(uuid);
+                    Metadata metadata = metadataRepository.findOneByUuid(uuid);
+                    if (metadata != null) {
+                        listOfIdsToIndex.add(metadata.getId() + "");
+                    } else {
+                        //LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
+                    }
+                }
+            }
+            for(String id : listOfIdsToIndex) {
+                dataMan.indexMetadata(id + "", false, getEsSearchManager());
+            }
+        } else {
+            final Specifications<Metadata> metadataSpec =
+                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
+                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
+            final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
+                Specifications.where(metadataSpec)
+            );
+            for(Integer id : metadataIds) {
+                dataMan.indexMetadata(id + "", false, getEsSearchManager());
+            }
+        }
+        getEsSearchManager().forceIndexChanges();
+        return true;
+    }
 
 }
