@@ -188,7 +188,7 @@
                   edit: md.edit,          // TODOES: edit & selected do not exist anymore with ES;
                   selected: md.selected,  // make sure they are replaced with the correct ones
                   isTemplate: md.isTemplate,
-                  title: md.title
+                  title: md.resourceTitle
                 };
               });
             });

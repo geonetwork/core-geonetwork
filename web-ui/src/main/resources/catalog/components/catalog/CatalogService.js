@@ -619,7 +619,7 @@
         return this.id;
       },
       getTitle: function() {
-        return this.title || this.defaultTitle;
+        return this.resourceTitle;
       },
       isPublished: function() {
         return this.isPublishedToAll === 'true';

@@ -28,7 +28,7 @@
             <a href ng-click="createFromTemplate(t)" class="flex-row flex-start">
               <div class="flex-spacer" />
               <i class="fa fa-fw fa-bookmark-o"/>
-              <div class="text-wrap">{{::t.title || t.defaultTitle}}</div>
+              <div class="text-wrap">{{::t.resourceTitle}}</div>
             </a>
           </li>
           <li class="divider"/>
@@ -188,9 +188,9 @@
 
                   <a href class="text-ellipsis"
                      data-ng-if="user.canEditRecord(md)"
-                     ng-click="startEditing(md)" title="{{md.title || md.defaultTitle}}">
-                    {{md.title || md.defaultTitle}}</a>
-                  <span data-ng-if="!user.canEditRecord(md)">{{md.title || md.defaultTitle}}</span>
+                     ng-click="startEditing(md)" title="{{md.resourceTitle}}">
+                    {{md.resourceTitle}}</a>
+                  <span data-ng-if="!user.canEditRecord(md)">{{md.resourceTitle}}</span>
                 </div>
 
                 <div class="entry-info flex-row flex-align-center" ng-if="!templatesShown()">
@@ -281,7 +281,7 @@
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
 
                   <a href ng-click="startEditing(md)" title="{{md.title}}">
-                    {{md.title || md.defaultTitle}}</a>
+                    {{md.resourceTitle}}</a>
 
                   <div class="flex-spacer flex-grow"></div>
 
@@ -341,7 +341,7 @@
         <span class="text-muted" translate>directoryEntryEditing</span>
         &nbsp;
         <gn-md-type-widget metadata="activeEntry"></gn-md-type-widget>
-        {{activeEntry.title || activeEntry.defaultTitle}}
+        {{activeEntry.resourceTitle}}
         &nbsp;
         <a href class="btn btn-default" ng-click="closeEditor()">
           <i class="fa fa-close"/>&nbsp;

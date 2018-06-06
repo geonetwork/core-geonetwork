@@ -77,7 +77,7 @@
         return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
             msg: $translate.instant('metadataRemoved',
-                {title: md.title || md.defaultTitle}),
+                {title: md.resourceTitle}),
             type: 'success'
           });
           $scope.closeRecord(md);

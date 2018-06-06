@@ -212,8 +212,7 @@
 
       this.openPrivilegesPanel = function(md, scope) {
         openModal({
-          title: $translate.instant('privileges') + ' - ' +
-              (md.title || md.defaultTitle),
+          title: $translate.instant('privileges') + ' - ' +md.resourceTitle,
           content: '<div gn-share="' + md.getId() + '"></div>',
           className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
@@ -382,7 +381,7 @@
       this.getPermalink = function(md) {
         var url = $location.absUrl().split('#')[0] + '#/metadata/' +
             md.getUuid();
-        gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
+        gnUtilityService.getPermalink(md.resourceTitle, url);
       };
 
       /**

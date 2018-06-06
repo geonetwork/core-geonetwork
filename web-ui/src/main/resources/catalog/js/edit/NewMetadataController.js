@@ -158,7 +158,6 @@
         var tpls = [];
         for (var i = 0; i < $scope.mdList.metadata.length; i++) {
           var md = $scope.mdList.metadata[i];
-          md.title = md.title || md.defaultTitle;
           var mdType = md.type || unknownType;
           if (mdType instanceof Array) {
             if (mdType.indexOf(type) >= 0) {
@@ -171,9 +170,9 @@
 
         // Sort template list
         function compare(a, b) {
-          if (a.title < b.title)
+          if (a.resourceTitle < b.resourceTitle)
             return -1;
-          if (a.title > b.title)
+          if (a.resourceTitle > b.resourceTitle)
             return 1;
           return 0;
         }
@@ -191,11 +190,11 @@
 
 
       if ($routeParams.childOf) {
-        $scope.title = $translate.instant('createChildOf');
+        $scope.resourceTitle = $translate.instant('createChildOf');
       } else if ($routeParams.from) {
-        $scope.title = $translate.instant('createCopyOf');
+        $scope.resourceTitle = $translate.instant('createCopyOf');
       } else {
-        $scope.title = $translate.instant('createA');
+        $scope.resourceTitle = $translate.instant('createA');
       }
 
       $scope.createNewMetadata = function(isPublic) {

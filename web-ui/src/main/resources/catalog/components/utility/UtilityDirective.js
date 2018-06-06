@@ -400,7 +400,7 @@
            restrict: 'A',
            link: function(scope, element, attrs) {
              element.attr('placeholder', '...');
-             var displayField = attrs['displayField'] || 'defaultTitle';
+             var displayField = attrs['displayField'] || 'resourceTitle';
              var valueField = attrs['valueField'] || displayField;
              var params = angular.fromJson(element.attr('params') || '{}');
 

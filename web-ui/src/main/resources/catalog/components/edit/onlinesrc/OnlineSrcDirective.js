@@ -1564,7 +1564,7 @@
                     if (!angular.isUndefined(scope.stateObj.selectRecords) &&
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
-                      scope.currentMdTitle = md.title || md.defaultTitle;
+                      scope.currentMdTitle = md.resourceTitle;
                       if (scope.mode === 'service') {
                         var links = [];
                         scope.layers = [];

@@ -239,7 +239,7 @@
                                data-ng-if="field.use === 'data-gn-metadata-picker'"
                                data-ng-disabled="field.isDeleted"
                                data-gn-metadata-picker=""
-                               data-display-field="defaultTitle"
+                               data-display-field="resourceTitle"
                                data-value-field="uuid"
                                data-ng-blur="putChange(field, $event)"/>
                         <input type="text"
@@ -399,7 +399,7 @@
             <h4 data-translate="">aboutToUpdateTheFollowing</h4>
             <ul>
               <li data-ng-repeat="record in selectedRecords.metadata">
-                {{record.title || record.defaultTitle}}
+                {{record.resourceTitle}}
               </li>
             </ul>
           </div>
