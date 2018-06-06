@@ -158,7 +158,7 @@
         var tpls = [];
         for (var i = 0; i < $scope.mdList.metadata.length; i++) {
           var md = $scope.mdList.metadata[i];
-          var mdType = md.type || unknownType;
+          var mdType = md.resourceType || unknownType;
           if (mdType instanceof Array) {
             if (mdType.indexOf(type) >= 0) {
               tpls.push(md);
