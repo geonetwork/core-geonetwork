@@ -195,14 +195,25 @@
                 });
                 source.initialize();
 
+                function allOrSearchFn(q, sync) {
+                  if (q === '') {
+                    sync(source.all());
+                    // This is the only change needed to get 'ALL'
+                    // items as the defaults
+                  } else {
+                    source.search(q, sync);
+                  }
+                }
+
                 // Init autocomplete
                 $(input).typeahead({
                   minLength: 0,
                   highlight: true
                 }, {
                   name: 'category',
-                  source: source.ttAdapter(),
-                  displayKey: 'langlabel'
+                  source: allOrSearchFn,
+                  displayKey: 'langlabel',
+                  limit: Infinity
                 }).bind('typeahead:selected',
                     $.proxy(function(obj, c) {
                       // Add to tags

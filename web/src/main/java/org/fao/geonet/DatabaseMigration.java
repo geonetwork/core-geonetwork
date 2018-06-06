@@ -268,6 +268,12 @@ public class DatabaseMigration implements BeanPostProcessor {
         return anyMigrationError;
     }
 
+    /**
+     * Execute a Java database migration.
+     * @param conn database connection.
+     * @param file Java migration class name prefixed with JAVA_MIGRATION_PREFIX ("java:")
+     * @return <code>true</code> if there is any error while executing the migration. <code>false</code> if there are no errors.
+     */
     private boolean runJavaMigration(Connection conn, String file) {
         try {
             String className = file.substring(JAVA_MIGRATION_PREFIX.length());
@@ -298,7 +304,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             _logger.error("          Errors occurs during Java migration file: " + error);
             return true;
         } catch (Throwable e) {
-            e.printStackTrace();
+            _logger.error("          Errors occurs during Java migration file: " + e);
             return true;
         }
     }

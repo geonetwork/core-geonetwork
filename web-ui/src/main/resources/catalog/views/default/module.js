@@ -47,6 +47,7 @@
     function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        internal: true,
         filters: gnSearchSettings.filters,
         params: {
           sortBy: 'popularity',
@@ -62,6 +63,7 @@
     function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        internal: true,
         filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
@@ -79,6 +81,7 @@
         'search/resultsview/partials/viewtemplates/grid4maps.html';
       $scope.searchObj = {
         permalink: false,
+        internal: true,
         filters: {
           'type': 'interactiveMap'
         },
@@ -128,6 +131,7 @@
       $scope.$location = $location;
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
+      $scope.advandedSearchTemplate = gnSearchSettings.advancedSearchTemplate;
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
       $scope.facetConfig = gnSearchSettings.facetConfig;
       $scope.facetTabField = gnSearchSettings.facetTabField;
@@ -322,48 +326,13 @@
           m.map.enabled ? '/map' : 'home'
         );
       }
-      $scope.activeTab = $location.path().
-          match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
-
-      $scope.$on('$locationChangeSuccess', function(next, current) {
+      var setActiveTab = function() {
         $scope.activeTab = $location.path().
-            match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
+        match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
+      };
 
-        // resize search map for any views exluding viewer
-        if (!gnSearchLocation.isMap() && (!angular.isArray(
-            searchMap.getSize()) || searchMap.getSize()[0] < 0)) {
-          setTimeout(function() {
-            searchMap.updateSize();
-
-            // if an extent was obtained from a loaded context, apply it
-            if(searchMap.get('lastExtent')) {
-              searchMap.getView().fit(
-                searchMap.get('lastExtent'),
-                searchMap.getSize(), { nearest: true });
-            }
-          }, 0);
-        }
-
-        // resize viewer map for corresponding view
-        if (gnSearchLocation.isMap() && (!angular.isArray(
-            viewerMap.getSize()) || viewerMap.getSize().indexOf(0) >= 0)) {
-          setTimeout(function() {
-            viewerMap.updateSize();
-
-            // if an extent was obtained from a loaded context, apply it
-            if(viewerMap.get('lastExtent')) {
-              viewerMap.getView().fit(
-                viewerMap.get('lastExtent'),
-                viewerMap.getSize(), { nearest: true });
-            }
-
-            var map = $location.search().map;
-            if (angular.isDefined(map)) {
-              $scope.resultviewFns.loadMap({url: map});
-            }
-          }, 0);
-        }
-      });
+      setActiveTab();
+      $scope.$on('$locationChangeSuccess', setActiveTab);
 
       angular.extend($scope.searchObj, {
         advancedMode: false,
@@ -373,7 +342,7 @@
         viewerMap: viewerMap,
         searchMap: searchMap,
         mapfieldOption: {
-          relations: ['within']
+          relations: ['within_bbox']
         },
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         filters: gnSearchSettings.filters,

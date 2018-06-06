@@ -79,7 +79,7 @@ public class OgcWxSHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -100,7 +100,7 @@ public class OgcWxSHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -127,16 +127,18 @@ public class OgcWxSHarvester extends AbstractHarvester<HarvestResult> {
         OgcWxSParams params = (OgcWxSParams) p;
         super.setParams(params);
 
-        settingMan.add("id:" + siteId, "url", params.url);
-        settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + siteId, "ogctype", params.ogctype);
-        settingMan.add("id:" + optionsId, "lang", params.lang);
-        settingMan.add("id:" + optionsId, "topic", params.topic);
-        settingMan.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
-        settingMan.add("id:" + optionsId, "useLayer", params.useLayer);
-        settingMan.add("id:" + optionsId, "useLayerMd", params.useLayerMd);
-        settingMan.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
-        settingMan.add("id:" + optionsId, "outputSchema", params.outputSchema);
+        harvesterSettingsManager.add("id:" + siteId, "url", params.url);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + siteId, "ogctype", params.ogctype);
+        harvesterSettingsManager.add("id:" + optionsId, "lang", params.lang);
+        harvesterSettingsManager.add("id:" + optionsId, "topic", params.topic);
+        harvesterSettingsManager.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
+        harvesterSettingsManager.add("id:" + optionsId, "useLayer", params.useLayer);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetTemplateUuid", params.datasetTemplateUuid);
+        harvesterSettingsManager.add("id:" + optionsId, "serviceTemplateUuid", params.serviceTemplateUuid);
+        harvesterSettingsManager.add("id:" + optionsId, "useLayerMd", params.useLayerMd);
+        harvesterSettingsManager.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchema", params.outputSchema);
     }
 
     //---------------------------------------------------------------------------

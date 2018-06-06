@@ -758,7 +758,6 @@
             xml/schemas/**,
             WEB-INF/data/*.db,
             WEB-INF/data/index/**,
-            WEB-INF/data/data/formatter/**,
             WEB-INF/data/data/backup/**,
             WEB-INF/data/data/resources/htmlcache/**,
             catalog/lib/style/bootstrap/docs/**,

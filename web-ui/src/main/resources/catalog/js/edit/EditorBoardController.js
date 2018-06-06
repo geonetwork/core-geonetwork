@@ -110,6 +110,7 @@
       };
     }
   ]);
+
   module.controller('GnEditorBoardController', [
     '$scope',
     '$location',
@@ -144,7 +145,77 @@
       gnSearchSettings.paginationInfo = {
         hitsPerPage: gnSearchSettings.hitsperpageValues[0]
       };
-
     }
   ]);
+
+
+  module.controller('GnEditorHotKeyController', [
+    '$scope',
+    '$location',
+    'gnSearchSettings',
+    'gnUtilityService',
+    '$timeout',
+    'hotkeys',
+    '$translate',
+    function($scope, $location, gnSearchSettings, gnUtilityService,
+             $timeout, hotkeys, $translate) {
+
+      $timeout(function() {
+        hotkeys.bindTo($scope)
+          .add({
+            combo: 'd',
+            description: $translate.instant('hotkeyDirectory'),
+            callback: function(event) {
+              $location.path('/directory');
+            }
+          }).add({
+          combo: 'i',
+          description: $translate.instant('hotkeyImportRecord'),
+          callback: function(event) {
+            $location.path('/import');
+          }
+        }).add({
+          combo: 'h',
+          description: $translate.instant('hotkeyEditorBoard'),
+          callback: function(event) {
+            $location.path('/board');
+          }
+        }).add({
+          combo: '+',
+          description: $translate.instant('hotkeyAddRecord'),
+          callback: function(event) {
+            $location.path('/create');
+          }
+        }).add({
+          combo: 't',
+          description: $translate.instant('hotkeyFocusToSearch'),
+          callback: function(event) {
+            event.preventDefault();
+            var anyField = $('#gn-any-field');
+            if (anyField) {
+              gnUtilityService.scrollTo();
+              $location.path('/board');
+              anyField.focus();
+            }
+          }
+        }).add({
+          combo: 'enter',
+          description: $translate.instant('hotkeySearchTheCatalog'),
+          allowIn: ['INPUT'],
+          callback: function() {
+            angular.element($('#gn-any-field'))
+              .scope().triggerSearch()
+          }
+        }).add({
+          combo: 'b',
+          description: $translate.instant('hotkeyBatchEdit'),
+          callback: function(event) {
+            $location.path('/batchedit');
+          }
+        });
+      }, 500);
+    }
+  ]);
+
+
 })();

@@ -27,9 +27,10 @@
 
   goog.require('gn_categories_controller');
   goog.require('gn_thesaurus_controller');
+  goog.require('gn_registry');
 
   var module = angular.module('gn_classification_controller',
-      ['gn_thesaurus_controller', 'gn_categories_controller']);
+      ['gn_thesaurus_controller', 'gn_categories_controller', 'gn_registry']);
 
 
   /**

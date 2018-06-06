@@ -40,28 +40,18 @@ import org.jdom.Element;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.jdom.Element;
 
-//=============================================================================
+import javax.naming.OperationNotSupportedException;
+import java.nio.file.Path;
 
 /**
  * Stores the feedback from a user into the database and sends an e-mail
  */
 
 public class Insert implements Service {
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Init
-    // ---
-    // --------------------------------------------------------------------------
-
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
 
     public Element exec(Element params, final ServiceContext context)
             throws Exception {
@@ -126,5 +116,3 @@ public class Insert implements Service {
         return new Element("response").addContent(params.cloneContent());
     }
 }
-
-// =============================================================================

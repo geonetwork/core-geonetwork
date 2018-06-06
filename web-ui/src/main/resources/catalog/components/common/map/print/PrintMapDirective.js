@@ -308,6 +308,9 @@
               src instanceof ol.source.TileWMS) {
             encLayer = gnPrint.encoders.layers['WMS'].call(this,
                 layer, layerConfig, proj);
+          } else if (src instanceof ol.source.XYZ) {
+            encLayer = gnPrint.encoders.layers['XYZ'].call(this,
+                layer, layerConfig, proj);
           } else if (src instanceof ol.source.Vector ||
               src instanceof ol.source.ImageVector) {
             if (src instanceof ol.source.ImageVector) {

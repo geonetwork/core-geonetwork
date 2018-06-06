@@ -459,4 +459,14 @@ public interface IMetadataUtils {
      * @return an object for performing statistic calculation queries.
      */
     MetadataReportsQueries getMetadataReports();
+    
+    /**
+     * Check if another record exist with that UUID. This is not allowed
+     * and would return a DataIntegrityViolationException
+     *
+     * @param uuid  The UUID to check for
+     * @param id    The current record id to compare with other record which may be found
+     * @return      An exception if another record is found, false otherwise
+     */
+    boolean checkMetadataWithSameUuidExist(String uuid, int id);
 }

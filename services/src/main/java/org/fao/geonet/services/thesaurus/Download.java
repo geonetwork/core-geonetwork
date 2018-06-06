@@ -44,6 +44,7 @@ import java.nio.file.Path;
 /**
  * Download one thesaurus file
  */
+@Deprecated
 public class Download implements Service {
     //--------------------------------------------------------------------------
     //---

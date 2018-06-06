@@ -192,7 +192,9 @@
 
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
-      gnSearchManagerService.gnSearch(finalParams).then(
+      gnSearchManagerService.gnSearch(
+                              finalParams, null,
+                              $scope.searchObj.internal).then(
           function(data) {
             $scope.searchResults.records = [];
             for (var i = 0; i < data.metadata.length; i++) {

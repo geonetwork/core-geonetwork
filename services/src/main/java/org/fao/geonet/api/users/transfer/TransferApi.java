@@ -53,6 +53,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -106,12 +107,12 @@ public class TransferApi {
 
         List<OwnerResponse> ownerList = new ArrayList<>();
         for (User u : users) {
-            List<? extends AbstractMetadata> userRecords = metadataRepository.findAll(
+            long userRecordsCount = metadataRepository.count(
                 MetadataSpecs.hasOwner(u.getId())
             );
-            if (userRecords.size() > 0) {
+            if (userRecordsCount > 0) {
                 ownerList.add(
-                    new OwnerResponse(u, userRecords.size())
+                    new OwnerResponse(u, userRecordsCount)
                 );
             }
         }
@@ -145,7 +146,14 @@ public class TransferApi {
         List<UserGroupsResponse> list = new ArrayList<>();
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin) {
             List<User> allAdmin = userRepository.findAllByProfile(Profile.Administrator);
-            List<UserGroup> userGroups = userGroupRepository.findAll();
+            List<UserGroup> userGroups;
+
+            if (myProfile == Profile.Administrator) {
+                userGroups = userGroupRepository.findAll();
+            } else {
+                userGroups  = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+            }
+
             for (UserGroup ug : userGroups) {
                 list.add(
                     new UserGroupsResponse(ug.getUser(), ug.getGroup(), ug.getProfile().name())

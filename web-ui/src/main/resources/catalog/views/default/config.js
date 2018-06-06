@@ -35,35 +35,16 @@
         'gnSearchSettings',
         'gnViewerSettings',
         'gnOwsContextService',
-        'gnMap', 'gnMapsManager',
-        'gnGlobalSettings',
-        '$location',
+        'gnMap',
+        'gnMapsManager',
+        'gnDefaultGazetteer',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnMapsManager, gnGlobalSettings, $location) {
+                 gnMap, gnMapsManager, gnDefaultGazetteer) {
 
-          // Load the context defined in the configuration
-          viewerSettings.defaultContext =
-              (viewerSettings.mapConfig.map || '../../map/config-viewer.xml');
-          viewerSettings.owsContext = $location.search().map;
-
-          // these layers will be added along the default context
-          // (transform settings to be usable by the OwsContextService)
-          var viewerMapLayers = viewerSettings.mapConfig.viewerMapLayers
-          viewerSettings.additionalMapLayers =
-            viewerMapLayers && viewerMapLayers.map ?
-            viewerMapLayers.map(function (layer) {
-              return {
-                name: '{type=' + layer.type + ', name=' + layer.name + '}',
-                title: layer.title,
-                group: 'Background layers',
-                server: [{
-                  service: 'urn:ogc:serviceType:WMS',
-                  onlineResource: [{
-                    href: layer.url
-                  }]
-                }]
-              }
-            }) : [];
+          if(viewerSettings.mapConfig.viewerMapLayers) {
+            console.warn('[geonetwork] Use of "mapConfig.viewerMapLayers" is deprecated. ' +
+              'Please configure layer per map type.')
+          }
 
           // Keep one layer in the background
           // while the context is not yet loaded.
@@ -115,20 +96,11 @@
 
           };
 
-          // Start location. This is usually overriden
-          // by context for large map and search records
-          // extent for minimap
-          var mapsConfig = viewerSettings.aoi || {
-            center: [280274.03240585705, 6053178.654789996],
-            zoom: 2
-          };
-
-          var viewerMap = new ol.Map({
-            controls: [],
-            view: new ol.View(mapsConfig)
-          });
-
           var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
+          var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+
+          // To configure a gazetteer provider
+          viewerSettings.gazetteerProvider = gnDefaultGazetteer;
 
           // Map protocols used to load layers/services in the map viewer
           searchSettings.mapProtocols = {

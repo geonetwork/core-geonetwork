@@ -19,7 +19,9 @@
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
                data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
-          <span class="hidden-sm hidden-md">{{info['system/site/name']}}</span>
+          <span class="hidden-sm hidden-md gn-name" 
+                data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
+                title="{{info['system/site/name']}}">{{info['system/site/name']}}</span>
         </a>
       </li>
       <li data-ng-if="gnCfg.mods.search.enabled">

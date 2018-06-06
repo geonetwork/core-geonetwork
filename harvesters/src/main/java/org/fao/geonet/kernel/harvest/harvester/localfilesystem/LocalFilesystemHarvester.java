@@ -79,13 +79,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         LocalFilesystemParams lp = (LocalFilesystemParams) params;
         super.setParams(lp);
 
-        settingMan.add("id:" + siteId, "icon", lp.icon);
-        settingMan.add("id:" + siteId, "recurse", lp.recurse);
-        settingMan.add("id:" + siteId, "directory", lp.directoryname);
-        settingMan.add("id:" + siteId, "recordType", lp.recordType);
-        settingMan.add("id:" + siteId, "nodelete", lp.nodelete);
-        settingMan.add("id:" + siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
-        settingMan.add("id:" + siteId, "beforeScript", lp.beforeScript);
+        harvesterSettingsManager.add("id:" + siteId, "icon", lp.icon);
+        harvesterSettingsManager.add("id:" + siteId, "recurse", lp.recurse);
+        harvesterSettingsManager.add("id:" + siteId, "directory", lp.directoryname);
+        harvesterSettingsManager.add("id:" + siteId, "recordType", lp.recordType);
+        harvesterSettingsManager.add("id:" + siteId, "nodelete", lp.nodelete);
+        harvesterSettingsManager.add("id:" + siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
+        harvesterSettingsManager.add("id:" + siteId, "beforeScript", lp.beforeScript);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
         storeNode(params, "id:" + id);
 
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -119,7 +119,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
      */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this, log);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
         } else {
@@ -275,7 +275,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);

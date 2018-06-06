@@ -513,6 +513,8 @@ public final class Geonet {
             public static final String CROSSES = "crosses";
             public static final String TOUCHES = "touches";
             public static final String WITHIN = "within";
+            public static final String WITHIN_BBOX = "within_bbox";
+            public static final String OVERLAPS_BBOX = "overlaps_bbox";
         }
 
         /**
@@ -668,5 +670,6 @@ public final class Geonet {
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
 		public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
+        public static final String FEEDBACKCOUNT = "feedbackCount";
     }
 }

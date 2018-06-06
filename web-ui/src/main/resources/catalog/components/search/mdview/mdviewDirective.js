@@ -165,14 +165,14 @@
           mode: '@gnMode'
         },
         link: function(scope, element, attrs, controller) {
-
           if (['default', 'role', 'org-role'].indexOf(scope.mode) == -1) {
             scope.mode = 'default';
           }
 
-          if (scope.mode != 'default') {
-            var groupByOrgAndMailOrName = function(resources) {
-              return _.groupBy(resources,
+          scope.calculateContacts = function() {
+            if (scope.mode != 'default') {
+              var groupByOrgAndMailOrName = function(resources) {
+                return _.groupBy(resources,
                   function(contact) {
                     if (contact.email) {
                       return contact.org + '#' + contact.email;
@@ -180,10 +180,10 @@
                       return contact.org + '#' + contact.name;
                     }
                   });
-            };
+              };
 
-            var aggregateRoles = function(resources) {
-              return _.map(resources,
+              var aggregateRoles = function(resources) {
+                return _.map(resources,
                   function(contact) {
                     var copy = angular.copy(contact[0]);
                     angular.extend(copy, {
@@ -192,53 +192,58 @@
 
                     return copy;
                   });
-            };
+              };
 
-            if (scope.mode == 'role') {
-              var contactsByOrgAndMailOrName =
+              if (scope.mode == 'role') {
+                var contactsByOrgAndMailOrName =
                   groupByOrgAndMailOrName(scope.mdContacts);
 
-              var contactsWithAggregatedRoles =
+                var contactsWithAggregatedRoles =
                   aggregateRoles(contactsByOrgAndMailOrName);
 
-              /**
-               * Contacts format:
-               *
-               * {
+                /**
+                 * Contacts format:
+                 *
+                 * {
                *    {[roles]: [{contact1}, {contact2}, ... },
                *    {[roles]: [{contact3}, {contact4}, ... },
                * }
-               *
-               */
-              scope.mdContactsByRole =
+                 *
+                 */
+                scope.mdContactsByRole =
                   _.groupBy(contactsWithAggregatedRoles, function(c) {
                     return c.roles;
                   });
-            } else if (scope.mode == 'org-role') {
-              /**
-               * Contacts format:
-               *
-               * {
+              } else if (scope.mode == 'org-role') {
+                /**
+                 * Contacts format:
+                 *
+                 * {
                *    {organisation1: [{contact1}, {contact2}, ... },
                *    {organisation2: [{contact3}, {contact4}, ... },
                * }
-               *
-               */
-              scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
+                 *
+                 */
+                scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
                   function(contact) {
                     return contact.org;
                   });
 
-              for (var key in scope.mdContactsByOrgRole) {
-                var value = scope.mdContactsByOrgRole[key];
+                for (var key in scope.mdContactsByOrgRole) {
+                  var value = scope.mdContactsByOrgRole[key];
 
-                var contactsByOrgAndMailOrName = groupByOrgAndMailOrName(value);
+                  var contactsByOrgAndMailOrName = groupByOrgAndMailOrName(value);
 
-                scope.mdContactsByOrgRole[key] =
+                  scope.mdContactsByOrgRole[key] =
                     aggregateRoles(contactsByOrgAndMailOrName);
+                }
               }
             }
-          }
+          };
+
+          scope.$watch('mdContacts', function () {
+            scope.calculateContacts();
+          });
         }
       };
     }]

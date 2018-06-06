@@ -99,6 +99,7 @@
     <property name="createNonExistingLdapUser" value="${ldap.privilege.create.nonexisting.users}"/>
     <property name="ldapManager" ref="ldapUserDetailsService"/>
     <property name="contextSource" ref="contextSource"/>
+    <property name="ldapUsernameCaseInsensitive" value="${ldap.usernameCaseInsensitive:#{true}}"/>
   </bean>
 
 

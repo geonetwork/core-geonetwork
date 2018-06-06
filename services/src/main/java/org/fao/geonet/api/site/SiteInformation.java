@@ -173,16 +173,10 @@ public class SiteInformation {
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path luceneDir = dataDirectory.getLuceneDir();
         indexProperties.put("index.path", luceneDir.toAbsolutePath().normalize().toString());
-        Path lDir = dataDirectory.getSpatialIndexPath();
         if (Files.exists(luceneDir)) {
             long size = ApiUtils.sizeOfDirectory(luceneDir);
             indexProperties.put("index.size", "" + size); // lucene + Shapefile
             // if exist
-        }
-
-        if (Files.exists(lDir)) {
-            long size = ApiUtils.sizeOfDirectory(lDir);
-            indexProperties.put("index.size.lucene", "" + size);
         }
         indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
     }
@@ -239,6 +233,6 @@ public class SiteInformation {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-        } 
+        }
     }
 }

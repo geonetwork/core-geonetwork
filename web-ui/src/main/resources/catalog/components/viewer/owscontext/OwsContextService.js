@@ -151,12 +151,15 @@
           map.setView(view);
         }
 
-        // $timeout used to avoid map no rendered (eg: null size)
-        $timeout(function() {
-          if (map.getSize()) {
+        var loadPromise = map.get('sizePromise');
+        if (loadPromise) {
+          loadPromise.then(function() {
             map.getView().fit(extent, map.getSize(), { nearest: true });
-          }
-        }, 0, false);
+          })
+        }
+        else {
+          console.warn('Map must be created by mapsManager');
+        }
 
         // load the resources & add additional layers if available
         var layers = context.resourceList.layer;
@@ -187,6 +190,7 @@
           }
           gnViewerSettings.bgLayers.length = 0;
           var bgLayers = gnViewerSettings.bgLayers;
+          bgLayers.fromCtx = true;
           var isFirstBgLayer = false;
           // -------
 
@@ -230,6 +234,7 @@
                 // {type=wmts,name=Ocean_Basemap} or WMS
                 else {
 
+                  // to push in bgLayers not in the map
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
                     label: 'loading',
@@ -243,15 +248,15 @@
                   }
 
                   var layerIndex = bgLayers.push(loadingLayer);
-                  var p = self.createLayer(layer, map, i);
+                  var p = self.createLayer(layer, map, 'do not add');
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      bgLayers[idx - 1] = layer;
-
                       if (!layer) {
                         return;
                       }
+                      bgLayers[idx - 1] = layer;
+
                       layer.displayInLayerManager = false;
                       layer.background = true;
 
@@ -462,6 +467,8 @@
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = layer.get('urlCap');
+          } else {
+            return;
           }
 
           // fetch current filters state (the whole object will be saved)

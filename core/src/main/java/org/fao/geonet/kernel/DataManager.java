@@ -1,5 +1,6 @@
 //==============================================================================
 //===
+
 //=== DataManager
 //===
 //=============================================================================
@@ -481,12 +482,12 @@ public class DataManager {
 
     @Deprecated
     public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadataGroup(context, metadataId);
+        metadataManager.deleteMetadata(context, metadataId);
     }
 
     @Deprecated
     public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
-        metadataManager.deleteMetadata(context, metadataId);
+        metadataManager.deleteMetadataGroup(context, metadataId);
     }
 
     @Deprecated

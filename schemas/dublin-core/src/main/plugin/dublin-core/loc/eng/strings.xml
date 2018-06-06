@@ -30,4 +30,8 @@
   <xml>XML</xml>
   <default>Simple</default>
   <advanced>Full</advanced>
+
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <associatedResources>Associated resources</associatedResources>
 </strings>
