@@ -541,7 +541,7 @@ public class Importer {
         }
     }
 
-    public static String importRecord(String uuid,
+    public static void importRecord(String uuid,
                                     MEFLib.UuidAction uuidAction, List<Element> md, String schema, int index,
                                     String source, String sourceName, Map<String, String> sourceTranslations, ServiceContext context,
                                     List<String> id, String createDate, String changeDate,
@@ -612,8 +612,6 @@ public class Importer {
         dm.activateWorkflowIfConfigured(context, metadataId, groupId);
 
         id.add(index, metadataId);
-
-        return uuid;
 
     }
 
