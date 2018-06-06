@@ -223,7 +223,7 @@
         }
 
         return gnMetadataManager.create(
-            $scope.activeTpl['geonet:info'].id,
+            $scope.activeTpl.id,
             $scope.ownerGroup,
             isPublic || false,
             $scope.isTemplate,

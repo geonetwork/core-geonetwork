@@ -125,7 +125,7 @@
             var uuids = [];
             scope.searchResults.records.forEach(function(record) {
               uuids.push(record.getUuid());
-              record['geonet:info'].selected = selected;
+              record.selected = selected;
             });
 
             gnSearchManagerService.select(uuids,
@@ -141,7 +141,7 @@
                 .success(function(res) {
                   scope.searchResults.selectedCount = parseInt(res, 10);
                   scope.searchResults.records.forEach(function(record) {
-                    record['geonet:info'].selected = true;
+                    record.selected = true;
                   });
                 });
           };
@@ -152,7 +152,7 @@
                 .success(function(res) {
                   scope.searchResults.selectedCount = parseInt(res, 10);
                   scope.searchResults.records.forEach(function(record) {
-                    record['geonet:info'].selected = false;
+                    record.selected = false;
                   });
                 });
           };

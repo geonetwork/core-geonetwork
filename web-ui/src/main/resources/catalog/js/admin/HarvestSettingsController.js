@@ -462,7 +462,7 @@
           // from the GetCapabilities only
           $scope.ogcwxsTemplates = [{
             getTitle:function (){return ''},
-            'geonet:info': {'uuid': ''}}];
+            'uuid': ''}];
           for (var i = 0; i < data.metadata.length; i++) {
             $scope.ogcwxsTemplates.push(new Metadata(data.metadata[i]));
           }
@@ -478,7 +478,7 @@
           // from the GetCapabilities only
           $scope.ogcwxsDatasetTemplates = [{
             getTitle:function (){return ''},
-            'geonet:info': {'uuid': ''}}];
+            'uuid': ''}];
           for (var i = 0; i < data.metadata.length; i++) {
             $scope.ogcwxsDatasetTemplates.push(new Metadata(data.metadata[i]));
           }

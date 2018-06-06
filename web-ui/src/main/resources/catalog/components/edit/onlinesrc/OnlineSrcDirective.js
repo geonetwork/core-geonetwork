@@ -818,10 +818,10 @@
                           })
                         }));
                       });
-                  
+
                   var listenerExtent = scope.$watch(
                 		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
-                			  
+
                 	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
                           // FIXME : only first extent is took into account
                           var projectedExtent;
@@ -841,25 +841,25 @@
                           scope.map.getView().fit(
                               projectedExtent,
                               scope.map.getSize());
-                          
+
                           //unregister
                           listenerExtent();
                         }
                   });
-            	  
+
                   // Trigger init of print directive
                   scope.mode = 'thumbnailMaker';
                 }
 
                 scope.generateThumbnail = function() {
-                  //Added mandatory custom params here to avoid 
+                  //Added mandatory custom params here to avoid
                   //changing other printing services
                   jsonSpec = angular.extend(
                 		  scope.jsonSpec,
                 		  {
                 			  hasNoTitle: true
                 		  });
-                	
+
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
                       '/attachments/print-thumbnail', null, {
@@ -1886,7 +1886,7 @@
                     var uuids = [];
                     for (i = 0; i < scope.selection.length; ++i) {
                       var obj = scope.selection[i];
-                      uuids.push(obj.md['geonet:info'].uuid + '#' +
+                      uuids.push(obj.md.uuid + '#' +
                           obj.associationType + '#' +
                           obj.initiativeType);
                     }

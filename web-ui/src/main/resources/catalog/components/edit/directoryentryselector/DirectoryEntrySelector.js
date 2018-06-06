@@ -223,8 +223,8 @@
                     };
 
                     angular.forEach(entry, function(c) {
-                      var id = c['geonet:info'].id,
-                          uuid = c['geonet:info'].uuid;
+                      var id = c.id,
+                          uuid = c.uuid;
                       var params = {};
 
                       // For the time being only contact role

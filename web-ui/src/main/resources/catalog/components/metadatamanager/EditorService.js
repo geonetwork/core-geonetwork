@@ -394,7 +394,7 @@
 
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
-             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref + '&name=' + name + attributeAction)
               .success(function(data) {
                // Append HTML snippet after current element - compile Angular
@@ -432,7 +432,7 @@
            insertRef, position) {
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
-             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref +
              '&name=' + parent +
              '&child=' + name).success(function(data) {
@@ -462,8 +462,8 @@
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
-             '/editor/elements?ref=' + ref + 
-             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
+             '/editor/elements?ref=' + ref +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&parent=' + parent)
               .success(function(data) {
                // For a fieldset, domref is equal to ref.
@@ -591,12 +591,12 @@
              return defer.promise;
            },
            view: function(md) {
-             window.open('../../?uuid=' + md['geonet:info'].uuid,
+             window.open('../../?uuid=' + md.uuid,
              'gn-view');
            },
            edit: function(md) {
              location.href = 'catalog.edit?#/metadata/' +
-             md['geonet:info'].id;
+             md.id;
            },
            getRecord: function(uuid) {
              var defer = $q.defer();

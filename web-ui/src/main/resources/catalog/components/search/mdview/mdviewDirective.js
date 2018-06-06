@@ -151,7 +151,7 @@
 
 
           scope.rateForRecord = function() {
-            return $http.put('../api/records/' + scope.md['geonet:info'].uuid +
+            return $http.put('../api/records/' + scope.md.uuid +
                              '/rate', scope.rate).success(function(data) {
               scope.rate = data;
             });
