@@ -89,18 +89,19 @@
           <clusterName>test</clusterName>
           <transportPort>9300</transportPort>
           <httpPort>9200</httpPort>
+          <pathInitScript>${project.basedir}/../es/itest-es-setup.script</pathInitScript>
         </configuration>
         <executions>
           <execution>
             <id>start-elasticsearch</id>
-            <phase>process-test-resources</phase>
+            <phase>process-test-classes</phase>
             <goals>
               <goal>runforked</goal>
             </goals>
           </execution>
           <execution>
             <id>stop-elasticsearch</id>
-            <phase>post-integration-test</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>stop</goal>
             </goals>

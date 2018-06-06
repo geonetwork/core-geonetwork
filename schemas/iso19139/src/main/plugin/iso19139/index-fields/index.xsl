@@ -664,7 +664,7 @@
 
           <xsl:if test="$crs != ''">
             <coordinateSystem>
-              <xsl:value-of select="$crs"/>
+              <xsl:value-of select="$crs"/>HarvestManagerImplIntegrationTest
             </coordinateSystem>
           </xsl:if>
         </xsl:for-each>

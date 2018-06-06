@@ -280,6 +280,7 @@ public class EsClient implements InitializingBean {
         client.shutdownClient();
     }
 
+    // TODO: check index exist too
     public String getServerStatus() throws Exception {
         JestResult result = getClient().execute(new Health.Builder().build());
         return result.getJsonObject().get("status").getAsString();

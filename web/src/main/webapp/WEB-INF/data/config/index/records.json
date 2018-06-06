@@ -1080,6 +1080,9 @@
         "harvesterUuid": {
           "type": "keyword"
         },
+        "uuid": {
+          "type": "keyword"
+        },
         "id": {
           "type": "keyword"
         },
