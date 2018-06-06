@@ -1257,5 +1257,7 @@
     "registryNoItemFound": "No collection found. Choose another item class.",
     "registryNoLanguage": "One language is required.",
     "registryNoClassFound": "No class found in that registry. Check the URL?",
-    "registryFailedToLoadClass": "No class found in that registry. Check the URL?"
+    "registryFailedToLoadClass": "No class found in that registry. Check the URL?",
+    "indexInEsDoneError": "There is an error with the ElasticSearch index. See the logs for details",
+    "indexInEsDone": "The ElasticSearch index completed successfully"
 }
