@@ -93,7 +93,7 @@
             then(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('metadataRemoved',
-                    {title: md.title || md.defaultTitle}),
+                    {title: md.resourceTitle}),
                 timeout: 2
               });
               deferred.resolve(data);

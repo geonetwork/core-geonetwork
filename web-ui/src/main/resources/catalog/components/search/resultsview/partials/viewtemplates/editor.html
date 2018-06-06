@@ -15,8 +15,8 @@
           <a href=""
              data-ng-show="md.isTemplate != 's'"
              data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
-             title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
-          <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>
+             title="{{md.resourceAbstract}}">{{md.resourceTitle}}</a>
+          <span data-ng-show="md.isTemplate == 's'">{{md.resourceTitle}}</span>
           <br/>
           <div class="gn-record-details text-muted">
             <small><span data-translate="">owner</span>:</small>

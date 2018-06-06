@@ -69,7 +69,7 @@
           this.addLayer = function(getCapLayer, style) {
             getCapLayer.version = $scope.capability.version;
             getCapLayer.capRequest = $scope.capability.Request;
-  
+
             //check if proxy is needed
             var url = $scope.url.split('/');
             getCapLayer.useProxy = false;
@@ -113,7 +113,7 @@
             angular.forEach(md.getLinksByType(type), function(link) {
               if (link.url) {
                 scope.catServicesList.push({
-                  title: md.title || md.defaultTitle,
+                  title: md.resourceTitle,
                   uuid: md.getUuid(),
                   name: link.name,
                   desc: link.desc,

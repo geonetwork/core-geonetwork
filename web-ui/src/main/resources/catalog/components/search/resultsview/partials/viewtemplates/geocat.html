@@ -21,7 +21,7 @@
           <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('service')>=0"
                 class="fa fa-globe" title="service"></span>
           <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview"
-             title="{{md.title || md.defaultTitle}}">{{md.title || md.defaultTitle}}</a>
+             title="{{md.resourceTitle}}">{{md.resourceTitle}}</a>
         </h4>
 
         <a class="pull-left" ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
@@ -32,7 +32,7 @@
         </a>
 
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350"
-           dd-text-collapse-text="{{md.abstract}}"></p>
+           dd-text-collapse-text="{{md.resourceAbstract}}"></p>
         <p class="md-date" ng-if="showDate.date">(<i translate>{{showDate.type}}</i> :
           {{showDate.date}})</p>
         <p class="md-owner">

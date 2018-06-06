@@ -585,12 +585,12 @@
             target="_blank"
             class="btn btn-default"><i class="fa fa-fw fa-facebook"></i></a>
           <a
-            data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
+            data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.resourceTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
             title="{{'shareOnLinkedIn' | translate}}"
             target="_blank"
             class="btn btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
           <a
-            data-ng-href="mailto:?subject={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
+            data-ng-href="mailto:?subject={{mdView.current.record.resourceTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
             title="{{'shareByEmail' | translate}}"
             target="_blank"
             class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>

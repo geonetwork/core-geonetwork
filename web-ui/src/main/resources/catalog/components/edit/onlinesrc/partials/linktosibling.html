@@ -44,7 +44,7 @@
               <li data-ng-repeat="md in searchResults.records">
                 <a href=""
                    data-ng-click="addToSelection(md, config.associationType, config.initiativeType)">
-                  {{md.title || md.defaultTitle}}
+                  {{md.resourceTitle}}
                 </a>
               </li>
             </ul>
@@ -55,7 +55,7 @@
         <ul class="list-group">
           <li class="list-group-item gn-record"
               data-ng-repeat="obj in selection">
-            {{obj.md.title || obj.md.defaultTitle}}
+            {{obj.md.resourceTitle}}
               <span><i>({{obj.associationType}}
                 <span data-ng-show="obj.initiativeType">/ {{obj.initiativeType}}</span>)
               </i></span>

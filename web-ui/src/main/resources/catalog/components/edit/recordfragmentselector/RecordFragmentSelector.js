@@ -105,7 +105,7 @@
 
                  scope.setSource = function(r) {
                    if (angular.isObject(r)) {
-                     scope.sourceRecordTitle = r.title || r.defaultTitle || '';
+                     scope.sourceRecordTitle = r.resourceTitle || '';
                      scope.sourceRecord = r.uuid;
                    } else {
                      scope.sourceRecordTitle = null;

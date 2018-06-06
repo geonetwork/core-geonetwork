@@ -31,12 +31,12 @@
 
           <!-- Icon for types -->
           <a href="" gn-metadata-open="md" gn-metadata-open-selector=".gn-resultview"
-             title="{{md.title || md.defaultTitle}}">
+             title="{{md.resourceTitle}}">
             <span class="fa gn-icon-{{md.type[0]}}"></span>
-            {{md.title || md.defaultTitle}}</a>
+            {{md.resourceTitle}}</a>
         </h4>
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350"
-           dd-text-collapse-text="{{md.abstract || md.defaultAbstract}}"></p>
+           dd-text-collapse-text="{{md.resourceAbstract}}"></p>
         <blockquote ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</blockquote>
       </div>
     </div>
