@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Version;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -406,60 +407,5 @@ public class DatabaseMigration implements BeanPostProcessor {
 
     public void setInitAfter(String initAfter) {
         this.initAfter = initAfter;
-    }
-
-    public static class Version implements Comparable<Version> {
-        private final int major, minor, micro;
-
-        public Version(String major, String minor, String micro) {
-            this.major = Integer.parseInt(major);
-            this.minor = Integer.parseInt(minor);
-            this.micro = Integer.parseInt(micro);
-        }
-
-        public Version() {
-            this("0", "0", "0");
-        }
-
-        @Override
-        public int compareTo(Version o) {
-            if (major != o.major) {
-                return Integer.compare(major, o.major);
-            }
-            if (minor != o.minor) {
-                return Integer.compare(minor, o.minor);
-            }
-            if (micro != o.micro) {
-                return Integer.compare(micro, o.micro);
-            }
-            return 0;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Version version = (Version) o;
-
-            if (major != version.major) return false;
-            if (micro != version.micro) return false;
-            if (minor != version.minor) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = major;
-            result = 31 * result + minor;
-            result = 31 * result + micro;
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return major + "." + minor + "." + micro;
-        }
     }
 }

@@ -28,6 +28,7 @@
   <name>iso19110</name>
   <id>ae229ba0-dde3-11df-99ab-001c2346de4c</id>
   <version>1.0</version>
+  <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
   <title xml:lang="en">Geographic information -- Methodology for feature cataloguing</title>
   <title xml:lang="fr">Information géographique -- Méthodologie de catalogage des entités</title>
   <standardUrl xml:lang="en">
