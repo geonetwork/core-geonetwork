@@ -1210,6 +1210,22 @@
                           }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
+                    } else if (scope.OGCProtocol === 'WMTS') {
+                      return gnOwsCapabilities.getWMTSCapabilities(url)
+                          .then(function(capabilities) {
+                            scope.layers = [];
+                            scope.isUrlOk = true;
+                            angular.forEach(capabilities.Layer, function(l) {
+                              if (angular.isDefined(l.Identifier)) {
+                                scope.layers.push({
+                                    "Name": l.Identifier,
+                                    "Title": l.Title
+                                  });
+                              }
+                            });
+                          }).catch(function(error) {
+                            scope.isUrlOk = error === 200;
+                          });
                     } else if (scope.OGCProtocol === 'WFS') {
                       return gnWfsService.getCapabilities(url)
                           .then(function(capabilities) {
@@ -1251,6 +1267,9 @@
                   }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
                     return 'WFS';
+                  }
+                  else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
+                    return 'WMTS';
                   }
                   else {
                     return null;
@@ -1520,6 +1539,7 @@
                    */
                   scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
+
                     return gnOwsCapabilities.getWMSCapabilities(url)
                         .then(function(capabilities) {
                           scope.layers = [];
