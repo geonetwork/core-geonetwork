@@ -162,7 +162,6 @@
   <!-- New section of services based on refactoring
     guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
 
-  <include>config/config-service-xml-api.xml</include>
 
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>

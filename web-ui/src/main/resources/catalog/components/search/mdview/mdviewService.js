@@ -44,10 +44,10 @@
     'gnSearchManagerService',
     'gnSearchSettings',
     'gnUrlUtils',
-    'gnUtilityService',
+    'gnUtilityService', '$http',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService) {
+             gnUrlUtils, gnUtilityService, $http) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
@@ -146,14 +146,18 @@
 
               // get a new search to pick the md
               gnMdViewObj.current.record = null;
-              gnSearchManagerService.gnSearch({
-                uuid: uuid,
-                _isTemplate: 'y or n',
-                fast: 'index',
-                _content_type: 'json'
-              }).then(function(data) {
-                if (data.metadata.length == 1) {
-                  data.metadata[0] = new Metadata(data.metadata[0]);
+              $http.post('../../index/records/_search', {"query": {
+                  "bool" : {
+                    "must": [{
+                      "term": {"uuid": uuid}},
+                      {"terms": {"isTemplate": ["n", "y"]}
+                      }]
+                  }
+                }}).then(function(r) {
+                if (r.data.hits.total == 1) {
+                  var metadata = [];
+                  metadata.push(new Metadata(r.data.hits.hits[0]));
+                  data = {metadata: metadata};
                   that.feedMd(0, undefined, data.metadata);
                 } else {
                   gnMdViewObj.loadDetailsFinished = true;

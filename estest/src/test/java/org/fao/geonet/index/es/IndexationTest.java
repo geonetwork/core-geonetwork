@@ -5,6 +5,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.jdom.Element;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class IndexationTest {
 
+    @Ignore
     @Test
     public void nominal() throws Exception {
 

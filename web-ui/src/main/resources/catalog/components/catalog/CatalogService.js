@@ -613,7 +613,7 @@
 
     Metadata.prototype = {
       getUuid: function() {
-        return this.uuid;
+        return this.uuid || this._source.uuid;
       },
       getId: function() {
         return this.id;
