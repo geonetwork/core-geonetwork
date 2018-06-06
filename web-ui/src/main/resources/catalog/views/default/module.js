@@ -112,12 +112,13 @@
     'gnOwsContextService',
     'hotkeys',
     'gnGlobalSettings',
+    'gnExternalViewer',
     function($scope, $location, $filter,
              suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
-             hotkeys, gnGlobalSettings) {
+             hotkeys, gnGlobalSettings, gnExternalViewer) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -139,6 +140,7 @@
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
       };
+      $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',
@@ -278,6 +280,20 @@
             // Related service return a property title for the name
           } else if (link.title) {
             config.name = link.title;
+          }
+
+          // if an external viewer is defined, use it here
+          if (gnExternalViewer.isEnabled()) {
+            gnExternalViewer.viewService({
+              id: md ? md.getId() : null,
+              uuid: config.uuid
+            }, {
+              type: config.type,
+              url: config.url,
+              name: config.name,
+              title: link.title
+            });
+            return;
           }
 
           // This is probably only a service

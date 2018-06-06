@@ -54,9 +54,10 @@
         'gnWfsService',
         'gnAlertService',
         '$filter',
+        'gnExternalViewer',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, gnViewerSettings,
             ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
-            gnWfsService, gnAlertService, $filter) {
+            gnWfsService, gnAlertService, $filter, gnExternalViewer) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
@@ -91,29 +92,36 @@
             var isGetFeatureLink =
                (url.toLowerCase().indexOf('request=getfeature') > -1);
 
-            if (isServiceLink && !isGetFeatureLink) {
-              gnMap.addOwsServiceToMap(url, 'WFS');
+            var featureName;
+            if (isGetFeatureLink) {
+              var name = 'typename';
+              var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+              var results = regex.exec(url);
+
+              if (results) {
+                featureName = decodeURIComponent(results[1].replace(/\+/g, ' '));
+              }
             } else {
-              var ftName = '';
+              featureName = $filter('gnLocalized')(link.title);
+            }
 
-              if (isGetFeatureLink) {
-                var name = 'typename';
-                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-                var results = regex.exec(url);
-
-                if (results) {
-                  ftName = decodeURIComponent(results[1].replace(/\+/g, ' '));
-                }
-              } else {
-                ftName = $filter('gnLocalized')(link.title);
-              }
-
-              if (ftName) {
-                gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
-                   url, ftName, false, md);
-              } else {
-                gnMap.addOwsServiceToMap(url, 'WFS');
-              }
+            // if an external viewer is defined, use it here
+            if (gnExternalViewer.isEnabled()) {
+              gnExternalViewer.viewService({
+                id: md ? md.getId() : null,
+                uuid: md ? md.getUuid() : null
+              }, {
+                type: 'wfs',
+                url: url,
+                name: featureName
+              });
+              return;
+            }
+            if (featureName && (!isServiceLink || isGetFeatureLink)) {
+              gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
+                  url, featureName, false, md);
+            } else {
+              gnMap.addOwsServiceToMap(url, 'WFS');
             }
             gnSearchLocation.setMap();
           };
@@ -198,7 +206,7 @@
             'MAP' : {
               iconClass: 'fa-map',
               label: 'mapLink',
-              action: addMapToMap
+              action: gnExternalViewer.isEnabled() ? null : addMapToMap
             },
             'DB' : {
               iconClass: 'fa-database',
@@ -213,7 +221,7 @@
             'KML' : {
               iconClass: 'fa-globe',
               label: 'addToMap',
-              action: addKMLToMap
+              action: gnExternalViewer.isEnabled() ? null : addKMLToMap
             },
             'MDFCATS' : {
               iconClass: 'fa-table',
