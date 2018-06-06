@@ -2,7 +2,7 @@
   <tr data-ng-repeat="md in searchResults.records">
     <td>
       <input data-gn-selection-md type="checkbox"
-             data-ng-model="md['geonet:info'].selected"
+             data-ng-model="md.selected"
              data-ng-change="change()"/>
     </td>
     <td>
@@ -24,7 +24,7 @@
             &nbsp;
             <small data-translate="">updatedOn</small>
             <small class="text-muted"
-                   data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+                   data-gn-humanize-time="{{md.changeDate}}"
                    data-from-now=""></small>
 
             <span class="pull-right text-muted"
@@ -45,7 +45,7 @@
             <!-- TODO: subtemplate link for editing is different -->
             <a class="btn btn-default"
                data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-               data-ng-href="#/metadata/{{md['geonet:info'].id}}?redirectUrl=catalog.edit"
+               data-ng-href="#/metadata/{{md.id}}?redirectUrl=catalog.edit"
                title="{{'edit' | translate}}">
               <i class="fa fa-pencil"></i>
             </a>
@@ -58,14 +58,14 @@
             </a>
             <a class="btn btn-default"
                data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-               data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
+               data-ng-href="#/create?childOf={{md.id}}"
                title="{{'createChild' | translate}}">
               <i class="fa fa-sitemap text-muted"></i>
             </a>
             <a class="btn btn-default"
                data-ng-class="user.canEditRecord(md) ? '' : 'btn-single'"
                data-ng-show="md.isTemplate != 's'"
-               data-ng-href="#/create?from={{md['geonet:info'].id}}"
+               data-ng-href="#/create?from={{md.id}}"
                title="{{'duplicate' | translate}}">
               <i class="fa fa-copy text-muted"></i>
             </a>

@@ -435,7 +435,7 @@
                name: 'metadata',
                displayKey: function(data) {
                  if (valueField === 'uuid') {
-                   return data['geonet:info'].uuid;
+                   return data.uuid;
                  } else {
                    return data[valueField];
                  }

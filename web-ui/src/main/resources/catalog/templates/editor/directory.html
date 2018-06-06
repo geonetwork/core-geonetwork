@@ -181,7 +181,7 @@
                 <div class="flex-row" ng-if="!templatesShown()">
                   <input class="flex-no-shrink" type="checkbox"
                          data-gn-selection-md
-                         data-ng-model="md['geonet:info'].selected"
+                         data-ng-model="md.selected"
                          data-ng-change="change()"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
@@ -200,7 +200,7 @@
                     &nbsp;
                     <small data-translate="">updatedOn</small>
                     <small class="text-muted"
-                           data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+                           data-gn-humanize-time="{{md.changeDate}}"
                            data-from-now=""></small>
                   </div>
 
@@ -258,7 +258,7 @@
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
                       <li ng-if="md.openAssociatedMD">
-                        <gn-directory-associated-md entry-uuid="md['geonet:info'].uuid" />
+                        <gn-directory-associated-md entry-uuid="md.uuid" />
                       </li>
                     </ul>
                   </div>
@@ -275,7 +275,7 @@
                      ng-if="templatesShown()">
 
                   <input data-gn-selection-md type="checkbox"
-                         data-ng-model="md['geonet:info'].selected"
+                         data-ng-model="md.selected"
                          data-ng-change="change()"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
@@ -421,12 +421,12 @@
 
           <div class="entry-editor-controls">
             <div gn-metadata-group-updater="activeEntry.groupOwner"
-                 metadata-id="activeEntry['geonet:info'].id">
+                 metadata-id="activeEntry.id">
             </div>
 
             <button type="button" class="btn btn-default"
                 ng-click="startPermissionsEdit(activeEntry)"
-                ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                ng-disabled="activeEntry.edit !== 'true'"
                 title="{{'directoryEntryPermissions' | translate}}">
               <i class="fa fa-key"/>&nbsp;
               <span translate class="hidden-xs hidden-sm hidden-md">
@@ -484,7 +484,7 @@
 
             <button type="button" class="btn btn-default hidden-xs"
                 gn-click-and-spin="saveAndClose()"
-                ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                ng-disabled="activeEntry.edit !== 'true'"
                 title="{{'closeEditor' | translate}}">
               <i class="fa fa-save"/>&nbsp;
               <span translate>
@@ -494,8 +494,8 @@
         </div>
         <div class="panel-body">
           <fieldset ng-if="activeEntry"
-                    ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-            <div id="gn-editor-container-{{activeEntry['geonet:info'].id}}"></div>
+                    ng-disabled="activeEntry.edit !== 'true'">
+            <div id="gn-editor-container-{{activeEntry.id}}"></div>
           </fieldset>
         </div>
       </div>
@@ -508,7 +508,7 @@
           <span translate>directoryEntryAssociatedMetadata</span>
         </div>
         <div class="panel-body">
-          <gn-directory-associated-md entry-uuid="activeEntry['geonet:info'].uuid" />
+          <gn-directory-associated-md entry-uuid="activeEntry.uuid" />
         </div>
       </div>
     </div>
@@ -517,7 +517,7 @@
   <div gn-modal class="gn-share gn-privileges-popup"
        gn-popup-options="{title:'sharingSettings', closeCallback: closePermissionsEdit}"
        id="gn-share">
-    <div ng-if="activeEntry" gn-share="activeEntry['geonet:info'].id"></div>
+    <div ng-if="activeEntry" gn-share="activeEntry.id"></div>
   </div>
 
   <div gn-modal class="gn-confirm-delete"

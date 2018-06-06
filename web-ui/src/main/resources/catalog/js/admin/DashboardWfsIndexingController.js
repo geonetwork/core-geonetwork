@@ -75,7 +75,7 @@
 
             $scope.jobs.forEach(function(job) {
               gnMetadataManager.getMdObjByUuid(job.mdUuid).then(function(md) {
-                if (!md['geonet:info']) {
+                if (!md) {
                   job.md = {
                     error: 'wfsIndexingMetadataNotFound'
                   }

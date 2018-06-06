@@ -26,7 +26,7 @@
     <div class="list-group fixed">
       <li class="list-group-item gn-record"
           data-ng-repeat="md in searchResults.records"
-          id="gn-record-{{md['geonet:info'].uuid}}"
+          id="gn-record-{{md.uuid}}"
           href=""
           data-ng-class="isSelected(md) ? 'active' : ''"
           data-ng-click="onClick(md)">

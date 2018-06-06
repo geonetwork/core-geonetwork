@@ -87,8 +87,8 @@
             }
 
             // Parse selected to boolean
-            metadata['geonet:info'].selected =
-                metadata['geonet:info'].selected == 'true';
+            metadata.selected =
+                metadata.selected == 'true';
           }
         }
 

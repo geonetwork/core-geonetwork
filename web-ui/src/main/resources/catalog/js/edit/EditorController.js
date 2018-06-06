@@ -169,7 +169,7 @@
               $scope.metadataNotFoundId = $routeParams.id;
               $scope.id = $routeParams.id;
 
-              $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+              $scope.mdSchema = data.metadata[0].schema;
               $scope.mdCategories = {values: []};
               var categories = data.metadata[0].category;
               if (categories) {
