@@ -1,7 +1,9 @@
 <div>
   <div class="panel panel-default">
-    <h4 class="panel-heading" ng-if="describeState == 'succeeded'">
-      {{processDescription.title.value}}
+    <h4 class="panel-heading" ng-if="describeState == 'succeeded' && !hideTitle">
+      {{getLabel() || processDescription.title.value}}
+      <span class="fa fa-info-circle" ng-if="::processDescription._abstract.value"
+        title="{{::processDescription._abstract.value}}"></span>
       <button type="button" class="btn btn-default close" data-ng-click="close()">
         &times;
       </button>
@@ -47,8 +49,8 @@
               class="form-group">
 
               <!-- Input label & info -->
-              <span>
-                <label>{{::input.title.value}}</label>
+              <label>
+                <span>{{::input.title.value}}&nbsp;</span>
                 <span class="fa fa-info-circle" ng-if="::input._abstract.value"
                   title="{{::input._abstract.value}}"></span>
                 <small class="text-danger" ng-if="::input.minOccurs">
@@ -58,7 +60,7 @@
                 <small class="text-muted"
                   ng-if="inputWfsOverride[input.identifier.value]">
                   {{::'inputIsOverloaded' | translate}}</small>
-              </span>
+              </label>
 
               <!-- Basic form field (combo box or text field) -->
               <div ng-if="::input.literalData">
@@ -136,7 +138,7 @@
                 &nbsp;<span translate>wpsExecute</span>
               </button>
 
-              <div class="output-selection dropup">
+              <div class="output-selection dropup" ng-if="executeResponse.processOutputs.output.length > 0">
                 <button class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret"></span>
                   &nbsp;<span translate>wpsSelectOutput</span>
