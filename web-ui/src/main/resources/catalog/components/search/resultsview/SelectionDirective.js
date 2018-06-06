@@ -52,6 +52,15 @@
 
           scope.mdService = gnMetadataActions;
 
+          scope.operationOnSelectionInProgress = false;
+
+          scope.$on('operationOnSelectionStart', function() {
+            scope.operationOnSelectionInProgress = true;
+          });
+          scope.$on('operationOnSelectionStop', function() {
+            scope.operationOnSelectionInProgress = false;
+          });
+
           // initial state
           gnSearchManagerService.selected(scope.searchResults.selectionBucket)
               .success(function(res) {

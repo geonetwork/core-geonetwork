@@ -168,8 +168,11 @@
             '?bucket=' + bucket, windowName, windowOption);
       };
       this.validateMd = function(md, bucket) {
+
+        $rootScope.$broadcast('operationOnSelectionStart');
         if (md) {
           return gnMetadataManager.validate(md.getId()).then(function() {
+            $rootScope.$broadcast('operationOnSelectionStop');
             $rootScope.$broadcast('search');
           });
         } else {
@@ -178,15 +181,18 @@
                     method: 'PUT'
                   }).then(function(data) {
             alertResult(data.data);
+            $rootScope.$broadcast('operationOnSelectionStop');
             $rootScope.$broadcast('search');
           });
         }
       };
 
       this.deleteMd = function(md, bucket) {
+        $rootScope.$broadcast('operationOnSelectionStart');
         if (md) {
           return gnMetadataManager.remove(md.getId()).then(function() {
             $rootScope.$broadcast('mdSelectNone');
+            $rootScope.$broadcast('operationOnSelectionStop');
             // TODO: Here we may introduce a delay to not display the deleted
             // record in results.
             // https://github.com/geonetwork/core-geonetwork/issues/759
@@ -197,6 +203,7 @@
           return $http.delete('../api/records?' +
               'bucket=' + bucket).then(function() {
             $rootScope.$broadcast('mdSelectNone');
+            $rootScope.$broadcast('operationOnSelectionStop');
             $rootScope.$broadcast('search');
           });
         }
@@ -297,7 +304,7 @@
        * @return {*}
        */
       this.publish = function(md, bucket, flag, scope) {
-
+        scope.$broadcast('operationOnSelectionStart');
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
         }
@@ -310,6 +317,7 @@
             .then(
             function(data) {
               scope.$emit('PrivilegesUpdated', true);
+              scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
                 msg: translations.privilegesUpdated,
                 timeout: 0,
@@ -319,6 +327,7 @@
               }
             }, function(data) {
               scope.$emit('PrivilegesUpdated', false);
+              scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
                 title: translations.privilegesUpdatedError,
                 error: data,

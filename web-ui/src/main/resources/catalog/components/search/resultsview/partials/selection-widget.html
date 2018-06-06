@@ -27,89 +27,91 @@
   </div>
   <div class="btn-group gn-selection-actions"
        title="{{'actionsOnSelection' | translate}}"
-       ng-if="searchResults.selectedCount > 0 && !withoutActionMenu">
+       data-ng-if="searchResults.selectedCount > 0 && !withoutActionMenu">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-      <span class="hidden-xs" translate="">selected</span>
+      <span class="fa fa-spinner fa-spin" data-ng-if="operationOnSelectionInProgress" ></span>
+      <span class="hidden-xs" data-ng-if="!operationOnSelectionInProgress" translate="">selected</span>
+      <span class="hidden-xs" data-ng-if="operationOnSelectionInProgress" translate="">pleaseWait</span>
       <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" role="menu">
+    <ul class="dropdown-menu" role="menu" data-ng-if="!operationOnSelectionInProgress">
       <li data-ng-show="!excludePattern.test('exportMEF')">
-        <a href=""
-           ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket)">
+        <a href="" data-ng-disabled="operationOnSelectionInProgress"
+           data-ng-click="mdService.metadataMEF(undefined, searchResults.selectionBucket)">
           <i class="fa fa-file-zip-o"></i>&nbsp;
           <span translate>exportMEF</span>
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('exportPDF')">
-        <a href="" ng-click="mdService.metadataPrint(searchObj.params, searchResults.selectionBucket)">
+        <a href="" data-ng-click="mdService.metadataPrint(searchObj.params, searchResults.selectionBucket)">
           <i class="fa fa-file-pdf-o"></i>&nbsp;<span translate>exportPDF</span>
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('exportCSV')">
-        <a href="" ng-click="mdService.exportCSV(searchResults.selectionBucket)">
+        <a href="" data-ng-click="mdService.exportCSV(searchResults.selectionBucket)">
           <i class="fa fa-file-excel-o"></i>&nbsp;<span translate>exportCSV</span>
         </a>
       </li>
       <li data-ng-show="!excludePattern.test('viewSelectionOnly')">
-        <a href="" ng-click="viewSelectionOnly()">
+        <a href="" data-ng-click="viewSelectionOnly()">
           <i class="fa fa-check"></i>&nbsp;<span translate>viewSelectionOnly</span>
         </a>
       </li>
       <li class="divider" data-ng-if="user.isConnected()"></li>
       <li  data-ng-show="!excludePattern.test('updatePrivileges')"
-           ng-if="user.isEditorOrMore()">
-        <a href="" ng-click="mdService.openPrivilegesBatchPanel(getCatScope(), searchResults.selectionBucket)">
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.openPrivilegesBatchPanel(getCatScope(), searchResults.selectionBucket)">
           <i class="fa fa-key"></i>&nbsp;<span translate>updatePrivileges</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('editRecords')"
-           ng-if="v.service === 'catalog.edit' && user.isEditorOrMore()">
-        <a href="" ng-click="mdService.openBatchEditing(getCatScope())">
+           data-ng-if="v.service === 'catalog.edit' && user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.openBatchEditing(getCatScope())">
           <i class="fa fa-pencil"></i>&nbsp;<span translate>editRecords</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('publish')"
-           ng-if="user.isReviewerOrMore()">
-        <a ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'on', getCatScope())">
+           data-ng-if="user.isReviewerOrMore()">
+        <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'on', getCatScope())">
           <i class="fa fa-unlock"></i>&nbsp;<span translate>publish</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('unpublish')"
-           ng-if="user.isReviewerOrMore()">
-        <a ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'off', getCatScope())">
+           data-ng-if="user.isReviewerOrMore()">
+        <a href="" data-ng-click="mdService.publish(undefined, searchResults.selectionBucket, 'off', getCatScope())">
           <i class="fa fa-lock"></i>&nbsp;<span translate>unpublish</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('transferOwnership')"
-           ng-if="user.isUserAdminOrMore()">
+           data-ng-if="user.isUserAdminOrMore()">
         <a href=""
            data-ng-click="mdService.openTransferOwnership(undefined, searchResults.selectionBucket, getCatScope())">
           <i class="fa fa-user"></i>&nbsp;<span translate>transferOwnership</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('index')"
-           ng-if="user.isUserAdminOrMore()">
+           data-ng-if="user.isUserAdminOrMore()">
         <a href="" data-ng-click="mdService.indexSelection(searchResults.selectionBucket)">
           <i class="fa fa-cogs"></i>&nbsp;<span translate>index</span>
         </a>
       </li>
       <li class="divider" data-ng-if="user.isConnected()"></li>
       <li  data-ng-show="!excludePattern.test('updateCategories')"
-           ng-if="user.isEditorOrMore()">
-        <a href="" ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">
           <i class="fa fa-tags"></i>&nbsp;<span translate>updateCategories</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('validate')"
-           ng-if="user.isEditorOrMore()">
-        <a href="" ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.validateMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'validateSelectedRecordConfirm' | translate:searchResults}}">
           <i class="fa fa-check"></i>&nbsp;<span translate>validate</span>
         </a>
       </li>
       <li  data-ng-show="!excludePattern.test('delete')"
-           ng-if="user.isEditorOrMore()">
-        <a href="" ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
+           data-ng-if="user.isEditorOrMore()">
+        <a href="" data-ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
           <i class="fa fa-times"></i>&nbsp;<span translate>delete</span>
         </a>
