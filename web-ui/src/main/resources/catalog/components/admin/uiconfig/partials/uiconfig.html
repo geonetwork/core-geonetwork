@@ -691,6 +691,16 @@
         </div>
         <div ng-show="mCfg[key]['enabled']">
           <label class="control-label" translate>
+            ui-externalViewer-baseUrl
+          </label>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="mCfg[key]['baseUrl']"/>
+          <p class="help-block" translate>
+             ui-externalViewer-baseUrl-help</p>
+        </div>
+        <div ng-show="mCfg[key]['enabled']">
+          <label class="control-label" translate>
             ui-externalViewer-urlTemplate
           </label>
           <input type="text"

@@ -148,6 +148,13 @@
         'map': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/map',
+          'externalViewer': {
+            'enabled': false,
+            'baseUrl': 'http://www.example.com/viewer',
+            'urlTemplate': 'http://www.example.com/viewer?url={service.url}&type=${service.type}&layer=${service.name}',
+            'openNewWindow': false,
+            'valuesSeparator': ','
+          },
           'is3DModeAllowed': true,
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
@@ -191,12 +198,6 @@
             'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [{'type': 'osm'}]
-          },
-          'externalViewer': {
-            'enabled': false,
-            'urlTemplate': 'http://www.example.com/viewer?url={service.url}&type=${service.type}&layer=${service.name}',
-            'openNewWindow': false,
-            'valuesSeparator': ','
           }
         },
         'geocoder': 'https://secure.geonames.org/searchJSON',
