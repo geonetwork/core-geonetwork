@@ -3,6 +3,16 @@
     "index": {
       "analysis": {
         "analyzer": {
+          "trigram": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["standard", "shingle"]
+          },
+          "reverse": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["standard", "reverse"]
+          },
           "synInspireAnnexes": {
             "tokenizer": "keyword",
             "filter": [
@@ -43,6 +53,11 @@
           }
         },
         "filter": {
+          "shingle": {
+            "type": "shingle",
+            "min_shingle_size": 2,
+            "max_shingle_size": 3
+          },
           "keepInspireServiceTypes": {
             "type": "keep",
             "keep_words": [
@@ -1185,6 +1200,14 @@
             "keyword": {
               "type": "keyword",
               "ignore_above": 256
+            },
+            "trigram": {
+              "type": "text",
+              "analyzer": "trigram"
+            },
+            "reverse": {
+              "type": "text",
+              "analyzer": "reverse"
             }
           }
         },
@@ -1204,7 +1227,17 @@
           "type": "short"
         },
         "tag": {
-          "type": "keyword"
+          "type": "keyword",
+          "fields": {
+            "trigram": {
+              "type": "text",
+              "analyzer": "trigram"
+            },
+            "reverse": {
+              "type": "text",
+              "analyzer": "reverse"
+            }
+          }
         },
         "scope": {
           "type": "keyword"
