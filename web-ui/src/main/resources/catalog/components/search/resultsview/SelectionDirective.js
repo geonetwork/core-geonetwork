@@ -124,7 +124,7 @@
           scope.selectAllInPage = function(selected) {
             var uuids = [];
             scope.searchResults.records.forEach(function(record) {
-              uuids.push(record.getUuid());
+              uuids.push(record.uuid);
               record.selected = selected;
             });
 
@@ -191,7 +191,7 @@
           scope.change = function() {
             var method = element[0].checked ? 'select' : 'unselect';
             gnSearchManagerService[method](
-                scope.md.getUuid(), scope.searchResults.selectionBucket).
+                scope.md.uuid, scope.searchResults.selectionBucket).
                 success(function(res) {
                   scope.searchResults.selectedCount = parseInt(res, 10);
                 });

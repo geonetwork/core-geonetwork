@@ -1572,7 +1572,7 @@
                         // TODO: WFS ?
                         links = links.concat(md.getLinksByType('OGC:WMS'));
                         links = links.concat(md.getLinksByType('wms'));
-                        scope.srcParams.uuidSrv = md.getUuid();
+                        scope.srcParams.uuidSrv = md.uuid;
                         scope.srcParams.identifier =
                           (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
                             gnCurrentEdit.metadata.identifier[0] : '';
@@ -1590,17 +1590,17 @@
                           scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
                           scope.srcParams.url =  gnConfigService.getServiceURL() +
                             "api/records/" +
-                            md.getUuid() + "/formatters/xml";
+                            md.uuid + "/formatters/xml";
                         }
                       } else {
                         // dataset
-                        scope.srcParams.uuidDS = md.getUuid();
+                        scope.srcParams.uuidDS = md.uuid;
                         scope.srcParams.name = gnCurrentEdit.mdTitle;
                         scope.srcParams.desc = gnCurrentEdit.mdTitle;
                         scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
                         scope.srcParams.url =  gnConfigService.getServiceURL() +
                           "api/records/" +
-                          md.getUuid() + "/formatters/xml";
+                          md.uuid + "/formatters/xml";
                         scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
                         scope.srcParams.source = md.source;
                       }

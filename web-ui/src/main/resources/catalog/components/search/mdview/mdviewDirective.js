@@ -47,7 +47,7 @@
 
           element.on('click', function(e) {
             e.preventDefault();
-            gnMdView.setLocationUuid(scope.md.getUuid());
+            gnMdView.setLocationUuid(scope.md.uuid);
             gnMdView.setCurrentMdScope(scope.$parent);
             scope.$apply();
           });

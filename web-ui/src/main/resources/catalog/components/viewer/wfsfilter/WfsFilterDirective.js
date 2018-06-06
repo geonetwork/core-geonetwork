@@ -188,7 +188,7 @@
               url: scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs')
             });
 
-            uuid = scope.md && scope.md.getUuid();
+            uuid = scope.md && scope.md.uuid;
             ftName = scope.featureTypeName ||
                 scope.layer.getSource().getParams().LAYERS;
             scope.featureTypeName = ftName;

@@ -269,7 +269,7 @@
          * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
-          return this.getMdObjByUuid(md.getUuid()).then(
+          return this.getMdObjByUuid(md.uuid).then(
               function(md_) {
                 angular.extend(md, md_);
                 return md;
@@ -612,15 +612,6 @@
     }
 
     Metadata.prototype = {
-      getUuid: function() {
-        return this.uuid || this._source.uuid;
-      },
-      getId: function() {
-        return this.id;
-      },
-      getTitle: function() {
-        return this.resourceTitle;
-      },
       isPublished: function() {
         return this.isPublishedToAll === 'true';
       },

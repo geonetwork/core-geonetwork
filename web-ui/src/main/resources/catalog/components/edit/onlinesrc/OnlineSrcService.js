@@ -305,10 +305,10 @@
             process: mode + '-add'
           };
           if (mode == 'fcats') {
-            params.uuidref = md.getUuid();
+            params.uuidref = md.uuid;
           }
           else {
-            params[mode + 'Uuid'] = md.getUuid();
+            params[mode + 'Uuid'] = md.uuid;
           }
           return runProcess(this, params).then(function() {
             closePopup(popupid);

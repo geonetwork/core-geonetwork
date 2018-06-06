@@ -49,7 +49,7 @@
 
           scope.$watch('records', function(mds) {
             var uuids = mds.map(function(md) {
-              return md.getUuid();
+              return md.uuid;
             });
             if (uuids.length) {
               gnGridRelatedList.promise =
