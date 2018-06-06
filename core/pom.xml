@@ -475,11 +475,6 @@
     </dependency>
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
-      <artifactId>es-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
       <artifactId>index</artifactId>
       <version>${project.version}</version>
     </dependency>
