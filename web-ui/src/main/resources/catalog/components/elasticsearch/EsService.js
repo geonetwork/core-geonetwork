@@ -118,6 +118,29 @@
       return params;
     };
 
+
+    // Using trigram
+    // GET /records/_search
+    // {
+    //   "suggest": {
+    //   "text": "espese",
+    //     "simple_phrase": {
+    //     "phrase": {
+    //       "field": "tag.trigram",
+    //         "direct_generator": [ {
+    //         "field": "tag.trigram",
+    //         "suggest_mode": "always"
+    //       } ],
+    //         "highlight": {
+    //         "pre_tag": "<em>",
+    //           "post_tag": "</em>"
+    //       }
+    //     }
+    //   }
+    // }
+    // }
+
+
     this.getSuggestAnyParams = function(query) {
 
       var anyFields = ['resourceTitle', 'resourceAbstract'];
