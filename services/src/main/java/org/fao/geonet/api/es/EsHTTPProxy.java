@@ -88,7 +88,6 @@ public class EsHTTPProxy {
         method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    @PreAuthorize("isAnonymous()")
     public void handlePOSTMetadata(
         @PathVariable String endPoint,
         HttpServletRequest request,
@@ -256,7 +255,6 @@ public class EsHTTPProxy {
                     if (!addPermissions) {
                         IOUtils.copy(streamFromServer, streamToClient);
                     } else {
-                        //addUserInfoToJson(context, streamFromServer, response.getOutputStream());
                         addUserInfoToJson(context, streamFromServer, streamToClient);
                     }
 
