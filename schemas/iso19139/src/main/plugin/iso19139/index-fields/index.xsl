@@ -31,6 +31,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="2.0">
@@ -45,6 +46,9 @@
               omit-xml-declaration="yes"
               encoding="utf-8"
               escape-uri-attributes="yes"/>
+
+  <xsl:variable name="doubleQuote">"</xsl:variable>
+  <xsl:variable name="escapedDoubleQuote">\\"</xsl:variable>
 
   <!-- Define if operatesOn type should be defined
   by analysis of protocol in all transfers options.
@@ -70,6 +74,67 @@
   in field="resourceAbstract" (whose UTF8 encoding is longer
   than the max length 32766. -->
   <xsl:variable name="maxFieldLength" select="32000" as="xs:integer"/>
+
+
+  <xsl:function name="gn-fn-index:add-field" as="node()*">
+    <xsl:param name="element" as="node()*"/>
+    <xsl:param name="fieldName" as="xs:string"/>
+    <xsl:param name="languages" as="node()?"/>
+
+    <!--
+    TODO:
+    * escape JSON char
+    * handle Anchor
+    -->
+    <!--<xsl:message>gn-fn-index:add-field <xsl:value-of select="$fieldName"/></xsl:message>-->
+    <!--<xsl:message>gn-fn-index:add-field languages <xsl:copy-of select="$languages"/></xsl:message>-->
+    <xsl:variable name="field">
+      <xsl:choose>
+        <xsl:when test="$languages">
+
+          <!--
+          <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+            <gco:CharacterString>Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FRE">Modèle de données vectorielles en
+                  ISO19139 (multilingue)
+                </gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+              -->
+          <xsl:for-each select="$element//gmd:LocalisedCharacterString">
+            <xsl:variable name="elementLanguage"
+                          select="replace(@locale, '#', '')"/>
+            <xsl:variable name="elementLanguage3LetterCode"
+                          select="$languages/lang[@id = $elementLanguage]/@value"/>
+
+            <xsl:element name="{if ($elementLanguage3LetterCode = '') then $fieldName else concat($fieldName, '_lang', $elementLanguage3LetterCode)}">
+              <xsl:value-of select="normalize-space(.)"/>
+            </xsl:element>
+          </xsl:for-each>
+
+          <xsl:for-each select="$element//gco:CharacterString">
+            <xsl:element name="{$fieldName}">
+              <xsl:value-of select="normalize-space(.)"/>
+            </xsl:element>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <!-- Index each values in a field. -->
+          <xsl:for-each select="distinct-values($element)">
+            <xsl:element name="{$fieldName}">
+              <xsl:value-of select="normalize-space(.)"/>
+            </xsl:element>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!--<xsl:message>gn-fn-index:add-field <xsl:copy-of select="$field"/></xsl:message>-->
+    <xsl:copy-of select="$field"/>
+  </xsl:function>
+
+
 
   <xsl:template match="/">
     <xsl:apply-templates mode="index"/>
@@ -103,6 +168,13 @@
                   select="gmd:locale/gmd:PT_Locale/
                         gmd:languageCode/gmd:LanguageCode/
                           @codeListValue[normalize-space(.) != '']"/>
+
+    <xsl:variable name="allLanguages">
+      <lang id="default" value="{$mainLanguage}"/>
+      <xsl:for-each select="$otherLanguages">
+        <lang id="{../../../@id}" value="{.}"/>
+      </xsl:for-each>
+    </xsl:variable>
 
     <!-- Record is dataset if no hierarchyLevel -->
     <xsl:variable name="isDataset" as="xs:boolean"
@@ -239,13 +311,9 @@
       -->
       <xsl:for-each select="gmd:identificationInfo[1]/*[1]">
         <xsl:for-each select="gmd:citation/gmd:CI_Citation">
-          <resourceTitle>
-            <xsl:value-of select="gmd:title/gco:CharacterString/text()"/>
-          </resourceTitle>
-          <resourceAltTitle>
-            <xsl:value-of
-              select="gmd:alternateTitle/gco:CharacterString/text()"/>
-          </resourceAltTitle>
+
+          <xsl:copy-of select="gn-fn-index:add-field(gmd:title, 'resourceTitle', $allLanguages)"/>
+          <xsl:copy-of select="gn-fn-index:add-field(gmd:resourceAltTitle, 'resourceAltTitle', $allLanguages)"/>
 
           <xsl:for-each select="gmd:date/gmd:CI_Date[gmd:date/*/text() != '' and
                                   matches(gmd:date/*/text(), '[0-9]{4}.*')]">
@@ -273,11 +341,7 @@
           </xsl:for-each>
         </xsl:for-each>
 
-        <resourceAbstract>
-          <xsl:value-of select="substring(
-                gmd:abstract/gco:CharacterString,
-                0, $maxFieldLength)"/>
-        </resourceAbstract>
+        <xsl:copy-of select="gn-fn-index:add-field(gmd:abstract, 'resourceAbstract', $allLanguages)"/>
 
 
         <!-- Indexing resource contact -->
