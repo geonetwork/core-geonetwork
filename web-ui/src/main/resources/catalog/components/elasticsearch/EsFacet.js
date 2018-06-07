@@ -26,46 +26,27 @@
 
   var module = angular.module('gn_es_facet', []);
 
-  var MAX_ROWS = 10;
+  var DEFAULT_SIZE = 10;
 
   module.service('gnESFacet', ['gnGlobalSettings', function(gnGlobalSettings) {
 
     this.configs = gnGlobalSettings.gnCfg.mods.search.facetConfig;
 
     this.addFacets = function(esParams, type) {
-      esParams.aggregations = this.getAggs(type);
+      esParams.aggregations = this.getParamsFromConfig(type);
     };
 
-    this.getAggs = function(type) {
-      var config = this.configs[type];
+    this.getParamsFromConfig = function(typeOrConfig) {
+      var config = typeof typeOrConfig === 'string' ?
+        this.configs[typeOrConfig] : typeOrConfig;
 
       var aggs = {};
-      var fieldNames = [
-        'tag',
-        'codelist_spatialRepresentationType'
-        //'sourceCatalogue',
-        //'docType',
-        //'publicationYearForResource',
-        //'topic'
-      ];
-      fieldNames.forEach(function(fieldName) {
-        aggs[fieldName] = {
-          terms: {
-            field: fieldName,
-            size: MAX_ROWS
-          }
-        };
-      });
-      return aggs;
-    };
 
-    this.getParamsFromConfig = function(config) {
-      var aggs = {};
       config.forEach(function(facet) {
         aggs[facet.field] = {
           terms: {
             field: facet.field,
-            size: facet.size
+            size: facet.size || DEFAULT_SIZE
           }
         };
       });

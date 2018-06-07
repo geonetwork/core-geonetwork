@@ -88,16 +88,37 @@
           'paginationInfo': {
             'hitsPerPage': 20
           },
-          'facetsSummaryType': 'details',
           'facetTabField': '',
-          'facetConfig': [
-            // {
-            // key: 'createDateYear',
-            // labels: {
-            //   eng: 'Published',
-            //   fre: 'Publication'
-            // }}
-          ],
+          'facetConfig': {
+            'mainsearch': [
+              {
+                field: 'resourceType'
+              },
+              {
+                field: 'creationYearForResource',
+                labels: {
+                  eng: 'Published',
+                  fre: 'Publication'
+                },
+                size: 5
+              },
+              {
+                field: 'tag',
+                size: 15
+              },
+              {
+                field: 'codelist_spatialRepresentationType'
+              }
+            ],
+            'adminsearch': [
+              {
+                field: 'resourceType'
+              },
+              {
+                field: 'tag'
+              }
+            ]
+          },
           'filters': {},
           'sortbyValues': [{
             'sortBy': 'relevance',
