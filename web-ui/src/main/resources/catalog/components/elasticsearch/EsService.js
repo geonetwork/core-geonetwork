@@ -37,7 +37,9 @@
       };
       var query_string;
 
-      var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket', 'sortBy', 'resultType', 'facet.q', 'any'];
+      var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
+        'sortBy', 'resultType', 'facet.q', 'any',
+        'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo'];
       var mappingFields = {
         title: 'resourceTitle',
         abstract: 'resourceAbstract',
@@ -68,6 +70,30 @@
           params.sort.push(sort);
         }
         params.sort.push('_score');
+      }
+
+      // ranges criteria (for dates)
+      if (p.creationDateFrom || p.creationDateTo) {
+        query.bool.must.push({
+          range: {
+            createDate : {
+                gte: p.creationDateFrom || undefined,
+                lte: p.creationDateTo || undefined,
+                format: 'yyyy-MM-dd'
+            }
+          }
+        });
+      }
+      if (p.dateFrom || p.dateTo) {
+        query.bool.must.push({
+          range: {
+            changeDate : {
+                gte: p.dateFrom || undefined,
+                lte: p.dateTo || undefined,
+                format: 'yyyy-MM-dd'
+            }
+          }
+        });
       }
 
       var termss = Object.keys(p).reduce(function(output, current) {
