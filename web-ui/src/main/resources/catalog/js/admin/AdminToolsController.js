@@ -431,8 +431,8 @@
 
       checkIsIndexing();
 
-      $scope.rebuildIndex = function() {
-        return $http.put('../api/site/index')
+      $scope.rebuildIndex = function(dropFirst) {
+        return $http.put('../api/site/index' + (dropFirst ? '?reset=true' : ''))
             .success(function(data) {
               checkIsIndexing();
             })
