@@ -200,46 +200,32 @@
           return new Metadata(r._source);
         });
         $scope.searchResults.records = records;
-        $scope.searchResults.count = hits.total;
-        $scope.searchResults.facets = data.facets;
-      });
+        $scope.searchResults.count = data.hits.total;
+        $scope.searchResults.facets = data.facets || {};  // TODOES: actually get facets from response
 
-      gnSearchManagerService.gnSearch(
-                              finalParams, null,
-                              $scope.searchObj.internal).then(
-          function(data) {
-            return;
-            $scope.searchResults.records = [];
-            for (var i = 0; i < data.metadata.length; i++) {
-              $scope.searchResults.records.push(new Metadata(data.metadata[i]));
-            }
-            $scope.searchResults.count = data.count;
-            $scope.searchResults.facet = data.facet;
-            $scope.searchResults.dimension = data.dimension;
+        // compute page number for pagination
+        if ($scope.hasPagination) {
 
-            // compute page number for pagination
-            if ($scope.hasPagination) {
+          var paging = $scope.paginationInfo;
 
-              var paging = $scope.paginationInfo;
+          // Means the `from` and `to` params come from permalink
+          if ((paging.currentPage - 1) *
+              paging.hitsPerPage + 1 != params.from) {
+            paging.currentPage = (params.from - 1) / paging.hitsPerPage + 1;
+          }
 
-              // Means the `from` and `to` params come from permalink
-              if ((paging.currentPage - 1) *
-                  paging.hitsPerPage + 1 != params.from) {
-                paging.currentPage = (params.from - 1) / paging.hitsPerPage + 1;
-              }
-
-              paging.resultsCount = $scope.searchResults.count;
-              paging.to = Math.min(
-                  data.count,
-                  paging.currentPage * paging.hitsPerPage
-                  );
-              paging.pages = Math.ceil(
-                  $scope.searchResults.count /
-                  paging.hitsPerPage, 0
-                  );
-              paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
-            }
-          }).finally(function() {
+          paging.resultsCount = $scope.searchResults.count;
+          paging.to = Math.min(
+            data.hits.total,
+              paging.currentPage * paging.hitsPerPage
+              );
+          paging.pages = Math.ceil(
+              $scope.searchResults.count /
+              paging.hitsPerPage, 0
+              );
+          paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
+        }
+      }).then(function() {
         $scope.searching--;
       });
     };
@@ -277,20 +263,22 @@
       params.from = '1';
       params.to = '20';
 
-      gnSearchManagerService.gnSearch(params).then(
-          function(data) {
-            $scope.searchResults.records = data.metadata;
-            $scope.searchResults.count = data.count;
-            $scope.searchResults.facet = data.facet;
+      // TODOES: use ES client
 
-            // compute page number for pagination
-            if ($scope.searchResults.records.length > 0 &&
-                $scope.hasPagination) {
-              $scope.paginationInfo.pages = Math.ceil(
-                  $scope.searchResults.count /
-                      $scope.paginationInfo.hitsPerPage, 0);
-            }
-          });
+      // gnSearchManagerService.gnSearch(params).then(
+      //     function(data) {
+      //       $scope.searchResults.records = data.metadata;
+      //       $scope.searchResults.count = data.count;
+      //       $scope.searchResults.facet = data.facet;
+
+      //       // compute page number for pagination
+      //       if ($scope.searchResults.records.length > 0 &&
+      //           $scope.hasPagination) {
+      //         $scope.paginationInfo.pages = Math.ceil(
+      //             $scope.searchResults.count /
+      //                 $scope.paginationInfo.hitsPerPage, 0);
+      //       }
+      //     });
     };
 
     /**
