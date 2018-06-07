@@ -35,6 +35,10 @@
     'gnESService',
     function($http, gnESFacet, gnESService) {
 
+    this.getUrl = function(service) {
+      return ES_API_URL + service;
+    };
+
     this.search = function(params) {
       return callApi('_search', params).then(
         function(response) {

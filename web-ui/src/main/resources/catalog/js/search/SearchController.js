@@ -48,8 +48,10 @@
     'gnAlertService',
     'gnSearchSettings',
     'gnConfig',
+    'gnESClient',
+    'gnESService',
     function($scope, $q, $http, suggestService,
-             gnAlertService, gnSearchSettings, gnConfig) {
+             gnAlertService, gnSearchSettings, gnConfig, gnESClient,gnESService) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -87,9 +89,23 @@
       $scope.keywordsOptions = {
         mode: 'remote',
         remote: {
-          url: suggestService.getUrl('QUERY', 'keyword', 'STARTSWITHFIRST'),
-          filter: suggestService.bhFilter,
-          wildcard: 'QUERY'
+          url: gnESClient.getUrl('_search') + '#QUERY', //gnESClient.getSuggestUrl('tag.trigram', 'QUERY'),
+          filter: gnESService.parseCompletionResponse,
+          wildcard: 'QUERY',
+          transport: function (opts, onSuccess, onError) {
+            var url = opts.url.split("#")[0];
+            var query = opts.url.split("#")[1];
+            $.ajax({
+              url: url,
+              data: JSON.stringify(gnESService.getCompletion('tag.completion', query)),
+              type: "POST",
+              dataType: 'json',
+              contentType: "application/json",
+              success: onSuccess,
+              error: onError
+            })
+          }
+
         }
       };
 

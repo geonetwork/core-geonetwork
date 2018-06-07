@@ -41,7 +41,8 @@
       var mappingFields = {
         title: 'resourceTitle',
         abstract: 'resourceAbstract',
-        type: 'resourceType'
+        type: 'resourceType',
+        keyword: 'tag'
       };
 
       if(p.from) {
@@ -96,12 +97,19 @@
       }
 
       params.query = query;
-
       gnESFacet.addFacets(params, 'mainsearch');
       return params;
-
     };
 
+    /**
+     * Return suggestion from a field, like title, while making a search
+     * on the field and return the field value (value should be unique for
+     * each document).
+     *
+     * @param field document field
+     * @param query Completion query
+     * @returns es request params
+     */
     this.getSuggestParams = function(field, query) {
       var phrase = {
         query: query,
@@ -118,6 +126,60 @@
       return params;
     };
 
+    this.getSuggestParamsTrigram = function(field, query) {
+      var params = {
+        suggest: {
+          text: query,
+          simple_phrase: {
+            phrase: {
+              field: field + '.trigram',
+              direct_generator: [ {
+                field: field + '.trigram',
+                suggest_mode: 'always'
+              } ],
+              highlight: {
+                pre_tag: '<em>',
+                post_tag: '</em>'
+              }
+            }
+          }
+        }
+      };
+      return params;
+    };
+
+    /**
+     * Get completion using the index type `completion` for a field
+     * @param field
+     * @param query
+     * @returns {{suggest: {}, _source: *}}
+     */
+    this.getCompletion = function(field, query) {
+      var suggest = {};
+      suggest['completion'/*field.split('.')[0]*/] = {
+        prefix : query,
+        completion : {
+          field : field
+        }
+      };
+      return {
+        suggest: suggest,
+        _source: field
+      };
+    };
+
+    /**
+     * Par es completion field response to match typeahead input format
+     * @param response
+     */
+    this.parseCompletionResponse = function(response) {
+      return response.suggest.completion[0].options.map(function(sugg) {
+        return {
+          name: sugg.text,
+          id: sugg.text
+        }
+      });
+    };
 
     // Using trigram
     // GET /records/_search
@@ -154,19 +216,6 @@
         },
         _source: anyFields
       };
-
-/*
-      params = {
-        suggest: {
-          any: {
-            text: query,
-            term: {
-              field: 'resourceTitle'
-            }
-          }
-        }
-      };
-*/
 
       return params;
     };
