@@ -164,7 +164,7 @@ public class EsHTTPProxy {
     }
 
     private String buildDocTypeFilter(String type) {
-        return "docType:" + type;
+        return "documentType:" + type;
     }
 
     private void handleRequest(ServiceContext context, HttpServletRequest request,
