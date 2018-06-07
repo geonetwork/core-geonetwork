@@ -1008,9 +1008,7 @@
     });
 
     if (any) {
-      any.split(' ').forEach(function(v) {
-        fieldsQ.push('+*' + v + '*');
-      });
+      fieldsQ.push(v);
     }
 
     // Search for all if no filter defined
