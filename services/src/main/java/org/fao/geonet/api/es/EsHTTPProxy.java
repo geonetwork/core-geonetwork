@@ -49,7 +49,6 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,6 +80,9 @@ public class EsHTTPProxy {
 
     @Autowired
     private EsClient client;
+
+    public EsHTTPProxy() {
+    }
 
     @ApiOperation(value = "Search proxy for ElasticSearch",
         notes = "See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html")
@@ -156,9 +158,8 @@ public class EsHTTPProxy {
     private String buildPermissionsFilter(ServiceContext context) throws Exception {
         AccessManager accessManager = context.getBean(AccessManager.class);
         Set<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
-        final int viewId = ReservedOperation.view.getId();
         final String ids = groups.stream().map(Object::toString)
-           .collect(Collectors.joining(" OR ", "", ""));
+           .collect(Collectors.joining("\\\" OR \\\"", "\\\"", "\\\""));
 
         return ids;
     }
