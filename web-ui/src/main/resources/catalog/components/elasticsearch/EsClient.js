@@ -27,7 +27,7 @@
   var module = angular.module('gn_es_client', []);
 
 
-  var ES_API_URL = '../../index/records/';
+  var ES_API_URL = '../api/search/records/';
 
   module.service('gnESClient', [
     '$http',
