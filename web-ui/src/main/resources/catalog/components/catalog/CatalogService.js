@@ -530,7 +530,7 @@
    * json output of the search service. It also provides some functions
    * on the metadata.
    */
-  module.factory('Metadata', function() {
+  module.factory('Metadata', ['gnLangs', function(gnLangs) {
     function Metadata(k) {
       $.extend(true, this, k);
 
@@ -612,6 +612,23 @@
     }
 
     Metadata.prototype = {
+      translate: function(fieldName) {
+        var translation = this[fieldName + '_lang' + gnLangs.current];
+        if (translation) {
+          return translation;
+          // TODO fallback to a default language ?
+        } else if (this[fieldName]) {
+          return this[fieldName];
+        } else {
+          console.warn(fieldName + ' is not defined in this record.');
+        }
+      },
+      getUuid: function() {
+        return this.uuid || this._source.uuid;
+      },
+      getId: function() {
+        return this.id;
+      },
       isPublished: function() {
         return this.isPublishedToAll === 'true';
       },
@@ -812,7 +829,7 @@
       }
     };
     return Metadata;
-  });
+  }]);
 
 
 })();
