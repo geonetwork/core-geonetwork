@@ -634,14 +634,6 @@
 
           // Get basic info about current content
           var url = 'qi?_content_type=json&summaryOnly=true';
-          angular.forEach(gnGlobalSettings.gnCfg.mods.search.filters,
-              function(v, k) {
-                url += '&' + k + '=' + v;
-              });
-          return gnSearchManagerService.search(url).
-              then(function(data) {
-                $scope.searchInfo = data;
-              });
         });
       };
       $scope.userAdminMenu = gnAdminMenu.UserAdmin;

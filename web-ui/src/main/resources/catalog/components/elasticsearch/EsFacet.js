@@ -59,6 +59,19 @@
       return aggs;
     };
 
+    this.getParamsFromConfig = function(config) {
+      var aggs = {};
+      config.forEach(function(facet) {
+        aggs[facet.field] = {
+          terms: {
+            field: facet.field,
+            size: facet.size
+          }
+        };
+      });
+      return aggs;
+    };
+
     this.getUIModel = function(response, request) {
       var listModel = [];
       for (var fieldId in response.data.aggregations) {
