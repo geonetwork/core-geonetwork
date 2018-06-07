@@ -387,25 +387,6 @@
     <url-pattern>/proxy/*</url-pattern>
   </servlet-mapping>
 
-
-  <!--Direct proxy to ES server-->
-  <servlet>
-    <servlet-name>ESProxy</servlet-name>
-    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
-    <init-param>
-      <param-name>targetUri</param-name>
-      <param-value>${es.url}</param-value>
-    </init-param>
-    <init-param>
-      <param-name>log</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ESProxy</servlet-name>
-    <url-pattern>/index/*</url-pattern>
-  </servlet-mapping>
-
   <servlet>
     <servlet-name>HttpDashboardProxy</servlet-name>
     <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
