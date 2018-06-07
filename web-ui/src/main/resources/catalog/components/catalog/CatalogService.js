@@ -531,18 +531,40 @@
    * on the metadata.
    */
   module.factory('Metadata', ['gnLangs', function(gnLangs) {
+    var langSuffix = "_lang";
+
     function Metadata(k) {
       $.extend(true, this, k);
 
+      // Populate translation for all multilingual fields.
+      // Multilingual fields are composed of one field without _lang suffix
+      // and one field for each translation.
+      // Set the default field value to the UI language if exist.
+      var listOfTranslatedField = {};
+      $.each( this, function(key, value) {
+        // alert( key + ": " + value );
+        var fieldName = key.split(langSuffix)[0];
+        if (listOfTranslatedField[fieldName] !== true) {
+          if (key.indexOf(langSuffix) !== -1) {
+            this[fieldName] = this.translate(fieldName);
+            listOfTranslatedField[fieldName] = true;
+          }
+        }
+      });
 
-
+      // TODOES Check if we can define in ES which fields
+      // to always return as an array.
       var listOfArrayFields = ['topicCat', 'category', 'keyword',
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
         'creationDate', 'publicationDate', 'revisionDate'];
+
+      // TODOES This should be defined as object in ES
       var listOfJsonFields = ['keywordGroup', 'crsDetails'];
+
+
       // See below; probably not necessary
       var record = this;
       this.linksCache = [];
@@ -583,40 +605,39 @@
       }.bind(this));
 
       // Create a structure that reflects the transferOption/onlinesrc tree
-      var links = [];
-      angular.forEach(this.link, function(link) {
-        var linkInfo = formatLink(link);
-        var idx = linkInfo.group - 1;
-        if (!links[idx]) {
-          links[idx] = [linkInfo];
-        }
-        else if (angular.isArray(links[idx])) {
-          links[idx].push(linkInfo);
-        }
-      });
-      this.linksTree = links;
+      // var links = [];
+      // angular.forEach(this.link, function(link) {
+      //   var linkInfo = formatLink(link);
+      //   var idx = linkInfo.group - 1;
+      //   if (!links[idx]) {
+      //     links[idx] = [linkInfo];
+      //   }
+      //   else if (angular.isArray(links[idx])) {
+      //     links[idx].push(linkInfo);
+      //   }
+      // });
+      // this.linksTree = links;
     };
 
-    function formatLink(sLink) {
-      var linkInfos = sLink.split('|');
-      return {
-        name: linkInfos[0],
-        title: linkInfos[0],
-        url: linkInfos[2],
-        desc: linkInfos[1],
-        protocol: linkInfos[3],
-        contentType: linkInfos[4],
-        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
-        applicationProfile: linkInfos[6]
-      };
-    }
+    // function formatLink(sLink) {
+    //   var linkInfos = sLink.split('|');
+    //   return {
+    //     name: linkInfos[0],
+    //     title: linkInfos[0],
+    //     url: linkInfos[2],
+    //     desc: linkInfos[1],
+    //     protocol: linkInfos[3],
+    //     contentType: linkInfos[4],
+    //     group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
+    //     applicationProfile: linkInfos[6]
+    //   };
+    // }
 
     Metadata.prototype = {
       translate: function(fieldName) {
         var translation = this[fieldName + '_lang' + gnLangs.current];
         if (translation) {
           return translation;
-          // TODO fallback to a default language ?
         } else if (this[fieldName]) {
           return this[fieldName];
         } else {
@@ -693,28 +714,28 @@
         if (this.linksCache[key] && !groupId) {
           return this.linksCache[key];
         }
-        angular.forEach(this.link, function(link) {
-          var linkInfo = formatLink(link);
-          if (types.length > 0) {
-            types.forEach(function(type) {
-              if (type.substr(0, 1) == '#') {
-                if (linkInfo.protocol == type.substr(1, type.length - 1) &&
-                    (!groupId || groupId == linkInfo.group)) {
-                  ret.push(linkInfo);
-                }
-              }
-              else {
-                if (linkInfo.protocol.toLowerCase().indexOf(
-                    type.toLowerCase()) >= 0 &&
-                    (!groupId || groupId == linkInfo.group)) {
-                  ret.push(linkInfo);
-                }
-              }
-            });
-          } else {
-            ret.push(linkInfo);
-          }
-        });
+        // angular.forEach(this.link, function(link) {
+        //   var linkInfo = formatLink(link);
+        //   if (types.length > 0) {
+        //     types.forEach(function(type) {
+        //       if (type.substr(0, 1) == '#') {
+        //         if (linkInfo.protocol == type.substr(1, type.length - 1) &&
+        //             (!groupId || groupId == linkInfo.group)) {
+        //           ret.push(linkInfo);
+        //         }
+        //       }
+        //       else {
+        //         if (linkInfo.protocol.toLowerCase().indexOf(
+        //             type.toLowerCase()) >= 0 &&
+        //             (!groupId || groupId == linkInfo.group)) {
+        //           ret.push(linkInfo);
+        //         }
+        //       }
+        //     });
+        //   } else {
+        //     ret.push(linkInfo);
+        //   }
+        // });
         this.linksCache[key] = ret;
         return ret;
       },

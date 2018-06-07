@@ -836,14 +836,22 @@
           <linkProtocol>
             <xsl:value-of select="$protocol"/>
           </linkProtocol>
-          <link>
-            <xsl:value-of select="gmd:protocol/*/text()"/>
-            <xsl:text>|</xsl:text>
-            <xsl:value-of select="gmd:linkage/gmd:URL"/>
-            <xsl:text>|</xsl:text>
-            <xsl:value-of select="gmd:name/*/text()"/>
-            <xsl:text>|</xsl:text>
-            <xsl:value-of select="gmd:description/*/text()"/>
+          <link type="object">{
+            "protocol":"<xsl:value-of select="gmd:protocol/*/text()"/>",
+            "url":"<xsl:value-of select="gmd:linkage/gmd:URL"/>",
+            "name":"<xsl:value-of select="replace(gmd:name/gco:CharacterString/text(), $doubleQuote, $escapedDoubleQuote)"/>",
+            "description":"<xsl:value-of select="replace(gmd:description/gco:CharacterString/text(), $doubleQuote, $escapedDoubleQuote)"/>"
+            }
+
+            <!--Link object in Angular used to be
+            //     name: linkInfos[0],
+            //     title: linkInfos[0],
+            //     url: linkInfos[2],
+            //     desc: linkInfos[1],
+            //     protocol: linkInfos[3],
+            //     contentType: linkInfos[4],
+            //     group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
+            //     applicationProfile: linkInfos[6]-->
           </link>
 
           <xsl:if test="$operatesOnSetByProtocol and normalize-space($protocol) != ''">
