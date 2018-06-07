@@ -52,7 +52,8 @@
    */
   var searchFormController =
       function($scope, $location, gnSearchManagerService,
-               gnFacetService, Metadata, gnSearchLocation, gnESClient, gnESService) {
+               gnFacetService, Metadata, gnSearchLocation, gnESClient,
+               gnESService, gnAlertService) {
     var defaultParams = {
       fast: 'index',
       _content_type: 'json'
@@ -195,14 +196,18 @@
 
       var esParams = gnESService.convertLuceneParams(finalParams);
       gnESClient.search(esParams).then(function(data) {
-        if(!data.hits){
-          console.log('response object has no hits');
-          console.log(esParams);
-          console.log(data);
-          return false;
+        // data is not an object: this is an error
+        if (typeof data !== 'object') {
+          gnAlertService.addAlert({
+            msg: data,
+            type: 'danger'
+          });
+          return;
         }
-        var hits = data.hits;
-        var records = hits.hits.map(function(r) {
+
+        // make sure we have a hits object if ES did not give back anything
+        data.hits = data.hits || { hits: [], total: 0 };
+        var records = data.hits.hits.map(function(r) {
           return new Metadata(r._source);
         });
         $scope.searchResults.records = records;
@@ -396,7 +401,8 @@
     'Metadata',
     'gnSearchLocation',
     'gnESClient',
-    'gnESService'
+    'gnESService',
+    'gnAlertService'
   ];
 
   /**
