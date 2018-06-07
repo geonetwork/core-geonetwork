@@ -29,11 +29,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonElement;
 import io.searchbox.client.JestResult;
-import io.searchbox.cluster.Health;
 import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.indices.CreateIndex;
+import io.searchbox.indices.DeleteIndex;
 import io.searchbox.indices.IndicesExists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -44,7 +44,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.exceptions.NotFoundEx;
 import org.fao.geonet.index.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -159,25 +158,46 @@ public class EsSearchManager implements ISearchManager {
     public void init() throws Exception {
         if (indexList != null) {
             indexList.keySet().forEach(e -> {
-                createIndexIfNotExist(e, indexList.get(e));
+                createIndex(e, indexList.get(e), false);
             });
         }
     }
+    public void recreate() throws Exception {
+        if (indexList != null) {
+            indexList.keySet().forEach(e -> {
+                createIndex(e, indexList.get(e), true);
+            });
+        }
+    }
+
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
 
     public static final String INDEX_DIRECTORY = "index";
 
-    private void createIndexIfNotExist(String indexId, String indexName) {
+
+    private void createIndex(String indexId, String indexName, boolean dropIndexFirst) {
         try {
+            if (dropIndexFirst) {
+                try {
+                    DeleteIndex deleteIndex = new DeleteIndex.Builder(indexId).build();
+                    client.getClient().execute(deleteIndex);
+                } catch (Exception e) {
+                    // index does not exist ?
+                }
+            }
+
             // Check index exist first
             final IndicesExists request = new IndicesExists.Builder(indexId)
                 .build();
             JestResult result = client.getClient().execute(request);
-            if (result.getResponseCode() == 200) {
+            if (result.getResponseCode() == 200 && !dropIndexFirst) {
                 return;
-            } else if (result.getResponseCode() == 404) {
+            }
+
+
+            if (result.getResponseCode() == 404) {
                 // Check version of the index - how ?
 
                 // Create it if not
@@ -229,7 +249,6 @@ public class EsSearchManager implements ISearchManager {
             doc.remove("source");
             doc.put(SOURCE_CATALOGUE, catalog);
         }
-        doc.put(DOC_TYPE,"metadata");
         listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
 
         if (listOfDocumentsToIndex.size() == commitInterval || forceRefreshReaders) {
@@ -240,6 +259,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() throws IOException {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
+                // TODOES: Report status of failures
                 client.bulkRequest(defaultIndex, listOfDocumentsToIndex);
                 listOfDocumentsToIndex.clear();
             }
@@ -251,6 +271,8 @@ public class EsSearchManager implements ISearchManager {
      */
     public ObjectNode documentToJson(Element xml) {
         ObjectNode doc = new ObjectMapper().createObjectNode();
+        ObjectMapper mapper = new ObjectMapper();
+
 
         List<String> elementNames = new ArrayList();
         List<Element> fields = xml.getChildren();
@@ -258,6 +280,7 @@ public class EsSearchManager implements ISearchManager {
         // Loop on doc fields
         for (Element currentField: fields) {
             String name = currentField.getName();
+            boolean isObject = "object".equals(currentField.getAttributeValue("type"));
 
             if (elementNames.contains(name)) {
                 continue;
@@ -274,20 +297,42 @@ public class EsSearchManager implements ISearchManager {
             if (isArray) {
                 ArrayNode arrayNode = doc.putArray(propertyName);
                 for (Element node : nodeElements) {
-                    arrayNode.add(node.getTextNormalize());
+                    if (isObject) {
+                        try {
+                            arrayNode.add(
+                                    mapper.readTree(node.getTextNormalize()));
+                        } catch (IOException e) {
+                            // Invalid JSON object provided
+                            e.printStackTrace();
+                        }
+                    } else {
+                        arrayNode.add(node.getTextNormalize());
+                    }
+
                 }
                 continue;
             }
-//            if (name.equals("geom")) {
-//                continue;
-//            }
 
             if (name.equals("geom")) {
                 doc.put("geom", nodeElements.get(0).getTextNormalize());
                 continue;
             }
+
             if (!name.startsWith("conformTo_")) { // Skip some fields causing errors / TODO
-                doc.put(propertyName, nodeElements.get(0).getTextNormalize());
+                if (isObject) {
+                    try {
+                        doc.set(propertyName,
+                            mapper.readTree(
+                                nodeElements.get(0).getTextNormalize()
+                            ));
+                    } catch (IOException e) {
+                        // Invalid JSON object provided
+                        e.printStackTrace();
+                    }
+                } else {
+                    doc.put(propertyName, nodeElements.get(0).getTextNormalize());
+                }
+
             }
         }
         return doc;

@@ -512,6 +512,9 @@ public class SiteApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
 
+        if(reset) {
+            searchMan.recreate();
+        }
         searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
 
         return new HttpEntity<>(HttpStatus.CREATED);
