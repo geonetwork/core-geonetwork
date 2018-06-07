@@ -739,10 +739,6 @@
         } else {
           this.allContacts.resource=[this.contactForResource];
         }
-
-
-        console.log(this.allContacts.resource[0]);
-
         return this.allContacts;
       },
       /**

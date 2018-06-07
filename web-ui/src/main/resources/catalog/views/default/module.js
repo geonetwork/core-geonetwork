@@ -112,12 +112,14 @@
     'gnOwsContextService',
     'hotkeys',
     'gnGlobalSettings',
+    'gnESClient',
+    'gnESFacet',
     function($scope, $location, $filter,
              suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
-             hotkeys, gnGlobalSettings) {
+             hotkeys, gnGlobalSettings, gnESClient, gnESFacet) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -237,17 +239,27 @@
           active: false
         }};
 
-      // Set the default browse mode for the home page
-      $scope.$watch('searchInfo', function (n, o) {
-        if (angular.isDefined($scope.searchInfo.facet)) {
-          if ($scope.searchInfo.facet['inspireThemes'].length > 0) {
-            $scope.browse = 'inspire';
-          } else if ($scope.searchInfo.facet['topicCats'].length > 0) {
-            $scope.browse = 'topics';
-          //} else if ($scope.searchInfo.facet['categories'].length > 0) {
-          //  $scope.browse = 'cat';
-          }
-        }
+      var themesFacets = [{
+        field: 'inspireTheme',
+        size: 40
+      }, {
+        field: 'topic',
+        size: 15
+      }];
+
+      var params = {
+        size: 100,
+        aggregations: gnESFacet.getParamsFromConfig(themesFacets)
+      };
+
+      gnESClient.search(params).then(function(response) {
+        $scope.themes = response.facets.reduce(function(themes, facet) {
+          themes[facet.name] = facet.items;
+          return themes;
+        }, {});
+        $scope.themes._total = response.hits.total;
+        $scope.browse = $scope.themes['inspireTheme'] ? 'inspire' : 'topics';
+        console.log($scope.themes)
       });
 
       $scope.$on('layerAddedFromContext', function(e,l) {
@@ -322,7 +334,7 @@
       angular.extend($scope.searchObj, {
         advancedMode: false,
         from: 1,
-        to: 30,
+        to: 20,
         selectionBucket: 's101',
         viewerMap: viewerMap,
         searchMap: searchMap,
@@ -332,13 +344,9 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         filters: gnSearchSettings.filters,
         defaultParams: {
-          'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details',
           sortBy: gnSearchSettings.sortBy || 'relevance'
         },
         params: {
-          'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details',
           sortBy: gnSearchSettings.sortBy || 'relevance'
         },
         sortbyValues: gnSearchSettings.sortbyValues

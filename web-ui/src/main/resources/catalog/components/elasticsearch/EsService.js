@@ -190,7 +190,7 @@
       };
       return {
         suggest: suggest,
-        _source: field
+        _source: ''
       };
     };
 
