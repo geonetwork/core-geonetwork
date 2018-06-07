@@ -195,6 +195,12 @@
 
       var esParams = gnESService.convertLuceneParams(finalParams);
       gnESClient.search(esParams).then(function(data) {
+        if(!data.hits){
+          console.log('response object has no hits');
+          console.log(esParams);
+          console.log(data);
+          return false;
+        }
         var hits = data.hits;
         var records = hits.hits.map(function(r) {
           return new Metadata(r._source);
@@ -225,6 +231,10 @@
               );
           paging.from = (paging.currentPage - 1) * paging.hitsPerPage + 1;
         }
+      },function(data){
+        //error handler
+        console.warn('An error occured');
+        console.log(esParams);
       }).then(function() {
         $scope.searching--;
       });
