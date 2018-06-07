@@ -48,21 +48,21 @@
 
       $scope.saveCssStyleSettings = function(formId) {
 
-    	  $http.post('../api/customstyle',
-    			  formId)
-    			  .success(function(data) {
-    				  $http({
-    					  method: 'GET',
-    					  url: '../../static/wroAPI/reloadModel',
-    					  headers: {'Content-Type': 'text/plain'}
-    				  }).then(function(data) {
-    					  $http({
-    						  method: 'GET',
-    						  url: '../../static/wroAPI/reloadCache',
-    						  headers: {'Content-Type': 'text/plain'}
-    					  }).then(function(data) {
-    						  $window.location.reload(); });
-    				  });
+        $http.post('../api/customstyle',
+            formId)
+            .success(function(data) {
+              $http({
+                method: 'GET',
+                url: '../../static/wroAPI/reloadModel',
+                headers: {'Content-Type': 'text/plain'}
+              }).then(function(data) {
+                $http({
+                  method: 'GET',
+                  url: '../../static/wroAPI/reloadCache',
+                  headers: {'Content-Type': 'text/plain'}
+                }).then(function(data) {
+                  $window.location.reload(); });
+              });
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -71,6 +71,18 @@
                 timeout: 0,
                 type: 'danger'});
             });
+      };
+
+      $scope.uploadCssStyleSettings = function(cssJsonContent){
+
+        $scope.saveCssStyleSettings(cssJsonContent);
+      };
+
+      $scope.restoreDefaultCssStyleSettings = function(formId){
+        angular.forEach(formId, function(value, key) {
+          $scope.gnCssStyle[key] = '';
+        });
+        $scope.saveCssStyleSettings(formId);
       };
 
     }]);
