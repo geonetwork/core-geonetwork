@@ -245,6 +245,9 @@
       }, {
         field: 'topic',
         size: 15
+      }, {
+        field: 'resourceType',
+        size: 15
       }];
 
       var params = {
