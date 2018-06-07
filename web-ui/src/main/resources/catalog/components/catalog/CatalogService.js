@@ -636,7 +636,8 @@
     Metadata.prototype = {
       translate: function(fieldName) {
         var translation = this[fieldName + '_lang' + gnLangs.current];
-        if (translation) {
+        
+	if (translation) {
           return translation;
         } else if (this[fieldName]) {
           return this[fieldName];
