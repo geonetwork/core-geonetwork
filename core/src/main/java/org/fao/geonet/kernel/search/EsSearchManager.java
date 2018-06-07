@@ -29,14 +29,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonElement;
 import io.searchbox.client.JestResult;
-import io.searchbox.cluster.Health;
 import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.IndicesExists;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -44,13 +41,9 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.exceptions.NotFoundEx;
 import org.fao.geonet.index.es.EsClient;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -58,15 +51,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static org.fao.geonet.kernel.search.IndexFields.*;
+import static org.fao.geonet.kernel.search.IndexFields.DOC_TYPE;
+import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
 public class EsSearchManager implements ISearchManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
@@ -297,51 +294,7 @@ public class EsSearchManager implements ISearchManager {
         sendDocumentsToIndex();
     }
 
-    @Override
-    public boolean rebuildIndex(ServiceContext context, boolean xlinks,
-                                boolean reset, String bucket) throws Exception {
-        DataManager dataMan = context.getBean(DataManager.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
-        if (reset) {
-            clearIndex();
-        }
-
-        if (StringUtils.isNotBlank(bucket)) {
-            ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
-            UserSession session = context.getUserSession();
-            SelectionManager sm = SelectionManager.getManager(session);
-
-            synchronized (sm.getSelection(bucket)) {
-                for (Iterator<String> iter = sm.getSelection(bucket).iterator();
-                     iter.hasNext(); ) {
-                    String uuid = (String) iter.next();
-//                    String id = dataMan.getMetadataId(uuid);
-                    Metadata metadata = metadataRepository.findOneByUuid(uuid);
-                    if (metadata != null) {
-                        listOfIdsToIndex.add(metadata.getId() + "");
-                    } else {
-                        LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
-                    }
-                }
-            }
-            for(String id : listOfIdsToIndex) {
-                dataMan.indexMetadata(id + "", false, this);
-            }
-        } else {
-            final Specifications<Metadata> metadataSpec =
-                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
-                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
-            final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
-                Specifications.where(metadataSpec)
-            );
-            for(Integer id : metadataIds) {
-                dataMan.indexMetadata(id + "", false, this);
-            }
-        }
-        sendDocumentsToIndex();
-        return true;
-    }
 
     public void clearIndex() throws Exception {
         client.deleteByQuery(defaultIndex,"*:*");

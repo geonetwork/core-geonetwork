@@ -510,9 +510,9 @@ public class SiteApi {
         HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        DataManager dataMan = ApplicationContextHolder.get().getBean(DataManager.class);
 
-        searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
+        dataMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
 
         return new HttpEntity<>(HttpStatus.CREATED);
     }

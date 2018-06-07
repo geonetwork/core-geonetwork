@@ -65,12 +65,13 @@ import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.filter.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
@@ -80,6 +81,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -110,6 +112,9 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 //@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
 public class DataManager implements ApplicationEventPublisherAware {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
+    private static final Logger LOGGER_IDX_ENGINE = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
+    private static final Logger LOGGER_EDITOR_SESSION = LoggerFactory.getLogger(Geonet.EDITOR_SESSION);
 
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
     Lock waitLoopLock = new ReentrantLock();
@@ -325,9 +330,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         // set up results HashMap for post processing of records to be indexed
         ArrayList<String> toIndex = new ArrayList<String>();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
-
+        LOGGER.debug("INDEX CONTENT:");
 
         Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         int currentPage = 0;
@@ -342,15 +345,13 @@ public class DataManager implements ApplicationEventPublisherAware {
                 // get metadata
                 String id = String.valueOf(result.one());
 
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")");
-                }
+                LOGGER.debug("- record ({})", id);
 
                 String idxLastChange = docs.get(id);
 
                 // if metadata is not indexed index it
                 if (idxLastChange == null) {
-                    Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+                    LOGGER.debug("-  will be indexed");
                     toIndex.add(id);
 
                     // else, if indexed version is not the latest index it
@@ -359,15 +360,12 @@ public class DataManager implements ApplicationEventPublisherAware {
 
                     String lastChange = result.two().toString();
 
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                        Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange);
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                        Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange);
+                    LOGGER.debug("- lastChange: {}", lastChange);
+                    LOGGER.debug("- idxLastChange: {}", idxLastChange);
 
                     // date in index contains 't', date in DBMS contains 'T'
                     if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
-                        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                            Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+                        LOGGER.debug("-  will be indexed");
                         toIndex.add(id);
                     }
                 }
@@ -385,18 +383,13 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         if (docs.size() > 0) { // anything left?
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "INDEX HAS RECORDS THAT ARE NOT IN DB:");
-            }
+            LOGGER.debug("INDEX HAS RECORDS THAT ARE NOT IN DB:");
         }
 
         // remove from index metadata not in DBMS
         for (String id : docs.keySet()) {
             getEsSearchManager().delete(id);
-
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "- removed record (" + id + ") from index");
-            }
+            LOGGER.debug("- removed record ({}) from index", id);
         }
     }
 
@@ -409,8 +402,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         // get all metadata with XLinks
         Set<Integer> toIndex = getEsSearchManager().getDocsWithXLinks();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
+        LOGGER.debug("Will index {} records with XLinks", toIndex.size());
         if (toIndex.size() > 0) {
             // clean XLink Cache so that cache and index remain in sync
             Processor.clearCache();
@@ -448,10 +440,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
         }
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-            Log.debug(Geonet.DATA_MANAGER, "Will index " +
-                listOfIdsToIndex.size() + " records from selection.");
-        }
+        LOGGER.debug("Will index {} records from selection.", listOfIdsToIndex.size());
 
         if (listOfIdsToIndex.size() > 0) {
             // clean XLink Cache so that cache and index remain in sync
@@ -487,25 +476,20 @@ public class DataManager implements ApplicationEventPublisherAware {
         if (metadataIds.size() < threadCount) perThread = metadataIds.size();
         else perThread = metadataIds.size() / threadCount;
         int index = 0;
-        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-            Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
-            Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
-        }
+        LOGGER_IDX_ENGINE.debug("Indexing {} records.", metadataIds.size());
+        LOGGER_IDX_ENGINE.debug(metadataIds.toString());
+
         AtomicInteger numIndexedTracker = new AtomicInteger();
         while (index < metadataIds.size()) {
             int start = index;
             int count = Math.min(perThread, metadataIds.size() - start);
             int nbRecords = start + count;
 
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
-            }
+            LOGGER_IDX_ENGINE.debug("Indexing records from {} to {}", start, nbRecords);
 
             List<?> subList = metadataIds.subList(start, nbRecords);
 
-            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, subList.toString());
-            }
+            LOGGER_IDX_ENGINE.debug(Geonet.INDEX_ENGINE, subList);
 
             // create threads to process this chunk of ids
             Runnable worker = new IndexMetadataTask(context, subList,
@@ -614,10 +598,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             final String rating = String.valueOf(fullMd.getDataInfo().getRating());
             final String displayOrder = fullMd.getDataInfo().getDisplayOrder() == null ? null : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
 
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); //DEBUG
-                Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
-            }
+            LOGGER.debug("record schema ({})", schema);
+            LOGGER.debug("record createDate ({})", createDate);
 
             moreFields.add(getEsSearchManager().makeField(Geonet.IndexFieldNames.ROOT, root));
             moreFields.add(getEsSearchManager().makeField(Geonet.IndexFieldNames.SCHEMA, schema));
@@ -768,14 +750,14 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             getEsSearchManager().index(getSchemaManager().getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
         } catch (Exception x) {
-            Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
+            LOGGER.error("The metadata document index with id={} is corrupt/invalid - ignoring it. Error: {}", metadataId, x.getMessage(), x);
             fullMd = null;
         } finally {
             indexingLock.lock();
             try {
                 indexing.remove(metadataId);
             } catch (Exception e) {
-                Log.warning(Geonet.INDEX_ENGINE, "Exception removing " + metadataId + " from indexing set", e);
+                LOGGER_IDX_ENGINE.warn("Exception removing {} from indexing set", metadataId, e);
             } finally {
                 indexingLock.unlock();
             }
@@ -840,8 +822,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             md.removeAttribute("schemaLocation", Namespaces.XSI);
         }
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of " + schemaLoc);
+        LOGGER.debug("Extracted schemaLocation of {}", schemaLoc);
         if (schemaLoc == null) schemaLoc = "";
 
         if (schema == null) {
@@ -868,8 +849,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted schemaLocation of " + schemaLoc);
+        LOGGER.debug("Extracted schemaLocation of {}", schemaLoc);
         if (schemaLoc == null) schemaLoc = "";
 
         if (schema == null) {
@@ -960,9 +940,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public void startEditingSession(ServiceContext context, String id)
         throws Exception {
-        if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-            Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
-        }
+        LOGGER_EDITOR_SESSION.debug("Editing session starts for record {}", id);
 
         boolean keepXlinkAttributes = true;
         boolean forEditing = false;
@@ -979,18 +957,14 @@ public class DataManager implements ApplicationEventPublisherAware {
                                      String id) throws Exception {
         UserSession session = context.getUserSession();
         Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
-
-        if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-            Log.debug(Geonet.EDITOR_SESSION,
-                "Editing session end. Cancel changes. Restore record " + id +
-                    ". Replace by original record which was: ");
-        }
+        LOGGER_EDITOR_SESSION.debug("Editing session end. Cancel changes. Restore record {}. Replace by original record which was: ", id);
 
         if (metadataBeforeAnyChanges != null) {
-            if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-                Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
-                Log.debug(Geonet.EDITOR_SESSION, Xml.getString(metadataBeforeAnyChanges));
+            LOGGER_EDITOR_SESSION.debug(" > restoring record: ");
+            if (LOGGER_EDITOR_SESSION.isDebugEnabled()) {
+                LOGGER_EDITOR_SESSION.debug(Xml.getString(metadataBeforeAnyChanges));
             }
+
             Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
             boolean validate = false;
             boolean ufo = false;
@@ -1001,11 +975,8 @@ public class DataManager implements ApplicationEventPublisherAware {
                 context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
             endEditingSession(id, session);
         } else {
-            if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-                Log.debug(Geonet.EDITOR_SESSION,
-                    " > nothing to cancel for record " + id +
-                        ". Original record was null. Use starteditingsession to.");
-            }
+            LOGGER_EDITOR_SESSION.debug(
+                    " > nothing to cancel for record {}. Original record was null. Use starteditingsession to.", id);
         }
     }
 
@@ -1013,9 +984,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * Remove the original record stored in session.
      */
     public void endEditingSession(String id, UserSession session) {
-        if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
-            Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
-        }
+        LOGGER_EDITOR_SESSION.debug("Editing session end.");
         session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
     }
 
@@ -1055,8 +1024,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             for (String rule : rules) {
                 // -- create a report for current rules.
                 // Identified by a rule attribute set to shematron file name
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                    Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
+                LOGGER.debug(" - rule: {}", rule);
                 String ruleId = rule.substring(0, rule.indexOf(".xsl"));
                 Element report = new Element("report", Edit.NAMESPACE);
                 report.setAttribute("rule", ruleId,
@@ -1091,7 +1059,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                         }
                     }
                 } catch (Exception e) {
-                    Log.error(Geonet.DATA_MANAGER, "WARNING: schematron xslt " + schemaTronXmlXslt + " failed");
+                    LOGGER.error("WARNING: schematron xslt {} failed", schemaTronXmlXslt);
 
                     // If an error occurs that prevents to verify schematron rules, add to show in report
                     Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
@@ -1146,14 +1114,14 @@ public class DataManager implements ApplicationEventPublisherAware {
                     elem = Xml.selectElement(md, xpath, schemaNamespaces);
                 } catch (JDOMException je) {
                     je.printStackTrace();
-                    Log.error(Geonet.DATA_MANAGER, "Attach xsderror message to xpath " + xpath + " failed: " + je.getMessage());
+                    LOGGER.error("Attach xsderror message to xpath {} failed: {}", xpath, je.getMessage());
                 }
                 if (elem != null) {
                     String existing = elem.getAttributeValue("xsderror", Edit.NAMESPACE);
                     if (existing != null) message = existing + message;
                     elem.setAttribute("xsderror", message, Edit.NAMESPACE);
                 } else {
-                    Log.warning(Geonet.DATA_MANAGER, "WARNING: evaluating XPath " + xpath + " against metadata failed - XSD validation message: " + message + " will NOT be shown by the editor");
+                    LOGGER.warn("evaluating XPath {} against metadata failed - XSD validation message: {} will NOT be shown by the editor", xpath, message);
                 }
             }
         }
@@ -1167,8 +1135,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_UUID);
         String uuid = Xml.transform(md, styleSheet).getText().trim();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '" + uuid + "' for schema '" + schema + "'");
+        LOGGER.debug("Extracted UUID '{}' for schema '{}'", uuid, schema);
 
         //--- needed to detach md from the document
         md.detach();
@@ -1187,8 +1154,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DATE_MODIFIED);
         String dateMod = Xml.transform(md, styleSheet).getText().trim();
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted Date Modified '" + dateMod + "' for schema '" + schema + "'");
+        LOGGER.debug("Extracted Date Modified '' for schema '{}'", dateMod, schema);
 
         //--- needed to detach md from the document
         md.detach();
@@ -1232,9 +1198,9 @@ public class DataManager implements ApplicationEventPublisherAware {
     public Element extractSummary(Element md) throws Exception {
         Path styleSheet = stylePath.resolve(Geonet.File.METADATA_BRIEF);
         Element summary = Xml.transform(md, styleSheet);
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted summary '\n" + Xml.getString(summary));
-
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Extracted summary '\n {}", Xml.getString(summary));
+        }
         //--- needed to detach md from the document
         md.detach();
 
@@ -1389,13 +1355,10 @@ public class DataManager implements ApplicationEventPublisherAware {
     @CheckForNull
     String autodetectSchema(Element md, String defaultSchema) throws SchemaMatchConflictException, NoSchemaMatchesException {
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Autodetect schema for metadata with :\n * root element:'" + md.getQualifiedName()
-                + "'\n * with namespace:'" + md.getNamespace()
-                + "\n * with additional namespaces:" + md.getAdditionalNamespaces().toString());
+        LOGGER.debug("Autodetect schema for metadata with :\n * root element:'{}',\n * with namespace:'{}\n * with additional namespaces: {}",
+            new Object[] {md.getQualifiedName(), md.getNamespace(), md.getAdditionalNamespaces().toString()});
         String schema = getSchemaManager().autodetectSchema(md, defaultSchema);
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Schema detected was " + schema);
+        LOGGER.debug("Schema detected was {}", schema);
         return schema;
     }
 
@@ -1435,9 +1398,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             final IndexingList list = srvContext.getBean(IndexingList.class);
             list.add(iId);
         } else {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
-            }
+            LOGGER.debug("GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
         }
     }
 
@@ -1461,8 +1422,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         // Calculate new rating
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:" + metadataId + " --> rating is:" + newRating);
+        LOGGER.debug("Setting rating for id:{} --> rating is: {}", metadataId, newRating);
 
 
         getMetadataRepository().update(metadataId, new Updater<Metadata>() {
@@ -1500,9 +1460,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public void rateMetadata(final int metadataId, final int average) {
 
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, String.format(
-                "Setting rating in advanced mode for id: %d --> rating is: %d", metadataId , average));
+        LOGGER.debug("Setting rating in advanced mode for id: {} --> rating is: {}", metadataId , average);
 
         getMetadataRepository().update(metadataId, new Updater<Metadata>() {
             @Override
@@ -1972,8 +1930,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         // XSD validation error(s)
         catch (Exception x) {
             // do not print stacktrace as this is 'normal' program flow
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "invalid metadata: " + x.getMessage(), x);
+            LOGGER.debug("invalid metadata: {}", x.getMessage(), x);
             return false;
         }
     }
@@ -1992,8 +1949,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         boolean valid = true;
 
         if (doc.getDocType() != null) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "Validating against dtd " + doc.getDocType());
+            LOGGER.debug("Validating against dtd {}", doc.getDocType());
 
             // if document has a doctype then validate using that (assuming that the
             // dtd is either mapped locally or will be cached after first validate)
@@ -2005,9 +1961,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                     setRequired(true).
                     setNumTests(1).
                     setNumFailures(0));
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, "Valid.");
-                }
+                LOGGER.debug("Valid.");
             } catch (Exception e) {
                 validations.add(new MetadataValidation().
                     setId(new MetadataValidationId(intMetadataId, "dtd")).
@@ -2016,15 +1970,11 @@ public class DataManager implements ApplicationEventPublisherAware {
                     setNumTests(1).
                     setNumFailures(1));
 
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, "Invalid.", e);
-                }
+                LOGGER.debug("Invalid.", e);
                 valid = false;
             }
         } else {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
-            }
+            LOGGER.debug(Geonet.DATA_MANAGER, "Validating against XSD {}", schema);
             // do XSD validation
             Element md = doc.getRootElement();
             Element xsdErrors = getXSDXmlReport(schema, md);
@@ -2040,8 +1990,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                     setRequired(true).
                     setNumTests(xsdErrorCount).
                     setNumFailures(xsdErrorCount));
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                    Log.debug(Geonet.DATA_MANAGER, "Invalid.");
+                LOGGER.debug("Invalid.");
                 valid = false;
             } else {
                 validations.add(new MetadataValidation().
@@ -2050,8 +1999,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                     setRequired(true).
                     setNumTests(1).
                     setNumFailures(0));
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                    Log.debug(Geonet.DATA_MANAGER, "Valid.");
+                LOGGER.debug("Valid.");
             }
             try {
                 editLib.enumerateTree(md);
@@ -2061,7 +2009,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 editLib.removeEditingInfo(md);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
+                LOGGER.error("Could not run schematron validation on metadata {}: {}", metadataId, e.getMessage());
                 valid = false;
             }
         }
@@ -2071,7 +2019,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             saveValidationStatus(intMetadataId, validations);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + metadataId + ": " + e.getMessage());
+            LOGGER.error("Could not save validation status on metadata {}: {}", metadataId, e.getMessage());
         }
 
         return valid;
@@ -2092,13 +2040,11 @@ public class DataManager implements ApplicationEventPublisherAware {
     public Pair<Element, String> doValidate(UserSession session, String schema, String metadataId, Element md, String lang, boolean forEditing) throws Exception {
         int intMetadataId = Integer.parseInt(metadataId);
         String version = null;
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + metadataId + " [schema: " + schema + "].");
+        LOGGER.debug("Creating validation report for record #{} [schema: {}].", metadataId, schema);
 
         Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         if (sessionReport != null && !forEditing) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "  Validation report available in session.");
+            LOGGER.debug("  Validation report available in session.");
             sessionReport.detach();
             return Pair.read(sessionReport, version);
         }
@@ -2122,9 +2068,8 @@ public class DataManager implements ApplicationEventPublisherAware {
                 setRequired(true).
                 setNumTests(xsdErrorCount).
                 setNumFailures(xsdErrorCount));
-
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("  - XSD error: {}", Xml.getString(xsdErrors));
             }
         } else {
             validations.add(new MetadataValidation().
@@ -2134,17 +2079,14 @@ public class DataManager implements ApplicationEventPublisherAware {
                 setNumTests(1).
                 setNumFailures(0));
 
-            if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-                Log.trace(Geonet.DATA_MANAGER, "Valid.");
-            }
+            LOGGER.trace("Valid.");
         }
 
         // ...then schematrons
         // edit mode
         Element error = null;
         if (forEditing) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "  - Schematron in editing mode.");
+            LOGGER.debug("  - Schematron in editing mode.");
             //-- now expand the elements and add the geonet: elements
             editLib.expandElements(schema, md);
             version = editLib.getVersionForEditing(schema, metadataId, md);
@@ -2165,7 +2107,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
+                LOGGER.error("Could not run schematron validation on metadata {}: {}", metadataId, e.getMessage());
             }
         }
 
@@ -2177,7 +2119,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         try {
             saveValidationStatus(intMetadataId, validations);
         } catch (Exception e) {
-            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + metadataId + ": " + e.getMessage(), e);
+            LOGGER.error("Could not save validation status on metadata {}: {}", metadataId, e.getMessage(), e);
         }
 
         return Pair.read(errorReport, version);
@@ -2713,7 +2655,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      */
     public void copyDefaultPrivForGroup(ServiceContext context, String id, String groupId, boolean fullRightsForGroup) throws Exception {
         if (StringUtils.isBlank(groupId)) {
-            Log.info(Geonet.DATA_MANAGER, "Attempt to set default privileges for metadata " + id + " to an empty groupid");
+            LOGGER.info("Attempt to set default privileges for metadata {} to an empty groupid", id);
             return;
         }
         //--- store access operations for group
@@ -2945,9 +2887,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
         boolean autoFixing = getSettingManager().getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
         if (autoFixing) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
-            }
+            LOGGER.debug("Autofixing is enabled, trying update-fixed-info (updateDatestamp: {})", updateDatestamp.name());
 
             Metadata metadata = null;
             if (metadataId.isPresent()) {
@@ -2956,9 +2896,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
                 // don't process templates
                 if (isTemplate) {
-                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
-                    }
+                    LOGGER.debug("Not applying update-fixed-info for a template");
                     return md;
                 }
             }
@@ -3034,9 +2972,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             result = Xml.transform(result, styleSheet);
             return result;
         } else {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
-            }
+            LOGGER.debug("Autofixing is disabled, not applying update-fixed-info");
             return md;
         }
     }
@@ -3075,9 +3011,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             // Check privileges
             if (!getAccessManager().canEdit(srvContext, childId)) {
                 untreatedChildSet.add(childId);
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                    Log.debug(Geonet.DATA_MANAGER, "Could not update child ("
-                        + childId + ") because of privileges.");
+                LOGGER.debug("Could not update child ({}) because of privileges.", childId);
                 continue;
             }
 
@@ -3090,17 +3024,13 @@ public class DataManager implements ApplicationEventPublisherAware {
             // child are in the same schema (even not profil different)
             if (!childSchema.equals(parentSchema)) {
                 untreatedChildSet.add(childId);
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER, "Could not update child ("
-                        + childId + ") because schema (" + childSchema
-                        + ") is different from the parent one (" + parentSchema
-                        + ").");
-                }
+                LOGGER.debug("Could not update child ({}) because schema ({}) is different from the parent one ({}).",
+                    new Object[] {childId, childSchema, parentSchema});
                 continue;
             }
 
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "Updating child (" + childId + ") ...");
+
+            LOGGER.debug("Updating child ({}) ...", childId);
 
             // --- setup xml element to be processed by XSLT
 
@@ -3346,7 +3276,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             if (aNs.getPrefix().equals("")) { // found default namespace
                 String prefix = mds.getPrefix(aNs.getURI());
                 if (prefix == null) {
-                    Log.warning(Geonet.DATA_MANAGER, "Metadata record contains a default namespace " + aNs.getURI() + " (with no prefix) which does not match any " + schema + " schema's namespaces.");
+                    LOGGER.warn("Metadata record contains a default namespace {} (with no prefix) which does not match any {} schema's namespaces.",
+                        aNs.getURI(), schema);
                 }
                 ns = Namespace.getNamespace(prefix, aNs.getURI());
                 setNamespacePrefix(md, ns);
@@ -3501,5 +3432,50 @@ public class DataManager implements ApplicationEventPublisherAware {
             return false;
         }
     };
+
+    public boolean rebuildIndex(ServiceContext context, boolean xlinks,
+                                boolean reset, String bucket) throws Exception {
+        DataManager dataMan = context.getBean(DataManager.class);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+
+        if (reset) {
+            getEsSearchManager().clearIndex();
+        }
+
+        if (StringUtils.isNotBlank(bucket)) {
+            ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
+            UserSession session = context.getUserSession();
+            SelectionManager sm = SelectionManager.getManager(session);
+
+            synchronized (sm.getSelection(bucket)) {
+                for (Iterator<String> iter = sm.getSelection(bucket).iterator();
+                     iter.hasNext(); ) {
+                    String uuid = (String) iter.next();
+//                    String id = dataMan.getMetadataId(uuid);
+                    Metadata metadata = metadataRepository.findOneByUuid(uuid);
+                    if (metadata != null) {
+                        listOfIdsToIndex.add(metadata.getId() + "");
+                    } else {
+                        LOGGER_IDX_ENGINE.warn("Selection contains uuid '{}' not found in database", uuid);
+                    }
+                }
+            }
+            for(String id : listOfIdsToIndex) {
+                dataMan.indexMetadata(id + "", false, getEsSearchManager());
+            }
+        } else {
+            final Specifications<Metadata> metadataSpec =
+                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
+                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
+            final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
+                Specifications.where(metadataSpec)
+            );
+            for(Integer id : metadataIds) {
+                dataMan.indexMetadata(id + "", false, getEsSearchManager());
+            }
+        }
+        getEsSearchManager().forceIndexChanges();
+        return true;
+    }
 
 }
