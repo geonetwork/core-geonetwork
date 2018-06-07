@@ -1126,7 +1126,12 @@
           "type": "integer"
         },
         "link": {
-          "type": "text"
+          "properties": {
+            "protocol": {"type": "keyword"},
+            "link": {"type": "text"},
+            "name": {"type": "text"},
+            "description": {"type": "text"}
+          }
         },
         "linkProtocol": {
           "type": "keyword"
@@ -1153,7 +1158,12 @@
           }
         },
         "overviewUrl": {
-          "type": "text"
+          "type": "text",
+          "fields": {
+            "raw": {
+              "type": "keyword"
+            }
+          }
         },
         "pointOfTruthURL": {
           "type": "text"
