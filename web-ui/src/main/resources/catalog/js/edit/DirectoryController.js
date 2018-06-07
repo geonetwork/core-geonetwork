@@ -183,9 +183,12 @@
               $scope.templates = data.metadata.map(function(md) {
                 return {
                   root: $.isArray(md.root) ? md.root[0] : md.root,
-                  'geonet:info': md['geonet:info'],
+                  id: md.id,
+                  uuid: md.uuid,
+                  edit: md.edit,          // TODOES: edit & selected do not exist anymore with ES;
+                  selected: md.selected,  // make sure they are replaced with the correct ones
                   isTemplate: md.isTemplate,
-                  title: md.title
+                  title: md.resourceTitle
                 };
               });
             });
@@ -390,7 +393,7 @@
       // ACTIONS
 
       $scope.delEntry = function(e) {
-        $scope.delEntryId = e['geonet:info'].id;
+        $scope.delEntryId = e.id;
         $('#gn-confirm-delete').modal('show');
       };
       $scope.confirmDelEntry = function(e) {
@@ -404,7 +407,7 @@
 
       $scope.copyEntry = function(e) {
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
-        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.id, $scope.ownerGroup,
             fullPrivileges,
             e.isTemplate === 't' ? 'TEMPLATE_OF_SUB_TEMPLATE' : 'SUB_TEMPLATE'
         ).then(refreshEntriesInfo);
@@ -423,7 +426,7 @@
 
         // conversion to template is done by duplicating into template type
         // the original entry is kept
-        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.id, $scope.ownerGroup,
             fullPrivileges,
             'TEMPLATE_OF_SUB_TEMPLATE').then(refreshEntriesInfo);
       };
@@ -439,7 +442,7 @@
         }
 
         // a copy of the template is created & opened
-        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
+        gnMetadataManager.copy(e.id, $scope.ownerGroup,
             fullPrivileges,
             'SUB_TEMPLATE')
             .then(function(response) {
@@ -452,13 +455,13 @@
       };
 
       $scope.validateEntry = function(e) {
-        gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, true)
+        gnMetadataManager.validateDirectoryEntry(e.id, true)
             .then(function() {
               if ($scope.publishToAllWhenValidated) {
                 gnMetadataActions.publish(e, undefined, undefined, $scope);
               }
               refreshEntriesInfo();
-              return gnMetadataManager.getMdObjById(e['geonet:info'].id,
+              return gnMetadataManager.getMdObjById(e.id,
               's or t');
             })
             .then(function(e) {
@@ -469,10 +472,10 @@
       };
 
       $scope.rejectEntry = function(e) {
-        gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, false)
+        gnMetadataManager.validateDirectoryEntry(e.id, false)
             .then(function() {
               refreshEntriesInfo();
-              return gnMetadataManager.getMdObjById(e['geonet:info'].id,
+              return gnMetadataManager.getMdObjById(e.id,
               's or t');
             })
             .then(function(e) {
@@ -502,7 +505,7 @@
         $scope.currentEditorAction =
             (e.isTemplate === 't' ? 'editTemplate' : 'editEntry');
 
-        var id = e['geonet:info'].id;
+        var id = e.id;
         angular.extend(gnCurrentEdit, {
           id: id,
           formId: '#gn-editor-' + id,

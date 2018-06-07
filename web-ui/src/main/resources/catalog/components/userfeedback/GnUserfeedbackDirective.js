@@ -151,7 +151,7 @@
             function refreshList() {
               scope.loaded = false;
               scope.fewCommentsList = [];
-              gnUserfeedbackService.loadComments(scope.mdrecord.getUuid(),
+              gnUserfeedbackService.loadComments(scope.mdrecord.uuid,
                 scope.nbOfComments || defaultNbOfComments).then(
                 function(response) {
                   scope.fewCommentsList =
@@ -161,7 +161,7 @@
                   console.log(response.statusText);
                 });
 
-              gnUserfeedbackService.loadRating(scope.mdrecord.getUuid()).then(
+              gnUserfeedbackService.loadRating(scope.mdrecord.uuid).then(
                 function mySuccess(response) {
                   scope.rating = null;
                   scope.rating = response.data;
@@ -194,8 +194,8 @@
             function initRecord(md) {
               if (scope.record != null) {
                 var m = new Metadata(md);
-                scope.metatdataUUID = m.getUuid();
-                scope.metatdataTitle = m.getTitle();
+                scope.metatdataUUID = m.uuid;
+                scope.metatdataTitle = m.resourceTitle;
               }
             }
 
@@ -286,8 +286,8 @@
             function initRecord(md) {
               if (scope.record != null) {
                 var m = new Metadata(md);
-                scope.metatdataUUID = m.getUuid();
-                scope.metatdataTitle = m.getTitle();
+                scope.metatdataUUID = m.uuid;
+                scope.metatdataTitle = m.resourceTitle;
               }
             }
 

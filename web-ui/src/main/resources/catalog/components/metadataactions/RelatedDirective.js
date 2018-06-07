@@ -205,7 +205,7 @@
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    scope.uuid = scope.md.getUuid();
+                    scope.uuid = scope.md.uuid;
                   }
                   scope.updateRelations();
                 }

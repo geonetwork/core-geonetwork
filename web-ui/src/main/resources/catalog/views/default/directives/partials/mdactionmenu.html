@@ -99,21 +99,21 @@
         <span data-translate="">permalink</span>
       </a></li>
       <li><a data-ng-href=""
-             data-ng-click="mdService.metadataMEF(md.getUuid())">
+             data-ng-click="mdService.metadataMEF(md.uuid)">
         <i class="fa fa-file-zip-o"></i>&nbsp;
         <span data-translate="">exportMEF</span>
       </a></li>
-      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&output=pdf"
+      <li><a data-ng-href="../api/records/{{md.uuid}}/formatters/xsl-view?root=div&output=pdf"
              target="_blank">
         <i class="fa fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">exportPDF</span>
       </a></li>
-      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true">
+      <li><a data-ng-href="../api/records/{{md.uuid}}/formatters/xml?attachment=true">
         <i class="fa fa-file-code-o"></i>&nbsp;
         <span data-translate="">exportXML</span>
       </a></li>
       <li><a data-ng-href=""
-             data-ng-click="mdService.metadataRDF(md.getUuid())">
+             data-ng-click="mdService.metadataRDF(md.uuid)">
         <i class="fa fa-share-alt"></i>&nbsp;
         <span data-translate="">exportRDF</span>
       </a></li>

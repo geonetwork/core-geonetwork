@@ -142,14 +142,14 @@
 
           var openLink = function(record, link) {
             var url = $filter('gnLocalized')(record.url) || record.url;
-            if (url && 
-                angular.isString(url) && 
+            if (url &&
+                angular.isString(url) &&
                 url.match("^(http|ftp|sftp|\\\\|//)")) {
               return window.open(url, '_blank');
             } else if (url && url.indexOf('www.') == 0) {
               return window.open('http://' + url, '_blank');
-            } else if (record.title && 
-                       angular.isString(record.title) && 
+            } else if (record.title &&
+                       angular.isString(record.title) &&
                        record.title.match("^(http|ftp|sftp|\\\\|//)")) {
               return window.location.assign(record.title);
             } else {
@@ -310,7 +310,7 @@
             var protocolOrType = resource.protocol + resource.serviceType;
             // Cas for links
             if (angular.isString(protocolOrType) &&
-                angular.isUndefined(resource['geonet:info'])) {
+                angular.isUndefined(resource)) {
               if (protocolOrType.match(/wms/i)) {
                 if (this.isLayerProtocol(resource)) {
                   return 'WMS';

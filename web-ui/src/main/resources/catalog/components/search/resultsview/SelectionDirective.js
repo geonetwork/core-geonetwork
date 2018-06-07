@@ -115,8 +115,8 @@
           scope.selectAllInPage = function(selected) {
             var uuids = [];
             scope.searchResults.records.forEach(function(record) {
-              uuids.push(record.getUuid());
-              record['geonet:info'].selected = selected;
+              uuids.push(record.uuid);
+              record.selected = selected;
             });
 
             gnSearchManagerService.select(uuids,
@@ -132,7 +132,7 @@
                 .success(function(res) {
                   scope.searchResults.selectedCount = parseInt(res, 10);
                   scope.searchResults.records.forEach(function(record) {
-                    record['geonet:info'].selected = true;
+                    record.selected = true;
                   });
                 });
           };
@@ -143,7 +143,7 @@
                 .success(function(res) {
                   scope.searchResults.selectedCount = parseInt(res, 10);
                   scope.searchResults.records.forEach(function(record) {
-                    record['geonet:info'].selected = false;
+                    record.selected = false;
                   });
                 });
           };
@@ -182,7 +182,7 @@
           scope.change = function() {
             var method = element[0].checked ? 'select' : 'unselect';
             gnSearchManagerService[method](
-                scope.md.getUuid(), scope.searchResults.selectionBucket).
+                scope.md.uuid, scope.searchResults.selectionBucket).
                 success(function(res) {
                   scope.searchResults.selectedCount = parseInt(res, 10);
                 });

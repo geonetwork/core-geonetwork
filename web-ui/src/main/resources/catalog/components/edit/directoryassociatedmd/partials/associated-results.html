@@ -26,15 +26,15 @@
         data-ng-repeat="e in searchResults.records">
           <gn-md-type-widget metadata="e"></gn-md-type-widget>
 
-          <a href="catalog.search#/metadata/{{e['geonet:info'].uuid}}"
+          <a href="catalog.search#/metadata/{{e.uuid}}"
             class="flex-shrink text-ellipsis"
-            title="{{e.title || e.defaultTitle}}">
-            {{e.title || e.defaultTitle}}</a>
+            title="{{e.resourceTitle}}">
+            {{e.resourceTitle}}</a>
 
           <div class="flex-spacer flex-grow"></div>
 
           <a class="btn btn-primary btn-sm"
-             data-ng-href="#/metadata/{{e['geonet:info'].id}}"
+             data-ng-href="#/metadata/{{e.id}}"
              title="{{'edit' | translate}}">
             <i class="fa fa-pencil" />
           </a>

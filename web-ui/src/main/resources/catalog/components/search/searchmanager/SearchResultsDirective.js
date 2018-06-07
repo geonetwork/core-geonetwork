@@ -100,15 +100,15 @@
             } else {
               scope.select = function(md) {
                 if (scope.options.selection.mode.indexOf('multiple') >= 0) {
-                  if (md['geonet:info'].selected === false) {
-                    md['geonet:info'].selected = true;
+                  if (md.selected === false) {
+                    md.selected = true;
                     gnSearchManagerService.select(
-                        md['geonet:info'].uuid, scope.selectionBucket)
+                        md.uuid, scope.selectionBucket)
                         .then(updateSelectionNumber);
                   } else {
-                    md['geonet:info'].selected = false;
+                    md.selected = false;
                     gnSearchManagerService.unselect(
-                        md['geonet:info'].uuid, scope.selectionBucket)
+                        md.uuid, scope.selectionBucket)
                         .then(updateSelectionNumber);
                   }
                 }
@@ -116,8 +116,8 @@
                   // TODO: clear selection ?
                   console.log('Single selection is not ' +
                       'supported in remote mode.');
-                  //  md['geonet:info'].selected = true;
-                  //  gnSearchManagerService.select(md['geonet:info'].uuid)
+                  //  md.selected = true;
+                  //  gnSearchManagerService.select(md.uuid)
                   //  .then(updateSelectionNumber);
                 }
               };
@@ -132,7 +132,7 @@
 
           scope.selectAll = function(all) {
             angular.forEach(scope.searchResults.records, function(md) {
-              md['geonet:info'].selected = all;
+              md.selected = all;
             });
             if (all) {
               gnSearchManagerService.selectAll(
@@ -152,16 +152,16 @@
             if (!scope.options.selection || !scope.options.selection.mode) {
               return false;
             }
-            var targetUuid = md['geonet:info'].uuid;
+            var targetUuid = md.uuid;
             var selected = false;
             if (scope.options.selection.mode.indexOf('local') >= 0) {
               angular.forEach(scope.selection, function(md) {
-                if (md['geonet:info'].uuid === targetUuid) {
+                if (md.uuid === targetUuid) {
                   selected = true;
                 }
               });
             } else {
-              selected = md['geonet:info'].selected;
+              selected = md.selected;
             }
             return selected;
           };

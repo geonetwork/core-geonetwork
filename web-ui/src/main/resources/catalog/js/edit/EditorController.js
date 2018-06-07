@@ -169,7 +169,7 @@
               $scope.metadataNotFoundId = $routeParams.id;
               $scope.id = $routeParams.id;
 
-              $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+              $scope.mdSchema = data.metadata[0].schema;
               $scope.mdCategories = {values: []};
               var categories = data.metadata[0].category;
               if (categories) {
@@ -181,8 +181,7 @@
               }
 
               $scope.groupOwner = data.metadata[0].groupOwner;
-              $scope.mdTitle = data.metadata[0].title ||
-                  data.metadata[0].defaultTitle;
+              $scope.mdTitle = data.metadata[0].resourceTitle;
 
               // Get the schema configuration for the current record
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
@@ -486,7 +485,7 @@
               then(function(data) {
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate.instant('metadataRemoved',
-                  {title: md.title || md.defaultTitle}),
+                  {title: md.resourceTitle}),
                   timeout: 2
                 });
                 closeEditor();

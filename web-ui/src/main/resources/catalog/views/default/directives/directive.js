@@ -36,7 +36,7 @@
             'partials/infolist.html',
         link: function linkFn(scope, element, attr) {
           scope.showMore = function(isDisplay) {
-            var div = $('#gn-info-list' + this.md.getUuid());
+            var div = $('#gn-info-list' + this.md.uuid);
             $(div.children()[isDisplay ? 0 : 1]).addClass('hidden');
             $(div.children()[isDisplay ? 1 : 0]).removeClass('hidden');
           };
@@ -96,7 +96,7 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
-          
+
           scope.$watch(attrs.gnMdActionsMenu, function(a) {
             scope.md = a;
           });

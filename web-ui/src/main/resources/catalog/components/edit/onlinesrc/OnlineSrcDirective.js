@@ -818,10 +818,10 @@
                           })
                         }));
                       });
-                  
+
                   var listenerExtent = scope.$watch(
                 		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
-                			  
+
                 	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
                           // FIXME : only first extent is took into account
                           var projectedExtent;
@@ -841,25 +841,25 @@
                           scope.map.getView().fit(
                               projectedExtent,
                               scope.map.getSize());
-                          
+
                           //unregister
                           listenerExtent();
                         }
                   });
-            	  
+
                   // Trigger init of print directive
                   scope.mode = 'thumbnailMaker';
                 }
 
                 scope.generateThumbnail = function() {
-                  //Added mandatory custom params here to avoid 
+                  //Added mandatory custom params here to avoid
                   //changing other printing services
                   jsonSpec = angular.extend(
                 		  scope.jsonSpec,
                 		  {
                 			  hasNoTitle: true
                 		  });
-                	
+
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
                       '/attachments/print-thumbnail', null, {
@@ -1544,7 +1544,7 @@
                     if (!angular.isUndefined(scope.stateObj.selectRecords) &&
                         scope.stateObj.selectRecords.length > 0) {
                       var md = new Metadata(scope.stateObj.selectRecords[0]);
-                      scope.currentMdTitle = md.title || md.defaultTitle;
+                      scope.currentMdTitle = md.resourceTitle;
                       if (scope.mode === 'service') {
                         var links = [];
                         scope.layers = [];
@@ -1552,7 +1552,7 @@
                         // TODO: WFS ?
                         links = links.concat(md.getLinksByType('OGC:WMS'));
                         links = links.concat(md.getLinksByType('wms'));
-                        scope.srcParams.uuidSrv = md.getUuid();
+                        scope.srcParams.uuidSrv = md.uuid;
                         scope.srcParams.identifier =
                           (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
                             gnCurrentEdit.metadata.identifier[0] : '';
@@ -1570,17 +1570,17 @@
                           scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
                           scope.srcParams.url =  gnConfigService.getServiceURL() +
                             "api/records/" +
-                            md.getUuid() + "/formatters/xml";
+                            md.uuid + "/formatters/xml";
                         }
                       } else {
                         // dataset
-                        scope.srcParams.uuidDS = md.getUuid();
+                        scope.srcParams.uuidDS = md.uuid;
                         scope.srcParams.name = gnCurrentEdit.mdTitle;
                         scope.srcParams.desc = gnCurrentEdit.mdTitle;
                         scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
                         scope.srcParams.url =  gnConfigService.getServiceURL() +
                           "api/records/" +
-                          md.getUuid() + "/formatters/xml";
+                          md.uuid + "/formatters/xml";
                         scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
                         scope.srcParams.source = md.source;
                       }
@@ -1866,7 +1866,7 @@
                     var uuids = [];
                     for (i = 0; i < scope.selection.length; ++i) {
                       var obj = scope.selection[i];
-                      uuids.push(obj.md['geonet:info'].uuid + '#' +
+                      uuids.push(obj.md.uuid + '#' +
                           obj.associationType + '#' +
                           obj.initiativeType);
                     }

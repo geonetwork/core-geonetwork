@@ -60,7 +60,7 @@
                   <span translate>{{job.md.error}}</span>
                 </span>
                 <span ng-if="job.md && !job.md.error">
-                  <a href="catalog.search#/metadata/{{job.md.getUuid()}}" translate>{{job.md.title}}</a>
+                  <a href="catalog.search#/metadata/{{job.md.uuid}}" translate>{{job.md.title}}</a>
                 </span>
                 <i ng-if="!job.md" class="fa fa-spinner fa-spin"/>
               </dd>

@@ -96,11 +96,11 @@
                     <a data-target="#" href="http://example.com" data-toggle="dropdown"
                        aria-haspopup="true"
                        role="button" aria-expanded="false">
-                      {{md.title || md.defaultTitle || ('recordWithNoTitle' | translate)}}
+                      {{md.resourceTitle || ('recordWithNoTitle' | translate)}}
                     </a>
 
                     <a class="pull-right" target="_blank"
-                       data-ng-href="catalog.search#/metadata/{{md['geonet:info'].uuid}}">
+                       data-ng-href="catalog.search#/metadata/{{md.uuid}}">
                       <i class="fa fa-eye"></i>
                     </a>
 

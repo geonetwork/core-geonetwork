@@ -44,9 +44,9 @@
         <table>
           <tr>
             <th colspan="2">
-              {{md.title || md.defaultTitle}}
+              {{md.resourceTitle}}
               <a class="btn btn-cog"
-                 data-ng-href="#/metadata/{{md.getUuid()}}"
+                 data-ng-href="#/metadata/{{md.uuid}}"
                  title="{{'openRecord' | translate}}">
                 <i class="fa fa-fw fa-info-circle"/>
               </a>

@@ -191,8 +191,9 @@
       };
       $scope.canEdit = function(record) {
         // TODO: take catalog config for harvested records
-        if (record && record['geonet:info'] &&
-            record['geonet:info'].edit == 'true') {
+        // TODOES: this property does not exist yet; makes sure it is
+        // replaced by a correct one eventually
+        if (record && record.edit == 'true') {
           return true;
         }
         return false;
@@ -260,7 +261,7 @@
       $scope.resultviewFns = {
         addMdLayerToMap: function (link, md) {
           var config = {
-            uuid: md ? md.getUuid() : null,
+            uuid: md ? md.uuid : null,
             type: link.protocol.indexOf('WMTS') > -1 ? 'wmts' : 'wms',
             url: $filter('gnLocalized')(link.url) || link.url
           };

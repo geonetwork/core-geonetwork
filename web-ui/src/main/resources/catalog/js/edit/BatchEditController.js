@@ -312,7 +312,7 @@
           };
         }
         $scope.xmlContacts[field.name].values.push({
-          title: record.title + (role ? ' - ' + role : ''),
+          title: record.resourceTitle + (role ? ' - ' + role : ''),
           xml: scope.snippet
         });
         $scope.addChange(field, {

@@ -39,7 +39,7 @@
     'gn_mdview_directive',
     'gn_related_observer_directive',
     'gn_userfeedback',
-    'gn_thesaurus', 
+    'gn_thesaurus',
     'gn_catalog_service'
   ]);
 
@@ -56,7 +56,7 @@
       $scope.usingFormatter = false;
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
-      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
+      $scope.recordIdentifierRequested = gnSearchLocation.uuid;
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
 
@@ -77,7 +77,7 @@
         return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
             msg: $translate.instant('metadataRemoved',
-                {title: md.title || md.defaultTitle}),
+                {title: md.resourceTitle}),
             type: 'success'
           });
           $scope.closeRecord(md);

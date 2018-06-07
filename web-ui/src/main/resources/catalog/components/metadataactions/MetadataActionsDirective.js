@@ -45,7 +45,7 @@
           var user = scope.$parent.user;
           scope.newStatus = {value: '0'};
 
-          var metadataId = scope.md.getId();
+          var metadataId = scope.md.id;
           function init() {
             return $http.get('md.status.list?' +
                 '_content_type=json&id=' + metadataId).
