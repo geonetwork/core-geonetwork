@@ -54,12 +54,8 @@
         params.size = p.to - p.from;
       }
       if(p.any) {
-        var anys = [];
-        p.any.split(' ').forEach(function(v) {
-          anys.push('+*' + v + '*');
-        });
         query_string = {
-          query: anys.join(' ')
+          query: p.any
         };
       }
       if(p.sortBy) {
