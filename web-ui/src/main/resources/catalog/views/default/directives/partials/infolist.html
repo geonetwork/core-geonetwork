@@ -17,9 +17,9 @@
           </div>
           <div class="rigth">
             <div class="header-card">
-              <div class="title">{{md.resourceTitle}}</div>
+              <div class="title">{{md.resourceTitle||'No title'}}</div>
               <div class="introduction">
-                <span data-ng-repeat="t in md.resourceType">{{t | translate}}
+                <span data-ng-repeat="t in md.resourceType track by $index">{{t | translate}}
                 <span data-ng-if="!$last">, </span>
                 </span>
               </div>
