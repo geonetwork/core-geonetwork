@@ -34,8 +34,7 @@
 
   <xsl:template match="/root">
 
-    <rss version="2.0"
-    >
+    <rss version="2.0">
       <channel>
 
         <title>
