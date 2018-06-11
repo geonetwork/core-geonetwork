@@ -118,4 +118,5 @@ public class IndexFields {
     public static final String ROOT = "_root";
     public static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
     public static final String INDEXING_ERROR_FIELD = "_indexingError";
+    public static final String DBID = "id";
 }

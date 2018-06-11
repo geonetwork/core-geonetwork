@@ -23,12 +23,14 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.JsonElement;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.BulkResult;
 import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
@@ -249,18 +251,73 @@ public class EsSearchManager implements ISearchManager {
             doc.remove("source");
             doc.put(SOURCE_CATALOGUE, catalog);
         }
-        listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
+        String jsonDocument = mapper.writeValueAsString(doc);
+//        System.out.println(jsonDocument);
+        listOfDocumentsToIndex.put(id, jsonDocument);
 
         if (listOfDocumentsToIndex.size() == commitInterval || forceRefreshReaders) {
             sendDocumentsToIndex();
         }
     }
 
-    private void sendDocumentsToIndex() throws IOException {
+    private void sendDocumentsToIndex() {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
                 // TODOES: Report status of failures
-                client.bulkRequest(defaultIndex, listOfDocumentsToIndex);
+                try {
+                    BulkResult result = client.bulkRequest(defaultIndex, listOfDocumentsToIndex);
+                    if (result.isSucceeded()) {
+                        // TODOES: inform about time ellapsed ?
+                    } else {
+                        Map<String, String> listErrorOfDocumentsToIndex = new HashMap<>(result.getItems().size());
+                        List<String> errorDocumentIds = new ArrayList<>();
+                        System.out.println(result.getErrorMessage());
+                        System.out.println(result.getJsonString());
+                        // Add information in index that some items were not properly indexed
+                        result.getItems().forEach(e -> {
+                            if (e.status != 201) { // Not created
+                                errorDocumentIds.add(e.id);
+                                ObjectMapper mapper = new ObjectMapper();
+                                ObjectNode docWithErrorInfo = mapper.createObjectNode();
+                                docWithErrorInfo.put(IndexFields.DBID, e.id);
+                                String resourceTitle = String.format("Document #%s", e.id);
+
+                                String failureDoc = listOfDocumentsToIndex.get(e.id);
+                                try {
+                                    JsonNode node = mapper.readTree(failureDoc);
+                                    resourceTitle = node.get(IndexFields.RESOURCE_TITLE).asText();
+                                } catch (Exception ignoredException) {
+                                }
+                                docWithErrorInfo.put(IndexFields.RESOURCE_TITLE, resourceTitle);
+                                docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, e.errorType);
+                                docWithErrorInfo.put(IndexFields.INDEXING_ERROR_MSG, e.errorReason);
+                                // TODO: Report the JSON which was causing the error ?
+                                System.out.println(String.format("Document with error #%s: %s", e.id, e.errorReason));
+                                System.out.println(failureDoc);
+
+                                try {
+                                    listErrorOfDocumentsToIndex.put(e.id, mapper.writeValueAsString(docWithErrorInfo));
+                                } catch (JsonProcessingException e1) {
+                                    System.out.println(String.format(
+                                        "Generated document for the index is not properly formatted. Check document #%s, error is %s",
+                                        e.id, e1.getMessage()));
+                                    e1.printStackTrace();
+                                }
+                            }
+                        });
+
+                        BulkResult errorDocResult = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                        if (!errorDocResult.isSucceeded()) {
+                            System.out.println(String.format(
+                                "Failed to save error documents %s",
+                                errorDocumentIds.toArray().toString()));
+                            // We can't do much more here
+                        }
+                    }
+                } catch (IOException e) {
+                    // TODOES: Probably ES not accessible ?
+                    // Report errors
+                }
                 listOfDocumentsToIndex.clear();
             }
         }

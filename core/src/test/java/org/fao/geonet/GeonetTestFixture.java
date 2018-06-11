@@ -108,6 +108,10 @@ public class GeonetTestFixture {
                                 !entry.toString().contains("resources");
                         }
                     });
+
+                    // Create ES index
+                    _applicationContext.getBean(EsSearchManager.class).init();
+
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);
                     LanguageDetector.init(AbstractCoreIntegrationTest.getWebappDir(test.getClass()).resolve(_applicationContext.getBean
@@ -120,7 +124,6 @@ public class GeonetTestFixture {
 
                     templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 
-                    _applicationContext.getBean(EsSearchManager.class).init();
                     Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
                 }
             }

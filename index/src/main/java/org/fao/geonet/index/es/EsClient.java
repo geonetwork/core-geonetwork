@@ -32,9 +32,6 @@ import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.Index;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpHost;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -123,9 +120,9 @@ public class EsClient implements InitializingBean {
         return this;
     }
 
-    public boolean bulkRequest(String index, Map<String, String> docs) throws IOException {
+    public BulkResult bulkRequest(String index, Map<String, String> docs) throws IOException {
         if (!activated) {
-            return false;
+            throw new IOException("Index not yet activated.");
         }
         boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
@@ -141,11 +138,7 @@ public class EsClient implements InitializingBean {
         }
         try {
             BulkResult result = client.execute(bulk.build());
-            if (!result.isSucceeded()) {
-                System.out.println(result.getErrorMessage());
-                System.out.println(result.getJsonString());
-                return false;
-            }
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
@@ -198,7 +191,6 @@ public class EsClient implements InitializingBean {
 //                success = false;
 //            }
 //        }
-        return success;
     }
 
 
