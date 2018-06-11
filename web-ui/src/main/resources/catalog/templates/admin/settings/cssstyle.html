@@ -6,23 +6,12 @@
       data-ng-controller="GnCssStyleSettingsController">
       <div class="panel-heading">
         <span data-translate="">cssstyle</span>
-        <div class="btn-toolbar">
-          <form class="form-inline pull-right">
-            <button class="btn btn-primary"
-              data-ng-click="saveCssStyleSettings(gnCssStyle)">
-              <span class="fa fa-save"></span>
-              {{"saveSettings"|translate}}
-            </button>
-          </form>
-        </div>
       </div>
       <div class="panel-body">
         <form id="gn-settings" name="gnSettings" class="form-horizontal">
-
           <div class="row">
             <p data-translate="">gnCssStyleIntroMessage</p>
           </div>
-
           <div class="row">&nbsp;</div>
           <div class="row">&nbsp;</div>
           <div class="row">
@@ -31,16 +20,13 @@
             </legend>
             <div class="form-row">
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnBackgroundImage"
-                  data-translate="">styleVariable-gnBackgroundImage</label> <input
-                  class="form-control" type="text"
+                <label for="gnCssStyle.gnBackgroundImage" data-translate="">styleVariable-gnBackgroundImage</label>
+                <input class="form-control" type="text"
                   data-ng-model="gnCssStyle.gnBackgroundImage" />
               </div>
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnBackgroundColor"
-                  data-translate="">styleVariable-gnBackgroundColor</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnBackgroundColor"
+                <label for="gnCssStyle.gnBackgroundColor" data-translate="">styleVariable-gnBackgroundColor</label>
+                <color-picker data-ng-model="gnCssStyle.gnBackgroundColor"
                   color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
               </div>
             </div>
@@ -54,10 +40,8 @@
             </legend>
             <div class="form-row">
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnMenubarBackground"
-                  data-translate="">styleVariable-gnMenubarBackground</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnMenubarBackground"
+                <label for="gnCssStyle.gnMenubarBackground" data-translate="">styleVariable-gnMenubarBackground</label>
+                <color-picker data-ng-model="gnCssStyle.gnMenubarBackground"
                   color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
               </div>
               <div class="col-md-4 mb-6">
@@ -73,17 +57,13 @@
                   color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
               </div>
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gn-menubarColorHover"
-                  data-translate="">styleVariable-gnMenubarColorHover</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnMenubarColorHover"
+                <label for="gnCssStyle.gn-menubarColorHover" data-translate="">styleVariable-gnMenubarColorHover</label>
+                <color-picker data-ng-model="gnCssStyle.gnMenubarColorHover"
                   color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
               </div>
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnMenubarBorderColor"
-                  data-translate="">styleVariable-gnMenubarBorderColor</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnMenubarBorderColor"
+                <label for="gnCssStyle.gnMenubarBorderColor" data-translate="">styleVariable-gnMenubarBorderColor</label>
+                <color-picker data-ng-model="gnCssStyle.gnMenubarBorderColor"
                   color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
               </div>
             </div>
@@ -97,31 +77,23 @@
             </legend>
             <div class="form-row">
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnBottombarBackground"
-                  data-translate="">styleVariable-gnBottombarBackground</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnBottombarBackground"
+                <label for="gnCssStyle.gnBottombarBackground" data-translate="">styleVariable-gnBottombarBackground</label>
+                <color-picker data-ng-model="gnCssStyle.gnBottombarBackground"
                   color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
               </div>
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnBottombarColor"
-                  data-translate="">styleVariable-gnBottombarColor</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnBottombarColor"
+                <label for="gnCssStyle.gnBottombarColor" data-translate="">styleVariable-gnBottombarColor</label>
+                <color-picker data-ng-model="gnCssStyle.gnBottombarColor"
                   color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
               </div>
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnBottombarColorHover"
-                  data-translate="">styleVariable-gnBottombarColorHover</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnBottombarColorHover"
+                <label for="gnCssStyle.gnBottombarColorHover" data-translate="">styleVariable-gnBottombarColorHover</label>
+                <color-picker data-ng-model="gnCssStyle.gnBottombarColorHover"
                   color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
               </div>
               <div class="col-md-4 mb-6">
-                <label for="gnCssStyle.gnBottombarBorderColor"
-                  data-translate="">styleVariable-gnBottombarBorderColor</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnBottombarBorderColor"
+                <label for="gnCssStyle.gnBottombarBorderColor" data-translate="">styleVariable-gnBottombarBorderColor</label>
+                <color-picker data-ng-model="gnCssStyle.gnBottombarBorderColor"
                   color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
               </div>
             </div>
@@ -137,8 +109,7 @@
               <div class="col-md-4 mb-6">
                 <label for="gnCssStyle.gnTopicsBackgroundColor"
                   data-translate="">styleVariable-gnTopicsBackgroundColor</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnTopicsBackgroundColor"
+                <color-picker data-ng-model="gnCssStyle.gnTopicsBackgroundColor"
                   color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
               </div>
             </div>
@@ -148,15 +119,13 @@
           <div class="row">&nbsp;</div>
           <div class="row">
             <legend>
-              <span data-translate="">gnInfoCss 
+              <span data-translate="">gnInfoCss</span>
             </legend>
             <div class="form-row">
               <div class="col-md-4 mb-6">
 
-                <label for="gnCssStyle.gnInfoBackgroundColor"
-                  data-translate="">styleVariable-gnInfoBackgroundColor</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnInfoBackgroundColor"
+                <label for="gnCssStyle.gnInfoBackgroundColor" data-translate="">styleVariable-gnInfoBackgroundColor</label>
+                <color-picker data-ng-model="gnCssStyle.gnInfoBackgroundColor"
                   color-picker-format="'hex'" color-picker-alpha="true"></color-picker>
               </div>
             </div>
@@ -209,21 +178,66 @@
             <legend>
               <span data-translate="">gnMdViewCss</span>
             </legend>
-
             <div class="form-row">
               <div class="col-md-4 mb-6">
                 <label for="gnCssStyle.gnMdViewBackgroundColor"
                   data-translate="">styleVariable-gnMdViewBackgroundColor</label>
-                <color-picker
-                  data-ng-model="gnCssStyle.gnMdViewBackgroundColor"
+                <color-picker data-ng-model="gnCssStyle.gnMdViewBackgroundColor"
                   color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
               </div>
             </div>
           </div>
+          <div class="row">&nbsp;</div>
+          <div class="row">&nbsp;</div>
+          <div class="row">
+            <div class="form-row">
+              <div class="col-md-4 mb-6">
+                <button class="btn btn-primary"
+                  data-ng-click="saveCssStyleSettings(gnCssStyle)">
+                  <span class="fa fa-save"></span> {{"saveSettings"|translate}}
+                </button>
+              </div>
+              <div class="col-md-4 mb-6">
+                <a target="_blank" data-ng-href="../api/customstyle"
+                  class="btn btn-success"> <span class="fa fa-clone"></span>
+                  {{"exportSettings"|translate}}
+                </a>
+              </div>
+              <div class="col-md-4 mb-6">
+                <button class="btn btn-danger"
+                  data-gn-confirm-click="{{'restoreDefaultStyleConfirm' | translate}}"
+                  data-ng-click="restoreDefaultCssStyleSettings(gnCssStyle)">
+                  <span class="fa fa-history"></span>
+                  {{"restoreDefaultSettings"|translate}}
+                </button>
+              </div>
+            </div>
+          </div>
         </form>
-        <div
-          data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
-          class="pull-right"></div>
+      </div>
+    </div>
+    <div class="panel panel-default"
+      data-ng-controller="GnCssStyleSettingsController">
+      <div class="panel-heading">
+        <span data-translate="">gnUploadCssStyle</span>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="form-row">
+            <div class="col-md-4 mb-6">
+              <textarea name="cssJsonContent" id="cssJsonContent"
+                data-ng-model="cssJsonContent" class="form-control ng-binding"></textarea>
+            </div>
+            <div class="col-md-4 mb-6">
+              <button class="btn btn-primary"
+                data-ng-click="uploadCssStyleSettings(cssJsonContent)">
+                <span class="fa fa-magic"></span> {{"uploadSettings"|translate}}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">&nbsp;</div>
       </div>
     </div>
   </div>

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
+<<<<<<< HEAD
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
@@ -37,6 +38,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang.StringUtils;
+=======
+import jeeves.server.context.ServiceContext;
+>>>>>>> apache 2.6 isNumeric("") return true
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -71,10 +75,9 @@ import org.jdom.xpath.XPath;
 
 import jeeves.server.context.ServiceContext;
 
-public class Aligner extends BaseAligner {
+public class Aligner extends BaseAligner<CswParams> {
 
     private ServiceContext context;
-    private CswParams params;
     private DataManager dataMan;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -288,8 +291,14 @@ public class Aligner extends BaseAligner {
          ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
        
 
+<<<<<<< HEAD
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
+=======
+        ownerId = getOwner();
+        Metadata metadata = new Metadata().setUuid(mdUuid);
+
+>>>>>>> apache 2.6 isNumeric("") return true
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
