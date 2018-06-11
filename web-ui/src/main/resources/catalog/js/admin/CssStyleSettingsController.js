@@ -67,7 +67,7 @@
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('settingsUpdateError'),
-                error: data,
+                msg: data,
                 timeout: 0,
                 type: 'danger'});
             });

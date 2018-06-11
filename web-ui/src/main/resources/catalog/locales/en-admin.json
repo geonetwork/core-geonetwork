@@ -1235,6 +1235,7 @@
     "gnCssStyleIntroMessage": "Properties defined here replace the default system properties. An empty field restores the corresponding default value.",
     "exportSettings": "Export settings",
     "uploadSettings": "Upload settings",
+    "settingsUpdateError": "Error during settings update",
     "restoreDefaultSettings": "Restore default settings",
     "restoreDefaultStyleConfirm": "Confirm to restore default default style values. Current changes will be lost.",
     "gnUploadCssStyle": "Upload a JSON style file",
