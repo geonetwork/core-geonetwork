@@ -75,7 +75,7 @@
             if (scope.md == null) {
               return;
             }
-            $http.post('../../index/records/_search', {
+            $http.post('../api/search/records/_search', {
               "query": {
                 "more_like_this" : {
                   "fields" : ["resourceTitle", "resourceAbstract", "tag.raw"],
