@@ -159,19 +159,27 @@
           // Config loaded
           if ($routeParams.id) {
             // Check requested metadata exists
-            gnSearchManagerService.gnSearch({
-              _id: $routeParams.id,
-              _content_type: 'json',
-              _isTemplate: 'y or n or s',
-              fast: 'index'
-            }).then(function(data) {
-              $scope.metadataFound = data.count !== '0';
+            $http.post('../api/search/records/_search', {"query": {
+                "bool" : {
+                  "must": [{
+                    "term": {"id": $routeParams.id}},
+                    {"terms": {"isTemplate": ["n", "y", "s"]}
+                    }]
+                }
+              }}).then(function(r) {
+              $scope.metadataFound = r.data.hits.total == 1;
               $scope.metadataNotFoundId = $routeParams.id;
+
+              if (!$scope.metadataFound) {
+                return;
+              }
+
               $scope.id = $routeParams.id;
 
-              $scope.mdSchema = data.metadata[0].schema;
+              gnCurrentEdit.metadata = new Metadata(r.data.hits.hits[0]._source);
+              $scope.mdSchema = gnCurrentEdit.metadata.schema;
               $scope.mdCategories = {values: []};
-              var categories = data.metadata[0].category;
+              var categories = gnCurrentEdit.metadata.category;
               if (categories) {
                 if (angular.isArray(categories)) {
                   $scope.mdCategories.values = categories;
@@ -180,11 +188,10 @@
                 }
               }
 
-              $scope.groupOwner = data.metadata[0].groupOwner;
-              $scope.mdTitle = data.metadata[0].resourceTitle;
+              $scope.groupOwner = gnCurrentEdit.metadata.groupOwner;
+              $scope.mdTitle = gnCurrentEdit.metadata.resourceTitle;
 
               // Get the schema configuration for the current record
-              gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
               $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {

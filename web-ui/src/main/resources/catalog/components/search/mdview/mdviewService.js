@@ -128,7 +128,7 @@
         var that = this;
         var loadMdView = function() {
           gnMdViewObj.loadDetailsFinished = false;
-          var uuid = gnSearchLocation.uuid;
+          var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (!gnMdViewObj.current.record ||
                 gnMdViewObj.current.record.uuid !== uuid) {
@@ -146,7 +146,7 @@
 
               // get a new search to pick the md
               gnMdViewObj.current.record = null;
-              $http.post('../../index/records/_search', {"query": {
+              $http.post('../api/search/records/_search', {"query": {
                   "bool" : {
                     "must": [{
                       "term": {"uuid": uuid}},
@@ -156,7 +156,7 @@
                 }}).then(function(r) {
                 if (r.data.hits.total == 1) {
                   var metadata = [];
-                  metadata.push(new Metadata(r.data.hits.hits[0]));
+                  metadata.push(new Metadata(r.data.hits.hits[0]._source));
                   data = {metadata: metadata};
                   that.feedMd(0, undefined, data.metadata);
                 } else {
