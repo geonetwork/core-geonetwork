@@ -57,6 +57,13 @@
   <uri name="../../../xsl/utils-fn.xsl"
        uri="../xsl/utils-fn.xsl"/>
 
+
+  <uri name="common/index-utils.xsl"
+       uri="../xslt/common/index-utils.xsl"/>
+
+  <uri name="common/inspire-constant.xsl"
+       uri="../xslt/common/inspire-constant.xsl"/>
+
   <uri name="common/utility-tpl.xsl"
        uri="../xslt/common/utility-tpl.xsl"/>
 
