@@ -9,9 +9,9 @@
       {{record._source.resourceTitle}}
       </span>
       <div class="flex-spacer"></div>
-      <img data-ng-show="record._source.overviewUrl"
+      <img data-ng-if="record._source.overview[0]"
            style="max-width: 95px;"
-           src="{{record._source.overviewUrl.length ? record._source.overviewUrl[0] : record._source.overviewUrl}}">
+           data-ng-src="{{record._source.overview[0].url}}">
     </a>
   </div>
 </div>

@@ -409,18 +409,18 @@
       </div>
 
       <div class="col-md-4 gn-md-side">
-        <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overviews.length > 0">
+        <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overview.length > 0">
           <h4>
             <i class="fa fa-fw fa-image"></i>
             <span data-translate="">overview</span>
           </h4>
 
-          <div data-ng-repeat="img in (mdView.current.record.overviewUrl | asArray)">
-            <a data-ng-href="{{img}}" target="_blank">
+          <div data-ng-repeat="img in mdView.current.record.overview">
+            <a data-ng-href="{{img.url}}" target="_blank">
             <img data-gn-img-modal="img"
                  class="gn-img-thumbnail img-thumbnail"
-                 alt="{{img}}" onerror="$(this).hide()"
-                 data-ng-src="{{img}}"/></a>
+                 alt="{{img.name}}" onerror="$(this).hide()"
+                 data-ng-src="{{img.url}}"/></a>
           </div>
         </section>
         </br>

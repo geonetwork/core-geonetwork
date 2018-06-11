@@ -55,7 +55,7 @@
          data-ng-click="openRecord($index, md, searchResults.records)">
       <h3>
         <a data-ng-href="#/metadata/{{md.uuid}}"
-           title="{{md.translate('resourceTitle')}}">
+           title="{{md.resourceTitle}}">
 
           <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
           {{(md.resourceTitle) | characters:80}}</a>
@@ -67,11 +67,11 @@
          data-ng-click="openRecord($index, md, searchResults.records)">
       <!-- Thumbnail -->
       <div class="gn-md-thumbnail"
-            data-ng-class="{'gn-md-no-thumbnail': !md.overviewUrl[0]}">
+            data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
             <!--data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">-->
         <img class="gn-img-thumbnail"
-             data-ng-src="{{md.overviewUrl[0]}}"
-             data-ng-if="md.overviewUrl[0]"/>
+             data-ng-src="{{md.overview[0].url}}"
+             data-ng-if="md.overview[0]"/>
 
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="md.status_text.length > 0"

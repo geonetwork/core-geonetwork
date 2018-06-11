@@ -541,12 +541,13 @@
       // and one field for each translation.
       // Set the default field value to the UI language if exist.
       var listOfTranslatedField = {};
+      var record = this;
       $.each( this, function(key, value) {
         // alert( key + ": " + value );
         var fieldName = key.split(langSuffix)[0];
         if (listOfTranslatedField[fieldName] !== true) {
           if (key.indexOf(langSuffix) !== -1) {
-            this[fieldName] = this.translate(fieldName);
+            this[fieldName] = record.translate(fieldName);
             listOfTranslatedField[fieldName] = true;
           }
         }
