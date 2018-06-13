@@ -24,6 +24,7 @@
 (function() {
   goog.provide('gn_editor');
 
+  goog.require('gn_app_templates');
   goog.require('gn_batch_service');
   goog.require('gn_draggable_directive');
   goog.require('gn_editor_controller');

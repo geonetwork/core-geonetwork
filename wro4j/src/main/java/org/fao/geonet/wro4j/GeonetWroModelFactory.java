@@ -50,6 +50,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -544,8 +545,16 @@ public class GeonetWroModelFactory implements WroModelFactory {
         return resource;
     }
 
+    /**
+     * If a JS file ends with {@See TEMPLATE_PATTERN} or is a view template
+     * then check all HTML files which are templates.
+     *
+     * TODO: Add for all views ?
+     */
     private void addTemplateResourceFrom(List<Resource> group, ClosureRequireDependencyManager.Node dep) {
-        if (dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN)) {
+        boolean isViewTemplate = dep.path.startsWith("/catalog/views/default/config.js");
+        if (dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN) ||
+            isViewTemplate) {
             Path dir;
             if (dep.path.startsWith("file:/")) {
                 try {
@@ -559,7 +568,7 @@ public class GeonetWroModelFactory implements WroModelFactory {
             if (dir == null) {
                 throw new RuntimeException("Directory folder is missing!!");
             }
-            Path resolve = dir.resolve("partials");
+            Path resolve = dir;
             String dirPath = resolve.toString().replace('\\', '/');
             String prefix = TemplatesUriLocator.URI_PREFIX + dirPath;
             group.add(getTemplateResource(prefix));
