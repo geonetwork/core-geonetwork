@@ -26,8 +26,6 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 import org.apache.http.client.utils.URIBuilder;
 import org.opengis.feature.type.AttributeDescriptor;
 
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * Created by fgravin on 11/5/15.
@@ -70,9 +68,11 @@ public class OwsUtils {
                 Float.class)) {
             type = "double";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
-                Date.class) ||
+                java.util.Date.class) ||
                    descriptor.getType().getBinding().isAssignableFrom(
-               Timestamp.class)) {
+                java.sql.Timestamp.class) ||
+                   descriptor.getType().getBinding().isAssignableFrom(
+                java.sql.Date.class)) {
             type = "date";
         } else if (descriptor.getType().getBinding().isAssignableFrom(
                 Long.class)) {
