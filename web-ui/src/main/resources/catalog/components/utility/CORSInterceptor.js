@@ -44,9 +44,15 @@
         'gnGlobalSettings',
         'gnLangs',
         'gnUrlUtils',
-        function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils) {
+        '$templateCache',
+        function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils, $templateCache) {
           return {
             request: function(config) {
+              // Do not manipulate url which are available in the template
+              // cache built by WRO4J.
+              if ($templateCache.get(config.url) !== undefined) {
+                return config;
+              }
               var isGnUrl =
                   config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
                   (config.url.indexOf('http') !== 0 &&
