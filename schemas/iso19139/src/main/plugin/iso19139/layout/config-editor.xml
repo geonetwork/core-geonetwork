@@ -2007,10 +2007,10 @@
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
                 <key label="edmoId"
-                     xpath="*[1]/@uuid"/>
+                     xpath="*[1]/@uuid[starts-with(., 'http')]"/>
               </values>
               <snippet>
-                <gmd:contact>
+                <gmd:pointOfContact>
                   <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
@@ -2039,7 +2039,7 @@
                     </gmd:contactInfo>
                     <gn:copy select="gmd:role"/>
                   </gmd:CI_ResponsibleParty>
-                </gmd:contact>
+                </gmd:pointOfContact>
               </snippet>
             </template>
           </field>
@@ -2069,7 +2069,7 @@
             <template>
               <snippet>
                 <gmd:pointOfContact>
-                  <gmd:CI_Responsibility>
+                  <gmd:CI_ResponsibleParty uuid="http://">
                     <gmd:organisationName>
                       <gco:CharacterString></gco:CharacterString>
                     </gmd:organisationName>
@@ -2088,7 +2088,7 @@
                       <gmd:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
                                        codeListValue="originator">originator</gmd:CI_RoleCode>
                     </gmd:role>
-                  </gmd:CI_Responsibility>
+                  </gmd:CI_ResponsibleParty>
                 </gmd:pointOfContact>
               </snippet>
             </template>
@@ -2112,7 +2112,7 @@
                      xpath="gmd:CI_ResponsibleParty/@uuid[starts-with(., 'http')]"/>
               </values>
               <snippet>
-                <gmd:contact>
+                <gmd:pointOfContact>
                   <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
@@ -2141,7 +2141,7 @@
                     </gmd:contactInfo>
                     <gn:copy select="gmd:role"/>
                   </gmd:CI_ResponsibleParty>
-                </gmd:contact>
+                </gmd:pointOfContact>
               </snippet>
             </template>
           </field>
@@ -2168,7 +2168,7 @@
             <template>
               <snippet>
                 <gmd:pointOfContact>
-                  <gmd:CI_Responsibility>
+                  <gmd:CI_ResponsibleParty uuid="http://">
                     <gmd:organisationName>
                       <gco:CharacterString></gco:CharacterString>
                     </gmd:organisationName>
@@ -2187,7 +2187,7 @@
                       <gmd:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
                                        codeListValue="resourceProvider">resourceProvider</gmd:CI_RoleCode>
                     </gmd:role>
-                  </gmd:CI_Responsibility>
+                  </gmd:CI_ResponsibleParty>
                 </gmd:pointOfContact>
               </snippet>
             </template>
