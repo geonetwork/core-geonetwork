@@ -22,13 +22,13 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gn="http://www.fao.org/geonetwork"
-                xmlns:exslt="http://exslt.org/common"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:media="http://search.yahoo.com/mrss/"
                 xmlns:georss="http://www.georss.org/georss"
                 xmlns:gml="http://www.opengis.net/gml"
-                version="1.0"
-                exclude-result-prefixes="gn exslt">
+                version="2.0"
+                exclude-result-prefixes="#all">
 
   <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
 
@@ -38,8 +38,8 @@
       <xsl:variable name="md">
         <xsl:apply-templates mode="brief" select="."/>
       </xsl:variable>
+      <xsl:variable name="metadata" select="$md/*[1]"/>
 
-      <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
       <xsl:variable name="mdURL"
                     select="normalize-space(concat($baseURL, '/', /root/gui/nodeId, '/metadata/', gn:info/uuid))"/>
       <xsl:variable name="thumbnailLink" select="$metadata/image[starts-with(., 'http')]"/>
