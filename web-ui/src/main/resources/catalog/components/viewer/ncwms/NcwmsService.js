@@ -97,14 +97,24 @@
         if (layer.get('advanced') == true) {
           var url = this.getMetadataUrl(layer);
           var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-
           return $http.get(proxyUrl)
             .success(function(json) {
               if (angular.isObject(json)) {
                 layer.ncInfo = json;
+                layer.isNcwms = true;
                 layer.set('oceanotron', !!layer.ncInfo.multiFeature);
                 if(layer.get('oceanotron')) {
                   this.initOceanotronParams(layer);
+                }
+              }
+              else {
+                layer.isNcwms = false;
+                layer.ncInfo = {
+                  'time': {'units': layer.values_.time.units,
+                    'values' : layer.values_.time.values},
+
+                  'zaxis': {'units': layer.values_.elevation.units,
+                    'values' : layer.values_.elevation.values}
                 }
               }
             }.bind(this));
