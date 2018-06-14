@@ -61,7 +61,9 @@ public class TemplatesUriLocator implements UriLocator {
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                         if (!Files.isDirectory(file) && file.getFileName().toString().endsWith("html")) {
-                            addFileToTemplateCache(javascript, "../.." + path.replace('\\', '/') + '/' + file.getFileName(), file.toFile());
+                            String fileFolder = file.getParent().toString();
+                            String relativeFileFolderPath = fileFolder.substring(fileFolder.indexOf(path));
+                            addFileToTemplateCache(javascript, "../.." + relativeFileFolderPath.replace('\\', '/') + '/' + file.getFileName(), file.toFile());
                         }
                         return FileVisitResult.CONTINUE;
                     }
