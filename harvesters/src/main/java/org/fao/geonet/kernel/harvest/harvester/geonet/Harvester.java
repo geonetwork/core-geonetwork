@@ -326,11 +326,12 @@ class Harvester implements IHarvester<HarvestResult> {
             String name = sourceEl.getChildText("name");
 
             Source source = new Source(uuid, name, new HashMap<String, String>(), false);
-            // GeoNetwork 2.x versions doesn't provide this information
-            if (sourceEl.getChild("label") != null) {
+            // If translation element provided and has values, use it.
+            // Otherwise use the default ones from the name of the source
+            if ((sourceEl.getChild("label") != null) &&
+                (sourceEl.getChild("label").getChildren().size() > 0)) {
                 source.setLabelTranslationsFromElement(sourceEl.getChild("label").getChildren());
             }
-
             map.put(uuid, source);
         }
 
