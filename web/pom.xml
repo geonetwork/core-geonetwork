@@ -874,6 +874,7 @@
       </activation>
       <properties>
         <env>dev</env>
+        <wro.debug>true</wro.debug>
       </properties>
     </profile>
     <profile>
