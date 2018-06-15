@@ -1228,28 +1228,42 @@
                           });
                     } else if (scope.OGCProtocol === 'WFS') {
                       return gnWfsService.getCapabilities(url)
-                          .then(function(capabilities) {
-                            scope.layers = [];
-                            scope.isUrlOk = true;
-                            angular.forEach(
-                               capabilities.featureTypeList.featureType,
-                               function(l) {
-                                 if (angular.isDefined(l.name)) {
-                                   scope.layers.push({
-                                     Name: l.name.localPart,
-                                     abstract: l._abstract,
-                                     Title: l.title
-                                   });
-                                 }
+                      .then(function(capabilities) {
+                        scope.layers = [];
+                        scope.isUrlOk = true;
+                        angular.forEach(
+                           capabilities.featureTypeList.featureType,
+                           function(l) {
+                             if (angular.isDefined(l.name)) {
+                               scope.layers.push({
+                                 Name: l.name.localPart,
+                                 abstract: l._abstract,
+                                 Title: l.title
                                });
-                          }).catch(function(error) {
-                            scope.isUrlOk = error === 200;
-                          });
+                             }
+                           });
+                      }).catch(function(error) {
+                        scope.isUrlOk = error === 200;
+                      });
+                    } else if (scope.OGCProtocol === 'WMTS') {
+                      return gnOwsCapabilities.getWMTSCapabilities(url)
+                      .then(function(capabilities) {
+                        scope.layers = [];
+                        scope.isUrlOk = true;
+                        angular.forEach(capabilities.Layer, function(l) {
+                          if (angular.isDefined(l.Identifier)) {
+                            if(!l.Name) {
+                              l.Name = l.Identifier;
+                            }
+                            scope.layers.push(l);
+                          }
+                        });
+                      }).catch(function(error) {
+                        scope.isUrlOk = error === 200;
+                      });
                     }
                   } else if (url.indexOf('http') === 0) {
-                    return $http.get(url, {
-                      gnNoProxy: false
-                    }).then(function(response) {
+                    return $http.get(url).then(function(response) {
                       scope.isUrlOk = response.status === 200;
                     },
                     function(response) {
