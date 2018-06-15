@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package v342;
+package v343;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.annotations.VisibleForTesting;
@@ -47,43 +47,21 @@ import java.util.Map;
 public class AdvancedSearchFormMigration extends JsonDatabaseMigration
     implements DatabaseMigrationTask {
 
+    private final String settingName = "ui/config";
+
     @Override
-    public void update(Connection connection) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(
-            "SELECT * FROM settings WHERE name='ui/config'")) {
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
-                String currentSettingJson = rs.getString("value");
-                Map<String, String> fieldsToUpdate = new HashMap<>(1);
-                fieldsToUpdate.put("/mods/search/advancedSearchTemplate",
-                    "\"../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html\"");
-
-                String newSettingJson = super.insertOrUpdateField(currentSettingJson, fieldsToUpdate);
-                try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE settings SET "
-                    + "value=? WHERE name='ui/config'")) {
-                    updateStatement.setString(1, newSettingJson);
-                    updateStatement.executeUpdate();
-                }
-            }
-        } catch (IOException e) {
-            Log.error(Geonet.GEONETWORK + ".databasemigration",
-                "Error in AdvancedSearchFormMigration. Cannot complete the "
-                    + "migration", e);
-            throw new DatabaseMigrationException(e);
-        }
-
+    protected Map<String, String> setUpNewSettingValues() {
+        Map<String, String> fieldsToUpdate = new HashMap<>(1);
+        fieldsToUpdate.put("/mods/search/advancedSearchTemplate",
+            "\"../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html\"");
+        return fieldsToUpdate;
     }
 
-    /**
-     * Given a JSON string and a map of fields to update/insert and their values return an updated JSON string.
-     *
-     * @param currentSettingJson the JSON string to modify.
-     * @param fieldsToUpdate     a {@link Map} with the fields to update. Keys are in the form of nested fields separated by
-     *                           slash ("/") and starting by slash. Values are in form of JSON strings. For example
-     *                           <code>"\"my new value\""</code>
-     * @return a JSON string with updated/inserted values.
-     */
+    @Override
+    protected String getSettingName() {
+        return settingName;
+    }
+
     @VisibleForTesting
     @Override
     protected String insertOrUpdateField(String currentSettingJson, Map<String, String> fieldsToUpdate) throws IOException {

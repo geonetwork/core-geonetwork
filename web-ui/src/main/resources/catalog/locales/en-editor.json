@@ -297,6 +297,7 @@
     "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Validation",
     "runValidation": "Run validation check",
+    "fixedOnTop": "Always on top",
     "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
     "xmlSnippet": "XML snippet",

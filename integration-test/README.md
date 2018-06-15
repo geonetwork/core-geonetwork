@@ -8,7 +8,7 @@ Based on [selenium-cucumber](https://github.com/selenium-cucumber/selenium-cucum
 
 Go to your project directory from terminal and hit following command
 
-* `mvn test -Dbrowser=phantomjs -Dphantomjs.binary.path=$DRIVERS_BIN/phantomjs -DendPointToTest=http://localhost:8080/geonewtwork`
+* `mvn test -Dbrowser=phantomjs -Dphantomjs.binary.path=$DRIVERS_BIN/phantomjs -DendPointToTest=http://localhost:8080/geonetwork`
 
 * The url to test could by defined in **src/test/resources/system.properties** by changing the property **endPointToTest.url** or provided to the mvn command with the parameter `-DendPointToTest=YOUR_URL`
 

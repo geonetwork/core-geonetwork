@@ -39,7 +39,7 @@
     'gn_mdview_directive',
     'gn_related_observer_directive',
     'gn_userfeedback',
-    'gn_thesaurus', 
+    'gn_thesaurus',
     'gn_catalog_service'
   ]);
 
@@ -118,31 +118,40 @@
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
         if (f) {
+          $('#gn-metadata-display').find('*').remove();
           gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
             $http.get(url, {
               headers: {
                 Accept: 'text/html'
               }
             }).then(
-                function(response) {
-                  var snippet = response.data.replace(
-                      '<?xml version="1.0" encoding="UTF-8"?>', '');
+                function(response,status) {
+                  console.log(response.status);
+                  if (response.status!=200){
+                    $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
+                  } else {
+                    var snippet = response.data.replace(
+                        '<?xml version="1.0" encoding="UTF-8"?>', '');
 
-                  $('#gn-metadata-display').find('*').remove();
+                    $('#gn-metadata-display').find('*').remove();
 
-                  $scope.compileScope.$destroy();
+                    $scope.compileScope.$destroy();
 
-                  // Compile against a new scope
-                  $scope.compileScope = $scope.$new();
-                  var content = $compile(snippet)($scope.compileScope);
+                    // Compile against a new scope
+                    $scope.compileScope = $scope.$new();
+                    var content = $compile(snippet)($scope.compileScope);
 
-                  $('#gn-metadata-display').append(content);
+                    $('#gn-metadata-display').append(content);
 
-                  // activate the tabs in the full view
-                  $scope.activateTabs();
-                });
+                    // activate the tabs in the full view
+                    $scope.activateTabs();
+                }
+              },
+            function(data) {
+              $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
+            });
           });
-        }
+        };
       };
 
       // Reset current formatter to open the next record

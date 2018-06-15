@@ -91,6 +91,8 @@ public class MetadataSchema {
     private String schemaName;
     private Path schemaDir;
     private String standardUrl;
+    private String appMinorVersionSupported;
+    private String appMajorVersionSupported;
     private Map<String, String> titles = new HashMap<>();
     private Map<String, String> descriptions = new HashMap<>();
     private String primeNS;
@@ -572,6 +574,22 @@ public class MetadataSchema {
 
     public void setStandardUrl(String standardUrl) {
         this.standardUrl = standardUrl;
+    }
+
+    public String getAppMinorVersionSupported() {
+        return appMinorVersionSupported;
+    }
+
+    public void setAppMinorVersionSupported(String appMinorVersionSupported) {
+        this.appMinorVersionSupported = appMinorVersionSupported;
+    }
+
+    public String getAppMajorVersionSupported() {
+        return appMajorVersionSupported;
+    }
+
+    public void setAppMajorVersionSupported(String appMajorVersionSupported) {
+        this.appMajorVersionSupported = appMajorVersionSupported;
     }
 
     public Map<String, String> getTitles() {

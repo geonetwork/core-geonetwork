@@ -28,6 +28,7 @@
   <name>iso19139</name>
   <id>3f95190a-dde4-11df-8626-001c2346de4c</id>
   <version>1.0</version>
+  <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
   <title xml:lang="en">Geographic information -- Metadata</title>
   <title xml:lang="fr">Information géographique -- Métadonnées</title>
   <description xml:lang="en">

@@ -458,6 +458,13 @@ public class MetadataEditingApi {
             required = false
         )
             String child,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
@@ -537,6 +544,13 @@ public class MetadataEditingApi {
             required = true)
         @PathVariable
             Direction direction,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         @ApiIgnore
         @ApiParam(hidden = true)
         @RequestParam
@@ -593,6 +607,13 @@ public class MetadataEditingApi {
             required = true)
         @RequestParam
             String parent,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)
@@ -638,6 +659,13 @@ public class MetadataEditingApi {
             required = true)
         @RequestParam
             String ref,
+        @ApiParam(
+            value = "Should attributes be shown on the editor snippet?",
+            required = false)
+        @RequestParam(
+                defaultValue = "false"
+            )
+                boolean displayAttributes,
         HttpServletRequest request,
         @ApiIgnore
         @ApiParam(hidden = true)

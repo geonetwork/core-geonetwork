@@ -55,7 +55,8 @@
           </button>
           <button type="button" class="btn pull-right btn-danger"
                   data-ng-disabled="searchResults.count > 0"
-                  data-ng-hide="groupSelected.id == ''"
+                  data-ng-hide="!groupSelected.id || groupSelected.id<0"
+                  data-gn-confirm-click="{{'groupDeleteConfirm' | translate}}"
                   data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">deleteGroup</span>

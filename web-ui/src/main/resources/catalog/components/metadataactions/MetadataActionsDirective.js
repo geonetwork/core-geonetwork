@@ -422,6 +422,11 @@
                   }
                 });
                 scope.userGroups = uniqueUserGroups;
+                if(scope.userGroups && Object.keys(scope.userGroups).length>0) {
+                  scope.userGroupDefined = true;
+                } else {
+                  scope.userGroupDefined = false;
+                }
               });
 
           scope.save = function() {

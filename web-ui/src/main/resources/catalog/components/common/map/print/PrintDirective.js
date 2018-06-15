@@ -465,7 +465,7 @@
             });
             return enc;
           },
-          'WMS': function(layer, config) {
+          'WMS': function(layer, config, proj) {
             var enc = $scope.encoders.
                 layers['Layer'].call(this, layer);
             var params = layer.getSource().getParams();
@@ -485,7 +485,7 @@
               customParams: {
                 'EXCEPTIONS': 'XML',
                 'TRANSPARENT': 'true',
-                'CRS': 'EPSG:4326', // FIXME
+                'CRS': proj.getCode(), 
                 'TIME': params.TIME
               },
               singleTile: config.singleTile || true
@@ -668,6 +668,7 @@
           enableLegends: (encLegends && encLegends.length > 0),
           pages: [
             angular.extend({
+              title: '', //default
               center: getPrintRectangleCenterCoord(),
               // scale has to be one of the advertise by the print server
               scale: getOptimalScale().value,
