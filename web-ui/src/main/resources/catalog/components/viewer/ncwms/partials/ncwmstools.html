@@ -35,7 +35,7 @@
 
     <!---------- Times inputs --------- -->
     <!--Ncwms optional single date (feed from getMetadata)-->
-    <div class="form-group" ng-if="::layer.get('time') && !ctrl.isOceanotron && ctrl.isNcWMS">
+    <div class="form-group" ng-if="::layer.get('time') && !ctrl.isOceanotron && !ctrl.useComboForTime">
       <label class="col-sm-4" translate>time</label>
       <div class="col-sm-8">
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
@@ -63,8 +63,8 @@
       </div>
     </div>
 
-    <!--Time combo for advanced and not ncwms layers-->
-    <div class="form-group" ng-if="::!ctrl.isNcWMS && params.TIME">
+    <!--Time combo for advanced layers without iso dates-->
+    <div class="form-group" ng-if="::!ctrl.isNcWMS && params.TIME && ctrl.useComboForTime">
       <label class="col-sm-4" for="ncwmstime"><span translate="">time</span><span>&nbsp({{params.TIMEUNIT}})</span></label>
       <div class="col-sm-8">
         <select class="form-control input-sm" id="ncwmstime" data-ng-model="params.TIME" data-ng-change="updateLayerParams()">

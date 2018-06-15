@@ -250,67 +250,78 @@
               scope.ctrl.palette = ncInfo.defaultPalette || ncInfo.palettes[0];
             }
             // For layers that are not ncWMS
-            // time is dealt with a combo as it is done for elevation
+            // we get the units if month, year, day is dealt with a combo as it is done for elevation
+            // if no units we assume date is in a standard format
+
+            var datesWithData = {}
             if (!scope.ctrl.isNcWMS){
               scope.time = ncInfo.time ? ncInfo.time.values : [];
-
-              var time = scope.layer.get('time');
-              if(time) {
-                var range = time.values[0];
-                if(angular.isString(range)) {
-                  scope.timeRange = range.replace('/', time.units + ' / ')
-                    + time.units;
+              scope.ctrl.useComboForTime = false;
+              if (ncInfo.time.units == 'unknown') {
+                for (var i = 0, length =  scope.time.length; i < length; i++) {
+                  var date = new Date(scope.time[i])
+                  var year = date.getFullYear()
+                  // first time we add the months to the year
+                  if (!datesWithData.hasOwnProperty(year)) {
+                    datesWithData[year] = {}
+                    // now add the months
+                    for (var j = 0; j <= 11; j++) {
+                      datesWithData[year][j] = [];
+                    }
+                  }
+                  datesWithData[year][date.getMonth()].push(date.getDate());
                 }
+                var fr = new Date(ncInfo.time.values[0])
+                layer.ncInfo.datesWithData = datesWithData
+                // initValue
+                scope.ncTime.value = ("0" + fr.getDate()).slice(-2) + '-' + ("0" + (fr.getMonth() + 1)).slice(-2) + '-' + fr.getFullYear()
               }
-              scope.ctrl.timeMinFn = function(time) {
-                if(time) {
-                  scope.params.TIME = time + '/' + timeMax;
-                  scope.updateLayerParams();
+              else {
+                var time = scope.layer.get('time');
+                if (time) {
+                  var range = time.values[0];
+                  if (angular.isString(range)) {
+                    scope.timeRange = range.replace('/', time.units + ' / ')
+                      + time.units;
+                  }
                 }
-                return angular.isDefined(time) ?
-                  (timeMin = time) : timeMin;
-              };
-              scope.ctrl.timeMaxFn = function(time) {
-                if(time) {
-                  scope.params.TIME = timeMin + '/' + time;
-                  scope.updateLayerParams();
-                }
-                return angular.isDefined(time) ?
-                  (timeMax = time) : timeMax;
-              };
-              scope.params.TIME = timeMin + '/' + timeMax;
-              scope.params.TIMEUNIT = ncInfo.time.units;
-            }
+                scope.ctrl.timeMinFn = function (time) {
+                  if (time) {
+                    scope.params.TIME = time + '/' + timeMax;
+                    scope.updateLayerParams();
+                  }
+                  return angular.isDefined(time) ?
+                    (timeMin = time) : timeMin;
+                };
+                scope.ctrl.timeMaxFn = function (time) {
+                  if (time) {
+                    scope.params.TIME = timeMin + '/' + time;
+                    scope.updateLayerParams();
+                  }
+                  return angular.isDefined(time) ?
+                    (timeMax = time) : timeMax;
+                };
+                scope.params.TIME = timeMin + '/' + timeMax;
+                scope.params.TIMEUNIT = ncInfo.time.units;
 
+                // display combo
+                scope.ctrl.useComboForTime = true;
+
+              }
+            }
             // elevation (zaxis)
             scope.elevations = ncInfo.zaxis ? ncInfo.zaxis.values : [];
 
             var elevation = scope.layer.get('elevation');
             if(elevation) {
               var range = elevation.values[0];
+              scope.params.ELEVATION = range;
               if(angular.isString(range)) {
+
                 scope.elevRange = range.replace('/', elevation.units + ' / ')
                   + elevation.units;
               }
             }
-
-            scope.ctrl.elevationMinFn = function(elev) {
-              if(elev) {
-                scope.params.ELEVATION = elev + '/' + elevationMax;
-                scope.updateLayerParams();
-              }
-              return angular.isDefined(elev) ?
-                (elevationMin = elev) : elevationMin;
-            };
-            scope.ctrl.elevationMaxFn = function(elev) {
-              if(elev) {
-                scope.params.ELEVATION = elevationMin + '/' + elev;
-                scope.updateLayerParams();
-              }
-              return angular.isDefined(elev) ?
-                (elevationMax = elev) : elevationMax;
-            };
-            scope.params.ELEVATION = elevationMin + '/' + elevationMax;
 
             //Oceanotron is a special type of ncwms
             if(isOceanotron) {
@@ -321,6 +332,23 @@
               };
 
               gnNcWms.getOceanotronInfo(scope.layer).then(function(type) {
+                scope.ctrl.elevationMinFn = function(elev) {
+                  if(elev) {
+                    scope.params.ELEVATION = elev + '/' + elevationMax;
+                    scope.updateLayerParams();
+                  }
+                  return angular.isDefined(elev) ?
+                    (elevationMin = elev) : elevationMin;
+                };
+                scope.ctrl.elevationMaxFn = function(elev) {
+                  if(elev) {
+                    scope.params.ELEVATION = elevationMin + '/' + elev;
+                    scope.updateLayerParams();
+                  }
+                  return angular.isDefined(elev) ?
+                    (elevationMax = elev) : elevationMax;
+                };
+                scope.params.ELEVATION = elevationMin + '/' + elevationMax;
                 scope.ctrl.oceanotronType = type;
               });
             }
