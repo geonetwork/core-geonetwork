@@ -3130,6 +3130,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="COPYFILE">Télécharger (copie)</option>
       <option value="DB">Télécharger (base de données)</option>
       <option value="WWW:DOWNLOAD-1.0-link--download">Télécharger (lien)</option>
+      <option value="NETWORK:LINK">Télécharger (chemin visible)</option>
       <option value="OGC:WFS">Télécharger (WFS)</option>
       <option value="OGC:WCS">Télécharger (WCS)</option>
       <option value="OGC:WPS">Traitement en ligne (WPS)</option>
