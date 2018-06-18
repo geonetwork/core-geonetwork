@@ -342,6 +342,13 @@
       </div>
     </div>
   </hr>
+  <hrfullrow>
+    <div class="row">
+      <div class="col-md-12">
+        <hr/>
+      </div>
+    </div>
+  </hrfullrow>
 
   <change-spatial-type-alert>
     <!--<div class="row">
@@ -360,6 +367,10 @@
   <sdn-short-name>External shortname</sdn-short-name>
   <sdn-OriginatorTitle>Originator (EDMO)</sdn-OriginatorTitle>
   <sdn-ResourceProviderTitle>Resource provider (EDMO)</sdn-ResourceProviderTitle>
+  <sdn-custodian>Custodian</sdn-custodian>
+  <sdn-addAuthor>Add author</sdn-addAuthor>
+  <orAddCustodian>or add a custodian if none found in EDMO</orAddCustodian>
+  <sdn-author>Author</sdn-author>
   <sdn-identification>Identification</sdn-identification>
   <sdn-contact>Contacts</sdn-contact>
   <sdn-spatial>Spatial &amp; temporal ref.</sdn-spatial>
@@ -367,7 +378,6 @@
   <sdn-quality>Quality</sdn-quality>
   <sdn-verticalExtent>Vertical extent</sdn-verticalExtent>
   <sdn-metadata>Metadata</sdn-metadata>
-
   <!-- String for INSPIRE SDS tab -->
   <inspire_sds_cc1>Conformance class 1: invocable</inspire_sds_cc1>
   <inspire_sds_cc2>Conformance class 2: interoperable</inspire_sds_cc2>

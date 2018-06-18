@@ -2050,8 +2050,6 @@
                   addDirective="data-gn-directory-entry-selector"
                   or="pointOfContact"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
-            <!-- TODO: filter on a group  ?
-            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
             <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
@@ -2094,6 +2092,7 @@
             </template>
           </action>
 
+          <text ref="hrfullrow"/>
           <field name="sdn-ResourceProviderTitle"
                  templateModeOnly="true"
                  notDisplayedIfMissing="true"
@@ -2193,7 +2192,7 @@
             </template>
           </action>
 
-
+          <text ref="hrfullrow"/>
 
           <!-- Custodian -->
           <field name="sdn-custodian"
@@ -2295,6 +2294,8 @@
             </template>
           </action>
 
+
+          <text ref="hrfullrow"/>
           <!-- Add author-->
           <field name="sdn-author"
                  templateModeOnly="true"
@@ -2305,7 +2306,7 @@
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="individualName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:individual  Name/gco:CharacterString"/>
+                     xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
                 <key label="organisationName"
                      xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
