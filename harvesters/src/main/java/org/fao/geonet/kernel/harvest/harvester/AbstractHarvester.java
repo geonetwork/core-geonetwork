@@ -54,8 +54,8 @@ import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -65,6 +65,7 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
@@ -183,6 +184,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected void setContext(ServiceContext context) {
         this.context = context;
         this.dataMan = context.getBean(DataManager.class);
+        this.metadataUtils = context.getBean(IMetadataUtils.class);
         this.harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
         this.settingManager = context.getBean(SettingManager.class);
     }
@@ -339,19 +341,19 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
                 doUnschedule();
 
-                final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+                final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
-
-                final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
+                
+                final Specifications<? extends AbstractMetadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
                 Set<String> sources = new HashSet<String>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
-                    sources.add(metadataRepository.findOne(id).getSourceInfo().getSourceId());
+                    sources.add(metadataUtils.findOne(id).getSourceInfo().getSourceId());
                     dataMan.deleteMetadata(context, "" + id);
                 }
-
+                
                 // Remove all sources related to the harvestUuid if they are not linked to any record anymore
                 for (String sourceUuid : sources) {
-                    Long ownedBySource =
+                    Long ownedBySource = 
                             metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
                     if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
                         removeIcon(sourceUuid);
@@ -1004,6 +1006,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         harvesterSettingsManager.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
         harvesterSettingsManager.add(ID_PREFIX + contentId, "validate", params.getValidate());
 
+        //--- setup extras --------------------------------------------
+
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "overrideUuid", params.getOverrideUuid());
+        
         //--- setup stats node ----------------------------------------
 
         harvesterSettingsManager.add(ID_PREFIX + infoId, "lastRun", "");
@@ -1222,6 +1228,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected SettingManager settingManager;
 
     protected DataManager dataMan;
+    protected IMetadataUtils metadataUtils;
 
     protected AbstractParams params;
     protected T result;

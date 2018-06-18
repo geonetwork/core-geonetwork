@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
@@ -43,6 +44,7 @@ import org.jdom.Namespace;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
+
 
 
 /**
@@ -179,7 +181,7 @@ public class InspireAtomUtil {
 
 
     public static Map<String, String> retrieveServiceMetadataWithAtomFeeds(final DataManager dataManager,
-                                                                           final List<Metadata> iso19139Metadata,
+                                                                           final List<AbstractMetadata> iso19139Metadata,
                                                                            final String atomProtocol)
         throws Exception {
 
@@ -187,18 +189,18 @@ public class InspireAtomUtil {
     }
 
     public static Map<String, String> retrieveServiceMetadataWithAtomFeed(final DataManager dataManager,
-                                                                          final Metadata iso19139Metadata,
+                                                                          final AbstractMetadata iso19139Metadata,
                                                                           final String atomProtocol)
         throws Exception {
 
-        List<Metadata> iso19139MetadataList = new ArrayList<>();
+        List<AbstractMetadata> iso19139MetadataList = new ArrayList<>();
         iso19139MetadataList.add(iso19139Metadata);
 
         return retrieveServiceMetadataWithAtomFeeds(dataManager, iso19139MetadataList, atomProtocol);
     }
 
     public static Map<String, String> retrieveDatasetMetadataWithAtomFeeds(final DataManager dataManager,
-                                                                           final List<Metadata> iso19139Metadata,
+                                                                           final List<AbstractMetadata> iso19139Metadata,
                                                                            final String atomProtocol)
         throws Exception {
 
@@ -206,12 +208,12 @@ public class InspireAtomUtil {
     }
 
     private static Map<String, String> processAtomFeedsInternal(DataManager dataManager,
-                                                                List<Metadata> iso19139Metadata, String type,
+                                                                List<AbstractMetadata> iso19139Metadata, String type,
                                                                 String atomProtocol) throws Exception {
 
         Map<String, String> metadataAtomFeeds = new HashMap<String, String>();
 
-        for (Metadata md : iso19139Metadata) {
+        for (AbstractMetadata md : iso19139Metadata) {
             int id = md.getId();
             String schema = md.getDataInfo().getSchemaId();
             Element mdEl = null;
@@ -255,7 +257,7 @@ public class InspireAtomUtil {
         return atomFeed;
     }
 
-    public static List<Metadata> searchMetadataByType(ServiceContext context,
+    public static List<AbstractMetadata> searchMetadataByType(ServiceContext context,
                                                       ISearchManager searchMan,
                                                       String type) {
 

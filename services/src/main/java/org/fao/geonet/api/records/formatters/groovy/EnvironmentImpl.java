@@ -31,7 +31,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterParams;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -59,7 +59,7 @@ public class EnvironmentImpl implements Environment {
     private final String resourceUrl;
     private final Multimap<String, ParamValue> params = ArrayListMultimap.create();
     private final FormatType formatType;
-    private final Metadata metadataInfo;
+    private final AbstractMetadata metadataInfo;
     private final String locUrl;
     private final Element jdomMetadata;
     private final ServiceContext serviceContext;

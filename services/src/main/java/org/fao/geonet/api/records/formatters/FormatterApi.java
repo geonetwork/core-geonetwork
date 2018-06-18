@@ -46,11 +46,11 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.XslUtil;
@@ -195,7 +195,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             String acceptHeader,
         @PathVariable(
             value = "formatterId"
-        ) final String formatterId,
+        )
+        final String formatterId,
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -233,12 +234,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (formatType == null) {
             formatType = FormatType.xml;
         }
+
         final String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
         final ServiceContext context = createServiceContext(
             language,
             formatType,
             request.getNativeRequest(HttpServletRequest.class));
-        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+
 
         Boolean hideWithheld = true;
 //        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
@@ -334,7 +337,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             metadataEl = Xml.selectElement(metadataEl, mdPath, namespaces);
             metadataEl.detach();
         }
-        Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
+        Metadata metadataInfo = new Metadata();
+        metadataInfo.setData(metadata).setId(1).setUuid("uuid");
         metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
 
         Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid, width,
@@ -528,9 +532,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(ServiceContext context, Key key, final NativeWebRequest request) throws Exception {
-        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, key.mdId, key.hideWithheld);
+        final Pair<Element, AbstractMetadata> elementMetadataPair = getMetadata(context, key.mdId, key.hideWithheld);
         Element metadata = elementMetadataPair.one();
-        Metadata metadataInfo = elementMetadataPair.two();
+        AbstractMetadata metadataInfo = elementMetadataPair.two();
 
         return createFormatterAndParams(key.lang, key.formatType, key.formatterId, key.width, request, context, metadata, metadataInfo);
     }
@@ -546,7 +550,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                                                                           NativeWebRequest request,
                                                                           ServiceContext context,
                                                                           Element metadata,
-                                                                          Metadata metadataInfo) throws Exception {
+                                                                          AbstractMetadata metadataInfo) throws Exception {
         final String schema = metadataInfo.getDataInfo().getSchemaId();
         Path schemaDir = null;
         if (schema != null) {
@@ -611,13 +615,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return isInSchemaPlugin;
     }
 
-    public Pair<Element, Metadata> getMetadata(ServiceContext context, int id,
+    public Pair<Element, AbstractMetadata> getMetadata(ServiceContext context, int id,
                                                Boolean hide_withheld) throws Exception {
 
+        AbstractMetadata md = loadMetadata(context.getBean(IMetadataUtils.class), id);
         XmlSerializer serializer = context.getBean(XmlSerializer.class);
         boolean doXLinks = serializer.resolveXLinks();
 
-        Metadata md = loadMetadata(context.getBean(MetadataRepository.class), id);
 
         Element metadata = serializer.removeHiddenElements(false, md, false);
         if (doXLinks) Processor.processXLink(metadata, context);

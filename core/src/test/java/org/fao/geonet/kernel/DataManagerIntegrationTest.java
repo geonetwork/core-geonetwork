@@ -25,28 +25,15 @@ package org.fao.geonet.kernel;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -55,18 +42,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -81,7 +63,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     MetadataRepository _metadataRepository;
 
     static void doSetHarvesterDataTest(MetadataRepository metadataRepository, DataManager dataManager, int metadataId) throws Exception {
-        Metadata metadata = metadataRepository.findOne(metadataId);
+        AbstractMetadata metadata = metadataRepository.findOne(metadataId);
 
         assertNull(metadata.getHarvestInfo().getUuid());
         assertNull(metadata.getHarvestInfo().getUri());
@@ -187,6 +169,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final User principal = serviceContext.getUserSession().getPrincipal();
 
         final GroupRepository bean = serviceContext.getBean(GroupRepository.class);
+        final IMetadataManager metadataManager = serviceContext.getBean(IMetadataManager.class);
         Group group = bean.findAll().get(0);
 
         MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
@@ -195,18 +178,18 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         Source source = sourceRepository.save(new Source().setLocal(true).setName("GN").setUuid("sourceuuid"));
 
         final Element sampleMetadataXml = super.getSampleMetadataXml();
-        final Metadata metadata = new Metadata();
+        final AbstractMetadata metadata = new Metadata();
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
         metadata.getMetadataCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
-        final Metadata templateMd = _metadataRepository.save(metadata);
+        final AbstractMetadata templateMd = metadataManager.save(metadata);
         final String newMetadataId = _dataManager.createMetadata(serviceContext, "" + metadata.getId(), "" + group.getId(), source.getUuid(),
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
-        Metadata newMetadata = _metadataRepository.findOne(newMetadataId);
+        AbstractMetadata newMetadata = _metadataRepository.findOne(newMetadataId);
         assertEquals(1, newMetadata.getMetadataCategories().size());
         assertEquals(category, newMetadata.getMetadataCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");

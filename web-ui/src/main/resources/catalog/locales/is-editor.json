@@ -304,7 +304,6 @@
     "noFileSelected": "Veldu skrá til að hlaða!",
     "yourMetadata": "Lýsigögnin þín",
     "searchKeyword": "Leita ...",
-    "searchTopicCategory": "Leita ...",
     "searchOrTypeKeyword": "Skrifa eða leita ...",
     "tagsAllowed": "merkingar leyfðar",
     "suggestionListError": "Úbbs, eitthvað fór úrskeiðis þegar tillögur voru sóttar!",
@@ -363,10 +362,5 @@
     "selectKeyword": "Add keywords",
     "saveLinkToSibling": "Save link to other resource",
     "confirmCloseInvalidTitle": "Confirm editor close",
-    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?",
-    "hotkeyDirectory": "Manage directories (eg. contact)",
-    "hotkeyImportRecord": "Flytja inn nýjar færslur",
-    "hotkeyAddRecord": "Bæta nýrri færslu við",
-    "hotkeyBatchEdit": "Bunkabreytingar",
-    "hotkeyEditorBoard": "Editor board"
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

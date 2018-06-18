@@ -92,4 +92,6 @@ public interface ISearchManager {
     void delete(List<String> txts) throws Exception;
 
     long getNumDocs() throws Exception;
+
+    Element makeField(String fieldName, String fieldValue);
 }

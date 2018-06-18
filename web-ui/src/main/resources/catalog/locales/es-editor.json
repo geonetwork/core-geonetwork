@@ -304,7 +304,6 @@
     "noFileSelected": "¡Escoge un fichero a cargar!",
     "yourMetadata": "Tus metadatos",
     "searchKeyword": "Buscar...",
-    "searchTopicCategory": "Buscar...",
     "searchOrTypeKeyword": "Escribe o busca...",
     "tagsAllowed": "etiqueta(s) permitidas",
     "suggestionListError": "¡Oh! ¡Algo salió mal mientras cargábamos las sugerencias!",
@@ -363,10 +362,5 @@
     "selectKeyword": "Añadir palabras clave",
     "saveLinkToSibling": "Guardar un enlace a otro recurso",
     "confirmCloseInvalidTitle": "Confirmar cierre del editor",
-    "confirmCloseInvalidMetadata": "Se ha encontrado que los metadato actuales no son válidos. Cerrar el editor hará que no se publique (esto se puede cambiar en la configuración de la aplicación). <br> <br> ¿Está seguro de que desea continuar?",
-    "hotkeyDirectory": "Administrar directorios (por ejemplo, contacto)",
-    "hotkeyImportRecord": "Importar nuevas entradas",
-    "hotkeyAddRecord": "Añadir una nueva entrada",
-    "hotkeyBatchEdit": "Edición por lotes",
-    "hotkeyEditorBoard": "Tablero del editor"
+    "confirmCloseInvalidMetadata": "Se ha encontrado que los metadato actuales no son válidos. Cerrar el editor hará que no se publique (esto se puede cambiar en la configuración de la aplicación). <br> <br> ¿Está seguro de que desea continuar?"
 }

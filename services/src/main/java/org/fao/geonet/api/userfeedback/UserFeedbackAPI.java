@@ -23,21 +23,10 @@
 
 package org.fao.geonet.api.userfeedback;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import io.swagger.annotations.*;
+import jeeves.server.UserSession;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -45,7 +34,7 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
-import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
@@ -65,21 +54,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
@@ -148,7 +135,8 @@ public class UserFeedbackAPI {
             required = true
         )
         @PathVariable(value = "uuid")
-    final String uuid)
+    final String uuid,
+    final HttpServletRequest request)
             throws Exception {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -163,7 +151,7 @@ public class UserFeedbackAPI {
 
         final IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
-        userFeedbackService.removeUserFeedback(uuid);
+        userFeedbackService.removeUserFeedback(uuid, request.getRemoteAddr());
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -206,7 +194,7 @@ public class UserFeedbackAPI {
             Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
 
             // Check permission for metadata
-            final Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            final AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
             if (metadata == null) {
                 printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
                 return null;
@@ -292,7 +280,7 @@ public class UserFeedbackAPI {
         }
 
         // Check permission for metadata
-        final Metadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
+        final AbstractMetadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
         if (metadata == null) {
             printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
             return null;
@@ -493,7 +481,8 @@ public class UserFeedbackAPI {
             }
 
             userFeedbackService
-                    .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null));
+                    .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null),
+                    		request.getRemoteAddr());
 
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (final Exception e) {

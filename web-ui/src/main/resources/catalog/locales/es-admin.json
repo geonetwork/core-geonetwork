@@ -298,7 +298,6 @@
     "csw-outputSchemaOptions": "Esquemas de Salida Típicos",
     "csw-dublinCore": "Dublin Core",
     "csw-iso19139": "ISO 19139",
-    "csw-recommendedValues": "Valores recomendados",
     "currentCatalogLogo": "Logo actual del Catálogo",
     "customConfiguration": "Personalizado ...",
     "customizeElementSet": "Personalizar conjunto de elementos",
@@ -1185,6 +1184,8 @@
     "ui-map-search-help": "Esta configuracion se usa en el mapa de búsqueda. Cada parámetro es opcional. El contexto se aplica primero, luego la extensión y las capas. Los tipos soportados son: osm, bing_aerial, stamen, wmts, wms.",
     "ui-map-editor": "Configuración del Mapa del Editor",
     "ui-map-editor-help": "Esta configuración se usa en el mapa del editor (cuadro delimitador y editor de geometrías). Cada parámetros es opcional. El contexto se aplica primero, luego la extensión y las capas. Los tipos soportados son: osm, bing_aerial, stamen, wmts, wms.",
+    "ui-defaultSearchString": "Búsqueda predeterminada",
+    "ui-defaultSearchString-help": "Esta configuración le permite definir un filtro predeterminado para la búsqueda. La sintaxis es la utilizada en las consultas de aspecto de la sección de búsqueda.",
     "mapConfigContext": "Ruta al fichero de contexto (XML)",
     "mapConfigExtent": "Extensión del mapa, expresada en la proyección actual",
     "mapConfigLayers": "Capas en JSON:  {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
@@ -1218,14 +1219,5 @@
     "styleVariable-gnResultsBackgroundColor": "Fondo",
     "gnMdViewCss": "Vista de metadato",
     "styleVariable-gnMdViewBackgroundColor": "Fondo",
-    "gnCssStyleIntroMessage": "Las propiedades definidas aquí reemplazan las propiedades predeterminadas del sistema. Un campo vacío restaura el valor predeterminado correspondiente.",
-    "wfs-indexing": "Indexación WFS",
-    "wfsIndexingTitle": "Dashboard de indexación del WFS",
-    "wfsIndexingSubtitle": "Aquí se enumeran los trabajos en curso y finalizados para los features de indexación de los servicios WFS remotos. Una vez indexadas, los features se pueden filtrar según sus atributos y el filtro aplicado a la capa del mapa original.",
-    "wfsIndexingFeatureType": "Tipo de feature",
-    "wfsIndexingMetadata": "Metadato asociados",
-    "wfsIndexingMetadataNotFound": "Metadato no encontrados.",
-    "wfsIndexingMetadataUuid": "UUID de metadato",
-    "wfsIndexingRefreshError": "Se produjo un error al actualizar la lista:",
-    "wfsIndexingError": "Error encontrado"
+    "gnCssStyleIntroMessage": "Las propiedades definidas aquí reemplazan las propiedades predeterminadas del sistema. Un campo vacío restaura el valor predeterminado correspondiente."
 }

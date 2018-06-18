@@ -1251,5 +1251,16 @@
     "registryNoClassFound": "No class found in that registry. Check the URL?",
     "registryFailedToLoadClass": "No class found in that registry. Check the URL?",
     "indexInEsDoneError": "There is an error with the ElasticSearch index. See the logs for details",
-    "indexInEsDone": "The ElasticSearch index completed successfully"
+    "indexInEsDone": "The ElasticSearch index completed successfully",
+    "ui-externalViewer": "External viewer",
+    "ui-externalViewer-enabled": "Use an external viewer",
+    "ui-externalViewer-enabled-help": "When using map-related functionalities, the user will be redirected to a third party application. Will disable the default Geonetwork map.<br /><strong>Please note that most settings within this section will not be effective anymore.</strong>",
+    "ui-externalViewer-baseUrl": "Viewer base URL",
+    "ui-externalViewer-baseUrl-help": "This URL must point to the external viewer application and will be used when the user clicks on the 'map' tab.",
+    "ui-externalViewer-urlTemplate": "Viewer URL template",
+    "ui-externalViewer-urlTemplate-help": "This URL will be used to add layers to the external viewer. Available tokens are: <code>${md.uuid}</code>, <code>${md.id}</code>, <code>${md.url}</code>, <code>${service.url}</code>, <code>${service.type}</code>, <code>${service.name}</code>, <code>${service.title}</code>.",
+    "ui-externalViewer-valuesSeparator": "Values separator",
+    "ui-externalViewer-valuesSeparator-help": "This will be used when the user requests visualization of multiple layers.",
+    "ui-externalViewer-openNewWindow": "Open new window",
+    "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window. Please note that many browsers will not allow opening links in the same tab."
 }

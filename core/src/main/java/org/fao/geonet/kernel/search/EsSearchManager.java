@@ -43,6 +43,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -50,7 +51,7 @@ import org.fao.geonet.index.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -67,7 +68,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static org.fao.geonet.kernel.search.IndexFields.*;
+import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
 public class EsSearchManager implements ISearchManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
@@ -403,7 +404,7 @@ public class EsSearchManager implements ISearchManager {
     public boolean rebuildIndex(ServiceContext context, boolean xlinks,
                                 boolean reset, String bucket) throws Exception {
         DataManager dataMan = context.getBean(DataManager.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
         if (reset) {
             clearIndex();
@@ -419,7 +420,7 @@ public class EsSearchManager implements ISearchManager {
                      iter.hasNext(); ) {
                     String uuid = (String) iter.next();
 //                    String id = dataMan.getMetadataId(uuid);
-                    Metadata metadata = metadataRepository.findOneByUuid(uuid);
+                    AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
                     if (metadata != null) {
                         listOfIdsToIndex.add(metadata.getId() + "");
                     } else {
@@ -635,9 +636,9 @@ public class EsSearchManager implements ISearchManager {
     public List<Element> getDocs(String query, long start, long rows) throws IOException, JDOMException {
         final List<String> result = getDocIds(query, start, rows);
         List<Element> xmlDocs = new ArrayList<>(result.size());
-        MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         for (String id : result) {
-            Metadata metadata = metadataRepository.findOne(id);
+            AbstractMetadata metadata = metadataRepository.findOne(id);
             xmlDocs.add(metadata.getXmlData(false));
         }
         return xmlDocs;

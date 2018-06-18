@@ -26,12 +26,13 @@ package org.fao.geonet.component.csw;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -40,7 +41,6 @@ import org.jdom.JDOMException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -75,7 +75,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     private static final String TOTAL_DELETED = "totalDeleted";
 
     @Autowired
-    private MetadataRepository _metadataRepository;
+    private IMetadataManager _metadataRepository;
+    @Autowired
+    private IMetadataUtils _metadataUtils;
     @Autowired
     private EsSearchManager _searchManager;
     @Autowired
@@ -122,7 +124,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void testInsertAsAdmin() throws Exception {
-        assertEquals(0, _metadataRepository.count());
+        assertEquals(0, _metadataUtils.count());
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
@@ -132,13 +134,13 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         Element response = _transaction.execute(params, serviceContext);
 
         assertEquals(1, getUpdatedCount(response, TOTAL_INSERTED));
-        assertEquals(1, _metadataRepository.count());
-        assertNotNull(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID));
+        assertEquals(1, _metadataUtils.count());
+        assertNotNull(_metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID));
     }
 
     @Test
     public void testInsertMany() throws Exception {
-        assertEquals(0, _metadataRepository.count());
+        assertEquals(0, _metadataUtils.count());
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
@@ -157,9 +159,9 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         Element response = _transaction.execute(params, serviceContext);
 
         assertEquals(2, getUpdatedCount(response, TOTAL_INSERTED));
-        assertEquals(2, _metadataRepository.count());
-        assertNotNull(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID));
-        assertNotNull(_metadataRepository.findOneByUuid(uuid2));
+        assertEquals(2, _metadataUtils.count());
+        assertNotNull(_metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID));
+        assertNotNull(_metadataUtils.findOneByUuid(uuid2));
     }
 
     @Test
@@ -186,7 +188,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         final String xpath = "gmd:identificationInfo/*/gmd:resourceConstraints";
         Xml.selectElement(metadata, xpath, Arrays.asList(GMD)).detach();
 
-        assertNotNull(Xml.selectElement(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID).getXmlData(false), xpath,
+        assertNotNull(Xml.selectElement(_metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID).getXmlData(false), xpath,
             Arrays.asList(GMD)));
 
         final ServiceContext serviceContext = createServiceContext();
@@ -200,7 +202,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
 
         _transaction.execute(request, serviceContext);
 
-        assertNull(Xml.selectElement(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID).getXmlData(false), xpath, Arrays.asList(GMD)));
+        assertNull(Xml.selectElement(_metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID).getXmlData(false), xpath, Arrays.asList(GMD)));
     }
 
     @Test
@@ -231,7 +233,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertEquals(1, getUpdatedCount(response, TOTAL_DELETED));
 
-        assertNull(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID));
+        assertNull(_metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID));
     }
 
     @Test
@@ -271,7 +273,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
 
-        final Metadata updatedMetadata = _metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID);
+        final AbstractMetadata updatedMetadata = _metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID);
         assertEquals(1, Xml.selectNodes(updatedMetadata.getXmlData(false), TITLE_XPATH, Arrays.asList(GCO, GMD)).size());
     }
 
@@ -311,7 +313,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     private void assertMetadataIsUpdated(String updateXPath, String newValue) throws IOException, JDOMException {
-        final Metadata updatedMetadata = _metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID);
+        final AbstractMetadata updatedMetadata = _metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID);
         assertNotNull(updatedMetadata);
 
         assertEqualsText(newValue, updatedMetadata.getXmlData(false), updateXPath);
@@ -346,7 +348,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     private void addPhotographicMetadataToRepository(int ownerId) throws Exception {
-        Metadata metadata = MetadataRepositoryTest.newMetadata(_inc);
+        AbstractMetadata metadata = MetadataRepositoryTest.newMetadata(_inc);
         metadata.getSourceInfo().setOwner(ownerId);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.setUuid(PHOTOGRAPHIC_UUID);

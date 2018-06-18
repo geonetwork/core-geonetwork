@@ -304,7 +304,6 @@
     "noFileSelected": "Kies een bestand om te laden",
     "yourMetadata": "uw metadata",
     "searchKeyword": "Zoeken ...",
-    "searchTopicCategory": "Zoeken",
     "searchOrTypeKeyword": "Type of zoek ...",
     "tagsAllowed": "toegestane label(s)",
     "suggestionListError": "Oeps, er ging iets mis bij het ophalen van suggesties!",
@@ -363,10 +362,5 @@
     "selectKeyword": "Voeg trefwoorden toe",
     "saveLinkToSibling": "Sla link naar andere bron op",
     "confirmCloseInvalidTitle": "Bevestig het sluiten van de editor",
-    "confirmCloseInvalidMetadata": "De huidige metadata is invalide. Als u de editor sluit, zal het record niet meer publiek toegankelijk zijn (dit gedrag is te wijzigen in applicatie settings).<br><br>Wilt u doorgaan?",
-    "hotkeyDirectory": "Manage directories (eg. contact)",
-    "hotkeyImportRecord": "Records importeren",
-    "hotkeyAddRecord": "Record toevoegen",
-    "hotkeyBatchEdit": "In bulk wijzigen",
-    "hotkeyEditorBoard": "Editor board"
+    "confirmCloseInvalidMetadata": "De huidige metadata is invalide. Als u de editor sluit, zal het record niet meer publiek toegankelijk zijn (dit gedrag is te wijzigen in applicatie settings).<br><br>Wilt u doorgaan?"
 }

@@ -304,7 +304,6 @@
     "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Vaše metadata",
     "searchKeyword": "Vyhledat ...",
-    "searchTopicCategory": "Vyhledat ...",
     "searchOrTypeKeyword": "Napsat nebo vyhledat ...",
     "tagsAllowed": "tag(y) povoleny",
     "suggestionListError": "Ajaj, při vyhledávání návrhů se něco nepovedlo!",
@@ -363,10 +362,5 @@
     "selectKeyword": "Add keywords",
     "saveLinkToSibling": "Save link to other resource",
     "confirmCloseInvalidTitle": "Confirm editor close",
-    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?",
-    "hotkeyDirectory": "Manage directories (eg. contact)",
-    "hotkeyImportRecord": "Importovat nové záznamy",
-    "hotkeyAddRecord": "Přidat nový záznam",
-    "hotkeyBatchEdit": "Batch editing",
-    "hotkeyEditorBoard": "Editor board"
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

@@ -46,11 +46,11 @@ import org.fao.geonet.index.Status;
 import org.fao.geonet.index.es.EsServerStatusChecker;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -84,6 +84,7 @@ import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
+
 
 /**
  *
@@ -370,7 +371,7 @@ public class SiteApi {
         String newUuid = allRequestParams.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
-            final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+            final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
             Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());

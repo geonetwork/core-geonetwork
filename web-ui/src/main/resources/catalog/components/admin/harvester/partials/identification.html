@@ -1,47 +1,43 @@
 <fieldset>
   <legend data-translate="">harvesterIdentification</legend>
   <div data-ng-class="harvester.site.name == '' ? 'has-error' : ''">
-    <label class="control-label">
-      <span data-translate="">harvesterName</span>
-          <span data-ng-hide="harvester['@type'] == 'geonetwork'"
-                data-translate="">andNodeLogo</span>
-    </label>
-
-    <input type="hidden" class="form-control" data-ng-model="harvester.site.icon"/>
+    <label class="control-label"> <span data-translate="">harvesterName</span>
+      <span data-ng-hide="harvester['@type'] == 'geonetwork'"
+      data-translate="">andNodeLogo</span>
+    </label> <input type="hidden" class="form-control"
+      data-ng-model="harvester.site.icon" />
 
     <div class="input-group">
       <div class="input-group margin-bottom-sm">
-        <a class="input-group-addon highlight"
-           target="_blank"
-           href="#/settings/sources"
-           title="{{'sourceTranslations' | translate}}">
-          <i
-           class="fa fa-database fa-fw"></i>
-        </a>
-        <input type="text" class="form-control" data-ng-model="harvester.site.name"/>
+        <a class="input-group-addon highlight" target="_blank"
+          href="#/settings/sources"
+          title="{{'sourceTranslations' | translate}}"> <i
+          class="fa fa-database fa-fw"></i>
+        </a> <input type="text" class="form-control"
+          data-ng-model="harvester.site.name" />
       </div>
       <div class="input-group-btn" gn-logo-picker="harvester.site.icon"
-           data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'">
+        data-ng-hide="harvester['@type'] == 'geonetwork' || harvester['@type'] == 'geonetwork20'">
       </div>
     </div>
     <p class="help-block" data-translate="">harvesterNameHelp</p>
   </div>
   <div data-ng-show="groups.length"
-       data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
+    data-ng-class="harvester.site.ownerGroup == '' ? 'has-error' : ''">
     <label class="control-label" data-translate="">harvesterGroup</label>
-    <div data-groups-combo="" data-owner-group="harvester.ownerGroup[0]" lang="lang" groups="groups"
-         data-optional
-         data-exclude-special-groups="true"/>
+    <div data-groups-combo="" data-owner-group="harvester.ownerGroup[0]"
+      lang="lang" groups="groups" data-optional
+      data-exclude-special-groups="true" />
 
     <p class="help-block" data-translate="">harvesterGroupHelp</p>
   </div>
- <div data-ng-show="users.length"
-         data-ng-class="harvester.site.ownerUser == '' ? 'has-error' : ''">
-        <label class="control-label" data-translate="">harvesterUser</label>
-        <div data-users-combo="" data-owner-user="harvester.ownerUser[0]"
-              data-users="users"></div>
+  <div data-ng-show="users.length"
+    data-ng-class="harvester.site.ownerUser == '' ? 'has-error' : ''">
+    <label class="control-label" data-translate="">harvesterUser</label>
+    <div data-users-combo="" data-owner-user="harvester.ownerUser[0]"
+      data-users="users"></div>
 
-        <p class="help-block" data-translate="">harvesterUserHelp</p>
-    </div>
- <div data-gn-harvester-extras="">
+    <p class="help-block" data-translate="">harvesterUserHelp</p>
+  </div>
+  <div data-gn-harvester-extras="">
 </fieldset>

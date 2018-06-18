@@ -23,12 +23,17 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -38,12 +43,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Export MEF file
@@ -61,9 +61,9 @@ class MEFExporter {
     public static Path doExport(ServiceContext context, String uuid,
                                 Format format, boolean skipUUID, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
-        Pair<Metadata, String> recordAndMetadata =
+        Pair<AbstractMetadata, String> recordAndMetadata =
             MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute, addSchemaLocation);
-        Metadata record = recordAndMetadata.one();
+        AbstractMetadata record = recordAndMetadata.one();
         String xmlDocumentAsString = recordAndMetadata.two();
 
         if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ||

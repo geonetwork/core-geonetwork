@@ -71,7 +71,7 @@
               <!--Remove layer-->
               <li class="">
                 <a href=""
-                   data-ng-click="removeLayer(layer, map)">
+                  data-ng-click="removeLayer(layer, map)">
                   <span translate="">layerDelete</span>
                 </a>
               </li>
@@ -105,7 +105,7 @@
         </span>
         <label for="layer-{{$index}}">
           <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
-            {{layer.get('label')}}&nbsp;
+            {{layer.get('label')}}
             <small><em>
               {{layer.get('currentStyle') ? '(' + layer.get('currentStyle').Title || layer.get('currentStyle').Name + ')' : ''}}
             </em></small>
@@ -114,8 +114,7 @@
       </div>
       <a href class="width-100 text-right small"
          ng-if="layer.get('legend') || layer.get('attribution')"
-         data-ng-click="showInfo(layer)"
-         title="{{'Legend'|translate}}">
+         data-ng-click="showInfo(layer)" title="{{'Legend'|translate}}">
         <i class="fa fa-caret-down" ng-if="!layer.showInfo"/>
         <i class="fa fa-caret-up" ng-if="layer.showInfo"/>
         <span translate ng-if="!layer.showInfo">{{'showLegend' | translate}}</span>

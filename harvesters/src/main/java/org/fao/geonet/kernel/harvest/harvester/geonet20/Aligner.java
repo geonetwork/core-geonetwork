@@ -31,18 +31,15 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.AbstractAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
@@ -53,7 +50,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
 public class Aligner extends AbstractAligner<GeonetParams> {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
+
 
     private final AtomicBoolean cancelMonitor;
 
@@ -96,7 +100,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         //-----------------------------------------------------------------------
         //--- retrieve local uuids for given site-id
 
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), siteId);
+        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), siteId);
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
@@ -185,7 +189,8 @@ public class Aligner extends AbstractAligner<GeonetParams> {
         //
         //  insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(remoteUuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(remoteUuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -225,7 +230,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
     //---
     //--------------------------------------------------------------------------
 
-    private void addCategories(Metadata metadata, List<Element> categ) throws Exception {
+    private void addCategories(AbstractMetadata metadata, List<Element> categ) throws Exception {
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
         Collection<String> catNames = Lists.transform(categ, new Function<Element, String>() {
             @Nullable

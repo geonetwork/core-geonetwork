@@ -57,6 +57,7 @@ import static org.quartz.JobBuilder.newJob;
 public abstract class AbstractParams {
     public static final String TRANSLATIONS = "translations";
     private static final long MAX_EVERY = Integer.MAX_VALUE;
+    
 
     public enum OverrideUuid {
         SKIP, OVERRIDE, RANDOM
@@ -81,7 +82,6 @@ public abstract class AbstractParams {
     private Element node;
     private String ownerId;
     private String ownerIdGroup;
-    
     private String ownerIdUser;
     private OverrideUuid overrideUuid;
 

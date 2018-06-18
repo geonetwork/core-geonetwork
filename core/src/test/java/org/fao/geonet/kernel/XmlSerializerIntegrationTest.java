@@ -23,9 +23,18 @@
 
 package org.fao.geonet.kernel;
 
-import com.google.common.collect.Maps;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import jeeves.server.context.ServiceContext;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
@@ -33,8 +42,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -44,18 +53,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import jeeves.server.context.ServiceContext;
 
 public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     private static final String OWNER_ID = "1234";
@@ -72,7 +72,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     DataManager _dataManager;
     @Autowired
-    MetadataRepository _metadataRepo;
+    IMetadataManager metadataManager;
     @Autowired
     ConfigurableApplicationContext applicationContext;
     private int _mdId;
@@ -124,7 +124,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Before
     public void addMetadata() {
         setSchemaFilters(true, true);
-        this._mdId = _metadataRepo.save(metadata).getId();
+        this._mdId = metadataManager.save(metadata).getId();
     }
 
     @Test

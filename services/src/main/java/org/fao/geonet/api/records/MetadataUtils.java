@@ -31,7 +31,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -333,7 +333,7 @@ public class MetadataUtils {
         return content;
     }
 
-    public static void backupRecord(Metadata metadata, ServiceContext context) {
+    public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
         Path outDir = Lib.resource.getRemovedDir(metadata.getId());
         Path outFile;
         try {

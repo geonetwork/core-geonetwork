@@ -15,11 +15,15 @@
       <ows:Title>OpenStreetMap
       </ows:Title>
     </ows-context:Layer>
+    <!--Uncomment the code bellow to add support to MS bing maps; don't forget to add a valid bingKey on the
+    settings!-->
+    <!--
     <ows-context:Layer name="{type=bing_aerial}"
                        group="Background layers"
+                       hidden="false"
                        opacity="1">
       <ows:Title>Bing Aerial</ows:Title>
-    </ows-context:Layer>
+    </ows-context:Layer> -->
     <ows-context:Layer name="{type=stamen,name=watercolor}"
                        group="Background layers"
                        hidden="true"
@@ -32,6 +36,13 @@
                        opacity="1">
       <ows:Title>Stamen Toner</ows:Title>
     </ows-context:Layer>
+    <ows-context:Layer name="{type=stamen,name=terrain}"
+                       group="Background layers"
+                       hidden="true"
+                       opacity="1">
+      <ows:Title>Stamen Terrain</ows:Title>
+    </ows-context:Layer>
+
     <!--
     Example for TMS:
 
