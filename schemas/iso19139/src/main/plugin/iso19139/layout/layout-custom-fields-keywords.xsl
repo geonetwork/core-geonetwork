@@ -62,7 +62,6 @@
         <xsl:with-param name="ref" select="../gn:element/@ref"/>
       </xsl:call-template>
     </xsl:if>
-
     <xsl:variable name="thesaurusTitle">
       <xsl:choose>
         <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">
@@ -121,6 +120,7 @@
         <xsl:apply-templates mode="mode-iso19139" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
+          <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
         </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
@@ -137,6 +137,7 @@
             <xsl:apply-templates mode="mode-iso19139" select="*">
               <xsl:with-param name="schema" select="$schema"/>
               <xsl:with-param name="labels" select="$labels"/>
+              <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
             </xsl:apply-templates>
           </xsl:with-param>
         </xsl:call-template>
@@ -147,13 +148,16 @@
 
 
   <xsl:template mode="mode-iso19139" match="gmd:MD_Keywords" priority="2000">
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
 
     <xsl:variable name="thesaurusIdentifier"
                   select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text())"/>
 
     <xsl:variable name="thesaurusTitle"
-                  select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
+                  select="if ($overrideLabel != '')
+                          then $overrideLabel
+                          else gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
 
 
     <xsl:variable name="thesaurusConfig"
