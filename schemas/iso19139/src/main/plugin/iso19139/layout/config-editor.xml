@@ -1986,7 +1986,7 @@
                         contains(
                           gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                           'NVS.P35')]"
-                    name="oceanChemistryVariable"/>
+                    name="oceanChemistryVariables"/>
           </section>
         </section>
       </tab>
