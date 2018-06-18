@@ -360,7 +360,9 @@
       </div>
     </div>-->
   </change-spatial-type-alert>
-
+  <oceanDiscoveryParameters>Ocean discovery parameters</oceanDiscoveryParameters>
+  <oceanChemistryVariables>Ocean chemistry variables</oceanChemistryVariables>
+  <seaAreas>Sea areas</seaAreas>
   <sdnSpatialRepresentationType>Spatial representation type</sdnSpatialRepresentationType>
   <sdn>Default</sdn>
   <sdn-abstract>Overview</sdn-abstract>

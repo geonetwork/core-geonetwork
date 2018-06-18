@@ -1973,17 +1973,20 @@
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                         contains(
                           gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                          'NVS.C19')]"/>
+                          'NVS.C19')]"
+                    name="seaAreas"/>
 
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                         contains(
                           gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                          'NVS.P02')]"/>
+                          'NVS.P02')]"
+                    name="oceanDiscoveryParameters"/>
 
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                         contains(
                           gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                          'NVS.P35')]"/>
+                          'NVS.P35')]"
+                    name="oceanChemistryVariable"/>
           </section>
         </section>
       </tab>

@@ -352,7 +352,9 @@
       </div>
     </div>-->
   </change-spatial-type-alert>
-
+  <oceanDiscoveryParameters>Ocean discovery parameters</oceanDiscoveryParameters>
+  <oceanChemistryVariables>Ocean chemistry variables</oceanChemistryVariables>
+  <seaAreas>Sea areas</seaAreas>
   <sdn>Default</sdn>
   <sdn-abstract>Overview</sdn-abstract>
   <sdn-short-name>External shortname</sdn-short-name>
