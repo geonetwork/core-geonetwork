@@ -127,7 +127,7 @@ Stylesheet used to add vector information field to a metadata record.
                 </gmd:dimensionName>
                 <!-- OPTIONAL: number of vertical levels -->
                 <gmd:dimensionSize>
-                  <gco:Integer>12</gco:Integer>
+                  <gco:Integer></gco:Integer>
                 </gmd:dimensionSize>
               </gmd:MD_Dimension>
             </gmd:axisDimensionProperties>
@@ -139,7 +139,7 @@ Stylesheet used to add vector information field to a metadata record.
                 <gmd:dimensionSize/>
                 <!-- OPTIONAL: temporal resolution (mean period between each time steps) -->
                 <gmd:resolution>
-                  <gco:Measure uom="season">1</gco:Measure>
+                  <gco:Measure uom=""></gco:Measure>
                 </gmd:resolution>
               </gmd:MD_Dimension>
             </gmd:axisDimensionProperties>
