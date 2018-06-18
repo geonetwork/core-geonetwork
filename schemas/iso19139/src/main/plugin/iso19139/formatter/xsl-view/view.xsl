@@ -592,9 +592,14 @@
   </xsl:template>
 
 
-  <!-- Display thesaurus name and the list of keywords -->
+  <!-- Display thesaurus name and the list of keywords if at least one keyword is set -->
   <xsl:template mode="render-field"
-                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title]"
+                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title and
+                count(*/gmd:keyword/*[. != '']) = 0]"
+                priority="100"/>
+  <xsl:template mode="render-field"
+                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title and
+                count(*/gmd:keyword/*[. != '']) > 0]"
                 priority="100">
     <dl class="gn-keyword">
       <dt>
