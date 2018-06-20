@@ -29,12 +29,12 @@
   </div>
 
   <form class="form-horizontal"
-        role="nav"
+        role="grid"
         data-ng-controller="gnsSearchTopEntriesController"
         data-ng-search-form=""
         data-runSearch="true"
         data-ng-show="searchResults.records.length > 0">
-    <div class="row gn-top-records">
+    <div class="row gn-top-records" role="row">
       <h4 data-translate="">topMaps</h4>
 
         <input type="hidden" name="_csrf" value="{{csrf}}"/>
@@ -147,9 +147,9 @@
     <div class="col-sm-12">
       <tabset id="info-tabset">
         <tab heading="{{'lastRecords' | translate}}"
-             active="infoTabs.lastRecords.active">
+             active="infoTabs.lastRecords.active"
+             role="tab">
           <form class="form-horizontal"
-                role="nav"
                 data-ng-controller="gnsSearchLatestController"
                 data-ng-search-form=""
                 data-runSearch="true"
@@ -160,9 +160,9 @@
           </form>
         </tab>
         <tab heading="{{'preferredRecords' | translate}}"
-             active="infoTabs.preferredRecords.active">
+             active="infoTabs.preferredRecords.active"
+             role="tab">
           <form class="form-horizontal"
-                role="nav"
                 data-ng-controller="gnsSearchPopularController"
                 data-ng-search-form=""
                 data-runSearch="true"
@@ -173,8 +173,9 @@
         </tab>
         <tab heading="{{'Comments' | translate}}"
              data-ng-if="isUserFeedbackEnabled"
-             active="infoTabs.commentsalt.active" >
-          <form class="form-horizontal" role="nav">
+             active="infoTabs.commentsalt.active"
+             role="tab">
+          <form class="form-horizontal">
             <div class="data-gn-userfeedbacklasthome"
                  data-nb-of-comments="10"></div>
           </form>
