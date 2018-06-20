@@ -82,9 +82,9 @@
         <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['topicCats']"
               class="col-xs-6 col-sm-4 col-lg-3" data-ng-show="browse === 'topics'"> -->
       <div class="row">
-        <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['topicCats']"
+        <span data-ng-repeat="(key, facet) in searchInfo.facet['topicCats']"
               data-ng-show="browse === 'topics'"
-              class="col-xs-12 col-sm-6 col-md-4">
+              class="col-xs-12 col-sm-6 col-md-4 chips-card">
           <div class="badge-result badge-result-topic clearfix">
             <a class="pull-left clearfix"
                title="{{facet['@label']}}"
@@ -99,10 +99,9 @@
             <span class="badge pull-left">{{facet['@count']}}</span>
           </div>
         </span>
-        <span id="chips-card"
-              data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesURI'] track by $index"
+        <span data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesURI'] track by $index"
               data-ng-show="browse === 'inspire'"
-              class="col-xs-12 col-sm-6 col-md-4">
+              class="col-xs-12 col-sm-6 col-md-4 chips-card">
           <div class="badge-result badge-result-inspire clearfix">
             <a class="pull-left clearfix bg-iti-{{facet['@name'].slice(facet['@name'].lastIndexOf('/')+1)}}"
                title="{{facet['@label']}}"
@@ -124,9 +123,9 @@
         <span data-translate="">browseTypes</span>
       </h4>
       <div class="row">
-          <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['types']"
+          <span data-ng-repeat="(key, facet) in searchInfo.facet['types']"
                 data-ng-show="facet['@label']"
-                class="col-xs-12 col-sm-6 col-md-12">
+                class="col-xs-12 col-sm-6 col-md-12 chips-card">
             <div class="badge-result badge-result-type pull-left">
               <a title="{{facet['@label']}}"
                  class="pull-left clearfix"
