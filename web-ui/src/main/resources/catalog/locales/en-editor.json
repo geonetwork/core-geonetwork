@@ -372,5 +372,6 @@
     "hotkeyImportRecord": "Import new records",
     "hotkeyAddRecord": "Add new record",
     "hotkeyBatchEdit": "Batch editing",
-    "hotkeyEditorBoard": "Editor board"
+    "hotkeyEditorBoard": "Editor board",
+    "cancelMetadataError": "Error, please reload the page"
 }
