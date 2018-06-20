@@ -69,6 +69,7 @@
       <div class="gn-md-thumbnail"
             data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">
         <img class="gn-img-thumbnail"
+             alt="{{md.title}}"
              data-ng-src="{{md.getThumbnails().list[0].url}}"
              data-ng-if="md.getThumbnails().list[0].url"/>
 

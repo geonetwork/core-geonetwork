@@ -9,6 +9,7 @@
                data-ng-model="homeAnyField"
                data-ng-model-options="modelOptions"
                placeholder="{{'anyPlaceHolder' | translate}}"
+               aria-label="{{'anyPlaceHolder' | translate}}"
                data-ng-keyup="$event.keyCode == 13 && goToSearch(homeAnyField)"
                data-typeahead="address for address in getAnySuggestions($viewValue)"
                data-typeahead-loading="anyLoading"
@@ -18,6 +19,7 @@
              type="button"
              data-ng-href="#/search?any={{homeAnyField}}">
             <i class="fa fa-search"></i>
+            <span class="sr-only" data-translate="">search</span>
           </a>
         </span>
       </div>
@@ -88,6 +90,7 @@
           <div class="badge-result badge-result-topic clearfix">
             <a class="pull-left clearfix"
                title="{{facet['@label']}}"
+               role="link"
                data-ng-href="#/search?facet.q=topicCat%2F{{facet['@name']}}">
               <span class="badge-icon badge-result-topic pull-left">
                 <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i>
@@ -145,7 +148,7 @@
   </div>
   <div class="row gn-row-info" data-ng-show="searchInfo.count > 0">
     <div class="col-sm-12">
-      <tabset id="info-tabset">
+      <tabset class="info-tabset">
         <tab heading="{{'lastRecords' | translate}}"
              active="infoTabs.lastRecords.active"
              role="tab">

@@ -18,6 +18,7 @@
       <li data-ng-if="gnCfg.mods.home.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
+               alt="{{'siteLogo' | translate}}"
                data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
           <span class="hidden-sm hidden-md gn-name" 
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
@@ -114,6 +115,7 @@
           class="dropdown-toggle"
           role="button" aria-expanded="false">
           <img class="img-circle"
+            alt="{{'avatar' | translate}}"
             data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>&nbsp;
           <div class="gn-user-info">
             {{user.name}} {{user.surname}}<br>
