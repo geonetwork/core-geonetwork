@@ -9,16 +9,20 @@
     <div class="row">
       <input data-gn-selection-md type="checkbox"
              data-ng-model="md['geonet:info'].selected"
+             aria-label="{{'clickToSelect' | translate}}"
              data-ng-change="change()"/>
 
       <!--Source catalog Logo-->
       <a data-ng-if="md.groupWebsite"
-         href="{{md.groupWebsite}}" target="_blank">
+         href="{{md.groupWebsite}}"
+         target="_blank">
         <img data-ng-src="{{gnUrl}}..{{md.logo}}"
+             alt="{{'siteLogo' | translate}}"
              class="gn-source-logo"/>
       </a>
-      <img data-ng-if="!md.groupWebsite"
+      <img data-ng-if="!md.groupWebsite && md.logo"
            data-ng-src="{{gnUrl}}..{{md.logo}}"
+           alt="{{'siteLogo' | translate}}"
            class="gn-source-logo"/>
 
       <div class="gn-md-category"

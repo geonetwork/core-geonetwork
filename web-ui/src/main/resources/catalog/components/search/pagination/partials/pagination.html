@@ -4,11 +4,13 @@
       <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''">
         <a href="" data-ng-click="first()">
           <i class="fa fa-angle-double-left"></i>
+          <span class="sr-only" data-translate="">first</span>
         </a>
       </li>
       <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''">
         <a href="" data-ng-click="previous()">
           <i class="fa fa-angle-left"></i>
+          <span class="sr-only" data-translate="">previous</span>
         </a>
       </li>
       <li class="btn-group">
@@ -41,11 +43,13 @@
       <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
         <a href="" data-ng-click="next()">
           <i class="fa fa-angle-right"></i>
+          <span class="sr-only" data-translate="">next</span>
         </a>
       </li>
       <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
         <a href="" data-ng-click="last()">
           <i class="fa fa-angle-double-right"></i>
+          <span class="sr-only" data-translate="">last</span>
         </a>
       </li>
     </ul>

@@ -395,5 +395,6 @@
     "loginText": "Sign in with your username and password to add and edit metadata.",
     "siteLogo": "Logo",
     "languageSwitcher": "Language switcher",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "first": "First"
 }

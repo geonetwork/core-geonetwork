@@ -182,6 +182,7 @@
                   <input class="flex-no-shrink" type="checkbox"
                          data-gn-selection-md
                          data-ng-model="md['geonet:info'].selected"
+                         aria-label="{{clickToSelect | translate}}"
                          data-ng-change="change()"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
@@ -276,6 +277,7 @@
 
                   <input data-gn-selection-md type="checkbox"
                          data-ng-model="md['geonet:info'].selected"
+                         aria-label="{{'clickToSelect' | translate}}"
                          data-ng-change="change()"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
