@@ -224,6 +224,9 @@
                             // check if there is a wfs filter active
                             // & apply value
                             var wfsFilter = input.linkedWfsFilter || '';
+                            var isTokenized = !!input.tokenizeWfsFilterValues;
+                            var delimiter = isTokenized &&
+                              (input.wfsFilterValuesDelimiter || ',')
 
                             // handle the case where the link points to "from"
                             // or "to" dates of a filter
@@ -241,6 +244,8 @@
                               // take value at specific index, or all values
                               if (valueIndex >= 0) {
                                 wfsFilterValue = [wfsFilterValues[wfsFilter][valueIndex]];
+                              } else if(isTokenized) {
+                                wfsFilterValue = [wfsFilterValues[wfsFilter].join(delimiter)];
                               } else {
                                 wfsFilterValue = wfsFilterValues[wfsFilter];
                               }
