@@ -143,8 +143,8 @@
      * for metadata privileges. To be improved.
      */
   module.directive('gnHarvesterPrivileges',
-      ['$http', '$translate', '$rootScope',
-       function($http, $translate, $rootScope) {
+      ['$http', '$translate', '$rootScope', 'gnShareConstants',
+       function($http, $translate, $rootScope, gnShareConstants) {
 
          return {
            restrict: 'A',
@@ -171,22 +171,24 @@
              };
              var defaultPrivileges = [getPrivilege(1)];
 
-             scope.visibleTo = function(who) {
-               scope.custom = false;
-               scope.selectedPrivileges = {};
-               if (who == 'all') {
-                 scope.allGroup = false;
-                 scope.selectedPrivileges = {1: true};
-               } else if (who == 'none') {
-                 scope.allGroup = false;
-                 scope.selectedPrivileges = {1: false};
-               } else if (who == 'allGroup') {
-                 scope.allGroup = !scope.allGroup;
-                 angular.forEach(scope.groups, function(g) {
-                   scope.selectedPrivileges[g['@id']] = scope.allGroup;
-                 });
-               }
-             };
+             // deal with order by
+             scope.sorter = null
+             scope.setSorter = function(g) {
+               if (scope.sorter == 'name') return g.label ? g.label[scope.lang] : g.name;
+               else if (scope.sorter == 'checked') return scope.selectedPrivileges[g['@id']];
+               else return 0;
+             }
+
+             var internalGroups =  gnShareConstants.internalGroups;
+
+             scope.keepInternalGroups = function(g){
+               if (internalGroups.includes(parseInt(g['@id']))) return true;
+               else return false;
+             }
+             scope.removeInternalGroups = function(g){
+               if (internalGroups.includes(parseInt(g['@id']))) return false;
+               else return true;
+             }
              function loadGroups() {
                $http.get('info?_content_type=json&' +
                'type=groupsIncludingSystemGroups',

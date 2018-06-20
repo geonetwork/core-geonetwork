@@ -37,6 +37,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang.StringUtils;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -71,10 +72,9 @@ import org.jdom.xpath.XPath;
 
 import jeeves.server.context.ServiceContext;
 
-public class Aligner extends BaseAligner {
+public class Aligner extends BaseAligner<CswParams> {
 
     private ServiceContext context;
-    private CswParams params;
     private DataManager dataMan;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -290,6 +290,7 @@ public class Aligner extends BaseAligner {
 
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
+        ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).

@@ -356,6 +356,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                 });
                 aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, LOGGER);
                 listOfRecordsToIndex.add(Integer.valueOf(id));
+                listOfRecords.add(Integer.valueOf(id));
                 result.addedMetadata++;
             }
         } catch (Exception e) {

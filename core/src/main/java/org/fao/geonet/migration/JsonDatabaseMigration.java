@@ -27,8 +27,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +45,36 @@ import java.util.Map;
 /**
  * Helper class for handling JSON strings.
  */
-public abstract class JsonDatabaseMigration {
+public abstract class JsonDatabaseMigration implements DatabaseMigrationTask {
+
+    @Override
+    public void update(Connection connection) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(
+            "SELECT * FROM settings WHERE name=?")) {
+            statement.setString(1, getSettingName());
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                String currentSettingJson = rs.getString("value");
+                Map<String, String> fieldsToUpdate = setUpNewSettingValues();
+
+                String newSettingJson = insertOrUpdateField(currentSettingJson, fieldsToUpdate);
+                try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE settings SET "
+                    + "value=? WHERE name=?")) {
+                    updateStatement.setString(1, newSettingJson);
+                    updateStatement.setString(2, getSettingName());
+                    updateStatement.executeUpdate();
+                }
+            }
+        } catch (IOException e) {
+            Log.error(Geonet.GEONETWORK + ".databasemigration",
+                "Error in AdvancedSearchFormMigration. Cannot complete the "
+                    + "migration", e);
+            throw new DatabaseMigrationException(e);
+        }
+    }
+
+
     /**
      * Given a JSON string and a map of fields to update/insert and their values return an updated JSON string.
      *
@@ -80,4 +116,18 @@ public abstract class JsonDatabaseMigration {
         }
         ((ObjectNode) newRoot).set(fullPath.get(fullPath.size() - 1), newJsonTree);
     }
+
+
+    /**
+     *
+     * @return a map where the key is the JSON path to the property to add or modify and the values are the new values
+     * for the path in key.
+     */
+    protected abstract Map<String, String> setUpNewSettingValues();
+
+    /**
+     *
+     * @return the name of the setting to update.
+     */
+    protected abstract String getSettingName();
 }
