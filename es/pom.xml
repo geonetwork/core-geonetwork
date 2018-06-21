@@ -29,7 +29,6 @@
             <executions>
               <execution>
                 <id>download-elastic-search</id>
-                <phase>pre-integration-test</phase>
                 <goals>
                   <goal>wget</goal>
                 </goals>
