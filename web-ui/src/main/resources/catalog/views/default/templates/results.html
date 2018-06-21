@@ -54,14 +54,16 @@
               data-enable-events=""></div>
         </div>
 
-        <div class="col-xs-6 col-sm-4 col-sm-pull-6 col-lg-pull-6"
+        <div class="col-xs-6 col-sm-3 col-sm-pull-6 col-lg-pull-6"
           data-ng-show="searchResults.records.length > 0">
           <div data-gn-selection-widget=""
                 data-results="searchResults"></div>
         </div>
 
-        <div class="col-xs-6 col-sm-2"
+        <div class="col-xs-6 col-sm-3"
           data-ng-show="searchResults.records.length > 0">
+          <div class="pull-right"
+               data-gn-results-tpl-switcher=""></div>
           <div class="pull-right"
               data-sortby-combo=""
               data-params="searchObj.params"
