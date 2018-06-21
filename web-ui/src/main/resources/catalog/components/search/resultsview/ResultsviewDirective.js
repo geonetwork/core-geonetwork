@@ -35,7 +35,7 @@
    * @description
    * The `gnResultsTplSwitcher` directive provides a button group
    * switcher to switch between customized views. The customs views
-   * are defined in the scope variable `scope.tpls`. This config
+   * are defined in the UI admin settings. This config
    * defines a icon for the button, and a link to the html file
    * representing the desired view.
    *
@@ -43,22 +43,20 @@
    * directive that will load the custom view into its root html
    * element.
    */
-  module.directive('gnResultsTplSwitcher', [
-    'gnSearchSettings',
-    function(gnSearchSettings) {
-
+  module.directive('gnResultsTplSwitcher',
+    function() {
       return {
-        restrict: 'A',
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
-            'templateswitcher.html',
-        scope: {
-          'templateUrl': '='
-        },
-        link: function(scope, element, attrs, controller) {
-          scope.tpls = gnSearchSettings.resultViewTpls;
+        'templateswitcher.html',
+        restrict: 'A',
+        link: function($scope) {
+          $scope.setResultTemplate = function (t) {
+            $scope.resultTemplate = t.tplUrl;
+          };
         }
       };
-    }]);
+    }
+  );
 
   /**
    * @ngdoc directive
