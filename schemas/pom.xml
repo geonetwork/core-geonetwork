@@ -31,7 +31,7 @@
     <version>3.5.0-SNAPSHOT</version>
   </parent>
 
-  <version>3.4</version>
+  <version>3.5</version>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>schemas</artifactId>
@@ -54,7 +54,7 @@
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>3.4.3-SNAPSHOT</gn.project.version>
+    <gn.project.version>3.5.0-SNAPSHOT</gn.project.version>
   </properties>
 
 </project>

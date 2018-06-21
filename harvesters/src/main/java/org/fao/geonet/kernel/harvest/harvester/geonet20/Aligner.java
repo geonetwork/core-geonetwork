@@ -50,14 +50,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 public class Aligner extends AbstractAligner<GeonetParams> {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
-
 
     private final AtomicBoolean cancelMonitor;
 

@@ -1264,3 +1264,4 @@
     "ui-externalViewer-openNewWindow": "Open new window",
     "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window. Please note that many browsers will not allow opening links in the same tab."
 }
+

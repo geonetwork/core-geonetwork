@@ -133,34 +133,45 @@ public class BaseMetadataManager implements IMetadataManager {
 	}
 
 	public void init(ServiceContext context, Boolean force) throws Exception {
-		metadataUtils = context.getBean(IMetadataUtils.class);
-		metadataIndexer = context.getBean(IMetadataIndexer.class);
-		metadataStatusRepository = context.getBean(MetadataStatusRepository.class);
-		metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
-		metadataRepository = context.getBean(MetadataRepository.class);
-		metadataValidator = context.getBean(IMetadataValidator.class);
-		metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-		searchManager = context.getBean(EsSearchManager.class);
-		metadataRatingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
-		metadataFileUploadRepository = context.getBean(MetadataFileUploadRepository.class);
-		groupRepository = context.getBean(GroupRepository.class);
-		xmlSerializer = context.getBean(XmlSerializer.class);
-		settingManager = context.getBean(SettingManager.class);
-		metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
-		try {
-			harvestInfoProvider = context.getBean(HarvestInfoProvider.class);
-		} catch (Exception e) {
-			// If it doesn't exist, that's fine
-		}
-		userRepository = context.getBean(UserRepository.class);
-		schemaManager = context.getBean(SchemaManager.class);
-		thesaurusManager = context.getBean(ThesaurusManager.class);
-		accessManager = context.getBean(AccessManager.class);
-		userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
+        metadataUtils = context.getBean(IMetadataUtils.class);
+        metadataIndexer = context.getBean(IMetadataIndexer.class);
+        metadataStatusRepository = context.getBean(MetadataStatusRepository.class);
+        metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        metadataRepository = context.getBean(MetadataRepository.class);
+        metadataValidator = context.getBean(IMetadataValidator.class);
+        metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
+        searchManager = context.getBean(EsSearchManager.class);
+        metadataRatingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
+        metadataFileUploadRepository = context.getBean(MetadataFileUploadRepository.class);
+        groupRepository = context.getBean(GroupRepository.class);
+        xmlSerializer = context.getBean(XmlSerializer.class);
+        settingManager = context.getBean(SettingManager.class);
+        metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
+        try {
+            harvestInfoProvider = context.getBean(HarvestInfoProvider.class);
+        } catch (Exception e) {
+            // If it doesn't exist, that's fine
+        }
+        userRepository = context.getBean(UserRepository.class);
+        schemaManager = context.getBean(SchemaManager.class);
+        thesaurusManager = context.getBean(ThesaurusManager.class);
+        accessManager = context.getBean(AccessManager.class);
+        userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
 
-		// From DataManager:
+        // From DataManager:
+        searchManager.init();
+    }
 
-		// get lastchangedate of all metadata in index
+
+    /**
+     * Refresh index if needed. Can also be called after GeoNetwork startup in
+     * order to rebuild the lucene index
+     *t
+     * @param force Force reindexing all from scratch
+     **/
+    public synchronized void synchronizeDbWithIndex(ServiceContext context, Boolean force) throws Exception {
+
+        // get lastchangedate of all metadata in index
 		Map<String, String> docs = searchManager.getDocsChangeDate();
 
 		// set up results HashMap for post processing of records to be indexed

@@ -535,7 +535,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         if (operator.equals("PropertyIsLike")) {
             prop = new Element(operator, Csw.NAMESPACE_OGC);
-            prop.setAttribute("wildcard", "%");
+            prop.setAttribute("wildCard", "%");
             prop.setAttribute("singleChar", "_");
             prop.setAttribute("escapeChar", "\\");
         } else {

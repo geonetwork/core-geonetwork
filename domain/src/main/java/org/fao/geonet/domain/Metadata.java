@@ -40,7 +40,6 @@ import java.util.Set;
 @Table(name = Metadata.TABLENAME)
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataEntityListenerManager.class)
-@SequenceGenerator(name = Metadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Metadata extends AbstractMetadata  implements Serializable {
 
     private static final long serialVersionUID = -5557599895424227101L;
