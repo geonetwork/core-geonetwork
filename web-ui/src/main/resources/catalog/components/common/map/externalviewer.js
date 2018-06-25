@@ -138,7 +138,8 @@
             .replace('${service.name}', getValues('service', 'name'))
             .replace('${service.title}', getValues('service', 'title'));
 
-          $window.open(url, settings.openNewWindow ? '_blank' : undefined);
+          settings.openNewWindow ? $window.open(url, '_blank') :
+            $window.location = url;
 
           // reset list of services to view
           this._toView.length = 0;

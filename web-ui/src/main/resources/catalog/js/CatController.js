@@ -153,7 +153,7 @@
           'externalViewer': {
             'enabled': false,
             'baseUrl': 'http://www.example.com/viewer',
-            'urlTemplate': 'http://www.example.com/viewer?url={service.url}&type=${service.type}&layer=${service.name}',
+            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.name}',
             'openNewWindow': false,
             'valuesSeparator': ','
           },
