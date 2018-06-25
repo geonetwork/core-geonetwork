@@ -217,9 +217,6 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Avoid insertion of schema location in the CSW
-  response - which is invalid. -->
-  <xsl:template match="@xsi:schemaLocation"/>
 </xsl:stylesheet>
 
 
