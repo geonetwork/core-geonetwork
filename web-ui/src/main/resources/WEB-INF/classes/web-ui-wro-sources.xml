@@ -27,6 +27,7 @@
     <jsSource webappPath="/catalog/js/"/>
     <jsSource webappPath="/catalog/views/"/>
     <jsSource webappPath="/catalog/components/"/>
+    <jsSource webappPath="/catalog/templates/"/>
     <cssSource webappPath="/catalog/views/"/>
     <cssSource webappPath="/catalog/style/"/>
     <cssSource webappPath="/catalog/lib/bootstrap-table/dist"/>

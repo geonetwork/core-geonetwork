@@ -70,6 +70,7 @@
             data-ng-class="{'gn-md-no-thumbnail': !md.overview[0]}">
             <!--data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">-->
         <img class="gn-img-thumbnail"
+             alt="{{md.resourceTitle}}"
              data-ng-src="{{md.overview[0].url}}"
              data-ng-if="md.overview[0]"/>
 

@@ -37,6 +37,8 @@
   -->
   <xsl:variable name="gnUri" select="'http://www.fao.org/geonetwork'"/>
 
+  <xsl:variable name="buildNumber"
+                select="util:getBuildNumber()"/>
 
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
 
