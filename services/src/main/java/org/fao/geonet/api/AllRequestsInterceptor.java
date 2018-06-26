@@ -23,6 +23,7 @@
 
 package org.fao.geonet.api;
 
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -86,6 +87,7 @@ public class AllRequestsInterceptor extends HandlerInterceptorAdapter {
             }
         } else {
             HttpSession httpSession = request.getSession(false);
+            ServiceContext.clear();
             if (Log.isDebugEnabled(Log.REQUEST)) {
                 Log.debug(Log.REQUEST, String.format(
                     "Crawler '%s' detected. Session MUST be null: %s",

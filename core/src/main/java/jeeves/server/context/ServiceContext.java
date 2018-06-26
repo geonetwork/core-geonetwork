@@ -107,6 +107,11 @@ public class ServiceContext extends BasicContext {
         return THREAD_LOCAL_INSTANCE.get();
     }
 
+
+    public static void clear() {
+        THREAD_LOCAL_INSTANCE.remove();;
+        ApplicationContextHolder.clear();;
+    }
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
