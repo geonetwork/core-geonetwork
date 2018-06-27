@@ -445,6 +445,9 @@
             scope.layer.set('esConfig', null);
             scope.$broadcast('FiltersChanged');
 
+            // reset text search in facets
+            scope.facetFilters = {};
+
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}).
                 then(function(resp) {

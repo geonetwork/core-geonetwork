@@ -29,7 +29,7 @@
   var module = angular.module('gn_wps_directive', [
   ]);
 
-  function isFieldNotEmpty (value) {
+  function isFieldValueNotEmpty (value) {
     return value !== undefined && value !== ''
   }
 
@@ -202,6 +202,10 @@
                     // by default, do not use profile graph output
                     scope.outputAsGraph = false;
 
+                    // init WFS filters related objects
+                    scope.inputWfsOverride = {};
+                    scope.wfsInputValues = {};
+
                     // loop on process expected inputs to prepare the form
                     angular.forEach(scope.processDescription.dataInputs.input,
                     function(input) {
@@ -221,6 +225,9 @@
                             // check if there is a wfs filter active
                             // & apply value
                             var wfsFilter = input.linkedWfsFilter || '';
+                            var isTokenized = !!input.tokenizeWfsFilterValues;
+                            var delimiter = isTokenized &&
+                              (input.wfsFilterValuesDelimiter || ',')
 
                             // handle the case where the link points to "from"
                             // or "to" dates of a filter
@@ -236,10 +243,12 @@
                             }
 
                             if (wfsFilter && wfsFilterValues &&
-                              isFieldNotEmpty(wfsFilterValues[wfsFilter])) {
+                              isFieldValueNotEmpty(wfsFilterValues[wfsFilter])) {
                               // take value at specific index, or all values
                               if (valueIndex >= 0) {
                                 wfsFilterValue = [wfsFilterValues[wfsFilter][valueIndex]];
+                              } else if(isTokenized) {
+                                wfsFilterValue = [wfsFilterValues[wfsFilter].join(delimiter)];
                               } else {
                                 wfsFilterValue = wfsFilterValues[wfsFilter];
                               }
@@ -250,7 +259,7 @@
 
                       // display field as overriden
                       scope.inputWfsOverride[inputName] =
-                      isFieldNotEmpty(wfsFilterValue) && wfsFilterValue.length > 0;
+                      isFieldValueNotEmpty(wfsFilterValue) && wfsFilterValue.length > 0;
 
                       // literal data (basic form input)
                       if (input.literalData !== undefined) {
@@ -332,24 +341,24 @@
                       // force values if a wfs filter is present
                       // note: wfs filter value is an array of values
                       if (wfsFilterValue && wfsFilterValue.length) {
-                        scope.removeAllInputValuesByName(inputName);
-                        wfsFilterValue.filter(function(value, index) {
-                          return index < maxCount;
-                        }).forEach(function(value) {
-                          scope.wpsLink.inputs.push({
-                            name: inputName,
-                            value: value
+                        scope.wfsInputValues[inputName] =
+                          wfsFilterValue.filter(function(value, index) {
+                            return index < maxCount;
+                          }).map(function(value) {
+                            return {
+                              name: inputName,
+                              value: value
+                            };
                           });
-                        });
                       }
                       // apply default values if any
-                      else if (isFieldNotEmpty(defaultValue)) {
+                      if (isFieldValueNotEmpty(defaultValue)) {
                         inputs = scope.getInputsByName(inputName);
                         var defaultValueArray = Array.isArray(defaultValue) ?
                           defaultValue : [defaultValue];
                         for(var i = 0; i < inputs.length; i++) {
-                          if (!isFieldNotEmpty(inputs[i].value) &&
-                          isFieldNotEmpty(defaultValueArray[i])) {
+                          if (!isFieldValueNotEmpty(inputs[i].value) &&
+                          isFieldValueNotEmpty(defaultValueArray[i])) {
                             scope.setInputValueByName(inputName, i,
                               defaultValueArray[i]);
                           }
@@ -472,7 +481,7 @@
                   // count the number of non empty values
                   var valueCount = scope.getInputsByName(input.identifier.value)
                   .filter(function(input) {
-                    return isFieldNotEmpty(input.value);
+                    return isFieldValueNotEmpty(input.value);
                   }).length;
 
                   // this will be used to show errors on the form
@@ -487,7 +496,7 @@
             // there are errors with inputs: leave
             if (invalid) { return; }
 
-            var inputs = scope.wpsLink.inputs;
+            var inputs = scope.getAllInputs();
             var output = scope.wpsLink.output;
 
             updateStatus = function(statusLocation) {
@@ -635,9 +644,13 @@
           };
 
           // get/set input values
+          // note: this will return values from WFS filters if applicable
           scope.getInputsByName = function(name) {
+            var wfsValues = scope.wfsInputValues[name];
             return scope.wpsLink.inputs.filter(function(input) {
               return input.name == name;
+            }).map(function(input, i) {
+              return (wfsValues && wfsValues.length > i) ? wfsValues[i] : input;
             });
           };
           scope.setInputValueByName = function(name, index, value) {
@@ -649,6 +662,18 @@
                 }
                 current++;
               }
+            });
+          };
+
+          scope.getAllInputs = function() {
+            var wfsValues = scope.wfsInputValues;
+            return scope.wpsLink.inputs.map(function(input) {
+              var innerIndex = scope.getInputsByName(input.name)
+                .map(function(input) { return input.name; })
+                .indexOf(input.name);
+              return (wfsValues[input.name] &&
+                wfsValues[input.name].length > innerIndex) ?
+                wfsValues[input.name][innerIndex] : input;
             });
           };
 

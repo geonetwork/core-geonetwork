@@ -1947,6 +1947,7 @@
       <option value="COPYFILE">Download (copy)</option>
       <option value="DB">Download (database)</option>
       <option value="WWW:DOWNLOAD-1.0-link--download">Download (link)</option>
+      <option value="NETWORK:LINK">Download (visible path)</option>
       <option value="OGC:WFS">Download (WFS)</option>
       <option value="OGC:WCS">Download (WCS)</option>
       <option value="OGC:WMS">View (WMS)</option>

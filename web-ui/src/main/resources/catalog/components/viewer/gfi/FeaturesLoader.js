@@ -276,14 +276,9 @@
   geonetwork.GnFeaturesINDEXLoader.prototype.formatUrlValues_ = function(url) {
     var $filter = this.$injector.get('$filter');
 
-    url = this.fillUrlWithFilter_(url);
-    var link = $filter('linky')(url, '_blank');
-    if (link != url) {
-      link = link.replace(/>(.)*</,
-          ' ' + 'target="_blank">' + linkTpl + '<'
-          );
-    }
-    return link;
+    var processedUrl = this.fillUrlWithFilter_(url);
+    return '<a target="_blank" href="' + encodeURI(processedUrl) + '">' +
+      linkTpl + '</a>';
   };
 
   /**

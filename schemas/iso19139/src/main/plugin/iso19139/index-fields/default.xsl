@@ -1040,6 +1040,12 @@
                                         gmd:deliveryPoint|gmd:postalCode|gmd:city|
                                         gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
 
+
+    <Field name="{$type}_{$fieldPrefix}_{$role}"
+           string="{$orgName}"
+           store="false"
+           index="true"/>
+
     <Field name="{$fieldPrefix}"
            string="{concat($roleTranslation, '|', $type,'|',
                              $orgName, '|',
