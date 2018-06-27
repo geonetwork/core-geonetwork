@@ -50,6 +50,8 @@
   goog.require('gn_wmsimport');
   goog.require('gn_wps');
   goog.require('gn_gazetteer');
+  goog.require('gn_legendpanel_directive');
+
 
   /**
    * @ngdoc overview
@@ -84,7 +86,8 @@
     'gn_geometry',
     'gn_profile',
     'gn_heatmap',
-    'gn_gazetteer'
+    'gn_gazetteer',
+    'gn_legendpanel_directive'
   ]);
 
   module.controller('gnViewerController', [

@@ -179,6 +179,7 @@
             'processes': false,
             'addLayers': false,
             'layers': false,
+            'legend': false,
             'filter': false,
             'contexts': false,
             'print': false,
