@@ -271,10 +271,8 @@
                   }
                   datesWithData[year][date.getMonth()].push(date.getDate());
                 }
-                var fr = new Date(ncInfo.time.values[0])
                 layer.ncInfo.datesWithData = datesWithData
-                // initValue
-                scope.ncTime.value = ("0" + fr.getDate()).slice(-2) + '-' + ("0" + (fr.getMonth() + 1)).slice(-2) + '-' + fr.getFullYear()
+                scope.ncTime.value = moment(new Date(ncInfo.time.values[0])).format('DD-MM-YYYY');
               }
               else {
                 var time = scope.layer.get('time');
@@ -285,22 +283,6 @@
                       + time.units;
                   }
                 }
-                scope.ctrl.timeMinFn = function (time) {
-                  if (time) {
-                    scope.params.TIME = time + '/' + timeMax;
-                    scope.updateLayerParams();
-                  }
-                  return angular.isDefined(time) ?
-                    (timeMin = time) : timeMin;
-                };
-                scope.ctrl.timeMaxFn = function (time) {
-                  if (time) {
-                    scope.params.TIME = timeMin + '/' + time;
-                    scope.updateLayerParams();
-                  }
-                  return angular.isDefined(time) ?
-                    (timeMax = time) : timeMax;
-                };
                 scope.params.TIME = timeMin + '/' + timeMax;
                 scope.params.TIMEUNIT = ncInfo.time.units;
 
