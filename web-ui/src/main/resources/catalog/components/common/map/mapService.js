@@ -908,8 +908,10 @@
                     });
                   }
                   if (dimension.name == 'time') {
-                    layer.set('time',
-                        dimension.values.split(','));
+                    layer.set('time', {
+                      units: dimension.units,
+                      values: dimension.values.split(',')
+                    });
                   }
                 }
               }

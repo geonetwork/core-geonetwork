@@ -3,7 +3,7 @@
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
     <!--Scales-->
-    <div class="form-group">
+    <div class="form-group" ng-if="::ctrl.isNcWMS">
       <label class="col-sm-4" for="ncwmsscales">Echelles</label>
       <div class="col-sm-8">
         <select class="form-control input-sm" data-ng-model="params.LOGSCALE" data-ng-change="updateLayerParams()">
@@ -14,12 +14,12 @@
     </div>
 
     <!--Color ranges auto compute-->
-    <button type="button" class="btn btn-link pull-right" data-ng-click="setAutoColorranges($event)" title="auto">
+    <button type="button" class="btn btn-link pull-right" ng-if="::ctrl.isNcWMS" data-ng-click="setAutoColorranges($event)" title="auto">
       <span class="fa fa-magic"></span>
     </button>
 
     <!--Color ranges double slider-->
-    <div class="form-group">
+    <div class="form-group" ng-if="::ctrl.isNcWMS">
       <label class="col-sm-4">
         <span ng-if="colorscalerange">
           <span>{{colorscalerange[0] | number: 3}}</span>
@@ -35,7 +35,7 @@
 
     <!---------- Times inputs --------- -->
     <!--Ncwms optional single date (feed from getMetadata)-->
-    <div class="form-group" ng-if="::layer.get('time') && !ctrl.isOceanotron">
+    <div class="form-group" ng-if="::layer.get('time') && !ctrl.isOceanotron && !ctrl.useComboForTime">
       <label class="col-sm-4" translate>time</label>
       <div class="col-sm-8">
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
@@ -63,6 +63,16 @@
       </div>
     </div>
 
+    <!--Time combo for advanced layers without iso dates-->
+    <div class="form-group" ng-if="::!ctrl.isNcWMS && params.TIME && ctrl.useComboForTime">
+      <label class="col-sm-4" for="ncwmstime"><span translate="">time</span><span>&nbsp({{params.TIMEUNIT}})</span></label>
+      <div class="col-sm-8">
+        <select class="form-control input-sm" id="ncwmstime" data-ng-model="params.TIME" data-ng-change="updateLayerParams()">
+          <option value="{{ti}}" data-ng-repeat="ti in time">{{ti | number: 1}}</option>
+        </select>
+      </div>
+    </div>
+
     <!--Elevations combo-->
     <div class="form-group" ng-if="::!ctrl.isOceanotron && params.ELEVATION">
       <label class="col-sm-4" for="ncwmselevation"><span translate="">elevation</span></label>
@@ -83,7 +93,7 @@
     </div>
 
     <!--Styles combo-->
-    <div class="form-group" data-ng-if="::hasStyles()">
+    <div class="form-group" data-ng-if="::hasStyles()" ng-if="::ctrl.isNcWMS">
       <label class="col-sm-4" for="ncwmsstyles">Styles</label>
       <div class="col-sm-8">
         <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="ctrl.palette" data-ng-change="updateStyle()">
@@ -91,7 +101,7 @@
         </select>
       </div>
     </div>
-    <div class="btn-group">
+    <div class="btn-group" ng-if="::ctrl.isNcWMS">
       <button class="btn btn-default btn-sm" data-ng-if="(!ctrl.isOceanotron && layer.get('time')) || ctrl.oceanotronType == 'time'" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
         <span class="fa fa-history"></span> Temps
       </button>

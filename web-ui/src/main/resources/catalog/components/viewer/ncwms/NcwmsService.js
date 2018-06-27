@@ -97,14 +97,24 @@
         if (layer.get('advanced') == true) {
           var url = this.getMetadataUrl(layer);
           var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-
           return $http.get(proxyUrl)
             .success(function(json) {
               if (angular.isObject(json)) {
                 layer.ncInfo = json;
+                layer.isNcwms = true;
                 layer.set('oceanotron', !!layer.ncInfo.multiFeature);
                 if(layer.get('oceanotron')) {
                   this.initOceanotronParams(layer);
+                }
+              }
+              else {
+                layer.isNcwms = false;
+                layer.ncInfo = {
+                  'time': {'units': layer.values_.time.units,
+                    'values' : layer.values_.time.values},
+
+                  'zaxis': {'units': layer.values_.elevation.units,
+                    'values' : layer.values_.elevation.values}
                 }
               }
             }.bind(this));
@@ -133,34 +143,6 @@
           TIME: this.formatTimeSeries(from, to)
         })
 
-      };
-
-      /**
-       * @ngdoc method
-       * @methodOf gn_viewer.service:gnNcWms
-       * @name gnNcWms#parseTimeSeries
-       *
-       * @description
-       * Parse a time serie from capabilities.
-       * Extract from string, 2 limit values.
-       * Ex : 2010-12-06T12:00:00.000Z/2010-12-31T12:00:00.000Z
-       *
-       * @param {string} s serie
-       * @return {Object} date
-       */
-      this.parseTimeSeries = function(s) {
-        s = s.trim();
-        var as = s.split('/');
-        return {
-          tsfromD: moment(new Date(as[0])).format('YYYY-MM-DD'),
-          tstoD: moment(new Date(as[1])).format('YYYY-MM-DD')
-        };
-      };
-      this.formatTimeSeries = function(from, to) {
-        return moment(from, 'DD-MM-YYYY').format(
-            'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]') +
-            '/' +
-            moment(to, 'DD-MM-YYYY').format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
       };
 
       this.parseStyles = function(info) {
