@@ -1159,4 +1159,18 @@ gn-wps-process-form,
   pointer-events: none;
 }
 
+// fix attributions
+.ol-attribution {
+  button {
+    background-image: none;
+  }
+  [sxt-main-viewer] & {
+    bottom: 2.8em;
+    &.ol-logo-only {
+      height: 2em;
+      width: 2.4em;
+    }
+  }
+}
+
 @import 'gn_popover.less';
