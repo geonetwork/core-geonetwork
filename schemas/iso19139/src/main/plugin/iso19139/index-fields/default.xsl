@@ -942,7 +942,8 @@
 
             <xsl:variable name="crsDetails">
             {
-              "code": "<xsl:value-of select="gmd:codeSpace/*/text()"/>:<xsl:value-of select="gmd:code/*/text()"/>",
+              "code": "<xsl:value-of select="gmd:code/*/text()"/>",
+              "codeSpace": "<xsl:value-of select="gmd:codeSpace/*/text()"/>",
               "name": "<xsl:value-of select="gmd:code/*/@xlink:title"/>",
               "url": "<xsl:value-of select="gmd:code/*/@xlink:href"/>"
             }
