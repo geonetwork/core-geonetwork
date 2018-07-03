@@ -57,7 +57,9 @@ class SxtSummaryFactory {
     configureDates(metadata, summary)
     configureContacts(metadata, summary)
     configureConstraints(metadata, summary)
+    configureNetworkLinkDescription(metadata, summary)
     configureDoi(metadata, summary)
+
     //createCollapsablePanel()
 
     summary.associated.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
@@ -104,6 +106,25 @@ class SxtSummaryFactory {
     def contacts = metadata.'gmd:identificationInfo'."**".findAll{it.name() == 'gmd:CI_ResponsibleParty'}
     if (!contacts.isEmpty()) {
       summary.contacts = this.isoHandlers.contactsElSxt(contacts).toString()
+    }
+  }
+
+  def configureNetworkLinkDescription(metadata, summary) {
+    def networkLinks = metadata."**".findAll {
+      it.name() == 'gmd:CI_OnlineResource' &&
+        it.'gmd:protocol'.'gco:CharacterString' == 'NETWORK:LINK'
+    }
+
+    if (networkLinks.size() >= 1) {
+      def networkLinksDescription = [];
+      networkLinks.forEach { it ->
+        def name = it.'gmd:name'.toString()
+        def link = it.'gmd:linkage'.toString()
+        def prettyName = "$name : $link"
+        networkLinksDescription.push(
+          isoHandlers.commonHandlers.func.urlToHtml(prettyName))
+      }
+      summary.networkLinksDescription = networkLinksDescription
     }
   }
 

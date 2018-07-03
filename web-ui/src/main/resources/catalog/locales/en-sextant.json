@@ -72,5 +72,6 @@
   "mdActions": "Associated services",
   "mdActions-view": "Viewable",
   "mdActions-download": "Downloadable",
-  "mdActions-process": "Process"
+  "mdActions-process": "Process",
+  "networkLinksDescription": "Download (Visible path)"
 }

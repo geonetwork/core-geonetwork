@@ -72,5 +72,6 @@
   "mdActions-view": "Visualisable",
   "mdActions-download": "Téléchargeable",
   "mdActions-process": "Traitement",
-  "wpsSelectOutput": "Format de sortie"
+  "wpsSelectOutput": "Format de sortie",
+  "networkLinksDescription": "Télécharger (Chemin visible)"
 }
