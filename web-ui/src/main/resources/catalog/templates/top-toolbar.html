@@ -130,7 +130,7 @@
           </span>
         </a>
         <ul class="dropdown-menu" role="menu">
-          <li>
+          <li role="menuitem">
             <a href="{{gnCfg.mods.signout.appUrl}}"
                 title="{{'signout' | translate}}">
               <i class="fa fa-sign-out"></i>&nbsp;
@@ -150,7 +150,7 @@
           {{'signIn' | translate}}
         </a>
         <ul class="dropdown-menu" role="menu">
-          <li>
+          <li role="menuitem">
             <form name="gnSigninForm" class="navbar-form flex-row"
               action="{{signInFormAction}}" method="post" role="form">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
@@ -180,6 +180,7 @@
               </div>
               <div class="flex-spacer"></div>
               <button type="submit" class="btn btn-primary btn-sm pull-right"
+                      aria-label="{{'signIn' | translate}}"
                       data-ng-disabled="!gnSigninForm.$valid">
                 <i class="fa fa-sign-in"/>
               </button>
