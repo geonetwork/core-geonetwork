@@ -1245,6 +1245,25 @@
                           }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
+                    } else if (scope.OGCProtocol === 'WCS') {
+                      return gnOwsCapabilities.getWCSCapabilities(url)
+                          .then(function(capabilities) {
+                            scope.layers = [];
+                            scope.isUrlOk = true;
+                            angular.forEach(
+                               capabilities.contents.coverageSummary,
+                               function(l) {
+                                 if (angular.isDefined(l.identifier)) {
+                                   scope.layers.push({
+                                     Name: l.identifier,
+                                     abstract: angular.isArray(l._abstract)?l._abstract[0]["value"]:'',
+                                     Title: angular.isArray(l.title)?l.title[0]["value"]:l.identifier
+                                   });
+                                 }
+                               });
+                          }).catch(function(error) {
+                            scope.isUrlOk = error === 200;
+                          });
                     }
                   } else if (url.indexOf('http') === 0) {
                     return $http.get(url, {
@@ -1268,6 +1287,8 @@
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
                     return 'WFS';
                   }
+                  else if (protocol && protocol.indexOf('OGC:WCS') >= 0) {
+                    return 'WCS';
                   else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
                     return 'WMTS';
                   }
