@@ -11,6 +11,7 @@
 
         <h4>
           <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected"
+                 aria-label="{{'clickToSelect' | translate}}"
                  ng-change="change()"/>
           <span data-placement="right" gn-tooltip ng-if="md.type[0].indexOf('dataset')>=0"
                 class="fa fa-database" title="dataset"></span>
@@ -25,10 +26,14 @@
         </h4>
 
         <a class="pull-left" ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
-          <img ng-src="../..{{md.logo}}" class="media-object"/>
+          <img ng-src="../..{{md.logo}}"
+               alt="{{'siteLogo' | translate}}"
+               class="media-object"/>
         </a>
-        <a class="pull-left" ng-if="!md.groupWebsite">
-          <img ng-src="../..{{md.logo}}" class="media-object"/>
+        <a class="pull-left" ng-if="!md.groupWebsite && md.logo">
+          <img ng-src="../..{{md.logo}}"
+               alt="{{'siteLogo' | translate}}"
+               class="media-object"/>
         </a>
 
         <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350"

@@ -8,15 +8,20 @@
       <div class="col-md-1">
         <!--Catalog or group Logo-->
         <a class="pull-left" ng-if="md.groupWebsite" href="{{md.groupWebsite}}" target="_blank">
-          <img ng-src="../..{{md.logo}}" class="media-object"/>
+          <img ng-src="../..{{md.logo}}"
+               alt="{{'siteLogo' | translate}}"
+               class="media-object"/>
         </a>
         <a class="pull-left" ng-if="!md.groupWebsite">
-          <img ng-src="../..{{md.logo}}" class="media-object"/>
+          <img ng-src="../..{{md.logo}}"
+               alt="{{'siteLogo' | translate}}"
+               class="media-object"/>
         </a>
       </div>
       <div class="col-md-9">
         <div class="gn-md-title">
           <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected"
+                 aria-label="{{'clickToSelect' | translate}}"
                  ng-change="change()"/>
           <div class="pull-right gn-md-category"
                data-ng-class="md.category.length > 0 ||
