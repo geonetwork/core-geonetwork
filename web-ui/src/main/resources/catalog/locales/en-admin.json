@@ -385,6 +385,9 @@
     "geonetwork-xslfilter": "XSL filter name to apply",
     "geonetwork-xslfilterHelp": "The XSL filter is applied to each metadata record",
     "groupDeleteError": "Error when deleting group",
+    "groupDeleteConfirm": "Do you really want to delete the group?",
+    "userDeleteError": "Error when deleting user",
+    "userDeleteConfirm": "Do you really want to delete the user?",
     "groupDescription": "Description",
     "groupDescriptionHelp": "A short description of the group.",
     "groupEmail": "Email",
@@ -1271,5 +1274,7 @@
     "ui-externalViewer-valuesSeparator": "Values separator",
     "ui-externalViewer-valuesSeparator-help": "This will be used when the user requests visualization of multiple layers.",
     "ui-externalViewer-openNewWindow": "Open new window",
-    "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window. Please note that many browsers will not allow opening links in the same tab."
+    "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window. Please note that many browsers will not allow opening links in the same tab.",
+    "indexInEsDoneError": "There is an error with the ElasticSearch index. See the logs for details",
+    "indexInEsDone": "The ElasticSearch index completed successfully"
 }

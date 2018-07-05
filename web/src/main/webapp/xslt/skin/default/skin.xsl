@@ -31,6 +31,7 @@
             <li>
               <a href="{/root/gui/nodeUrl}{$lang}/catalog.search#/home">
                 <img class="gn-logo"
+                     alt="{$i18n/siteLogo}"
                      src="{/root/gui/url}/images/logos/{$env//system/site/siteId}.png"></img>
                 <span class="hidden-xs">
                   <xsl:value-of select="$env//system/site/name"/>

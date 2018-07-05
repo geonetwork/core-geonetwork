@@ -376,9 +376,25 @@ public class SiteApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingManager sm = applicationContext.getBean(SettingManager.class);
         String currentUuid = sm.getSiteId();
+        String oldSiteName = sm.getSiteName();
 
         if (!sm.setValues(allRequestParams)) {
             throw new OperationAbortedEx("Cannot set all values");
+        }
+
+        String newSiteName = sm.getSiteName();
+        // Update site source name/translations if the site name is updated
+        if (!oldSiteName.equals(newSiteName)) {
+            SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
+            Source siteSource = sourceRepository.findOne(currentUuid);
+
+            if (siteSource != null) {
+                siteSource.setName(newSiteName);
+                siteSource.getLabelTranslations().forEach(
+                    (l, t) -> siteSource.getLabelTranslations().put(l, newSiteName)
+                );
+                sourceRepository.save(siteSource);
+            }
         }
 
         // And reload services

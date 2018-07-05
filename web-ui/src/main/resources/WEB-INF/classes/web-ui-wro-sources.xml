@@ -27,13 +27,14 @@
     <jsSource webappPath="/catalog/js/"/>
     <jsSource webappPath="/catalog/views/"/>
     <jsSource webappPath="/catalog/components/"/>
+    <jsSource webappPath="/catalog/templates/"/>
     <cssSource webappPath="/catalog/views/"/>
     <cssSource webappPath="/catalog/style/"/>
     <cssSource webappPath="/catalog/lib/bootstrap-table/dist"/>
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
@@ -90,7 +91,7 @@
   <!-- Same as previous + ol3cesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>

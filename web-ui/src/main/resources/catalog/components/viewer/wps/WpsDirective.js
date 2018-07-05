@@ -29,6 +29,10 @@
   var module = angular.module('gn_wps_directive', [
   ]);
 
+  function isFieldNotEmpty (value) {
+    return value !== undefined && value !== ''
+  }
+
   /**
    * @ngdoc directive
    * @name gn_viewer.directive:gnWpsProcessForm
@@ -49,11 +53,26 @@
    *
    * @directiveInfo {Object} map
    * @directiveInfo {Object} wpsLink this object holds information on the WPS
-   *  service to use: name, url and applicationProfile (optional)
+   *  service to use; expected keys are:
+   *  * `name`: required, process identifier
+   *  * `url`: required, process URL
+   *  * `labels`: optional, object holding a string for different languages (use
+   *     ISO3 language codes as returned by `$tanslate.use()`, see:
+   *     https://angular-translate.github.io/docs/#/api/pascalprecht.translate.$translate)
+   *  * `label`: optional, string
+   *  * `applicationProfile`: optional, refer to the documentation on how to
+   *    set up an application profile object for a WPS service
    * @directiveInfo {Object} wfsLink the WFS link object
    *  will be used to overload inputs based on active WFS feature filters
-   * @directiveInfo {boolean} hideExecuteButton if true,
-   *  the 'execute' button is hidden
+   * @directiveInfo {function} describedCallback will be called with no arg when
+   *  the describeProcess request has been done & processed; this means the form
+   *  is ready to use
+   * @directiveInfo {boolean} hideExecuteButton if true, the 'execute' button
+   *  will be hidden
+   * @directiveInfo {boolean} hideTitle if true, the form title will be hidden
+   * @directiveInfo {boolean} cancelPrevious if true, concurrent requests on WPS
+   *  endpoints will be allowed; this permits having several forms at the same
+   *  time in the UI
    */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
@@ -70,7 +89,8 @@
         scope: {
           map: '=',
           wpsLink: '=',
-          wfsLink: '='
+          wfsLink: '=',
+          describedCallback: '&'
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -85,7 +105,10 @@
             mimeType: ''
           };
 
-          scope.hideExecuteButton = attrs.hideExecuteButton;
+          scope.hideExecuteButton = !!scope.$eval(attrs.hideExecuteButton);
+          scope.hideTitle = !!scope.$eval(attrs.hideTitle);
+          scope.cancelPrevious = attrs.cancelPrevious !== undefined ?
+            !!scope.$eval(attrs.cancelPrevious) : true;
 
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
@@ -165,7 +188,7 @@
 
             // query a description and build up the form
             gnWpsService.describeProcess(newLink.uri, newLink.processId, {
-              cancelPrevious: true
+              cancelPrevious: scope.cancelPrevious
             }).then(
                 function(response) {
                   scope.describeState = 'succeeded';
@@ -212,7 +235,7 @@
                             }
 
                             if (wfsFilter && wfsFilterValues &&
-                            wfsFilterValues[wfsFilter]) {
+                              isFieldNotEmpty(wfsFilterValues[wfsFilter])) {
                               // take value at specific index, or all values
                               if (valueIndex >= 0) {
                                 wfsFilterValue =
@@ -227,12 +250,12 @@
 
                       // display field as overriden
                       scope.inputWfsOverride[inputName] =
-                      wfsFilterValue && wfsFilterValue.length > 0;
+                      isFieldNotEmpty(wfsFilterValue) && wfsFilterValue.length > 0;
 
                       // literal data (basic form input)
-                      if (input.literalData != undefined) {
+                      if (input.literalData !== undefined) {
                         // Default value (if not already there)
-                        if (input.literalData.defaultValue != undefined &&
+                        if (input.literalData.defaultValue !== undefined &&
                         defaultValue === undefined) {
                           defaultValue = input.literalData.defaultValue;
 
@@ -320,12 +343,13 @@
                         });
                       }
                       // apply default values if any
-                      else if (defaultValue) {
+                      else if (isFieldNotEmpty(defaultValue)) {
                         inputs = scope.getInputsByName(inputName);
                         var defaultValueArray = Array.isArray(defaultValue) ?
                         defaultValue : [defaultValue];
-                        for (var i = 0; i < inputs.length; i++) {
-                          if (!inputs[i].value && defaultValueArray[i]) {
+                        for(var i = 0; i < inputs.length; i++) {
+                          if (!isFieldNotEmpty(inputs[i].value) &&
+                          isFieldNotEmpty(defaultValueArray[i])) {
                             scope.setInputValueByName(inputName, i,
                             defaultValueArray[i]);
                           }
@@ -410,6 +434,11 @@
                     scope.loadedDescriptions[processKey] =
                     angular.extend({}, scope.processDescription);
                   }
+
+                  // described callback
+                  if (scope.describedCallback) {
+                    scope.describedCallback();
+                  }
                 },
                 function(response) {
                   scope.describeState = 'failed';
@@ -444,7 +473,7 @@
                   // count the number of non empty values
                   var valueCount = scope.getInputsByName(input.identifier.value)
                   .filter(function(input) {
-                    return input.value;
+                    return isFieldNotEmpty(input.value);
                   }).length;
 
                   // this will be used to show errors on the form
@@ -495,10 +524,7 @@
                     if (response.status.processSucceeded &&
                         gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map, scope.wpsLink.layer, {
-                            exclude: /^OUTPUT_/i
-                          }
-                      );
+                          response, scope.map, scope.wpsLink.layer);
                     }
                   }
                 }
@@ -670,6 +696,10 @@
             var input = scope._getInputInfo(name);
             return input ? !!input.disabled : false;
           };
+
+          scope.getLabel = function() {
+            return gnWpsService.getProcessLabel(scope.wpsLink);
+          }
         }
       };
     }

@@ -1327,6 +1327,8 @@
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
     <wro.version>1.7.9</wro.version>
+    <wro.debug>false</wro.debug>
+
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
@@ -1338,5 +1340,6 @@
     <slf4j.version>1.7.7</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
+    <gn.schemas.version>3.5</gn.schemas.version>
   </properties>
 </project>

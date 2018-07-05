@@ -37,6 +37,8 @@
   -->
   <xsl:variable name="gnUri" select="'http://www.fao.org/geonetwork'"/>
 
+  <xsl:variable name="buildNumber"
+                select="util:getBuildNumber()"/>
 
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
 
@@ -47,6 +49,7 @@
   <!-- Used by SearchApi loading translation from JSON locale files. -->
   <xsl:variable name="t" select="/root/translations"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
+  <xsl:variable name="lang2chars" select="/root/gui/lang2chars"/>
   <xsl:variable name="requestParameters" select="/root/request"/>
 
   <!-- XSL using this variable should be refactored to not rely on the

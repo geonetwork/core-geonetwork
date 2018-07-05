@@ -818,39 +818,54 @@
                           })
                         }));
                       });
+                  
+                  var listenerExtent = scope.$watch(
+                		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
+                			  
+                	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                          // FIXME : only first extent is took into account
+                          var projectedExtent;
+                          var extent = scope.gnCurrentEdit.extent &&
+                              scope.gnCurrentEdit.extent[0];
+                          var proj = ol.proj.get(gnMap.getMapConfig().projection);
 
-                  $timeout(function() {
-                    if (angular.isArray(scope.gnCurrentEdit.extent)) {
-                      // FIXME : only first extent is took into account
-                      var projectedExtent;
-                      var extent = scope.gnCurrentEdit.extent &&
-                          scope.gnCurrentEdit.extent[0];
-                      var proj = ol.proj.get(gnMap.getMapConfig().projection);
-
-                      if (!extent || !ol.extent.containsExtent(
-                          proj.getWorldExtent(),
-                          extent)) {
-                        projectedExtent = proj.getExtent();
-                      }
-                      else {
-                        projectedExtent =
-                            gnMap.reprojExtent(extent, 'EPSG:4326', proj);
-                      }
-                      scope.map.getView().fit(
-                          projectedExtent,
-                          scope.map.getSize());
-                    }
-                    // Trigger init of print directive
-                    scope.mode = 'thumbnailMaker';
-                  }, 300);
+                          if (!extent || !ol.extent.containsExtent(
+                              proj.getWorldExtent(),
+                              extent)) {
+                            projectedExtent = proj.getExtent();
+                          }
+                          else {
+                            projectedExtent =
+                                gnMap.reprojExtent(extent, 'EPSG:4326', proj);
+                          }
+                          scope.map.getView().fit(
+                              projectedExtent,
+                              scope.map.getSize());
+                          
+                          //unregister
+                          listenerExtent();
+                        }
+                  });
+            	  
+                  // Trigger init of print directive
+                  scope.mode = 'thumbnailMaker';
                 }
 
                 scope.generateThumbnail = function() {
+                  //Added mandatory custom params here to avoid 
+                  //changing other printing services
+                  jsonSpec = angular.extend(
+                		  scope.jsonSpec,
+                		  {
+                			  hasNoTitle: true
+                		  });
+                	
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
                       '/attachments/print-thumbnail', null, {
                         params: {
-                          jsonConfig: angular.fromJson(scope.jsonSpec)
+                          jsonConfig: angular.fromJson(jsonSpec),
+                          rotationAngle: ((jsonSpec.layout == 'landscape')? 90 : 0)
                         }
                       }).then(function() {
                     $rootScope.$broadcast('gnFileStoreUploadDone');
@@ -1195,30 +1210,60 @@
                           }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
-                    } else if (scope.OGCProtocol === 'WFS') {
-                      return gnWfsService.getCapabilities(url)
+                    } else if (scope.OGCProtocol === 'WMTS') {
+                      return gnOwsCapabilities.getWMTSCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
-                            angular.forEach(
-                               capabilities.featureTypeList.featureType,
-                               function(l) {
-                                 if (angular.isDefined(l.name)) {
-                                   scope.layers.push({
-                                     Name: l.name.localPart,
-                                     abstract: l._abstract,
-                                     Title: l.title
-                                   });
-                                 }
-                               });
+                            angular.forEach(capabilities.Layer, function(l) {
+                              if (angular.isDefined(l.Identifier)) {
+                                scope.layers.push({
+                                    "Name": l.Identifier,
+                                    "Title": l.Title
+                                  });
+                              }
+                            });
                           }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
+                    } else if (scope.OGCProtocol === 'WFS') {
+                      return gnWfsService.getCapabilities(url)
+                      .then(function(capabilities) {
+                        scope.layers = [];
+                        scope.isUrlOk = true;
+                        angular.forEach(
+                           capabilities.featureTypeList.featureType,
+                           function(l) {
+                             if (angular.isDefined(l.name)) {
+                               scope.layers.push({
+                                 Name: l.name.localPart,
+                                 abstract: l._abstract,
+                                 Title: l.title
+                               });
+                             }
+                           });
+                      }).catch(function(error) {
+                        scope.isUrlOk = error === 200;
+                      });
+                    } else if (scope.OGCProtocol === 'WMTS') {
+                      return gnOwsCapabilities.getWMTSCapabilities(url)
+                      .then(function(capabilities) {
+                        scope.layers = [];
+                        scope.isUrlOk = true;
+                        angular.forEach(capabilities.Layer, function(l) {
+                          if (angular.isDefined(l.Identifier)) {
+                            if(!l.Name) {
+                              l.Name = l.Identifier;
+                            }
+                            scope.layers.push(l);
+                          }
+                        });
+                      }).catch(function(error) {
+                        scope.isUrlOk = error === 200;
+                      });
                     }
                   } else if (url.indexOf('http') === 0) {
-                    return $http.get(url, {
-                      gnNoProxy: false
-                    }).then(function(response) {
+                    return $http.get(url).then(function(response) {
                       scope.isUrlOk = response.status === 200;
                     },
                     function(response) {
@@ -1236,6 +1281,9 @@
                   }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
                     return 'WFS';
+                  }
+                  else if (protocol && protocol.indexOf('OGC:WMTS') >= 0) {
+                    return 'WMTS';
                   }
                   else {
                     return null;
@@ -1505,6 +1553,7 @@
                    */
                   scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
+
                     return gnOwsCapabilities.getWMSCapabilities(url)
                         .then(function(capabilities) {
                           scope.layers = [];

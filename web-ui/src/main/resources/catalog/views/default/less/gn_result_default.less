@@ -15,6 +15,9 @@
     section {
       margin-bottom: 20px;
     }
+    h2 {
+      font-size: 16px;
+    }
   }
   .view-header {
     border-bottom: 2px solid #e5e5e5;
@@ -55,5 +58,9 @@
     left:-75px;
     top:50%;
     margin-top:-1.25em;
+  }
+  // IE11 flexbox fix
+  .gn-record > table {
+    table-layout: fixed;
   }
 }

@@ -53,6 +53,7 @@
     <div class="col-md-8 gn-nopadding-left">
       <select class="form-control"
         data-ng-model="ftSelected"
+        aria-label="{{'wfsChooseFeatureTypeToDownload' | translate}}"
         data-ng-options="featType as featType.name.localPart for featType in capabilities.featureTypeList.featureType | orderBy: 'name.localPart' track by featType.name.key">
         <option value="">{{'wfsChooseFeatureTypeToDownload' | translate}}</option>
       </select>

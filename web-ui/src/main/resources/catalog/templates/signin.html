@@ -1,4 +1,4 @@
-<div class="container" data-ng-controller="GnLoginController">
+<div class="container" data-ng-controller="GnLoginController" role="main">
   <div class="row">
     <div class="col-lg-12 col-md-12">
       <h1 data-translate="">loginTitle</h1>
@@ -99,6 +99,7 @@
                   <label class="control-label col-lg-3" data-translate="">username</label>
                   <div class="col-lg-8">
                     <input type="text" name="username" id="username"
+                           aria-label="{{'username' | translate}}"
                            data-ng-model="usernameToRemind"
                            data-ng-required="" class="form-control"/>
                   </div>

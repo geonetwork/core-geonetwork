@@ -219,12 +219,11 @@
   <xsl:template mode="mode-iso19139" match="gmd:EX_GeographicBoundingBox" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
-    <xsl:param name="overrideLabel" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
-
 
     <xsl:variable name="labelVal">
       <xsl:choose>
@@ -236,6 +235,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"

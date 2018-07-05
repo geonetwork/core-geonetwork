@@ -41,6 +41,7 @@
         },
         template:
             '<select class="form-control" ' +
+            ' aria-label=' + "{{'languageSwitcher'|translate}}" + '"' +
             ' data-ng-show="isHidden()" ' +
             ' data-ng-model="lang" ' +
             ' data-ng-options="key as langLabels[key] ' +

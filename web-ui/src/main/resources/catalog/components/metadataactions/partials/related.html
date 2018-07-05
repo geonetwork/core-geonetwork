@@ -28,7 +28,7 @@
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'" >
         <!-- WMS & WFS contains layer name in title -->
-        <h4 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
+        <h3 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                           mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
                           mainType === 'WFS') &&
                         !isLayerProtocol(r)) &&
@@ -36,7 +36,7 @@
                       mainType !== 'LINKDOWNLOAD' &&
                       mainType !== 'LINK'">
           {{::(r.title | gnLocalized: lang) || (r.url | gnLocalized: lang)}}
-        </h4>
+        </h3>
         <!-- Display description if available -->
         <h4 data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                        mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||

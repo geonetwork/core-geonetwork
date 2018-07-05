@@ -17,14 +17,17 @@
     <span class="title">{{title | escapeXmlContent}}</span>
   </h1>
   <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
-    <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
-    <li fmt-if="associated">
+    <li fmt-if="addOverviewNavItem" id="tab-overview">
+      <a href="" rel=".overview" fmt-translate="">overview</a>
+    </li>
+    <li fmt-if="associated" id="tab-associated">
       <a href="" rel=".container > .associated"><span fmt-translate="">associated-link</span>&amp;nbsp;
         <i class="fa fa-circle-o-notch fa-spin associated-spinner"></i></a>
     </li>
-    <li fmt-if="addCompleteNavItem"><a fmt-translate="" href=""
-                                       rel=".container > .entry:not(.overview)">complete</a></li>
-    <li fmt-repeat="item in navBar" title="{{item.name | escapeXmlAttrs}}">
+    <li fmt-if="addCompleteNavItem" id="tab-complete">
+      <a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a>
+    </li>
+    <li fmt-repeat="item in navBar" title="{{item.name | escapeXmlAttrs}}" id="tab-{{item.rel}}">
       <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName |
         escapeXmlContent}}</a>
       <a fmt-if="item.rel" rel="{{item.rel | escapeXmlAttrs}}">{{item.abbrName |
@@ -34,7 +37,7 @@
       <a class="dropdown-toggle" data-toggle="dropdown" title="More information"><i
         class="fa fa-ellipsis-h"></i><b class="caret"></b></a>
       <ul class="dropdown-menu">
-        <li fmt-repeat="item in navBarOverflow">
+        <li fmt-repeat="item in navBarOverflow" id="tab-{{item.rel}}">
           <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName
             | escapeXmlContent}}</a>
           <a fmt-if="item.rel" rel="{{item.rel | escapeXmlAttrs}}">{{item.abbrName |

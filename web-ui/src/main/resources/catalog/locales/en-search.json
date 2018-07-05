@@ -46,6 +46,7 @@
   "displayHeatMap": "Show heatmap",
   "removeFeatures": "Remove features",
   "refresh": "Refresh",
+  "mapLegend": "Legend",
   "kmlFile": "{{layer}} (KML)",
   "wmsLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
   "wmsServiceLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a>.",
@@ -369,6 +370,7 @@
   "wpsErrorCodeReturned": "The server returned status code",
   "time" : "Time",
   "features": "feature(s)",
+  "noUsers": "No users",
   "downloadLayer": "Download data",
   "featureCount": "Feature count",
   "fbContact": "Contact",
@@ -455,5 +457,6 @@
   "GUFdeleteConfirm": "Do you want to delete this comment?",
   "GUFrequired": "Required",
   "GUFtooLong": "Too long",
-  "GUFnotValidFormat": "Not a valid format"
+  "GUFnotValidFormat": "Not a valid format",
+  "clickToSelect": "Click to select or unselect"
 }

@@ -51,8 +51,6 @@ ul.gn-resultview {
     .gn-md-thumbnail {
       .gn-img-thumbnail {
         max-width: @thumbnail-width;
-        max-height: 140px;
-        min-height: 40px;
         height: auto;
       }
     }
@@ -73,6 +71,43 @@ ul.gn-resultview {
         }
       }
     }
+  }
+
+  .gn-md-title {
+    margin-top: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    h3 {
+
+      /* Leave space for selection checkbox */
+      //padding-left: 20px;
+      margin-top: 0px;
+      a {
+        //text-transform: uppercase;
+        font-weight: normal;
+        font-size: 80%;
+        color: #333333;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: block;
+      }
+      a:hover {
+        color: #428bca;
+        text-decoration: none;
+      }
+    }
+  }
+  .gn-source-logo {
+    z-index: 10;
+    height: 20px;
+    float: right;
+  }
+  .gn-md-abstract {
+    cursor: pointer;
+    color: @gray-light;
+  }
+  .gn-md-abstract.ellipsis:after {
+    background: none;
   }
 
   li.gn-grid {
@@ -98,37 +133,27 @@ ul.gn-resultview {
       vertical-align: text-bottom;
     }
     .gn-md-title {
-      margin-top: 2px;
       min-height: 3.5em;
       max-height: 3.5em;
-      overflow: hidden;
-      cursor: pointer;
-      h3 {
-
-        /* Leave space for selection checkbox */
-        //padding-left: 20px;
-        margin-top: 0px;
-        a {
-          //text-transform: uppercase;
-          font-weight: normal;
-          font-size: 80%;
-          color: #333333;
+      h3{
+        a{
           max-height: 82px;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          display: block;
-        }
-        a:hover {
-          color: #428bca;
-          text-decoration: none;
         }
       }
     }
-    .gn-source-logo {
-      z-index: 10;
-      height: 20px;
-      float: right;
+    input {
+      float: left;
     }
+    .gn-md-links {
+      //position: absolute;
+      //bottom: @grid-bottom-margin;
+      background: none;
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      padding: 5px;
+    }
+
     .gn-md-thumbnail {
       //position: absolute;
       //top: 82px;
@@ -143,25 +168,7 @@ ul.gn-resultview {
         height: auto;
       }
     }
-    .gn-md-abstract {
-      cursor: pointer;
-      color: @gray-light;
-    }
-    .gn-md-abstract.ellipsis:after {
-      background: none;
-    }
-    .gn-md-links {
-      //position: absolute;
-      //bottom: @grid-bottom-margin;
-      background: none;
-      position: absolute;
-      bottom: 0px;
-      right: 0px;
-      padding: 5px;
-    }
-    input {
-      float: left;
-    }
+
     .gn-md-category {
       display: block;
       float: left;

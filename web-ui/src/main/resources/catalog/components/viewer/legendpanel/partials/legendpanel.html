@@ -6,5 +6,9 @@
     <p>
       <img ng-src="{{layer.get('legend')}}"/>
     </p>
+    <h6 ng-if="layer.get('attribution')">
+      <span data-translate="">Attribution</span>
+      <em>{{layer.get('attribution')}}</em>
+    </h6>
   </li>
 </ul>

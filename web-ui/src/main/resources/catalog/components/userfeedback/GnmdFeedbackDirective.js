@@ -67,8 +67,10 @@
                   // Select all record's contact with an email
                   var contacts = [];
                   scope.contactList = [];
-                  contacts = contacts.concat(scope.md.allContacts.metadata);
-                  contacts = contacts.concat(scope.md.allContacts.resource);
+                  if (scope.md.allContacts) {
+                    contacts = contacts.concat(scope.md.allContacts.metadata);
+                    contacts = contacts.concat(scope.md.allContacts.resource);
+                  }
                   for (var i = 0; i < contacts.length; i ++){
                     if (contacts[i].email !== '') {
                       contacts[i].selected = true;

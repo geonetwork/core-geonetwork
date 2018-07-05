@@ -23,9 +23,12 @@
 
 package org.fao.geonet;
 
-import org.jdom.Element;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Properties;
+
+import org.jdom.Element;
 
 /**
  * Contains information about the system.
@@ -33,139 +36,146 @@ import java.util.Arrays;
  * @author Jesse on 10/21/2014.
  */
 public class SystemInfo {
-    public enum Staging {
-        testing,
-        development,
-        production;
-    }
-    public static final String STAGE_TESTING = Staging.testing.toString();
-    public static final String STAGE_DEVELOPMENT = Staging.development.toString();
-    public static final String STAGE_PRODUCTION = Staging.production.toString();
-    private String stagingProfile = STAGE_PRODUCTION;
-    private String buildDate;
-    private String version;
-    private String subVersion;
-    private String buildOsInfo;
-    private String buildJavaVersion;
-    private String buildJavaVendor;
-    private String scmUrl;
-    private String scmRevision;
+	public enum Staging {
+		testing, development, production;
+	}
 
-    public static SystemInfo createForTesting(String stagingProfile) {
-        return new SystemInfo(stagingProfile, "testing", "3.0.0", "SNAPSHOT", "testing", "testing", "testing", "", "");
-    }
+	public static final String STAGE_TESTING = Staging.testing.toString();
+	public static final String STAGE_DEVELOPMENT = Staging.development.toString();
+	public static final String STAGE_PRODUCTION = Staging.production.toString();
+	private String stagingProfile = STAGE_PRODUCTION;
+	private String buildDate;
+	private String version;
+	private String subVersion;
+	private String buildOsInfo;
+	private String buildJavaVersion;
+	private String buildJavaVendor;
+	private String scmUrl;
+	private String scmRevision;
 
-    public SystemInfo(String stagingProfile, String buildDate, String version, String subVersion,
-                      String buildOsInfo, String buildJavaVersion, String buildJavaVendor,
-                      String scmUrl, String scmRevision) {
-        this.stagingProfile = stagingProfile;
-        this.buildDate = buildDate;
-        this.version = version;
-        this.subVersion = subVersion;
-        this.buildOsInfo = buildOsInfo;
-        this.buildJavaVersion = buildJavaVersion;
-        this.buildJavaVendor = buildJavaVendor;
-        this.scmUrl = scmUrl;
-        this.scmRevision = scmRevision;
-    }
+	public static SystemInfo createForTesting(String stagingProfile) {
+		String version = "3.0.0";
+		try (InputStream stream = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("version.properties")) {
+			Properties p = new Properties();
+			p.load(stream);
+			version = p.getProperty("version");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-    public static SystemInfo getInfo() {
-        return getInfo(null);
-    }
+		return new SystemInfo(stagingProfile, "testing", version, "SNAPSHOT", "testing", "testing", "testing", "", "");
+	}
 
+	public SystemInfo(String stagingProfile, String buildDate, String version, String subVersion, String buildOsInfo,
+			String buildJavaVersion, String buildJavaVendor, String scmUrl, String scmRevision) {
+		this.stagingProfile = stagingProfile;
+		this.buildDate = buildDate;
+		this.version = version;
+		this.subVersion = subVersion;
+		this.buildOsInfo = buildOsInfo;
+		this.buildJavaVersion = buildJavaVersion;
+		this.buildJavaVendor = buildJavaVendor;
+		this.scmUrl = scmUrl;
+		this.scmRevision = scmRevision;
+	}
 
-    /**
-     * A value indicating if the server is in development mode or production mode or...
-     */
-    public String getStagingProfile() {
-        return stagingProfile;
-    }
+	public static SystemInfo getInfo() {
+		return getInfo(null);
+	}
 
-    public void setStagingProfile(String stagingProfile) {
-        this.stagingProfile = stagingProfile;
-    }
+	/**
+	 * A value indicating if the server is in development mode or production mode
+	 * or...
+	 */
+	public String getStagingProfile() {
+		return stagingProfile;
+	}
 
-    /**
-     * The date this build was built on.
-     */
-    public String getBuildDate() {
-        return buildDate;
-    }
+	public void setStagingProfile(String stagingProfile) {
+		this.stagingProfile = stagingProfile;
+	}
 
-    /**
-     * Return part of the version after -
-     */
-    public String getSubVersion() {
-        return subVersion;
-    }
+	/**
+	 * The date this build was built on.
+	 */
+	public String getBuildDate() {
+		return buildDate;
+	}
 
-    /**
-     * Return the part of the version before the -
-     */
-    public String getVersion() {
-        return version;
-    }
+	/**
+	 * Return part of the version after -
+	 */
+	public String getSubVersion() {
+		return subVersion;
+	}
 
-    /**
-     * Return the os information of the machine that the web app was built on.
-     */
-    public String getBuildOsInfo() {
-        return buildOsInfo;
-    }
+	/**
+	 * Return the part of the version before the -
+	 */
+	public String getVersion() {
+		return version;
+	}
 
-    /**
-     * Return the version of java used to build the web app.
-     */
-    public String getBuildJavaVersion() {
-        return this.buildJavaVersion;
-    }
+	/**
+	 * Return the os information of the machine that the web app was built on.
+	 */
+	public String getBuildOsInfo() {
+		return buildOsInfo;
+	}
 
-    /**
-     * Return the jvm vendor of java used to build the web app.
-     */
-    public String getBuildJavaVendor() {
-        return this.buildJavaVendor;
-    }
+	/**
+	 * Return the version of java used to build the web app.
+	 */
+	public String getBuildJavaVersion() {
+		return this.buildJavaVersion;
+	}
 
-    /**
-     * Return true if the current stagingProfile is {@link #STAGE_DEVELOPMENT}
-     */
-    public boolean isDevMode() {
-        return STAGE_DEVELOPMENT.equals(stagingProfile) || STAGE_TESTING.equals(stagingProfile);
-    }
+	/**
+	 * Return the jvm vendor of java used to build the web app.
+	 */
+	public String getBuildJavaVendor() {
+		return this.buildJavaVendor;
+	}
 
-    public Element toXml() {
-        return new Element("systemInfo").addContent(Arrays.asList(
-            new Element("stagingProfile").setText(this.stagingProfile),
-            new Element("buildOsInfo").setText(this.buildOsInfo),
-            new Element("buildJavaVendor").setText(this.buildJavaVendor),
-            new Element("buildJavaVersion").setText(this.buildJavaVersion),
-            new Element("buildDate").setText(this.buildDate),
-            new Element("scmRevision").setText(this.scmRevision)
-        ));
-    }
+	/**
+	 * Return true if the current stagingProfile is {@link #STAGE_DEVELOPMENT}
+	 */
+	public boolean isDevMode() {
+		return STAGE_DEVELOPMENT.equals(stagingProfile) || STAGE_TESTING.equals(stagingProfile);
+	}
 
-    public static SystemInfo getInfo(SystemInfo defaultInfo) {
-        SystemInfo actualInfo = defaultInfo;
-        if (actualInfo == null && ApplicationContextHolder.get() != null) {
-            actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
-        }
-        return actualInfo;
-    }
+	public Element toXml() {
+		return new Element("systemInfo")
+				.addContent(Arrays.asList(new Element("stagingProfile").setText(this.stagingProfile),
+						new Element("buildOsInfo").setText(this.buildOsInfo),
+						new Element("buildJavaVendor").setText(this.buildJavaVendor),
+						new Element("buildJavaVersion").setText(this.buildJavaVersion),
+						new Element("buildDate").setText(this.buildDate),
+						new Element("scmRevision").setText(this.scmRevision)));
+	}
 
-    public String getScmRevision() {
-        return scmRevision;
-    }
+	public static SystemInfo getInfo(SystemInfo defaultInfo) {
+		SystemInfo actualInfo = defaultInfo;
+		if (actualInfo == null && ApplicationContextHolder.get() != null) {
+			actualInfo = ApplicationContextHolder.get().getBean(SystemInfo.class);
+		}
+		return actualInfo;
+	}
 
-    public void setScmRevision(String scmRevision) {
-        this.scmRevision = scmRevision;
-    }
+	public String getScmRevision() {
+		return scmRevision;
+	}
 
-    public String getScmUrl() {
-        return scmUrl;
-    }
+	public void setScmRevision(String scmRevision) {
+		this.scmRevision = scmRevision;
+	}
 
-    public void setScmUrl(String scmUrl) {
-        this.scmUrl = scmUrl;
-    }
+	public String getScmUrl() {
+		return scmUrl;
+	}
+
+	public void setScmUrl(String scmUrl) {
+		this.scmUrl = scmUrl;
+	}
 }

@@ -183,4 +183,13 @@
         });
   };
 
+  gnFormatter.toggleTab = function(tabElementId) {
+    tab = $('.view-outline [id="tab-' + tabElementId + '"] a[rel]');
+    if (tab.length > 0) {
+      tab.click();
+    } else {
+      console.warn('Invalid tab requested in URL: ' + tabElementId)
+    }
+  };
+
 })();
