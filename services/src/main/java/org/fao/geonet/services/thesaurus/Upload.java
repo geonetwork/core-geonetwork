@@ -58,6 +58,7 @@ import java.nio.file.Path;
  * transformation could be run to convert the thesaurus to SKOS.
  *
  */
+@Deprecated
 public class Upload implements Service {
     private Path stylePath;
 

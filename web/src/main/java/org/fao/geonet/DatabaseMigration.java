@@ -24,17 +24,15 @@
 package org.fao.geonet;
 
 import com.google.common.util.concurrent.Callables;
-
 import com.vividsolutions.jts.util.Assert;
-
 import jeeves.server.sources.http.ServletPathFinder;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.DatabaseType;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Version;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -42,6 +40,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -50,13 +50,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-
-import javax.servlet.ServletContext;
-import javax.sql.DataSource;
 
 /**
  * Postprocessor that runs after the jdbcDataSource bean has been initialized and migrates the
@@ -74,7 +70,7 @@ public class DatabaseMigration implements BeanPostProcessor {
     @Autowired
     private ApplicationContext _applicationContext;
 
-    private Callable<LinkedHashMap<String, List<String>>> _migration;
+    private Callable<Map<String, List<String>>> _migration;
 
     private String initAfter;
 
@@ -134,11 +130,11 @@ public class DatabaseMigration implements BeanPostProcessor {
         return bean;
     }
 
-    public final void setMigration(final LinkedHashMap<String, List<String>> migration) {
+    public final void setMigration(final Map<String, List<String>> migration) {
         this._migration = Callables.returning(migration);
     }
 
-    public final void setMigrationLoader(final Callable<LinkedHashMap<String, List<String>>> migration) {
+    public final void setMigrationLoader(final Callable<Map<String, List<String>>> migration) {
         this._migration = migration;
     }
 
@@ -146,23 +142,15 @@ public class DatabaseMigration implements BeanPostProcessor {
                                  final String subVersion) throws Exception {
         _logger.info("  - Migration ...");
 
-        Connection conn = null;
-        Statement statement = null;
-        try {
-            conn = dataSource.getConnection();
-            statement = conn.createStatement();
+        try (Connection conn = dataSource.getConnection();
+             Statement statement = conn.createStatement()) {
+
             this.foundErrors = doMigration(webappVersion, subVersion, servletContext, path, conn, statement);
             conn.commit();
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } finally {
-                if (conn != null) {
-                    conn.close();
-                }
-            }
+        } catch (Exception e) {
+            _logger.warning("  - Migration: Exception running migration for version: " + webappVersion + " subversion: "
+                + subVersion + ". " + e.getMessage());
+            throw e;
         }
     }
 
@@ -268,6 +256,13 @@ public class DatabaseMigration implements BeanPostProcessor {
         return anyMigrationError;
     }
 
+    /**
+     * Execute a Java database migration.
+     *
+     * @param conn database connection.
+     * @param file Java migration class name prefixed with JAVA_MIGRATION_PREFIX ("java:")
+     * @return <code>true</code> if there is any error while executing the migration. <code>false</code> if there are no errors.
+     */
     private boolean runJavaMigration(Connection conn, String file) {
         try {
             String className = file.substring(JAVA_MIGRATION_PREFIX.length());
@@ -298,7 +293,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             _logger.error("          Errors occurs during Java migration file: " + error);
             return true;
         } catch (Throwable e) {
-            e.printStackTrace();
+            _logger.error("          Errors occurs during Java migration file: " + e);
             return true;
         }
     }
@@ -334,34 +329,24 @@ public class DatabaseMigration implements BeanPostProcessor {
     }
 
     private String newLookup(Statement statement, String key) throws SQLException {
-        ResultSet results = null;
-        try {
-            final String newGetVersion = "SELECT value FROM Settings WHERE name = '" + key + "'";
-            results = statement.executeQuery(newGetVersion);
+        final String newGetVersion = "SELECT value FROM Settings WHERE name = '" + key + "'";
+
+        try (ResultSet results = statement.executeQuery(newGetVersion)) {
             if (results.next()) {
                 return results.getString(1);
             }
             return null;
-        } finally {
-            if (results != null) {
-                results.close();
-            }
         }
     }
 
     private String oldLookup(Statement statement, int key) throws SQLException {
-        ResultSet results = null;
-        try {
-            final String newGetVersion = "SELECT value FROM Settings WHERE id = " + key;
-            results = statement.executeQuery(newGetVersion);
+        final String newGetVersion = "SELECT value FROM Settings WHERE id = " + key;
+
+        try (ResultSet results = statement.executeQuery(newGetVersion)) {
             if (results.next()) {
                 return results.getString(1);
             }
             return null;
-        } finally {
-            if (results != null) {
-                results.close();
-            }
         }
     }
 
@@ -408,7 +393,7 @@ public class DatabaseMigration implements BeanPostProcessor {
         return num;
     }
 
-    public LinkedHashMap<String, List<String>> getMigrationConfig() throws Exception {
+    public Map<String, List<String>> getMigrationConfig() throws Exception {
         return _migration.call();
     }
 
@@ -422,60 +407,5 @@ public class DatabaseMigration implements BeanPostProcessor {
 
     public void setInitAfter(String initAfter) {
         this.initAfter = initAfter;
-    }
-
-    public static class Version implements Comparable<Version> {
-        private final int major, minor, micro;
-
-        public Version(String major, String minor, String micro) {
-            this.major = Integer.parseInt(major);
-            this.minor = Integer.parseInt(minor);
-            this.micro = Integer.parseInt(micro);
-        }
-
-        public Version() {
-            this("0", "0", "0");
-        }
-
-        @Override
-        public int compareTo(Version o) {
-            if (major != o.major) {
-                return Integer.compare(major, o.major);
-            }
-            if (minor != o.minor) {
-                return Integer.compare(minor, o.minor);
-            }
-            if (micro != o.micro) {
-                return Integer.compare(micro, o.micro);
-            }
-            return 0;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Version version = (Version) o;
-
-            if (major != version.major) return false;
-            if (micro != version.micro) return false;
-            if (minor != version.minor) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = major;
-            result = 31 * result + minor;
-            result = 31 * result + micro;
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return major + "." + minor + "." + micro;
-        }
     }
 }

@@ -41,6 +41,24 @@
       return filtered;
     }
   });
+
+  /**
+   * Filters internal settings used by GeoNetwork,
+   * not intended to be configured by the user.
+   */
+  module.filter('hideGeoNetworkInternalSettings', function() {
+    return function(input) {
+      var filtered = [];
+      var internal = ['system/userFeedback/lastNotificationDate'];
+      angular.forEach(input, function(el) {
+        if (internal.indexOf(el.name) === -1) {
+          filtered.push(el);
+        }
+      });
+      return filtered;
+    }
+  });
+
   module.filter('orderObjectBy', function() {
     return function(input, attribute) {
       if (!angular.isObject(input)) return input;

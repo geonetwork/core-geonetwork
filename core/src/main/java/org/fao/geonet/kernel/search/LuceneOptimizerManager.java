@@ -33,11 +33,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.QuartzSchedulerUtils;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -67,9 +66,9 @@ public class LuceneOptimizerManager {
         this.scheduler = QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
         this.scheduler.getListenerManager().addJobListener(new Listener(manager), jobGroupEquals(instanceID));
         this.jobDetail = newJob(LuceneOptimizerJob.class).withIdentity(instanceID, instanceID).storeDurably().build();
+        _beginAt = settingsInfo.getLuceneIndexOptimizerSchedulerAt();
+        _intervalInMinutes = settingsInfo.getLuceneIndexOptimizerSchedulerInterval();
         if (settingsInfo.getLuceneIndexOptimizerSchedulerEnabled()) {
-            _beginAt = settingsInfo.getLuceneIndexOptimizerSchedulerAt();
-            _intervalInMinutes = settingsInfo.getLuceneIndexOptimizerSchedulerInterval();
             scheduleJob();
         } else {
             Log.info(Geonet.INDEX_ENGINE, "Scheduling thread that optimizes lucene index is disabled");

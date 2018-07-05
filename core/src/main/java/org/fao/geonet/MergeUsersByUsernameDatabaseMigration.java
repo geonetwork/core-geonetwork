@@ -41,7 +41,8 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 /**
- * This migration merge users sharing the same case insensitive user name.
+ * This migration merge users sharing the same case insensitive user name. Final result will be only one user with
+ * lower case username.
  */
 public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
 
@@ -87,6 +88,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
         mergeUser(userToKeep, tempUser);
         duplicatedUserList.remove(greatestProfileUser);
         userRepository.delete(duplicatedUserList);
+        userToKeep.setUsername(userToKeep.getUsername().toLowerCase());
         userRepository.save(userToKeep);
     }
 

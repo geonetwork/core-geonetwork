@@ -10,7 +10,7 @@
       <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
             method="post" role="form" data-ng-if="::user" data-ng-show="!shibbolethEnabled">
         <input type="hidden" name="_csrf" value="{{csrf}}"/>
-        
+
         <div class="form-group">
           <label class="col-sm-3 control-label"
                  for="inputUsername" data-translate="">username</label>
@@ -61,11 +61,13 @@
       <p class="alert alert-danger"
          data-ng-show="signinFailure">
         <strong data-translate="">signinFailure</strong>
-        <a type="submit"
-           class="btn btn-link btn-danger"
-           data-ng-click="setSendPassword(true)">
-          <span
-            data-translate="">recoverPassword</span> ?</a>
+        <span data-ng-show="gnConfig['system.feedback.mailServer.hostIsDefined']">
+          <a type="submit"
+             class="btn btn-link btn-danger"
+             data-ng-click="setSendPassword(true)">
+            <span
+              data-translate="">recoverPassword</span> ?</a>
+        </span>
       </p>
     </div>
     <div class="col-lg-6 col-md-6">

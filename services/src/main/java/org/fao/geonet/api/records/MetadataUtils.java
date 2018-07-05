@@ -191,9 +191,12 @@ public class MetadataUtils {
             if (listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.fcats)) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
-                Element fcat = new Element("fcats");
+                Element fcat = null;
 
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
+
+                    fcat = new Element("fcats");
+
                     for (String fcat_uuid : listOfUUIDs) {
                         Element metadata = new Element("metadata");
                         Element response = new Element("response");
@@ -204,7 +207,9 @@ public class MetadataUtils {
                     }
                 }
 
-                relatedRecords.addContent(fcat);
+                if (fcat != null) {
+                    relatedRecords.addContent(fcat);
+                }
             }
         }
 

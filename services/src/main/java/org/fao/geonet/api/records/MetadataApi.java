@@ -23,26 +23,16 @@
 
 package org.fao.geonet.api.records;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -81,14 +71,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
 @RequestMapping(value = {
     "/api/records",
@@ -133,7 +131,8 @@ public class MetadataApi implements ApplicationContextAware {
             "application/pdf",
             "application/zip",
             MEF_V1_ACCEPT_TYPE,
-            MEF_V2_ACCEPT_TYPE
+            MEF_V2_ACCEPT_TYPE,
+            MediaType.ALL_VALUE
         })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return the record."),
@@ -173,16 +172,13 @@ public class MetadataApi implements ApplicationContextAware {
             || accept.contains("application/pdf")) {
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
-                || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
             return "forward:" + (metadataUuid + "/formatters/xml");
         } else if (accept.contains("application/zip")
-                || accept.contains(MEF_V1_ACCEPT_TYPE)
-                || accept.contains(MEF_V2_ACCEPT_TYPE)) {
+            || accept.contains(MEF_V1_ACCEPT_TYPE)
+            || accept.contains(MEF_V2_ACCEPT_TYPE)) {
             return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
-            // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
-            response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
-            //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
@@ -247,8 +243,7 @@ public class MetadataApi implements ApplicationContextAware {
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
@@ -271,9 +266,9 @@ public class MetadataApi implements ApplicationContextAware {
 
 
         boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
-        Element xml  = withInfo ?
+        Element xml = withInfo ?
             dataManager.getMetadata(context,
-            metadata.getId() + "", forEditing, withValidationErrors, keepXlinkAttributes) :
+                metadata.getId() + "", forEditing, withValidationErrors, keepXlinkAttributes) :
             dataManager.getMetadataNoInfo(context, metadata.getId() + "");
 
         if (addSchemaLocation) {
@@ -295,7 +290,7 @@ public class MetadataApi implements ApplicationContextAware {
 
         boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
 
-        String mode = (attachment)?"attachment":"inline";
+        String mode = (attachment) ? "attachment" : "inline";
         response.setHeader("Content-Disposition", String.format(
             mode + "; filename=\"%s.%s\"",
             metadata.getUuid(),
@@ -485,7 +480,7 @@ public class MetadataApi implements ApplicationContextAware {
         HttpServletRequest request) throws Exception {
 
         Metadata md;
-        try{
+        try {
             md = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
@@ -498,11 +493,11 @@ public class MetadataApi implements ApplicationContextAware {
         // At least for related metadata and keep XSL only for links
         final ServiceContext context = ApiUtils.createServiceContext(request);
         Element raw = new Element("root").addContent(Arrays.asList(
-                new Element("gui").addContent(Arrays.asList(
-                        new Element("language").setText(language),
-                        new Element("url").setText(context.getBaseUrl())
-        		)),
-        		MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
+            new Element("gui").addContent(Arrays.asList(
+                new Element("language").setText(language),
+                new Element("url").setText(context.getBaseUrl())
+            )),
+            MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
         ));
         GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
@@ -513,57 +508,73 @@ public class MetadataApi implements ApplicationContextAware {
     }
 
     @ApiOperation(
-            value = "Returns a map to decode attributes in a dataset (from the associated feature catalog)",
-            nickname = "getFeatureCatalog",
-            notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
-                "to this records.<br/>" +
-                "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
-        @RequestMapping(value = "/{metadataUuid}/featureCatalog",
-            method = RequestMethod.GET,
-            produces = {
-                MediaType.APPLICATION_XML_VALUE,
-                MediaType.APPLICATION_JSON_VALUE
-            })
-        @ResponseStatus(HttpStatus.OK)
-        @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Return the associated resources."),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        value = "Returns a map to decode attributes in a dataset (from the associated feature catalog)",
+        nickname = "getFeatureCatalog",
+        notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
+            "to this records.<br/>" +
+            "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
+    @RequestMapping(value = "/{metadataUuid}/featureCatalog",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE
         })
-        @ResponseBody
-        public FeatureResponse getFeatureCatalog(
-            @ApiParam(
-                value = API_PARAM_RECORD_UUID,
-                required = true)
-            @PathVariable
-                String metadataUuid,
-            HttpServletRequest request) throws Exception {
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Return the associated resources."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @ResponseBody
+    public FeatureResponse getFeatureCatalog (
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        HttpServletRequest request) throws ResourceNotFoundException {
 
-            RelatedItemType[] type = {RelatedItemType.fcats};
+        RelatedItemType[] type = {RelatedItemType.fcats};
 
-            FeatureResponse response = new FeatureResponse();
+        FeatureResponse response = new FeatureResponse();
 
-            Map<String, String[]> decodeMap = new HashMap<>();
+        Map<String, String[]> decodeMap = new HashMap<>();
 
+        try {
             RelatedResponse related = getRelated(metadataUuid, type, 0, 100, request);
 
-            if(related.getFcats()!=null) {
+            if (isIncludedAttributeTable(related.getFcats())) {
                 for (AttributeTable.Element element : related.getFcats().getItem().get(0).getFeatureType().getAttributeTable().getElement()) {
-                    if(element.getCode()!=null && !element.getCode().trim().equals("")) {
-                        if(!decodeMap.containsKey(element.getCode())) {
+                    if (StringUtils.isNotBlank(element.getCode())) {
+                        if (!decodeMap.containsKey(element.getCode())) {
                             String[] decodedValues = {element.getName(), element.getDefinition()};
                             decodeMap.put(element.getCode(), decodedValues);
                         }
                     } else {
-                        if(!decodeMap.containsKey(element.getName())) {
+                        if (!decodeMap.containsKey(element.getName())) {
                             String[] decodedValues = {element.getName(), element.getDefinition()};
                             decodeMap.put(element.getName(), decodedValues);
                         }
                     }
                 }
-            } else return response;
+            }
 
             response.setDecodeMap(decodeMap);
 
             return response;
+        } catch (Exception e) {
+            Log.error(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new ResourceNotFoundException();
         }
+
+    }
+
+
+    private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
+        return fcat != null
+            && fcat.getItem() != null
+            && fcat.getItem().size()>0
+            && fcat.getItem().get(0).getFeatureType()!=null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable()!=null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement()!=null;
+    }
 }

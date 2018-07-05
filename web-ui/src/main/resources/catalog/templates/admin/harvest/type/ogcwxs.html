@@ -23,9 +23,10 @@
 
       <select class="form-control" data-ng-model="harvesterSelected.site.ogctype">
         <option
-          data-ng-repeat="t in ['WMS1.0.0', 'WMS1.1.1', 'WMS1.3.0', 'WFS1.0.0', 'WFS1.1.0', 'WCS1.0.0', 'CSW2.0.2', 'WPS0.4.0', 'WPS1.0.0', 'SOS1.0.0']"
-          value="{{t}}" data-ng-selected="t == harvesterSelected.site.ogctype">{{t |
-          translate}}
+          data-ng-repeat="t in ['WMS1.0.0', 'WMS1.1.1', 'WMS1.3.0', '-', 'WFS1.0.0', 'WFS1.1.0', '-', 'WCS1.0.0', '-', 'CSW2.0.2', '-', 'WPS0.4.0', 'WPS1.0.0', 'WPS2.0.0','-', 'SOS1.0.0'] track by $index"
+          value="{{t}}"
+          data-ng-selected="t == harvesterSelected.site.ogctype">
+          {{t | translate}}
         </option>
       </select>
 
@@ -43,32 +44,81 @@
     <div data-gn-harvester-account="harvesterSelected"/>
 
 
+    <!-- Service metadata record -->
     <div>
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.createThumbnails"/>
-        <span data-translate="">ogcwxs-createThumbnails</span>
+        <span data-translate="">ogcwxs-serviceTemplateUuid</span>
       </label>
-      <p class="help-block" data-translate="">ogcwxs-createThumbnailsHelp</p>
+      <select class="form-control"
+              data-ng-model="harvesterSelected.options.serviceTemplateUuid"
+              data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates">
+      </select>
+      <p class="help-block" data-translate="">ogcwxs-serviceTemplateUuidHelp</p>
     </div>
+
+    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+         data-label="ogcwxs-serviceCategory"/>
+
+
+    <!-- Dataset metadata records -->
 
     <div>
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.useLayer"/>
+        <input type="checkbox"
+               data-ng-disabled="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS2)') == null"
+               data-ng-model="harvesterSelected.options.useLayer"/>
         <span data-translate="">ogcwxs-createMetadataForEachLayer</span>
       </label>
       <p class="help-block" data-translate="">ogcwxs-createMetadataForEachLayerHelp</p>
     </div>
 
-    <div>
-      <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.useLayerMd"/>
-        <span data-translate="">ogcwxs-createMetadataForEachLayerUsingMetadataURL</span>
-      </label>
-      <p class="help-block" data-translate=""
-      >ogcwxs-createMetadataForEachLayerUsingMetadataURLHelp</p>
+    <div class="row"
+         data-ng-show="harvesterSelected.options.useLayer">
+      <div class="col-md-offset-1">
+
+        <div>
+          <label class="control-label">
+            <input type="checkbox" data-ng-model="harvesterSelected.options.useLayerMd"/>
+            <span data-translate="">ogcwxs-createMetadataForEachLayerUsingMetadataURL</span>
+          </label>
+          <p class="help-block" data-translate=""
+          >ogcwxs-createMetadataForEachLayerUsingMetadataURLHelp</p>
+        </div>
+
+
+        <div>
+          <label class="control-label">
+            <span data-translate="">ogcwxs-datasetTemplateUuid</span>
+          </label>
+          <select class="form-control"
+                  data-ng-model="harvesterSelected.options.datasetTemplateUuid"
+                  data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsDatasetTemplates">
+          </select>
+          <p class="help-block" data-translate="">ogcwxs-datasetTemplateUuidHelp</p>
+        </div>
+
+
+        <div>
+          <label class="control-label">
+            <input type="checkbox"
+                   data-ng-disabled="harvesterSelected.site.ogctype.indexOf('WMS') !== 0"
+                   data-ng-model="harvesterSelected.options.createThumbnails"/>
+            <span data-translate="">ogcwxs-createThumbnails</span>
+          </label>
+          <p class="help-block" data-translate="">ogcwxs-createThumbnailsHelp</p>
+        </div>
+
+
+        <div data-gn-category="harvesterSelected.options.datasetCategory" data-lang="{{lang}}"
+             data-label="ogcwxs-datasetCategory"/>
+      </div>
     </div>
 
-    <div>
+
+
+
+    <!-- Those properties are only required if a template is not used. -->
+    <div data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
       <label class="control-label" data-translate="">ogcwxs-topicCategory</label>
       <div
         data-schema-info-combo="codelist"
@@ -77,25 +127,24 @@
         lang="lang"></div>
     </div>
 
-
-    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
-         data-label="ogcwxs-serviceCategory"/>
-
-    <div data-gn-category="harvesterSelected.options.datasetCategory" data-lang="{{lang}}"
-         data-label="ogcwxs-datasetCategory"/>
-
-
-    <div>
+    <div data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
       <label class="control-label" data-translate="">ogcwxs-metadataLanguage</label>
       <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"
              data-gn-language-picker=""/>
     </div>
 
-    <div>
+    <div data-ng-show="harvesterSelected.options.serviceTemplateUuid == '' || harvesterSelected.options.datasetTemplateUuid == ''">
       <label class="control-label" data-translate="">ogcwxs-outputSchema</label>
       <input type="text" class="form-control"
              data-ng-model="harvesterSelected.options.outputSchema"/>
     </div>
+
+
+
+
+
+
+
 
     <div>
       <label class="control-label">

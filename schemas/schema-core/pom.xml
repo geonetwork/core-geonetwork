@@ -28,7 +28,7 @@
   <parent>
     <artifactId>schemas</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.4.2-SNAPSHOT</version>
+    <version>3.4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>common</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

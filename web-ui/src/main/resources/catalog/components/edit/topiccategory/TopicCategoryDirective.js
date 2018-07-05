@@ -224,7 +224,7 @@
              var getSnippet = function() {
                var xml = [];
                angular.forEach(getTopicCategoryIds(), function(t) {
-                 xml.push(xpathBySchema['iso19139'].tpl.replace('{{t}}', t));
+                 xml.push(xpathBySchema[schema].tpl.replace('{{t}}', t));
                });
                scope.snippets = xml;
              };

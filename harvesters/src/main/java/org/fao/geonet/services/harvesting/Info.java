@@ -27,7 +27,6 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -69,19 +68,17 @@ import java.util.Set;
 //=============================================================================
 
 public class Info implements Service {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
     private static final String iconExt[] = {".gif", ".png", ".jpg", ".jpeg"};
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
+    private Path oaiSchema;
+    private Path importXslPath;
+
     private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path icon) throws IOException {
@@ -98,20 +95,21 @@ public class Info implements Service {
             return false;
         }
     };
-    private Path oaiSchema;
 
     //--------------------------------------------------------------------------
     //---
-    //--- Private methods
+    //--- Init
     //---
     //--------------------------------------------------------------------------
-    private Path importXslPath;
-
     public void init(Path appPath, ServiceConfig config) throws Exception {
         importXslPath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
         oaiSchema = appPath.resolve("xml/validation/oai/OAI-PMH.xsd");
     }
 
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
     //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
@@ -127,54 +125,55 @@ public class Info implements Service {
             String type = el.getText();
 
             if (name.equals("type")) {
-
-                if (type.equals("icons"))
-                    result.addContent(getIcons(context));
-
-                else if (type.equals("harvesterTypes"))
-                    result.addContent(getHarvesterTypes(context));
-
-                else if (type.equals("oaiPmhServer"))
-                    result.addContent(getOaiPmhServer(el, context));
-
-                else if (type.equals("wfsFragmentStylesheets"))
-                    result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.WFS_STYLESHEETS, schema));
-
-                else if (type.equals("threddsFragmentStylesheets"))
-                    result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.TDS_STYLESHEETS, schema));
-
-                else if (type.equals("threddsFragmentSchemas"))
-                    result.addContent(getSchemas(el, context, Geonet.Path.TDS_STYLESHEETS));
-
-                else if (type.equals("ogcwxsOutputSchemas"))
-                    result.addContent(getSchemas(el, context, getGetCapXSLPath(serviceType)));
-
-                else if (type.equals("wfsFragmentSchemas"))
-                    result.addContent(getSchemas(el, context, Geonet.Path.WFS_STYLESHEETS));
-
-                else if (type.equals("threddsDIFSchemas"))
-                    result.addContent(getSchemas(el, context, Geonet.Path.DIF_STYLESHEETS));
-
-                else if (type.equals("importStylesheets"))
-                    result.addContent(getStylesheets(importXslPath));
-
-                else if (type.equals("validation"))
-                    result.addContent(getValidationOptions());
-
-                else
-                    throw new BadParameterEx("type", type);
-            } else if (name.equals("schema") || (name.equals("serviceType"))) { // do nothing
-//			} else {
-//					throw new BadParameterEx(name, type);
+                switch (type) {
+                    case "icons":
+                        result.addContent(getIcons(context));
+                        break;
+                    case "harvesterTypes":
+                        result.addContent(getNotDisabledHarvesterTypes(context));
+                        break;
+                    case "oaiPmhServer":
+                        result.addContent(getOaiPmhServer(el, context));
+                        break;
+                    case "wfsFragmentStylesheets":
+                        result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.WFS_STYLESHEETS, schema));
+                        break;
+                    case "threddsFragmentStylesheets":
+                        result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.TDS_STYLESHEETS, schema));
+                        break;
+                    case "threddsFragmentSchemas":
+                        result.addContent(getSchemas(el, context, Geonet.Path.TDS_STYLESHEETS));
+                        break;
+                    case "ogcwxsOutputSchemas":
+                        result.addContent(getSchemas(el, context, getGetCapXSLPath(serviceType)));
+                        break;
+                    case "wfsFragmentSchemas":
+                        result.addContent(getSchemas(el, context, Geonet.Path.WFS_STYLESHEETS));
+                        break;
+                    case "threddsDIFSchemas":
+                        result.addContent(getSchemas(el, context, Geonet.Path.DIF_STYLESHEETS));
+                        break;
+                    case "importStylesheets":
+                        result.addContent(getStylesheets(importXslPath));
+                        break;
+                    case "validation":
+                        result.addContent(getValidationOptions());
+                        break;
+                    default:
+                        throw new BadParameterEx("type", type);
+                }
+            } else if (name.equals("schema") || (name.equals("serviceType"))) {
+                // do nothing
             }
         }
 
         return result;
     }
 
-
     //--------------------------------------------------------------------------
-    //--- Get Metadata fragment stylesheets from each schema
+    //---
+    //--- Private methods
+    //---
     //--------------------------------------------------------------------------
 
     private Element getValidationOptions() {
@@ -185,13 +184,18 @@ public class Info implements Service {
         return validationOptions;
     }
 
-    //--------------------------------------------------------------------------
-    //--- Get List of Schemas that contain the xslPath
-    //--------------------------------------------------------------------------
 
     private Element getHarvesterTypes(ServiceContext context) {
         Element types = new Element("types");
         for (String type : AbstractHarvester.getHarvesterTypes(context)) {
+            types.addContent(new Element("type").setText(type));
+        }
+        return types;
+    }
+
+    private Element getNotDisabledHarvesterTypes(ServiceContext context) {
+        Element types = new Element("types");
+        for (String type : AbstractHarvester.getNonDisabledHarvesterTypes(context)) {
             types.addContent(new Element("type").setText(type));
         }
         return types;
@@ -219,10 +223,10 @@ public class Info implements Service {
     }
 
     //--------------------------------------------------------------------------
-    //--- OGC GetCapabilities to iso19119 stylesheet path for OGC service type
+    //--- Get Metadata fragment stylesheets from each schema
     //--------------------------------------------------------------------------
-
-    private Element getSchemaFragmentStylesheets(Element el, ServiceContext context, String xslFragmentDir, String schemaFilter) throws Exception {
+    private Element getSchemaFragmentStylesheets(Element el, ServiceContext context,
+                                                 String xslFragmentDir, String schemaFilter) throws Exception {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager schemaMan = gc.getBean(SchemaManager.class);
@@ -247,7 +251,7 @@ public class Info implements Service {
     }
 
     //--------------------------------------------------------------------------
-    //--- OaiPmhServer
+    //--- Get List of Schemas that contain the xslPath
     //--------------------------------------------------------------------------
 
     private Element getSchemas(Element el, ServiceContext context, String xslPathStr) throws Exception {
@@ -296,7 +300,8 @@ public class Info implements Service {
     }
 
     //--------------------------------------------------------------------------
-
+    //--- OGC GetCapabilities to iso19119 stylesheet path for OGC service type
+    //--------------------------------------------------------------------------
     private String getGetCapXSLPath(String serviceType) {
         return Geonet.Path.OGC_STYLESHEETS
             + "/OGC"
@@ -305,9 +310,7 @@ public class Info implements Service {
     }
 
     //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
+    //--- OaiPmhServer
     //--------------------------------------------------------------------------
 
     private Element getOaiPmhServer(Element el, ServiceContext context) throws BadInputEx {

@@ -51,6 +51,8 @@
                   config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
                   (config.url.indexOf('http') !== 0 &&
                   config.url.indexOf('//') !== 0);
+
+              //Add language headers manually or some servers fail
               if (isGnUrl && gnLangs.current &&
                   !config.headers['Accept-Language']) {
                 config.headers['Accept-Language'] = gnLangs.current;
@@ -79,15 +81,24 @@
                              config.url;
               }
 
-              return $q.when(config);
+              return config;
             },
             responseError: function(response) {
               var config = response.config;
 
               if (config.nointercept) {
-                return $q.when(config);
-              // let it pass
-              } else if (!config.status || config.status === -1) {
+                if(response.status > 199 && response.status < 400) {
+                  // let it pass
+                  return $q.resolve(config);
+                } else {
+                  // return error
+                  return $q.reject(config);
+                }
+              }
+
+              //If we have no error status, the request didn't even make it to the server
+              //Then, use proxy
+              if (response.status === -1) {
                 var defer = $q.defer();
 
                 if (config.url.indexOf('http', 0) === 0) {
@@ -108,7 +119,6 @@
                     $injector.invoke(['$http', function($http) {
                       // This modification prevents interception (infinite
                       // loop):
-
                       config.nointercept = true;
 
                       // retry again
@@ -120,16 +130,17 @@
                     }]);
                   }
                 } else {
+                  //It is not an http request, it looks like an internal request
                   return $q.reject(response);
                 }
 
                 return defer.promise;
               } else {
-                return response;
+                //return the original error
+                return $q.reject(response);
               }
             }
-          };
-
+          }
         }
       ]);
     }

@@ -131,7 +131,7 @@
              // Find label in dimension categories
              if (d.category) {
                var category = $.grep(d.category, function(cat, index) {
-                 return cat['@value'] === value;
+                 return cat['@value'] === decodeURIComponent(value);
                });
                if (category.length > 0) {
                  return category[0]['@label'];

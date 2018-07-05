@@ -76,13 +76,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         LocalFilesystemParams lp = (LocalFilesystemParams) params;
         super.setParams(lp);
 
-        settingMan.add("id:" + siteId, "icon", lp.icon);
-        settingMan.add("id:" + siteId, "recurse", lp.recurse);
-        settingMan.add("id:" + siteId, "directory", lp.directoryname);
-        settingMan.add("id:" + siteId, "recordType", lp.recordType);
-        settingMan.add("id:" + siteId, "nodelete", lp.nodelete);
-        settingMan.add("id:" + siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
-        settingMan.add("id:" + siteId, "beforeScript", lp.beforeScript);
+        harvesterSettingsManager.add("id:" + siteId, "icon", lp.icon);
+        harvesterSettingsManager.add("id:" + siteId, "recurse", lp.recurse);
+        harvesterSettingsManager.add("id:" + siteId, "directory", lp.directoryname);
+        harvesterSettingsManager.add("id:" + siteId, "recordType", lp.recordType);
+        harvesterSettingsManager.add("id:" + siteId, "nodelete", lp.nodelete);
+        harvesterSettingsManager.add("id:" + siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
+        harvesterSettingsManager.add("id:" + siteId, "beforeScript", lp.beforeScript);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
         storeNode(params, "id:" + id);
 
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -116,7 +116,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
      */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, log, this);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
         } else {
@@ -184,10 +184,10 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         metadata.getMetadataCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         dataMan.flush();
 
@@ -231,13 +231,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             setHarvested(true).
             setUuid(params.getUuid());
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.flush();
 
@@ -271,7 +271,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);

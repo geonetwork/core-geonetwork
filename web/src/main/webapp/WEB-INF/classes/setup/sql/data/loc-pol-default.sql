@@ -526,3 +526,10 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'pol','Odrzucone')
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'pol','Preferred records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'pol','Watch list');
 
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'pol', 'Average');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'pol', 'Completeness#Is the information on this page complete enough to know what you can expect from this dataset?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'pol', 'Discoverability#Was it easy to find this information page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'pol', 'Readability#Was it easy to read and understand the contents of this page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'pol', 'Data quality#Does the dataset contain the information you expected, the dataset has enough accuracy, the data is valid/up-to-date?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'pol', 'Service quality#The dataset is provided as a service or mediatype that is easy to work with?');

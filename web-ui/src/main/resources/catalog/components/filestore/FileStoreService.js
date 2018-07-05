@@ -34,7 +34,8 @@
              return $http.get('../api/0.1/records/' +
                                   metadataUuid + '/attachments', {
                params: {
-                 filter: filter
+                 filter: filter,
+                 _random: Math.floor(Math.random() * 10000)
                }
              });
            },

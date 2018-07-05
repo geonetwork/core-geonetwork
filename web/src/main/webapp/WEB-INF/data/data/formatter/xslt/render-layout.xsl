@@ -255,12 +255,13 @@
       <xsl:variable name="title"
                     select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
 
-      <div id="gn-tab-{@id}" class="tab-pane">
+      <div id="gn-tab-{@id}">
         <xsl:if test="count(following-sibling::tab) > 0">
-          <h1 class="view-header">
-            <xsl:value-of select="$title"/>
-          </h1>
+          <xsl:attribute name="class" select="'tab-pane'"/>
         </xsl:if>
+        <h1 class="view-header">
+          <xsl:value-of select="$title"/>
+        </h1>
         <xsl:choose>
           <xsl:when test="normalize-space($content) = ''">
             No information

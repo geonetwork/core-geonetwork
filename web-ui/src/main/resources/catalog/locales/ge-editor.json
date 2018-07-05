@@ -304,6 +304,7 @@
     "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Ihre Metadaten",
     "searchKeyword": "Suche ...",
+    "searchTopicCategory": "Suche ...",
     "searchOrTypeKeyword": "Art der Suche",
     "tagsAllowed": "erlaubte Tag(s)",
     "suggestionListError": "Verzeihung, es ging etwas schief.",
@@ -362,5 +363,10 @@
     "selectKeyword": "Add keywords",
     "saveLinkToSibling": "Beziehung zwischen Metadaten speichern",
     "confirmCloseInvalidTitle": "Confirm editor close",
-    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?",
+    "hotkeyDirectory": "Manage directories (eg. contact)",
+    "hotkeyImportRecord": "Metadaten importieren",
+    "hotkeyAddRecord": "Neue Metadaten erfassen",
+    "hotkeyBatchEdit": "Batch-Bearbeitung",
+    "hotkeyEditorBoard": "Editor board"
 }

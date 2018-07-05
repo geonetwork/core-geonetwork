@@ -77,7 +77,7 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), false);
@@ -97,7 +97,7 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -124,37 +124,37 @@ public class GeonetHarvester extends AbstractHarvester<HarvestResult> {
         GeonetParams params = (GeonetParams) p;
         super.setParams(params);
 
-        settingMan.add("id:" + siteId, "host", params.host);
-        settingMan.add("id:" + siteId, "node", params.getNode());
-        settingMan.add("id:" + siteId, "useChangeDateForUpdate", params.useChangeDateForUpdate());
-        settingMan.add("id:" + siteId, "createRemoteCategory", params.createRemoteCategory);
-        settingMan.add("id:" + siteId, "mefFormatFull", params.mefFormatFull);
-        settingMan.add("id:" + siteId, "xslfilter", params.xslfilter);
+        harvesterSettingsManager.add("id:" + siteId, "host", params.host);
+        harvesterSettingsManager.add("id:" + siteId, "node", params.getNode());
+        harvesterSettingsManager.add("id:" + siteId, "useChangeDateForUpdate", params.useChangeDateForUpdate());
+        harvesterSettingsManager.add("id:" + siteId, "createRemoteCategory", params.createRemoteCategory);
+        harvesterSettingsManager.add("id:" + siteId, "mefFormatFull", params.mefFormatFull);
+        harvesterSettingsManager.add("id:" + siteId, "xslfilter", params.xslfilter);
 
         //--- store search nodes
 
         for (Search s : params.getSearches()) {
-            String searchID = settingMan.add(path, "search", "");
+            String searchID = harvesterSettingsManager.add(path, "search", "");
 
-            settingMan.add("id:" + searchID, "freeText", s.freeText);
-            settingMan.add("id:" + searchID, "title", s.title);
-            settingMan.add("id:" + searchID, "abstract", s.abstrac);
-            settingMan.add("id:" + searchID, "keywords", s.keywords);
-            settingMan.add("id:" + searchID, "digital", s.digital);
-            settingMan.add("id:" + searchID, "hardcopy", s.hardcopy);
-            settingMan.add("id:" + searchID, "sourceUuid", s.sourceUuid);
-            settingMan.add("id:" + searchID, "sourceName", s.sourceName);
-            settingMan.add("id:" + searchID, "anyField", s.anyField);
-            settingMan.add("id:" + searchID, "anyValue", s.anyValue);
+            harvesterSettingsManager.add("id:" + searchID, "freeText", s.freeText);
+            harvesterSettingsManager.add("id:" + searchID, "title", s.title);
+            harvesterSettingsManager.add("id:" + searchID, "abstract", s.abstrac);
+            harvesterSettingsManager.add("id:" + searchID, "keywords", s.keywords);
+            harvesterSettingsManager.add("id:" + searchID, "digital", s.digital);
+            harvesterSettingsManager.add("id:" + searchID, "hardcopy", s.hardcopy);
+            harvesterSettingsManager.add("id:" + searchID, "sourceUuid", s.sourceUuid);
+            harvesterSettingsManager.add("id:" + searchID, "sourceName", s.sourceName);
+            harvesterSettingsManager.add("id:" + searchID, "anyField", s.anyField);
+            harvesterSettingsManager.add("id:" + searchID, "anyValue", s.anyValue);
         }
 
         //--- store group mapping
 
         for (Group g : params.getGroupCopyPolicy()) {
-            String groupID = settingMan.add(path, "groupCopyPolicy", "");
+            String groupID = harvesterSettingsManager.add(path, "groupCopyPolicy", "");
 
-            settingMan.add("id:" + groupID, "name", g.name);
-            settingMan.add("id:" + groupID, "policy", g.policy);
+            harvesterSettingsManager.add("id:" + groupID, "name", g.name);
+            harvesterSettingsManager.add("id:" + groupID, "policy", g.policy);
         }
     }
 

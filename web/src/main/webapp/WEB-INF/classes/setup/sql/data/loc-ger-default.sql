@@ -527,3 +527,10 @@ INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'ger','Preferred reco
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'ger','Watch list');
 
 
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'ger', 'Average');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'ger', 'Completeness#Is the information on this page complete enough to know what you can expect from this dataset?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'ger', 'Discoverability#Was it easy to find this information page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'ger', 'Readability#Was it easy to read and understand the contents of this page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'ger', 'Data quality#Does the dataset contain the information you expected, the dataset has enough accuracy, the data is valid/up-to-date?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'ger', 'Service quality#The dataset is provided as a service or mediatype that is easy to work with?');

@@ -9,6 +9,7 @@
 [gn-main-viewer],
 .gn-main-viewer {
   position: relative;
+  height:  calc(~"100vh - 102px");
 
   [role=tooltip] {
     position: absolute;
@@ -37,7 +38,7 @@
   }
   [ngeo-map] {
     width: 100%;
-    height: 89.9vh;
+    height:  calc(~"100vh - 102px");
     &.gn-gfi-loading:hover {
       cursor: wait;
     }
@@ -113,9 +114,9 @@
       &.active {
         width: 3.0em;
         border-left: medium none;
-        border-radius: 0px;
+        border-radius: 0;
         margin-left: -0.2em;
-        background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.7);
+        background: none repeat scroll 0 0 rgba(0, 0, 0, 0.7);
         border-color: transparent;
         color: #FFF;
       }
@@ -127,7 +128,8 @@
   }
   .control-tools {
     top: auto;
-    bottom: @viewport-padding;
+    bottom: 50px;
+    position: fixed;
   }
   & > .panel {
     background: rgba(255,255,255,.8);
@@ -611,8 +613,9 @@ gn-wps-process-form {
     box-shadow: none;
 
     .panel-heading {
-      height: 2em;
-      line-height: 1.6em;
+      height: auto;
+      line-height: 1.2em;
+      padding: 6px 15px;
 
       .close {
         margin-right: -0.2em;
