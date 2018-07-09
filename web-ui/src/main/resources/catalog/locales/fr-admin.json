@@ -1194,9 +1194,6 @@
     "mapConfigLayers": "Description des couches en JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
     "system/xlinkResolver/referencedDeletionAllowed": "Autoriser la suppression de sous-modèles référencés par un XLink.",
     "system/xlinkResolver/referencedDeletionAllowed-help": "Cocher la case pour autoriser la suppression.",
-    "ui-grid": "Configuration des résultats de recherche",
-    "gridConfigRelatedTypes": "Related metadata types to query",
-    "gridConfigRelatedTypes-help": "Possible types include children, parent, services, fcats, datasets, sibling.",
     "gnBackgroundCss": "Background",
     "styleVariable-gnBackgroundImage": "Image",
     "styleVariable-gnBackgroundColor": "Couleur",
@@ -1222,5 +1219,14 @@
     "styleVariable-gnResultsBackgroundColor": "Background",
     "gnMdViewCss": "Metadata view",
     "styleVariable-gnMdViewBackgroundColor": "Background",
-    "gnCssStyleIntroMessage": "Properties defined here replace the default system properties. An empty field restores the corresponding default value."
+    "gnCssStyleIntroMessage": "Properties defined here replace the default system properties. An empty field restores the corresponding default value.",
+    "wfs-indexing": "Indexation des WFS",
+    "wfsIndexingTitle": "Tableau de bord des indexations de WFS",
+    "wfsIndexingSubtitle": "Voici la liste des jobs en cours d'actions et des jobs terminés pour l'indexation des caractéristiques issues de services WFS distants. Une fois indexées, les caractéristiques peuvent être filtrées selon leurs attributs et le filtre appliqué à la couche cartographique originel.",
+    "wfsIndexingFeatureType": "Type d’entité",
+    "wfsIndexingMetadata": "Métadonnées associées",
+    "wfsIndexingMetadataNotFound": "La métadonnée ne peut être trouvée",
+    "wfsIndexingMetadataUuid": "UUID de la métadonnée",
+    "wfsIndexingRefreshError": "Une erreur est survenue lors de la mise à jour de la liste:",
+    "wfsIndexingError": "Erreur rencontrée"
 }
