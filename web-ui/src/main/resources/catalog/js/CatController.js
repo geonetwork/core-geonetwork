@@ -24,12 +24,6 @@
 (function() {
   goog.provide('gn_cat_controller');
 
-
-
-
-
-
-
   goog.require('gn_admin_menu');
   goog.require('gn_saved_selections');
   goog.require('gn_search_manager');
@@ -47,19 +41,19 @@
     var defaultConfig = {
       'langDetector': {
         'fromHtmlTag': false,
-        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
+        'regexp': '^(?:\/.+)?/.+\/([a-z]{2,3})\/.+',
         'default': 'eng'
       },
       'nodeDetector': {
-        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
+        'regexp': '^(?:\/.+)?\/(.+)\/[a-z]{2,3}\/.+',
         'default': 'srv'
       },
       'serviceDetector': {
-        'regexp': '^/.+/.+/[a-z]{3}/(.+)',
+        'regexp': '^(?:\/.+)?\/.+\/[a-z]{2,3}\/(.+)',
         'default': 'catalog.search'
       },
       'baseURLDetector': {
-        'regexp': '^\(/[a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\/[a-z]{3}\/',
+        'regexp': '^((?:\/.+)?)+\/.+\/[a-z]{2,3}\/.+',
         'default': '/geonetwork'
       },
       'mods': {
@@ -348,7 +342,7 @@
     },
     isValidIso2Lang: function(lang) {
       for (p in this.langs) {
-        if (this.langs[p] == lang) {
+        if (this.langs[p] === lang) {
           return true;
         }
       }
@@ -359,7 +353,7 @@
     },
     getIso3Lang: function(iso2lang) {
       for (p in this.langs) {
-        if (this.langs[p] == iso2lang) {
+        if (this.langs[p] === iso2lang) {
           return p;
         }
       }
