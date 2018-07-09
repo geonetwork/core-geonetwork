@@ -5,37 +5,30 @@
     data-ng-mouseenter="showMore(true)"
     data-ng-mouseleave="showMore(false)"
     id="gn-info-list-mw-{{md.getUuid()}}">
-    <section class="quickresultcard">
-      <div class="flip">
-        <div class="front">
-          <div class="top">
-            <div class="gn-md-thumbnail">
-              <img class="gn-img-thumbnail"
-                   alt="{{md.title || md.defaultTitle}}"
-                   data-ng-src="{{md.getThumbnails().list[0].url}}"
-                   data-ng-if="md.getThumbnails().list[0].url"/>
-            </div>
-          </div>
-          <div class="rigth">
-            <div class="header-card">
-              <div class="title">{{md.title || md.defaultTitle}}</div>
-              <div class="introduction">
-                <span data-ng-repeat="t in md.type">{{t | translate}}
-                <span data-ng-if="!$last">, </span>
-                </span>
-              </div>
-            </div>
-            <div class="content-card">
-              <div class="abstract">
-                {{md.abstract}}
-              </div>
-            </div>
-            <div class="footer-card">
-            </div>
-          </div>
-        </div>
-        <div class="back"></div>
+    <section class="resultcard clearfix"
+             data-ng-class="md.getThumbnails().list[0].url ? 'hasThumbnail' : 'noThumbnail'">
+
+      <div class="title">
+        <h4>{{md.title || md.defaultTitle}}&nbsp;</h4>
       </div>
+
+      <div class="gn-md-thumbnail" data-ng-if="md.getThumbnails().list[0].url">
+        <div class="gn-img-thumbnail"
+             style="background-image: url({{md.getThumbnails().list[0].url}})">
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="abstract">
+          {{md.abstract}}
+        </div>
+
+        <div class="introduction">
+          <span class="badge" data-ng-repeat="t in md.type">{{t | translate}}
+          </span>
+        </div>
+      </div>
+
     </section>
   </li>
 </ul>
