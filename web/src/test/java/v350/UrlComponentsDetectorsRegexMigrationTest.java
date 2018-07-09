@@ -32,7 +32,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import v343.AdvancedSearchFormMigration;
 
 import java.io.IOException;
 import java.sql.Connection;
