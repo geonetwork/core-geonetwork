@@ -52,7 +52,13 @@
       && user.isReviewerOrMore && !user.isReviewerOrMore());
 
 
-      scope.links = md.getLinksByType('LINK');
+      scope.links = md.getLinksByType('LINK').filter( function(item) {
+        // we do not want to display this protocol
+        // link https://forge.ifremer.fr/mantis/view.php?id=40721
+        return item.protocol !== 'NETWORK:LINK';
+      });
+
+
       scope.downloads = [];
       scope.layers = [];
 
