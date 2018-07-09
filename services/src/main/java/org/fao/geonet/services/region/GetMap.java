@@ -299,10 +299,18 @@ public class GetMap {
 
         Exception error = null;
         if (background != null) {
-
-            if (background.equalsIgnoreCase(SETTING_BACKGROUND) &&
-                settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND).startsWith("http://")) {
-                background = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
+            // 4 cases:
+            // * request param is 'settings' and db setting is a full url
+            // * request param is 'settings' and db setting is a named bg layer
+            // * request param is a named bg layer
+            // * request param is a full url
+            if (background.equalsIgnoreCase(SETTING_BACKGROUND)) {
+                String bgSetting = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
+                if (bgSetting.startsWith("http://") || bgSetting.startsWith("https://")) {
+                    background = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
+                } else if (this.regionGetMapBackgroundLayers.containsKey(bgSetting)) {
+                    background = this.regionGetMapBackgroundLayers.get(bgSetting);
+                }
             } else if (this.regionGetMapBackgroundLayers.containsKey(background)) {
                 background = this.regionGetMapBackgroundLayers.get(background);
             }
