@@ -42,8 +42,8 @@
    * given map
    */
   module.directive('gnBaselayerswitcher', [
-    'gnViewerSettings', 'baselayerTemplateURL', 'gnOwsContextService',
-    function(gnViewerSettings, baselayerTemplateURL, gnOwsContextService) {
+    'gnViewerSettings', 'baselayerTemplateURL', 'gnOwsContextService', '$rootScope',
+    function(gnViewerSettings, baselayerTemplateURL, gnOwsContextService, $rootScope) {
       return {
         restrict: 'A',
         templateUrl: baselayerTemplateURL,
@@ -64,6 +64,19 @@
             layers.removeAt(0);
             layers.insertAt(0, layer);
             return false;
+          };
+
+
+          scope.changeBackground = function (layer) {
+            scope.setBgLayer(layer);
+          };
+
+          scope.reset = function() {
+            $rootScope.$broadcast('owsContextReseted');
+            gnOwsContextService.loadContextFromUrl(
+              gnViewerSettings.defaultContext,
+              scope.map,
+              gnViewerSettings.additionalMapLayers);
           };
         }
       };

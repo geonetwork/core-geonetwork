@@ -28,8 +28,11 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.4.2-SNAPSHOT</version>
+    <version>3.4.3-SNAPSHOT</version>
   </parent>
+
+  <version>3.4</version>
+
   <modelVersion>4.0.0</modelVersion>
   <artifactId>schemas</artifactId>
   <name>GeoNetwork schema plugins</name>
@@ -57,6 +60,7 @@
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
+    <gn.project.version>3.4.3-SNAPSHOT</gn.project.version>
   </properties>
-  
+
 </project>

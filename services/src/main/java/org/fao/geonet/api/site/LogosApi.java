@@ -23,14 +23,20 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
@@ -49,16 +55,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -135,7 +138,7 @@ public class LogosApi {
         method = RequestMethod.POST)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Logo added.") ,
+        @ApiResponse(code = 201, message = "Logo added."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -172,18 +175,12 @@ public class LogosApi {
             if (Files.exists(filePath) && overwrite) {
                 IO.deleteFile(filePath, true, "Deleting file");
                 filePath = directoryPath.resolve(f.getOriginalFilename());
+            } else if (Files.exists(filePath)) {
+                throw new ResourceAlreadyExistException(f.getOriginalFilename());
             }
 
             filePath = Files.createFile(filePath);
-
-            try (OutputStream stream = Files.newOutputStream(filePath)) {
-                int read;
-                byte[] bytes = new byte[1024];
-                InputStream is = f.getInputStream();
-                while ((read = is.read(bytes)) != -1) {
-                    stream.write(bytes, 0, read);
-                }
-            }
+            FileUtils.copyInputStreamToFile(f.getInputStream(), filePath.toFile());
         }
         return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -211,8 +208,8 @@ public class LogosApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Logo removed.") ,
-        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND) ,
+        @ApiResponse(code = 204, message = "Logo removed."),
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody

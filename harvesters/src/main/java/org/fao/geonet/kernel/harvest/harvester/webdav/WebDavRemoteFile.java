@@ -33,6 +33,8 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 
 
 //=============================================================================
@@ -47,7 +49,11 @@ class WebDavRemoteFile implements RemoteFile {
     public WebDavRemoteFile(Sardine sardine, String baseURL, DavResource davResource) {
         this.sardine = sardine;
         path = baseURL + UrlEscapers.urlFragmentEscaper().escape(davResource.getPath());
-        changeDate = new ISODate(davResource.getModified().getTime(), false);
+        Date modifiedDate = davResource.getModified();
+        if (modifiedDate == null) {
+            modifiedDate = Calendar.getInstance().getTime();
+        }
+        changeDate = new ISODate(modifiedDate.getTime(), false);
     }
 
     //---------------------------------------------------------------------------

@@ -3723,7 +3723,8 @@ l’IGN (WPS)
     <condition>Obligatoire</condition>
 
   </element>
-  <element name="gmd:title" id="360.0" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
+  <element name="gmd:title" id="360.0"
+           context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
     <label>Intitulé de la ressource</label>
     <description>Nom avec lequel la ressource en question est connue</description>
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>

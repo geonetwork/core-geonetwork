@@ -78,7 +78,7 @@
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
 
         <script src="{$uiResourcesPath}lib/base64.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
+        <script src="{$uiResourcesPath}lib/jquery-2.2.4.js"></script>
 
         <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
 
@@ -93,6 +93,7 @@
         <script src="{$uiResourcesPath}lib/angular-filter.min.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/hotkeys/hotkeys.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/modal.js"></script>        
         <script src="{$uiResourcesPath}lib/angular.ext/buttons.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/rating.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js"></script>

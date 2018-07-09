@@ -154,7 +154,7 @@
     <facet name="emodnet-checkpoint.level.of.characteristics" indexKey="thesaurus-local.theme.emodnet-checkpoint.level.of.characteristics" label="emodnet-checkpoint.level.of.characteristics"/>
     <facet name="emodnet-checkpoint.production.mode" indexKey="thesaurus-local.theme.emodnet-checkpoint.production.mode" label="emodnet-checkpoint.production.mode"/>
     <facet name="ParameterUsageVocabulary-other" indexKey="thesaurus-ParameterUsageVocabulary(other)" label="ParameterUsageVocabulary-other"/>
-    
+
     <facet name="dcsmm-descripteur" indexKey="thesaurus-local.theme.dcsmm-descripteur" label="dcsmm-descripteur"/>
     <facet name="dcsmm-methode" indexKey="thesaurus-local.theme.dcsmm-methode" label="dcsmm-methode"/>
     <facet name="dcsmm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcsmm-type-espace"/>
@@ -177,7 +177,8 @@
       <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
       <item facet="mdActions"/>
       <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
-      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35" translator="term:http://geonetwork-opensource.org/inspire-theme"/>
+      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
+            translator="term:http://inspire.ec.europa.eu/theme"/>
       <!--<item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>-->
       <!--<item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>-->
       <item facet="keyword" max="15"/>
@@ -208,6 +209,8 @@
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
+      <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
+      <item facet="resolution" sortBy="value" sortOrder="desc"/>
       <!--
       <item facet="region"
             translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
@@ -249,7 +252,8 @@
       <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
       <item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
       <item facet="inspireThemeWithAc" sortBy="value" sortOrder="asc" max="35"/>
-      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35" translator="term:http://geonetwork-opensource.org/inspire-theme"/>
+      <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35"
+            translator="term:http://inspire.ec.europa.eu/theme"/>
       <item facet="keyword" max="15"/>
       <item facet="inspireTheme_fr" sortBy="value" sortOrder="asc" max="35"/>
       <item facet="inspireTheme_en" sortBy="value" sortOrder="asc" max="35"/>
@@ -287,7 +291,7 @@
       <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
       <item facet="emodnet-checkpoint.production.mode" max="300"/>
       <item facet="checkpointType" max="3" sortBy="value" translator="apploc:"/>
-      <item facet="ParameterUsageVocabulary-other" max="300"/>  
+      <item facet="ParameterUsageVocabulary-other" max="300"/>
       <item facet="dcsmm-descripteur" max="300"/>
       <item facet="dcsmm-methode" max="300"/>
       <item facet="dcsmm-type-espace" max="300"/>

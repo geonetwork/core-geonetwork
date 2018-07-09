@@ -48,47 +48,15 @@
       <gmd:organisationName gco:nilReason="missing">
         <gco:CharacterString/>
       </gmd:organisationName>
-      <gmd:positionName gco:nilReason="missing">
-        <gco:CharacterString/>
-      </gmd:positionName>
       <gmd:contactInfo>
         <gmd:CI_Contact>
-          <gmd:phone>
-            <gmd:CI_Telephone>
-              <gmd:voice gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:voice>
-              <gmd:facsimile gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:facsimile>
-            </gmd:CI_Telephone>
-          </gmd:phone>
           <gmd:address>
             <gmd:CI_Address>
-              <gmd:deliveryPoint gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:deliveryPoint>
-              <gmd:city gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:city>
-              <gmd:administrativeArea gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:administrativeArea>
-              <gmd:postalCode gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:postalCode>
-              <gmd:country gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:country>
+              <gmd:electronicMailAddress>
+                <gco:CharacterString></gco:CharacterString>
+              </gmd:electronicMailAddress>
             </gmd:CI_Address>
           </gmd:address>
-          <gmd:onlineResource>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://geonetwork-opensource.org/</gmd:URL>
-              </gmd:linkage>
-            </gmd:CI_OnlineResource>
-          </gmd:onlineResource>
         </gmd:CI_Contact>
       </gmd:contactInfo>
       <gmd:role>
@@ -98,7 +66,7 @@
     </gmd:CI_ResponsibleParty>
   </gmd:contact>
   <gmd:dateStamp>
-    <gco:DateTime>2008-11-17T23:12:03</gco:DateTime>
+    <gco:DateTime></gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
     <gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
@@ -117,7 +85,7 @@
           <gmd:date>
             <gmd:CI_Date>
               <gmd:date>
-                <gco:DateTime>2008-01-01T12:00:00</gco:DateTime>
+                <gco:DateTime></gco:DateTime>
               </gmd:date>
               <gmd:dateType>
                 <gmd:CI_DateTypeCode
@@ -139,53 +107,21 @@
       </gmd:status>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
-          <gmd:individualName gco:nilReason="missing">
-            <gco:CharacterString/>
+          <gmd:individualName>
+            <gco:CharacterString>The administrator of the service</gco:CharacterString>
           </gmd:individualName>
           <gmd:organisationName gco:nilReason="missing">
             <gco:CharacterString/>
           </gmd:organisationName>
-          <gmd:positionName gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:positionName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
-              <gmd:phone>
-                <gmd:CI_Telephone>
-                  <gmd:voice gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:voice>
-                  <gmd:facsimile gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:facsimile>
-                </gmd:CI_Telephone>
-              </gmd:phone>
               <gmd:address>
                 <gmd:CI_Address>
-                  <gmd:deliveryPoint gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:deliveryPoint>
-                  <gmd:city gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:city>
-                  <gmd:administrativeArea gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:administrativeArea>
-                  <gmd:postalCode gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:postalCode>
-                  <gmd:country gco:nilReason="missing">
-                    <gco:CharacterString/>
-                  </gmd:country>
+                  <gmd:electronicMailAddress>
+                    <gco:CharacterString></gco:CharacterString>
+                  </gmd:electronicMailAddress>
                 </gmd:CI_Address>
               </gmd:address>
-              <gmd:onlineResource>
-                <gmd:CI_OnlineResource>
-                  <gmd:linkage>
-                    <gmd:URL>http://geonetwork-opensource.org/</gmd:URL>
-                  </gmd:linkage>
-                </gmd:CI_OnlineResource>
-              </gmd:onlineResource>
             </gmd:CI_Contact>
           </gmd:contactInfo>
           <gmd:role>
@@ -197,19 +133,7 @@
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword>
-            <gco:CharacterString>WFS</gco:CharacterString>
-          </gmd:keyword>
-          <gmd:keyword>
             <gco:CharacterString>WMS</gco:CharacterString>
-          </gmd:keyword>
-          <gmd:keyword>
-            <gco:CharacterString>GEOSERVER</gco:CharacterString>
-          </gmd:keyword>
-          <gmd:keyword>
-            <gco:CharacterString>GEONETWORK</gco:CharacterString>
-          </gmd:keyword>
-          <gmd:keyword>
-            <gco:CharacterString>OSGeo</gco:CharacterString>
           </gmd:keyword>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeListValue="theme"
@@ -221,12 +145,12 @@
         <gco:LocalName codeSpace="www.w3c.org">OGC:WMS</gco:LocalName>
       </srv:serviceType>
       <srv:serviceTypeVersion>
-        <gco:CharacterString>1.1.1</gco:CharacterString>
+        <gco:CharacterString>1.3.0</gco:CharacterString>
       </srv:serviceTypeVersion>
       <srv:accessProperties>
         <gmd:MD_StandardOrderProcess>
           <gmd:fees>
-            <gco:CharacterString>NONE</gco:CharacterString>
+            <gco:CharacterString></gco:CharacterString>
           </gmd:fees>
         </gmd:MD_StandardOrderProcess>
       </srv:accessProperties>
@@ -254,482 +178,10 @@
         <srv:SV_CouplingType codeListValue="tight"
                              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#SV_CouplingType"/>
       </srv:couplingType>
-      <srv:containsOperations>
-        <srv:SV_OperationMetadata>
-          <srv:operationName>
-            <gco:CharacterString>GetCapabilities</gco:CharacterString>
-          </srv:operationName>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/vnd.ogc.wms_xml</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-        </srv:SV_OperationMetadata>
-      </srv:containsOperations>
-      <srv:containsOperations>
-        <srv:SV_OperationMetadata>
-          <srv:operationName>
-            <gco:CharacterString>GetMap</gco:CharacterString>
-          </srv:operationName>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/png</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/atom+xml</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/openlayers</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/pdf</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/rss+xml</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/vnd.google-earth.kml+xml
-                </gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/vnd.google-earth.kmz</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/geotiff</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/geotiff8</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/gif</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/jpeg</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/png8</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/svg+xml</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/tiff</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/tiff8</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-        </srv:SV_OperationMetadata>
-      </srv:containsOperations>
-      <srv:containsOperations>
-        <srv:SV_OperationMetadata>
-          <srv:operationName>
-            <gco:CharacterString>GetFeatureInfo</gco:CharacterString>
-          </srv:operationName>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : text/plain</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : text/html</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/vnd.ogc.gml</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-        </srv:SV_OperationMetadata>
-      </srv:containsOperations>
-      <srv:containsOperations>
-        <srv:SV_OperationMetadata>
-          <srv:operationName>
-            <gco:CharacterString>DescribeLayer</gco:CharacterString>
-          </srv:operationName>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : application/vnd.ogc.wms_xml</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-        </srv:SV_OperationMetadata>
-      </srv:containsOperations>
-      <srv:containsOperations>
-        <srv:SV_OperationMetadata>
-          <srv:operationName>
-            <gco:CharacterString>GetLegendGraphic</gco:CharacterString>
-          </srv:operationName>
-          <srv:DCP>
-            <srv:DCPList
-              codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList"
-              codeListValue=""/>
-          </srv:DCP>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/png</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/jpeg</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-          <srv:connectPoint>
-            <gmd:CI_OnlineResource>
-              <gmd:linkage>
-                <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS&amp;</gmd:URL>
-              </gmd:linkage>
-              <gmd:protocol>
-                <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
-              </gmd:protocol>
-              <gmd:description>
-                <gco:CharacterString>Format : image/gif</gco:CharacterString>
-              </gmd:description>
-              <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeListValue="information"
-                                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode"/>
-              </gmd:function>
-            </gmd:CI_OnlineResource>
-          </srv:connectPoint>
-        </srv:SV_OperationMetadata>
-      </srv:containsOperations>
     </srv:SV_ServiceIdentification>
   </gmd:identificationInfo>
   <gmd:distributionInfo>
     <gmd:MD_Distribution>
-      <gmd:distributionFormat>
-        <gmd:MD_Format>
-          <gmd:name gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:name>
-          <gmd:version gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:version>
-        </gmd:MD_Format>
-      </gmd:distributionFormat>
       <gmd:transferOptions>
         <gmd:MD_DigitalTransferOptions>
           <gmd:onLine>
@@ -738,14 +190,11 @@
                 <gmd:URL>http://localhost:8080/geoserver/wms?SERVICE=WMS</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
-                <gco:CharacterString>OGC:WMS-1.1.1-http-get-map</gco:CharacterString>
+                <gco:CharacterString>OGC:WMS</gco:CharacterString>
               </gmd:protocol>
               <gmd:name>
-                <gco:CharacterString>gn:gboundaries</gco:CharacterString>
+                <gco:CharacterString>My WMS service</gco:CharacterString>
               </gmd:name>
-              <gmd:description>
-                <gco:CharacterString>Country boundaries</gco:CharacterString>
-              </gmd:description>
             </gmd:CI_OnlineResource>
           </gmd:onLine>
         </gmd:MD_DigitalTransferOptions>
@@ -761,13 +210,6 @@
               codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"
               codeListValue="service"/>
           </gmd:level>
-          <gmd:levelDescription>
-            <gmd:MD_ScopeDescription>
-              <gmd:other gco:nilReason="missing">
-                <gco:CharacterString/>
-              </gmd:other>
-            </gmd:MD_ScopeDescription>
-          </gmd:levelDescription>
         </gmd:DQ_Scope>
       </gmd:scope>
       <gmd:lineage>

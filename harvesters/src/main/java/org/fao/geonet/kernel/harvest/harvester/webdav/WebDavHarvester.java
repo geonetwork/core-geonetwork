@@ -68,7 +68,7 @@ public class WebDavHarvester extends AbstractHarvester<HarvestResult> {
         params.create(node);
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
@@ -86,7 +86,7 @@ public class WebDavHarvester extends AbstractHarvester<HarvestResult> {
         //--- update variables
         copy.update(node);
         String path = "harvesting/id:" + id;
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
         //--- update database
         storeNode(copy, path);
         //--- we update a copy first because if there is an exception CswParams
@@ -103,11 +103,11 @@ public class WebDavHarvester extends AbstractHarvester<HarvestResult> {
     //---------------------------------------------------------------------------
     protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
         WebDavParams params = (WebDavParams) p;
-        settingMan.add("id:" + siteId, "url", params.url);
-        settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + optionsId, "validate", params.getValidate());
-        settingMan.add("id:" + optionsId, "recurse", params.recurse);
-        settingMan.add("id:" + optionsId, "subtype", params.subtype);
+        harvesterSettingsManager.add("id:" + siteId, "url", params.url);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + optionsId, "validate", params.getValidate());
+        harvesterSettingsManager.add("id:" + optionsId, "recurse", params.recurse);
+        harvesterSettingsManager.add("id:" + optionsId, "subtype", params.subtype);
     }
 
     //---------------------------------------------------------------------------

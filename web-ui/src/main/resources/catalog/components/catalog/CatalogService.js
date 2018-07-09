@@ -437,6 +437,7 @@
           isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
           isFeedbackEnabled: 'system.userFeedback.enable',
           isInspireEnabled: 'system.inspireValidation.enable',
+          isRatingUserFeedbackEnabled: 'system.localratinguserfeedback.enable',
           isSearchStatEnabled: 'system.searchStats.enable',
           isHideWithHelEnabled: 'system.hidewithheldelements.enable'
         },
@@ -453,6 +454,7 @@
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
       isInspireEnabled: 'system.inspire.enable',
+      isRatingUserFeedbackEnabled: 'system.localrating.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
     },
@@ -630,6 +632,9 @@
       },
       getId: function() {
         return this['geonet:info'].id;
+      },
+      getTitle: function() {
+        return this.title || this.defaultTitle;
       },
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';

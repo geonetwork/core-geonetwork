@@ -303,6 +303,7 @@
     "validationReport": "Validation",
     "runValidation": "Run validation check",
     "valuesFromOtherRecords": "Suggested values from other records",
+    "fixedOnTop": "Always on top",
     "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
     "xmlSnippet": "XML snippet",

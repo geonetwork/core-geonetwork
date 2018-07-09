@@ -405,20 +405,23 @@
               };
             });
 
-            indexObject.searchWithFacets({
-              params: scope.output,
-              geometry: scope.filterGeometry
-            }, aggs).
-                then(function(resp) {
-                  indexObject.pushState();
-                  scope.fields = resp.facets;
-                  scope.count = resp.count;
-                  angular.forEach(scope.fields, function(f) {
-                    if (expandedFields.indexOf(f.name) >= 0) {
-                      f.expanded = true;
-                    }
+            //indexObject is only available if Elastic is configured
+            if (indexObject) {
+              indexObject.searchWithFacets({
+                params: scope.output,
+                geometry: scope.filterGeometry
+              }, aggs).
+                  then(function(resp) {
+                    indexObject.pushState();
+                    scope.fields = resp.facets;
+                    scope.count = resp.count;
+                    angular.forEach(scope.fields, function(f) {
+                      if (expandedFields.indexOf(f.name) >= 0) {
+                        f.expanded = true;
+                      }
+                    });
                   });
-                });
+            }
           };
 
           scope.getMore = function(field) {

@@ -142,13 +142,15 @@
 
           var openLink = function(record, link) {
             var url = $filter('gnLocalized')(record.url) || record.url;
-            if (url && (url.indexOf('\\') == 0 ||
-               url.indexOf('http') == 0 ||
-               url.indexOf('ftp') == 0)) {
+            if (url && 
+                angular.isString(url) && 
+                url.match("^(http|ftp|sftp|\\\\|//)")) {
               return window.open(url, '_blank');
             } else if (url && url.indexOf('www.') == 0) {
               return window.open('http://' + url, '_blank');
-            } else if (record.title && record.title != '') {
+            } else if (record.title && 
+                       angular.isString(record.title) && 
+                       record.title.match("^(http|ftp|sftp|\\\\|//)")) {
               return window.location.assign(record.title);
             } else {
               gnAlertService.addAlert({

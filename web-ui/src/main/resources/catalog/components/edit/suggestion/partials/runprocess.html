@@ -27,7 +27,7 @@
       <div data-ng-if="param.type == 'boolean'" class="col-sm-offset-4 col-sm-8">
         <div class="checkbox">
           <label>
-            <input type="checkbox" data-ng-model="params[key]">
+            <input type="checkbox" data-ng-model="params[key]" data-ng-true-value="'1'" data-ng-false-value="'0'">
             {{key | translate}}
           </label>
         </div>

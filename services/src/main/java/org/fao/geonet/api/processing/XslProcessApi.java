@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.processing;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -97,7 +99,8 @@ public class XslProcessApi {
     @ApiOperation(
         value = "Preview process result applied to one or more records",
         nickname = "previewProcessRecordsUsingXslt",
-        notes = ApiParams.API_OP_NOTE_PROCESS_PREVIEW)
+        notes = ApiParams.API_OP_NOTE_PROCESS_PREVIEW +
+            " When errors occur during processing, the processing report is returned in JSON format.")
     @RequestMapping(
         value = "/{process}",
         method = RequestMethod.GET,
@@ -216,6 +219,18 @@ public class XslProcessApi {
             xslProcessingReport.addError(exception);
         } finally {
             xslProcessingReport.close();
+        }
+
+        // In case of errors during processing return report.
+        if (xslProcessingReport.getErrors().size() > 0) {
+            response.setHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.writeValueAsString(xslProcessingReport);
+            } catch (JsonProcessingException errorReportException) {
+                return String.format("Failed to generate error report due to '%s'.",
+                    errorReportException.getMessage().toString());
+            }
         }
 
         return isText ? output.toString() : preview;

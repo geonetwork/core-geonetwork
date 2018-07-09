@@ -29,6 +29,7 @@ import java.sql.Statement;
 
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.migration.DatabaseMigrationException;
 
 /**
  * A task for migrating the database from one version to another
@@ -36,5 +37,5 @@ import org.fao.geonet.kernel.setting.SettingManager;
  * @author jeichar
  */
 public interface DatabaseMigrationTask {
-    void update(Connection connection) throws SQLException;
+    void update(Connection connection) throws SQLException, DatabaseMigrationException;
 }

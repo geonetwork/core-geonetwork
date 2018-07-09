@@ -59,6 +59,7 @@
       initFromConfig();
 
       this.feedMd = function(index, md, records) {
+        gnMdViewObj.loadDetailsFinished = true;
         gnMdViewObj.records = records || gnMdViewObj.records;
         if (angular.isUndefined(md)) {
           md = gnMdViewObj.records[index];
@@ -125,17 +126,18 @@
        */
       this.initMdView = function() {
         var that = this;
-        var loadMdView = function(oldUrl, newUrl) {
+        var loadMdView = function() {
+          gnMdViewObj.loadDetailsFinished = false;
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (!gnMdViewObj.current.record ||
-                gnMdViewObj.current.record.getUuid() != uuid) {
+                gnMdViewObj.current.record.getUuid() !== uuid) {
 
               // Check if the md is in current search
               if (angular.isArray(gnMdViewObj.records)) {
                 for (var i = 0; i < gnMdViewObj.records.length; i++) {
                   var md = gnMdViewObj.records[i];
-                  if (md.getUuid() == uuid) {
+                  if (md.getUuid() === uuid) {
                     that.feedMd(i, md, gnMdViewObj.records);
                     return;
                   }
@@ -143,6 +145,7 @@
               }
 
               // get a new search to pick the md
+              gnMdViewObj.current.record = null;
               gnSearchManagerService.gnSearch({
                 uuid: uuid,
                 _isTemplate: 'y or n',
@@ -152,11 +155,18 @@
                 if (data.metadata.length == 1) {
                   data.metadata[0] = new Metadata(data.metadata[0]);
                   that.feedMd(0, undefined, data.metadata);
+                } else {
+                  gnMdViewObj.loadDetailsFinished = true;
                 }
+              }, function(error) {
+                gnMdViewObj.loadDetailsFinished = true;
               });
+            } else {
+              gnMdViewObj.loadDetailsFinished = true;
             }
           }
           else {
+            gnMdViewObj.loadDetailsFinished = true;
             gnMdViewObj.current.record = null;
           }
         };

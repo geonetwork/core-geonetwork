@@ -33,7 +33,7 @@
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/views/sextant/jquerynoconflict.js"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
@@ -48,6 +48,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/bindHtml.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/buttons.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/modal.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/position.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/slider.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/rating.js"/>
@@ -96,7 +97,7 @@
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
     <jsSource webappPath="/catalog/views/sextant/jquerynoconflict.js"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
@@ -113,6 +114,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/bindHtml.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/buttons.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/modal.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/position.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/slider.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/rating.js"/>

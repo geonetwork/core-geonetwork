@@ -30,17 +30,19 @@
                 xmlns:wfs="http://www.opengis.net/wfs"
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:ows11="http://www.opengis.net/ows/1.1"
+                xmlns:ows2="http://www.opengis.net/ows/2.0"
                 xmlns:wcs="http://www.opengis.net/wcs"
                 xmlns:wms="http://www.opengis.net/wms"
                 xmlns:wps="http://www.opengeospatial.net/wps"
                 xmlns:wps1="http://www.opengis.net/wps/1.0.0"
+                xmlns:wps2="http://www.opengis.net/wps/2.0"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:math="http://exslt.org/math"
                 xmlns:exslt="http://exslt.org/common"
                 xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
                 version="2.0"
                 xmlns="http://www.isotc211.org/2005/gmd"
-                extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml">
+                extension-element-prefixes="math exslt wcs ows wps wps1 wps2 ows11 wfs gml">
 
   <!-- ============================================================================= -->
 
@@ -48,9 +50,8 @@
     <xsl:param name="topic"/>
     <xsl:param name="ows"/>
 
-
     <xsl:variable name="s"
-                  select="Service|wfs:Service|wms:Service|ows:ServiceIdentification|ows11:ServiceIdentification|wcs:Service"/>
+                  select="Service|wfs:Service|wms:Service|ows:ServiceIdentification|ows11:ServiceIdentification|ows2:ServiceIdentification|wcs:Service"/>
 
     <citation>
       <CI_Citation>
@@ -59,7 +60,9 @@
             <xsl:choose>
               <xsl:when test="$ows='true'">
                 <xsl:value-of select="ows:ServiceIdentification/ows:Title|
-                          ows11:ServiceIdentification/ows11:Title"/>
+                          ows11:ServiceIdentification/ows11:Title|
+                          /wps1:Capabilities/ows11:ServiceIdentification/ows11:Title|
+                          /wps2:Capabilities/ows2:ServiceIdentification/ows2:Title"/>
               </xsl:when>
               <xsl:when test="name(.)='WFS_Capabilities'">
                 <xsl:value-of select="wfs:Service/wfs:Title"/>
@@ -111,7 +114,9 @@
         <xsl:choose>
           <xsl:when test="$ows='true'">
             <xsl:value-of select="ows:ServiceIdentification/ows:Abstract|
-                      ows11:ServiceIdentification/ows11:Abstract"/>
+                      ows11:ServiceIdentification/ows11:Abstract|
+                      /wps1:Capabilities/ows11:ServiceIdentification/ows11:Abstract|
+                      /wps2:Capabilities/ows2:ServiceIdentification/ows2:Abstract"/>
           </xsl:when>
           <xsl:when test="name(.)='WFS_Capabilities'">
             <xsl:value-of select="wfs:Service/wfs:Abstract"/>
@@ -158,7 +163,7 @@
     <!-- graphOver -->
     <!-- dsFormat-->
     <xsl:for-each
-      select="$s/KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords">
+      select="$s/KeywordList|$s/wfs:keywords|$s/wcs:keywords|$s/ows:Keywords|$s/ows11:Keywords|$s/ows2:Keywords">
       <descriptiveKeywords>
         <MD_Keywords>
           <xsl:apply-templates select="." mode="Keywords"/>
@@ -492,13 +497,14 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <srv:couplingType>
-      <srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType"
-                           codeListValue="tight">
-        <xsl:choose>
-          <xsl:when test="name(.)='wps:Capabilities' or name(.)='wps1:Capabilities'">loosely
-          </xsl:when>
-          <xsl:otherwise>tight</xsl:otherwise>
-        </xsl:choose>
+      <srv:SV_CouplingType codeList="./resources/codeList.xml#SV_CouplingType">
+        <xsl:attribute name="codeListValue">
+          <xsl:choose>
+            <xsl:when test="name(.)='wps:Capabilities' or name(.)='wps1:Capabilities' or name(.)='wps2:Capabilities'">loosely
+            </xsl:when>
+            <xsl:otherwise>tight</xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
       </srv:SV_CouplingType>
     </srv:couplingType>
 
@@ -515,15 +521,16 @@
                                 ows:OperationsMetadata/ows:Operation|
                                 ows11:OperationsMetadata/ows:Operation|
                                 wps:ProcessOfferings/*|
-                                wps1:ProcessOfferings/*">
+                                wps1:ProcessOfferings/*|
+                                wps2:Contents/*">
       <!-- Some services provide information about ows:ExtendedCapabilities TODO ? -->
       <srv:containsOperations>
         <srv:SV_OperationMetadata>
           <srv:operationName>
             <gco:CharacterString>
               <xsl:choose>
-                <xsl:when test="name(.)='wps:Process'">WPS Process:
-                  <xsl:value-of select="ows:Title|ows11:Title"/>
+                <xsl:when test="name(.)='wps:Process' or name(.)='wps:ProcessSummary'">WPS Process:
+                  <xsl:value-of select="ows:Title|ows11:Title|ows2:Title"/>
                 </xsl:when>
                 <xsl:when test="$ows='true'">
                   <xsl:value-of select="@name"/>
@@ -559,15 +566,15 @@
             </srv:DCP>
           </xsl:for-each>
 
-          <xsl:if test="name(.)='wps:Process' or name(.)='wps11:ProcessOfferings'">
+          <xsl:if test="name(.)='wps:Process' or name(.)='wps:ProcessSummary'">
             <srv:operationDescription>
               <gco:CharacterString>
-                <xsl:value-of select="ows:Abstract|ows11:Title"/>
+                <xsl:value-of select="ows:Abstract|ows11:Abstract|ows2:Abstract"/>
               </gco:CharacterString>
             </srv:operationDescription>
             <srv:invocationName>
               <gco:CharacterString>
-                <xsl:value-of select="ows:Identifier|ows11:Identifier"/>
+                <xsl:value-of select="ows:Identifier|ows11:Identifier|ows2:Identifier"/>
               </gco:CharacterString>
             </srv:invocationName>
           </xsl:if>
@@ -1088,7 +1095,7 @@
 
   <xsl:template match="*" mode="Keywords">
     <!-- TODO : tokenize WFS 100 keywords list -->
-    <xsl:for-each select="Keyword|wms:Keyword|ows:Keyword|ows11:Keyword|wfs:Keywords|wcs:keyword">
+    <xsl:for-each select="Keyword|wms:Keyword|ows:Keyword|ows11:Keyword|ows2:Keyword|wfs:Keywords|wcs:keyword">
       <keyword>
         <gco:CharacterString>
           <xsl:value-of select="."/>

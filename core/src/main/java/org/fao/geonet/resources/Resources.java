@@ -28,6 +28,7 @@ import com.google.common.io.Files;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -59,6 +60,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
+
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Utility methods for managing resources that are site dependent. In other words that can be added
@@ -446,7 +451,10 @@ public class Resources {
 
             String extension = Files.getFileExtension(src.getFileName().toString());
             des = Resources.locateLogosDir(context).resolve(destName + "." + extension);
-            IO.copyDirectoryOrFile(src, des, false);
+
+            if (java.nio.file.Files.exists(src)) {
+                java.nio.file.Files.copy(src, des, REPLACE_EXISTING, NOFOLLOW_LINKS);
+            }
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
 

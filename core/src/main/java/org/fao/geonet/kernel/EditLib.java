@@ -380,42 +380,33 @@ public class EditLib {
         // Loop over each XML fragments to insert or replace
         HashMap<String, Element> nodeRefToElem = new HashMap<>();
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-            String nodeRef = entry.getKey();
-            String[] nodeConfig = nodeRef.split("_");
-            nodeRef = nodeConfig[0];
+            String[] nodeConfig = entry.getKey().split("_");
+            String nodeRef = nodeConfig[0];
 
             Element el = findElement(md, nodeRef);
             nodeRefToElem.put(nodeRef, el);
         }
 
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-            String nodeRef = entry.getKey();
             String xmlSnippetAsString = entry.getValue();
             String nodeName = null;
             boolean replaceExisting = false;
 
-            String[] nodeConfig = nodeRef.split("_");
+            String[] nodeConfig = entry.getKey().split("_");
             // Possibilities:
             // * X125
             // * X125_replace
             // * X125_gmdCOLONkeywords
             // * X125_gmdCOLONkeywords_replace
-            nodeRef = nodeConfig[0];
+            String nodeRef = nodeConfig[0];
 
-            if (nodeConfig.length > 1 && nodeConfig[1] != null) {
-                if (nodeConfig[1].equals("replace")) {
-                    replaceExisting = true;
-                } else {
-                    nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
-                }
+            if (nodeConfig[nodeConfig.length-1].equals("replace")) {
+                replaceExisting = true;
             }
 
-            if (nodeConfig.length > 2 && nodeConfig[2] != null) {
-                if (nodeConfig[2].equals("replace")) {
-                    replaceExisting = true;
-                }
+            if ((nodeConfig.length > 1) && !replaceExisting) {
+                nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
             }
-
 
             // Get element to fill
             Element el = nodeRefToElem.get(nodeRef);

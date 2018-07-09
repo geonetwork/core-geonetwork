@@ -580,7 +580,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
 
         Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-            maxRecords, _lang.presentationLanguage,
+            maxRecords + startPosition - 1, _lang.presentationLanguage,
             luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
             reader, _query, wrapSpatialFilter(),
             _sort, taxonomyReader, buildSummary

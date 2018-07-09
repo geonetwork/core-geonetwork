@@ -119,7 +119,7 @@ public class MergeUsersByUsernameDatabaseMigrationTest extends AbstractCoreInteg
         duplicatedUserNames.sort(Comparator.comparing(User::getProfile));
         User greatestProfileUser = duplicatedUserNames.get(0);
         User userTmp = migration.mergeUser(new User(), greatestProfileUser);
-        userTmp.setUsername(greatestProfileUser.getUsername());
+        userTmp.setUsername(greatestProfileUser.getUsername().toLowerCase());
 
         migration.run(_applicationContext);
         assertNull(_userRepo.findOne(user1.getId()));

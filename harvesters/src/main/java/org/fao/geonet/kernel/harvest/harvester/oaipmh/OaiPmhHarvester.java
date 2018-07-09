@@ -80,7 +80,7 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -101,7 +101,7 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -128,22 +128,22 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult> {
                                   String siteId, String optionsId) throws SQLException {
         OaiPmhParams params = (OaiPmhParams) p;
 
-        settingMan.add("id:" + siteId, "url", params.url);
-        settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + siteId, "xslfilter", params.xslfilter);
+        harvesterSettingsManager.add("id:" + siteId, "url", params.url);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + siteId, "xslfilter", params.xslfilter);
 
-        settingMan.add("id:" + optionsId, "validate", params.getValidate());
+        harvesterSettingsManager.add("id:" + optionsId, "validate", params.getValidate());
 
         //--- store search nodes
 
         for (Search s : params.getSearches()) {
-            String searchID = settingMan.add(path, "search", "");
+            String searchID = harvesterSettingsManager.add(path, "search", "");
 
-            settingMan.add("id:" + searchID, "from", s.from);
-            settingMan.add("id:" + searchID, "until", s.until);
-            settingMan.add("id:" + searchID, "set", s.set);
-            settingMan.add("id:" + searchID, "prefix", s.prefix);
-            settingMan.add("id:" + searchID, "stylesheet", s.stylesheet);
+            harvesterSettingsManager.add("id:" + searchID, "from", s.from);
+            harvesterSettingsManager.add("id:" + searchID, "until", s.until);
+            harvesterSettingsManager.add("id:" + searchID, "set", s.set);
+            harvesterSettingsManager.add("id:" + searchID, "prefix", s.prefix);
+            harvesterSettingsManager.add("id:" + searchID, "stylesheet", s.stylesheet);
         }
     }
 
