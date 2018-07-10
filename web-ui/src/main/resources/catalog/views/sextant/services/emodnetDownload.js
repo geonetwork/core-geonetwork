@@ -42,8 +42,13 @@
          */
         openDownloadForm(urls) {
           var scope = $rootScope.$new(true);
+
+          scope.values = {};
+
           scope.submit = function() {
             var defer = $q.defer();
+
+            console.log(scope.values);
 
             setTimeout(function() {
               urls.forEach(function(url) {
