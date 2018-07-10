@@ -250,17 +250,21 @@
                       }
 
                       var langsParam = [];
-                      for (var p in
-                     JSON.parse(gnCurrentEdit.mdOtherLanguages)) {
-                        langsParam.push(p);
+                      // ISO19110 does not contain other lang
+                      if (gnCurrentEdit.mdOtherLanguages != '') {
+                        for (var p in
+                       JSON.parse(gnCurrentEdit.mdOtherLanguages)) {
+                          langsParam.push(p);
+                        }
+                        if (langsParam.length > 1) {
+                          params.lang = langsParam;
+                        }
+                        else {
+                          params.lang = gnCurrentEdit.mdLanguage;
+                        }
                       }
-                      if (langsParam.length > 1) {
-                        params.lang = langsParam;
-                      }
-                      else {
-                        params.lang = gnCurrentEdit.mdLanguage;
-                      }
-                      params.schema = gnCurrentEdit.schema;
+                      params.schema = gnCurrentEdit.schema === 'iso19110' ?
+                        'iso19139' : gnCurrentEdit.schema;
 
                       if (!params.lang) {
                         console.warn('No lang has been set for the xlink');
