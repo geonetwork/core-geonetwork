@@ -1,0 +1,17 @@
+<form name="emodnetDownloadForm" class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-2 control-label" translate>firstname</label>
+    <div class="col-sm-10">
+      <input maxlength="80" ng-required="true" required
+              type="text" class="form-control" name="firstname" ng-model="firstname">
+    </div>
+  </div>
+</form>
+
+<div class="text-right">
+  <button type="button" class="btn btn-link" data-dismiss="modal" translate>cancel</button>
+  <button type="button" class="btn btn-primary"
+          ng-disabled="!emodnetDownloadForm.$valid"
+          gn-click-and-spin="submit()" translate>download</button>
+</div>
+
