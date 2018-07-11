@@ -627,7 +627,7 @@
   <!-- Ignore the following topic categories-->
   <xsl:template mode="mode-iso19139"
                 match="gmd:topicCategory[
-                        preceding-sibling::*[1]/name() = name()]"
+                        preceding-sibling::*[1]/name() = name()]|gn:child[@name = 'topicCategory']"
                 priority="2100"/>
 
 
