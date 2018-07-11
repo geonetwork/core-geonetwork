@@ -338,6 +338,22 @@
 
   <rule>
     <note>
+      INSPIRE Atom search (html)
+    </note>
+    <from>^/opensearch/(.*)/(.*)/searchhtml?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search.html?fileIdentifier=$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom search (html)
+    </note>
+    <from>^/opensearch/(.*)/searchhtml?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search.html</to>
+  </rule>
+
+  <rule>
+    <note>
       INSPIRE Atom search
     </note>
     <from>^/opensearch/(.*)/(.*)/search?(.*)$</from>
