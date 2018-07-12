@@ -4,7 +4,8 @@
       class="list-group-item">
     <h5>{{layer.get('label')}}</h5>
     <p>
-      <img ng-src="{{layer.get('legend')}}"/>
+      <img ng-src="{{layer.get('legend')}}"
+           aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
     </p>
     <h6 ng-if="layer.get('attribution')">
       <span data-translate="">Attribution</span>

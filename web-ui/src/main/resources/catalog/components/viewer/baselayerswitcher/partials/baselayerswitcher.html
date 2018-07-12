@@ -8,7 +8,8 @@
   </button>
   <div data-ngeo-popover-content class="gn-baselayer-switcher-content">
     <ul class="gn-baselayer-switcher-menu" role="menu">
-      <li ng-if="::layer" ng-repeat="layer in layers" ng-click="changeBackground(layer);popoverCtrl.dismissPopover()">
+      <li ng-if="::layer" ng-repeat="layer in layers" ng-click="changeBackground(layer);popoverCtrl.dismissPopover()"
+          role="menuitem">
         <span ng-if="::!layer.get('loading')">
           <span class="fa"
                 ng-class="(layer == map.getLayers().item(0)) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
@@ -24,7 +25,9 @@
 </div>
 <br/>
 <div>
-  <button class="btn btn-default gn-md-thumbnail" data-ng-click="reset()">
+  <button class="btn btn-default gn-md-thumbnail"
+          data-ng-click="reset()"
+          aria-label="{{'resetContext' | translate}}">
     <span
       class="gn-img-thumbnail-caption" data-translate="">resetContext</span>
   </button>
