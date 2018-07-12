@@ -286,7 +286,7 @@ public class Importer {
                 // String schema = null;
                 String rating = null;
                 String popularity = null;
-//                String groupId = null;
+                String groupId = null;
                 Element categs = null;
                 final Element privileges;
 
@@ -711,4 +711,3 @@ public class Importer {
 }
 
 // =============================================================================
-
