@@ -109,6 +109,7 @@ import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
 
+
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
  * params are objects because it is hard to determine what is passed in from XSLT.
