@@ -51,7 +51,6 @@
   <!--											-->
   <xsl:template name="addHyperlinksAndLineBreaksToSingleWord">
     <xsl:param name="word"/>
-    <xsl:variable name="maxWordLength" select="56"/>
 
     <!-- if word contains ), remove remainder from processing here  -->
     <!-- this is to cope with texts containing "(http://blah.org)," -->
@@ -74,10 +73,7 @@
           <xsl:attribute name="href">
             <xsl:value-of select="$word-to-use"/>
           </xsl:attribute>
-          <xsl:call-template name="addLineBreaksToSingleWord">
-            <xsl:with-param name="word" select="$word-to-use"/>
-            <xsl:with-param name="maxWordLength" select="$maxWordLength"/>
-          </xsl:call-template>
+          <xsl:value-of select="$word-to-use"/>
         </a>
       </xsl:when>
       <!-- https links -->
@@ -86,10 +82,7 @@
           <xsl:attribute name="href">
             <xsl:value-of select="$word-to-use"/>
           </xsl:attribute>
-          <xsl:call-template name="addLineBreaksToSingleWord">
-            <xsl:with-param name="word" select="$word-to-use"/>
-            <xsl:with-param name="maxWordLength" select="$maxWordLength"/>
-          </xsl:call-template>
+          <xsl:value-of select="$word-to-use"/>
         </a>
       </xsl:when>
       <!-- ftp links -->
@@ -98,10 +91,7 @@
           <xsl:attribute name="href">
             <xsl:value-of select="$word-to-use"/>
           </xsl:attribute>
-          <xsl:call-template name="addLineBreaksToSingleWord">
-            <xsl:with-param name="word" select="$word-to-use"/>
-            <xsl:with-param name="maxWordLength" select="$maxWordLength"/>
-          </xsl:call-template>
+          <xsl:value-of select="$word-to-use"/>
         </a>
       </xsl:when>
       <!-- mailto links -->
@@ -110,17 +100,11 @@
           <xsl:attribute name="href">
             <xsl:text>mailto:</xsl:text><xsl:value-of select="$word-to-use"/>
           </xsl:attribute>
-          <xsl:call-template name="addLineBreaksToSingleWord">
-            <xsl:with-param name="word" select="$word-to-use"/>
-            <xsl:with-param name="maxWordLength" select="$maxWordLength"/>
-          </xsl:call-template>
+          <xsl:value-of select="$word-to-use"/>
         </a>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="addLineBreaksToSingleWord">
-          <xsl:with-param name="word" select="$word-to-use"/>
-          <xsl:with-param name="maxWordLength" select="$maxWordLength"/>
-        </xsl:call-template>
+        <xsl:value-of select="$word-to-use"/>
       </xsl:otherwise>
     </xsl:choose>
 
@@ -224,27 +208,6 @@
     </xsl:choose>
   </xsl:template>
 
-  <!--							-->
-  <!-- Adds a <br/> if word is longer than a max length.	-->
-  <!--							-->
-  <xsl:template name="addLineBreaksToSingleWord">
-    <xsl:param name="word"/>
-    <xsl:param name="maxWordLength"/>
-    <xsl:choose>
-      <!-- line break if word is longer than 56 characters -->
-      <xsl:when test="string-length($word) &gt; $maxWordLength">
-        <xsl:value-of select="substring($word, 0, $maxWordLength)"/>
-        <br/>
-        <xsl:call-template name="addLineBreaksToSingleWord">
-          <xsl:with-param name="word" select="substring($word, $maxWordLength)"/>
-          <xsl:with-param name="maxWordLength" select="$maxWordLength"/>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$word"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
   <!--
         Translates CR-LF sequences into HTML newlines <p/>
