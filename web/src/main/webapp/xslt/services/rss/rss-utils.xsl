@@ -74,16 +74,26 @@
               <img src="{.}" align="left" alt="" border="0" width="100"/>
             </a>
           </xsl:for-each>
-          <xsl:value-of select="$metadata/abstract"/>
-          <br/>
-          <xsl:if test="$bDynamic">
-            <xsl:apply-templates select="$metadata/link[contains(@type,'vnd.google-earth.km')][1]"
-                                 mode="GoogleEarthWMS">
-              <xsl:with-param name="url" select="$baseURL"/>
-              <xsl:with-param name="viewInGE" select="/root/gui/i18n/viewInGE"/>
-            </xsl:apply-templates>
-          </xsl:if>
-
+          <!--<xsl:value-of select="$metadata/abstract"/>-->
+          <xsl:variable name="abs"
+                        select="$metadata/abstract"/>
+          <xsl:variable name="limit"
+                        select="350"/>
+          <xsl:choose>
+            <xsl:when test="string-length($abs) &lt; $limit">
+              <xsl:value-of select="$abs"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="substring($abs, 0, $limit)"/>
+              <!-- If end of a word ? add the next token until the next space -->
+              <xsl:if test="substring($abs, $limit, 1) != ' '">
+                <xsl:variable name="endOfString"
+                              select="substring($abs, $limit, string-length($abs))"/>
+                <xsl:value-of select="tokenize($endOfString, ' ')[1]"/>
+              </xsl:if>
+              ...
+            </xsl:otherwise>
+          </xsl:choose>
         </p>
         <br clear="all"/>
         <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
