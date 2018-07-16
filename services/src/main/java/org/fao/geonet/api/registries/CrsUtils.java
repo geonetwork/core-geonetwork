@@ -167,7 +167,7 @@ public class CrsUtils {
      */
     static protected boolean matchesFilter(String input, String[] filters) {
         for (String match : filters) {
-            if (!input.contains(match))
+            if (!input.contains(match.toUpperCase()))
                 return false;
         }
         return true;
