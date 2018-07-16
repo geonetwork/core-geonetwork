@@ -113,6 +113,7 @@
               hasResults: '=?'
             },
             link: function(scope, element, attrs, controller) {
+              scope.location = window.location;
               var promise;
               scope.container = scope.$parent.container || '.links';
               scope.updateRelations = function() {
