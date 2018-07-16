@@ -560,7 +560,7 @@ eg. only 2 INSPIRE themes.
 .. code-block:: xml
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    transformations=""/>
       </thesaurusList>
