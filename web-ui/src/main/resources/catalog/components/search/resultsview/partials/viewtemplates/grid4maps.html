@@ -8,23 +8,23 @@
        title="{{'loadMap' | translate}}">
       <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
            data-ng-click="loadMap(maps[0], md)">
+
+        <span class="gn-img-thumbnail-caption">
+          {{(md.title || md.defaultTitle) | characters:80}}
+        </span>
+        <a class=""
+           data-ng-href="#/metadata/{{md.getUuid()}}"
+           title="{{'openRecord' | translate}}">
+          <i class="fa fa-fw fa-info-circle"/>
+        </a>
+
         <div class="gn-md-thumbnail">
           <img class="gn-img-thumbnail"
                alt="{{md.title || md.defaultTitle}}"
                data-ng-src="{{md.getThumbnails().list[0].url}}"
                data-ng-if="md.getThumbnails().list[0].url"/>
         </div>
-        <div style="clear: both;"></div>
 
-        <span class="gn-img-thumbnail-caption">
-        {{(md.title || md.defaultTitle) | characters:80}}
-        </span>
-
-        <a class=""
-           data-ng-href="#/metadata/{{md.getUuid()}}"
-           title="{{'openRecord' | translate}}">
-          <i class="fa fa-fw fa-info-circle"/>
-        </a>
       </div>
     </a>
     <div style="clear: both;"></div>
