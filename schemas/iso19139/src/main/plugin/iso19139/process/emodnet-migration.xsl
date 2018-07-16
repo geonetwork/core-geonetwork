@@ -55,14 +55,14 @@
             <xsl:value-of select="substring-after(., ' = ')"/>
         </xsl:copy>
     </xsl:template>
-
+    
     <xsl:template match="@uuidref[
         starts-with(., 'SDN:')]">
         <xsl:attribute name="uuidref">
             <xsl:value-of select="substring-after(., ' = ')"/>
         </xsl:attribute>
     </xsl:template>
-
+    
 
     <xsl:template match="gmd:MD_SpatialRepresentationTypeCode/@codeListValue[
                                   starts-with(., 'SDN:')]">
@@ -198,6 +198,7 @@
     </xsl:template>
 
 
+
     <!-- Move old shoal bias -->
     <xsl:template match="gmd:report/gmd:DQ_NonQuantitativeAttributeAccuracy[gmd:nameOfMeasure/* = 'shoal bias']">
         <xsl:variable name="bias"
@@ -250,35 +251,6 @@
             </xsl:attribute>
             <xsl:apply-templates select="*"/>
         </xsl:copy>
-    </xsl:template>
-
-
-    <xsl:template match="gmd:MD_Distribution" priority="2">
-      <xsl:copy>
-        <xsl:apply-templates
-          select="gmd:distributionFormat"/>
-        <!-- Forget about past distributor encoding
-         only containing links.
-         <xsl:apply-templates
-          select="gmd:distributor"/>-->
-        <xsl:apply-templates
-          select="gmd:transferOptions"/>
-
-        <!-- Copy links from the distributor section to here -->
-        <xsl:if test="count(gmd:distributor/*/
-                                gmd:distributorTransferOptions/*/
-                                  gmd:onLine) > 0">
-          <gmd:transferOptions>
-            <gmd:MD_DigitalTransferOptions>
-              <xsl:copy-of select="gmd:distributor/*/
-                                gmd:distributorTransferOptions/*/
-                                  gmd:onLine"/>
-            </gmd:MD_DigitalTransferOptions>
-          </gmd:transferOptions>
-        </xsl:if>
-
-
-      </xsl:copy>
     </xsl:template>
 
 
