@@ -242,7 +242,7 @@ public class DefaultStatusActions implements StatusActions {
         }
         // Fallback on a default value if statusMetadataDetails not resolved
         if (statusMetadataDetails == null) {
-            statusMetadataDetails = "* {{index:title}} ({{serverurl}}/catalog.search#/metadata/{{index:_uuid}})";
+            statusMetadataDetails = "* {{index:title}} ({{serverurl}}catalog.search#/metadata/{{index:_uuid}})";
         }
 
         ArrayList<String> fields = new ArrayList<String>();
