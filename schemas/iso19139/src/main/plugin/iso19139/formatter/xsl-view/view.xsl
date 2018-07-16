@@ -505,10 +505,10 @@
       <dd>
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
-        <a class="btn btn-link" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
+        <!--<a class="btn btn-link" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
           <i class="fa fa-file-code-o fa-2x">&#160;</i>
           <span><xsl:value-of select="$schemaStrings/metadataInXML"/></span>
-        </a>
+        </a>-->
       </dd>
     </dl>
   </xsl:template>
