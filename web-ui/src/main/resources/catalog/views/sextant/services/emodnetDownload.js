@@ -39,7 +39,7 @@
          * This will add the Matomo/Piwik library to the page
          * Must be called when opening the form for the first time
          */
-        importLibrary() {
+        importLibrary: function() {
           if (this.initialized) return;
 
           // global tracking array
@@ -64,11 +64,12 @@
         /**
          * Will show the download form and, when submitted, will open all urls
          * to download files
+         * Note: The API setting sxtSettings.useEmodnetDownloadForm must be set to true
          * @param {Array.<string>} urls
          * @return a $q.defer object that resolves when the submission to the
          * analytics service is done
          */
-        openDownloadForm(urls) {
+        openDownloadForm: function(urls) {
           this.importLibrary();
 
           var scope = $rootScope.$new(true);
@@ -96,11 +97,32 @@
             modal.modal('hide');
           };
 
+          var templateUrl = '../../catalog/views/sextant/services/emodnetdownloadform.html'
           modal = gnPopup.createModal({
             title: 'emodnetDownloadForm',
-            content: '<div ng-include="\'../../catalog/views/sextant/services/' +
-            'partials/emodnetdownloadform.html\'"></div>'
+            content: '<div ng-include="\'' + templateUrl + '\'"></div>'
           }, scope);
+        },
+
+        /**
+         * Returns true if the link must be hidden behind a download form
+         */
+        requiresDownloadForm: function(link) {
+          if (typeof sxtSettings === 'undefined' ||
+              !sxtSettings.useEmodnetDownloadForm) {
+            return;
+          }
+
+          if (!link.url || !link.protocol) { return false; }
+
+          var parts = link.url.toLowerCase().split('.');
+          var extension = parts[parts.length - 1];
+          if (link.protocol !== 'WWW:DOWNLOAD-1.0-link--download' ||
+              (extension !== 'nc' && extension !== 'zip')) {
+            return false;
+          }
+
+          return true;
         }
       };
     }

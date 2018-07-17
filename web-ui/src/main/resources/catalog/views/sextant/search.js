@@ -10,6 +10,7 @@
   goog.require('gn_legendpanel_directive');
   goog.require('gn_wps');
   goog.require('sxt_directives');
+  goog.require('sxt_services');
   goog.require('sxt_panier');
   goog.require('sxt_mdactionmenu');
   goog.require('sxt_linksbtn');
@@ -25,6 +26,7 @@
     'gn_thesaurus',
     'gn_wps',
     'sxt_directives',
+    'sxt_services',
     'sxt_panier',
     'sxt_mdactionmenu',
     'sxt_linksbtn',
@@ -93,12 +95,13 @@
     'sxtPanierService',
     'gnOwsContextService',
     'gnConfig',
+    'sxtEmodnetDownload',
     function($rootScope, $scope, $location, $window, suggestService,
              $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
              $translate, $q, gnUrlUtils, gnGlobalSettings, sxtPanierService,
-             gnOwsContextService, gnConfig) {
+             gnOwsContextService, gnConfig, sxtEmodnetDownload) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -399,6 +402,12 @@
         },
 
         addMdLayerToPanier: function(link, md, $event) {
+          // special case for Emodnet Chemistry (Matomo stat tracking)
+          if (sxtEmodnetDownload.requiresDownloadForm(link)) {
+            sxtEmodnetDownload.openDownloadForm([link.url]);
+            return;
+          }
+
           if(link.protocol.match(
               "WWW:FTP|WWW:DOWNLOAD-1.0-link--download|WWW:OPENDAP|MYO:MOTU-SUB") != null) {
             if (link.protocol == 'MYO:MOTU-SUB') {
@@ -423,7 +432,24 @@
         },
 
         addAllMdLayersToPanier: function (layers, md) {
-          angular.forEach(layers, function (layer) {
+          // first separate layers between the ones which need a download form
+          // and the others
+          var layersToForm = [];
+          var otherLayers = [];
+          layers.forEach(function(layer) {
+            if(sxtEmodnetDownload.requiresDownloadForm(layer)) {
+              layersToForm.push(layer);
+            } else {
+              otherLayers.push(layer);
+            }
+          });
+
+          if (layersToForm.length) {
+            var urls = layersToForm.map(function(layer) { return layer.url; });
+            sxtEmodnetDownload.openDownloadForm(urls);
+          }
+
+          angular.forEach(otherLayers, function (layer) {
             $scope.resultviewFns.addMdLayerToPanier(layer, md);
           });
         }
