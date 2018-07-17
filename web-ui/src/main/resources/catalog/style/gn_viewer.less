@@ -15,6 +15,7 @@
     position: absolute;
     clip: rect(1px, 1px, 1px, 1px);
     right: 0;
+    z-index: 60;
   }
 
   fieldset legend {
@@ -128,8 +129,8 @@
   }
   .control-tools {
     top: auto;
-    bottom: 50px;
-    position: fixed;
+    bottom: 5px;
+    position: absolute;
   }
   & > .panel {
     background: rgba(255,255,255,.8);
@@ -550,11 +551,13 @@
 gn-features-tables, .gn-viewer-info-pane {
   display          : block;
   position         : absolute;
-  bottom           : 1em;
+  bottom           : 0;
   left             : 1em;
-  right            : 3.8em;
-  background-color : rgba(255,255,255, .6);
-  border-radius    : 3px;
+  right            : 3.5em;
+  background-color:#fff;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  z-index: 55;
   .nav li a {
     background  : rgba(255, 255, 255, .5);
     text-shadow : 0 0 1px white;
@@ -569,6 +572,7 @@ gn-features-tables, .gn-viewer-info-pane {
   }
   .gn-features-table {
     padding          : .25em;
+    box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
   }
   .layername {
     display        : inline-block;
