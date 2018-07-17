@@ -7,53 +7,54 @@
       <div class="radio">
         <label>
           <input value="Commercial/Industry" type="radio" required
-                ng-model="values.purpose">
+                ng-model="values['DownloadForm-reason']">
           <span translate>emodnetPurpose-Commercial</span>
         </label>
       </div>
       <div class="radio">
         <label>
           <input value="Education/Research" type="radio" required
-              ng-model="values.purpose">
+              ng-model="values['DownloadForm-reason']">
           <span translate>emodnetPurpose-Education</span>
         </label>
       </div>
       <div class="radio">
         <label>
           <input value="Personal use" type="radio" required
-              ng-model="values.purpose">
+              ng-model="values['DownloadForm-reason']">
           <span translate>emodnetPurpose-Personal</span>
         </label>
       </div>
       <div class="radio">
         <label>
           <input value="Policy making" type="radio" required
-              ng-model="values.purpose">
+              ng-model="values['DownloadForm-reason']">
           <span translate>emodnetPurpose-Policy</span>
         </label>
       </div>
       <div class="radio">
         <label>
           <input value="Other" type="radio"
-              ng-model="values.purpose">
+              ng-model="values['DownloadForm-reason']">
           <span translate>emodnetPurpose-Other</span>
         </label>
       </div>
     </div>
   </div>
 
-  <div class="form-group gn-required" ng-show="values.purpose === 'Other'">
+  <div class="form-group gn-required" ng-show="values['DownloadForm-reason'] === 'Other'">
     <label class="col-sm-3 control-label" translate>otherReason</label>
     <div class="col-sm-9">
       <textarea class="form-control" maxlength="200"
-                ng-required="values.purpose === 'Other'" ng-model="values.otherReason"></textarea>
+                ng-required="values['DownloadForm-reason'] === 'Other'"
+                ng-model="values['DownloadForm-other_reason']"></textarea>
     </div>
   </div>
 
   <div class="form-group">
     <label class="col-sm-3 control-label" translate>organizationName</label>
     <div class="col-sm-9">
-      <input maxlength="80" type="text" class="form-control" name="organizationName" ng-model="values.organizationName">
+      <input maxlength="80" type="text" class="form-control" name="organizationName" ng-model="values['DownloadForm-organisation_name']">
     </div>
   </div>
 
@@ -63,35 +64,35 @@
         <div class="radio">
           <label>
             <input value="Academia/Research" type="radio" required
-                ng-model="values.organizationType">
+                ng-model="values['DownloadForm-organisation_type']">
             <span translate>emodnetOrgType-Academia</span>
           </label>
         </div>
         <div class="radio">
           <label>
             <input value="Government/Public Administration" type="radio" required
-                ng-model="values.organizationType">
+                ng-model="values['DownloadForm-organisation_type']">
             <span translate>emodnetOrgType-Government</span>
           </label>
         </div>
         <div class="radio">
           <label>
             <input value="Business and Private Company" type="radio" required
-                ng-model="values.organizationType">
+                ng-model="values['DownloadForm-organisation_type']">
             <span translate>emodnetOrgType-Business</span>
           </label>
         </div>
         <div class="radio">
           <label>
             <input value="NGOs/Civil Society" type="radio" required
-                ng-model="values.organizationType">
+                ng-model="values['DownloadForm-organisation_type']">
             <span translate>emodnetOrgType-NGO</span>
           </label>
         </div>
         <div class="radio">
           <label>
             <input value="Others" type="radio"
-                ng-model="values.organizationType">
+                ng-model="values['DownloadForm-organisation_type']">
             <span translate>emodnetOrgType-Other</span>
           </label>
         </div>
@@ -101,14 +102,14 @@
   <div class="form-group">
     <label class="col-sm-3 control-label" translate>country</label>
     <div class="col-sm-9">
-      <input maxlength="80" type="text" class="form-control" name="country" ng-model="values.country">
+      <input maxlength="80" type="text" class="form-control" name="country" ng-model="values['DownloadForm-country']">
     </div>
   </div>
 
   <div class="form-group">
     <label class="col-sm-3 control-label" translate>email</label>
     <div class="col-sm-9">
-      <input maxlength="80" type="text" class="form-control" name="email" ng-model="values.email">
+      <input maxlength="80" type="text" class="form-control" name="email" ng-model="values['DownloadForm-email']">
     </div>
   </div>
 
@@ -116,7 +117,7 @@
     <button type="button" class="btn btn-link" data-dismiss="modal" translate>basketCancel</button>
     <button type="button" class="btn btn-primary"
             ng-disabled="!emodnetDownloadForm.$valid"
-            gn-click-and-spin="submit()" translate>download</button>
+            ng-click="submit()" translate>download</button>
   </div>
 </form>
 
