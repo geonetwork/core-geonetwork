@@ -26,13 +26,7 @@ package org.fao.geonet.kernel.search;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -242,6 +236,11 @@ public class EsSearchManager implements ISearchManager {
 
         List<Element> records = xml.getChildren("doc");
         Map<String, ObjectNode> listOfXcb = new HashMap<>();
+        Set<String> booleanFields = new HashSet();
+        booleanFields.add(IndexFields.HAS_ATOM);
+        booleanFields.add(Geonet.IndexFieldNames.HASXLINKS);
+        booleanFields.add("hasxlinks");
+        booleanFields.add("isHarvested");
 
         // Loop on docs
         for (int i = 0; i < records.size(); i++) {
@@ -295,7 +294,9 @@ public class EsSearchManager implements ISearchManager {
                                 !name.startsWith("conformTo_")) {
                                 doc.put(
                                     propertyName,
-                                    node.getTextNormalize());
+                                    booleanFields.contains(propertyName) ?
+                                        parseBoolean(node.getTextNormalize()) :
+                                        node.getTextNormalize());
                             }
                         }
                     }
@@ -305,6 +306,20 @@ public class EsSearchManager implements ISearchManager {
         }
         return listOfXcb;
     }
+
+    private String parseBoolean(String textNormalize) {
+        if ("1".equalsIgnoreCase(textNormalize)
+            || "true".equalsIgnoreCase(textNormalize)
+            || "y".equalsIgnoreCase(textNormalize)) {
+            return "true";
+        } else if ("0".equalsIgnoreCase(textNormalize)
+            || "false".equalsIgnoreCase(textNormalize)
+            || "n".equalsIgnoreCase(textNormalize)) {
+            return "false";
+        }
+        return null;
+    }
+
     @Override
     public void forceIndexChanges() throws IOException {
     }
