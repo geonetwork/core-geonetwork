@@ -543,13 +543,14 @@ public class MapServersApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         context.setAsThreadLocal();
 
-        String baseUrl = applicationContext.getBean(SettingManager.class)
-            .getSiteURL(context);
+        SettingManager settingManager = applicationContext.getBean(SettingManager.class);
+        String baseUrl = settingManager.getSiteURL(context);
         final GeonetHttpRequestFactory requestFactory =
             applicationContext.getBean(GeonetHttpRequestFactory.class);
         GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
             g.getUsername(), g.getUserpassword(),
-            g.getNamespacePrefix(), baseUrl, m.pushStyleInWorkspace());
+            g.getNamespacePrefix(), baseUrl, settingManager.getNodeURL(),
+            m.pushStyleInWorkspace());
 
 //        String access = Util.getParam(params, "access");
 
