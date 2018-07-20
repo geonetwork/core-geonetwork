@@ -51,7 +51,8 @@
   <xsl:variable name="url"
                 select="concat($env/system/server/protocol, '://',
                           $env/system/server/host,
-                          if ($port='80') then '' else concat(':', $port),
+                          if (($env/system/server/protocol = 'http' and $port = '80') or
+                              ($env/system/server/protocol = 'https' and $port = '443')) then '' else concat(':', $port),
                           /root/gui/url)"/>
 
   <xsl:variable name="resourcePrefix" select="$env/metadata/resourceIdentifierPrefix"/>
