@@ -116,8 +116,8 @@ sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVer
 find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
 find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
 
-
 # Update version pom files
+mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}
 echo 'Module'
 mvn versions:set -DnewVersion=${new_version} -DgenerateBackupPoms=false -Pwith-doc
 echo
