@@ -749,11 +749,13 @@
           node: '<gnWfsFilterFacetsTreeItem'
         },
         require: {
-          treeCtrl: '^^gnWfsFilterFacetsTree'
+          treeCtrl: '^^gnWfsFilterFacetsTree',
+          parentCtrl: '?^^gnWfsFilterFacetsTreeItem'
         },
         bindToController: true,
         controllerAs: 'ctrl',
-        controller: ['$attrs', function($attrs) {
+        controller: ['$attrs', '$element', function($attrs, $element) {
+          this.element = $element;
           this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot'] ===
               undefined;
 
@@ -765,12 +767,33 @@
             this.isSelected = function() {
               return this.treeCtrl.isSelected(this.node.key);
             };
+
+
+            function toggleClass (controller) {
+              if (!controller) return
+              if (!controller.selectedOninit && !controller.isRoot) {
+                controller.selectedOninit = true;
+                controller.element.find('.fa').first().toggleClass('fa-minus-square')
+                  .toggleClass('fa-plus-square');
+                controller.element.children('.list-group').toggle();
+              }
+
+              return toggleClass(controller.parentCtrl);
+            }
+
+            if(this.isSelected() && !this.isRoot) {
+              toggleClass(this.parentCtrl);
+            }
           };
         }],
         link: function(scope, el, attrs, ctrls) {
           scope.toggleNode = function(evt) {
-            el.find('.fa').first().toggleClass('fa-minus-square')
-                .toggleClass('fa-plus-square');
+            var parentEL = el.find('.fa').first()
+            if (parentEL.attr('class').indexOf('fa-minus-square fa-plus-square') !=0 ){
+              parentEL.removeClass('fa-plus-square');
+            }
+            parentEL.toggleClass('fa-minus-square')
+              .toggleClass('fa-plus-square');
             el.children('.list-group').toggle();
             !evt || evt.preventDefault();
             evt.stopPropagation();
