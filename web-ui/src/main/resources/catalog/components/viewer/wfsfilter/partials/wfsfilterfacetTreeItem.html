@@ -4,7 +4,7 @@
 
   <span data-ng-if="::ctrl.node.nodes"
         ng-click="toggleNode($event)"
-        class="fa fa-fw text-primary"
+        class="fa text-primary"
         data-ng-class="ctrl.selectedOnInit ? 'fa-minus-square' : 'fa-plus-square'" >
   </span>
 
@@ -17,8 +17,7 @@
   <div ng-repeat="node in ctrl.node.nodes"
        gn-wfs-filter-facets-tree-item="::node"
        gn-wfs-filter-facets-tree-item-notroot
-       class="list-group-item"
-       date-ng-class="ctrl.toggleChildren">
+       class="list-group-item">
   </div>
 </div>
 <!--Just to force one time binding on nodes except root-->

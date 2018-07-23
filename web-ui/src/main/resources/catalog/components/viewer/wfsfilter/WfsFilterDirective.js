@@ -760,11 +760,39 @@
               undefined;
 
           this.$onInit = function() {
-
             this.onCheckboxTreeClick = function() {
+              // when the parent is clicked and all children are selected, deselect the children
+              // and if the parent is unselected unselect all children
+              if (this.node.nodes) {
+                var allChildrenSelected = true;
+                for (var i=0; i < this.node.nodes.length; i++) {
+                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key)) {
+                    // at least one child is not selected
+                    allChildrenSelected = false;
+                    break
+                  }
+                }
+                for (var i=0; i < this.node.nodes.length; i++) {
+                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key) || allChildrenSelected) {
+                    this.treeCtrl.onCheckboxTreeClick(this.node.nodes[i].key);
+                  }
+                }
+                return
+              }
+              // do the event
               this.treeCtrl.onCheckboxTreeClick(this.node.key);
             };
+
             this.isSelected = function() {
+              // if at least one child is selected then we check the parent
+              if (this.node.nodes) {
+                for (var i=0; i < this.node.nodes.length; i++) {
+                  if (this.treeCtrl.isSelected(this.node.nodes[i].key)) {
+                    return true
+                  }
+                }
+                return false
+              }
               return this.treeCtrl.isSelected(this.node.key);
             };
 
@@ -789,6 +817,8 @@
         link: function(scope, el, attrs, ctrls) {
           scope.toggleNode = function(evt) {
             var parentEL = el.find('.fa').first()
+            // for some reason both classes are on the element
+            // this must be delt with in a better way TODO
             if (parentEL.attr('class').indexOf('fa-minus-square fa-plus-square') !=0 ){
               parentEL.removeClass('fa-plus-square');
             }
