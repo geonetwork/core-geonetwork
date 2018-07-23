@@ -68,6 +68,23 @@
       }
     }
   }
+  .noThumbnail {
+    // display icon when there is no thumbnail
+    .gn-img-thumbnail:after {
+      content: "\f03e"; 
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: inherit;
+      position: absolute;
+      font-size: 46px;
+      color: #eaeaea;
+      top: 50%;
+      left: 50%;
+      margin: -32px 0 0 -23px;
+      z-index: 1;
+    }
+  }
   li:hover {
     .title {
       color: #000;
@@ -130,6 +147,8 @@
           margin-top: 4px;
           margin-right: 10px;
         }
+      }
+      .resultcard.hasThumbnail {
         &:hover {
           .gn-img-thumbnail {
             filter: none !important;
@@ -173,6 +192,9 @@
           display: block;
           width: 100%;
         }
+
+      }
+      .resultcard.hasThumbnail {
         &:hover {
           .gn-img-thumbnail {
             filter: none !important;
@@ -182,11 +204,11 @@
           }
         }
       }
-      .resultcard.hasThumbnail {
+      //.resultcard.hasThumbnail {
         .abstract {
           display: none !important;
         }
-      }
+      //}
     }
     li:hover {
       .resultcard {
