@@ -72,5 +72,21 @@
   "mdActions": "Associated services",
   "mdActions-view": "Viewable",
   "mdActions-download": "Downloadable",
-  "mdActions-process": "Process"
+  "mdActions-process": "Process",
+  "emodnetDownloadForm": "Download form",
+  "emodnetDownloadInfo": "Please share with us the reason for downloading this data.",
+  "purpose": "Purpose",
+  "otherReason": "Please indicate the purpose",
+  "organizationName": "Organisation name",
+  "organizationType": "Organisation type",
+  "emodnetPurpose-Commercial": "Commercial/Industry",
+  "emodnetPurpose-Education": "Education/Research",
+  "emodnetPurpose-Personal": "Personal use",
+  "emodnetPurpose-Policy": "Policy making",
+  "emodnetPurpose-Other": "Other",
+  "emodnetOrgType-Academia": "Academia/Research",
+  "emodnetOrgType-Government": "Government/Public Administration",
+  "emodnetOrgType-Business": "Business and Private Company",
+  "emodnetOrgType-NGO": "NGOs/Civil Society",
+  "emodnetOrgType-Other": "Autre"
 }
