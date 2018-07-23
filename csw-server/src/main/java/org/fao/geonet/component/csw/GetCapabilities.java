@@ -73,6 +73,8 @@ import javax.servlet.ServletContext;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
 
+import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
+
 /**
  * TODO javadoc.
  */
@@ -354,10 +356,15 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         HashMap<String, String> vars = new HashMap<String, String>();
 
-        vars.put("$PROTOCOL", sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL));
+        String protocol = sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+        vars.put("$PROTOCOL", protocol);
         vars.put("$HOST", sm.getValue(Settings.SYSTEM_SERVER_HOST));
-        String port = sm.getValue(Settings.SYSTEM_SERVER_PORT);
-        vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
+
+        String insecureport = sm.getValue(Settings.SYSTEM_SERVER_PORT);
+        String secureport = sm.getValue(Settings.SYSTEM_SERVER_SECURE_PORT);
+
+        String port = "https".equals(protocol) ? secureport : insecureport;
+        vars.put("$PORT", isPortRequired(protocol, port) ? ":" + port : "");
         vars.put("$END-POINT", context.getService());
         vars.put("$NODE_ID", context.getNodeId());
 
