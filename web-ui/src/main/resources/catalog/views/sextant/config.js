@@ -465,6 +465,9 @@
             }
           );
         }
+        if(sxtSettings.metadataType)  {
+          searchSettings.filters.type = sxtSettings.metadataType;
+        }
       }
 
       searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
