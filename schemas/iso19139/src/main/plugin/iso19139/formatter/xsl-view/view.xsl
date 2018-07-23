@@ -104,15 +104,8 @@
   </xsl:template>
 
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
-    <h4>
-      <i class="fa fa-fw fa-image">&#160;</i>&#160;
-      <span>
-        <xsl:value-of select="$schemaStrings/overviews"/>
-      </span>
-    </h4>
-
     <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-      <img class="gn-img-thumbnail center-block"
+      <img class="gn-img-thumbnail img-thumbnail center-block"
            src="{gmd:fileName/*}"/>
 
       <xsl:for-each select="gmd:fileDescription">

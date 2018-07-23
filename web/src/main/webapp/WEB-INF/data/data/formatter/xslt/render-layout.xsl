@@ -83,7 +83,7 @@
                itemtype="{gn-fn-core:get-schema-org-class($type)}">
 
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-9">
 
             <header>
               <h1>
@@ -110,21 +110,22 @@
                                    select="."/>
             </xsl:for-each>
           </div>
-          <div class="gn-md-side col-md-4">
-            <xsl:apply-templates mode="getOverviews" select="$metadata"/>
-
-            <br/>
+          <div class="gn-md-side col-md-3">
 
             <section class="links"
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
-              <h4 translate="">accessData</h4>
+              <h3 translate="">accessData</h3>
               <sxt-links-btn>&#160;</sxt-links-btn>
             </section>
 
             <br/>
+
+            <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+
+            <br/>
+
             <xsl:if test="$css != 'checkpoint' and
                           $view != 'emodnetHydrography' and $view != 'sdn'">
-
               <section>
                 <h4>
                   <i class="fa fa-fw fa-cog">&#160;</i>&#160;
