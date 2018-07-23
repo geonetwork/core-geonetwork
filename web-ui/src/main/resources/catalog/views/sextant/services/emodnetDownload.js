@@ -73,27 +73,30 @@
           this.importLibrary();
 
           var scope = $rootScope.$new(true);
-
-          // hardcoded tracking values
-          scope.values = {
-            'DownloadForm-sender_id': 'sextant',
-            'DownloadForm-data_url': urls[0]
-          };
+          scope.values = {};
 
           var category = 'Download_form';
 
-          scope.submit = function() {
-            Object.keys(scope.values).forEach(function(key) {
-              if (scope.values[key]) {
-                _paq.push(['trackEvent', category, key, scope.values[key]]);
+          var addTrackingValues = function (url, values) {
+            // hardcoded tracking values
+            values['DownloadForm-sender_id'] = 'sextant';
+            values['DownloadForm-data_url'] = url;
+
+            Object.keys(values).forEach(function(key) {
+              if (values[key]) {
+                _paq.push(['trackEvent', category, key, values[key]]);
               }
             });
-            _paq.push(['trackEvent', category, 'DownloadForm-jsondata', JSON.stringify(scope.values)]);
+            _paq.push(['trackEvent', category, 'DownloadForm-jsondata', JSON.stringify(values)]);
+          }
 
-            // open each url for download
+          scope.submit = function() {
+            // for each url, send tracking values & open for download
             urls.forEach(function(url) {
+              addTrackingValues(url, scope.values);
               window.open(url);
             });
+
             modal.modal('hide');
           };
 
