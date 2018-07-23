@@ -214,17 +214,17 @@
       <xsl:choose>
         <xsl:when test="@type='application/vnd.ogc.wms_xml' and $bDynamic">
           <xsl:choose>
-            <xsl:when test="number($west) and number($south) and number($east)
-              and number($north) and string($nameL)!='' and not(contains(@href,'?'))">
+            <xsl:when test="number($west[1]) and number($south[1]) and number($east[1])
+              and number($north[1]) and string($nameL)!='' and not(contains(@href,'?'))">
               <!-- The following link is a web map service.
                                 There's a hint providing the possible layers available in the service -->
               <xsl:variable name="xyRatio"
-                            select="string(number($north - $south) div number($east - $west))"/>
+                            select="string(number($north[1] - $south[1]) div number($east[1] - $west[1]))"/>
               <!-- This is a full GetMap request resulting in a PNG image of 200px wide-->
               <link href="{@href}" type="{@type}" rel="alternate" title="{@title}"
                     gn:layers="{$nameL}"/>
               <link href="{concat(@href,'?SERVICE=wms$amp;VERSION=1.1.1&amp;REQUEST=GetMap&amp;BBOX=',
-                concat($west,',',$south,',',$east,',',$north),
+                concat($west[1],',',$south[1],',',$east[1],',',$north[1]),
                 '&amp;LAYERS=',$nameL,
                 '&amp;SRS=EPSG:4326&amp;WIDTH=200&amp;HEIGHT='
                 ,string(round(200 * number($xyRatio)))
