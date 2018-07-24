@@ -24,119 +24,56 @@
 package dublincore
 
 import org.fao.geonet.api.records.formatters.groovy.Environment
-import org.fao.geonet.api.records.formatters.groovy.util.*
 
-public class Handlers {
+class Handlers {
     public static final String TITLE_EL_NAME = 'dc:title'
-    public static final String DESC_EL_NAME = 'dc:description'
-    protected org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
+    protected org.fao.geonet.api.records.formatters.groovy.Handlers handlers
     protected org.fao.geonet.api.records.formatters.groovy.Functions f
     protected Environment env
     common.Handlers commonHandlers
     public String rootEl
-    def excludedEls = []
-    def urlElts = ['dc:relation']
+    def urlElts = ['dct:references']
+    String rootEl
 
-    public Handlers(handlers, f, env) {
+
+
+    Handlers(handlers, f, env) {
         this(handlers, f, env, "simpledc")
     }
 
-    public Handlers(handlers, f, env, rootEl) {
+    Handlers(handlers, f, env, rootEl) {
         this.handlers = handlers
         this.f = f
         this.env = env
-        commonHandlers = new common.Handlers(handlers, f, env)
         this.rootEl = rootEl
-        excludedEls << rootEl
+        commonHandlers = new common.Handlers(handlers, f, env)
     }
 
-    public void addDefaultHandlers() {
+    void addDefaultHandlers() {
         commonHandlers.addDefaultStartAndEndHandlers()
-
-        handlers.add name: "Normal Elements", select: {
-            !excludedEls.contains(it.name()) && !it.text().isEmpty()
-        }, group:true, handleNormalEls
-        handlers.add name: 'Root Element', select: rootEl, priority: -1, handleRootEl
-    }
-
-    def firstNonEmpty(el) {
-        if (el.text().isEmpty()) {
-            return null;
-        } else {
-            return el.find { !it.text().isEmpty() }.text()
-        }
-    }
-
-    def handleRootEl = { el ->
-        Summary summary = new Summary(handlers, env, f);
-
-        summary.title = firstNonEmpty(el[TITLE_EL_NAME])
-        summary.abstr = getAbstract(el)
-        summary.content = handlers.processElements(el.children())
-        summary.addNavBarItem(new NavBarItem(f.translate('complete'), null, '.container > .entry:not(.overview)'))
-        summary.addNavBarItem(commonHandlers.createXmlNavBarItem())
-        summary.addCompleteNavItem = false
-        summary.addOverviewNavItem = true
-
-        LinkBlock linkBlock = new LinkBlock(f.translate("links"), "fa fa-link");
-        summary.links.add(linkBlock)
-        def toLink = { linkEl ->
-            Link link;
-            try {
-                def href = linkEl.text()
-                link = new Link(href, href);
-
-            } catch (URISyntaxException e) {
-                link = new Link("alert('${f.translate('notValidUri')}')", linkEl.text());
-            }
-
-            return link
-        }
-
-        def relatedLinkType = new LinkType("related", null, null, "fa fa-sitemap")
-        def referencesLinkType = new LinkType("references", null, null, "fa fa-arrows-h")
-        el.'dc:relation'.each{linkBlock.put(relatedLinkType, toLink(it))}
-        el.'dc:URI'.each{linkBlock.put(referencesLinkType, toLink(it))}
-
-        summary.result
+        handlers.add name: "Normal Elements", select: {!it.text().isEmpty()}, group:true, handleNormalEls
     }
 
     def handleNormalEls = { els ->
-        def sections = new TreeMap(
-                [compare:{el1, el2 ->
-                    if (el1 == TITLE_EL_NAME) return -1
-                    else if (el2 == TITLE_EL_NAME) return 1
-                    else return f.nodeLabel(el1, null).compareTo(f.nodeLabel(el2, null))
-                }] as Comparator);
+        def replacements = els
+                .groupBy({f.nodeLabel(it.name(), null)})
+                .sort({el1, el2 ->
+                    if (el1.key == f.nodeLabel(TITLE_EL_NAME, null))    return -1
+                    if (el2.key == f.nodeLabel(TITLE_EL_NAME, null))    return 1
+                    if (el1.value.size < el2.value.size)                return -1
+                    if (el2.value.size < el1.value.size)                return 1
+                    return el1.key <=> el2.key})
+                .inject('', {entries, entry ->
+                    if (entry.value.size() > 1) {
+                        return entries + handlers.fileResult("html/list-entry.html", [label: entry.key, listItems: entry.value])
+                    }
+                    def el = entry.value.iterator().next()
+                    if(!urlElts.contains(el.name())) {
+                        return entries + handlers.fileResult("html/text-el.html", [label: entry.key, text: el.text()])
+                    }
+                    return entries + handlers.fileResult("html/url-el.html", ["label": entry.key, "href" : el.text(), "text" :
+                            el.text().length() > 50 ? (el.text().substring(0, 50) + "...") : el.text()])})
 
-
-        els.each{
-            def list = sections[it.name()]
-            list = list == null ? [] : list
-            list << it
-            sections.put(it.name(), list)
-        }
-
-        def singles = new StringBuilder()
-        def multiples = new StringBuilder()
-        sections.entrySet().each { entry ->
-            if (entry.value.size() > 1) {
-                multiples.append(handlers.fileResult("html/list-entry.html", [label: f.nodeLabel(entry.key, null), listItems: entry.value]))
-            } else {
-                def el = entry.value.iterator().next()
-                if(!urlElts.contains(el.name()))
-                    singles.append(handlers.fileResult("html/text-el.html", [label: f.nodeLabel(el), text: el.text()]))
-                else
-                    singles.append(handlers.fileResult("html/url-el.html", ["label": f.nodeLabel(el), "href" : el.text(), "text" :
-                            el.text().length() > 50 ? (el.text().substring(0, 50) + "...") : el.text()]))
-
-            }
-        }
-
-        return handlers.fileResult("html/2-level-entry.html", [label: f.nodeLabel(rootEl, null), childData: singles.toString() + multiples])
-    }
-
-    public String getAbstract(el) {
-        return firstNonEmpty(el[DESC_EL_NAME])
+        return handlers.fileResult("html/2-level-entry.html", [label: f.nodeLabel(rootEl, null), childData: replacements])
     }
 }

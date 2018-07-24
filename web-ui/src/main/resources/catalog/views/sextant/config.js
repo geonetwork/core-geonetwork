@@ -240,7 +240,7 @@
           } else if(md.getSchema() == 'iso19139.emodnet.hydrography') {
             url = 'md.format.xml?xsl=emodnet&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'dublin-core') {
-            url = '../api/records/' + md.getUuid() + '/formatters/xsl-view?root=div&view=advanced';
+            url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19115-3') {
             var view =
               md.standardName ===

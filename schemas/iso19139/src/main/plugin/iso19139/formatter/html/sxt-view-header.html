@@ -42,6 +42,11 @@
           <dt data-fmt-if="abstract" translate="">abstract</dt>
           <dd data-fmt-if="abstract" class="md-abstract"><p>{{abstract}}</p>
           </dd>
+          <!--the following is hidden by default and can be overidden using a theme-->
+          <dt data-fmt-if="networkLinksDescription" class="md-network-link-description" translate="">networkLinksDescription</dt>
+          <dd data-fmt-if="networkLinksDescription" class="md-abstract md-network-link-description">
+            <p fmt-repeat="networkLink in networkLinksDescription">{{networkLink}}</p>
+          </dd>
 
           <dt data-fmt-if="dates" translate="">Date(s)</dt>
           <dd data-fmt-if="dates">
