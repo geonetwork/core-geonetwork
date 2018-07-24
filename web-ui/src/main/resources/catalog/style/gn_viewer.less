@@ -15,7 +15,6 @@
     position: absolute;
     clip: rect(1px, 1px, 1px, 1px);
     right: 0;
-    z-index: 60;
   }
 
   button:focus [role=tooltip],
@@ -38,6 +37,17 @@
       margin-left: 1.5em;
       margin-top: -7px;
       padding-top: 9px;
+    }
+  }
+  @media screen and (max-height: 768px) {
+    .control-tools {
+      button:focus [role=tooltip],
+      button:hover [role=tooltip] {
+        right: auto;
+        margin-left: 1.5em;
+        margin-top: -7px;
+        padding-top: 9px;
+      }
     }
   }
 
@@ -83,6 +93,7 @@
     top: @viewport-padding;
     left: @viewport-padding;
     width: 20em;
+    max-width: 75%;
     .dropdown-menu {
       width: 100%;
       top: ~"calc(100% - 3px)";
@@ -157,7 +168,11 @@
     top: auto;
     bottom: calc(~"50px + 1em");
     position: fixed;
+    @media screen and (max-height: 768px) {
+      left: @viewport-padding;
+    }
   }
+
   & > .panel {
     background: #fff;
   }
@@ -170,7 +185,7 @@
     border-radius: 0;
     min-height: 30em;
     max-height: ~"calc(100% - 2em)";
-    max-width: ~"calc(100% - 4em)";
+    max-width: ~"calc(100% - 4.5em)";
     overflow-y: auto;
     transition: opacity @transition-params;
     z-index: 80;
@@ -429,11 +444,15 @@
     .alert {
       margin-top: 1em;
     }
+    dl {
+      margin-top: 10px;
+    }
     dt {
-      width: 120px;
+      width: 100px;
+      text-align: left;
     }
     dd {
-      margin-left: 130px;
+      margin-left: 110px;
     }
   }
 
