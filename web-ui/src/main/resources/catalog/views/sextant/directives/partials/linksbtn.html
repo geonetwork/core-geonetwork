@@ -39,13 +39,14 @@
         <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
         <span class="fsxt" ng-if="layer.contentType=='application/vnd.ogc.wms_xml' || layer.contentType=='OGC:WMTS'">c</span>
         <span class="fa fa-globe" ng-if="layer.contentType=='OGC:OWS-C'"></span>
-        {{layer.desc || layer.name}} </a></li>
+        {{layer.desc || layer.name}} </a>
+      </li>
       <li class="divider"></li>
-      <li>
+      <li ng-if="getAddAllLayersCount() > 1">
         <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md, $event)">
           <i class="fa fa-plus"></i>
                   <span data-translate=""
-                        data-translate-values="{number: '{{layers.length}}'}">
+                        data-translate-values="{number: '{{addAllLayersCount}}'}">
                     addAllLayersToMap</span>
         </a>
       </li>
