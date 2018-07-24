@@ -121,6 +121,7 @@
             },
             require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
+              scope.location = window.location;
               var promise;
               scope.container = scope.$parent.container || '.links';
               var elem = element[0];

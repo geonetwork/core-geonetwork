@@ -402,6 +402,16 @@ public class SettingManager {
         String host = getValue(Settings.SYSTEM_SERVER_HOST);
         String port = getValue(Settings.SYSTEM_SERVER_PORT);
 
-        return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + baseURL + "/";
+        return protocol + "://" + host + (isPortRequired(protocol, port) ? ":" + port : "") + baseURL + "/";
+    }
+
+    static public boolean isPortRequired(String protocol, String port) {
+        if("http".equals(protocol) && "80".equals(port)) {
+            return false;
+        } else if("https".equals(protocol) && "443".equals(port)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

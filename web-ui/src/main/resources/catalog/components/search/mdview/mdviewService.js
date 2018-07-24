@@ -305,6 +305,7 @@
                 gnSearchSettings.tabOverflow.search) {
               el.setAttribute('class', 'sxt-scroll');
             }
+            $(selector).find('[gn-metadata-display]').remove();
             $(selector).append(el);
             $compile(el)(newscope);
           }, function() {

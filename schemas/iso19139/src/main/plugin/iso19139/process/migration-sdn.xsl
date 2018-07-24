@@ -198,6 +198,36 @@
   <xsl:template match="gmd:contentInfo"/>
 
 
+
+  <xsl:template match="gmd:MD_Distribution" priority="2">
+    <xsl:copy>
+      <xsl:apply-templates
+        select="gmd:distributionFormat"/>
+      <!-- Forget about past distributor encoding
+       only containing links.
+       <xsl:apply-templates
+        select="gmd:distributor"/>-->
+      <xsl:apply-templates
+        select="gmd:transferOptions"/>
+
+      <!-- Copy links from the distributor section to here -->
+      <xsl:if test="count(gmd:distributor/*/
+                                gmd:distributorTransferOptions/*/
+                                  gmd:onLine) > 0">
+        <gmd:transferOptions>
+          <gmd:MD_DigitalTransferOptions>
+            <xsl:copy-of select="gmd:distributor/*/
+                                gmd:distributorTransferOptions/*/
+                                  gmd:onLine"/>
+          </gmd:MD_DigitalTransferOptions>
+        </gmd:transferOptions>
+      </xsl:if>
+
+
+    </xsl:copy>
+  </xsl:template>
+
+  
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
     <xsl:copy>

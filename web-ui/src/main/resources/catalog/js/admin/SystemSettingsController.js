@@ -278,8 +278,20 @@
         var protocol = filterBySection(settings,
             'system/server/protocol')[0].value;
 
-        return protocol + '://' + host + (port == '80' ? '' : ':' + port);
+        return protocol + '://' + host +
+                (isPortRequired(procotol, port) ? ':' + port : '');
       };
+
+      var isPortRequired = function(protocol, port) {
+        if (protocol == 'http' && port == '80') {
+          return false;
+        } else if (protocol == 'https' && port == '443') {
+          return false;
+        } else {
+          return true;
+        }
+      }
+
       /**
        * Save settings and move to the batch process page
        *
