@@ -196,7 +196,7 @@ public class Do implements Service {
             final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
             GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
                 g.getUsername(), g.getUserpassword(),
-                g.getNamespacePrefix(), baseUrl, m.pushStyleInWorkspace());
+                g.getNamespacePrefix(), baseUrl, settingsManager.getNodeURL(), m.pushStyleInWorkspace());
 
             String file = Util.getParam(params, "file");
             String access = Util.getParam(params, "access");

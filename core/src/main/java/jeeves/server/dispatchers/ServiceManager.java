@@ -370,10 +370,12 @@ public class ServiceManager {
         // Session is created by ApiInterceptor when needed
         // Save the session here in the ServiceContext (not used in the API package).
         final HttpSession httpSession = request.getSession(false);
-        UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
-        if (session != null) {
+        if (httpSession != null) {
+            UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+            if (session != null) {
 
-            context.setUserSession(session);
+                context.setUserSession(session);
+            }
         }
 
         return context;

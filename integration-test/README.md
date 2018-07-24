@@ -8,13 +8,15 @@ Based on [selenium-cucumber](https://github.com/selenium-cucumber/selenium-cucum
 
 Go to your project directory from terminal and hit following command
 
-* `mvn test -Dbrowser=phantomjs -Dphantomjs.binary.path=$DRIVERS_BIN/phantomjs -DendPointToTest=http://localhost:8080/geonetwork`
+* With phantomJS `mvn test -Dbrowser=phantomjs -Dphantomjs.binary.path=$DRIVERS_BIN/phantomjs -DendPointToTest=http://localhost:8080/geonetwork`
+* With Chrome `mvn test -Dbrowser=chrome -Dwebdriver.chrome.driver=/pathto/chromedriver -DendPointToTest=http://localhost:8080/geonetwork`
 
 * The url to test could by defined in **src/test/resources/system.properties** by changing the property **endPointToTest.url** or provided to the mvn command with the parameter `-DendPointToTest=YOUR_URL`
 
 * By default the mvn command run all the test in the folder **src/test/resources/features**. To specify a different folder use the parameter `-Dcucumber.options="your path"`
 
 * To specify a path for the reports use the option `-Dcucumber.options="--plugin html:./report` in case you need to specify your path, the path must go after `-Dcucumber.options="--plugin html:./report your path`
+
 
 
 ## PhantomJS driver
@@ -30,6 +32,10 @@ If you want to see the running tests on firefox you can also use a geckodriver b
 `mvn test -Dbrowser=firefox -Dwebdriver.gecko.driver=$DRIVERS_BIN/geckodriver`
 
 Download the geckodriver from [here](https://github.com/mozilla/geckodriver/releases)
+
+## Chrome driver
+
+Download Chrome driver from [here](http://chromedriver.chromium.org/downloads).
 
 
 ## Writing a test

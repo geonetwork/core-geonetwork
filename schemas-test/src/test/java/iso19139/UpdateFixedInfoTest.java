@@ -124,7 +124,7 @@ public class UpdateFixedInfoTest extends AbstractServiceIntegrationTest {
             "*//gmd:descriptiveKeywords[2]//gmd:keyword", NAMESPACES).size());
 
         assertEqualsText(
-            "local://api/registries/vocabularies/keyword?thesaurus=external.theme.inspire-theme&id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&multiple=false&lang=ger,fre,eng,ita&textgroupOnly",
+            "local://api/registries/vocabularies/keyword?thesaurus=external.theme.httpinspireeceuropaeutheme-theme&id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&multiple=false&lang=ger,fre,eng,ita&textgroupOnly",
             updatedXml,
             "*//gmd:descriptiveKeywords[1]/@xlink:href", XLINK, GCO, GMD);
         assertEqualsText("local://api/registries/vocabularies/keyword?skipdescriptivekeywords=true&thesaurus=local._none_.geocat.ch&id=http://geocat.ch/concept#1,http://geocat.ch/concept#20&multiple=true&lang=ger,fre,eng,ita&textgroupOnly=",
