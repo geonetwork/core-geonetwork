@@ -435,6 +435,14 @@
 
             scope.resetSLDFilters();
 
+            // reset expanded status
+            angular.forEach(scope.fields, function(f) {
+              f.expanded = false;
+            });
+            if (scope.indexObject && scope.indexObject.geomField) {
+              scope.indexObject.geomField.expanded = false;
+            }
+
             var boxElt = element.find('.gn-bbox-input');
             if (boxElt.length) {
               angular.element(boxElt).scope().clear();
@@ -589,10 +597,12 @@
           }
 
           //Manage geographic search
-          scope.$watch('ctrl.searchGeometry', function(geom, old) {
+          scope.$watch(function() {
+            return (scope.ctrl.searchGeometry || '').replace(',,,', '');
+          }, function(geom, old) {
             extentFilter = undefined;
             scope.filterGeometry = undefined;
-            if (geom && geom != ',,,') {
+            if (geom !== '') {
               extentFilter = geom.split(',').map(function(val) {
                 return parseFloat(val);
               });
