@@ -378,11 +378,10 @@
       $scope.gotoPanier = function() {
         $location.path('/panier');
       };
-      // In order to add all layers to the map at less two layers (and not maps) must exist
-      $scope.getAddAllLayersCount = function() {
-        $scope.addAllLayersCount = this.layers.filter(
+      // In order to add all layers to the map at least two layers (and not maps) must exist
+      $scope.getMapLayersCount = function(layers) {
+        return layers.filter(
           function (layer) {return layer.contentType!=='OGC:OWS-C'}).length
-        return $scope.addAllLayersCount
       }
 
       angular.extend($scope.searchObj, {

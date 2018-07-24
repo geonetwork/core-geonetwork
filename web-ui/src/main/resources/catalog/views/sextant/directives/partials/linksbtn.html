@@ -42,11 +42,11 @@
         {{layer.desc || layer.name}} </a>
       </li>
       <li class="divider"></li>
-      <li ng-if="getAddAllLayersCount() > 1">
+      <li ng-if="getMapLayersCount(layers) > 1">
         <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md, $event)">
           <i class="fa fa-plus"></i>
                   <span data-translate=""
-                        data-translate-values="{number: '{{addAllLayersCount}}'}">
+                        data-translate-values="{number: '{{getMapLayersCount(layers)}}'}">
                     addAllLayersToMap</span>
         </a>
       </li>
