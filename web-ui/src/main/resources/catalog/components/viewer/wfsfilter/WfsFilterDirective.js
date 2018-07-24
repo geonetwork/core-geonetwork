@@ -749,28 +749,81 @@
           node: '<gnWfsFilterFacetsTreeItem'
         },
         require: {
-          treeCtrl: '^^gnWfsFilterFacetsTree'
+          treeCtrl: '^^gnWfsFilterFacetsTree',
+          parentCtrl: '?^^gnWfsFilterFacetsTreeItem'
         },
         bindToController: true,
         controllerAs: 'ctrl',
-        controller: ['$attrs', function($attrs) {
+        controller: ['$attrs', '$element', function($attrs, $element) {
+          this.element = $element;
           this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot'] ===
               undefined;
 
           this.$onInit = function() {
-
             this.onCheckboxTreeClick = function() {
+              // when the parent is clicked and all children are selected, deselect the children
+              // and if the parent is unselected unselect all children
+              if (this.node.nodes) {
+                var allChildrenSelected = true;
+                for (var i=0; i < this.node.nodes.length; i++) {
+                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key)) {
+                    // at least one child is not selected
+                    allChildrenSelected = false;
+                    break
+                  }
+                }
+                for (var i=0; i < this.node.nodes.length; i++) {
+                  if (!this.treeCtrl.isSelected(this.node.nodes[i].key) || allChildrenSelected) {
+                    this.treeCtrl.onCheckboxTreeClick(this.node.nodes[i].key);
+                  }
+                }
+                return
+              }
+              // do the event
               this.treeCtrl.onCheckboxTreeClick(this.node.key);
             };
+
             this.isSelected = function() {
+              // if at least one child is selected then we check the parent
+              if (this.node.nodes) {
+                for (var i=0; i < this.node.nodes.length; i++) {
+                  if (this.treeCtrl.isSelected(this.node.nodes[i].key)) {
+                    return true
+                  }
+                }
+                return false
+              }
               return this.treeCtrl.isSelected(this.node.key);
             };
+
+
+            function toggleClass (controller) {
+              if (!controller) return
+              if (!controller.selectedOninit && !controller.isRoot) {
+                controller.selectedOninit = true;
+                controller.element.find('.fa').first().toggleClass('fa-minus-square')
+                  .toggleClass('fa-plus-square');
+                controller.element.children('.list-group').toggle();
+              }
+
+              return toggleClass(controller.parentCtrl);
+            }
+
+            if(this.isSelected() && !this.isRoot) {
+              toggleClass(this.parentCtrl);
+            }
           };
         }],
         link: function(scope, el, attrs, ctrls) {
           scope.toggleNode = function(evt) {
-            el.find('.fa').first().toggleClass('fa-minus-square')
-                .toggleClass('fa-plus-square');
+            var parentEL = el.find('.fa').first()
+            // for some reason both classes are on the element
+            // this must be delt with in a better way TODO
+            if (parentEL.attr('class').indexOf('fa-minus-square fa-plus-square') !=0 ){
+              parentEL.removeClass('fa-plus-square');
+            }
+            parentEL.toggleClass('fa-minus-square')
+              .toggleClass('fa-plus-square');
             el.children('.list-group').toggle();
             !evt || evt.preventDefault();
             evt.stopPropagation();

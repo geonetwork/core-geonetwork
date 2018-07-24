@@ -11,8 +11,8 @@
       on-change-fn="updateCallback({from: pickerValues.from, to: pickerValues.to})"
       date-only-highlight="true"
       date-available="dates">
-    <input type="text" class="input-sm form-control" name="start" value="{{::pickerValues.from}}"/>
+    <input type="text" ng-blur="onBlur($event)" class="input-sm form-control" name="start" value="{{::pickerValues.from}}"/>
     <span class="input-group-addon" translate>dateToDate</span>
-    <input type="text" class="input-sm form-control" name="end" value="{{::pickerValues.to}}" />
+    <input type="text" ng-blur="onBlur($event)" class="input-sm form-control" name="end" value="{{::pickerValues.to}}" />
   </div>
 </div>

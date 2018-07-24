@@ -20,11 +20,11 @@
     <div ng-if="!member.get('loading')" class="flex-row">
       <!-- Visibility check box & Layer title-->
       <label class="flex-row layer-label">
-        <i ng-if="!groupCombo" class="fa sxt-layer-visibility"
-          ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'"
+        <i ng-if="!groupCombo" class="fa fa-fw sxt-layer-visibility"
+          ng-class="(member.visible) ? 'fa-check-square-o' : 'fa-square-o'"
           title="{{'layerVisible'|translate}}"></i>
-        <i ng-if="groupCombo" class="fa sxt-layer-visibility"
-          ng-class="(member.visible) ? 'fa-check-circle' : 'fa-circle'"
+        <i ng-if="groupCombo" class="fa fa-fw sxt-layer-visibility"
+          ng-class="(member.visible) ? 'fa-check-circle-o' : 'fa-circle-o'"
           title="{{'layerVisible'|translate}}"></i>
 
         &nbsp;

@@ -88,7 +88,7 @@
               <li ng-repeat="elt in panier" class="list-group-item">
                 <label ng-click="elt.validated = !elt.validated; validateDownload()">
                   <i class="fa fa-fw sxt-layer-visibility text-primary"
-                    ng-class="elt.validated ? 'fa-check-square' : 'fa-square'"/>
+                    ng-class="elt.validated ? 'fa-check-square-o' : 'fa-square-o'"/>
                   {{elt.md.title || elt.md.defaultTitle}}
                 </label>
                 <a class="btn btn-link" data-toggle="collapse" data-target="#w{{elt.md.getUuid()}}" aria-expanded="false">

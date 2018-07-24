@@ -412,6 +412,15 @@
             }
           });
         }
+        scope.onBlur = function(evt) {
+          if (evt.target.name == 'start') {
+           scope.values.from = evt.target.value;
+          }
+          if (evt.target.name == 'end') {
+            scope.values.to = evt.target.value;
+          }
+         refreshGraphRange();
+        }
 
         // update view if dates are changed from outside
         scope.$watch(function() {
