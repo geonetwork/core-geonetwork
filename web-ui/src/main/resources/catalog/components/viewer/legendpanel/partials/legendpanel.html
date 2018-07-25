@@ -12,4 +12,9 @@
       <em>{{layer.get('attribution')}}</em>
     </h6>
   </li>
+  <li data-ng-if="(layers | gnReverse | filter:layerFilterFn).length == 0"
+      class="list-group-item">
+    <span data-translate="">noLayersFound</span>
+  </li>
 </ul>
+
