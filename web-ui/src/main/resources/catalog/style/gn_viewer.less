@@ -632,11 +632,14 @@ gn-features-tables, .gn-viewer-info-pane {
   position         : absolute;
   bottom           : 0;
   left             : 1em;
-  right            : 3.5em;
+  right            : 4.5em;
   background-color:#fff;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-  z-index: 55;
+  z-index: 85;
+  @media screen and (max-height: 768px) {
+    left: 4.5em;
+  }
   .nav li a {
     background  : rgba(255, 255, 255, .5);
     text-shadow : 0 0 1px white;
