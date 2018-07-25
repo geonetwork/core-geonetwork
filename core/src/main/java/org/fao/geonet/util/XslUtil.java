@@ -38,6 +38,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -655,7 +656,7 @@ public final class XslUtil {
 
             final Envelope envelope = jts.getEnvelopeInternal();
             return
-                String.format("%f|%f|%f|%f",
+                String.format(Locale.US, "%f|%f|%f|%f",
                     envelope.getMinX(), envelope.getMinY(),
                     envelope.getMaxX(), envelope.getMaxY());
         } catch (Throwable e) {
