@@ -15,12 +15,14 @@
   </div>
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
-      <li data-ng-if="gnCfg.mods.home.enabled">
-        <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
-          <img class="gn-logo"
-               alt="{{'siteLogo' | translate}}"
-               data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
-          <span class="hidden-sm hidden-md gn-name" 
+      <li class="clearfix" data-ng-if="gnCfg.mods.home.enabled">
+          <a class="pull-left" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
+            <img class="gn-logo"
+                  alt="{{'siteLogo' | translate}}"
+                  data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
+          </a>
+        <a class="gn-nopadding-left hidden-sm hidden-md pull-left" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
+          <span class="gn-name" 
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
                 title="{{info['system/site/name']}}">{{info['system/site/name']}}</span>
         </a>
@@ -28,15 +30,15 @@
       <li data-ng-if="gnCfg.mods.search.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
            title="{{'search' | translate}}">
-          <i class="fa fa-search"></i>
-          <span class="hidden-sm" data-translate="">search</span>
+          <i class="fa fa-fw fa-search hidden-sm"></i>
+          <span data-translate="">search</span>
         </a>
       </li>
       <li data-ng-if="gnCfg.mods.map.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.map.externalViewer.baseUrl || gnCfg.mods.map.appUrl}}"
            title="{{'map' | translate}}">
-          <i class="fa fa-globe"></i>
-          <span class="hidden-sm" data-translate="">makeYourMap</span>
+          <i class="fa fa-fw fa-globe hidden-sm"></i>
+          <span data-translate="">makeYourMap</span>
 
           <span data-gnv-layer-indicator=""/>
         </a>
@@ -48,8 +50,8 @@
            title="{{'editorBoard' | translate}}"
            class="dropdown-toggle"
            role="button" aria-expanded="false">
-          <i class="fa fa-pencil"></i>
-          <span class="hidden-sm" data-translate="">contribute</span>
+          <i class="fa fa-fw fa-pencil hidden-sm"></i>
+          <span data-translate="">contribute</span>
         </a>
         <ul class="dropdown-menu" role="menu">
           <li>
@@ -79,8 +81,8 @@
            title="{{'adminConsole' | translate}}"
            class="dropdown-toggle"
            role="button" aria-expanded="false">
-          <i class="fa fa-wrench"></i>
-          <span class="hidden-sm" data-translate="">adminConsole</span>
+          <i class="fa fa-fw fa-wrench hidden-sm"></i>
+          <span data-translate="">adminConsole</span>
         </a>
         <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu" role="menu">
           <li data-ng-repeat="t in userAdminMenu">
@@ -108,7 +110,7 @@
     </form>
 
     <ul data-ng-if="gnCfg.mods.signin.enabled"
-        class="nav navbar-nav navbar-right">
+        class="nav navbar-nav navbar-right username-dropdown">
       <li class="dropdown dropdown-hover open" data-ng-show="authenticated">
         <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
           title="{{'userDetails' | translate}}"
@@ -116,9 +118,9 @@
           role="button" aria-expanded="false">
           <img class="img-circle"
             alt="{{'avatar' | translate}}"
-            data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>&nbsp;
-          <div class="gn-user-info">
-            {{user.name}} {{user.surname}}<br>
+            data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>
+          <div class="gn-user-info hidden-sm">
+            &nbsp;{{user.name}} {{user.surname}}<br>
             <span class="gn-user-role">{{user.profile | lowercase | translate}}</span>
           </div>
           <span class="alert alert-danger ng-hide"
@@ -130,9 +132,24 @@
           </span>
         </a>
         <ul class="dropdown-menu" role="menu">
+          <li class="text-center hidden-xs">
+            <img class="img-circle"
+                 alt="{{'avatar' | translate}}"
+                 data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=56"/>
+          </li>
+          <li role="separator" class="divider hidden-xs"></li>
+          <li class="dropdown-header hidden-xs" data-translate="">username</li>
+          <li class="hidden-xs">
+            <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}">{{user.name}} {{user.surname}}</a>
+          </li>
+          <li class="dropdown-header hidden-xs" data-translate="">profile</li>
+          <li class="hidden-xs">
+            <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}">{{user.profile | lowercase | translate}}</a>
+          </li>
+          <li role="separator" class="divider hidden-xs"></li>
           <li role="menuitem">
             <a href="{{gnCfg.mods.signout.appUrl}}"
-                title="{{'signout' | translate}}">
+               title="{{'signout' | translate}}">
               <i class="fa fa-sign-out"></i>&nbsp;
               {{'signout' | translate}}
             </a>
@@ -146,7 +163,7 @@
            class="dropdown-toggle"
            data-ng-keypress="$event"
            data-ng-mouseover="focusLoginPopup()">
-          <i class="fa fa-sign-in"/>&nbsp;
+          <i class="fa fa-sign-in hidden-sm"/>&nbsp;
           {{'signIn' | translate}}
         </a>
         <ul class="dropdown-menu" role="menu">
