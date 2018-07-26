@@ -73,5 +73,21 @@
   "mdActions-download": "Téléchargeable",
   "mdActions-process": "Traitement",
   "wpsSelectOutput": "Format de sortie",
-  "networkLinksDescription": "Télécharger (Chemin visible)"
+  "networkLinksDescription": "Télécharger (Chemin visible)",
+  "emodnetDownloadForm": "Formulaire de téléchargement",
+  "emodnetDownloadInfo": "Merci de nous indiquer la raison pour laquelle vous souhaitez télécharger ces données.",
+  "purpose": "Utilisation",
+  "otherReason": "Précisez l'utilisation",
+  "organizationName": "Nom de l'organisation",
+  "organizationType": "Type d'organisation",
+  "emodnetPurpose-Commercial": "Commerce / Industrie",
+  "emodnetPurpose-Education": "Education / Recherche",
+  "emodnetPurpose-Personal": "Utilisation personnelle",
+  "emodnetPurpose-Policy": "Politique",
+  "emodnetPurpose-Other": "Autre",
+  "emodnetOrgType-Academia": "Académique / Recherche",
+  "emodnetOrgType-Government": "Gouvernment / Administration",
+  "emodnetOrgType-Business": "Entreprise / Société privée",
+  "emodnetOrgType-NGO": "ONG / Société civile",
+  "emodnetOrgType-Other": "Autre"
 }

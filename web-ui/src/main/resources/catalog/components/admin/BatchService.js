@@ -62,9 +62,14 @@
          * metadata after the form has been saved.
          *
          * @param {Object} params to add to the request
+         * @param {boolean} skipSave doesn't save the metadata editor.
+         *                           Used when executing the process for
+         *                           a related metadata to the one being edited,
+         *                           like linking a service metadata
+         *                           to the related dataset.
          * @return {HttpPromise}
          */
-        runProcessMd: function(params) {
+        runProcessMd: function(params, skipSave) {
           if (!params.id && !params.uuid) {
             angular.extend(params, {
               id: gnCurrentEdit.id
@@ -73,19 +78,29 @@
           var defer = $q.defer();
           gnEditor.save(false, true)
               .then(function() {
-                $http.post('../api/records/' + (params.id || params.uuid) +
+                if (!skipSave) {
+                  $http.post('../api/records/' + (params.id || params.uuid) +
                     '/processes/' + params.process + '?' +
                     gnUrlUtils.toKeyValue(params)
-                ).then(function(data) {
-                  $http.get('../api/records/' + gnCurrentEdit.id + '/editor' +
+                  ).then(function(data) {
+                    $http.get('../api/records/' + gnCurrentEdit.id + '/editor' +
                       '?currTab=' + gnCurrentEdit.tab).then(function(data) {
-                    var snippet = $(data.data);
-                    gnEditor.refreshEditorForm(snippet);
+                      var snippet = $(data.data);
+                      gnEditor.refreshEditorForm(snippet);
+                      defer.resolve(data);
+                    });
+                  }, function(error) {
+                    defer.reject(error);
+                  });
+                } else {
+                  $http.post('../api/records/' + (params.id || params.uuid) +
+                    '/processes/' + params.process + '?' +
+                    gnUrlUtils.toKeyValue(params)
+                  ).then(function(data) {
                     defer.resolve(data);
                   });
-                }, function(error) {
-                  defer.reject(error);
-                });
+                }
+
               }, function(error) {
                 defer.reject(error);
               });

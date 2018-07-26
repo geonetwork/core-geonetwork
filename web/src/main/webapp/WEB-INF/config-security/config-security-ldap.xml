@@ -126,6 +126,7 @@
     <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
 
     <property name="contextSource" ref="contextSource" />
+    <property name="ldapUsernameCaseInsensitive" value="${ldap.usernameCaseInsensitive:#{true}}"/>
   </bean>
 
   <!-- Get all user information from the LDAP user's attributes excluding profiles and groups

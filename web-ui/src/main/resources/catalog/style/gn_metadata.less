@@ -431,6 +431,36 @@ ul.container-list {
       }
     }
   }
+
+
+
+  /* Override CMS styles in metadata view
+
+  eg. #content h1 {
+      border-bottom: solid 2px #afd687;
+      font: 2.8em Verdana, Geneva, sans-serif;
+      letter-spacing: 0.05em;
+      color: #008798;
+      text-shadow: -1px -1px 1px #cccccc;
+      }
+
+  A better approach would be to reset all styles from the parent
+  and then let GN styles apply.
+  */
+  h1 {
+    border-bottom: none !important;
+    font: 20px "Helvetica Neue", sans-serif !important;
+    color: #1b75bc !important;
+    text-shadow: none !important;
+  }
+  h4 {
+    border-bottom: none;
+  }
+
+}
+/* Fix keyword layout */
+.gn-metadata-view dd > ul {
+  padding-top: 0px !important;
 }
 
 [data-gn-metadata-contacts], [gn-metadata-contacts] {
@@ -438,3 +468,4 @@ ul.container-list {
     margin-left: -1.7em;
   }
 }
+

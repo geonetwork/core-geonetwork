@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -173,105 +174,35 @@ import javax.net.ssl.SSLHandshakeException;
  *
  * @author Simon Pigot
  */
-class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
+class Harvester extends BaseAligner<ThreddsParams> implements IHarvester<HarvestResult> {
 
-
-    //---------------------------------------------------------------------------
 
     static private final Namespace difNS = Namespace.getNamespace("http://gcmd.gsfc.nasa.gov/Aboutus/xml/dif/");
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
     static private final Namespace invCatalogNS = Namespace.getNamespace("http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0");
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
-
-    //---------------------------------------------------------------------------
     static private final Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-
-    //---------------------------------------------------------------------------
     static private final Namespace srv = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
-
-    //---------------------------------------------------------------------------
     static private final Namespace xlink = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 
-    //---------------------------------------------------------------------------
     private Logger log;
-
-    //---------------------------------------------------------------------------
     private ServiceContext context;
-
-    //---------------------------------------------------------------------------
-    private ThreddsParams params;
-
-    //---------------------------------------------------------------------------
     private DataManager dataMan;
-
-    //---------------------------------------------------------------------------
     private SchemaManager schemaMan;
-
-    //---------------------------------------------------------------------------
     private CategoryMapper localCateg;
-
-    //---------------------------------------------------------------------------
     private GroupMapper localGroups;
-
-    //---------------------------------------------------------------------------
     private UriMapper localUris;
-
-    //---------------------------------------------------------------------------
     private HarvestResult result;
-
-    //---------------------------------------------------------------------------
     private String hostUrl;
-
-    //---------------------------------------------------------------------------
     private HashSet<String> harvestUris = new HashSet<String>();
-
-    //---------------------------------------------------------------------------
     private Path cdmCoordsToIsoKeywordsStyleSheet;
-
-    //---------------------------------------------------------------------------
     private Path cdmCoordsToIsoMcpDataParametersStyleSheet;
-
-    //---------------------------------------------------------------------------
     private Path fragmentStylesheetDirectory;
-
-    //---------------------------------------------------------------------------
     private String metadataGetService;
-
-    //---------------------------------------------------------------------------
     private Map<String, ThreddsService> services = new HashMap<String, Harvester.ThreddsService>();
-
-    //---------------------------------------------------------------------------
     private InvCatalogImpl catalog;
-
-    //---------------------------------------------------------------------------
     private FragmentHarvester atomicFragmentHarvester;
-
-    //---------------------------------------------------------------------------
     private FragmentHarvester collectionFragmentHarvester;
-
-
-    //---------------------------------------------------------------------------
     private List<HarvestError> errors = new LinkedList<HarvestError>();
-
-    //---------------------------------------------------------------------------
-
-    /**
-     * Constructor
-     *
-     * @param context Jeeves context
-     * @param params  Information about harvesting configuration for the node
-     * @return null
-     **/
 
     public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, ThreddsParams params) {
         super(cancelMonitor);
@@ -541,19 +472,19 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setType(MetadataType.METADATA);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId())).
+            setOwner(getOwner()).
             setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid()).
             setUri(uri);
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
         dataMan.indexMetadata(id, true, null);
 

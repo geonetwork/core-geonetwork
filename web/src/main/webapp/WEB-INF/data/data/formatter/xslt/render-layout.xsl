@@ -23,6 +23,7 @@
   <xsl:template mode="getMetadataAbstract" match="*"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
   <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
@@ -45,6 +46,12 @@
           </xsl:with-param>
           <xsl:with-param name="description">
             <xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/>
+          </xsl:with-param>
+          <xsl:with-param name="type">
+            <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
+          </xsl:with-param>
+          <xsl:with-param name="thumbnail">
+            <xsl:apply-templates mode="getMetadataThumbnail" select="$metadata"/>
           </xsl:with-param>
         </xsl:call-template>
       </xsl:otherwise>
@@ -83,7 +90,7 @@
                itemtype="{gn-fn-core:get-schema-org-class($type)}">
 
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-9">
 
             <header>
               <h1 itemprop="name"
@@ -117,21 +124,22 @@
               </div>
             </div>
           </div>
-          <div class="gn-md-side gn-md-side-advanced col-md-4">
-            <xsl:apply-templates mode="getOverviews" select="$metadata"/>
-
-            <br/>
+          <div class="gn-md-side gn-md-side-advanced col-md-3">
 
             <section class="links"
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
-              <h4 translate="">accessData</h4>
+              <h3 translate="">accessData</h3>
               <sxt-links-btn>&#160;</sxt-links-btn>
             </section>
 
             <br/>
+
+            <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+
+            <br/>
+
             <xsl:if test="$css != 'checkpoint' and
                           $view != 'emodnetHydrography' and $view != 'sdn'">
-
               <section>
                 <h4>
                   <i class="fa fa-fw fa-cog">&#160;</i>&#160;

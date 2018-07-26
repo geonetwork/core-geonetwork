@@ -248,20 +248,20 @@ public class AtomPredefinedFeed {
         Map<String, Object> params = new HashMap<>();
         params.put("isLocal", true);
         params.put("guiLang", context.getLanguage());
-        params.put("baseUrl", getBaseURL(settingManager, context));
+        params.put("baseUrl", getBaseURL(settingManager));
         params.put("nodeName", ApplicationContextHolder.get().getBean(NodeInfo.class).getId());
 
         return params;
     }
 
-    private String getBaseURL(SettingManager settingManager, ServiceContext context) {
+    private String getBaseURL(SettingManager settingManager) {
+        String baseURL = settingManager.getBaseURL();
 
-        String baseURL = new ServletPathFinder(context.getServlet().getServletContext()).getBaseUrl();
-        String protocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
-        String host    = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
-        String port    = settingManager.getValue(Settings.SYSTEM_SERVER_PORT);
+        if (baseURL.endsWith("/")) {
+            baseURL = baseURL.substring(0, baseURL.length() - 1);
+        }
 
-        return protocol + "://" + host + (port.equals("80") ? "" : ":" + port + baseURL);
+        return baseURL;
     }
 
     private ServiceContext createServiceContext(String lang, HttpServletRequest request) {

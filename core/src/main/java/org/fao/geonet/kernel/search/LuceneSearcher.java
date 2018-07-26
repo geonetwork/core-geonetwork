@@ -648,7 +648,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         elSummary.setAttribute("count", tfc.getTotalHits() + "");
         elSummary.setAttribute("type", "local");
         LOGGER.debug(" Get top docs from {} ... {} (total: {})", new Object[] {startHit, endHit, tfc.getTotalHits()});
-        TopDocs tdocs = tfc.topDocs(startHit, endHit);
+        TopDocs tdocs = tfc.topDocs(startHit, endHit - startHit);
 
         return Pair.read(tdocs, elSummary);
     }

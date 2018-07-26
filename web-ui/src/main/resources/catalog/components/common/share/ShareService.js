@@ -180,7 +180,7 @@
             }
           }];
           return this.savePrivileges(
-              metadataId, bucket, privileges, user, !onOrOff);
+              metadataId, bucket, privileges, user, false);
         },
 
         /**

@@ -29,7 +29,7 @@
   var module = angular.module('gn_wps_directive', [
   ]);
 
-  function isFieldValueNotEmpty (value) {
+  function isFieldNotEmpty (value) {
     return value !== undefined && value !== ''
   }
 
@@ -243,7 +243,7 @@
                             }
 
                             if (wfsFilter && wfsFilterValues &&
-                              isFieldValueNotEmpty(wfsFilterValues[wfsFilter])) {
+                              isFieldNotEmpty(wfsFilterValues[wfsFilter])) {
                               // take value at specific index, or all values
                               if (valueIndex >= 0) {
                                 wfsFilterValue = [wfsFilterValues[wfsFilter][valueIndex]];
@@ -259,7 +259,7 @@
 
                       // display field as overriden
                       scope.inputWfsOverride[inputName] =
-                      isFieldValueNotEmpty(wfsFilterValue) && wfsFilterValue.length > 0;
+                      isFieldNotEmpty(wfsFilterValue) && wfsFilterValue.length > 0;
 
                       // literal data (basic form input)
                       if (input.literalData !== undefined) {
@@ -352,13 +352,13 @@
                           });
                       }
                       // apply default values if any
-                      if (isFieldValueNotEmpty(defaultValue)) {
+                      else if (isFieldNotEmpty(defaultValue)) {
                         inputs = scope.getInputsByName(inputName);
                         var defaultValueArray = Array.isArray(defaultValue) ?
-                          defaultValue : [defaultValue];
+                        defaultValue : [defaultValue];
                         for(var i = 0; i < inputs.length; i++) {
-                          if (!isFieldValueNotEmpty(inputs[i].value) &&
-                          isFieldValueNotEmpty(defaultValueArray[i])) {
+                          if (!isFieldNotEmpty(inputs[i].value) &&
+                          isFieldNotEmpty(defaultValueArray[i])) {
                             scope.setInputValueByName(inputName, i,
                               defaultValueArray[i]);
                           }
@@ -481,7 +481,7 @@
                   // count the number of non empty values
                   var valueCount = scope.getInputsByName(input.identifier.value)
                   .filter(function(input) {
-                    return isFieldValueNotEmpty(input.value);
+                    return isFieldNotEmpty(input.value);
                   }).length;
 
                   // this will be used to show errors on the form

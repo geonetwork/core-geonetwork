@@ -1,17 +1,21 @@
 <div data-ng-controller="GnMdViewController" class="container">
   <div class="alert alert-warning"
-       data-ng-hide="mdView.current.record"
+       data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
        data-translate=""
        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
     recordNotFound
+  </div>
+  <div class="row"
+       data-ng-show="!mdView.loadDetailsFinished">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
   </div>
 
   <div class="row gn-md-view"
        data-ng-show="mdView.current.record">
     <button class="btn btn-primary"
             data-ng-click="closeRecord(mdView.current.record)">
-      <i class="fa fa-search"></i>
-      <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
+      <i class="fa fa-search"></i> <span><span>
+      {{'backTo' + (fromView || 'search') | translate}}</span></span>
     </button>
 
     <button class="btn btn-link"
@@ -58,13 +62,6 @@
             {{f.label | translate}}
           </a>
         </li>
-        <li>
-          <a data-ng-href="{{gnUrl}}api/records/{{md.getUuid()}}/formatters/xml"
-                 target="_blank">
-            <i class="fa fa-file-code-o"></i>&nbsp;
-            <span data-translate="">xmlView</span>
-          </a>
-        </li>
       </ul>
     </div>
 
@@ -88,8 +85,6 @@
       <i class="fa fa-pencil"></i>
       <span data-translate="" class="hidden-sm hidden-xs">edit</span>
     </a>
-
-    <div class="gnMdfeedback"></div>
 
     <div data-ng-show="usingFormatter"
          id="gn-metadata-display"
@@ -135,17 +130,19 @@
           <tbody>
           <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
                           mdView.current.record.inspirethemewithac.length > 0">
-            <th data-translate="">inspireThemes</th>
-            <td>
-              <button data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
-                   data-ng-click="search({'inspirethemewithac': cat})"
-                   class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
-                   title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
-                <span class="iti-{{cat.split('|')[0]}}"></span>
-              </button>
-            </td>
-          </tr>
-          <tr data-ng-if="mdView.current.record.category.length > 0 ||
+              <th data-translate="">inspireThemes</th>
+              <td>
+                <button
+                  data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                  data-ng-click="search({'inspirethemewithac': cat})"
+                  class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                  title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+                  <span class="iti-{{cat.split('|')[0]}}"></span>
+                </button>
+              </td>
+            </tr>
+            <tr
+              data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
             <th data-translate="">listOfCategories</th>
             <td>
@@ -172,9 +169,17 @@
               <ul>
                 <li data-ng-repeat="k in keywords track by $index"
                     data-ng-if="k"
-                    class="tt-cursor"
-                    title="{{'clickToFilterOn' | translate}} {{k}}">
-                    <a href="" data-ng-click="search({'keyword': k})">{{k}}</a>
+                    class="tt-cursor">
+                    <span data-ng-show="k.link == ''">{{k.value}}</span>
+                    <a href=""
+                       data-ng-href="{{k.link}}"
+                       data-ng-hide="k.link == ''">
+                      {{k.value}}</a>&nbsp;
+                    <a href=""
+                       title="{{'clickToFilterOn' | translate}} {{k.value}}"
+                       data-ng-click="search({'keyword': k.value})">
+                      <i class="fa fa-search"/>
+                    </a>
                 </li>
               </ul>
             </td>
@@ -404,6 +409,26 @@
             </div>
           </div>
         </section>
+        </br>
+
+        <div data-gn-userfeedback='mdView.current.record'
+             data-gn-user={{user.username}}
+             data-ng-if="isUserFeedbackEnabled">
+        </div>
+        <div class="gn-md-feedback-buttons clearfix">
+          <div class="pull-left"
+                  data-gn-userfeedbackfull='mdView.current.record'
+                  data-gn-user={{user.username}}
+                  data-ng-if="isUserFeedbackEnabled">
+          </div>
+          <div class="pull-left"
+                  data-gn-userfeedbacknew='mdView.current.record'
+                  data-gn-user={{user.username}}
+                  data-ng-if="isUserFeedbackEnabled">
+          </div>
+
+        </div>
+        <div data-gn-md-feedback="mdView.current.record"></div>
 
         <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>
@@ -418,7 +443,7 @@
           <!-- TODO: use map config -->
           <p data-ng-repeat="bbox in mdView.current.record.geoBox">
             <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
-                 data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+                 data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=settings&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
           </p>
 
         </section>
@@ -453,7 +478,8 @@
                 data-gn-humanize-time="{{revDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.tempExtentBegin ||
+          <dl
+            data-ng-show="mdView.current.record.tempExtentBegin ||
                               mdView.current.record.tempExtentEnd">
             <dt data-translate>tempExtentBegin</dt>
             <dd>
@@ -552,13 +578,12 @@
             class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
         </section>
 
-        <section class="gn-md-side-rating">
+        <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
           <h4>
-            <i class="fa fa-fw fa-star-half-o"></i>
+            <i class="fa fa-fw"></i>
             <span data-translate="">rate</span>
           </h4>
           <div data-gn-metadata-rate="mdView.current.record"/>
-
         </section>
       </div>
 

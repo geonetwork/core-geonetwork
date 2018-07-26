@@ -42,6 +42,7 @@
             link: function(scope) {
               scope.showErrors = false;
               scope.showSuccess = false;
+              scope.alwaysOnTop = false;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.loading = false;
               scope.ruleTypes = [];
@@ -99,7 +100,6 @@
               scope.toggleShowSuccess = function() {
                 scope.showSuccess = !scope.showSuccess;
               };
-
               scope.getClass = function(type) {
                 if (scope.numberOfRules > 0) {
                   if (type === 'icon') {
@@ -113,6 +113,16 @@
                   return 'fa-check';
                 } else {
                   return '';
+                }
+              };
+
+              scope.toggleAlwaysOnTop = function() {
+                scope.alwaysOnTop = !scope.alwaysOnTop;
+                var element = angular.element( document.querySelector( '#gn-editor-validation-panel' ) );
+                if(scope.alwaysOnTop) {
+                  element.addClass('gn-fixed-scroll');
+                } else {
+                  element.removeClass('gn-fixed-scroll');
                 }
               };
 

@@ -275,6 +275,7 @@
       <name>gmd:metadataStandardName</name>
       <name>gmd:metadataStandardVersion</name>
       <name>gmd:hierarchyLevelName</name>
+      <name>gmd:parentIdentifier</name>
       <name>gmd:dataSetURI</name>
       <name>gmd:postalCode</name>
       <name>gmd:city</name>
@@ -3147,18 +3148,110 @@
 
           <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:contact"/>
+          <!--<field xpath="/gmd:MD_Metadata/gmd:contact"/>-->
 
-          <action type="add" name="metadataPointOfContact"
+          <field name="metadataPointOfContact"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:contact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="individualName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:individualName>
+                      <gco:CharacterString>{{individualName}}</gco:CharacterString>
+                    </gmd:individualName>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <action name="metadataPointOfContact"
+                  type="add"
                   addDirective="data-gn-directory-entry-selector"
                   or="contact"
                   in="/gmd:MD_Metadata">
             <directiveAttributes
-              data-template-add-action="true"
-              data-search-action="false"
+              data-template-add-action="false"
+              data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+          </action>
+
+
+          <action type="add"
+                  name="metadataPointOfContact"
+                  btnLabel="sdn-add-md-contact"
+                  forceLabel="true"
+                  or="contact"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:individualName>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:individualName>
+                    <gmd:organisationName>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString></gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode codeList="codeListLocation#CI_RoleCode"
+                                       codeListValue="pointOfContact"></gmd:CI_RoleCode>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
           </action>
 
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>

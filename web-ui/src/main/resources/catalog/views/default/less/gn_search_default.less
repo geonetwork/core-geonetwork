@@ -42,6 +42,7 @@
   clear: both;
   flex-grow: 1;
   position: relative;
+  padding-bottom: calc(~"@{gn-bottombar-height} + 10px");  
   .badge {
       margin-right: 5px;
     }
@@ -121,6 +122,16 @@
     div.tab-content {
       width: 84vw;
 
+    }
+  }
+  .bootstrap-tagsinput {
+    .tag {
+      white-space: normal;
+      display: inline-flex;
+      text-align: left;
+      line-height: 1.5em;
+      font-weight: normal;
+      margin-bottom: 3px;
     }
   }
 }

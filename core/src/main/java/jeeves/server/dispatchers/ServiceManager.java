@@ -23,45 +23,7 @@
 
 package jeeves.server.dispatchers;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.io.EofException;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Constants;
-import org.fao.geonet.NodeInfo;
-import org.fao.geonet.Util;
-import org.fao.geonet.exceptions.JeevesException;
-import org.fao.geonet.exceptions.NotAllowedEx;
-import org.fao.geonet.exceptions.ServiceNotFoundEx;
-import org.fao.geonet.exceptions.ServiceNotMatchedEx;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.utils.BLOB;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.SOAPUtil;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.springframework.context.ConfigurableApplicationContext;
-
 import com.yammer.metrics.core.TimerContext;
-
 import jeeves.component.ProfileManager;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
@@ -81,6 +43,39 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
+import org.eclipse.jetty.io.EofException;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
+import org.fao.geonet.NodeInfo;
+import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.exceptions.NotAllowedEx;
+import org.fao.geonet.exceptions.ServiceNotFoundEx;
+import org.fao.geonet.exceptions.ServiceNotMatchedEx;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.BLOB;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.SOAPUtil;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.ByteArrayOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 //=============================================================================
 public class ServiceManager {
@@ -375,10 +370,12 @@ public class ServiceManager {
         // Session is created by ApiInterceptor when needed
         // Save the session here in the ServiceContext (not used in the API package).
         final HttpSession httpSession = request.getSession(false);
-        UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
-        if (session != null) {
+        if (httpSession != null) {
+            UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+            if (session != null) {
 
-            context.setUserSession(session);
+                context.setUserSession(session);
+            }
         }
 
         return context;
@@ -945,6 +942,7 @@ public class ServiceManager {
 
     private void addPrefixes(Element root, String lang, String service, String nodeId) {
         root.addContent(new Element(Jeeves.Elem.LANGUAGE).setText(lang));
+        root.addContent(new Element(Jeeves.Elem.LANGUAGE_2_CHARS).setText(XslUtil.twoCharLangCode(lang)));
         root.addContent(new Element(Jeeves.Elem.REQ_SERVICE).setText(service));
         root.addContent(new Element(Jeeves.Elem.BASE_URL).setText(baseUrl));
         root.addContent(new Element(Jeeves.Elem.LOC_URL).setText(baseUrl + "/loc/" + lang));

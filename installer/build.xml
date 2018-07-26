@@ -44,7 +44,7 @@
   </condition>
 
   <property name="appName" value="geonetwork"/>
-  <property name="version" value="3.4.2"/>
+  <property name="version" value="3.4.4"/>
   <property name="subVersion" value="SNAPSHOT"/>
   <property name="javaVersion" value="1.8.0"/>
   <!-- Minimum version required -->
@@ -74,13 +74,6 @@
 
     <get src="${thesaurusUrl}/gemet.rdf"
          dest="../web/target/thesauri/gemet.rdf" usetimestamp="true"/>
-
-    <get src="${thesaurusUrl}/inspire-service-taxonomy.rdf"
-         dest="../web/target/thesauri/inspire-service-taxonomy.rdf"
-         usetimestamp="true"/>
-
-    <get src="${thesaurusUrl}/inspire-theme.rdf"
-         dest="../web/target/thesauri/inspire-theme.rdf" usetimestamp="true"/>
   </target>
 
   <target name="inspireDbSettings">
@@ -94,20 +87,6 @@
           <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','false');]]></replacetoken>
         <replacevalue>
           <![CDATA[INSERT INTO Settings VALUES (721,720,'enable','true');]]></replacevalue>
-      </replacefilter>
-
-      <replacefilter>
-        <replacetoken>
-          <![CDATA[INSERT INTO Settings VALUES (722,720,'enableSearchPanel','false');]]></replacetoken>
-        <replacevalue>
-          <![CDATA[INSERT INTO Settings VALUES (722,720,'enableSearchPanel','true');]]></replacevalue>
-      </replacefilter>
-
-      <replacefilter>
-        <replacetoken>
-          <![CDATA[INSERT INTO Settings VALUES (913,910,'enableInspireView','false');]]></replacetoken>
-        <replacevalue>
-          <![CDATA[INSERT INTO Settings VALUES (913,910,'enableInspireView','true');]]></replacevalue>
       </replacefilter>
     </replace>
   </target>

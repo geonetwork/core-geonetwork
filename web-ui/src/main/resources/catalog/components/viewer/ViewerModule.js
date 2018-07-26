@@ -25,92 +25,6 @@
   goog.provide('gn_viewer');
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
@@ -136,6 +50,7 @@
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
   goog.require('gn_wps');
+  goog.require('gn_gazetteer');
 
   /**
    * @ngdoc overview
@@ -170,7 +85,8 @@
     'gn_featurestable',
     'gn_geometry',
     'gn_profile',
-    'gn_heatmap'
+    'gn_heatmap',
+    'gn_gazetteer'
   ]);
 
   module.controller('gnViewerController', [

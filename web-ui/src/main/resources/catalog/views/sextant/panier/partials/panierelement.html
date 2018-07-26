@@ -30,7 +30,7 @@
     <div class="form-group sxt-active-filters dropdown" ng-if="element.filter.params || element.filter.any">
       <label ng-click="form.useFilters = !form.useFilters">
         <i class="fa fa-fw sxt-layer-visibility text-primary"
-          ng-class="form.useFilters ? 'fa-check-square' : 'fa-square'"/>
+          ng-class="form.useFilters ? 'fa-check-square-o' : 'fa-square-o'"/>
         <span translate>activeFilters</span>
       </label>
       <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -54,7 +54,7 @@
         <label ng-click="p.included = p.described && !p.included">
           <i ng-if="!p.described" class="fa fa-fw fa-spin fa-spinner"/>
           <i ng-if="p.described" class="fa fa-fw sxt-layer-visibility text-primary"
-            ng-class="p.included ? 'fa-check-square' : 'fa-square'"/>
+            ng-class="p.included ? 'fa-check-square-o' : 'fa-square-o'"/>
           <span class="wps-label">{{ p.desc || p.name }}</span>
         </label>
         <button type="button" data-ng-disabled="!p.included" class="btn btn-default" ng-click="editWPSForm(p)">

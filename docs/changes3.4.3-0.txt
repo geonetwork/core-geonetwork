@@ -1,0 +1,218 @@
+================================================================================
+===
+=== GeoNetwork 3.4.3: List of changes
+===
+================================================================================
+- ISO19139 / Parent identifier is not multilingual (#2985)
+- Formatter / XSLT / Break work with some hardcoded rules #2959. (#2960)
+- GeoPublisher / wrong html metadatalink posted to geoserver #2970. (#2980)
+- Rating / When off, should not be displayed in search results #2974. (#2975)
+- Editor / CRS search is case sensitive #2971. (#2972)
+- Formatter / Schema resources are not properly loaded due to URL change with the API. Use request accept language header instead. (#2979)
+- Fix for content that is overlapping the footer (#2952)
+- Integration test / Add chrome driver instruction. (#2963)
+- Metadata editor - INSPIRE view - Add INSPIRE themes button doesn't work as expected with the INSPIRE themes thesaurus created from INSPIRE Registry option #2882. (#2966)
+- The doc in the website looks to have moved to some new folder. (#2968)
+- Geonames search when editing a record doesn't seem to be working #2803
+- Topic categories widget doesn't work with schemas based in iso19139 #2953
+- Editor / Topic category / + should not be displayed if topic categories are defined #2940. (#2945)
+- Workflow / Fix invalid links in email. (#2949)
+- ISO19110 / producer does not use directory #2942. (#2944)
+- Build installer is broken. Remove GeoServer module #2743 (#2962)
+- Crawlers don't work with urls provided in the sitemap #2873
+- Use database setting for the map in simple record view (#2938)
+- Fix for too long keywords in the advanced search form (#2918) (#2928)
+- UI Config / properly updates iso2code in langs
+- restores schemaLocation attributes in CSW iso19139 responses
+- Fix for IE11 flexbox bugs in the `Contact for the resource` block
+- Fixing schema related tests: now version is important
+- Search page - filter tag for inspire themes thesaurus is not translated #2869
+- Set sortby for resolution facet to value
+- GeoNetwork harvester issues with sources - store remote source translations if available - Check if translation element has values #2810
+- Metadata editor (ISO19139) - Bounding box in full view displays before the map, the content of labels.xml #2864 (#2865)
+- Reverted bootstrap-table version (#2853)
+- Merge pull request #2835 from juanluisrp/html-lang-attribute-two-chars
+- Merge pull request #2841 from pvgenuchten/corsinterceptor-should-reject-error
+- Merge pull request #2842 from pvgenuchten/null-in-feedback
+- Merge pull request #2840 from pvgenuchten/fix-fullvw-failed-warning
+- Merge pull request #2813 from josegar74/fix/update-site-source
+- Merge pull request #2793 from josegar74/improvement/schema-artifact-version
+- Merge pull request #2806 from PascalLike/changeOwnerCheck
+- Merge pull request #2749 from PascalLike/publishRefresh
+- Merge pull request #2772 from pmauduit/fix-2771
+- Merge pull request #2782 from josegar74/fix/transfer-ownership-progress
+- Merge pull request #2724 from cmangeat/fix_adding_keyword
+- Merge pull request #2678 from pvgenuchten/3.4.x
+- Merge pull request #2664 from pvgenuchten/add-wmts-resource
+- Merge pull request #2561 from PascalLike/fixValidationPanel
+- Merge pull request #2530 from 4chirinos/translate_injection
+- Merge pull request #2350 from pvgenuchten/improved-atom
+- make variables names relate to what the name means
+- unify docLocale indexing behaviour between multii/monolingual items
+- avoid last element in page when sorting to be wrong
+- Merge pull request #2845 from pvgenuchten/ge-cs-lang-abbr
+- Merge pull request #2850 from Delawen/fix_wmts
+- Merge pull request #2849 from archaeogeek/patch-10
+- Fix typo in geonetwork URL
+- Merge pull request #2520 from PascalLike/upgradejquery
+- Merge pull request #2614 from jahow/improve-wps-directive
+- Merge pull request #2775 from cmangeat/mef_harvesting_fix_2
+- Redoing the WMTS add function to allow on the fly reprojection
+- Update en-admin.json
+- fix the 2-letter code for german and czech
+- Merge pull request #2811 from Delawen/fix_thumbnail
+- Merge pull request #2815 from julsbreakdown/privileges_harvest_groupes
+- Merge pull request #2808 from juanluisrp/move-migration-to-v343
+- resolves #2839
+- Merge pull request #2798 from PascalLike/FixGroupDeleteButton
+- Merge pull request #2801 from Delawen/fix_2511
+- Merge pull request #2820 from cmangeat/aligner_bug_with_apache_2.6_isNumeric
+- interceptor resolves errors unexpectedly, so http-error-cases were not entered
+- prevent the previous content is displayed when changing view and waiting for next formatter output to load
+- Improves https://github.com/geonetwork/core-geonetwork/issues/2764, a generic error is shown.
+- <html> element must have a valid value for the lang attribute
+- Merge branch '3.4.x-gh' into 3.4.x
+- Fix pom.xml versions
+- Don't show recordNotFound message while the server query is still running
+- Merge pull request #2822 from juanluisrp/map-height-ie
+- fix an adapt privileges for harvest
+- Harvester / OGC WxS / WMS1.0 fix. ISO19139 add thumbnail fix.
+- Harvester / OGC WxS / Add CSW. Do not insert twice a thumbnail. More robust extent parsing.
+- Harvester / OGC WxS / Add WPS process conversion to a record.
+- Harvester / OGC WxS / Enable/disable form option depending on protocol.
+- Harvester / OGC WxS / Do not use Jeeves services while adding overview.
+- Harvester / OGC WxS / Add possibility to combine WMS and WFS information in the same record as far as the service entry point is the same.
+- Harvester / OGC WxS / Move schema specific instruction to plugins.
+- Harvester / OGC WxS / Add injection to dataset records.
+- Harvester / OGC WxS / Improve configuration layout.
+- Support extended attribute value.
+- Harvester / OGC WxS / Update existing record if already created on previous run.
+- Harvester / OGC WxS / Add build from template for service record.
+- Merge remote-tracking branch 'origin/3.2.x' into 3.4.x
+- Fixing getCapLayer inexistent
+- Fix less compile error in Travis
+- Fixes gn-features-tables position in IE
+- Avoid to overlap gn-features-tables with the footer
+- Query not returning expected results with multilingual facet field filter when using changeDate queryable - #1671
+- Problem with map in IE
+- Rotating angle on thumbnail depending on layout
+- GeoNetwork harvester issues with sources - store remote source translations if available - #2810 (#2812)
+- apache 2.6 isNumeric("") return true
+- Bug fix: Thumbnail is generated, although it is rotated.
+- Layers created by the wizard editor were not considered. Wider definition of protocol and layer name to cover those cases.
+- Revert "Merge branch '3.4.x-gn' into 3.4.x"
+- Merge pull request #2817 from jahow/fix-xframe-options-mode
+- Fix cleanout database script
+- Align uf entities to GN codestyle
+- Remove unused database table
+- fix for using SAMEORIGIN mode in XFrameOptions filter
+- Bug fix: wait for the map to be really created (have a div with size)
+- Merge pull request #2814 from cmangeat/avoid_uuid_id_confusion
+- remove osolete comments and make a few logger static
+- revert/reset indirection avoiding the confusion
+- Changing the site name in the settings doesn't update sources table used for PROVIDED BY facet #2633
+- Bug fix: Missing title on the default print-thumbnail config made the "add to thumbnail" on the editor fail.
+- window.confirm removed
+- Fix base layer dropdown cut with many layers present (using ngeo-popover) (#2751)
+- Missing underscore.js (#2807)
+- Refactor JsonDatabaseMigration to make it easier to use
+- Move AdvancedSearchFormMigration from v3.4.2 to v3.4.3
+- Use proper types in migration list definitions
+- INSPIRE view: display keywords from other thesaurus than INSPIRE Themes, when available in the metadata
+- Fix transfer ownership message when no users available
+- Set the gazetter default URL if it is not defined in Config UI (#2790)
+- Update facet concept scheme URI for proper translation of INSPIRE themes.
+- Update INSPIRE thesaurus for test.
+- Update INSPIRE thesaurus for test.
+- Rename INSPIRE thesaurus from inspire-theme.rdf to httpinspireeceuropaeutheme-theme.rdf which is the name when imported from INSPIRE Registry. Fix for #2506.
+- Registry / Add registry as a prefix to avoid thesaurus name collision.
+- Fix missing info in message.
+- Add alt label when creating INSPIRE themes.
+- Anchor should link to keyword uri on external thesaurus #2593.
+- ISO19139 / Link to keyword using Anchor points to concept id (rdf:about) when starting by http.
+- Merge pull request #2460 from josegar74/fix/2435-csw-schemalocation
+- Merge pull request #2691 from pvgenuchten/mandatory-from-labels
+- Merge pull request #2766 from jahow/2754-fix-baselayer-init
+- Merge pull request #2773 from juanluisrp/ldap-username-caseinsensitive
+- Merge pull request #2794 from Delawen/merge_3.2.x
+- Merge branch 'juanluisrp-2524-customisable-avdanced-search' into 3.4.x
+- Merge branch '2524-customisable-avdanced-search' of https://github.com/juanluisrp/core-geonetwork into juanluisrp-2524-customisable-avdanced-search
+- Protect error.xsl for XSS
+- Fix #2511 Nil Reason is hidden when added
+- Behavior of delete buttons in User and Groups tools
+- Merge pull request #2797 from cmangeat/filter_on_lang_with_no_scope
+- allow use of gnLocalized filter from gnRelatedService
+- Merge remote-tracking branch 'origin/3.2.x' into 3.4.x
+- INSPIRE view - allow to add temporal extent element if missing, cleanup up it's parent when removing it, if doesn't contain any other child (#2791)
+- Refactor version check code
+- Add appMinorVersionSupported and appMajorVersionSupported to schema-ident.xml
+- Remove minor version from schemas artifact versions
+- Metadata editor - topic categories widget display the labels in english regardless of the UI language #2792
+- atom.predefined.service gets a wrong baseUrl in some setups #2784
+- Metadata editor - Metadata file store doesn't show the uploaded files in IE #2783
+- Change the harvester logo in the harvester page doesn't update the harvester logo image in the metadata detail page - Fix for tests #2752
+- Batch transfer ownership should show the loading indicator #2781
+- Bug fix: better WFS handling (failed on some corner cases)
+- Make sure transformations and attributes are applied on CSW and Webdav harvesters when "overriding" option is setup. Also, change of ownership.
+- Optimise code in TransferApi to get the owners #2776
+- Bug fix: Records were not being assigned to the proper user. Failback: harvester owner, if no user is defined
+- need the harvested metadata to be reported as imported not be deleted later
+- User Admins can transfer ownership of records outside of their group(s) #2738
+- Change the harvester logo in the harvester page doesn't update the harvester logo image in the metadata detail page #2752
+- Metadata editor - date picker indeterminate position list gets a new empty value every time the editor is saved #2757
+- Metadata editor - date picker indeterminate position list shows selected value only when hovering in the select box #2758
+- INSPIRE / Add support to load codelists from Registry (#2741)
+- Adding generic gitignore to all hidden files on the system
+- Update the migration to change the username to lowercase
+- Create users from LDAP in database using lowercase name
+- Lucene optimizer - instantiate variables in ctor
+- Remove rootscope from where it is not necessary
+- Merge pull request #2765 from cmangeat/mef_harvester_fixes
+- Support override label for iso19139 geographic bounding box
+- Support override label for iso19139 date fields
+- Fix bglayers loading from context
+- Add new harvester for WPS 2.0.0
+- set harvested mef is harvested to true
+- Update regions thesaurus with top concepts and continents in german
+- Fix formatter view display when having one tab only. Rework of 66ef64c054347c3f2e77800317c631dcdc60706a
+- Idle message during operation on list of records
+- Refresh list when privileges are updated
+- Editor / Normalize space in action text and tooltip.
+- Editor / Add action class to customize styling (eg. when having multiple actions and user want to display them side by side instead of one row each)
+- Update version to 3.4.3-SNAPSHOT
+- less error prone
+- Merge branch '3.4.x' of https://github.com/geonetwork/core-geonetwork into 2524-customisable-avdanced-search
+- take Jose issues 2714 advice into account
+- Merge branch '3.4.x-gn' into 3.4.x
+- Merge branch '3.4.x-gn' into 3.4.x
+- a condition:mandatory in labels.xml Resolves #2689
+- remove xml view (as open), alternative is to configure it as a formatter in settings
+- don't add the not-supported msg for sos/wcs, focus on wmts
+- add layer selection from wmts to onlinesrcdirective, resolves #2660
+- Add XYZ layers to mapfish print. Also, fix hard-coded projection on source code
+- Instead of changing the URL on the user interface, carry the "useProxy" internally
+- Better error handling for CORSInterceptor
+- Adding proxy when needed
+- updated doc of WPS directive
+- Allow not cancelling previous requests from WPS directive (disabled by default)
+- added described callback on the WPS directive
+- do not show output dropdup in WPS process form if not relevant
+- allow hiding title in the WPS process form
+- remove filter on wps output layers /output/
+- WPS form title can be specified in the process info
+- better handle zero field values in WPS form & improved form style
+- Fix NPE if WebDAV resource doesn't provide a modified date
+- Revert "To avoid a NPE skip records withoud modified date in server"
+- To avoid a NPE skip records withoud modified date in server
+- Metadata create - Create and publish for group editors option doesn't work #2565
+- Metadata editor validation - add a button to keep the validation panel on top
+- Refactor AdvancedSearchFormMigration to extract some JSON functions
+- Fixes swapped Labels for network and netmask in settings page
+- Apply netmask to network in isIntranet check.
+- Fix deadlock threads while indexing
+- Use a custom template for the advanced search form.
+- Adds new advanced search property in ui/config setting
+- Fix  dependency injection in gnKmlImport directive
+- Upgrade JQuery from 2.0.3 to 2.2.4
+- CSW GetRecords/GetRecordById doesn't add schemaLocation defined in schema-ident.xml #2435
+- improve opensearch to fit download spec

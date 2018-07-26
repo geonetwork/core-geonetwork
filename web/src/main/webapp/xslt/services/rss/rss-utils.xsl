@@ -74,16 +74,26 @@
               <img src="{.}" align="left" alt="" border="0" width="100"/>
             </a>
           </xsl:for-each>
-          <xsl:value-of select="$metadata/abstract"/>
-          <br/>
-          <xsl:if test="$bDynamic">
-            <xsl:apply-templates select="$metadata/link[contains(@type,'vnd.google-earth.km')][1]"
-                                 mode="GoogleEarthWMS">
-              <xsl:with-param name="url" select="$baseURL"/>
-              <xsl:with-param name="viewInGE" select="/root/gui/i18n/viewInGE"/>
-            </xsl:apply-templates>
-          </xsl:if>
-
+          <!--<xsl:value-of select="$metadata/abstract"/>-->
+          <xsl:variable name="abs"
+                        select="$metadata/abstract"/>
+          <xsl:variable name="limit"
+                        select="350"/>
+          <xsl:choose>
+            <xsl:when test="string-length($abs) &lt; $limit">
+              <xsl:value-of select="$abs"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="substring($abs, 0, $limit)"/>
+              <!-- If end of a word ? add the next token until the next space -->
+              <xsl:if test="substring($abs, $limit, 1) != ' '">
+                <xsl:variable name="endOfString"
+                              select="substring($abs, $limit, string-length($abs))"/>
+                <xsl:value-of select="tokenize($endOfString, ' ')[1]"/>
+              </xsl:if>
+              ...
+            </xsl:otherwise>
+          </xsl:choose>
         </p>
         <br clear="all"/>
         <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
@@ -214,17 +224,17 @@
       <xsl:choose>
         <xsl:when test="@type='application/vnd.ogc.wms_xml' and $bDynamic">
           <xsl:choose>
-            <xsl:when test="number($west) and number($south) and number($east)
-              and number($north) and string($nameL)!='' and not(contains(@href,'?'))">
+            <xsl:when test="number($west[1]) and number($south[1]) and number($east[1])
+              and number($north[1]) and string($nameL)!='' and not(contains(@href,'?'))">
               <!-- The following link is a web map service.
                                 There's a hint providing the possible layers available in the service -->
               <xsl:variable name="xyRatio"
-                            select="string(number($north - $south) div number($east - $west))"/>
+                            select="string(number($north[1] - $south[1]) div number($east[1] - $west[1]))"/>
               <!-- This is a full GetMap request resulting in a PNG image of 200px wide-->
               <link href="{@href}" type="{@type}" rel="alternate" title="{@title}"
                     gn:layers="{$nameL}"/>
               <link href="{concat(@href,'?SERVICE=wms$amp;VERSION=1.1.1&amp;REQUEST=GetMap&amp;BBOX=',
-                concat($west,',',$south,',',$east,',',$north),
+                concat($west[1],',',$south[1],',',$east[1],',',$north[1]),
                 '&amp;LAYERS=',$nameL,
                 '&amp;SRS=EPSG:4326&amp;WIDTH=200&amp;HEIGHT='
                 ,string(round(200 * number($xyRatio)))

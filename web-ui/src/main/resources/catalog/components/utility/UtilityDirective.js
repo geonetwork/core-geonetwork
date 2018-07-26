@@ -242,8 +242,8 @@
                           forEach(function(p) {
                             if (loc[p]) { props.push(loc[p]); }
                           });
-                      return loc.name + ((props.length == 0) ? '' :
-                          ' — <em>' + props.join(', ') + '</em>');
+                      return '<div>' + loc.name + ((props.length == 0) ? '' :
+                          ' — <em>' + props.join(', ') + '</em></div>');
                     }
                   }
 

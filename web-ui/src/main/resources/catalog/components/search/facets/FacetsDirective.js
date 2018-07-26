@@ -420,6 +420,22 @@
             }
           });
         }
+        scope.onBlur = function(evt) {
+          if (!scope.values) {
+            scope.values = {};
+          }
+          if (evt.target.name == 'start') {
+            scope.values.from = evt.target.value;
+          }
+          if (evt.target.name == 'end') {
+            scope.values.to = evt.target.value;
+          }
+          refreshGraphRange();
+          scope.updateCallback({
+            from: scope.values.from,
+            to: scope.values.to
+          });
+        }
 
         // update view if dates are changed from outside
         scope.$watch(function() {

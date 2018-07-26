@@ -153,9 +153,9 @@ public class Handlers {
         Element related = getRelatedReport(id, uuid)
 
         related.getChildren().each { rel ->
-            def type = rel.name
 
             rel.getChildren("item").each { item ->
+                def type = rel.name
                 def direction = Direction.CHILD
                 def association
                 if (type == "siblings") {
@@ -183,20 +183,21 @@ public class Handlers {
 
                     report.getChildren().each { potentialSiblingRel ->
                         def relType = potentialSiblingRel.name
-                        potentialSiblingRel.getChildren("item").each { potentialSiblingItem ->
-                            if (association != null) {
-                                boolean isAggSibling = potentialSiblingItem.getChildren("agg_$association").any {
-                                    it.getTextTrim() == parentUUID
-                                }
-                                if (isAggSibling) {
-                                    addRelation(hierarchy, parentUUID, potentialSiblingItem, association, Direction.SIBLING)
-                                }
-                            } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
-                                addRelation(hierarchy, parentUUID, potentialSiblingItem, relType, Direction.SIBLING)
-                            } else if (relType == 'children') {
-                                addRelation(hierarchy, parentUUID, potentialSiblingItem, "siblings", Direction.SIBLING)
-                            }
-
+                        potentialSiblingRel.getChildren("item").
+                                findAll { it.getChildren("id").any {!it.getTextTrim().equals(uuid)}}.
+                                each { potentialSiblingItem ->
+                                    if (association != null) {
+                                        boolean isAggSibling = potentialSiblingItem.getChildren("agg_$association").any {
+                                            it.getTextTrim() == parentUUID
+                                        }
+                                        if (isAggSibling) {
+                                            addRelation(hierarchy, parentUUID, potentialSiblingItem, association, Direction.SIBLING)
+                                        }
+                                    } else if (relType == 'datasets' || relType == 'hassource' || relType == 'hasfeaturecat') {
+                                        addRelation(hierarchy, parentUUID, potentialSiblingItem, relType, Direction.SIBLING)
+                                    } else if (relType == 'children') {
+                                        addRelation(hierarchy, parentUUID, potentialSiblingItem, "siblings", Direction.SIBLING)
+                                    }
                         }
                     }
                 }

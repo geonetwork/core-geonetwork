@@ -462,6 +462,9 @@
         }
         if(sxtSettings.metadataFormatter)  {
           searchSettings.metadataFormatter = sxtSettings.metadataFormatter;
+	}
+	if(sxtSettings.metadataType)  {
+          searchSettings.filters.type = sxtSettings.metadataType;
         }
       }
 

@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.4.2-SNAPSHOT</version>
+    <version>3.4.4-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -439,7 +439,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.schemas.version}</version>
     </dependency>
     <dependency> <!-- dummy API for ARC SDE stuff -->
       <groupId>${project.groupId}</groupId>
@@ -520,7 +520,7 @@
     <dependency>
       <groupId>org.geonetwork-opensource</groupId>
       <artifactId>es-core</artifactId>
-      <version>3.4.2-SNAPSHOT</version>
+      <version>3.4.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

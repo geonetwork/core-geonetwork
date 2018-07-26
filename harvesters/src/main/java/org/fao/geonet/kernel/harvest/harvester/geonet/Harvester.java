@@ -158,13 +158,13 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 log.error(t);
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             } catch (Throwable t) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 t.printStackTrace();
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             }
         }
 
@@ -177,13 +177,13 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 log.error(t);
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             } catch (Throwable t) {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 t.printStackTrace();
-                errors.add(new HarvestError(context, t, log));
+                errors.add(new HarvestError(context, t));
             }
         }
 
@@ -195,17 +195,17 @@ class Harvester implements IHarvester<HarvestResult> {
             try {
                 Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
                 result = aligner.align(records, errors);
-    
-                Map<String, String> sources = buildSources(remoteInfo);
+
+                Map<String, Source> sources = buildSources(remoteInfo);
                 updateSources(records, sources);
              } catch (Exception t) {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
-                errors.add(new HarvestError(this.context, t, log));
+                errors.add(new HarvestError(this.context, t));
             } catch (Throwable t) {
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                errors.add(new HarvestError(this.context, t, log));
+                errors.add(new HarvestError(this.context, t));
             }
         } else {
             log.warning("Due to previous errors the align process has not been called");
@@ -256,7 +256,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     records.add(new RecordInfo(uuid, changeDate, schema, source));
                 }
             } catch (Exception e) {
-                HarvestError harvestError = new HarvestError(context, e, log);
+                HarvestError harvestError = new HarvestError(context, e);
                 harvestError.setDescription("Malformed element '"
                     + o.toString() + "'");
                 harvestError
@@ -283,10 +283,10 @@ class Harvester implements IHarvester<HarvestResult> {
             return response;
         } catch (BadSoapResponseEx e) {
             log.warning("Raised exception when searching : " + e.getMessage());
-            this.errors.add(new HarvestError(context, e, log));
+            this.errors.add(new HarvestError(context, e));
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch (BadXmlResponseEx e) {
-            HarvestError harvestError = new HarvestError(context, e, log);
+            HarvestError harvestError = new HarvestError(context, e);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". Excepted XML, returned: "
                 + e.getMessage());
@@ -294,14 +294,14 @@ class Harvester implements IHarvester<HarvestResult> {
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch (IOException e) {
-            HarvestError harvestError = new HarvestError(context, e, log);
+            HarvestError harvestError = new HarvestError(context, e);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
         } catch (Exception e) {
-            HarvestError harvestError = new HarvestError(context, e, log);
+            HarvestError harvestError = new HarvestError(context, e);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". ");
             harvestError.setHint("Check with your administrator.");
@@ -311,28 +311,35 @@ class Harvester implements IHarvester<HarvestResult> {
         }
     }
 
-    private Map<String, String> buildSources(Element info) throws BadServerResponseEx {
+    private Map<String, Source> buildSources(Element info) throws BadServerResponseEx {
         Element sources = info.getChild("sources");
 
         if (sources == null)
             throw new BadServerResponseEx(info);
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Source> map = new HashMap<String, Source>();
 
         for (Object o : sources.getChildren()) {
-            Element source = (Element) o;
+            Element sourceEl = (Element) o;
 
-            String uuid = source.getChildText("uuid");
-            String name = source.getChildText("name");
+            String uuid = sourceEl.getChildText("uuid");
+            String name = sourceEl.getChildText("name");
 
-            map.put(uuid, name);
+            Source source = new Source(uuid, name, new HashMap<String, String>(), false);
+            // If translation element provided and has values, use it.
+            // Otherwise use the default ones from the name of the source
+            if ((sourceEl.getChild("label") != null) &&
+                (sourceEl.getChild("label").getChildren().size() > 0)) {
+                source.setLabelTranslationsFromElement(sourceEl.getChild("label").getChildren());
+            }
+            map.put(uuid, source);
         }
 
         return map;
     }
 
     private void updateSources(Set<RecordInfo> records,
-                               Map<String, String> remoteSources) throws SQLException, MalformedURLException {
+                               Map<String, Source> remoteSources) throws SQLException, MalformedURLException {
         log.info("Aligning source logos from for : " + params.getName());
 
         //--- collect all different sources that have been harvested
@@ -349,16 +356,16 @@ class Harvester implements IHarvester<HarvestResult> {
 
         for (String sourceUuid : sources) {
             if (!siteId.equals(sourceUuid)) {
-                String sourceName = remoteSources.get(sourceUuid);
+                Source source = remoteSources.get(sourceUuid);
 
-                if (sourceName != null) {
+                if (source != null) {
                     retrieveLogo(context, params.host, sourceUuid);
                 } else {
-                    sourceName = "(unknown)";
+                    String sourceName = "(unknown)";
+                    source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), false);
                     Resources.copyUnknownLogo(context, sourceUuid);
                 }
 
-                Source source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), false);
                 context.getBean(SourceRepository.class).save(source);
             }
         }

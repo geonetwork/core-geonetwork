@@ -34,7 +34,7 @@
                       id="{{section2.name.replace('/', '-')}}">
               <legend>{{section2.name | translate}}</legend>
               <!-- According to data type -->
-              <div data-ng-repeat="s in section2.children | hideLanguages | orderObjectBy:'position'"
+              <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
                   data-ng-switch="s.dataType"
                   data-ng-if="s.name != ''">
                 <div data-ng-switch-when="BOOLEAN">
@@ -46,8 +46,9 @@
 
                     <p class="help-block">
                       <span
-                        data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')">
-                        {{s['name'] + '-help' | translate}}
+                        data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
+                        data-translate="">
+                        {{(s['name'] + '-help')}}
                       </span>
                     </p>
                   </div>
@@ -108,6 +109,18 @@
                       <option value="2"
                               ng-selected="'2' == s.value">
                         {{'system/oai/mdmode-valueModificationDate' | translate}}
+                      </option>
+                    </select>
+                    <select data-ng-switch-when="system/localrating/enable" class="form-control"
+                            name="{{s.name}}">
+                      <option value=""
+                              ng-selected="'' == s.value">{{'off' | translate}}
+                      </option>
+                      <option value="basic"
+                              ng-selected="'basic' == s.value">{{'basic' | translate}}
+                      </option>
+                      <option value="advanced"
+                              ng-selected="'advanced' == s.value">{{'advanced' | translate}}
                       </option>
                     </select>
                     <select data-ng-switch-when="system/requestedLanguage/only" class="form-control"
@@ -300,7 +313,7 @@
                             data-ng-model="s.value"
                             data-ng-change="processRecommended('siteIdChange', s['name'])"/>
                     </div>
-                    
+
                     <input data-ng-switch-when="system/inspire/remotevalidation/url" type="text" class="form-control"
                           id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}" placeholder="{{'system/inspire/remotevalidation/url-placeholder' | translate}}" />
 

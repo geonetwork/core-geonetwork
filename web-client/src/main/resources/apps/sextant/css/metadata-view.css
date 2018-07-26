@@ -476,7 +476,7 @@ div.help ul li {
     color: #1b75bc;
     /*display: none;*/
 }
-.gn-metadata-view h3 {
+.gn-metadata-view :not(section) h3 {
     /*color: #3071a9;*/
     /*position: relative;*/
     /*border-bottom: 2px dotted lightgrey;*/
@@ -488,6 +488,18 @@ div.help ul li {
     width: 33%;
     padding-top: 8px;
     padding-bottom: 4px;
+}
+
+/* Cancel above rule for v6 */
+.gn-metadata-view section h3 {
+  font-weight: normal;
+  font-size: 16px;
+  color: #000;
+  text-transform: none;
+  font-style: normal;
+  width: 100%;
+  padding-bottom: .5em;
+  padding-bottom: 4px;
 }
 
 .gn-metadata-view h3 * h3 {

@@ -101,11 +101,13 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" required="no"/>
+    <xsl:param name="overrideLabel" required="no"/>
 
     <xsl:apply-templates mode="mode-iso19139" select="*|@*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
       <xsl:with-param name="refToDelete" select="$refToDelete"/>
+      <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -628,5 +630,8 @@
                         preceding-sibling::*[1]/name() = name()]"
                 priority="2100"/>
 
+  <xsl:template mode="mode-iso19139"
+                match="gn:child[@name = 'topicCategory' and count(../gmd:topicCategory) > 0]"
+                priority="2100" />
 
 </xsl:stylesheet>

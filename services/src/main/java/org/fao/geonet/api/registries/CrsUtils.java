@@ -94,7 +94,7 @@ public class CrsUtils {
                     }
                     description += " (" + authorityCodeSpace + ":" + code + ")";
 
-                    if (matchesFilter(description.toUpperCase(), filters)) {
+                    if (matchesFilter(description, filters)) {
                         crsList.add(
                             new Crs(code, authorityTitle,
                                 authorityEdition, authorityCodeSpace,
@@ -159,15 +159,16 @@ public class CrsUtils {
 
 
     /**
-     * checks if all keywords in filter array are in input
+     * Checks if all keywords in filter array are in input (case insensitive search)
      *
      * @param input   test string
      * @param filters array of keywords
      * @return true, if all keywords in filter are in the input, false otherwise
      */
     static protected boolean matchesFilter(String input, String[] filters) {
+        String upperCasedInput = input.toUpperCase();
         for (String match : filters) {
-            if (!input.contains(match))
+            if (!upperCasedInput.contains(match.toUpperCase()))
                 return false;
         }
         return true;

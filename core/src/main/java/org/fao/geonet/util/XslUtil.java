@@ -39,6 +39,7 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SingletonIterator;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
@@ -57,6 +58,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -83,12 +85,17 @@ import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -101,6 +108,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
+
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -843,6 +851,10 @@ public final class XslUtil {
         return DefaultEncoder.getInstance().encodeForJavaScript(str);
     }
 
+    public static String encodeForHTML(String str) {
+        return DefaultEncoder.getInstance().encodeForHTML(str);
+    }
+
     public static String md5Hex(String str) {
         return org.apache.commons.codec.digest.DigestUtils.md5Hex(str);
     }
@@ -854,6 +866,38 @@ public final class XslUtil {
             ex.printStackTrace();
             return str;
         }
+    }
+
+    /**
+     *  To get the xml content of an url
+     *  It supports the usage of a proxy
+        * @param surl
+        * @return
+     */
+    public static Node getUrlContent(String surl) {
+
+        Node res = null;
+        InputStream is = null;
+
+        ServiceContext context = ServiceContext.get();
+
+        try {
+            URL url = new URL(surl);
+            URLConnection conn = Lib.net.setupProxy(context, url);
+
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            is = conn.getInputStream();
+            res = db.parse(is);
+
+        } catch (Throwable e) {
+            Log.error(Geonet.GEONETWORK, "Failed fetching url: " + surl, e);
+        } finally {
+            IOUtils.closeQuietly(is);
+        }
+
+        return res;
     }
 
     public static String decodeURLParameter(String str) {

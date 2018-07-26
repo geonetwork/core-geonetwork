@@ -5,9 +5,10 @@
 	<name>iso19139.sdn-product</name>
 	<id>2e73da10-82b6-11e3-baa7-0800200c9a66</id>
 	<version>1.0</version>
+  <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
 	<depends>iso19139</depends>
 	<!-- Profile XSD location -->
-	<schemaLocation>http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd 
+	<schemaLocation>http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd
 		http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd</schemaLocation>
 	<autodetect xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
 		<elements>

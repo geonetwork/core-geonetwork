@@ -37,8 +37,9 @@
         'gnOwsContextService',
         'gnMap',
         'gnMapsManager',
+        'gnDefaultGazetteer',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnMapsManager) {
+                 gnMap, gnMapsManager, gnDefaultGazetteer) {
 
           if(viewerSettings.mapConfig.viewerMapLayers) {
             console.warn('[geonetwork] Use of "mapConfig.viewerMapLayers" is deprecated. ' +
@@ -97,6 +98,9 @@
 
           var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
           var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
+
+          // To configure a gazetteer provider
+          viewerSettings.gazetteerProvider = gnDefaultGazetteer;
 
           // Map protocols used to load layers/services in the map viewer
           searchSettings.mapProtocols = {

@@ -109,27 +109,22 @@
     <xsl:value-of select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue"/>
   </xsl:template>
 
+  <xsl:template mode="getMetadataThumbnail" match="gmd:MD_Metadata">
+    <xsl:value-of select="gmd:identificationInfo/*/gmd:graphicOverview[1]/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+  </xsl:template>
+
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
     <section class="gn-md-side-overview">
-      <h4>
-        <i class="fa fa-fw fa-image">&#160;</i>
-        <span>
-          <xsl:value-of select="$schemaStrings/overviews"/>
-        </span>
-      </h4>
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
+      <img class="gn-img-thumbnail img-thumbnail center-block"
+           src="{gmd:fileName/*}"/>
 
-      <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-        <img class="gn-img-thumbnail center-block"
-             src="{gmd:fileName/*}"/>
-
-        <xsl:for-each select="gmd:fileDescription">
-          <div class="gn-img-thumbnail-caption">
-            <xsl:call-template name="localised">
-              <xsl:with-param name="langId" select="$langId"/>
-            </xsl:call-template>
-          </div>
-        </xsl:for-each>
-
+      <xsl:for-each select="gmd:fileDescription">
+        <div class="gn-img-thumbnail-caption">
+          <xsl:call-template name="localised">
+            <xsl:with-param name="langId" select="$langId"/>
+          </xsl:call-template>
+        </div>
       </xsl:for-each>
     </section>
   </xsl:template>
@@ -519,10 +514,10 @@
       <dd>
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
-        <a class="btn btn-link" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
+        <!--<a class="btn btn-link" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
           <i class="fa fa-file-code-o fa-2x">&#160;</i>
           <span><xsl:value-of select="$schemaStrings/metadataInXML"/></span>
-        </a>
+        </a>-->
       </dd>
     </dl>
   </xsl:template>

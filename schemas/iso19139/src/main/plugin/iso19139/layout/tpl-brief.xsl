@@ -77,7 +77,7 @@
     <xsl:variable name="id" select="$info/id"/>
     <xsl:variable name="uuid" select="$info/uuid"/>
 
-    <xsl:if test="normalize-space(gmd:parentIdentifier/*)!=''">
+    <xsl:if test="normalize-space(gmd:parentIdentifier/*[1])!=''">
       <parentId>
         <xsl:value-of select="gmd:parentIdentifier/*"/>
       </parentId>

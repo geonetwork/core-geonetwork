@@ -47,12 +47,16 @@
     var defaultConfig = {
       'langDetector': {
         'fromHtmlTag': false,
-        'regexp': '^\/[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-]+\/([a-z]{3})\/',
+        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
         'default': 'eng'
       },
       'nodeDetector': {
-        'regexp': '^\/[a-zA-Z0-9_\-]+\/([a-zA-Z0-9_\-]+)\/[a-z]{3}\/',
+        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
         'default': 'srv'
+      },
+      'baseURLDetector': {
+        'regexp': '^\(/[a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\/[a-z]{3}\/',
+        'default': '/geonetwork'
       },
       'mods': {
         'header': {
@@ -61,10 +65,10 @@
             'eng': 'en',
             'dut': 'nl',
             'fre': 'fr',
-            'ger': 'ge',
+            'ger': 'de',
             'kor': 'ko',
             'spa': 'es',
-            'cze': 'cz',
+            'cze': 'cs',
             'cat': 'ca',
             'fin': 'fi',
             'ice': 'is',
@@ -194,7 +198,10 @@
             'layers': [{'type': 'osm'}]
           }
         },
-        'geocoder': 'https://secure.geonames.org/searchJSON',
+        'geocoder': {
+            'enabled': true,
+            'appUrl': 'https://secure.geonames.org/searchJSON'
+        },
         'editor': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.edit',
@@ -266,7 +273,7 @@
         gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
         gnViewerSettings.defaultContext =
           gnViewerSettings.mapConfig['map-viewer'].context;
-        gnViewerSettings.geocoder = this.gnCfg.mods.geocoder;
+        gnViewerSettings.geocoder = this.gnCfg.mods.geocoder.appUrl || defaultConfig.mods.geocoder.appUrl;
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);
@@ -412,8 +419,21 @@
         }
         return detector.default || 'srv';
       }
+
+      function detectBaseURL(detector) {
+        if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            return res[1];
+          }
+        }
+        return detector.default || 'geonetwork';
+      }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
       gnGlobalSettings.nodeId = $scope.nodeId;
+      gnConfig.env = gnConfig.env || {};
+      gnConfig.env.node = $scope.nodeId;
+      gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
