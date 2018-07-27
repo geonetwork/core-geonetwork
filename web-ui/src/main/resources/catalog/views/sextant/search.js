@@ -98,6 +98,7 @@
     'gnMetadataActions',
     '$translate',
     '$q',
+    'gnUrlUtils',
     'gnGlobalSettings',
     'sxtPanierService',
     'gnOwsContextService',
