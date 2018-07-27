@@ -78,7 +78,7 @@
           </gmd:date>
           <gmd:identifier xmlns:gn="http://www.fao.org/geonetwork"
                           xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                         
+
                           xmlns:xlink="http://www.w3.org/1999/xlink">
             <gmd:MD_Identifier>
               <gmd:code>
@@ -156,7 +156,7 @@
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
                                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>

@@ -55,14 +55,14 @@
             <xsl:value-of select="substring-after(., ' = ')"/>
         </xsl:copy>
     </xsl:template>
-    
+
     <xsl:template match="@uuidref[
         starts-with(., 'SDN:')]">
         <xsl:attribute name="uuidref">
             <xsl:value-of select="substring-after(., ' = ')"/>
         </xsl:attribute>
     </xsl:template>
-    
+
 
     <xsl:template match="gmd:MD_SpatialRepresentationTypeCode/@codeListValue[
                                   starts-with(., 'SDN:')]">
@@ -139,7 +139,7 @@
 
 
 
-    <xsl:template match="gmd:descriptiveKeywords/*[normalize-space(gmd:thesaurusName/*/gmd:title/*) = 'external.theme.inspire-theme']/gmd:thesaurusName">
+    <xsl:template match="gmd:descriptiveKeywords/*[normalize-space(gmd:thesaurusName/*/gmd:title/*) = 'external.theme.httpinspireeceuropaeutheme-theme']/gmd:thesaurusName">
         <gmd:thesaurusName>
             <gmd:CI_Citation>
                 <gmd:title>
@@ -160,7 +160,7 @@
                     <gmd:MD_Identifier>
                         <gmd:code>
                             <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                                xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme</gmx:Anchor>
                         </gmd:code>
                     </gmd:MD_Identifier>
                 </gmd:identifier>

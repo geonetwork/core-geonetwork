@@ -26,6 +26,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
@@ -635,7 +636,35 @@
       </dd>
     </dl>
   </xsl:template>
-
+  <xsl:template mode="render-field"
+                match="gmd:descriptiveKeywords"
+                priority="1011">
+    <dl class="gn-keyword">
+      <dt>
+        <xsl:apply-templates mode="render-value"
+                             select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*"/>
+AAA
+        <!--<xsl:if test="*/gmd:type/*[@codeListValue != '']">
+          (<xsl:apply-templates mode="render-value"
+                                select="*/gmd:type/*/@codeListValue"/>)
+        </xsl:if>-->
+      </dt>
+      <dd>
+        <div>
+          <xsl:value-of select="count(*/gmd:keyword)"/>
+          <ul>
+            <li>
+              <xsl:for-each select="*/gmd:keyword">a
+                <xsl:value-of select="name(.)"/>:<xsl:value-of select="."/>
+                <xsl:apply-templates mode="render-value"
+                                     select="."/><xsl:if test="position() != last()">, </xsl:if>
+              </xsl:for-each>
+            </li>
+          </ul>
+        </div>
+      </dd>
+    </dl>
+  </xsl:template>
 
   <xsl:template mode="render-field"
                 match="gmd:descriptiveKeywords[not(*/gmd:thesaurusName/gmd:CI_Citation/gmd:title)]"
@@ -834,6 +863,18 @@
   <xsl:template mode="render-value"
                 match="gmd:URL">
     <a href="{.}">
+      <xsl:value-of select="."/>&#160;
+    </a>
+  </xsl:template>
+
+  <xsl:template mode="render-value"
+                match="*[gmx:Anchor]">
+    <xsl:apply-templates mode="render-value"
+                         select="gmx:Anchor"/>
+  </xsl:template>
+  <xsl:template mode="render-value"
+                match="gmx:Anchor">
+    <a href="{@xlink:href}">
       <xsl:value-of select="."/>&#160;
     </a>
   </xsl:template>

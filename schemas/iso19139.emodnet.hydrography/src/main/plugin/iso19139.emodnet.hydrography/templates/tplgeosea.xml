@@ -303,7 +303,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>external.theme.inspire-theme</gco:CharacterString>
+                <gco:CharacterString>external.theme.httpinspireeceuropaeutheme-theme</gco:CharacterString>
               </gmd:title>
               <gmd:date gco:nilReason="unknown" />
             </gmd:CI_Citation>
@@ -411,7 +411,7 @@
       <gmd:extent>
         <gmd:EX_Extent>
           <gmd:description>
-            <gco:CharacterString>Map projection parameters, values and units :  
+            <gco:CharacterString>Map projection parameters, values and units :
 Axes units :</gco:CharacterString>
           </gmd:description>
           <gmd:geographicElement>

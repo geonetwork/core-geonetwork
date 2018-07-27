@@ -1,13 +1,13 @@
-<!-- 
+<!--
 	Describes association between the schema and the thesaurus-->
 <associations>
-	<!-- 
-	registerAssociation : hold associations between elements ISO element and the 
+	<!--
+	registerAssociation : hold associations between elements ISO element and the
 	list of thesaurus to propose for that element. If no association registered, then
 	all thesaurus available on the node are provided.
-	
+
 	TODO : add support for registerURL to load on startup thesaurus if not available in the catalog
-	
+
 	-->
 	<registerAssociation registerId="local://thesaurus/local.areaOfBenefit.myocean.area.of.benefit" element="gmd:descriptiveKeywords"/>
 	<registerAssociation registerId="local://thesaurus/local.parametersGroup.myocean.ocean.variable" element="gmd:descriptiveKeywords"/>
@@ -18,11 +18,11 @@
 	<registerAssociation registerId="local://thesaurus/local.my-ocean-areas.myocean.geographical-area" element="gmd:descriptiveKeywords"/>
 	<registerAssociation registerId="local://thesaurus/local.processing-levels.myocean.processing-level" element="gmd:descriptiveKeywords"/>
 	<registerAssociation registerId="local://thesaurus/local.stratum.myocean.vertical.coverage" element="gmd:descriptiveKeywords"/>
-	
-	<registerAssociation registerId="local://thesaurus/external.theme.inspire-theme" element="gmd:descriptiveKeywords"/>
-	
-	<!-- 
-	registerTransformation : hold associations between elements ISO element and the 
+
+	<registerAssociation registerId="local://thesaurus/external.theme.httpinspireeceuropaeutheme-theme" element="gmd:descriptiveKeywords"/>
+
+	<!--
+	registerTransformation : hold associations between elements ISO element and the
 	template to use for its transformation from SKOS format.
 	-->
 	<!--<registerTransformation element="gmd:descriptiveKeywords" xslTpl="to-iso19139-keyword"/>-->

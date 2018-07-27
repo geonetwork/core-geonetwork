@@ -189,7 +189,7 @@
       <!--
       To restrict the list of thesaurus allowed, set the include attribute
       for the directive:
-      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      <directiveAttributes data-include="external.theme.httpinspireeceuropaeutheme-theme,external.place.regions"/>
 
       Exclude a thesaurus:
       <directiveAttributes data-include="-external.place.regions"/>
@@ -431,7 +431,7 @@
                             'ISO 19115:2003/19139 - SEXTANT')">
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" maxtags="1"/>
         <thesaurus key="local.theme.sextant-theme" maxtags="1"/>
       </thesaurusList>
 
@@ -527,13 +527,13 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.local.theme.sextant-theme']"
                  name="sextant-theme"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.inspire-theme']"
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"
                  name="inspireTheme"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
                             'geonetwork.thesaurus.local.theme.sextant-theme' and
                           */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
-                            'geonetwork.thesaurus.external.theme.inspire-theme']"/>
+                            'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"
                  or="descriptiveKeywords"
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
@@ -873,7 +873,7 @@
       eg. only 2 INSPIRE themes with Anchor.
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>
@@ -2335,7 +2335,7 @@
                               gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
                               'ISO 19115:2003/19139 - EMODNET - SDN')">
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    fieldset="false"
                    transformations="to-iso19139-keyword"
                    maxtags="1"/>
@@ -2379,7 +2379,7 @@
             <field
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() =
-                          'geonetwork.thesaurus.external.theme.inspire-theme' or
+                          'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme' or
                           */gmd:thesaurusName/*/gmd:title/*/text() = 'GEMET - INSPIRE themes, version 1.0']"
               name="inspireTheme"/>
 

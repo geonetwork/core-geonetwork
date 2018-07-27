@@ -14039,7 +14039,7 @@ return inspirerelated
 return inspiretheme
 },getThemesField:function(services,multi){var Keyword,themesStore,inspiretheme;
 Keyword=Ext.data.Record.create([{name:"id"},{name:"value"},{name:"definition"},{name:"uri"}]);
-themesStore=new Ext.data.Store({proxy:new Ext.data.HttpProxy({url:services.searchKeyword,method:"GET"}),baseParams:{pNewSearch:true,pTypeSearch:1,pKeyword:"*",pThesauri:"external.theme.inspire-theme",pMode:"searchBox",maxResults:"35"},reader:new Ext.data.XmlReader({record:"keyword",id:"id"},Keyword),fields:["id","value","definition","uri"],sortInfo:{field:"value"}});
+themesStore=new Ext.data.Store({proxy:new Ext.data.HttpProxy({url:services.searchKeyword,method:"GET"}),baseParams:{pNewSearch:true,pTypeSearch:1,pKeyword:"*",pThesauri:"external.theme.httpinspireeceuropaeutheme-theme",pMode:"searchBox",maxResults:"35"},reader:new Ext.data.XmlReader({record:"keyword",id:"id"},Keyword),fields:["id","value","definition","uri"],sortInfo:{field:"value"}});
 themesStore.load();
 var config={id:"inspiretheme",name:"E_inspiretheme",mode:"local",triggerAction:"all",fieldLabel:OpenLayers.i18n("inspiretheme"),store:themesStore,valueField:"value",displayField:"value"};
 if(multi){Ext.apply(config,{valueDelimiter:" or ",stackItems:true});

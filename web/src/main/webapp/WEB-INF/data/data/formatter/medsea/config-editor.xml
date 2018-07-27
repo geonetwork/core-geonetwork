@@ -108,7 +108,7 @@
       <!--
       To restrict the list of thesaurus allowed, set the include attribute
       for the directive.
-      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      <directiveAttributes data-include="external.theme.httpinspireeceuropaeutheme-theme,external.place.regions"/>
       -->
     </for>
   </fields>
@@ -161,7 +161,7 @@
       <name>gmd:abstract</name>
     </expanded>
     <!-- All fields in ISO could be multilingual.
-    Define element to exlcude. 
+    Define element to exlcude.
     TODO: it may be relevant to have parent defined
     to restrict the list.
     -->
@@ -222,7 +222,7 @@
 
   <!-- View configuration -->
   <views>
-    <!-- TODO: Add option to configure if view should be displayed or not 
+    <!-- TODO: Add option to configure if view should be displayed or not
     based on xpath expression ? -->
     <!--Turn off INSPIRE view by default -->
     <view name="inspire" upAndDownControlHidden="true" disabled="true">
@@ -269,7 +269,7 @@
             xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
             del="../..">
-            <template> 
+            <template>
               <values>
                 <key label="url" xpath="gmd:URL" tooltip="gmd:linkage"/>
               </values>
@@ -475,7 +475,7 @@
                         <gmd:identifier>
                           <gmd:MD_Identifier>
                             <gmd:code>
-                              <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                              <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme</gmx:Anchor>
                             </gmd:code>
                           </gmd:MD_Identifier>
                         </gmd:identifier>
@@ -1362,8 +1362,8 @@
           <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
         </section>
       </tab>
-      
-      <!-- Elements that should not use the "flat" mode --> 
+
+      <!-- Elements that should not use the "flat" mode -->
       <flatModeExceptions>
         <for name="gmd:descriptiveKeywords" />
         <for name="gmd:pointOfContact"/>
@@ -1381,7 +1381,7 @@
       eg. only 2 INSPIRE themes with Anchor.
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
@@ -1461,7 +1461,7 @@
         <thesaurus key="local.theme.medsea.environmental.matrix" maxtags="1"/>
         <thesaurus key="local.theme.medsea.visibility" maxtags="1"/>
         <thesaurus key="local.theme.medsea.policy.visibility" maxtags="1"/>
-        <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" maxtags="1"/>
         <thesaurus key="local.theme.medsea.level.of.characteristics" maxtags="1"/>
         <thesaurus key="local.theme.medsea.production.mode" maxtags="1"/>
         <thesaurus key="local.theme.medsea.data.delivery.mechanism" maxtags="1"/>

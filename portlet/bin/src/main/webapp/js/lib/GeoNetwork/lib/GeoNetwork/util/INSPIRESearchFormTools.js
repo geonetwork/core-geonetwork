@@ -168,7 +168,7 @@ GeoNetwork.util.INSPIRESearchFormTools = {
                 pNewSearch : true,
                 pTypeSearch : 1,
                 pKeyword: '*',
-                pThesauri : 'external.theme.inspire-theme',
+                pThesauri : 'external.theme.httpinspireeceuropaeutheme-theme',
                 pMode : 'searchBox',
                 maxResults : '35'
             },
