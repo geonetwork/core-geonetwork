@@ -1968,25 +1968,31 @@
               name="sextant-theme"/>
 
             <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.inspire-theme']"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() =
+                          'geonetwork.thesaurus.external.theme.inspire-theme' or
+                          */gmd:thesaurusName/*/gmd:title/*/text() = 'GEMET - INSPIRE themes, version 1.0']"
               name="inspireTheme"/>
 
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                         contains(
                           gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                          'NVS.C19')]"
+                          'NVS.C19') or
+                          */gmd:thesaurusName/*/gmd:title/*/text() = 'SeaVoX salt and fresh water body gazetteer']"
                     name="seaAreas"/>
 
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                         contains(
                           gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                          'NVS.P02')]"
+                          'NVS.P02')  or
+                          */gmd:thesaurusName/*/gmd:title/*/text() = 'Parameter Discovery Vocabulary (P02)']"
                     name="oceanDiscoveryParameters"/>
 
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                         contains(
                           gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                          'NVS.P35')]"
+                          'NVS.P35') or
+                          */gmd:thesaurusName/*/gmd:title/*/text() = 'EMODNET chemistry lot aggregated parameter names']"
                     name="oceanChemistryVariables"/>
           </section>
         </section>
