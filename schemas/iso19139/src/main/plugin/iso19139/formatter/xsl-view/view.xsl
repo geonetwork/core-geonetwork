@@ -115,16 +115,17 @@
 
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
     <section class="gn-md-side-overview">
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-      <img class="gn-img-thumbnail img-thumbnail center-block"
-           src="{gmd:fileName/*}"/>
+      <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
+        <img class="gn-img-thumbnail img-thumbnail center-block"
+             src="{gmd:fileName/*}"/>
 
-      <xsl:for-each select="gmd:fileDescription">
-        <div class="gn-img-thumbnail-caption">
-          <xsl:call-template name="localised">
-            <xsl:with-param name="langId" select="$langId"/>
-          </xsl:call-template>
-        </div>
+        <xsl:for-each select="gmd:fileDescription">
+          <div class="gn-img-thumbnail-caption">
+            <xsl:call-template name="localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </div>
+        </xsl:for-each>
       </xsl:for-each>
     </section>
   </xsl:template>
