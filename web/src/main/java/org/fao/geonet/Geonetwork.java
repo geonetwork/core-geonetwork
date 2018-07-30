@@ -155,8 +155,10 @@ public class Geonetwork implements ApplicationHandler {
         ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));
         appPath = finder.getAppPath();
         String baseURL = context.getBaseUrl();
-        String webappName = baseURL.substring(1);
-        // TODO : if webappName is "". ie no context
+        String webappName = "";
+        if (StringUtils.isNotEmpty(baseURL)) {
+            webappName = baseURL.substring(1);
+        }
 
         final SystemInfo systemInfo = _applicationContext.getBean(SystemInfo.class);
         String version = systemInfo.getVersion();

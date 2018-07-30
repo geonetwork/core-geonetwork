@@ -24,12 +24,6 @@
 (function() {
   goog.provide('gn_cat_controller');
 
-
-
-
-
-
-
   goog.require('gn_admin_menu');
   goog.require('gn_saved_selections');
   goog.require('gn_search_manager');
@@ -47,15 +41,19 @@
     var defaultConfig = {
       'langDetector': {
         'fromHtmlTag': false,
-        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
+        'regexp': '^(?:\/.+)?/.+\/([a-z]{2,3})\/.+',
         'default': 'eng'
       },
       'nodeDetector': {
-        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
+        'regexp': '^(?:\/.+)?\/(.+)\/[a-z]{2,3}\/.+',
         'default': 'srv'
       },
+      'serviceDetector': {
+        'regexp': '^(?:\/.+)?\/.+\/[a-z]{2,3}\/(.+)',
+        'default': 'catalog.search'
+      },
       'baseURLDetector': {
-        'regexp': '^\(/[a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\/[a-z]{3}\/',
+        'regexp': '^((?:\/.+)?)+\/.+\/[a-z]{2,3}\/.+',
         'default': '/geonetwork'
       },
       'mods': {
@@ -344,7 +342,7 @@
     },
     isValidIso2Lang: function(lang) {
       for (p in this.langs) {
-        if (this.langs[p] == lang) {
+        if (this.langs[p] === lang) {
           return true;
         }
       }
@@ -355,7 +353,7 @@
     },
     getIso3Lang: function(iso2lang) {
       for (p in this.langs) {
-        if (this.langs[p] == iso2lang) {
+        if (this.langs[p] === iso2lang) {
           return p;
         }
       }
@@ -395,13 +393,6 @@
       });
       $scope.getPermalink = gnUtilityService.getPermalink;
 
-      try {
-        var tokens = location.href.split('/');
-        $scope.service = tokens[6].split('?')[0];
-      } catch (e) {
-        // console.log("Failed to extract current service from URL.");
-      }
-
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
       $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
@@ -417,6 +408,17 @@
         return detector.default || 'srv';
       }
 
+
+      function detectService(detector) {
+        if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            return res[1];
+          }
+        }
+        return detector.default;
+      }
+
       function detectBaseURL(detector) {
         if (detector.regexp) {
           var res = new RegExp(detector.regexp).exec(location.pathname);
@@ -427,6 +429,7 @@
         return detector.default || 'geonetwork';
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
+      $scope.service = detectService(gnGlobalSettings.gnCfg.serviceDetector);
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env || {};
       gnConfig.env.node = $scope.nodeId;
