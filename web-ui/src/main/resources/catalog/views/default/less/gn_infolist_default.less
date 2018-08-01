@@ -1,10 +1,3 @@
-
-.nav-tabs > li > a {
-  &:hover {
-    cursor: pointer;
-  }
-}
-
 .gn-row-info {
   padding: 30px 20px 40px 20px;
   background-color: @gn-info-background-color;
@@ -15,220 +8,25 @@
   }
 }
 
-// list of records
-.gn-info-list {
-  padding: 5px 0px;
-  margin: auto -10px;
-  li {
-    width: 100%;
-    zoom: 1;
-    list-style: none;
-    float: left;
-    padding: 10px;
-    cursor: pointer;
-  }
-  li.gn-more {
-    position: relative;
-    float: right;
-  }
-
-  // info lists
-  // 
-  // ----- general
-  .resultcard {
-    padding: 0 0 10px 0;
-    background: transparent;
-    .title {
-      min-height: 40%;
-      padding: 10px;
-      h4 {
-        font-size: 16px;
-        margin: 0;
-      }
-    }
-    .abstract {
-      overflow: auto;
-      padding: 0 10px 0 10px;
-      height: 60%;
-    }
-    .gn-md-thumbnail {
-      display: none;
-      float: left;
-      width: 150px;
-      height: 150px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      .gn-img-thumbnail {
-        width: 100%;
-        height: 100%;
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: cover;
-        filter: grayscale(100%); /* Current draft standard */
-      }
-    }
-  }
-  .noThumbnail {
-    // display icon when there is no thumbnail
-    .gn-img-thumbnail:after {
-      content: "\f03e"; 
-      font-family: FontAwesome;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: inherit;
-      position: absolute;
-      font-size: 46px;
-      color: #eaeaea;
-      top: 50%;
-      left: 50%;
-      margin: -32px 0 0 -23px;
-      z-index: 1;
-    }
-  }
-  li:hover {
-    .title {
-      color: #000;
-    }
-  }
-}
-
-// info lists
-// 
-// ----- small
-.gn-info-list-small {
-  .gn-info-list {
-    li {
-      width: 100%;
-      padding: 5px 10px;
-      .resultcard {
-        .title {
-          padding-left: 0;
-        }
-        .abstract {
-          max-height: 1.5em !important;
-          overflow: hidden;
-          padding-left: 0;
-        }
-        .introduction {
-          display: none;
-        }
-      }
-    }
-  }
-}
-// ----- large
-.gn-info-list-large {
-  .gn-info-list {
-    li {
-      width: 100%;
-      .resultcard {
-        .title {
-          padding-left: 0;
-        }
-        .content {
-          float: left;
-          max-width: 70%
-        }
-        .abstract {
-          max-height: auto !important;
-          max-height: 250px;
-          padding-left: 0;
-        }
-        .introduction {
-          margin-top: 10px;
-          .badge {
-            font-weight: normal;
-            background-color: #333;
-          }
-        }
-        .gn-md-thumbnail {
-          float: left;
-          display: block;
-          margin-top: 4px;
-          margin-right: 10px;
-        }
-      }
-      .resultcard.hasThumbnail {
-        &:hover {
-          .gn-img-thumbnail {
-            filter: none !important;
-          }
-        }
-      }
-    }
-  }
-}
-// ----- blocks
+// custom colors for the blocks in the info list
 .gn-info-list-blocks {
   .gn-info-list {
     li {
-      width: 33%;
-      height: 250px;
       .resultcard {
         .title {
           background: @gn-resultcard-title-background-color;
           border: @gn-resultcard-title-border;
           h4 {
             color: @gn-resultcard-title-color;
-            font-size: 15px;
-            font-weight: normal;
-            margin: 0;
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            line-height: 22px;
           }
         }
-        .abstract {
-          border: 1px solid #ccc;
-          height: 150px;
-          padding-bottom: 5px;
-        }
-        .introduction {
-          display: none;
-        }
-        .gn-md-thumbnail {
-          display: block;
-          width: 100%;
-        }
-
       }
       .resultcard.hasThumbnail {
         &:hover {
-          .gn-img-thumbnail {
-            filter: none !important;
-          }
           .title {
             background: @gn-resultcard-title-background-color-hover;
           }
         }
-      }
-      //.resultcard.hasThumbnail {
-        .abstract {
-          display: none !important;
-        }
-      //}
-    }
-    li:hover {
-      .resultcard {
-        transform: scale(1.05);
-        -webkit-transform: scale(1.05);
-        -moz-transform: scale(1.05);
-        transition: transform 0.15s ease-in-out;
-      }
-    }
-    li:hover:before {
-      content: "";
-    }
-  }
-}
-// more blocks on 1 row when the screen is wider
-@media (min-width: @screen-lg-min) {
-  .gn-info-list-blocks {
-    .gn-info-list {
-      li {
-        width: 25%;
       }
     }
   }
