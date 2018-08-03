@@ -105,7 +105,7 @@ class SxtSummaryFactory {
       replacements['pdfOutput'] = false
       replacements['gnUrl'] = env.getLocalizedUrl();
 
-      return handlers.fileResult("html/bbox.html", replacements)
+      return handlers.fileResult("html/sxt-bbox.html", replacements)
     }
   }
 
