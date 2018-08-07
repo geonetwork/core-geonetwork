@@ -695,7 +695,7 @@ public class SiteApi {
                 if (asFavicon) {
                     ApiUtils.createFavicon(
                         source,
-                        dataDirectory.getResourcesDir().resolve("images").resolve("favicon.png"));
+                        dataDirectory.getResourcesDir().resolve("images").resolve("logos").resolve("favicon.png"));
                 } else {
                     Path logo = nodeLogoDirectory.resolve("logos").resolve(nodeUuid + ".png");
                     Path defaultLogo = nodeLogoDirectory.resolve("images").resolve("logo.png");
