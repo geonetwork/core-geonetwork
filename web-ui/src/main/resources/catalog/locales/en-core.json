@@ -377,6 +377,7 @@
     "settings": "Settings",
     "tools": "Tools",
     "processesTool": "Use a WPS process",
+    "processesToolUrlDiscovery": "WPS URL",
     "addLayersTool": "Add layers",
     "layersTool": "Manager layers",
     "filterTool": "Search & filter features",

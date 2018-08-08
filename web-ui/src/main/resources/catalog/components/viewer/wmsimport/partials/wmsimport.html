@@ -31,7 +31,7 @@
         <div class="input-group">
           <input class="form-control" type="text" data-toggle="dropdown"
                  data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
-                 aria-label="{{'serviceUrl' | translate}}"
+                 aria-label="{{format.toUpperCase()}} {{'serviceUrlLabel' | translate }}"
                  placeholder="{{'serviceUrl' | translate}}"/>
           <span class="input-group-btn">
             <button class="btn btn-default" type="button" data-ng-click="reset()">
