@@ -10,6 +10,7 @@
   background-color: @gn-menubar-background;
   border-color: @gn-menubar-border-color;
   .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
+    height: @gn-menubar-height;
     color: @gn-menubar-color;
     &:hover, &:focus {
       color: @gn-menubar-color-hover;
@@ -21,5 +22,16 @@
       display: inline-block;
       .text-overflow();
     }
+  }
+  // also add `display:none`, this doesn't take whitespace on the navbar
+  .badge.invisible {
+    display: none
+  }
+
+}
+
+@media (max-width: @grid-float-breakpoint) {
+  .navbar-nav {
+    margin: 0;
   }
 }
