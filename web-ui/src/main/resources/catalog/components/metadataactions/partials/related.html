@@ -26,7 +26,7 @@
         </strong>
       </strong>
       </div>
-      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'" >
+      <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-8 col-sm-8'" >
         <!-- WMS & WFS contains layer name in title -->
         <h3 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                           mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
@@ -93,7 +93,7 @@
                data-ng-if="!isLayerProtocol(r)">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
-          wfsServiceLinkDetails</span>
+              wfsServiceLinkDetails</span>
             </p>
             <div data-ng-if="!isLayerProtocol(r)"
                  data-gn-no-map-wfs-download=""
@@ -165,14 +165,10 @@
           </div>
           
           <div data-ng-switch-when="MDFCATS">
-          <p class="text-muted">
-            <h2>{{(r.title | gnLocalized: lang) }}</h2>
-            
-           <h2 data-translate="">technicalInformation</h2>
-           
-           <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
-	        </div>
-            </p>
+            <h3>{{(r.title | gnLocalized: lang) }}</h3>
+            <h4 data-translate="">technicalInformation</h4>
+            <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
+            </div>
           </div>
 
           <div data-ng-switch-default>
@@ -193,7 +189,7 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-4">
+      <div class="col-xs-12 col-sm-3">
         <button type="button"
                 class="btn btn-default btn-sm btn-block"
                 data-ng-show="hasAction(mainType)"
