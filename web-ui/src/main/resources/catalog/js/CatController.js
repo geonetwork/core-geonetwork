@@ -153,7 +153,7 @@
           'externalViewer': {
             'enabled': false,
             'baseUrl': 'http://www.example.com/viewer',
-            'urlTemplate': 'http://www.example.com/viewer?url={service.url}&type=${service.type}&layer=${service.name}',
+            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.name}',
             'openNewWindow': false,
             'valuesSeparator': ','
           },
@@ -375,12 +375,12 @@
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService',
     'gnSessionService', 'gnLangs', 'gnAdminMenu',
-    'gnViewerSettings', 'gnSearchSettings', '$cookies',
+    'gnViewerSettings', 'gnSearchSettings', '$cookies', 'gnExternalViewer',
     function($scope, $http, $q, $rootScope, $translate,
              gnSearchManagerService, gnConfigService, gnConfig,
              gnGlobalSettings, $location, gnUtilityService,
              gnSessionService, gnLangs, gnAdminMenu,
-             gnViewerSettings, gnSearchSettings, $cookies) {
+             gnViewerSettings, gnSearchSettings, $cookies, gnExternalViewer) {
       $scope.version = '0.0.1';
 
 
@@ -449,6 +449,8 @@
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+      $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
+      $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
 
       $scope.layout = {

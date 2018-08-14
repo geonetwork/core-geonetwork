@@ -22,7 +22,7 @@
                   data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
           </a>
         <a class="gn-nopadding-left hidden-sm hidden-md pull-left" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
-          <span class="gn-name" 
+          <span class="gn-name"
                 data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
                 title="{{info['system/site/name']}}">{{info['system/site/name']}}</span>
         </a>
@@ -35,7 +35,7 @@
         </a>
       </li>
       <li data-ng-if="gnCfg.mods.map.enabled">
-        <a data-gn-active-tb-item="{{gnCfg.mods.map.externalViewer.baseUrl || gnCfg.mods.map.appUrl}}"
+        <a data-gn-active-tb-item="{{isExternalViewerEnabled ? externalViewerUrl : gnCfg.mods.map.appUrl}}"
            title="{{'map' | translate}}">
           <i class="fa fa-fw fa-globe hidden-sm"></i>
           <span data-translate="">makeYourMap</span>
