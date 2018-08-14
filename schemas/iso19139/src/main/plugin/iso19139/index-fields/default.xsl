@@ -433,7 +433,7 @@
         <xsl:for-each-group select="//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/*/text() != '']"
                             group-by="gmd:thesaurusName/*/gmd:title/*/text()">
           '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
-          <xsl:for-each select="gmd:keyword/(gco:CharacterString|gmx:Anchor)">
+          <xsl:for-each select="current-group()/gmd:keyword/(gco:CharacterString|gmx:Anchor)">
             {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
             'link': '<xsl:value-of select="@xlink:href"/>'}
             <xsl:if test="position() != last()">,</xsl:if>
