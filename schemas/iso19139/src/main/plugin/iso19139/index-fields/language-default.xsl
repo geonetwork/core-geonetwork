@@ -368,7 +368,7 @@
                               group-by="gmd:thesaurusName/*/gmd:title/*/text()">
 
             '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
-            <xsl:for-each select="gmd:keyword//gmd:LocalisedCharacterString[@locale = $langId and text() != '']">
+            <xsl:for-each select="current-group()/gmd:keyword//gmd:LocalisedCharacterString[@locale = $langId and text() != '']">
               {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
               'link': '<xsl:value-of select="@xlink:href"/>'}
               <xsl:if test="position() != last()">,</xsl:if>
