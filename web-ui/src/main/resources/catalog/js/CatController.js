@@ -28,11 +28,13 @@
   goog.require('gn_saved_selections');
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
+  goog.require('gn_external_viewer');
 
 
   var module = angular.module('gn_cat_controller',
       ['gn_search_manager', 'gn_session_service',
-        'gn_admin_menu', 'gn_saved_selections']);
+        'gn_admin_menu', 'gn_saved_selections',
+        'gn_external_viewer']);
 
 
   module.constant('gnSearchSettings', {});
