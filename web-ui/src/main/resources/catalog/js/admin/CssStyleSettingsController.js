@@ -50,7 +50,7 @@
 
         $http.post('../api/customstyle',
             formId)
-            .success(function(data) {
+            .then(function(data) {
               $http({
                 method: 'GET',
                 url: '../../static/wroAPI/reloadModel',
@@ -63,19 +63,27 @@
                 }).then(function(data) {
                   $window.location.reload(); });
               });
-            })
-            .error(function(data) {
+            }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('settingsUpdateError'),
-                msg: data,
+                msg: error.message || error,
                 timeout: 0,
                 type: 'danger'});
             });
+
       };
 
       $scope.uploadCssStyleSettings = function(cssJsonContent){
 
-        $scope.saveCssStyleSettings(cssJsonContent);
+        if(cssJsonContent) {
+          $scope.saveCssStyleSettings(cssJsonContent);
+        } else {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate.instant('settingsUpdateError'),
+            msg: 'No data',
+            timeout: 0,
+            type: 'danger'});
+        }
       };
 
       $scope.restoreDefaultCssStyleSettings = function(formId){

@@ -88,21 +88,18 @@ public class CssStyleSettingsService {
      */
     @ApiOperation(value = "Saves custom style variables.", notes = "Saves custom style variables.", nickname = "saveCustomStyle")
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<String> saveCssStyle(@ApiIgnore HttpServletRequest request, @ApiIgnore HttpServletResponse response,
             @ApiParam(name = "gnCssStyle") @RequestBody String jsonVariables) throws Exception {
 
         try {
-            if(checkJSONFile(jsonVariables)) {
-                final String cleanedVariables = convertFormNamesToLessVariablesNames(jsonVariables);
-                saveLessVariablesOnDB(cleanedVariables);
-                saveLessVariablesInDataFolder(cleanedVariables);
-                return new ResponseEntity<String>(HttpStatus.CREATED);
-            } else {
-                return new ResponseEntity<String>("Error in JSON format", HttpStatus.BAD_REQUEST);
-            }
+            checkJSONFile(jsonVariables);
+            final String cleanedVariables = convertFormNamesToLessVariablesNames(jsonVariables);
+            saveLessVariablesOnDB(cleanedVariables);
+            saveLessVariablesInDataFolder(cleanedVariables);
+            return new ResponseEntity<String>(HttpStatus.CREATED);
         } catch (final JSONException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (final Exception e) {
@@ -292,7 +289,7 @@ public class CssStyleSettingsService {
      *  and the properties are correct
      * @throws JSONException the JSON exception
      */
-    private boolean checkJSONFile(String jsonLessVariables) throws JSONException {
+    private void checkJSONFile(String jsonLessVariables) throws JSONException {
 
         final JSONObject input = new JSONObject(jsonLessVariables);
         final Iterator<String> iter = input.keys();
@@ -304,19 +301,18 @@ public class CssStyleSettingsService {
                     Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
                     Matcher matcher = pattern.matcher(input.getString(key));
                     if (!matcher.matches()) {
-                        throw new JSONException("Invalid URL property");
+                        throw new JSONException("Invalid color value. It must be in the format #RRGGBB.");
                     }
                 } else if(key.equals("gnBackgroundImage") && !StringUtils.isEmpty(input.getString(key))) {
                     Pattern pattern = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
                     Matcher matcher = pattern.matcher(input.getString(key));
                     if (!matcher.matches()) {
-                        throw new JSONException("Invalid color property");
+                        throw new JSONException("Invalid URL in 'gnBackgroundImage' property");
                     }
                 }
 
             }
         }
-        return true;
     }
 
     /**
