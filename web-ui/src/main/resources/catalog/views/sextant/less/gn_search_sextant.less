@@ -46,17 +46,20 @@
 @btn-default-color: white;
 @btn-default-bg: @sxt-button-color;
 
+
+body {
+  font-family: @sxt-font-family;
+}
+
+html, body,
+body > div:not(.gn-alerts):not(.g):not(.datepicker),
+.container-fluid,
+.hfull, .tab-pane
+{
+  height: 100%;
+}
+
 @media (min-width: @screen-md-min) {
-  body {
-    font-family: @sxt-font-family;
-  }
-  html, body,
-  body > div:not(.gn-alerts):not(.g):not(.datepicker),
-  .container-fluid,
-  .hfull, .tab-pane
-  {
-    height: 100%;
-  }
   .sxt-search-main-container {
     height: calc(~"100% - "@sxt-viewer-top);
     .noresult {

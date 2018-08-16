@@ -48,7 +48,7 @@
               scope.activeTools = {};
               if (gnViewerSettings.menuExpanded) {
                 $timeout(function() {
-                  $('[gi-btn][rel=#layers]').click();
+                  $('[gi-btn][rel="#layers"]').click();
                 });
               }
 
