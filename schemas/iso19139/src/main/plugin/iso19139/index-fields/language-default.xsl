@@ -565,10 +565,8 @@
 
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
         <xsl:variable name="tPosition" select="position()"></xsl:variable>
-        <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[
-        gmd:name/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] or
-        gmd:description/*/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]
-        ]">
+
+        <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource">
           <xsl:variable name="download_check"><xsl:text>&amp;fname=&amp;access</xsl:text></xsl:variable>
           <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
           <xsl:variable name="title"
