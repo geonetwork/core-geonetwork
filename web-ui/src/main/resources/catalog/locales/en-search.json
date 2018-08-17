@@ -68,6 +68,7 @@
   "wfsCapabilitiesNotAvailable": "Couldn't check the GetCapabilities response",
   "wfsLayerNotAvailable": "The featuretype {{layerName}} is not available in the WFS service. However, you can view one of the available ones",
   "wfsChooseLayerToAdd": "Choose a featuretype to add to the map",
+  "Unable_to_connect_to_service": "Unable to connect to service",
   "wcsCapabilitiesNotAvailable": "Couldn't check the GetCapabilities response",
   "wcsLayerNotAvailable": "The coverage {{layerName}} is not available in the WCS service. However, you can view one of the available ones",
   "wcsChooseLayerToAdd": "Choose a coverage to add to the map",
