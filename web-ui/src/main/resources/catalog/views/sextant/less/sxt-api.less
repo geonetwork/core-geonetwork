@@ -121,9 +121,6 @@
   /* @media (max-width: @screen-md) { */
   @media (max-width: 991px) {
     .tab-pane.active .gn-main-viewer {
-      #sxt-tabswitcher {
-        display: inline-block;
-      }
       [gn-localisation-input] {
         display: none;
       }
@@ -157,11 +154,13 @@
   }
 
   // special cases for search view
-  .sxt-max-md .sxt-search-tab.sxt-main-tabs .btn-group.sxt-panel-button {
-    margin-left: calc(~"33% + 2em");
+  @media (min-width: 992px) {
+    .sxt-max-md .sxt-search-tab.sxt-main-tabs #sxt-tabswitcher {
+      left: calc(~"33% + 2em");
+    }
   }
-  .sxt-max-sm .sxt-search-tab.sxt-main-tabs .btn-group.sxt-panel-button {
-    margin-left: 29.7em;
+  .sxt-max-sm .sxt-search-tab.sxt-main-tabs #sxt-tabswitcher {
+    left: 0;
   }
 
 

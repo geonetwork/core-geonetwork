@@ -256,11 +256,10 @@ div.gn, div.g, * {
   .btn-group {
     margin-top: @sxt-vieweritem-top;
     box-shadow: @sxt-shadow;
-    &.sxt-panel-button {
-      margin-left: 29.7em;
-    }
     &.sxt-adminbtn {
-      margin-right: 1.2em;
+      position: absolute;
+      right: 1.8em;
+      top: 0;
       .btn {
         height: 29px;
       }
@@ -276,11 +275,25 @@ div.gn, div.g, * {
 
 }
 
+#sxt-tabswitcher {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  top: 0;
+  left: 29.7em;
+
+  & > *:not(:last-of-type) {
+    margin-right: 1.3em;
+  }
+}
+
 // special margin for tab switch when in search tab
-.sxt-search-tab.sxt-main-tabs .sxt-panel-button {
-  margin-left: calc(~"33% + 2em");
-  @media (min-width: 1200px) {
-    margin-left: ~"calc(25% + 1.8em)";
+.sxt-search-tab.sxt-main-tabs #sxt-tabswitcher {
+  @media (min-width: 992px) { // #screen-sm-max
+    left: ~"calc(33% + 2em)";
+  }
+  @media (min-width: 1200px) {  // #screen-md-max
+    left: ~"calc(25% + 1.8em)";
   }
 }
 
@@ -308,6 +321,10 @@ div.gn, div.g, * {
   }
   .sxt-main-tabs {
     height: 6em;
+    .btn-group.sxt-adminbtn {
+      top: -0.8em;
+      right: 0.7em;
+    }
   }
   [sxt-main-viewer] {
     .main-tools,
@@ -321,11 +338,10 @@ div.gn, div.g, * {
     }
   }
   #sxt-tabswitcher {
-    display: block;
-    position: absolute;
     top: -0.8em;
-    left: 50%;
-    margin-left: -12em;
+    left: 0;
+    width: 100%;
+    justify-content: center;
   }
   [gn-metadata-display] {
     top: .5em;
