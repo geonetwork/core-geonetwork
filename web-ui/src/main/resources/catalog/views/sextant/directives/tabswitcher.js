@@ -16,7 +16,11 @@
           scope.isVisible = Object.keys(scope.mainTabs).length > 1;
           scope.allowLogin = typeof sxtSettings !== 'undefined' ?
             sxtSettings.allowLogin : true;
-          scope.signInUrl = gnGlobalSettings.gnUrl + 'info?casLogin';
+
+          // signin url is https://host/geonetwork/casRedirect?service=<currentUrl>
+          var currentUrl = window.location.origin + window.location.pathname;
+          scope.signInUrl = gnGlobalSettings.gnUrl + '../../casRedirect?service=' +
+            currentUrl;
         }
       };
     }
