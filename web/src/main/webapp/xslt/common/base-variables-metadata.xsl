@@ -135,6 +135,12 @@
                         else if ($viewConfig/@displayTooltipsMode)
                         then $viewConfig/@displayTooltipsMode
                         else ''"/>
+  <xsl:variable name="isDisplayingSections"
+                select="if (/root/request/displaySections)
+                        then /root/request/displaySections = 'true'
+                        else if ($viewConfig/@displaySections)
+                        then $viewConfig/@displaySections = 'true'
+                        else true()"/>
 
 
 </xsl:stylesheet>

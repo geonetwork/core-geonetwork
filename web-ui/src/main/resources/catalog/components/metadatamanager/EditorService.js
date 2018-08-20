@@ -363,6 +363,8 @@
                getInputValue('displayTooltips') == 'true',
                displayTooltipsMode:
                getInputValue('displayTooltipsMode') || '',
+               displaySections:
+               getInputValue('displaySections') == 'true',
                schema: getInputValue('schema'),
                version: getInputValue('version'),
                tab: getInputValue('currTab'),

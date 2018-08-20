@@ -350,6 +350,9 @@
       <null/>
     </xsl:param>
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
+    <!-- Collapsed fieldsets reopens when saving, this param can be
+    used to collapse again the fieldset after loading -->
+    <xsl:param name="isSlideToggle" select="false()" required="no"/>
 
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
@@ -359,7 +362,7 @@
               class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
       <legend class="{$cls}"
-              data-gn-slide-toggle=""
+              data-gn-slide-toggle="{$isSlideToggle}"
               data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|">
         <!--
          The toggle title is in conflict with the element title

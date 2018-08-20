@@ -235,6 +235,7 @@
                   displayAttributes: $location.search()['displayAttributes'] === 'true',
                   displayTooltips: $location.search()['displayTooltips'] === 'true',
                   displayTooltipsMode: $location.search()['displayTooltipsMode'] || '',
+                  displaySections: ($location.search()['displaySections'] || 'true') === 'true',
                   compileScope: $scope,
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
@@ -266,6 +267,9 @@
                   editorFormUrl += '&displayTooltipsMode='
                     + gnCurrentEdit.displayTooltipsMode ;
                 }
+
+                editorFormUrl += '&displaySections='
+                	+ (gnCurrentEdit.displaySections === true ? 'true' : 'false');
 
                 gnEditor.load(editorFormUrl).then(function() {
                   // $scope.onFormLoad();

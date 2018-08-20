@@ -540,20 +540,27 @@
    *
    * Add the event attribute to define a custom event.
    */
-  module.directive('gnToggle', [
-    function() {
+  module.directive('gnToggle', [ 'gnCurrentEdit',
+    function(gnCurrentEdit) {
       return {
         restrict: 'A',
         template: '<button title="{{\'gnToggle\' | translate}}">' +
-            '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
+            '<i class="fa fa-fw {{gnCurrentEdit.displaySections === true ? \'fa-angle-double-up\' : \'fa-angle-double-down\'}}"/>&nbsp;' +
             '</button>',
         link: function linkFn(scope, element, attr) {
           var selector = attr['gnSectionToggle'] ||
               'form > fieldset > legend[data-gn-slide-toggle]',
               event = attr['event'] || 'click';
           element.on('click', function() {
+            scope.gnCurrentEdit.displaySections = !(scope.gnCurrentEdit.displaySections === true);
+            $("#displaySections")[0].value = scope.gnCurrentEdit.displaySections;
             $(selector).each(function(idx, elem) {
-              $(elem).trigger(event);
+              if (scope.gnCurrentEdit.displaySections === true && elem.className.contains('collapsed')) {
+                $(elem).trigger(event);
+              }
+              if (scope.gnCurrentEdit.displaySections === false && !elem.className.contains('collapsed')) {
+                $(elem).trigger(event);
+              }
             });
             $(this).find('i').toggleClass(
                 'fa-angle-double-up fa-angle-double-down');

@@ -68,7 +68,7 @@
           <fieldset data-gn-field-highlight="" class="gn-{@name}">
             <!-- Get translation for labels.
             If labels contains ':', search into labels.xml. -->
-            <legend data-gn-slide-toggle="">
+            <legend data-gn-slide-toggle="{if ($isDisplayingSections = true()) then 'false' else 'true'}">
               <xsl:value-of
                 select="if (contains($sectionName, ':'))
                   then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label

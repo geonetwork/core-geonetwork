@@ -100,6 +100,8 @@
                  value="{$isDisplayingTooltips = true()}"/>
           <input type="hidden" id="displayTooltipsMode" name="displayTooltipsMode"
                  value="{$displayTooltipsMode}"/>
+          <input type="hidden" id="displaySections" name="displaySections"
+                 value="{$isDisplayingSections = true()}"/>
           <input type="hidden" id="minor" name="minor" value="{$isMinorEdit}"/>
           <input type="hidden" id="flat" name="flat" value="{$isFlatMode}"/>
           <input type="hidden" id="showvalidationerrors" name="showvalidationerrors"
