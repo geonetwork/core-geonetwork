@@ -21,7 +21,11 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      * parent
      */
     static {
-        String[] headers = new String[]{"X-XSRF-TOKEN", "Access-Control-Allow-Origin", "Vary", "Access-Control-Allow-Credentials"};
+        String[] headers = new String[]{
+                "X-XSRF-TOKEN",
+                "Access-Control-Allow-Origin",
+                "Vary", "Access-Control-Allow-Credentials",
+                "Strict-Transport-Security"};       // STS header not passed for Sextant
         for (String header : headers) {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
         }
