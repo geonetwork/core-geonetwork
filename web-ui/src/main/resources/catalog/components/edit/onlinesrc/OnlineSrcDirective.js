@@ -818,10 +818,10 @@
                           })
                         }));
                       });
-                  
+
                   var listenerExtent = scope.$watch(
                 		  'angular.isArray(scope.gnCurrentEdit.extent)', function() {
-                			  
+
                 	  if (angular.isArray(scope.gnCurrentEdit.extent)) {
                           // FIXME : only first extent is took into account
                           var projectedExtent;
@@ -841,25 +841,25 @@
                           scope.map.getView().fit(
                               projectedExtent,
                               scope.map.getSize());
-                          
+
                           //unregister
                           listenerExtent();
                         }
                   });
-            	  
+
                   // Trigger init of print directive
                   scope.mode = 'thumbnailMaker';
                 }
 
                 scope.generateThumbnail = function() {
-                  //Added mandatory custom params here to avoid 
+                  //Added mandatory custom params here to avoid
                   //changing other printing services
                   jsonSpec = angular.extend(
                 		  scope.jsonSpec,
                 		  {
                 			  hasNoTitle: true
                 		  });
-                	
+
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
                       '/attachments/print-thumbnail', null, {
@@ -1236,9 +1236,9 @@
                            function(l) {
                              if (angular.isDefined(l.name)) {
                                scope.layers.push({
-                                 Name: l.name.localPart,
-                                 abstract: l._abstract,
-                                 Title: l.title
+                                 Name: l.name.prefix+':'+l.name.localPart,
+                                 abstract: angular.isArray(l._abstract)?l._abstract[0].value:l._abstract,
+                                 Title: angular.isArray(l.title)?l.title[0].value:l.title
                                });
                              }
                            });

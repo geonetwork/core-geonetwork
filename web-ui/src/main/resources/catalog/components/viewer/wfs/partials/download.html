@@ -1,7 +1,7 @@
 <p data-ng-show="formats.length > 0 && featureType" data-translate=""
    wfsDownloadDataInstruction
 </p>
-<div data-ng-hide="isWfsAvailable">
+<div data-ng-hide="isWfsAvailable && formats.length > 0 && !featureType">
   <i class="fa fa-warning fa-2x fa-fw pull-left" />
   {{'Unable_to_connect_to_service'|translate}}
 </div>
@@ -71,7 +71,7 @@
         </button>
         <ul class="dropdown-menu">
           <li data-ng-repeat="format in formats | orderBy:format">
-            <a data-gn-click-and-spin="downloadFeatureType(format, ftSelected, ftSelected.name.localPart)">
+            <a data-gn-click-and-spin="downloadFeatureType(format, ftSelected, ftSelected.name.prefix+':'+ftSelected.name.localPart)">
               {{format|lowercase}}
             </a>
           </li>

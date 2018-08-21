@@ -63,7 +63,7 @@
               scope.formats = [];
               scope.checkWFSUrl();
             } catch (e) {
-              //console.log('Error initialising wfs: '+e.message);
+              console.log('Error initialising wfs: ' + e.message);
               scope.problemContactingServer = true;
             }
           }
@@ -100,7 +100,7 @@
                   .then(function(capabilities) {
                     scope.isWfsAvailable = true;
                     scope.featureType =
-                    gnWfsService.getTypeName(capabilities, scope.typename);
+                      gnWfsService.getTypeName(capabilities, scope.typename);
                     if (scope.featureType) {
                       scope.formats =
                       gnWfsService.getOutputFormat(capabilities);

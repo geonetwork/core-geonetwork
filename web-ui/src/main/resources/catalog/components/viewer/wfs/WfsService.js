@@ -76,7 +76,16 @@
               for (var j = 0; j < op.parameter.length; j++) {
                 var f = op.parameter[j];
                 if (f.name == 'outputFormat') {
-                  return f.value;
+                  if (capabilities.version=="2.0.0"){
+                    //wfs2 exposes outputformats in 'AllowedValues'
+                    var outFrmt = [];
+                    angular.forEach(f.allowedValues.valueOrRange,function(val) {
+                      outFrmt.push(val.value);
+                    });
+                    return outFrmt;
+                  } else {
+                    return f.value
+                  }
                 }
               }
             }
