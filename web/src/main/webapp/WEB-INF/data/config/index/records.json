@@ -1126,6 +1126,7 @@
           "type": "integer"
         },
         "link": {
+          "type": "nested",
           "properties": {
             "protocol": {"type": "keyword"},
             "link": {"type": "text"},
