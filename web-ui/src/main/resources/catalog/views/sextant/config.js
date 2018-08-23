@@ -55,12 +55,10 @@
       /** *************************************
        * Define mapviewer background layers
        */
-      viewerSettings.bgLayers = (typeof sxtGnUrl != 'undefined') ?  [
+      viewerSettings.bgLayers = [
         new ol.layer.Tile()
-      ] : [
-        gnMap.createLayerForType('osm'),
-        gnMap.createLayerForType('bing_aerial')
       ];
+
       angular.forEach(viewerSettings.bgLayers, function(l) {
         l.displayInLayerManager = false;
         l.background = true;
