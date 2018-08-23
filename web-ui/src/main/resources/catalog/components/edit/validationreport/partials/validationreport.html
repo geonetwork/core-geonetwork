@@ -3,6 +3,7 @@
        data-gn-slide-toggle="">
     <i class="fa" data-ng-class="getClass('icon')"></i>&nbsp;
     <span data-translate="">validationReport</span>
+
     <button type="button" class="btn btn-default pull-right btn-xs"
             data-ng-click="toggleAlwaysOnTop();$event.stopPropagation();"
             data-toggle="tooltip"
@@ -10,34 +11,44 @@
             title="{{'fixedOnTop' | translate}}">
       <i class="fa fa-thumb-tack"/>
     </button>
-    &nbsp;
-    <button type="button" class="btn btn-default pull-right btn-xs"
-            data-ng-click="load();$event.stopPropagation();"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="{{'runValidation' | translate}}">
-      <i data-ng-hide="loading" class="fa fa-refresh"/>
-      <i data-ng-show="loading" class="fa fa-spinner fa-spin"/>
-    </button>
-    &nbsp;
-    <div class="btn-group pull-right btn-group-xs" role="group" aria-label="..."
-         style="margin-right:5px">
-      <button type="button" class="btn btn-default btn-xs"
-              data-ng-class="showSuccess ? 'active' : ''"
-              data-ng-click="toggleShowSuccess();$event.stopPropagation();"
-              data-ng-show="hasSuccess"
-              data-toggle="tooltip" data-placement="top" title="{{'showHideSuccess' | translate}}">
-        <span class="fa fa-thumbs-up text-success" aria-hidden="true"></span></button>
-      <button type="button" class="btn btn-default btn-xs"
-              data-ng-class="showErrors ? 'active' : ''"
-              data-ng-click="toggleShowErrors();$event.stopPropagation();"
-              data-ng-show="hasErrors"
-              data-toggle="tooltip" data-placement="top" title="{{'showHideErrors' | translate}}">
-        <span class="fa fa-thumbs-down text-danger" aria-hidden="true"></span></button>
-    </div>
   </div>
-  <div class="panel-body" data-ng-show="ruleTypes.length !== 0">
-    <div class="gn-validation-report">
+  <!-- /.panel-heading -->
+  <div class="panel-body">
+    <div class="btn-toolbar" role="toolbar">
+      <button type="button" class="btn btn-default btn-xs"
+              data-ng-click="load();$event.stopPropagation();"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="{{'runValidation' | translate}}">
+        <i data-ng-hide="loading" class="fa fa-fw fa-refresh"/>
+        <i data-ng-show="loading" class="fa fa-fw fa-spinner fa-spin"/>
+        <span data-translate="">runValidation</span>
+      </button>
+
+      <div class="pull-right">
+        <div class="btn-group ">
+          <small data-ng-show="hasSuccess || hasErrors" class="gn-margin-right">Filter:</small>
+        </div>
+        <div class="btn-group btn-group-xs" role="group">
+          <button type="button" class="btn btn-default btn-xs"
+                  data-ng-class="showSuccess ? 'active' : ''"
+                  data-ng-click="toggleShowSuccess();$event.stopPropagation();"
+                  data-ng-show="hasSuccess"
+                  data-toggle="tooltip" data-placement="top" title="{{'showHideSuccess' | translate}}">
+            <span class="fa fa-thumbs-up text-success" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-xs"
+                  data-ng-class="showErrors ? 'active' : ''"
+                  data-ng-click="toggleShowErrors();$event.stopPropagation();"
+                  data-ng-show="hasErrors"
+                  data-toggle="tooltip" data-placement="top" title="{{'showHideErrors' | translate}}">
+            <span class="fa fa-thumbs-down text-danger" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- /.btn-toolbar -->
+    <div class="gn-validation-report gn-margin-top" data-ng-show="ruleTypes.length !== 0">
       <div data-ng-repeat="type in ruleTypes"
            data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
         <div class="row">
@@ -71,4 +82,5 @@
       </div>
     </div>
   </div>
+  <!-- /.panel-body -->
 </div>
