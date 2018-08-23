@@ -79,9 +79,10 @@
     '$timeout',
     'gnGlobalSettings',
     'wfsFilterService',
+    'gnConfigService',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
              $translate, $q, $filter, $rootScope, $timeout, gnGlobalSettings,
-             wfsFilterService) {
+             wfsFilterService, gnConfigService) {
 
 
       var firstLoad = true;
@@ -215,20 +216,39 @@
                     opt = {name: lyr,
                             url: res};
                   }
-                  var olLayer =
-                      gnMap.createLayerForType(type, opt, layer.title);
-                  if (olLayer) {
-                    olLayer.displayInLayerManager = false;
-                    olLayer.background = true;
-                    olLayer.set('group', 'Background layers');
-                    olLayer.setVisible(!layer.hidden);
-                    bgLayers.push(olLayer);
 
-                    if (!layer.hidden && !isFirstBgLayer) {
-                      isFirstBgLayer = true;
-                      map.getLayers().setAt(0, olLayer);
-                    }
+                  // to push in bgLayers not in the map
+                  var loadingLayer = new ol.layer.Image({
+                    loading: true,
+                    label: 'loading',
+                    url: '',
+                    visible: false
+                  });
+
+                  if (!layer.hidden && !isFirstBgLayer) {
+                    isFirstBgLayer = true;
+                    loadingLayer.set('bgLayer', true);
                   }
+                  var layerIndex = bgLayers.push(loadingLayer);
+
+                  // Specific sextant api
+                  // Settings are not from XSL so bing key is not yet known
+                  (function(idx, loadingLayer, layer_, type_, opt_) {
+                    gnConfigService.loadPromise.then(function(config) {
+                      var olLayer =
+                        gnMap.createLayerForType(type_, opt_, layer_.title);
+                      if (olLayer) {
+                        olLayer.displayInLayerManager = false;
+                        olLayer.background = true;
+                        olLayer.set('group', layer.group);
+                        bgLayers[idx - 1] = olLayer;
+
+                        if (loadingLayer.get('bgLayer')) {
+                          map.getLayers().setAt(0, olLayer);
+                        }
+                      }
+                    });
+                  })(layerIndex, loadingLayer, layer, type, opt);
                 }
 
                 // {type=wmts,name=Ocean_Basemap} or WMS
