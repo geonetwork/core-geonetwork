@@ -766,7 +766,7 @@
 
           <xsl:variable name="protocol"
                         select="gmd:protocol/gco:CharacterString/text()"/>
-          <xsl:variable name="elinkName"
+          <xsl:variable name="linkName"
                         select="replace(gmd:name/gco:CharacterString/text(),
                                               $doubleQuote, $escapedDoubleQuote)"/>
 
