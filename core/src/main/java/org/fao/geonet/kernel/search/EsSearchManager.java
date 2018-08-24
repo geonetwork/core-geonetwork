@@ -286,6 +286,10 @@ public class EsSearchManager implements ISearchManager {
                         // Register list of already processed names
                         elementNames.add(name);
 
+                        // JSON object may be generated in the XSL processing.
+                        // In such case an object type attribute is set.
+                        boolean isObject = "object".equals(currentField.getAttributeValue("type"));
+
                         List<Element> nodeElements = record.getChildren(name);
                         boolean isArray = nodeElements.size() > 1;
 
@@ -312,20 +316,41 @@ public class EsSearchManager implements ISearchManager {
                             }
 
                             if (isArray) {
-                                arrayNode.add(
-                                    booleanFields.contains(propertyName) ?
-                                        parseBoolean(node.getTextNormalize()) :
-                                        node.getTextNormalize());
+                                if (isObject) {
+                                    try {
+                                        arrayNode.add(
+                                            mapper.readTree(node.getTextNormalize()));
+                                    } catch (IOException e) {
+                                        // Invalid JSON object provided
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    arrayNode.add(
+                                        booleanFields.contains(propertyName) ?
+                                            parseBoolean(node.getTextNormalize()) :
+                                            node.getTextNormalize());
+                                }
                             } else if (name.equals("geojson")) {
                                 doc.put("geom", node.getTextNormalize());
-                            } else if (
-                                // Skip some fields causing errors / TODO
-                                !name.startsWith("conformTo_")) {
-                                doc.put(
-                                    propertyName,
-                                    booleanFields.contains(propertyName) ?
-                                        parseBoolean(node.getTextNormalize()) :
-                                        node.getTextNormalize());
+                            // Skip some fields causing errors / TODO
+                            } else if (!name.startsWith("conformTo_")) {
+                                if (isObject) {
+                                    try {
+                                        doc.set(propertyName,
+                                            mapper.readTree(
+                                                nodeElements.get(0).getTextNormalize()
+                                            ));
+                                    } catch (IOException e) {
+                                        // Invalid JSON object provided
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    doc.put(
+                                        propertyName,
+                                        booleanFields.contains(propertyName) ?
+                                            parseBoolean(node.getTextNormalize()) :
+                                            node.getTextNormalize());
+                                }
                             }
                         }
                     }

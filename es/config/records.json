@@ -932,6 +932,13 @@
               "type": "keyword"
             }
           }
+        },{
+          "codelist": {
+            "match": "linkUrlProtocol*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
         },
         {
           "org": {
@@ -1001,7 +1008,7 @@
           "synInspireAnnexesType": {
             "match": "inspireAnnex*",
             "mapping": {
-              "type":     "string",
+              "type":     "keyword",
               "fielddata": true,
               "analyzer": "synInspireAnnexes",
               "search_analyzer": "keyword"
@@ -1012,7 +1019,7 @@
           "synInspireThemeType": {
             "match": "inspireTheme*",
             "mapping": {
-              "type":     "string",
+              "type":     "keyword",
               "fielddata": true,
               "analyzer": "synInspireThemes",
               "search_analyzer": "keyword"
@@ -1023,7 +1030,7 @@
           "inspireServiceType": {
             "match": "inspireServiceType",
             "mapping": {
-              "type":     "string",
+              "type":     "keyword",
               "fielddata": true,
               "analyzer": "keepInspireServiceTypes",
               "search_analyzer": "keyword"
@@ -1056,8 +1063,8 @@
           "type": "date"
         },
         "document": {
-          "type" : "string",
-          "index" : "no",
+          "type" : "text",
+          "index" : false,
           "doc_values": false
         },
         "documentStandard": {
@@ -1108,13 +1115,19 @@
           "type": "integer"
         },
         "link": {
-          "type": "text"
+          "type": "nested",
+          "properties": {
+            "protocol": {"type": "keyword"},
+            "link": {"type": "text"},
+            "name": {"type": "text"},
+            "description": {"type": "text"}
+          }
         },
         "linkProtocol": {
           "type": "keyword"
         },
         "linkUrl": {
-          "type": "text"
+          "type": "keyword"
         },
         "mainLanguage": {
           "type": "keyword"
@@ -1135,7 +1148,13 @@
           }
         },
         "overviewUrl": {
-          "type": "text"
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
         },
         "pointOfTruthURL": {
           "type": "text"
@@ -1210,8 +1229,8 @@
           "type": "keyword"
         },
         "validReport": {
-          "type" : "string",
-          "index" : "no",
+          "type" : "text",
+          "index" : false,
           "doc_values": false
         },
         "useLimitation": {
