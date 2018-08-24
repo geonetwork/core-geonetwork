@@ -1,0 +1,125 @@
+(function() {
+  goog.provide('gn_access_manager');
+
+  var module = angular.module('gn_access_manager_controller', []);
+
+  module.controller('GnAccessManagerController', [
+    '$scope',
+    '$http',
+    function($scope, $http) {
+      $scope.groups = [];
+      $scope.operations = [];
+      $scope.params = {any: '', group: ''};
+      var defaultGroups = [1];
+      var defaultOperations = [0, 1, 2, 5];
+      $scope.size = 100;
+      $scope.nbOperations = 0;
+
+      var init = function() {
+        // Load operations
+        $http.get('../api/operations').
+        then(function(r) {
+          $scope.operations = r.data;
+          angular.forEach($scope.operations, function (o) {
+            o.selected = defaultOperations.indexOf(o.id) !== -1;
+          });
+
+
+          // Load groups
+          $http.get('../api/groups?withReservedGroup=true').
+          then(function(r) {
+            $scope.groups = r.data;
+            angular.forEach($scope.groups, function (o) {
+              o.selected = defaultGroups.indexOf(o.id) !== -1;
+            });
+            $scope.buildQuery();
+          });
+        });
+      };
+
+      $scope.more = function(){
+        $scope.size += 100;
+        $scope.buildQuery();
+      };
+
+      $scope.buildQuery = function() {
+        var selectedOperations = [];
+        var scriptFields = [];
+        $scope.selectedGroups = [];
+        $scope.columns = [];
+
+        for (var i = 0; i < $scope.operations.length; i++) {
+          var o = $scope.operations[i];
+          if (o.selected === true) {
+            selectedOperations.push(o);
+          }
+        }
+
+        $scope.nbOperations = selectedOperations.length;
+
+        for (var i = 0; i < $scope.groups.length; i++) {
+          var g = $scope.groups[i];
+          if (g.selected === true) {
+            $scope.selectedGroups.push(g);
+            for (var j = 0; j < selectedOperations.length; j++) {
+              var o = selectedOperations[j];
+              var fieldName = g.name + '-'+ o.name;
+              scriptFields.push(
+                '"' + fieldName +'": {' +
+                '      "script": {' +
+                '        "inline": "doc[\'op' + o.id + '\'].value == \'' + g.id + '\'"' +
+                '      }' +
+                '    }');
+              $scope.columns.push({
+                group: g,
+                operation: o,
+                fieldName: fieldName
+              });
+            }
+          }
+        }
+
+
+        var filter = [];
+        if ($scope.params.any != '') {
+          filter.push('{"match": {"resourceTitle": {' +
+            '"query": "' + $scope.params.any + '", ' +
+            '"zero_terms_query": "all", "fuzziness": "auto"}}}');
+        }
+        if ($scope.params.group != '') {
+          filter.push('{"term": {"groupPublished": "' + $scope.params.group + '"}}');
+        }
+        var query = '{' +
+            '  "sort" : [{"resourceTitle.keyword": "asc"}],' +
+            '  "query": {' +
+            '    "bool": {' +
+            '      "must": [' +
+            (filter.length > 0 ? filter.join(',') : '{"match_all": {}}') +
+            '      ]' +
+            '    }' +
+            '  },'
+            '  "from": 0,' +
+            '  "size": ' + $scope.size + ',' +
+            '  "_source": "resourceTitle", ' +
+            '  "script_fields": {' +
+            scriptFields.join(',') +
+            '  }' +
+            '}';
+
+        $http.post('../../index/records/_search', query, {
+          headers: {'Content-type': 'application/json'}
+        }).
+        then(function(r) {
+          $scope.results = r.data;
+        });
+      };
+
+      $scope.$watchCollection('params', function (n, o){
+        if (n != o) {
+          $scope.buildQuery();
+        }
+      });
+      init();
+    }
+  ]);
+}());

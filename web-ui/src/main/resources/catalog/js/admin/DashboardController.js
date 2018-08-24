@@ -92,23 +92,14 @@
             '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&_g=()')
       }];
 
-      $scope.isDashboardAvailable = false;
-      function buildMenuBasedOnStatus(data) {
-        angular.forEach(data, function(o) {
-          if (o.name === 'DashboardAppHealthCheck' &&
-              o.status === 'OK') {
-            tabs = tabs.concat(dashboards);
-          }
-          $scope.pageMenu = {
-            folder: 'dashboard/',
-            defaultTab: 'status',
-            tabs: tabs
-          };
-        });
+      if ($scope.healthCheck.DashboardAppHealthCheck === true) {
+        tabs = tabs.concat(dashboards);
+      }
+      $scope.pageMenu = {
+        folder: 'dashboard/',
+        defaultTab: 'status',
+        tabs: tabs
       };
-      $http.get('../../warninghealthcheck')
-          .success(buildMenuBasedOnStatus)
-          .error(buildMenuBasedOnStatus);
 
       $http.get('../api/site/info').
           success(function(data) {

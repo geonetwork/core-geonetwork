@@ -678,6 +678,17 @@
       $scope.session = gnSessionService.getSession();
 
       $scope.loadCatalogInfo();
+
+
+      $scope.healthCheck = {};
+      function healthCheckStatus(data) {
+        angular.forEach(data, function(o) {
+          $scope.healthCheck[o.name] = (o.status === 'OK');
+        });
+      };
+      $http.get('../../warninghealthcheck')
+        .success(healthCheckStatus)
+        .error(healthCheckStatus);
     }]);
 
 })();

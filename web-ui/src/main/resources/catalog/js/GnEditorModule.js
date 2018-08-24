@@ -26,6 +26,7 @@
 
   goog.require('gn_app_templates');
   goog.require('gn_batch_service');
+  goog.require('gn_access_manager');
   goog.require('gn_draggable_directive');
   goog.require('gn_editor_controller');
   goog.require('gn_geopublisher');
@@ -49,6 +50,7 @@
     'gn_ows',
     'gn_geopublisher',
     'gn_batch_service',
+    'gn_access_manager_controller',
     'gn_mdactions_directive',
     'ui.ace'
   ]);

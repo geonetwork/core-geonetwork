@@ -65,6 +65,10 @@
                  ng-if="user.isEditorOrMore()">
                 <i class="fa fa-pencil"/>&nbsp;<span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
               </a>
+              <a href="#/accessManager" class="btn btn-default"
+                 ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
+                <i class="fa fa-lock"/>&nbsp;<span class="hidden-xs hidden-sm hidden-md" data-translate="">accessManager</span>
+              </a>
             </div>
           </div>
         </form>
