@@ -24,6 +24,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
 
+  <!-- Define if search for regulation title should be strict or light. -->
+  <xsl:variable name="inspireRegulationLaxCheck" select="false()"/>
+
   <xsl:variable name="inspireThemesMap">
     <map theme="Coordinate reference systems"
          monitoring="coordinateReferenceSystems" annex="I"/>
