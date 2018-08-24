@@ -374,5 +374,11 @@
     "hotkeyBatchEdit": "Batch editing",
     "hotkeyEditorBoard": "Editor board",
     "cancelMetadataError": "Error, please reload the page",
-    "showMessages": "Show messages:"
+    "showMessages": "Show messages:",
+    "hotkeyAccessManager": "Access rights manager",
+    "searchByTitle": "Filter by title",
+    "accessManager": "Access rights",
+    "accessManagerTitle": "Access rights by records",
+    "accessManagerChooseGroups": "Choose one or more groups",
+    "accessManagerChooseOperations": "Choose one or more operation types"
 }

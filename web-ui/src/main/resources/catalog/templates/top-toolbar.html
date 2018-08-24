@@ -79,6 +79,11 @@
               <i class="fa fa-fw fa-pencil"></i>&nbsp;<span translate>batchEditing</span>
             </a>
           </li>
+          <li ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
+            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/accessManager">
+              <i class="fa fa-fw fa-lock"/>&nbsp;<span data-translate="">accessManager</span>
+            </a>
+          </li>
         </ul>
       </li>
       <li class="dropdown dropdown-hover open" data-ng-show="user.isUserAdminOrMore()">

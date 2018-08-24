@@ -95,6 +95,9 @@
           when('/batchedit', {
             templateUrl: tplFolder + 'batchedit.html',
             controller: 'GnBatchEditController'}).
+          when('/accessManager', {
+            templateUrl: tplFolder + 'accessManager.html',
+            controller: 'GnAccessManagerController'}).
           when('/board', {
             templateUrl: tplFolder + 'editorboard.html',
             controller: 'GnEditorBoardController'}).
