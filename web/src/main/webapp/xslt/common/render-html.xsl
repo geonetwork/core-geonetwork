@@ -50,7 +50,7 @@
       <head>
         <title><xsl:value-of select="$title"/></title>
         <meta charset="utf-8"/>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+        <meta name="viewport" content="initial-scale=1.0"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 
         <meta name="description" content="{normalize-space($description)}"/>
