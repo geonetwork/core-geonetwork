@@ -168,6 +168,57 @@ ul.gn-resultview {
       margin-left: 18px;
     }
   }
+
+  li.gn-list {
+    .media-body {
+      h1 {
+        line-height: 1.3em;
+        font-size: 20px;
+        margin-top: 0;
+        a {
+          color: #333;
+          &:hover {
+            color: #000;
+          }
+        }
+        .fa {
+          margin-left: 4px;
+        }
+        .md-title {
+          display: block;
+          float: right;
+          width: calc(~"100% - 50px");
+        }
+      }
+      .gn-md-thumbnail {
+        height: auto;
+        max-height: 140px;
+        border: 0;
+      }
+      .gn-md-abstract {
+        width: calc(~"100% - 160px");
+        p {
+          font-size: 1em;
+          &:empty {
+            display: none;
+          }
+        }
+        address {
+          margin-bottom: 5px;
+        }
+      }
+    }
+    .gn-md-links {
+      background: 0;
+      margin-top: 10px;
+      border-bottom: 1px solid @list-group-border;
+      padding-bottom: 10px;
+      line-height: 1em;
+    }
+    &:hover {
+      background-color: rgba(240, 240, 240, 0.5)
+    }
+  }
 }
 
 /* Extra small devices (phones, less than 768px) */
