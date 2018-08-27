@@ -271,7 +271,7 @@
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities',
+                request: 'GetCapabilities',
                 service: 'WMTS'
               });
 
@@ -302,7 +302,7 @@
               defaultVersion = '1.1.0';
               version = version || defaultVersion;
               url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities',
+                request: 'GetCapabilities',
                 service: 'WFS',
                 version: version
               });

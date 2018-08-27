@@ -71,6 +71,7 @@
   "wcsCapabilitiesNotAvailable": "Couldn't check the GetCapabilities response",
   "wcsLayerNotAvailable": "The coverage {{layerName}} is not available in the WCS service. However, you can view one of the available ones",
   "wcsChooseLayerToAdd": "Choose a coverage to add to the map",
+  "Unable_to_connect_to_service": "Unable to connect to service",
   "databaseLayerDetails": "This dataset is published in the database <strong>{{url}}</strong> in table <strong>{{layer}}</strong>.",
   "fileLayerDetails": "{{name}}. This dataset is available in the local network <strong>{{url}}</strong>.",
   "wfsNotAvailable": "<a href='{{url}}' target='_blank'>WFS</a> not available.",
