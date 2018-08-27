@@ -166,13 +166,12 @@ public class DatabaseMigration implements BeanPostProcessor {
         // Migrate db if needed
         _logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
         _logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
-        if (dbVersion == null){
+        if (dbVersion == null) {
             _logger.warning("      Unable to retrieve the current GeoNetwork version from the database. "
                 + "If this is an initial run of the software, then the database will be auto-populated. "
                 + "Else check that the database is properly configured");
             return true;
-        }
-        else if (webappVersion == null) {
+        } else if (webappVersion == null) {
             _logger.warning("      Unable to retrieve the GeoNetwork version from the application code.");
             return true;
         }
