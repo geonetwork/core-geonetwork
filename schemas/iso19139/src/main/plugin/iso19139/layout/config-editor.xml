@@ -183,7 +183,7 @@
 
       To restrict the list of thesaurus allowed, set the include attribute
       for the directive:
-      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      <directiveAttributes data-include="external.theme.httpinspireeceuropaeutheme-theme,external.place.regions"/>
 
       Exclude a thesaurus:
       <directiveAttributes data-include="-external.place.regions"/>
@@ -268,6 +268,7 @@
       <name>gmd:metadataStandardName</name>
       <name>gmd:metadataStandardVersion</name>
       <name>gmd:hierarchyLevelName</name>
+      <name>gmd:parentIdentifier</name>
       <name>gmd:dataSetURI</name>
       <name>gmd:postalCode</name>
       <name>gmd:city</name>
@@ -1204,8 +1205,8 @@
                           <gmd:MD_Identifier>
                             <gmd:code>
                               <gmx:Anchor
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">
-                                geonetwork.thesaurus.external.theme.inspire-theme
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">
+                                geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme
                               </gmx:Anchor>
                             </gmd:code>
                           </gmd:MD_Identifier>
@@ -3136,7 +3137,7 @@
       eg. only 2 INSPIRE themes with Anchor.
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>

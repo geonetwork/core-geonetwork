@@ -14,9 +14,9 @@ new_version_main_nopoint="0"
 # Target version minor version number eg. RC0
 sub_version="0"
 
-function showUsage 
+function showUsage
 {
-  echo -e "\nThis script is used to reset a version number from e.g. 2.7.1 to 2.7.0" 
+  echo -e "\nThis script is used to reset a version number from e.g. 2.7.1 to 2.7.0"
   echo
   echo -e "Usage: ./`basename $0 $1` actual_version next_version"
   echo
@@ -25,7 +25,7 @@ function showUsage
   echo
 }
 
-if [ "$1" = "-h" ] 
+if [ "$1" = "-h" ]
 then
 	showUsage
 	exit
@@ -81,14 +81,14 @@ echo
 
 
 # Note: In MacOS (darwin10.0) sed requires -i .bak as option to work properly
-if [[ $OSTYPE == 'darwin10.0' ]]; then
+if [[ ${OSTYPE:0:6} == 'darwin' ]]; then
 	sedopt='-i .bak'
 else
 	sedopt='-i'
 fi
 
 echo
-echo 'Your Operating System is: ' $OSTYPE 
+echo 'Your Operating System is: ' $OSTYPE
 echo 'sed will use the following option: ' $sedopt
 echo
 
@@ -97,7 +97,7 @@ echo
 # Update version in sphinx doc files
 echo 'Documentation'
 echo ' * updating docs/manuals/source/conf.py'
-sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py 
+sed $sedopt "s/${version}/${new_version_main}/g" docs/manuals/source/conf.py
 echo
 
 # Update installer
@@ -116,8 +116,8 @@ sed $sedopt "s/'system\/platform\/subVersion', '.*', 0/'system\/platform\/subVer
 find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='${version}' WHERE name='system\/platform\/version'/value='${new_version_main}' WHERE name='system\/platform\/version'/g" {} \;
 find . -wholename *v${version//[.]/}/migrate-default.sql -exec sed $sedopt "s/value='.*' WHERE name='system\/platform\/subVersion'/value='${sub_version}' WHERE name='system\/platform\/subVersion'/g" {} \;
 
-
 # Update version pom files
+mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_version}
 echo 'Module'
 mvn versions:set -DnewVersion=${new_version} -DgenerateBackupPoms=false -Pwith-doc
 echo

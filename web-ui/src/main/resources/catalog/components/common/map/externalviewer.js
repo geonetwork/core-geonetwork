@@ -65,12 +65,28 @@
          *
          * @description
          * Simple check against UI settings to see if an external viewer is
-         * enabled.
+         * enabled. IF no base URL is defined, the feature will be disabled.
          *
          * @return {boolean} true if enabled
          */
         isEnabled: function() {
-          return !!settings.enabled;
+          return !!settings.enabled && !!settings.baseUrl &&
+            !!settings.urlTemplate;
+        },
+
+        /**
+         * @ngdoc method
+         * @methodOf gn_external_viewer.service:gnExternalViewer
+         * @name gnExternalViewer#getBaseUrl
+         *
+         * @description
+         * Returns the base URL as defined in the settings; will return
+         * an empty string if disabled.
+         *
+         * @return {string} empty if disabled
+         */
+        getBaseUrl: function() {
+          return this.isEnabled() ? settings.baseUrl : '';
         },
 
         /**
@@ -122,7 +138,8 @@
             .replace('${service.name}', getValues('service', 'name'))
             .replace('${service.title}', getValues('service', 'title'));
 
-          $window.open(url, settings.openNewWindow ? '_blank' : undefined);
+          settings.openNewWindow ? $window.open(url, '_blank') :
+            $window.location = url;
 
           // reset list of services to view
           this._toView.length = 0;

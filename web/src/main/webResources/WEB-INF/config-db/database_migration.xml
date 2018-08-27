@@ -212,5 +212,11 @@
         <value>java:v343.AdvancedSearchFormMigration</value>
       </list>
     </entry>
+    <entry key="3.5.0">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v350/migrate-</value>
+        <value>java:v350.UrlComponentsDetectorsRegexMigration</value>
+      </list>
+    </entry>
   </util:map>
 </beans>

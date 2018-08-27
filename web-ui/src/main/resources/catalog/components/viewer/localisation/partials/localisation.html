@@ -11,16 +11,19 @@
            data-ng-model-options="modelOptions"
            data-ng-change="locCtrl.search(query)"
            type="search"
-           class="form-control" placeholder="{{'searchPlaces' | translate}}">
+           class="form-control"
+           aria-label="{{'searchPlaces' | translate}}"
+           placeholder="{{'searchPlaces' | translate}}">
     <span class="input-group-btn">
       <button class="btn btn-default" type="submit"
-              data-ng-click="zoomToYou(map)">
+              data-ng-click="zoomToYou(map)"
+              aria-label="{{'ZoomToYourLocation' | translate}}">
         <span class="fa fa-crosshairs"></span>
         <span role="tooltip" data-translate="">ZoomToYourLocation</span>
       </button>
     </span>
   </div>
-  <div class="dropdown-menu" role="menu">
+  <div class="dropdown-menu" role="listbox">
     <h5 ng-if="(localisations | filter:query).length > 0" data-translate="">Locations</h5>
     <ul class="loc-defaults list-group">
       <li data-ng-repeat="loc in localisations | filter:query" class="list-group-item">

@@ -35,3 +35,18 @@
     }
   }
 }
+
+.pagination > .disabled > span, .pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus, .pagination > .disabled > a,
+.pagination > .disabled > a:hover, .pagination > .disabled > a:focus {
+  border-color: @btn-default-border;
+}
+.pagination > li > a, .pagination > li > span {
+  border-color: @btn-default-border;
+  color: @btn-default-color;
+  &:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    color: @btn-default-color;
+  }
+}

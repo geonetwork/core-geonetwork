@@ -162,6 +162,7 @@
   "formats": "Formats",
   "addLayers": "Add layers",
   "serviceUrl": "http://...",
+  "serviceUrlLabel": "Service URL",
   "CurrentLayers": "Layers",
   "SearchLayer": "Search",
   "addLayerFromMaps": "Maps",

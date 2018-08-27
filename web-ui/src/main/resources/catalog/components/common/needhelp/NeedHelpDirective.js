@@ -55,16 +55,11 @@
         link: function(scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === 'true';
           var helpBaseUrl = gnGlobalSettings.docUrl ||
-              'http://geonetwork-opensource.org/manuals/3.4.x/';
+              'https://geonetwork-opensource.org/manuals/3.4.x/';
 
           scope.showHelp = function() {
             var page = attrs.gnNeedHelp;
             var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
-            // GeoNetwork website language folder are different
-            if (helpBaseUrl.indexOf('http://geonet') === 0) {
-              lang = gnGlobalSettings.lang == 'fr' ? 'fr' : 'en';
-              helpPageUrl = helpBaseUrl + lang + '/html/' + page;
-            }
             window.open(helpPageUrl, 'gn-documentation');
             return true;
           };
