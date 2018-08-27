@@ -248,7 +248,7 @@
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities',
+                request: 'GetCapabilities',
                 service: 'WMTS'
               });
 
@@ -277,9 +277,9 @@
             var defer = $q.defer();
             if (url) {
               defaultVersion = '1.1.0';
-              version = version || defaultVersion;
-              url = mergeDefaultParams(url, {
-                REQUEST: 'GetCapabilities',
+              version = defaultVersion; //gn supports no other versions
+              url = mergeParams(url, {
+                request: 'GetCapabilities',
                 service: 'WFS',
                 version: version
               });
