@@ -114,7 +114,10 @@
             <div>
               <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
               <!-- Tab panes -->
-              <div class="tab-content">
+              <div>
+                <xsl:if test="$tabs = 'true'">
+                  <xsl:attribute name="class" select="'tab-content'"/>
+                </xsl:if>
                 <xsl:for-each select="$viewConfig/*">
                   <xsl:sort select="@formatter-order"
                             data-type="number"/>
@@ -268,7 +271,7 @@
 
   <!-- Render list of tabs in the current view -->
   <xsl:template mode="render-toc" match="view">
-    <xsl:if test="count(tab) > 1">
+    <xsl:if test="$tabs = 'true' and count(tab) > 1">
       <ul class="view-outline nav nav-tabs nav-tabs-advanced">
         <xsl:for-each select="tab">
           <li>

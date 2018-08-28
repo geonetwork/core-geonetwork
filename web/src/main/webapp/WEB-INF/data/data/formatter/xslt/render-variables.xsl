@@ -12,6 +12,7 @@
   * html render a full HTML page
   * div render a div element to be embedded in an existing webpage. -->
   <xsl:param name="root" select="'html'"/>
+  <xsl:param name="tabs" select="'false'"/>
 
 
   <!-- Define if header and footer should be displayed or not.
