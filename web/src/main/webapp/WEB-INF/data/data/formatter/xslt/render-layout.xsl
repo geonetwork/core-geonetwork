@@ -481,7 +481,7 @@
             For now, adding an extra parameter to set the field content with an hyperlink when we are in an organisation name.
             -->
             <xsl:with-param name="link"
-                            select="if (name(*) = 'gmd:organisationName') then $element/*/@uuid else ''"/>
+                            select="if (name(*[1]) = 'gmd:organisationName') then $element/*/@uuid else ''"/>
           </xsl:apply-templates>
         </xsl:for-each>
       </xsl:for-each>
