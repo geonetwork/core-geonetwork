@@ -426,7 +426,7 @@
   <add-grid-info>Cette ressource est un raster</add-grid-info>
   <change-to-grid-info>Modifier le type de donnée. C'est un raster ?</change-to-grid-info>
   <add-grid-infoHelp>Ajoute des informations sue la donnée de type raster (eg. nombre de dimensions). Cela supprime les information sur les vecteur.</add-grid-infoHelp>
-
+  <country>Country</country>
   <hr>
     <div class="row">
       <div class="col-md-offset-2">

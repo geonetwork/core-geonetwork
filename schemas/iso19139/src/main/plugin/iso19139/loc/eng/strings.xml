@@ -373,7 +373,7 @@
     required for the selected type. Check that you are not going to lose important information
     when changing the spatial representation type of the current record.</change-to-grid-infoHelp>
   <add-grid-infoHelp>Add information related to a grid (eg. number of dimension). It will remove information about vector.</add-grid-infoHelp>
-
+  <country>Country</country>
   <hr>
     <div class="row">
       <div class="col-md-offset-2">
