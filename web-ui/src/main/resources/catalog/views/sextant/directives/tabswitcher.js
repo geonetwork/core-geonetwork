@@ -17,9 +17,9 @@
           scope.allowLogin = typeof sxtSettings !== 'undefined' ?
             sxtSettings.allowLogin : true;
 
-          // signin url is https://host/geonetwork/casRedirect?service=<currentUrl>
+          // signin url is https://host/geonetwork/signin?service=<currentUrl>
           var currentUrl = window.location.origin + window.location.pathname;
-          scope.signInUrl = gnGlobalSettings.gnUrl + '../../casRedirect?service=' +
+          scope.signInUrl = gnGlobalSettings.gnUrl + '../../signin?service=' +
             currentUrl;
         }
       };

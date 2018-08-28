@@ -90,7 +90,7 @@
   </bean>
 
   <bean id="casEntryPoint"
-        class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+        class="org.fao.geonet.web.CasAuthenticationRedirectEntryPoint">
     <property name="loginUrl" value="${cas.login.url}"/>
     <property name="serviceProperties" ref="serviceProperties"/>
   </bean>
