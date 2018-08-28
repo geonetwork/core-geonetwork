@@ -478,11 +478,6 @@
     <url-pattern>/accessDenied.jsp</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>spring</servlet-name>
-    <url-pattern>/casRedirect</url-pattern>
-  </servlet-mapping>
-
   <welcome-file-list>
     <welcome-file>home</welcome-file>
     <welcome-file>index.html</welcome-file>
