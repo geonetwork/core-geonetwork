@@ -341,7 +341,7 @@
   <sextant-date-resource>Resource date</sextant-date-resource>
   <sextant-identification>Identification</sextant-identification>
   <sextant-contact>Contacts</sextant-contact>
-  <sextant-spatial>Spatial &amp; temporal ref.</sextant-spatial>
+  <sextant-spatial>Spatial &amp; temporal references</sextant-spatial>
   <sextant-usage>Usage</sextant-usage>
   <sextant-quality>Quality</sextant-quality>
   <sextant-metadata>Metadata</sextant-metadata>

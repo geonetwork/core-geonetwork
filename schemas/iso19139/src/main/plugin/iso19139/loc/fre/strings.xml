@@ -467,7 +467,7 @@
   <sdn-identification>Identification</sdn-identification>
   <sdn-contact>Contacts</sdn-contact>
   <sdn-add-md-contact>Add another contact for the metadata</sdn-add-md-contact>
-  <sdn-spatial>Spatial &amp; temporal ref.</sdn-spatial>
+  <sdn-spatial>Spatial &amp; temporal references</sdn-spatial>
   <sdn-usage>Usage</sdn-usage>
   <sdn-quality>Quality</sdn-quality>
   <sdn-verticalExtent>Vertical extent</sdn-verticalExtent>
