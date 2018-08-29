@@ -18,7 +18,7 @@
             sxtSettings.allowLogin : true;
 
           // signin url is https://host/geonetwork/signin?service=<currentUrl>
-          var currentUrl = window.location.origin + window.location.pathname;
+          var currentUrl = encodeURIComponent(window.location.href);
           scope.signInUrl = gnGlobalSettings.gnUrl + '../../signin?service=' +
             currentUrl;
         }
