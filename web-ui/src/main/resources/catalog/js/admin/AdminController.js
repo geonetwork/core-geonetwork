@@ -306,7 +306,17 @@
               }
             }
           }).
-          otherwise({templateUrl: tplFolder + 'admin.html'});
+          when('/home', {
+            templateUrl: tplFolder + 'admin.html',
+            resolve: {
+              permission: function() {
+                authorizationService.$get[0]().check('Administrator');
+              }
+            }
+          }).
+          otherwise({
+            redirectTo: '/home'
+          });
     }]);
 
   /**

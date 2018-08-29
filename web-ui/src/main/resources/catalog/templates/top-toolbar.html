@@ -55,6 +55,12 @@
         </a>
         <ul class="dropdown-menu" role="menu">
           <li>
+            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/board">
+              <i class="fa fa-fw fa-bars"/>&nbsp;<span data-translate="">editorHome</span>
+            </a>
+          </li>
+          <li role="separator" class="divider"></li>
+          <li>
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/create">
               <i class="fa fa-fw fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
             </a>
@@ -66,7 +72,7 @@
           </li>
           <li>
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory">
-              <i class="fa fa-fw fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
+              <i class="fa fa-fw fa-bookmark"/>&nbsp;<span data-translate="">directoryManager</span>
             </a>
           </li>
           <li>
@@ -85,6 +91,12 @@
           <span data-translate="">adminConsole</span>
         </a>
         <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu" role="menu">
+          <li>
+            <a data-gn-active-tb-item="admin.console#/home">
+              <i class="fa fa-fw fa-th"/>&nbsp;<span data-translate="">adminHome</span>
+            </a>
+          </li>
+          <li role="separator" class="divider"></li>
           <li data-ng-repeat="t in userAdminMenu">
             <a data-gn-active-tb-item="admin.console{{t.route}}">
               <i class="fa fa-fw {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
@@ -92,6 +104,12 @@
           </li>
         </ul>
         <ul data-ng-if="user.isAdministrator()" class="dropdown-menu" role="menu">
+          <li>
+            <a data-gn-active-tb-item="admin.console#/home">
+              <i class="fa fa-fw fa-th"/>&nbsp;<span data-translate="">adminHome</span>
+            </a>
+          </li>
+          <li role="separator" class="divider"></li>
           <li data-ng-repeat="t in adminMenu">
             <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
               <i class="fa fa-fw {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
