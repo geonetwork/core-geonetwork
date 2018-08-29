@@ -1,36 +1,205 @@
 /* these instructions should help reduce inconsistencies between API integrations of Sextant */
-
-header {
+/* CSS reset from https://meyerweb.com/eric/tools/css/reset/ */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+  font-size: 14px;
+	font: inherit;
+  vertical-align: baseline;
+  color: inherit;
   height: auto;
 }
-ol, ul {
-  list-style: none;
-  list-style-image: none;
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
 }
-img {
-  margin: 0;
-  padding: 0;
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* default values from https://www.w3.org/TR/CSS2/sample.html */
+html, address,
+blockquote,
+body, dd, div,
+dl, dt, fieldset, form,
+frame, frameset,
+h1, h2, h3, h4,
+h5, h6, noframes,
+ol, p, ul, center,
+dir, hr, menu, pre {
+  display: block;
+  unicode-bidi: embed
+}
+li {
+  display: list-item
+}
+head {
+  display: none
+}
+table {
+  display: table
+}
+tr {
+  display: table-row
+}
+thead {
+  display: table-header-group
+}
+tbody {
+  display: table-row-group
+}
+tfoot {
+  display: table-footer-group
+}
+col {
+  display: table-column
+}
+colgroup {
+  display: table-column-group
+}
+td, th {
+  display: table-cell
+}
+caption {
+  display: table-caption
+}
+th {
+  font-weight: bolder; text-align: center
+}
+caption {
+  text-align: center
+}
+body {
+  margin: 8px
+}
+h1 {
+  font-size: 2em; margin: .67em 0
+}
+h2 {
+  font-size: 1.5em; margin: .75em 0
+}
+h3 {
+  font-size: 1.17em; margin: .83em 0
+}
+h4, p,
+blockquote, ul,
+fieldset, form,
+ol, dl, dir,
+menu {
+  margin: 1.12em 0
+}
+h5 {
+  font-size: .83em; margin: 1.5em 0
+}
+h6 {
+  font-size: .75em; margin: 1.67em 0
+}
+h1, h2, h3, h4,
+h5, h6, b,
+strong {
+  font-weight: bolder
+}
+blockquote {
+  margin-left: 40px; margin-right: 40px
+}
+i, cite, em,
+var, address {
+  font-style: italic
+}
+pre, tt, code,
+kbd, samp {
+  font-family: monospace
+}
+pre {
+  white-space: pre
+}
+button, textarea,
+input, select {
+  display: inline-block
+}
+big {
+  font-size: 1.17em
+}
+small, sub,  {
+  font-size: .83em
+}
+sub {
+  vertical-align: sub
+}
+sup {
+  vertical-align: super
+}
+table {
+  border-spacing: 2px;
+}
+thead, tbody,
+tfoot {
+  vertical-align: middle
+}
+td, th, tr {
+  vertical-align: inherit
+}
+s, strike, del {
+  text-decoration: line-through
+}
+hr {
+  border: 1px inset
+}
+ol ul, ul ol,
+ul ul, ol ol {
+  margin-top: 0; margin-bottom: 0
+}
+u, ins {
+  text-decoration: underline
+}
+br:before {
+  content: "\A"; white-space: pre-line
+}
+center {
+  text-align: center
+}
+:link, :visited {
+  text-decoration: underline
+}
+:focus {
+  outline: thin dotted invert
+}
+header {
+  height: auto;
 }
 label {
   white-space: normal;
 }
 button {
   text-shadow: none;
-}
-p {
-  padding: initial;
-  font-size: 14px;
-}
-ul {
-  font-size: 14px;
-  margin: 0;
-  li {
-    font-size: 14px;
-    padding: initial;
-  }
-}
-label {
-  white-space: normal;
 }
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: normal;
