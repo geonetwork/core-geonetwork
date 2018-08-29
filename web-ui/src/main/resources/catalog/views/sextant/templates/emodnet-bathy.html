@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Sextant Catalogue service - Metadata &amp; Data - EMODnet Bathymetry</title>
+  <meta name="description" content="Developing and providing a harmonised Digital Terrain Model (DTM) for the European sea regions"
+  />
+  <meta name="keywords" content="wrecks,hydrography,bathymetry,underwater" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" href="http://www.emodnet-bathymetry.eu/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="http://www.emodnet-bathymetry.eu/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="http://www.emodnet-bathymetry.eu/apple-touch-icon-152x152.png" />
+  <link rel="apple-touch-icon-precomposed" href="http://www.emodnet-bathymetry.eu/touch-icon-iphone-precomposed.png" />
+  <link rel="stylesheet" type="text/css" href="http://www.emodnet-bathymetry.eu/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="http://www.emodnet-bathymetry.eu/css/sextant.css" />
+  <script type="text/javascript" src="http://www.emodnet-bathymetry.eu/java/jquery/jquery-2.1.4.min.js"></script>
+
+  <link rel="icon" href="http://www.emodnet-bathymetry.eu/favicon.ico" type="image/x-icon" />
+</head>
+
+<body id="top">
+  <header>
+    <div id="topbar">
+      <div class="wrapper">
+        <div class="topbar-left">
+          <div id="logo">
+            <a href="http://www.emodnet-bathymetry.eu/" title="">Bathymetry</a>
+          </div>
+          <div id="branding">
+            <div class="border-branding">
+              <a href="#">
+                <h1>Bathymetry</h1>
+                <p>Understanding the topography of the European seas</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div id="freesearch">
+            <form action="/content/google_results.php" id="cse-search-box" method="get">
+              <input type="text" name="q" size="35" id="txtGoogleSearch" placeholder="Free search" />
+              <input type="submit" value="Zoeken" />
+            </form>
+          </div>
+          <div class="content">
+            <div class="block-contact-submit">
+              <p>
+                <a href="http://www.emodnet-bathymetry.eu/Contact-us">Contact us</a>
+                <a href="http://www.emodnet-bathymetry.eu/Data-products/How-can-I-contribute">SUBMIT DATA</a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <nav id="nav">
+      <a href="#nav" title="Show navigation">Show navigation</a>
+      <a href="#" title="Hide navigation">Hide navigation</a>
+      <div class="wrapper clearfix">
+        <ul class="clearfix">
+          <li>
+            <a href="http://www.emodnet-bathymetry.eu/Approach">Approach</a>
+          </li>
+          <li class="active">
+            <a href="http://www.emodnet-bathymetry.eu/Metadata-and-Data">Metadata &amp; Data</a>
+          </li>
+          <li>
+            <a href="http://www.emodnet-bathymetry.eu/Data-products">Data products</a>
+          </li>
+          <li>
+            <a href="http://www.emodnet-bathymetry.eu/News">News</a>
+          </li>
+          <li>
+            <a href="http://www.emodnet-bathymetry.eu/Promotion">Promotion</a>
+          </li>
+          <li>
+            <a href="http://www.emodnet-bathymetry.eu/Partners">Partners</a>
+          </li>
+          <li>
+            <a href="http://www.emodnet-bathymetry.eu/Helpdesk">Helpdesk</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="wrapper clearfix">
+      <h1>Sextant Catalogue service</h1>
+      <div ng-app="gn_search_sextant" ng-controller="GnCatController" class="gn sxt-max-md"
+        sxt-size="auto " ng-include="'../../catalog/views/sextant/templates/index.html'"></div>
+      <script type="text/javascript">
+        var sxtSettings = {
+          langDetector: {
+            fromHtmlTag: true,
+            regexp: '^\/([a-z]+)\/',
+            lang: 'fre'
+          },
+          configWhat: 'EMODNET_HYDROGRAPHY_CPRD',
+          tabOverflow: {
+            search: true
+          },
+          theme: 'emodnet-bathymetry'
+        };
+      </script>
+
+
+      <!-- Matomo -->
+      <script type="text/javascript">
+        var _paq = _paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+          var u = "//piwik.vliz.be/";
+          _paq.push(['setTrackerUrl', u + 'piwik.php']);
+          _paq.push(['setSiteId', '24']);
+          var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+          g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'piwik.js'; s.parentNode.insertBefore(g, s);
+        })();
+      </script>
+      <!-- End Matomo Code -->
+
+
+
+      <script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+      <script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+
+    </div>
+  </main>
+  <!-- Matomo -->
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var u = "//piwik.vliz.be/";
+      _paq.push(['setTrackerUrl', u + 'piwik.php']);
+      _paq.push(['setSiteId', '24']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'piwik.js'; s.parentNode.insertBefore(g, s);
+    })();
+  </script>
+  <!-- End Matomo Code -->
+
+
+</body>
+
+</html>

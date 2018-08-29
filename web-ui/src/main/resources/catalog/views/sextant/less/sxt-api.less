@@ -11,6 +11,9 @@
 @btn-default-bg: @sxt-button-color;
 
 .gn, .g {
+  // first import is the reset stylesheet
+  @import "sextant-reset.less";
+
   display: table;
   table-layout: fixed;
   width: 100%;
@@ -26,35 +29,8 @@
     height: 100%;
     display: table-row;
   }
-  button {
-    text-shadow: none;
-  }
   .layers {
     width: 100% !important;
-  }
-  .gn-search-page, .gn-metadata-view {
-    p {
-      padding: initial;
-      font-size: 14px;
-    }
-    ul {
-      font-size: 14px;
-      margin: 0;
-      li {
-        font-size: 14px;
-        padding: initial;
-      }
-    }
-    label {
-      white-space: normal;
-    }
-  }
-  h1, h2, h3, h4, h5, h6 {
-    letter-spacing: normal;
-    text-shadow: none;
-  }
-  ul {
-    list-style-image: none;
   }
   .gn-metadata-view {
     p {
@@ -69,9 +45,6 @@
     li {
       font-size: 12px;
     }
-  }
-  img {
-    padding: 0;
   }
 
   @import (less) "tmp.css";
