@@ -9,13 +9,17 @@
       padding-bottom: 0;
     }
   }
-
-  // tabs above editor
-  .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
-    border-color: @panel-default-border;
-  }
-
   form.gn-editor {
+    // tabs above editor
+    .nav {
+      min-height: 42px;
+    }
+    .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+      border-color: @panel-default-border;
+    }
+    div[data-gn-toggle] {
+      right: 15px;
+    }
     // styling on row hover
     .field-bg {
       background: transparent;
@@ -60,22 +64,14 @@
     }
     fieldset {
       padding: 0 0 5px 0;
-      border: 1px solid @panel-default-border;
-      border-left: 3px solid @brand-primary;
+      border: 1px solid #eee;
       margin-top: 10px;
       background-color: #fff;
       legend {
-        border: 1px solid @panel-default-border;
-        border-left: 3px solid @brand-primary;
-        background: @panel-default-heading-bg;
-        margin-left: -3px;
-        margin-right: -3px;
-        width: ~"calc(100% + 4px)";
-        font-size: 16px;
-        padding: 3px 23px;
+        margin-left: -6px;
+        width: calc(~"100% + 6px");
+        font-size: 24px;
         line-height: 34px;
-        border-top-left-radius: 2px;
-        border-top-right-radius: 2px;
         & > div.gn-move {
           position: relative;
           float: right;
@@ -116,44 +112,19 @@
         margin-bottom: 0px;
       }
       fieldset {
-        margin: 10px 15px;
+        margin: 10px;
         padding-bottom: 10px;
         padding-left: 0;
-        border-left-color: @brand-success;
         legend {
           padding-right: 11px;
-          font-size: 14px;
-          border-left-color: @brand-success;
+          font-size: 20px;
+          font-weight: 400;
         }
         @media (max-width: @screen-xs-max) {
           margin: 10px;
         }
         .table {
           margin-bottom: -10px;
-        }
-        fieldset {
-          border-left-color: @brand-danger;
-          legend {
-            border-left-color: @brand-danger;
-          }
-          fieldset {
-            border-left-color: @brand-info;
-            legend {
-              border-left-color: @brand-info;
-            }
-            fieldset {
-              border-left-color: @brand-warning;
-              legend {
-                border-left-color: @brand-warning;
-              }
-              fieldset {
-                border-left-color: #999;
-                legend {
-                  border-left-color: #999;
-                }
-              }
-            }
-          }
         }
       }
     }
@@ -259,7 +230,6 @@
   }
   // sidebar in the editor
   .gn-editor-tools-container {
-    padding-top: 10px;
     .panel {
       border-radius: 2px;
       [data-gn-slide-toggle] {
@@ -277,5 +247,120 @@
         }
       }
     }
+  }
+}
+// alternative style
+form.gn-editor.gn-indent-colored {
+
+  fieldset {
+    padding: 0 0 5px 0;
+    border: 1px solid @panel-default-border;
+    border-left: 3px solid @brand-primary;
+    margin-top: 10px;
+    background-color: #fff;
+    legend {
+      border: 1px solid @panel-default-border;
+      border-left: 3px solid @brand-primary;
+      background: @panel-default-heading-bg;
+      margin-left: -3px;
+      margin-right: -3px;
+      width: ~"calc(100% + 4px)";
+      font-size: 16px;
+      padding: 3px 23px;
+      line-height: 34px;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+      & > div.gn-move {
+        position: relative;
+        float: right;
+      }
+    }
+    legend[data-gn-slide-toggle]:before {
+      content: "\f107";
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: inherit;
+      position: absolute;
+      margin-left: -17px;
+      font-size: 16px;
+      margin-top: 0px;
+    }
+    table {
+      .col-sm-2, .col-sm-9 {
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .btn [data-gn-click-and-spin] {
+        margin-right: 3px;
+      }
+      fieldset {
+        margin: 0 0 10px 0;
+        padding: 0;
+        .col-sm-2, .col-sm-9 {
+          padding-right: 15px;
+          padding-left: 15px;
+        }
+      }
+      .gn-move {
+        display: none;
+      }
+    }
+    .table {
+      margin-bottom: 0px;
+    }
+    fieldset {
+      margin: 10px 15px;
+      padding-bottom: 10px;
+      padding-left: 0;
+      border-left-color: @brand-success;
+      legend {
+        padding-right: 11px;
+        font-size: 14px;
+        border-left-color: @brand-success;
+      }
+      @media (max-width: @screen-xs-max) {
+        margin: 10px;
+      }
+      .table {
+        margin-bottom: -10px;
+      }
+      fieldset {
+        border-left-color: @brand-danger;
+        legend {
+          border-left-color: @brand-danger;
+        }
+        fieldset {
+          border-left-color: @brand-info;
+          legend {
+            border-left-color: @brand-info;
+          }
+          fieldset {
+            border-left-color: @brand-warning;
+            legend {
+              border-left-color: @brand-warning;
+            }
+            fieldset {
+              border-left-color: #999;
+              legend {
+                border-left-color: #999;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+// toggle buttons for the indent style
+#gn-toggle-indent {
+  position: absolute;
+  margin-bottom: 5px;
+  z-index: 5;
+  pointer-events: none;
+  .btn-toolbar {
+    margin-right: 45px;
+    pointer-events: all;
   }
 }

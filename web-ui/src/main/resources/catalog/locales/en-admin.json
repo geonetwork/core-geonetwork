@@ -1270,5 +1270,8 @@
     "ui-externalViewer-openNewWindow": "Open new window",
     "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window.",
     "indexInEsDoneError": "There is an error with the ElasticSearch index. See the logs for details",
-    "indexInEsDone": "The ElasticSearch index completed successfully"
+    "indexInEsDone": "The ElasticSearch index completed successfully",
+    "ui-editorIndentType": "Editor page indent type",
+    "ui-editorIndentType-default": "Default, minimal indents",
+    "ui-editorIndentType-colored": "Colored indents"
 }
