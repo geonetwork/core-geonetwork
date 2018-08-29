@@ -1312,5 +1312,8 @@
     "ui-definition-help": "Definition for Proj4 library. This is a mandatory field if the projection is not defined already on GeoNetwork. Without a definition, the map can't work.",
     "ui-mod-recordview": "Record View",
     "ui-isSocialbarEnabled": "Show Socialbar",
-    "ui-isSocialbarEnabled-help": "Show the button bar with all the social buttons (facebook, twitter, etc.)"
+    "ui-isSocialbarEnabled-help": "Show the button bar with all the social buttons (facebook, twitter, etc.)",
+    "ui-editorIndentType": "Editor page indent type",
+    "ui-editorIndentType-default": "Default, minimal indents",
+    "ui-editorIndentType-colored": "Colored indents"
 }
