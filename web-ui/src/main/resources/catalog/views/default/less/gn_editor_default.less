@@ -3,6 +3,29 @@
 @import "gn_view.less";
 
 [ng-app="gn_editor"] {
+  .gn-top-bar {
+    .gn-btn-toolbar {
+      margin-left: -20px;
+      margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      // smartphones
+      @media (max-width: @screen-xs-max) {
+        border-bottom: 1px solid @navbar-default-border;
+        background-color: #fff;
+        li > a {
+          color: #555 !important;
+        }
+      }
+      // on really small screen the submenu should open to the right
+      @media (max-width: 424px) {
+        .dropdown-menu-right {
+          left: 0;
+        }
+      }
+    }
+  }
+
   .gn-editor-board {
     .gn-top-search {
       padding-top: 0;
