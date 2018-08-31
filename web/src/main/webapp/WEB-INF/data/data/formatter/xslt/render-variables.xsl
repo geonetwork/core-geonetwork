@@ -13,6 +13,9 @@
   * div render a div element to be embedded in an existing webpage. -->
   <xsl:param name="root" select="'html'"/>
 
+  <!-- Enable tab view mode or not -->
+  <xsl:param name="tabs" select="'true'"/>
+
   <!-- Define the full portal link. By default, it will link
   to the catalog.search main page of the catalog. To configure a custom
   use {{uuid}} to be replaced by the record UUID.
