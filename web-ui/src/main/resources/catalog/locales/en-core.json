@@ -397,5 +397,7 @@
     "siteLogo": "Logo",
     "languageSwitcher": "Language switcher",
     "avatar": "Avatar",
-    "first": "First"
+    "first": "First",
+    "editorHome": "Editor board",
+    "adminHome": "Summary"
 }
