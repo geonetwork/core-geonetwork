@@ -147,6 +147,9 @@
         element.bootstrapTable('resetWidth');
         element.bootstrapTable('resetView');
       });
+
+      // trigger an async digest loop to make the table appear
+      setTimeout(function() { scope.$apply(); });
     }.bind(this));
   };
 
