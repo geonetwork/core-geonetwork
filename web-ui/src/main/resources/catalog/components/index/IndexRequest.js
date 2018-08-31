@@ -433,7 +433,10 @@
             terms: {
               field: field.idxName,
               size: field.isDateTime ? MAX_ROWS :
-                      field.isTree ? FACET_TREE_ROWS : ROWS
+                      field.isTree ? FACET_TREE_ROWS : ROWS,
+
+              // Sextant: ignore empty strings
+              exclude : ''
             }
           };
         }
