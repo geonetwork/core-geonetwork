@@ -30,6 +30,7 @@ import org.jdom.Namespace;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -80,5 +81,15 @@ public abstract class SchemaPlugin implements CSWPlugin {
 
     public Set<Namespace> getNamespaces() {
         return allNamespaces;
+    }
+
+    private List<String> xpathTitle;
+
+    public void setXpathTitle(List<String> xpathTitle) {
+        this.xpathTitle = xpathTitle;
+    }
+
+    public List<String> getXpathTitle() {
+        return xpathTitle;
     }
 }

@@ -4,13 +4,17 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 
@@ -61,6 +65,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -91,6 +96,7 @@ import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -469,7 +475,9 @@ public class BaseMetadataManager implements IMetadataManager {
 		String schema = templateMetadata.getDataInfo().getSchemaId();
 		String data = templateMetadata.getData();
 		Element xml = Xml.loadString(data, false);
-		if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
+		boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
+		setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
+		if (isMetadata) {
 			xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO,
 					context);
 		}
@@ -500,7 +508,47 @@ public class BaseMetadataManager implements IMetadataManager {
 		return String.valueOf(finalId);
 	}
 
-	/**
+    /**
+     * Update XML document title as defined by schema plugin
+     * in xpathTitle property.
+     */
+    private void setMetadataTitle(String schema, Element xml, String language, boolean fromTemplate) {
+        ResourceBundle messages = ResourceBundle.getBundle(
+            "org.fao.geonet.api.Messages",
+            new Locale(language));
+
+        SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
+        List<String> xpathTitle = schemaPlugin.getXpathTitle();
+        if (xpathTitle != null) {
+            xpathTitle.forEach(path -> {
+                List<?> titleNodes = null;
+                try {
+                    titleNodes = Xml.selectNodes(
+                        xml,
+                        path,
+                        new ArrayList(schemaPlugin.getNamespaces()));
+
+                    for (Object o : titleNodes) {
+                        if (o instanceof Element) {
+                            Element title = (Element) o;
+                            title.setText(String.format(
+                                messages.getString(
+                                    "metadata.title.createdFrom" + (fromTemplate ? "Template" :  "Record")),
+                                title.getTextTrim(),
+                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                            ));
+                        }
+                    }
+                } catch (JDOMException e) {
+                    Log.debug(Geonet.DATA_MANAGER,
+                        String.format("Check xpath '%s' for schema plugin '%s'. Error is '%s'.",
+                        path, schema, e.getMessage()));
+                }
+            });
+        }
+    }
+
+    /**
 	 * Inserts a metadata into the database, optionally indexing it, and optionally
 	 * applying automatic changes to it (update-fixed-info).
 	 *
