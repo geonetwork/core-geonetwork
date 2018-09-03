@@ -52,12 +52,15 @@
       && user.isReviewerOrMore && !user.isReviewerOrMore());
 
 
-      scope.links = md.getLinksByType('LINK').filter( function(item) {
-        // we do not want to display this protocol
+      scope.unFilteredlinks = md.getLinksByType('LINK')
+        // we do not want to display the following protocols
         // link https://forge.ifremer.fr/mantis/view.php?id=40721
-        return item.protocol !== 'NETWORK:LINK';
-      });
-
+      scope.links = []
+      scope.unFilteredlinks.forEach(function(link){
+         if (link.protocol !== 'NETWORK:LINK' && link.protocol !== 'WWW:DOWNLOAD-1.0-link--download'){
+          scope.links.push(link)
+        };
+      })
 
       scope.downloads = [];
       scope.layers = [];
@@ -88,6 +91,11 @@
           else {
             scope.downloads = scope.downloads.concat(downloads);
           }
+          scope.downloads = scope.downloads.filter(function (download){
+            return download.protocol !== 'WWW:DOWNLOAD-1.0-link--download';
+            //Le protocole 'WWW:DOWNLOAD-1.0-link--download' ne doit pas être présent dans le bouton de type Link.
+          });
+
         }
         scope.layers = scope.layers.concat(layers);
       }.bind(this));
