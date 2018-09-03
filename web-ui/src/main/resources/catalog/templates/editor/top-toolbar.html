@@ -1,15 +1,16 @@
 <nav class="navbar navbar-default navbar-fixed-top gn-top-bar" role="navigation"
      data-ng-if="!unsupportedSchema">
 
-  <p class="navbar-text gn-tooltip"
+  <div class="navbar-text gn-tooltip"
      data-ng-mouseover="getSaveStatus()"
      title="{{savedStatus}}">
-    <strong title="{{gnCurrentEdit.mdTitle}}">
+    <h1 title="{{gnCurrentEdit.mdTitle}}">
       {{gnCurrentEdit.mdTitle | limitTo: 50 }}
       {{gnCurrentEdit.mdTitle.length > 50 ? '...' : ''}}
-    </strong>
+    </h1>
+    <span data-ng-if="savedStatus">| </span>
     <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
-  </p>
+  </div>
 
   <div class="gn-btn-toolbar navbar-right">
     <!-- If using the category selector in the editor form directly, remove this directive. -->
@@ -31,7 +32,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li role="presentation">
+        <li role="menuitem">
           <a role="menuitem"
              tabindex="-1"
              data-gn-click-and-spin="startVersioning()"
@@ -75,19 +76,21 @@
       </button>
       <button type="button"
               class="btn btn-success navbar-btn dropdown-toggle"
+              aria-label="{{'showOptions' | translate}}"
               data-toggle="dropdown"
               aria-expanded="false">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <li>
+        <li role="menuitem">
           <a href=""
              title="{{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
              data-gn-click-and-spin="switchTypeAndSave(true)">
             {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
           </a>
         </li>
-        <li class="dropdown-header">
+        <li class="dropdown-header"
+            role="menuitem">
           <label title="{{'minorEditHelp' | translate}}">
             <input type="checkbox" data-ng-model="gnCurrentEdit.isMinor"/>
             {{'minorEdit' | translate}}

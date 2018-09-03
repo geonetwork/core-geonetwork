@@ -400,5 +400,7 @@
     "first": "First",
     "editorHome": "Editor board",
     "adminHome": "Summary",
-    "allAdmins": "Administrators"
+    "allAdmins": "Administrators",
+    "group": "Group",
+    "showOptions": "Show options"
 }
