@@ -48,6 +48,7 @@
         <button type="button"
                 class="btn btn-default navbar-btn dropdown-toggle"
                 data-toggle="dropdown"
+                aria-label="{$i18n/selectView}"
                 title="{$i18n/selectView}"
                 aria-expanded="false">
           <i class="fa fa-eye"></i>
