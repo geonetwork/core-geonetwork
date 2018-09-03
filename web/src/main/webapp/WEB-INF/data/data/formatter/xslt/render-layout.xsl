@@ -93,13 +93,14 @@
           <div class="col-md-9">
 
             <header>
-              <h1 itemprop="name"
-                  itemscope="itemscope"
-                  itemtype="http://schema.org/name">
-                <i class="fa gn-icon-{$type}">&#160;</i>
-                <xsl:value-of select="$title"/>
-              </h1>
-
+              <xsl:if test="$header != 'false'">
+                <h1 itemprop="name"
+                    itemscope="itemscope"
+                    itemtype="http://schema.org/name">
+                  <i class="fa gn-icon-{$type}">&#160;</i>
+                  <xsl:value-of select="$title"/>
+                </h1>
+              </xsl:if>
               <xsl:if test="$view != 'emodnetHydrography' and $view != 'sdn'">
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
@@ -110,7 +111,6 @@
 
               <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
-
             <div>
               <xsl:apply-templates mode="render-toc" select="$viewConfig"/>
               <!-- Tab panes -->
