@@ -643,7 +643,6 @@
       <dt>
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*"/>
-AAA
         <!--<xsl:if test="*/gmd:type/*[@codeListValue != '']">
           (<xsl:apply-templates mode="render-value"
                                 select="*/gmd:type/*/@codeListValue"/>)
@@ -654,7 +653,7 @@ AAA
           <xsl:value-of select="count(*/gmd:keyword)"/>
           <ul>
             <li>
-              <xsl:for-each select="*/gmd:keyword">a
+              <xsl:for-each select="*/gmd:keyword">
                 <xsl:value-of select="name(.)"/>:<xsl:value-of select="."/>
                 <xsl:apply-templates mode="render-value"
                                      select="."/><xsl:if test="position() != last()">, </xsl:if>
