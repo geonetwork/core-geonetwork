@@ -399,5 +399,7 @@
     "avatar": "Avatar",
     "first": "First",
     "editorHome": "Editor board",
-    "adminHome": "Summary"
+    "adminHome": "Summary",
+    "group": "Group",
+    "showOptions": "Show options"
 }

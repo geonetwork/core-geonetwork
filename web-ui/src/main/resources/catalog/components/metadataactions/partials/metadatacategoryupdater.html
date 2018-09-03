@@ -16,7 +16,8 @@
           data-translate="">setMetadataCategories
       </li>
       <li data-ng-repeat="c in categories | orderBy:sortByLabel"
-          data-ng-hide="enableallowedcategories && allowedcategories.indexOf(c.id) == -1">
+          data-ng-hide="enableallowedcategories && allowedcategories.indexOf(c.id) == -1"
+          role="menuitem">
         <a data-ng-click="assign(c, $event)" 
            href=""
            title="{{c.label[lang] | translate}}">
