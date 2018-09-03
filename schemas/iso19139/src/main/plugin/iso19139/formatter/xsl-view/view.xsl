@@ -650,11 +650,9 @@
       </dt>
       <dd>
         <div>
-          <xsl:value-of select="count(*/gmd:keyword)"/>
           <ul>
             <li>
               <xsl:for-each select="*/gmd:keyword">
-                <xsl:value-of select="name(.)"/>:<xsl:value-of select="."/>
                 <xsl:apply-templates mode="render-value"
                                      select="."/><xsl:if test="position() != last()">, </xsl:if>
               </xsl:for-each>
