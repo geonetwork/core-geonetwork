@@ -4,7 +4,7 @@
     <i class="fa" data-ng-class="getClass('icon')"></i>&nbsp;
     <span data-translate="">validationReport</span>
 
-    <button type="button" class="btn btn-default pull-right btn-xs"
+    <button type="button" class="btn btn-default pull-right btn-xs gn-btn-fix"
             data-ng-click="toggleAlwaysOnTop();$event.stopPropagation();"
             data-toggle="tooltip"
             data-placement="top"
@@ -53,7 +53,7 @@
            data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
         <div class="row">
           <div class="col-md-9">
-            <h4 class="gn-schematron-title">{{(type.label || type.id) | translate}}</h4>
+            <h2 class="gn-schematron-title">{{(type.label || type.id) | translate}}</h2>
           </div>
           <div class="col-md-3">
             <span class="label pull-right"
@@ -70,7 +70,7 @@
                   data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>
           </div>
         </div>
-        <div class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
+        <ul class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
           <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
               title="{{rule.details}}"
               data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
@@ -78,7 +78,7 @@
             <strong>{{pattern.title}}</strong>
             <p>{{rule.msg}}</p>
           </li>
-        </div>
+        </ul>
       </div>
     </div>
   </div>
