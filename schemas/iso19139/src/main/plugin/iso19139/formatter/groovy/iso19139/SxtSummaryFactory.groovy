@@ -118,12 +118,13 @@ class SxtSummaryFactory {
     if (networkLinks.size() >= 1) {
       def networkLinksDescription = [];
       networkLinks.forEach { it ->
-        def name = it.'gmd:name'.toString()
+        def name = this.isoHandlers.isofunc.isoText(it.'gmd:name')
         def link = it.'gmd:linkage'.toString()
         def prettyName = "$name : $link"
         networkLinksDescription.push(
           isoHandlers.commonHandlers.func.urlToHtml(prettyName))
       }
+
       summary.networkLinksDescription = networkLinksDescription
     }
   }
