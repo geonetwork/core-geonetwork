@@ -321,14 +321,15 @@
       function(url) {
 
     var indexFilters = this.indexObject.getState();
-    var regex = /(?<=[?|&])[^&]*?=(\$\{filtre_([a-zA-Z_.-]*)\})&?/;
+    var regex = /[&|?]([^&]*)?=(\$\{filtre_([a-zA-Z_.-]*)\})/;
     var match = regex.exec(url);
-    while (match && match.length === 3) {
+    while (match && match.length === 4) {
       try {
         // urlParam will be a full param ie 'myfilter=${filtre_param_liste}&'
         var urlParam = match[0];
-        var placeholder = match[1];
-        var filter = match[2];
+        var paramName = match[1];
+        var placeholder = match[2];
+        var filter = match[3];
 
         var parseValue = (filter.indexOf('.') > 0);
         var filterName = filter.split('.')[0];
@@ -337,10 +338,10 @@
 
         if (fValue !== null && fValue !== undefined) {
           fValue = parseValue ? fValue.values[filter.split('.')[1]] :
-            Object.keys(fValue.values)[0];
+            Object.keys(fValue.values).join(';');
           url = url.replace(placeholder, encodeURIComponent(fValue));
         } else {
-          url = url.replace(urlParam, '');  // when no value present, remove the whole param altogether
+          url = this.urlUtils.remove(url, [paramName]);   // when no value present, remove the whole param altogether
         }
       } catch (e) {
         console.warn('[sxt] Error while replacing parameters in features URL attribute, ' +
