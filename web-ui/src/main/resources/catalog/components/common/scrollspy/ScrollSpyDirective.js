@@ -70,7 +70,7 @@
           scope.scrollTo = gnUtilityService.scrollTo;
           // Ordered list in an array of elements to spy
           scope.spyElems = [];
-          scope.isEnabled = true;
+          scope.isEnabled = false;
 
           var previousLabel = '';
           var registerSpy = function() {
