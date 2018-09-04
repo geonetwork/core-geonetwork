@@ -321,34 +321,32 @@
       function(url) {
 
     var indexFilters = this.indexObject.getState();
-    var URL_SUBSTITUTE_PREFIX = 'filtre_';
-    var regex = /\$\{([a-zA-Z_.-]*)\}/;
+    var regex = /(?<=[?|&])[^&]*?=(\$\{filtre_([a-zA-Z_.-]*)\})&?/;
     var match = regex.exec(url);
-
-    while (match && match.length) {
+    while (match && match.length === 3) {
       try {
-        var placeholder = match[0];
-        var urlFilter = match[1].substring(
-          URL_SUBSTITUTE_PREFIX.length, match[1].length);
+        // urlParam will be a full param ie 'myfilter=${filtre_param_liste}&'
+        var urlParam = match[0];
+        var placeholder = match[1];
+        var filter = match[2];
 
-        var parseValue = (urlFilter.indexOf('.') > 0);
-        var filterName = urlFilter.split('.')[0];
+        var parseValue = (filter.indexOf('.') > 0);
+        var filterName = filter.split('.')[0];
         var idxName = parseValue ? filterName : this.indexObject.getIdxNameObj_(filterName).idxName;
-        var fValue = indexFilters.qParams[idxName];
+        var fValue = indexFilters.qParams && indexFilters.qParams[idxName];
 
-        if (fValue) {
-          fValue = parseValue ? fValue.values[urlFilter.split('.')[1]] :
+        if (fValue !== null && fValue !== undefined) {
+          fValue = parseValue ? fValue.values[filter.split('.')[1]] :
             Object.keys(fValue.values)[0];
-          url = url.replace(placeholder,
-            encodeURIComponent(fValue));
+          url = url.replace(placeholder, encodeURIComponent(fValue));
         } else {
-          url = url.replace(placeholder, '');
+          url = url.replace(urlParam, '');  // when no value present, remove the whole param altogether
         }
+      } catch (e) {
+        console.warn('[sxt] Error while replacing parameters in features URL attribute, ' +
+            'param: ' + match[0] + ', error: ', e);
+      } finally {
         match = regex.exec(url);
-      }
-      catch (e) {
-        match = null;
-        console.warn('[sxt] Error while processing wfs url datas', filterName);
       }
     }
     return url;
