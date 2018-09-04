@@ -91,11 +91,6 @@
           else {
             scope.downloads = scope.downloads.concat(downloads);
           }
-          scope.downloads = scope.downloads.filter(function (download){
-            return download.protocol !== 'WWW:DOWNLOAD-1.0-link--download';
-            //Le protocole 'WWW:DOWNLOAD-1.0-link--download' ne doit pas être présent dans le bouton de type Link.
-          });
-
         }
         scope.layers = scope.layers.concat(layers);
       }.bind(this));
