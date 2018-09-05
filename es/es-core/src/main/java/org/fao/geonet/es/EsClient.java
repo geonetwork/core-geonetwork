@@ -23,14 +23,19 @@
 
 package org.fao.geonet.es;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
+import io.searchbox.core.DeleteByQuery;
 import io.searchbox.core.Index;
+import io.searchbox.indices.Analyze;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -270,6 +275,51 @@ public class EsClient implements InitializingBean {
 //            }
 //        }
     }
+
+    /**
+     * Analyze a field and a value against the index
+     * or query phase and return the first value generated
+     * by the specified filterClass.
+     * <p>
+     * If an exception occured, the field value is returned.
+     *
+     * TODO: Logger.
+     * </p>
+     * @param fieldValue    The field value to analyze
+     *
+     * @return The analyzed string value if found or the field value if not found.
+     */
+    public static String analyzeField(String collection,
+                                      String analyzer,
+                                      String fieldValue) {
+        Analyze analyze = new Analyze.Builder()
+            .index(collection)
+            .analyzer(analyzer)
+            // Replace , as it is meaningful in synonym map format
+            .text(fieldValue.replaceAll(",", ""))
+            .build();
+
+        try {
+            JestResult result = EsClient.get().getClient().execute(analyze);
+
+            if (result.isSucceeded()) {
+                JsonArray tokens = result.getJsonObject().getAsJsonArray("tokens");
+                if (tokens != null && tokens.size() == 1) {
+                    JsonObject token = tokens.get(0).getAsJsonObject();
+                    String type = token.get("type").getAsString();
+                    if ("SYNONYM".equals(type) || "word".equals(type)) {
+                        return token.get("token").getAsString();
+                    }
+                }
+                return fieldValue;
+            } else {
+                return fieldValue;
+            }
+        } catch (Exception ex) {
+            return fieldValue;
+        }
+    }
+
 
     protected void finalize() {
         client.shutdownClient();

@@ -42,7 +42,7 @@ import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
 import static org.fao.geonet.util.XslUtil.md5Hex;
 

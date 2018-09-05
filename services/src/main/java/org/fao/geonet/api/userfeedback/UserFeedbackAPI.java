@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.userfeedback;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_NAME_PATH;
 
@@ -493,7 +493,7 @@ public class UserFeedbackAPI {
             }
 
             userFeedbackService
-                    .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null), 
+                    .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null),
                     		request.getRemoteAddr());
 
             return new ResponseEntity(HttpStatus.CREATED);

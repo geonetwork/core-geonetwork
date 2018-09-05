@@ -544,7 +544,7 @@ public class EsSearchManager implements ISearchManager {
 
     }
 
-    public int getNumDocs(String query) throws Exception {
+    public Long getNumDocs(String query) throws Exception {
         if (StringUtils.isBlank(query)) {
             query = "*:*";
         }
@@ -601,7 +601,7 @@ public class EsSearchManager implements ISearchManager {
         this.client = client;
     }
 
-    public List<Element> getDocs(String query, Integer start, Integer rows) throws IOException, JDOMException {
+    public List<Element> getDocs(String query, Integer start, Long rows) throws IOException, JDOMException {
         final List<String> result = getDocIds(query, start, rows);
         List<Element> xmlDocs = new ArrayList<>(result.size());
         IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
@@ -612,7 +612,7 @@ public class EsSearchManager implements ISearchManager {
         return xmlDocs;
     }
 
-    public List<String> getDocIds(String query, Integer start, Integer rows) throws IOException, JDOMException {
+    public List<String> getDocIds(String query, Integer start, Long rows) throws IOException, JDOMException {
 //        final SolrQuery solrQuery = new SolrQuery(query == null ? "*:*" : query);
 //        solrQuery.setFilterQueries(DOC_TYPE + ":metadata");
 //        solrQuery.setFields(SolrSearchManager.ID);
@@ -633,13 +633,21 @@ public class EsSearchManager implements ISearchManager {
     }
 
     public List<Element> getAllDocs(String query) throws Exception {
-        int hitsNumber = getNumDocs(query);
+        Long hitsNumber = getNumDocs(query);
         return getDocs(query, 0, hitsNumber);
     }
 
     public List<String> getAllDocIds(String query) throws Exception {
-        int hitsNumber = getNumDocs(query);
+        Long hitsNumber = getNumDocs(query);
         return getDocIds(query, 0, hitsNumber);
     }
 
+    public static String analyzeField(String analyzer,
+                                      String fieldValue) {
+
+        return EsClient.analyzeField(
+                            ApplicationContextHolder.get().getBean(EsSearchManager.class).getIndex(),
+                            analyzer,
+                            fieldValue);
+    }
 }
