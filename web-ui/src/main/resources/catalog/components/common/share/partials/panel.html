@@ -24,24 +24,28 @@
     <table class="table table-striped" data-ng-show="privileges.length > 0">
       <thead>
       <tr>
-        <th><a href="" ng-click="setSorter('g')">
-          <span translate>groupOwners</span>&nbsp;
-          <i data-ng-if="sorter.predicate == 'g'" class="fa"
+        <th>
+          <a href="" ng-click="setSorter('g')">
+            <span translate>groupOwners</span>&nbsp;
+            <i data-ng-if="sorter.predicate == 'g'" class="fa"
              ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
-        </a>
+          </a>
         </th>
         <th data-ng-repeat="key in operations">
           <a href="" ng-click="setSorter(key)">
-            <i class="fa {{icons[key] || fa-fw}}"/>&nbsp;
-            <span>{{('op-' + key) | translate}}</span>&nbsp;
+            <i class="fa {{icons[key] || fa-fw}}"/>
+            <span class="hidden-xs">&nbsp;{{('op-' + key) | translate}}&nbsp;</span>
             <i data-ng-if="sorter.predicate == key" class="fa"
                data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"></i>
           </a>
         </th>
         <th data-ng-if="!disableAllCol">
-          <span translate>setall</span>
+          <span class="visible-xs">
+            <i class="fa fa-fw fa-lock"></i>
+          </span>
+          <span class="hidden-xs" translate>setall</span>
         </th>
-        <th><a href="" ng-click="setSorter('p')" data-ng-if="displayProfile">
+        <th data-ng-if="displayProfile"><a href="" ng-click="setSorter('p')">
           <span translate>profile</span>&nbsp;
           <i data-ng-if="sorter.predicate == 'p'" class="fa"
              ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
@@ -67,7 +71,7 @@
                  data-ng-click="checkAll(g)"
                  data-ng-model="g.isCheckedAll"/>
         </td>
-        <td class="text-center">
+        <td class="text-center" data-ng-if="displayProfile">
 
         </td>
       </tr>
@@ -87,9 +91,8 @@
                  data-ng-click="checkAll(g)"
                  data-ng-model="g.isCheckedAll"/>
         </td>
-        <td class="text-center">
-          <span data-ng-if="displayProfile"
-                data-ng-repeat="p in g.userProfiles">
+        <td class="text-center" data-ng-if="displayProfile">
+          <span data-ng-repeat="p in g.userProfiles">
             {{user.isAdministrator() ? ('Administrator' | translate) : (p | translate)}}&nbsp;
           </span>
         </td>
@@ -100,25 +103,24 @@
   </form>
 </div>
 
-<div class="btn-toolbar">
-  <button type="button" class="btn pull-right"
-          data-ng-click="reset()"
-          data-ng-show="batch"
-          title="{{'resetOps' | translate}}">
-    <i class="fa fa-undo"></i>&nbsp;
+<div class="btn-toolbar pull-right">
+  <div data-gn-need-help="user-guide/publishing/index.html"
+       data-icon-only="true"></div> 
+  <button type="button" class="btn btn-primary"
+          data-gn-click-and-spin="save(true)">
+    <i class="fa fa-eraser"></i>&nbsp;
+    <span data-translate="">replaceByThoseOperations</span>
   </button>
-  <button type="button" class="btn btn-primary pull-right"
+  <button type="button" class="btn btn-primary"
           data-gn-click-and-spin="save(false)"
           data-ng-show="batch">
     <i class="fa fa-plus"></i>&nbsp;
     <span data-translate="">addThoseOperations</span>
   </button>
-  <button type="button" class="btn btn-primary pull-right"
-          data-gn-click-and-spin="save(true)">
-    <i class="fa fa-eraser"></i>&nbsp;
-    <span data-translate="">replaceByThoseOperations</span>
+  <button type="button" class="btn btn-default"
+          data-ng-click="reset()"
+          data-ng-show="batch"
+          title="{{'resetOps' | translate}}">
+    <i class="fa fa-undo"></i>&nbsp;
   </button>
-  <div data-gn-need-help="user-guide/publishing/index.html"
-       data-icon-only="true"
-       class="pull-right"></div>
 </div>
