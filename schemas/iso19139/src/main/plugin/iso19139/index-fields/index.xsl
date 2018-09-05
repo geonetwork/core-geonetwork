@@ -29,6 +29,7 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
@@ -336,8 +337,7 @@
           <xsl:for-each select="gco:CharacterString[. != '']|
                                 gmx:Anchor[. != '']">
             <xsl:variable name="inspireTheme" as="xs:string"
-                          select="text()"/>
-
+                          select="index:analyzeField('synInspireThemes', text())"/>
             <inspireTheme_syn>
               <xsl:value-of select="text()"/>
             </inspireTheme_syn>
@@ -357,11 +357,13 @@
                 <xsl:value-of select="$inspireTheme"/>
               </inspireThemeFirst>
               <inspireAnnexForFirstTheme>
-                <xsl:value-of select="$inspireTheme"/>
+                <xsl:value-of
+                  select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
               </inspireAnnexForFirstTheme>
             </xsl:if>
             <inspireAnnex>
-              <xsl:value-of select="text()"/>
+              <xsl:value-of
+                select="index:analyzeField('synInspireAnnexes', $inspireTheme)"/>
             </inspireAnnex>
           </xsl:for-each>
         </xsl:for-each>
@@ -636,7 +638,8 @@
             <xsl:value-of select="text()"/>
           </serviceType>
           <xsl:variable name="inspireServiceType" as="xs:string"
-                        select="text()"/>
+                        select="index:analyzeField(
+                                  'keepInspireServiceTypes', text())"/>
           <xsl:if test="$inspireServiceType != ''">
             <inspireServiceType>
               <xsl:value-of select="lower-case($inspireServiceType)"/>
