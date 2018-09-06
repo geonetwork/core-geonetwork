@@ -110,11 +110,11 @@
               else {
                 layer.isNcwms = false;
                 layer.ncInfo = {
-                  'time': {'units': layer.values_.time.units,
-                    'values' : layer.values_.time.values},
+                  'time': {'units': layer.get('time').units,
+                    'values' : layer.get('time').values},
 
-                  'zaxis': {'units': layer.values_.elevation.units,
-                    'values' : layer.values_.elevation.values}
+                  'zaxis': {'units': layer.get('elevation').units,
+                    'values' : layer.get('elevation').values}
                 }
               }
             }.bind(this));
