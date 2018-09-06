@@ -73,7 +73,7 @@
   "mdActions-view": "Viewable",
   "mdActions-download": "Downloadable",
   "mdActions-process": "Process",
-  "networkLinksDescription": "Download (Visible path)",
+  "networkLinksDescription": "Data access",
   "emodnetDownloadForm": "Download form",
   "emodnetDownloadInfo": "Please share with us the reason for downloading this data.",
   "purpose": "Purpose",

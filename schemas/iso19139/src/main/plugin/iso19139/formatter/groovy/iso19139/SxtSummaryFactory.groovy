@@ -120,7 +120,7 @@ class SxtSummaryFactory {
       networkLinks.forEach { it ->
         def name = this.isoHandlers.isofunc.isoText(it.'gmd:name')
         def link = it.'gmd:linkage'.toString()
-        def prettyName = "$name : $link"
+        def prettyName = name ? "$name : $link" : "$link"
         networkLinksDescription.push(
           isoHandlers.commonHandlers.func.urlToHtml(prettyName))
       }
