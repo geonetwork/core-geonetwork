@@ -135,7 +135,7 @@
             <!--Specific geocat: use lUrl instead of url-->
             <div class="col-md-1">
               <i class="fa fa-fw"
-                 data-ng-class="onlinesrcService.getIconByProtocol(resource)"/>
+                 data-ng-class="onlinesrcService.getIconByProtocol(resource)"></i>
             </div>
             <div class="col-md-10"
                  title="{{resource.title | gnLocalized: lang}}">
@@ -150,7 +150,7 @@
               </a>
               <span data-ng-if="resource.lUrl.match('^http|ftp') === null">
                 <i class="fa fa-fw"
-                   data-ng-class="onlinesrcService.getIconByProtocol(resource)"/>
+                   data-ng-class="onlinesrcService.getIconByProtocol(resource)"></i>
                 {{(resource.title | gnLocalized: lang) || resource.lUrl}}
               </span>
             </div>

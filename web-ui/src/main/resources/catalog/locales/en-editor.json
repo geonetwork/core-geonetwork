@@ -373,5 +373,6 @@
     "hotkeyAddRecord": "Add new record",
     "hotkeyBatchEdit": "Batch editing",
     "hotkeyEditorBoard": "Editor board",
-    "cancelMetadataError": "Error, please reload the page"
+    "cancelMetadataError": "Error, please reload the page",
+    "showMessages": "Show messages:"
 }

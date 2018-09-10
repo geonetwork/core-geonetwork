@@ -9,7 +9,7 @@
             data-toggle="tooltip"
             data-placement="top"
             title="{{'fixedOnTop' | translate}}">
-      <i class="fa fa-thumb-tack"/>
+      <i class="fa fa-thumb-tack"></i>
     </button>
   </div>
   <!-- /.panel-heading -->
@@ -20,14 +20,14 @@
               data-toggle="tooltip"
               data-placement="top"
               title="{{'runValidation' | translate}}">
-        <i data-ng-hide="loading" class="fa fa-fw fa-refresh"/>
-        <i data-ng-show="loading" class="fa fa-fw fa-spinner fa-spin"/>
+        <i data-ng-hide="loading" class="fa fa-fw fa-refresh"></i>
+        <i data-ng-show="loading" class="fa fa-fw fa-spinner fa-spin"></i>
         <span data-translate="">runValidation</span>
       </button>
 
       <div class="pull-right">
         <div class="btn-group ">
-          <small data-ng-show="hasSuccess || hasErrors" class="gn-margin-right">Filter:</small>
+          <small data-ng-show="hasSuccess || hasErrors" class="gn-margin-right" data-translate="">showMessages</small>
         </div>
         <div class="btn-group btn-group-xs" role="group">
           <button type="button" class="btn btn-default btn-xs"
