@@ -45,7 +45,7 @@
             <!-- TODO: subtemplate link for editing is different -->
             <a class="btn btn-default"
                data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-               data-ng-href="{{buildEditorUrl(md)}}"
+               data-ng-href="{{buildEditorUrl(md)}}?redirectUrl=catalog.edit"
                title="{{'edit' | translate}}">
               <i class="fa fa-pencil"></i>
             </a>
