@@ -38,7 +38,7 @@
    * the input.
    *
    */
-  module.directive('gnTopiccategorySelector',
+  module.directive('gnTopiccategorySelectorDiv',
       ['$compile', '$timeout', '$translate',
        'gnTopicCategoryService', 'gnCurrentEdit',
        'TopicCategory', 'gnLangs',
@@ -50,7 +50,7 @@
            replace: true,
            transclude: true,
            scope: {
-             values: '@gnTopiccategorySelector',
+             values: '@gnTopiccategorySelectorDiv',
              label: '@label',
              ref: '@ref'
            },
