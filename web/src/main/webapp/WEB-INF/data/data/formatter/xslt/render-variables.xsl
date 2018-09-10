@@ -21,6 +21,9 @@
    This only applies to root = html mode (ie. not when rendering a div) -->
   <xsl:param name="header" select="'true'"/>
 
+  <!-- Display catalogue header on top to do search or login. -->
+  <xsl:param name="catalogueHeader" select="'false'"/>
+
 
   <!-- Define the full portal link. By default, it will link
   to the catalog.search main page of the catalog. To configure a custom
