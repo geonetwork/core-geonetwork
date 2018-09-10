@@ -636,32 +636,6 @@
       </dd>
     </dl>
   </xsl:template>
-  <xsl:template mode="render-field"
-                match="gmd:descriptiveKeywords"
-                priority="1011">
-    <dl class="gn-keyword">
-      <dt>
-        <xsl:apply-templates mode="render-value"
-                             select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*"/>
-        <!--<xsl:if test="*/gmd:type/*[@codeListValue != '']">
-          (<xsl:apply-templates mode="render-value"
-                                select="*/gmd:type/*/@codeListValue"/>)
-        </xsl:if>-->
-      </dt>
-      <dd>
-        <div>
-          <ul>
-            <li>
-              <xsl:for-each select="*/gmd:keyword">
-                <xsl:apply-templates mode="render-value"
-                                     select="."/><xsl:if test="position() != last()">, </xsl:if>
-              </xsl:for-each>
-            </li>
-          </ul>
-        </div>
-      </dd>
-    </dl>
-  </xsl:template>
 
   <xsl:template mode="render-field"
                 match="gmd:descriptiveKeywords[not(*/gmd:thesaurusName/gmd:CI_Citation/gmd:title)]"
