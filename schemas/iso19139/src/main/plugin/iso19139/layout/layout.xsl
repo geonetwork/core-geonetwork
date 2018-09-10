@@ -406,7 +406,7 @@
       <xsl:with-param name="type"
                       select="gn-fn-metadata:getFieldType($editorConfig, name(),
         name($theElement))"/>
-      <xsl:with-param name="directive"
+      <xsl:with-param name="directiveAttributes"
                       select="gn-fn-metadata:getFieldDirective($editorConfig, name())"/>
       <xsl:with-param name="name" select="$theElement/gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
