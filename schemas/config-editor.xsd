@@ -91,7 +91,8 @@ The list of possible values are:
 
 - all HTML5 input type or
 
-- an AngularJS directive name.
+- an AngularJS directive name. MUST starts with 'data-' and
+  could end with '-textarea' to create a textarea element
 
 
 An element can only have one type defined.

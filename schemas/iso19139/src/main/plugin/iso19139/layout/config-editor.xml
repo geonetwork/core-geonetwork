@@ -50,8 +50,15 @@
     <for name="gmd:supplementalInformation" use="textarea"/>
     <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
-    <for name="gmd:useLimitation" use="textarea"/>
 
+    <for name="gmd:useLimitation" use="textarea"/>
+    <!--<for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"/>
+    </for>-->
+    
+    <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
+    <for name="gml:duration" use="data-gn-field-duration-div"/>
 
     <for name="gco:Distance" use="number"/>
     <for name="gco:Decimal" use="number"/>
@@ -164,6 +171,8 @@
         data-insert-modes=""
         data-template-type="report"/>
     </for>
+
+
 
 
     <!-- Example configuration: Add onLine source from subtemplate

@@ -367,6 +367,27 @@
   </xsl:function>
 
 
+  <!-- Return the directive to use for editing. -->
+  <xsl:function name="gn-fn-metadata:getFieldDirective" as="node()">
+    <xsl:param name="configuration" as="node()"/>
+    <xsl:param name="name" as="xs:string"/>
+
+    <xsl:variable name="type"
+                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-')]"/>
+    <xsl:choose>
+      <xsl:when test="$type">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$type/@use"/>
+          <xsl:copy-of select="$type/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <null/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+
   <!-- Return the directive to use for add control if a custom one
   is defined. Eg. Adding from a thesaurus propose a list of available
   thesaurus. -->
