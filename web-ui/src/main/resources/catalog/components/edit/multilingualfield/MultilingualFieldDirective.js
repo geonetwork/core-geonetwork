@@ -55,7 +55,10 @@
           // Only inputs and textarea could be multilingual fields
           var formFieldsSelector =
               'div[data-ng-transclude] > input.form-control,' +
-              'div[data-ng-transclude] > textarea.form-control';
+              'div[data-ng-transclude] > textarea.form-control,' +
+              // + selector for field using directive eg. gn-keyword-picker
+              'div[data-ng-transclude] > span > input.form-control,' +
+              'div[data-ng-transclude] > span > textarea.form-control';
 
           // Some input should be displayed in Right-To-Left direction
           var rtlLanguages = ['AR'];
