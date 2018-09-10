@@ -221,7 +221,9 @@
                 </xsl:for-each>
 
                 <!-- Display the helper for a multilingual field below the field.
-                 The helper will be used only to populate the main language. -->
+                 The helper will be used only to populate the main language.
+                 It is recommended to use a thesaurus instead of an helper for
+                 multilingual records. -->
                 <xsl:if test="count($listOfValues/*) > 0">
                   <xsl:call-template name="render-form-field-helper">
                     <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>

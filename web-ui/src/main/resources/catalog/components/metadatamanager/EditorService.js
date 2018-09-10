@@ -368,6 +368,16 @@
                saving: false
              });
 
+             gnCurrentEdit.allLanguages = {code2iso: {}, iso2code: {}, iso: []};
+             if (gnCurrentEdit.mdOtherLanguages != '') {
+               angular.forEach(JSON.parse(gnCurrentEdit.mdOtherLanguages), function(code, iso) {
+                 gnCurrentEdit.allLanguages.code2iso[code] = iso;
+                 gnCurrentEdit.allLanguages.iso2code[iso] = code;
+                 gnCurrentEdit.allLanguages.iso.push(iso);
+                 ;
+               });
+             }
+
              if (angular.isFunction(gnCurrentEdit.formLoadExtraFn)) {
                gnCurrentEdit.formLoadExtraFn();
              }
@@ -394,7 +404,7 @@
 
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
-             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref + '&name=' + name + attributeAction)
               .success(function(data) {
                // Append HTML snippet after current element - compile Angular
@@ -432,7 +442,7 @@
            insertRef, position) {
              var defer = $q.defer();
              $http.put(this.buildEditUrlPrefix('editor/elements') +
-             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&ref=' + ref +
              '&name=' + parent +
              '&child=' + name).success(function(data) {
@@ -462,8 +472,8 @@
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
-             '/editor/elements?ref=' + ref + 
-             '&displayAttributes=' + gnCurrentEdit.displayAttributes + 
+             '/editor/elements?ref=' + ref +
+             '&displayAttributes=' + gnCurrentEdit.displayAttributes +
              '&parent=' + parent)
               .success(function(data) {
                // For a fieldset, domref is equal to ref.

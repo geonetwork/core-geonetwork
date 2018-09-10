@@ -496,8 +496,8 @@
    * We can't transclude input (http://plnkr.co/edit/R2O2ixWA1QJUsVcUHl0N)
    */
   module.directive('gnKeywordPicker', [
-    'gnThesaurusService', '$compile', '$translate',
-    function(gnThesaurusService, $compile, $translate) {
+    'gnThesaurusService', '$compile', '$translate', 'gnCurrentEdit',
+    function(gnThesaurusService, $compile, $translate, gnCurrentEdit) {
       return {
         restrict: 'A',
         scope: {},
@@ -541,7 +541,9 @@
             var keywordsAutocompleter =
                 gnThesaurusService.getKeywordAutocompleter({
                   thesaurusKey: scope.thesaurusKey,
-                  lang: scope.lang,
+                  lang: gnCurrentEdit.allLanguages.code2iso['#' + attrs.lang] ||
+                        gnCurrentEdit.mdLanguage ||
+                        scope.lang,
                   orderById: scope.orderById
                 });
 
@@ -570,6 +572,8 @@
               element.trigger(ev);
               if (element.val() != initial) {
                 element.val('');
+                // TODO: Multilingual support
+                // TODO: Anchor support
               }
               return true;
             });
