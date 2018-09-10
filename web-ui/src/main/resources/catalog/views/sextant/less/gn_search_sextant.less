@@ -1091,6 +1091,43 @@ ul.gn-resultview {
   }
 }
 
+
+/* Formatter display does not have gn-metadata-display
+directive, but some styles have to be applied. This
+should probably be merged with the next rule at some point
+without attaching styles to an angular object but
+to a common CSS class?
+*/
+.gn-metadata-display {
+  section.links {
+    margin: 0 0 1.5em;
+    padding: 1em;
+    box-shadow: @sxt-shadow;
+    text-align: center;
+    position: relative;
+    .gn-md-links {
+      display: inline-block;
+      width: auto;
+      .btn {
+        margin-left: 4px;
+      }
+    }
+    [gn-related] {
+      display: inline-block;
+      .btn-group {
+        vertical-align: initial;
+      }
+    }
+    h3 {
+      padding-bottom: .5em;
+      color: #000;
+    }
+    .dropdown-menu {
+      text-align: left;
+    }
+  }
+}
+
 [gn-metadata-display] {
   position: absolute;
   left: 1.1em;
