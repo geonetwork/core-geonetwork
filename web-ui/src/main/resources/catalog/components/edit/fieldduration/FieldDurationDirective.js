@@ -41,7 +41,7 @@
      *  * nM indicates the number of minutes
      *  * nS indicates the number of seconds
      */
-  module.directive('gnFieldDuration', ['$http', '$rootScope',
+  module.directive('gnFieldDurationDiv', ['$http', '$rootScope',
     function($http, $rootScope) {
 
       return {
@@ -49,7 +49,7 @@
         replace: true,
         transclude: true,
         scope: {
-          value: '@gnFieldDuration',
+          value: '@gnFieldDurationDiv',
           label: '@label',
           ref: '@ref'
         },
