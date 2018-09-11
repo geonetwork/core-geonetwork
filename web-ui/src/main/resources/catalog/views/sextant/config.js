@@ -240,16 +240,20 @@
           } else if(md.getSchema() == 'dublin-core') {
             url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19115-3') {
-            var view =
-              md.standardName ===
-                'ISO 19115-3 - Emodnet Checkpoint - Upstream Data' ? 'medsea' :
-                (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product' ?
-                  'checkpoint-tdp' :
-                  (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
-                  'checkpoint-dps' : 'default'
-                ));
-            url = 'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' + view +
-                    '&uuid=' + md.getUuid();
+            var view;
+            if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
+              view = 'medsea'
+            }
+            else if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product') {
+              view = 'checkpoint-tdp'
+            }
+            else if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification') {
+              view = 'checkpoint-dps'
+            }
+            url = view ?
+              'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' + view +
+              '&uuid=' + md.getUuid() :
+              'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
