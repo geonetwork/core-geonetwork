@@ -56,7 +56,9 @@
           scope.setBgLayer = function(layer) {
             layer.setVisible(true);
             var layers = scope.map.getLayers();
-            layers.removeAt(0);
+            if(layers.getLength() > 0) {
+              layers.removeAt(0);
+            }
             layers.insertAt(0, layer);
             return false;
           };
@@ -65,6 +67,13 @@
           scope.changeBackground = function (layer) {
             scope.setBgLayer(layer);
           };
+          
+          scope.$watch(function() { return gnViewerSettings.bgLayers}, function(bgLayers) {
+            if(bgLayers && bgLayers.length && bgLayers.length > 0 ) {
+              scope.layers = bgLayers;
+              scope.setBgLayer(scope.layers[0]);
+            }
+          });
 
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');

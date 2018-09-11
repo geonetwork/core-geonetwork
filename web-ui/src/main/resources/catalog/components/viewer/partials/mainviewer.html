@@ -30,6 +30,12 @@
       <span class="label" ng-show="showToolLabels" translate="">Layers</span>
       <span role="tooltip" translate="">Layers</span>
     </button>
+    <button class="btn btn-default" ng-model="activeTools.projectionSwitcher"
+            type="submit" gi-btn="active" ng-hide="disabledTools.projectionSwitcher">
+      <span class="fa fa-map-signs"></span>
+      <span class="label" ng-show="showToolLabels" translate="">ProjectionSwitcher</span>
+      <span role="tooltip" translate="">ProjectionSwitcher</span>
+    </button>
     <button class="btn btn-default" ng-model="activeTools.legend"
             type="submit" gi-btn="active" ng-hide="disabledTools.legend"
             aria-label="{{'mapLegend' | translate}}">
@@ -198,6 +204,16 @@
           data-ng-show="is3dEnabled"></div>
     </div>
   </div>
+
+  <!-- Projection Switcher -->
+  <div class="panel panel-default panel-tools"
+       ng-show="activeTools.projectionSwitcher">
+    <div class="panel-heading">
+      <h3>{{'ProjectionSwitcher' | translate}}
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.projectionSwitcher" gi-btn>
+    <div class="panel-body">
+      <div gn-projection-switcher="map"></div>
 
   <!-- Legend -->
   <div class="panel panel-default panel-tools"

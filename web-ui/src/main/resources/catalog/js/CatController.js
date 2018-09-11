@@ -175,9 +175,14 @@
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
           }],
+          'switcherProjectionList': [{
+            'code': 'EPSG:3857',
+            'label': 'Google mercator (EPSG:3857)'
+          }],
           'disabledTools': {
             'processes': false,
             'addLayers': false,
+            'projectionSwitcher': false,
             'layers': false,
             'legend': false,
             'filter': false,

@@ -1,0 +1,6 @@
+<ul class="list-group">
+	<li ng-repeat="p in (projections)" class="list-group-item"
+		data-ng-click="switchProjection(p.code)"
+		data-ng-class="map.getView().getProjection().getCode() == p.code ? 'active' : ''">
+		{{p.label}}</li>
+</ul>

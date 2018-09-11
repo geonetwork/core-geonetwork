@@ -95,7 +95,7 @@
             })
 
           };
-
+          
           var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
           var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
 
@@ -123,6 +123,29 @@
           angular.extend(searchSettings, {
             viewerMap: viewerMap,
             searchMap: searchMap
+          });
+          
+          
+          //Add projections from UI settings:
+          $.each(viewerSettings.mapConfig.switcherProjectionList, function(i, p) {
+            if(!ol.proj.get(p.code)) {
+              if(p.def) {
+                // Define an OL3 projection based on the included Proj4js projection
+                // definition and set it's extent.
+                proj4.defs(p.code,p.def);
+              } else {
+                console.error("Trying to use unknown projection '" + p.code 
+                      + "'. Please add definition on settings.");
+              }
+            }
+
+            var bng = ol.proj.get(p.code);
+            if(p.extent) {
+              bng.setExtent(JSON.parse(p.extent));
+            }
+            if(p.worldExtent) {
+              bng.setWorldExtent(JSON.parse(p.worldExtent));
+            }
           });
 
         }]);

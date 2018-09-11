@@ -162,6 +162,24 @@
               defer.reject();
               return $q.defer().promise;
             }
+            
+            //Check if the layer has some projection restriction
+            //If no restriction, just (try to) add it
+            if(layerInfo.projectionList && layerInfo.projectionList.length 
+                && layerInfo.projectionList.length > 0) {
+              var addIt = false;
+              
+              $.each(layerInfo.projectionList, function(i, p){
+                if(map.getView().getProjection().getCode() == p) {
+                  addIt = true;
+                }
+              });
+              
+              if(!addIt) {
+                defer.reject();
+                return $q.defer().promise;
+              }
+            }
 
             switch (layerInfo.type) {
               case 'osm':

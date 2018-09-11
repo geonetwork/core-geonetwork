@@ -1153,6 +1153,8 @@
     "ui-listOfServices-help": "If none defined, service metadata records are proposed to the users",
     "ui-storage": "User preference persistence",
     "ui-storage-help": "'' or 'sessionStorage' or 'localStorage'. An empty value means that the viewer map will not be saved when leaving the application and restored when coming back.",
+    "ui-switcherProjectionList": "Projections to display maps into",
+    "ui-switcherProjectionList-help": "These are the projections to show on the projections switcher of the main map. Remember to fill the definition if it is not already available.",
     "ui-isExportMapAsImageEnabled": "Export map as image",
     "ui-isExportMapAsImageEnabled-help": "This requires CORS to be enabled on the WMS services used in the map application. If not sure, you should disable that option that may cause trouble displaying WMS layers.",
     "ui-is3DModeAllowed": "Allow 3D mode",
@@ -1270,5 +1272,6 @@
     "ui-externalViewer-openNewWindow": "Open new window",
     "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window.",
     "indexInEsDoneError": "There is an error with the ElasticSearch index. See the logs for details",
-    "indexInEsDone": "The ElasticSearch index completed successfully"
+    "indexInEsDone": "The ElasticSearch index completed successfully",
+    "projectionSwitcherTool": "Projection Switcher Tool"
 }
