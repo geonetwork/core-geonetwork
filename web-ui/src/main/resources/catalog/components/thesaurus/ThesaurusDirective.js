@@ -505,6 +505,9 @@
           scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
+
+          var displayDefinition = attrs.displayDefinition || '';
+          var numberOfSuggestions = attrs.numberOfSuggestions || 20;
           var initialized = false;
 
           // Create an input group around the element
@@ -538,29 +541,72 @@
             if (!initialized && !attrs.thesaurusKey) {
               addThesaurusSelectorOnElement(element);
             }
+            var searchLanguage = gnCurrentEdit.allLanguages.code2iso['#' + attrs.lang] ||
+              gnCurrentEdit.mdLanguage ||
+              scope.lang;
             var keywordsAutocompleter =
                 gnThesaurusService.getKeywordAutocompleter({
                   thesaurusKey: scope.thesaurusKey,
-                  lang: gnCurrentEdit.allLanguages.code2iso['#' + attrs.lang] ||
-                        gnCurrentEdit.mdLanguage ||
-                        scope.lang,
+                  lang: searchLanguage,
+                  outputLang: gnCurrentEdit.allLanguages && gnCurrentEdit.allLanguages.iso ?
+                         gnCurrentEdit.allLanguages.iso.join(',') :
+                         (gnCurrentEdit.mdLanguage || scope.lang),
                   orderById: scope.orderById
                 });
+
+
+            // Multilingual support
+            // In multilingual mode, update all inputs
+            // based on information returned by thesaurus service
+            // (there is one input per language with a specific
+            // field name)
+            var isMultilingualMode =
+              $(element).closest('div[data-gn-multilingual-field]').size() === 1;
+
 
             // Init typeahead
             element.typeahead({
               minLength: 0,
               highlight: true
-              // template: '<p>{{label}}</p>'
-              // TODO: could be nice to have definition
             }, {
               name: 'keyword',
-              displayKey: 'label',
-              source: keywordsAutocompleter.ttAdapter()
-              // templates: {
-              // header: '<h4>' + scope.thesaurusKey + '</h4>'
-              // }
-            });
+              limit: numberOfSuggestions,
+              source: keywordsAutocompleter.ttAdapter(),
+              displayKey: function (data) {
+                 return data.props.values[searchLanguage] || data.props.value;
+              },
+              templates: {
+                suggestion: function (data) {
+                  var def = data.props.definitions[searchLanguage];
+                  var text = '<p>' + data.props.values[searchLanguage] + '';
+                  if (displayDefinition && def != '') {
+                    text += ' - <i>' + def + '</i>';
+                  }
+                  return text + '</p>';
+                }
+               // header: '<h4>' + scope.thesaurusKey + '</h4>'
+              }
+            }).bind('typeahead:selected',
+              $.proxy(function(obj, keyword) {
+                var inputs = $(obj.currentTarget).parent().parent().find('input.tt-input');
+                if (isMultilingualMode && inputs.size() > 0) {
+                  for (var i = 0; i < inputs.size(); i ++) {
+                    var input = inputs.get(i);
+                    var lang = input.getAttribute('lang');
+                    var value = keyword.props.values[gnCurrentEdit.allLanguages.code2iso['#' + lang]];
+                    if (value) {
+                      $(input).val(value);
+                    }
+                    // If no value for the language, value is not set.
+                  }
+                } else {
+                  $(obj.currentTarget).val(keyword.label);
+                }
+              }, $(element))
+            );
+
+            // TODO: Anchor support
+
 
             // When clicking the element trigger input
             // to show autocompletion list.
@@ -572,8 +618,6 @@
               element.trigger(ev);
               if (element.val() != initial) {
                 element.val('');
-                // TODO: Multilingual support
-                // TODO: Anchor support
               }
               return true;
             });
