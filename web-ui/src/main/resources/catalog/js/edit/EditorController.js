@@ -349,7 +349,7 @@
         //        $($scope.formId + ' > fieldset').fadeOut(duration);
         $scope.save(true);
 
-        $location.search('tab', tabIdentifier);
+        $location.search('tab', tabIdentifier).replace();
       };
 
       /**
