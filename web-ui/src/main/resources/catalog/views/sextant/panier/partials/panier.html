@@ -83,43 +83,12 @@
                 </div>
               </div>
             </form>
-            <h4 translate>validateConstraints</h4>
-            <ul class="list-group" data-ng-class="{invalid : downloadDisabled}">
-              <li ng-repeat="elt in panier" class="list-group-item">
-                <label ng-click="elt.validated = !elt.validated; validateDownload()">
-                  <i class="fa fa-fw sxt-layer-visibility text-primary"
-                    ng-class="elt.validated ? 'fa-check-square-o' : 'fa-square-o'"/>
-                  {{elt.md.title || elt.md.defaultTitle}}
-                </label>
-                <a class="btn btn-link" data-toggle="collapse" data-target="#w{{elt.md.getUuid()}}" aria-expanded="false">
-                  <i class="fa fa-angle-double-down"></i>
-                </a>
-                <!--legalConstraints - securityConstraints - resourceConstraints-->
-                <div class="well collapse" id="w{{elt.md.getUuid()}}">
-                  <div ng-if="elt.md.legalConstraints[2]">
-                    <h5>Limites d'utilisation :</h5>
-                    <small>{{elt.md.legalConstraints[2]}}</small>
-                  </div>
-                  <div ng-if="elt.md.Constraints[0]">
-                    <h5>Contraintes d'accès :</h5>
-                    <small>{{elt.md.Constraints[0]}}</small>
-                  </div>
-                  <h5>Contraintes d'utilisation :</h5>
-                  <small>Copyright</small>
-                  <div ng-if="elt.md.legalConstraints[0] || elt.md.legalConstraints[1]">
-                    <h5>Autres contraintes :</h5>
-                    <small>{{elt.md.legalConstraints[0]}}</small><br>
-                    <small>{{elt.md.legalConstraints[1]}}</small>
-                  </div>
-                </div>
-              </li>
-            </ul>
           </div>
 
           <div class="modal-footer">
             <button type="button" class="btn btn-link" data-dismiss="modal" translate>basketCancel</button>
             <button type="button" class="btn btn-primary" ng-click="extract()"
-                    ng-disabled="downloadDisabled || !(panierForm.firstname.$valid && panierForm.lastname.$valid && panierForm.email.$valid)" translate>Télécharger</button>
+                    ng-disabled="!panierForm.$valid" translate>Télécharger</button>
           </div>
 
         </div><!-- /.modal-content -->

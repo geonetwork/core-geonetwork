@@ -73,7 +73,6 @@
             sxtPanierService.extract(scope.formObj).then(function(data) {
               modal.modal('hide');
               if(data.data.success) {
-                scope.downloadDisabled = true;
                 scope.report = {
                   success: true
                 };
@@ -86,15 +85,6 @@
               }
             });
           };
-
-          scope.downloadDisabled = true;
-          scope.validateDownload = function() {
-            var enable = true;
-            $.each(scope.panier, function(i, elt) {
-              enable = enable && elt.validated;
-            });
-            scope.downloadDisabled = !enable;
-          }
 
           scope.goBack = function() {
             window.history.back();
