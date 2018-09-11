@@ -445,6 +445,19 @@
         services: [
           ]
       };
+
+      // login button management
+      $scope.allowLogin = typeof sxtSettings !== 'undefined' ?
+      sxtSettings.allowLogin : true;
+
+      // signin url is https://host/geonetwork/signin?service=<currentUrl>
+      // following #41968, we make sure there is always a query string in currentUrl
+      $scope.getSignInUrl = function() {
+        var currentUrl = window.location.origin + window.location.pathname
+            + (window.location.search || '?') + window.location.hash;
+        return gnGlobalSettings.gnUrl + '../../signin?service=' +
+          encodeURIComponent(currentUrl);
+      }
     }]);
 
   module.controller('gnsSextantSearch', [

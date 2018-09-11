@@ -11,14 +11,41 @@
 
           <sxt-tab-switcher></sxt-tab-switcher>
 
-          <!--Admin button-->
-          <div class="btn-group sxt-adminbtn pull-right" data-ng-if="authenticated">
+          <!-- login button -->
+          <div class="btn-group sxt-adminbtn pull-right"
+               ng-if="allowLogin && !authenticated">
+            <a type="button" class="btn btn-default"
+               ng-if="allowLogin && !authenticated" href="{{getSignInUrl()}}"
+               title="{{'signIn'|translate}}">
+              <i class="fa fa-sign-in"></i>
+              <span data-translate="">signIn</span>
+            </a>
+          </div>
+
+          <!-- registered user info-->
+          <div class="btn-group sxt-adminbtn pull-right"
+               ng-if="authenticated && !user.isEditorOrMore()">
+            <span class="btn btn-default btn-static dropdown-toggle">
+              <span ng-if="user.name && user.surname">{{user.name}} {{user.surname}}</span>
+              <span ng-if="!user.name || !user.surname">{{user.username}}</span>
+            </span>
+          </div>
+
+          <!-- admin button-->
+          <div class="btn-group sxt-adminbtn pull-right"
+               ng-if="authenticated && user.isEditorOrMore()">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
               <span class="fa fa-cog"></span>&nbsp;
               <span translate class="hidden-sm hidden-xs">administration</span>&nbsp;
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
+              <li class="btn-static"><a>
+                <i class="fa fa-user"></i>&nbsp;
+                <span ng-if="user.name && user.surname">{{user.name}} {{user.surname}}</span>
+                <span ng-if="!user.name || !user.surname">{{user.username}}</span>
+                </a></li>
+              <li role="separator" class="divider"></li>
               <li data-ng-if="user.isAdministrator()"><a href="{{gnUrl}}admin.console">
                 <i class="fa fa-th"></i>&nbsp;<span translate>adminConsole</span></a></li>
               <li><a title="{{'adminConsole' | translate}}" href="{{gnUrl}}catalog.edit#/create" target="_blank">
