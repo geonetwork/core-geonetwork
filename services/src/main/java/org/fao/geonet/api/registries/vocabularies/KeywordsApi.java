@@ -173,6 +173,10 @@ public class KeywordsApi {
             required = false
         )
             String q,
+        @ApiParam(
+            value = "Query in that language",
+            required = false
+        )
         @RequestParam(
             value = "lang",
             defaultValue = "eng"
@@ -197,7 +201,7 @@ public class KeywordsApi {
         )
             int start,
         @ApiParam(
-                value = "Target langs",
+            value = "Return keyword information in one or more languages",
                 required = false
         )
         @RequestParam(
