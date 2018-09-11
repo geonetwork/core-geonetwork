@@ -1608,3 +1608,24 @@ ul.invalid {
 .btn-static {
   pointer-events: none;
 }
+
+// center modals vertically
+// from: https://stackoverflow.com/questions/18422223/bootstrap-3-modal-vertical-position-center
+.modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
