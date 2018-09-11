@@ -63,7 +63,7 @@ public class SearchUI implements Service {
         paramNames.add("wmsurl");
 
         String host = context.getHeaders().get("Host");
-        String referrer = context.getHeaders().get("Referrer");
+        String referrer = context.getHeaders().get("Referer");
         String ip = context.getIpAddress();
         for (String paramName: paramNames) {
             String param = Util.getParam(params, paramName, "");
