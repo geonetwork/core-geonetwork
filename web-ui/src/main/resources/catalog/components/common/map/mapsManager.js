@@ -170,11 +170,11 @@
             // SPECIFIC SEXTANT
             // keep backwards compat with these params
             if (gnViewerSettings.owscontext) {
+              console.warn('Url parameter usage "catalog.search?owscontext" is deprecated.\nPlease use catalog.search#/map?owscontext= instead.');
               mapParams.owscontext = gnViewerSettings.owscontext;
-              alert('Url parameters for owscontext is deprecated.\nPlease use catalog.search#/map?owscontext= instead of catalog.search?owscontext=#/map');
             }
             if (gnViewerSettings.wmsurl && gnViewerSettings.layername) {
-              alert('Url parameters for layername is deprecated.\nPlease use catalog.search#/map?layername= instead of catalog.serach?layername=#/map');
+              console.warn('Url parameter usage "catalog.search?wmsurl=...&layername=..." is deprecated.\nPlease use catalog.search#/map?wmsurl=...&layername=... instead.');
               mapParams.wmsurl = gnViewerSettings.wmsurl;
               mapParams.layername = gnViewerSettings.layername;
               mapParams.layergroup = gnViewerSettings.layergroup;

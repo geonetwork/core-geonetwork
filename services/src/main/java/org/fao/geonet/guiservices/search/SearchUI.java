@@ -63,10 +63,13 @@ public class SearchUI implements Service {
         paramNames.add("wmsurl");
 
         String host = context.getHeaders().get("Host");
+        String referrer = context.getHeaders().get("Referrer");
+        String ip = context.getIpAddress();
         for (String paramName: paramNames) {
             String param = Util.getParam(params, paramName, "");
             if(param.length() > 0) {
-                Log.info("jeeves.request", "### Usage of deprecated url param `" + paramName + "` for " + host);
+                Log.info("jeeves.request", "### Usage of deprecated url param `" + paramName + "`" +
+                        " for referrer: " + referrer + ", host: " + host + ", ip: " + ip);
             }
         }
         return new Element("root");
