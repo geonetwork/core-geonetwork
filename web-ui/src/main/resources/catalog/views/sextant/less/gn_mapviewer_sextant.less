@@ -269,6 +269,8 @@
   .search-container {
     top: @sxt-vieweritem-top;
     right: 1.8em;
+    bottom: 2.85em;
+    margin: 0px;
     input {
       height: 3em;
       border-radius: 0;
@@ -280,6 +282,9 @@
     }
     .dropdown-menu {
       border-radius: 0;
+      max-height: ~"calc(100% - 3em)";
+      overflow-y: auto;
+      top: 3em;
       li {
         border-radius: 0;
         border-left: 0;
