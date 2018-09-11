@@ -275,16 +275,18 @@
                 scope.ncTime.value = moment(new Date(ncInfo.time.values[0])).format('DD-MM-YYYY');
               }
               else {
+                scope.params.TIME = timeMin + '/' + timeMax;
+                scope.params.TIMEUNIT = ncInfo.time.units;
+
                 var time = scope.layer.get('time');
                 if (time) {
                   var range = time.values[0];
+                  scope.params.TIME = range;
                   if (angular.isString(range)) {
                     scope.timeRange = range.replace('/', time.units + ' / ')
                       + time.units;
                   }
                 }
-                scope.params.TIME = timeMin + '/' + timeMax;
-                scope.params.TIMEUNIT = ncInfo.time.units;
 
                 // display combo
                 scope.ctrl.useComboForTime = true;
