@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<labels xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+  <!-- ==================================================== -->
+  <element name="simpledc">
+    <label>Metadata</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:title">
+    <label>Title</label>
+    <description>A name given to the resource. Typically, Title will be a name by which the resource
+      is formally known.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:creator">
+    <label>Creator</label>
+    <description>An entity primarily responsible for making the content of the resource.
+    </description>
+    <example>Examples of Creator include a person, an organization, or a service. Typically, the
+      name of a Creator should be used to indicate the entity.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:subject">
+    <label>Subject and Keywords</label>
+    <btnClass>fa fa-tag</btnClass>
+    <btnLabel>Add keyword</btnLabel>
+    <description>A topic of the content of the resource. Typically, Subject will be expressed as
+      keywords, key phrases, or classification codes that describe a topic of the resource.
+    </description>
+    <example>Recommended best practice is to select a value from a controlled vocabulary or formal
+      classification scheme.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:description">
+    <label>Description</label>
+    <description>An account of the content of the resource.</description>
+    <example>Examples of Description include, but are not limited to, an abstract, table of
+      contents, reference to a graphical representation of content, or free-text account of the
+      content.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:publisher">
+    <label>Publisher</label>
+    <description>An entity responsible for making the resource available.</description>
+    <example>Examples of Publisher include a person, an organization, or a service. Typically, the
+      name of a Publisher should be used to indicate the entity.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:contributor">
+    <label>Contributor</label>
+    <description>An entity responsible for making contributions to the content of the resource.
+    </description>
+    <example>Examples of Contributor include a person, an organization, or a service. Typically, the
+      name of a Contributor should be used to indicate the entity.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:date">
+    <label>Date</label>
+    <description>A date of an event in the lifecycle of the resource. Typically, Date will be
+      associated with the creation or availability of the resource.
+    </description>
+    <example>Recommended best practice for encoding the date value is defined in a profile of ISO
+      8601 and includes (among others) dates of the form YYYY-MM-DD.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:type">
+    <label>Resource Type</label>
+    <description>The nature or genre of the content of the resource. Type includes terms describing
+      general categories, functions, genres, or aggregation levels for content.
+    </description>
+    <example>Recommended best practice is to select a value from a controlled vocabulary (for
+      example, the DCMI Type Vocabulary). To describe the physical or digital manifestation of the
+      resource, use the Format element.
+    </example>
+    <helper>
+      <option value="dataset">Dataset</option>
+      <option value="service">Service</option>
+    </helper>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:format">
+    <label>Format</label>
+    <description>The physical or digital manifestation of the resource. Typically, Format will
+      include the media-type or dimensions of the resource. Format may be used to identify the
+      software, hardware, or other equipment needed to display or operate the resource.
+    </description>
+    <example>Examples of dimensions include size and duration. Recommended best practice is to
+      select a value from a controlled vocabulary (for example, the list of Internet Media Types
+      defining computer media formats).
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:identifier">
+    <label>Resource Identifier</label>
+    <description>An unambiguous reference to the resource within a given context.</description>
+    <example>Recommended best practice is to identify the resource by means of a string or number
+      conforming to a formal identification system. Formal identification systems include but are
+      not limited to the Uniform Resource Identifier (URI) (including the Uniform Resource Locator
+      (URL)), the Digital Object Identifier (DOI), and the International Standard Book Number
+      (ISBN).
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:source">
+    <label>Source</label>
+    <description>A Reference to a resource from which the present resource is derived. The present
+      resource may be derived from the Source resource in whole or in part.
+    </description>
+    <example>Recommended best practice is to identify the referenced resource by means of a string
+      or number conforming to a formal identification system.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:language">
+    <label>Language</label>
+    <description>A language of the intellectual content of the resource. Recommended best practice
+      is to use RFC 3066, which, in conjunction with ISO 639, defines two- and three-letter primary
+      language tags with optional subtags.
+    </description>
+    <example>Examples include "en" or "eng" for English, "akk" for Akkadian, and "en-GB" for English
+      used in the United Kingdom.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:relation">
+    <label>Relation</label>
+    <description>A reference to a related resource.</description>
+    <example>Recommended best practice is to identify the referenced resource by means of a string
+      or number conforming to a formal identification system.
+    </example>
+  </element>
+  <element name="dc:URI">
+    <label>URI</label>
+    <description/>
+    <example/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:coverage">
+    <label>Coverage</label>
+    <description>The extent or scope of the content of the resource. Typically, Coverage will
+      include spatial location (a place name or geographic coordinates), temporal period (a period
+      label, date, or date range), or jurisdiction (such as a named administrative entity).
+    </description>
+    <example>For example: "North 90, South -90, East 180, West -180. Global".
+      Recommended best practice is to select a value from a controlled vocabulary (for example, the
+      Thesaurus of Geographic Names [TGN]) and to use, where appropriate, named places or time
+      periods in preference to numeric identifiers such as sets of coordinates or date ranges.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:rights">
+    <label>Rights Management</label>
+    <description>Information about rights held in and over the resource.</description>
+    <example>Typically, Rights will contain a rights management statement for the resource, or
+      reference a service providing such information. Rights information often encompasses
+      Intellectual Property Rights (IPR), Copyright, and various Property Rights. If the Rights
+      element is absent, no assumptions may be made about any rights held in or over the resource.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:modified">
+    <label>Date Modified</label>
+    <description>Data metadata was modified</description>
+  </element>
+  <element name="dct:created">
+    <label>Date Created</label>
+    <description>Date of creation of the resource.</description>
+  </element>
+  <element name="dct:dateSubmitted">
+    <label>Date Submitted</label>
+    <description>Date of submission of the resource</description>
+    <example>Examples of resources to which a Date Submitted may be relevant are a thesis (submitted
+      to a university department) or an article (submitted to a journal).
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:abstract">
+    <label>Abstract</label>
+    <description>A summary of the content of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:spatial">
+    <label>Spatial</label>
+    <description>Spatial characteristics of the intellectual content of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:audience">
+    <label>Audience</label>
+    <description>A class of entity for whom the resource is intended or useful.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualMethod">
+    <label>Accrual Method</label>
+    <description>The method by which items are added to a collection.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPeriodicity">
+    <label>Accrual Periodicity</label>
+    <description>The frequency with which items are added to a collection.</description>
+    <helper>
+      <option value="continual">Continual</option>
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="fortnightly">Fortnightly</option>
+      <option value="monthly">Monthly</option>
+      <option value="quarterly">Quarterly</option>
+      <option value="biannually">Biannually</option>
+      <option value="annually">Annually</option>
+      <option value="asNeeded">As needed</option>
+      <option value="irregular">Irregular</option>
+      <option value="notPlanned">Not planned</option>
+      <option value="unknown">Unknown</option>
+    </helper>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPolicy">
+    <label>Accrual Policy</label>
+    <description>The policy governing the addition of items to a collection.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:instructionalMethod">
+    <label>Instructional Method</label>
+    <description>A process, used to engender knowledge, attitudes and skills, that the resource is
+      designed to support.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:provenance">
+    <label>Provenance</label>
+    <description>A statement of any changes in ownership and custody of the resource since its
+      creation that are significant for its authenticity, integrity and interpretation.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:rightsHolder">
+    <label>Rights Holder</label>
+    <description>A person or organization owning or managing rights over the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isPartOf">
+    <label>Is part of</label>
+    <description>A related resource in which the described resource is physically or logically
+      included.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:references">
+    <label>Related resource</label>
+    <description>A related resource that is referenced, cited, or otherwise pointed to by the
+      described resource.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accessRights">
+    <label>Access Rights</label>
+    <description>Information about who can access the resource or an indication of its security
+      status.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:alternative">
+    <label>Alternative Title</label>
+    <description>An alternative name for the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:bibliographicCitation">
+    <label>Bibliographic Citation</label>
+    <description>A bibliographic reference for the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:conformsTo">
+    <label>Conforms To</label>
+    <description>An established standard to which the described resource conforms.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:dateAccepted">
+    <label>Date Accepted</label>
+    <description>Date of acceptance of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:dateCopyrighted">
+    <label>Date Copyrighted</label>
+    <description>Date of copyright.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:educationLevel">
+    <label>Audience Education Level</label>
+    <description>A class of entity, defined in terms of progression through an educational or
+      training context, for which the described resource is intended.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:extent">
+    <label>Extent</label>
+    <description>The size or duration of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasFormat">
+    <label>Has Format</label>
+    <description>A related resource that is substantially the same as the pre-existing described
+      resource, but in another format.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasPart">
+    <label>Has Part</label>
+    <description>A related resource that is included either physically or logically in the described
+      resource.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasVersion">
+    <label>Has Version</label>
+    <description>A related resource that is a version, edition, or adaptation of the described
+      resource.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isFormatOf">
+    <label>Is Format Of</label>
+    <description>A related resource that is substantially the same as the described resource, but in
+      another format.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isReferencedBy">
+    <label>Is Referenced By</label>
+    <description>A related resource that references, cites, or otherwise points to the described
+      resource.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isReplacedBy">
+    <label>Is Replaced By</label>
+    <description>A related resource that supplants, displaces, or supersedes the described
+      resource.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isRequiredBy">
+    <label>Is Required By</label>
+    <description>A related resource that requires the described resource to support its function,
+      delivery, or coherence.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isVersionOf">
+    <label>Is Version Of</label>
+    <description>A related resource of which the described resource is a version, edition, or
+      adaptation.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:issued">
+    <label>Date Issued</label>
+    <description>Date of formal issuance (e.g., publication) of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:license">
+    <label>License</label>
+    <description>A legal document giving official permission to do something with the resource.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:mediator">
+    <label>Mediator</label>
+    <description>An entity that mediates access to the resource and for whom the resource is
+      intended or useful.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:medium">
+    <label>Medium</label>
+    <description>The material or physical carrier of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:replaces">
+    <label>Replaces</label>
+    <description>A related resource that is supplanted, displaced, or superseded by the described
+      resource.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:requires">
+    <label>Requires</label>
+    <description>A related resource that is required by the described resource to support its
+      function, delivery, or coherence.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:tableOfContents">
+    <label>Table Of Contents</label>
+    <description>A list of subunits of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:temporal">
+    <label>Temporal Coverage</label>
+    <description>Temporal characteristics of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:valid">
+    <label>Date Valid</label>
+    <description>Date (often a range) of validity of a resource.</description>
+  </element>
+  <!-- ==================================================== -->
+</labels>

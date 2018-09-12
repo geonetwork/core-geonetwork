@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<labels xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows"
+        xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct="http://purl.org/dc/terms/">
+  <!-- ==================================================== -->
+  <element name="csw:Record">
+    <label>Metadata</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:title">
+    <label>Title</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:creator">
+    <label>Creator</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:subject">
+    <label>Subject and Keywords</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:description">
+    <label>Description</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:publisher">
+    <label>Publisher</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:contributor">
+    <label>Contributor</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:date">
+    <label>Date</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:type">
+    <label>Resource Type</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:format">
+    <label>Format</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:identifier">
+    <label>Resource Identifier</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:source">
+    <label>Source</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:language">
+    <label>Language</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:relation">
+    <label>Relation</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:coverage">
+    <label>Coverage</label>
+    <description>For example: "North 90, South -90, East 180, West -180. Global"</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:rights">
+    <label>Rights Management</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:modified">
+    <label>Date Modified</label>
+    <description>Data metadata was modified</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:abstract">
+    <label>Abstract</label>
+    <description>A summary of the content of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:spatial">
+    <label>Spatial</label>
+    <description>Spatial characteristics of the intellectual content of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:audience">
+    <label>Audience</label>
+    <description>A class of entity for whom the resource is intended or useful.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualMethod">
+    <label>Accrual Method</label>
+    <description>The method by which items are added to a collection.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPeriodicity">
+    <label>Accrual Periodicity</label>
+    <description>The frequency with which items are added to a collection.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPolicy">
+    <label>Accrual Policy</label>
+    <description>The policy governing the addition of items to a collection.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:instructionalMethod">
+    <label>Instructional Method</label>
+    <description>A process, used to engender knowledge, attitudes and skills, that the resource is
+      designed to support.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:provenance">
+    <label>Provenance</label>
+    <description>A statement of any changes in ownership and custody of the resource since its
+      creation that are significant for its authenticity, integrity and interpretation.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:rightsHolder">
+    <label>Rights Holder</label>
+    <description>A person or organization owning or managing rights over the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="ows:BoundingBox">
+    <label>Bounding box</label>
+  </element>
+  <element name="ows:UpperCorner">
+    <label>Upper corner</label>
+  </element>
+  <element name="ows:LowerCorner">
+    <label>Lower corner</label>
+  </element>
+  <element name="crs">
+    <label>CRS</label>
+  </element>
+</labels>
