@@ -110,6 +110,25 @@ public class StandardsApi implements ApplicationContextAware {
         return schemaList;
     }
 
+    @ApiOperation(value = "Reload standards",
+        nickname = "reloadStandards")
+    @RequestMapping(
+        value = "/reload",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Standards reloaded.")
+    })
+    void reloadSchema() throws Exception {
+        Set<String> schemaIds = schemaManager.getSchemas();
+        schemaIds.stream().forEach(id -> schemaManager.reloadSchema(id));
+    }
+
     @ApiOperation(value = "Get batch editor configuration for standards",
         nickname = "getBatchConfigurations")
     @RequestMapping(value = "/batchconfiguration",

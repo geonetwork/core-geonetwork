@@ -1012,6 +1012,19 @@ public class SchemaManager {
     }
 
     /**
+     * Reload a schema.
+     *
+     * Compile validation rules (conversion from SCH to XSL).
+     *
+     * @param schemaIdentifier The schema identifier.
+     */
+    public void reloadSchema(String schemaIdentifier) {
+        MetadataSchema metadataSchema = this.getSchema(schemaIdentifier);
+        metadataSchema.loadSchematronRules(basePath);
+    }
+
+
+    /**
      * Read the elements from the schema plugins catalog for use by other methods.
      */
     private Element getSchemaPluginCatalog() throws Exception {
