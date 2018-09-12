@@ -883,7 +883,7 @@
                 }
               }
               
-              url = getCapLayer.url || url;
+              url = url || getCapLayer.url;
               if(getCapLayer.useProxy 
                   && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
                 url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
