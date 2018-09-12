@@ -54,6 +54,8 @@ public class XsltResponseWriter {
             url.substring(0, url.length() - 1)
         ));
         gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
+        gui.addContent(new Element("baseUrl").setText(settingManager.getBaseURL()));
+        gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
         // TODO: set language based on header
         gui.addContent(new Element("language").setText("eng"));
 

@@ -75,6 +75,8 @@ public class XsltFormatter implements FormatterImpl {
         Element gui = new Element("gui");
         gui.addContent(new Element("url").setText(fparams.url + "../.."));
         gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
+        gui.addContent(new Element("baseUrl").setText(settingManager.getBaseURL()));
+        gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
         gui.addContent(new Element("language").setText(fparams.context.getLanguage()));
         gui.addContent(new Element("reqService").setText("md.format.html"));
         Element env = new Element("systemConfig");
