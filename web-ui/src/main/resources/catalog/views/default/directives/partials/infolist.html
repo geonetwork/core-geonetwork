@@ -2,8 +2,6 @@
   <li
     data-ng-repeat="md in searchResults.records"
     data-ng-click="openRecord($index, md, searchResults.records)"
-    data-ng-mouseenter="showMore(true)"
-    data-ng-mouseleave="showMore(false)"
     id="gn-info-list-mw-{{md.getUuid()}}">
     <section class="resultcard clearfix"
              data-ng-class="md.getThumbnails().list[0].url ? 'hasThumbnail' : 'noThumbnail'">
