@@ -171,8 +171,8 @@
 
       <tabset id="info-tabset pull-left" type="pills" justified="false">
         <tab heading="{{'lastRecords' | translate}}"
-              role="tab"
-              active="infoTabs.lastRecords.active">
+             role="tab"
+             active="infoTabs.lastRecords.active">
           <form class="form-horizontal"
                 role="form"
                 data-ng-controller="gnsSearchLatestController"
@@ -185,8 +185,8 @@
           </form>
         </tab>
         <tab heading="{{'preferredRecords' | translate}}"
-              role="tab"
-              active="infoTabs.preferredRecords.active">
+             role="tab"
+             active="infoTabs.preferredRecords.active">
           <form class="form-horizontal"
                 role="form"
                 data-ng-controller="gnsSearchPopularController"
@@ -195,6 +195,15 @@
                 data-ng-show="searchResults.records.length > 0">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div data-gn-info-list=""></div>
+          </form>
+        </tab>
+        <tab heading="{{'Comments' | translate}}"
+             data-ng-if="isUserFeedbackEnabled"
+             active="infoTabs.commentsalt.active"
+             role="tab">
+          <form class="form-horizontal">
+            <div class="data-gn-userfeedbacklasthome"
+                  data-nb-of-comments="10"></div>
           </form>
         </tab>
       </tabset>

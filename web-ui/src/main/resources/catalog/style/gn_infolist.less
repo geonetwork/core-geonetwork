@@ -19,64 +19,62 @@
     float: left;
     padding: 10px;
     cursor: pointer;
-  }
-
-  // info lists
-  // 
-  // ----- general
-  .resultcard {
-    padding: 0 0 10px 0;
-    background: transparent;
-    .title {
-      min-height: 40%;
-      padding: 10px;
-      h4 {
-        font-size: 16px;
-        margin: 0;
+    // info lists
+    // 
+    // ----- general
+    .resultcard {
+      padding: 0 0 10px 0;
+      .title {
+        min-height: 40%;
+        padding: 10px;
+        h4 {
+          font-size: 16px;
+          margin: 0;
+        }
+      }
+      .abstract {
+        overflow: auto;
+        padding: 0 10px 0 10px;
+        height: 60%;
+      }
+      .gn-md-thumbnail {
+        display: none;
+        float: left;
+        width: 150px;
+        height: 150px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        .gn-img-thumbnail {
+          width: 100%;
+          height: 100%;
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: cover;
+          filter: grayscale(100%);
+        }
       }
     }
-    .abstract {
-      overflow: auto;
-      padding: 0 10px 0 10px;
-      height: 60%;
-    }
-    .gn-md-thumbnail {
-      display: none;
-      float: left;
-      width: 150px;
-      height: 150px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      .gn-img-thumbnail {
-        width: 100%;
-        height: 100%;
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: cover;
-        filter: grayscale(100%); /* Current draft standard */
+    .noThumbnail {
+      // display icon when there is no thumbnail
+      .gn-img-thumbnail:after {
+        content: "\f03e"; 
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        position: absolute;
+        font-size: 46px;
+        color: #eaeaea;
+        top: 50%;
+        left: 50%;
+        margin: -32px 0 0 -23px;
+        z-index: 1;
       }
     }
-  }
-  .noThumbnail {
-    // display icon when there is no thumbnail
-    .gn-img-thumbnail:after {
-      content: "\f03e"; 
-      font-family: FontAwesome;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: inherit;
-      position: absolute;
-      font-size: 46px;
-      color: #eaeaea;
-      top: 50%;
-      left: 50%;
-      margin: -32px 0 0 -23px;
-      z-index: 1;
-    }
-  }
-  li:hover {
-    .title {
-      color: #000;
+    &:hover {
+      .title {
+        color: #000;
+      }
     }
   }
 }
@@ -94,13 +92,16 @@
           padding-left: 0;
         }
         .abstract {
-          max-height: 1.5em !important;
+          max-height: 1.5em;
           overflow: hidden;
           padding-left: 0;
         }
         .introduction {
           display: none;
         }
+      }
+      &:hover {
+        background-color: @list-group-hover-bg;
       }
     }
   }
@@ -119,7 +120,7 @@
           max-width: 70%
         }
         .abstract {
-          max-height: auto !important;
+          max-height: auto;
           max-height: 250px;
           padding-left: 0;
         }
@@ -137,10 +138,11 @@
           margin-right: 10px;
         }
       }
-      .resultcard.hasThumbnail {
-        &:hover {
+      &:hover {
+        background-color: @list-group-hover-bg;
+        .resultcard.hasThumbnail {
           .gn-img-thumbnail {
-            filter: none !important;
+            filter: none;
           }
         }
       }
@@ -153,6 +155,8 @@
     li {
       width: 33%;
       height: 250px;
+      transition: all 200ms ease-in;
+      transform: scale(1);
       .resultcard {
         .title {
           background: @gray-dark;
@@ -181,33 +185,27 @@
           display: block;
           width: 100%;
         }
-        &:hover {
+      }
+      .abstract {
+        display: none;
+      }
+      &:hover {
+        transition: all 200ms ease-in;
+        transform: scale(1.03);
+        .resultcard {
           .title {
             background: @gray-darker;
           }
         }
-      }
-      .resultcard.hasThumbnail {
-        &:hover {
+        .resultcard.hasThumbnail {
           .gn-img-thumbnail {
-            filter: none !important;
+            filter: none;
           }
         }
+        &:before {
+          content: "";
+        }
       }
-      .abstract {
-        display: none !important;
-      }
-    }
-    li:hover {
-      .resultcard {
-        transform: scale(1.05);
-        -webkit-transform: scale(1.05);
-        -moz-transform: scale(1.05);
-        transition: transform 0.15s ease-in-out;
-      }
-    }
-    li:hover:before {
-      content: "";
     }
   }
 }
