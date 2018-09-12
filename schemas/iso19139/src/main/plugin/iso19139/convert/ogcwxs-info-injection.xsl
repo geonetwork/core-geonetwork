@@ -95,6 +95,7 @@
   <xsl:variable name="serviceTitle"
                 select="$getCapabilities/(*/ows:ServiceIdentification/ows:Title|
                        */ows11:ServiceIdentification/ows11:Title|
+                       */ows2:ServiceIdentification/ows2:Title|
                        */wfs:Service/wfs:Title|
                        */wms:Service/wms:Title|
                        */Service/Title|
