@@ -77,7 +77,7 @@
                 for (var j = 0; j < op.parameter.length; j++) {
                   var f = op.parameter[j];
                   if (f.name == 'outputFormat') {
-                    if (capabilities.version=="2.0.0"){
+                    if (capabilities.version=="2.0.0") {
                       //wfs2 exposes outputformats in 'AllowedValues'
                       return f.allowedValues.valueOrRange.map(function(v) { return v.value; })
                     } else {
@@ -86,12 +86,11 @@
                   }
                 }
               } else {
-                if (capabilities.version=="2.0.0"){
+                if (capabilities.version=="2.0.0") {
                   return ["text/xml; subtype=gml/3.2"];
                 } else {
                   return ["text/xml; subtype=gml/3.1.1"];
                 }
-              }
               }
             }
           }
