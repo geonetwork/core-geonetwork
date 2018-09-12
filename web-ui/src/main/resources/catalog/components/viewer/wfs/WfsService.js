@@ -73,20 +73,25 @@
                i < capabilities.operationsMetadata.operation.length; i++) {
             var op = capabilities.operationsMetadata.operation[i];
             if (op.name == operation || op.name == 'GetFeature') {
-              for (var j = 0; j < op.parameter.length; j++) {
-                var f = op.parameter[j];
-                if (f.name == 'outputFormat') {
-                  if (capabilities.version=="2.0.0"){
-                    //wfs2 exposes outputformats in 'AllowedValues'
-                    var outFrmt = [];
-                    angular.forEach(f.allowedValues.valueOrRange,function(val) {
-                      outFrmt.push(val.value);
-                    });
-                    return outFrmt;
-                  } else {
-                    return f.value
+              if (op.parameter){
+                for (var j = 0; j < op.parameter.length; j++) {
+                  var f = op.parameter[j];
+                  if (f.name == 'outputFormat') {
+                    if (capabilities.version=="2.0.0"){
+                      //wfs2 exposes outputformats in 'AllowedValues'
+                      return f.allowedValues.valueOrRange.map(function(v) { return v.value; })
+                    } else {
+                      return f.value
+                    }
                   }
                 }
+              } else {
+                if (capabilities.version=="2.0.0"){
+                  return ["text/xml; subtype=gml/3.2"];
+                } else {
+                  return ["text/xml; subtype=gml/3.1.1"];
+                }
+              }
               }
             }
           }
@@ -132,6 +137,8 @@
           }
           url = gnOwsCapabilities.mergeParams(url, params);
           window.open(url);
+        } else {
+          console.warn('no url');
         }
       };
     }
