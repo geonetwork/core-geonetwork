@@ -44,7 +44,8 @@
     <property name="startsFromXMLConfigurationFile" value="false"/>
   </bean>
   <bean id="WFSFeatureIndexer"
-        class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer">
+        class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer"
+        scope="prototype">
     <property name="featureCommitInterval" value="300"/>
   </bean>
 
