@@ -433,12 +433,14 @@
             terms: {
               field: field.idxName,
               size: field.isDateTime ? MAX_ROWS :
-                      field.isTree ? FACET_TREE_ROWS : ROWS,
-
-              // Sextant: ignore empty strings
-              exclude : ''
+                    field.isTree ? FACET_TREE_ROWS : ROWS
             }
           };
+          if (!field.isDateTime) {
+            // Sextant: ignore empty strings
+            // include/exclude settings as they can only be applied to string fields
+            facetParams[field.idxName].terms['exclude'] = '';
+          }
         }
       }
       else {
