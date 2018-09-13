@@ -1523,6 +1523,11 @@ with the metadata identifier.
           ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="class" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Optional CSS class to add to the parent div element. eg. gn-required to show a *.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="btnLabel" type="xs:string">
         <xs:annotation>
           <xs:documentation>Optional label to be addded to the button.</xs:documentation>
