@@ -296,6 +296,7 @@
 
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
         <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
         <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
         <xsl:with-param name="directive" select="$directive"/>
@@ -432,6 +433,7 @@
     <xsl:param name="isMissingLabel" required="no"/>
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
     <xsl:param name="isAddAction" required="no" as="xs:boolean" select="false()"/>
+    <xsl:param name="class" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
@@ -449,7 +451,7 @@
                   select="$template/values/key[position() = 1]/@label"/>
 
     <div
-      class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
+      class="form-group gn-field gn-{$firstFieldKey} {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''} {$class}"
       id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}"
       data-gn-field-highlight="">
 
@@ -772,6 +774,7 @@
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
     <xsl:param name="isHidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="name" required="no" as="xs:string" select="''"/>
+    <xsl:param name="class" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
@@ -786,7 +789,7 @@
 
       <!-- This element is replaced by the content received when clicking add -->
       <div
-        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field {if ($isHidden) then 'hidden' else ''}"
+        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field {if ($isHidden) then 'hidden' else ''} {$class}"
         id="gn-el-{$id}"
         data-gn-cardinality="{$childEditInfo/@min}-{$childEditInfo/@max}"
         data-gn-field-highlight="">
