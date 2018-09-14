@@ -633,7 +633,7 @@ button.active [role=tooltip] {
 }
 
 [gn-share] {
-
+  .clearfix();
   @media (min-width: @screen-md) {
     min-width: 600px;
   }
@@ -642,12 +642,6 @@ button.active [role=tooltip] {
     max-width: 400px;
   }
   .gn-share-grid {
-    table {
-      width: auto;
-    }
-    thead, tbody {
-      display: block;
-    }
     tbody {
       max-height: 400px;
       overflow-y: auto;

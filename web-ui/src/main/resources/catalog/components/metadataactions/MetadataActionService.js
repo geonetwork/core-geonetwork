@@ -78,7 +78,7 @@
        * @param {string} eventName
        */
       var openModal = function(o, scope, eventName) {
-        var popup = gnPopup.create(o, scope);
+        var popup = gnPopup.createModal(o, scope);
         var myListener = $rootScope.$on(eventName,
             function(e, o) {
               $timeout(function() {
