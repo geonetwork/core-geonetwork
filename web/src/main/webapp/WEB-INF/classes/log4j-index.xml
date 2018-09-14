@@ -37,7 +37,7 @@
     <level value="WARN"/>
   </logger>
   <logger name="geonetwork.databasemigration">
-    <level value="WARN"/>
+    <level value="INFO"/>
   </logger>
   <logger name="geonetwork.schemamanager" additivity="false">
     <level value="WARN"/>
