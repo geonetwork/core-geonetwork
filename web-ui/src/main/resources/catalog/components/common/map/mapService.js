@@ -199,6 +199,12 @@
                   prop.projection = layerInfo.projection;
                 }
                 
+                if(layerInfo.attribution) {
+                  prop.attributions = [
+                    new ol.Attribution({"html": layerInfo.attribution})
+                  ]
+                }
+                
                 defer.resolve(new ol.layer.Tile({
                   source: new ol.source.XYZ(prop),
                   title: layerInfo.title || 'TMS Layer'
@@ -244,6 +250,11 @@
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
                       }
+                      
+                      if(layerInfo.attribution) {
+                        layer.getSource().setAttributions(layerInfo.attribution);
+                      }
+                      
                       defer.resolve(layer);
                     });
                 break;
@@ -262,6 +273,11 @@
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
                       }
+                      
+                      if(layerInfo.attribution) {
+                        layer.getSource().setAttributions(layerInfo.attribution);
+                      }
+                      
                       defer.resolve(layer);
                     });
                 break;
