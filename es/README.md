@@ -25,9 +25,9 @@ Use the following commands:
 cd es
 mvn install -Pes-download
 mvn exec:exec -Des-start
-curl -X PUT http://localhost:9200/features -d @config/features.json
-curl -X PUT http://localhost:9200/records -d @config/records.json
-curl -X PUT http://localhost:9200/searchlogs -d @config/searchlogs.json
+curl -X PUT http://localhost:9200/features -H "Content-Type:application/json" -d @config/features.json
+curl -X PUT http://localhost:9200/records -H "Content-Type:application/json"  -d @config/records.json
+curl -X PUT http://localhost:9200/searchlogs -H "Content-Type:application/json"  -d @config/searchlogs.json
 ```
 
 To delete your index:
