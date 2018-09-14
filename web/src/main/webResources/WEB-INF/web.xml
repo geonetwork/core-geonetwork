@@ -23,10 +23,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://java.sun.com/xml/ns/javaee"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5"
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	     http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	     version="3.0"
          metadata-complete="true">
 
   <display-name>geonetwork</display-name>
@@ -465,7 +466,12 @@
 
   <session-config>
     <session-timeout>${sessionTimeout}</session-timeout>
-  </session-config>
+    <cookie-config>
+      <http-only>true</http-only>
+      <!-- Uncomment if using https -->
+      <!--<secure>true</secure>-->
+    </cookie-config>
+ </session-config>
 
   <context-param>
     <param-name>spring.profiles.active</param-name>
