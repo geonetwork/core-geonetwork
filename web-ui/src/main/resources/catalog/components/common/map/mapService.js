@@ -680,9 +680,9 @@
               });
             }
 
-            if(layerParams.useProxy 
+            if(layerParams.useProxy
                 && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-              options.url = gnGlobalSettings.proxyUrl 
+              options.url = gnGlobalSettings.proxyUrl
                               + encodeURIComponent(options.url);
             }
 
@@ -882,8 +882,12 @@
                   }
                 }
               }
-              
+    
               url = getCapLayer.url || url;
+              if (url.slice(-1) === '?') {
+                url = url.substring(0, url.length-1);
+              }
+
               if(getCapLayer.useProxy 
                   && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
                 url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
@@ -1058,22 +1062,22 @@
 
 
               var vectorFormat = null;
-              
+
               if(getCapLayer.version == '1.0.0') {
-                vectorFormat = new ol.format.WFS( 
+                vectorFormat = new ol.format.WFS(
                 {
                     gmlFormat : new ol.format.GML2({
                         featureNS: getCapLayer.name.prefix,
                         featureType: getCapLayer.name.localPart,
                         srsName: map.getView().getProjection().getCode()
-                      }) 
+                      })
                   }
                );
               } else {
                   //Default format
                   var vectorFormat = new ol.format.WFS();
               }
-              
+
               var vectorSource = new ol.source.Vector({
                 format: vectorFormat,
                 loader: function(extent, resolution, projection) {
@@ -1094,7 +1098,7 @@
                         bbox: extent.join(','),
                         typename: getCapLayer.name.prefix + ':' +
                                    getCapLayer.name.localPart}));
-                  
+
                   //Fix, ArcGIS fails if there is a bbox:
                   if(getCapLayer.version == '1.1.0') {
                     urlGetFeature = gnUrlUtils.append(parts[0],
@@ -1106,13 +1110,13 @@
                           typename: getCapLayer.name.prefix + ':' +
                                      getCapLayer.name.localPart}));
                   }
-                  
 
-                  
+
+
                   //If this goes through the proxy, don't remove parameters
-                  if(getCapLayer.useProxy 
+                  if(getCapLayer.useProxy
                       && urlGetFeature.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-                    urlGetFeature = gnGlobalSettings.proxyUrl 
+                    urlGetFeature = gnGlobalSettings.proxyUrl
                                         + encodeURIComponent(urlGetFeature);
                   }
 
@@ -1263,7 +1267,7 @@
           addWmsFromScratch: function(map, url, name, createOnly, md, version) {
             var defer = $q.defer();
             var $this = this;
-            
+
             if (!isLayerInMap(map, name, url)) {
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
@@ -1308,7 +1312,7 @@
                   o.layer = olL;
                   defer.reject(o);
                 } else {
-                	
+
                   //check if proxy is needed
                   var _url = url.split('/');
                   _url = _url[0] + '/' + _url[1] + '/' + _url[2] + '/';
