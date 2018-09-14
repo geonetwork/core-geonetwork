@@ -35,12 +35,22 @@ import io.searchbox.core.DeleteByQuery;
 import io.searchbox.core.Index;
 import io.searchbox.indices.Analyze;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.nio.conn.SchemeIOSessionStrategy;
+import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -56,7 +66,11 @@ public class EsClient implements InitializingBean {
 
     @Value("${es.url}")
     private String serverUrl;
+
+    @Value("${es.username}")
     private String username;
+
+    @Value("${es.password}")
     private String password;
 
     private boolean activated = false;
@@ -74,11 +88,35 @@ public class EsClient implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         if (StringUtils.isNotEmpty(serverUrl)) {
             JestClientFactory factory = new JestClientFactory();
-            factory.setHttpClientConfig(new HttpClientConfig
-                .Builder(this.serverUrl)
-                .multiThreaded(true)
-                .readTimeout(-1)
-                .build());
+
+            if (serverUrl.startsWith("https://")) {
+                SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
+                    null, new TrustStrategy() {
+                        public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                            return true;
+                        }
+                    }).build();
+                // skip hostname checks
+                HostnameVerifier hostnameVerifier = NoopHostnameVerifier.INSTANCE;
+
+
+                SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+                SchemeIOSessionStrategy httpsIOSessionStrategy = new SSLIOSessionStrategy(sslContext, hostnameVerifier);
+                factory.setHttpClientConfig(new HttpClientConfig
+                    .Builder(this.serverUrl)
+                    .defaultCredentials(username, password)
+                    .multiThreaded(true)
+                    .sslSocketFactory(sslSocketFactory) // this only affects sync calls
+                    .httpsIOSessionStrategy(httpsIOSessionStrategy) // this only affects async calls
+                    .readTimeout(-1)
+                    .build());
+            } else {
+                factory.setHttpClientConfig(new HttpClientConfig
+                    .Builder(this.serverUrl)
+                    .multiThreaded(true)
+                    .readTimeout(-1)
+                    .build());
+            }
             client = factory.getObject();
 //            Depends on java.lang.NoSuchFieldError: LUCENE_5_2_1
 //            client = new PreBuiltTransportClient(Settings.EMPTY)
