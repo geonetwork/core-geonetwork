@@ -189,11 +189,18 @@
                 }));
                 break;
 
-              case 'tms':
+              case 'tms':            
+                var prop = { 
+                  // Settings are usually encoded
+                    url: decodeURI(layerInfo.url)
+                };
+                
+                if(layerInfo.projection) {
+                  prop.projection = layerInfo.projection;
+                }
+                
                 defer.resolve(new ol.layer.Tile({
-                  source: new ol.source.XYZ({
-                        url: layerInfo.url
-                  }),
+                  source: new ol.source.XYZ(prop),
                   title: layerInfo.title || 'TMS Layer'
                 }));
                 break;
