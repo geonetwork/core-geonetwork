@@ -70,6 +70,25 @@
         $scope.selectedGroups = [];
         $scope.columns = [];
 
+
+        var filter = [];
+        if ($scope.params.any != '') {
+          filter.push('{"match": {"resourceTitle": {' +
+            '"query": "' + $scope.params.any + '", ' +
+            '"zero_terms_query": "all", "fuzziness": "auto"}}}');
+        }
+        if ($scope.params.group != '') {
+          filter.push('{"term": {"groupPublished": "' + $scope.params.group + '"}}');
+          // Add the group filtered to the table column
+          for (var i = 0; i < $scope.groups.length; i++) {
+            if ($scope.groups[i].name === $scope.params.group) {
+              $scope.groups[i].selected = true;
+              break;
+            }
+          }
+        }
+
+
         for (var i = 0; i < $scope.operations.length; i++) {
           var o = $scope.operations[i];
           if (o.selected === true) {
@@ -102,31 +121,22 @@
         }
 
 
-        var filter = [];
-        if ($scope.params.any != '') {
-          filter.push('{"match": {"resourceTitle": {' +
-            '"query": "' + $scope.params.any + '", ' +
-            '"zero_terms_query": "all", "fuzziness": "auto"}}}');
-        }
-        if ($scope.params.group != '') {
-          filter.push('{"term": {"groupPublished": "' + $scope.params.group + '"}}');
-        }
         var query = '{' +
-            '  "sort" : [{"resourceTitle.keyword": "asc"}],' +
-            '  "query": {' +
-            '    "bool": {' +
-            '      "must": [' +
-            (filter.length > 0 ? filter.join(',') : '{"match_all": {}}') +
-            '      ]' +
-            '    }' +
-            '  },'
-            '  "from": 0,' +
-            '  "size": ' + $scope.size + ',' +
-            '  "_source": "resourceTitle", ' +
-            '  "script_fields": {' +
-            scriptFields.join(',') +
-            '  }' +
-            '}';
+          '  "sort" : [{"resourceTitle.keyword": "asc"}],' +
+          '  "query": {' +
+          '    "bool": {' +
+          '      "must": [' +
+          (filter.length > 0 ? filter.join(',') : '{"match_all": {}}') +
+          '      ]' +
+          '    }' +
+          '  },' +
+          '  "from": 0,' +
+          '  "size": ' + $scope.size + ',' +
+          '  "_source": "resourceTitle", ' +
+          '  "script_fields": {' +
+          scriptFields.join(',') +
+          '  }' +
+          '}';
 
         $http.post('../../index/records/_search', query, {
           headers: {'Content-type': 'application/json'}
