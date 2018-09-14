@@ -1331,9 +1331,10 @@
                    if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
-                  <!-- Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                  <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
+                        but this will make the XSLT formatter fails. Using // to access the element in both case. -->
                   <key label="beginPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
@@ -1342,7 +1343,7 @@
 
                   </key>
                   <key label="endPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
