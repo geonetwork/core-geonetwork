@@ -72,6 +72,9 @@
         <oneRunOnly>
           <xsl:value-of select="$opt/oneRunOnly/value"/>
         </oneRunOnly>
+        <overrideUuid>
+          <xsl:value-of select="$opt/overrideUUID/value"/>
+        </overrideUuid>
         <status>
           <xsl:value-of select="$opt/status/value"/>
         </status>

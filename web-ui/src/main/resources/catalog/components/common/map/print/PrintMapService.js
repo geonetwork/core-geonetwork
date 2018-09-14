@@ -38,7 +38,7 @@
     var DPI = 72;
     var MM_PER_INCHES = 25.4;
     var UNITS_RATIO = 39.37;
-    var METERS_PER_DEGREE = 222638.98158654716;
+    var METERS_PER_DEGREE = 111319.49079327358;
 
     /**
      * Get the map coordinates of the center of the given print rectangle.
@@ -222,7 +222,7 @@
           });
           return enc;
         },
-        'WMS': function(layer, config) {
+        'WMS': function(layer, config, proj) {
           var enc = self.encoders.
               layers['Layer'].call(this, layer);
           var params = layer.getSource().getParams();
@@ -243,7 +243,7 @@
             customParams: {
               'EXCEPTIONS': 'XML',
               'TRANSPARENT': 'true',
-              'CRS': 'EPSG:3857',
+              'CRS': proj.getCode(),
               'TIME': params.TIME
             },
             singleTile: config.singleTile || false
@@ -268,6 +268,31 @@
           });
           return enc;
         },
+        'XYZ': function(layer, config) {
+          var enc = self.encoders.
+              layers['Layer'].call(this, layer);
+          var url = layer.getSource().getUrls()[0];
+          //Remove the XYZ and extension parts of the URL
+          if(url.indexOf("{z}") > 0) {
+            url = url.substring(0, url.indexOf("{z}"));
+            //Remove last "/"
+            url = url.substring(0, url.lastIndexOf("/"));
+          }
+          angular.extend(enc, {
+            type: 'XYZ',
+            extension: 'png',
+            baseURL: url,
+            // Hack to return an extent for the base
+            // layer in case of undefined
+            maxExtent: layer.getExtent() ||
+                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            resolutions: layer.getSource().getTileGrid().getResolutions(),
+            tileSize: [
+              layer.getSource().getTileGrid().getTileSize(),
+              layer.getSource().getTileGrid().getTileSize()]
+          });
+          return enc;
+        },
         'Bing': function(layer, config) {
           var enc = self.encoders.
               layers['Layer'].call(this, layer);
@@ -286,7 +311,25 @@
           });
           return enc;
         },
-        'WMTS': function(layer, config) {
+        'MapQuest': function(layer, config) {
+          var enc = self.encoders.
+              layers['Layer'].call(this, layer);
+          angular.extend(enc, {
+            type: 'OSM',
+            baseURL: 'http://otile1-s.mqcdn.com/tiles/1.0.0/osm',
+            extension: 'png',
+            // Hack to return an extent for the base
+            // layer in case of undefined
+            maxExtent: layer.getExtent() ||
+                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            resolutions: layer.getSource().tileGrid.getResolutions(),
+            tileSize: [
+              layer.getSource().tileGrid.getTileSize(),
+              layer.getSource().tileGrid.getTileSize()]
+          });
+          return enc;
+        },
+        'WMTS': function(layer, config, proj) {
           // sextant specific
           var enc = self.encoders.layers['Layer'].
               call(this, layer);
@@ -294,9 +337,10 @@
           var tileGrid = source.getTileGrid();
           var matrixSet = source.getMatrixSet();
           var matrixIds = new Array(tileGrid.getResolutions().length);
+          var layerUrl = layer.get('url');
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
-            var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
-                getExtent()) /tileGrid.getTileSize()) /
+            var mSize = (ol.extent.getWidth(proj.getExtent()) /
+                tileGrid.getTileSize()) /
                 tileGrid.getResolutions()[z];
                 matrixIds[z] = {
                   identifier: tileGrid.getMatrixIds()[z],
@@ -307,12 +351,27 @@
                 };
           }
 
+          // workaround for Mapfish v2.1.2 with REST and matrixIds
+          if (matrixIds.length > 0) {
+            if (/{style}/ig.test(decodeURI(layerUrl))) {
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{style}/ig,
+                  source.getStyle()));
+            }
+            if (/layer/ig.test(decodeURI(layerUrl))) {
+              layerUrl = encodeURI(decodeURI(layerUrl).replace(/{layer}/ig,
+                  source.getLayer()));
+            }
+          }
+
           angular.extend(enc, {
             type: 'WMTS',
-            baseURL: layer.get('url'),
+            baseURL: layerUrl,
             layer: source.getLayer(),
             version: source.getVersion(),
-            requestEncoding: 'KVP',
+            requestEncoding: source.getRequestEncoding() || 'KVP',
+            // Dimensions is not a mandatory parameter
+            // but it is required by Mapfish v2.1.2 if requestEncoding is REST
+            dimensions: [],
             format: source.getFormat(),
             style: source.getStyle(),
             matrixSet: matrixSet,

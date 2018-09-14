@@ -34,7 +34,7 @@
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
 
-    <service name="thesaurus.upload">
+    <service name="thesaurus.upload" deprecated="true" >
       <documentation><![CDATA[
         Upload a new thesaurus.
         ]]></documentation>
@@ -42,7 +42,7 @@
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
 
-    <service name="thesaurus.download">
+    <service name="thesaurus.download" deprecated="true" >
       <documentation><![CDATA[
         Download a thesaurus.
 
@@ -88,7 +88,7 @@
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
 
-    <service name="thesaurus.remove">
+    <service name="thesaurus.remove" deprecated="true">
       <documentation><![CDATA[
         Remove a thesaurus.
 

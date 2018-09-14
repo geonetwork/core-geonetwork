@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -42,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
@@ -66,6 +68,8 @@ import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -99,20 +103,20 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Represents a harvester job. Used to launch harvester workers.
- * 
+ *
  * If you want to synchronize something here, use protected variable lock.
  * If not, we may not be able to even stop a frozen harvester.
- * 
+ *
  */
 public abstract class AbstractHarvester<T extends HarvestResult> {
 
     private static final String SCHEDULER_ID = "abstractHarvester";
     public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
-    
+
     /**
      * Used to make sure we don't wait forever for any task
-     * 
-     * 
+     *
+     *
         try {
             if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
                 //DO WORK
@@ -126,7 +130,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 lock.unlock();
             }
         }
-        
+
      */
     protected final ReentrantLock lock = new ReentrantLock(false);
 
@@ -135,9 +139,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * short. If we cannot do it, just show an error and warn.
      */
     protected Integer SHORT_WAIT = 2;
-    
+
     /**
-     * Time to wait for important operations in seconds. 
+     * Time to wait for important operations in seconds.
      * Patience, but don't block forever.
      */
     protected Integer LONG_WAIT = 30;
@@ -179,7 +183,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected void setContext(ServiceContext context) {
         this.context = context;
         this.dataMan = context.getBean(DataManager.class);
-        this.settingMan = context.getBean(HarvesterSettingsManager.class);
+        this.harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
+        this.settingManager = context.getBean(SettingManager.class);
     }
 
     /**
@@ -336,17 +341,17 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
                 final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
                 final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
-                
+
                 final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
                 Set<String> sources = new HashSet<String>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
                     sources.add(metadataRepository.findOne(id).getSourceInfo().getSourceId());
                     dataMan.deleteMetadata(context, "" + id);
                 }
-                
+
                 // Remove all sources related to the harvestUuid if they are not linked to any record anymore
                 for (String sourceUuid : sources) {
-                    Long ownedBySource = 
+                    Long ownedBySource =
                             metadataRepository.count(Specifications.where(MetadataSpecs.hasSource(sourceUuid)));
                     if (ownedBySource == 0 && !sourceUuid.equals(params.getUuid()) && sourceRepository.exists(sourceUuid)) {
                         removeIcon(sourceUuid);
@@ -381,7 +386,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 if (status != Status.INACTIVE) {
                     return OperResult.ALREADY_ACTIVE;
                 }
-                settingMan.setValue("harvesting/id:" + id + "/options/status", Status.ACTIVE);
+                harvesterSettingsManager.setValue("harvesting/id:" + id + "/options/status", Status.ACTIVE);
 
                 status = Status.ACTIVE;
                 error = null;
@@ -399,7 +404,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 lock.unlock();
             }
         }
-        return OperResult.ERROR;        
+        return OperResult.ERROR;
     }
 
     /**
@@ -415,14 +420,14 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
         JobKey jobKey = jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME);
         if(getScheduler().checkExists(jobKey)) {
-            getScheduler().interrupt(jobKey);            
+            getScheduler().interrupt(jobKey);
         }
 
         try {
             if(lock.tryLock(LONG_WAIT, TimeUnit.SECONDS)) {
                 this.running = false;
-                
-                settingMan.setValue("harvesting/id:" + id + "/options/status", newStatus);
+
+                harvesterSettingsManager.setValue("harvesting/id:" + id + "/options/status", newStatus);
                 if (newStatus == Status.INACTIVE) {
                     if (this.status != Status.ACTIVE) {
                         return OperResult.ALREADY_INACTIVE;
@@ -434,7 +439,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 return OperResult.OK;
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                
+
                 // Sometimes the harvester is frozen
                 // give some time, but if it does not finish properly...
                 // just kill it!!
@@ -442,7 +447,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                     @Override
                     public void run() {
                         super.run();
-                        
+
                         //Wait again for proper shutdown
                         try {
                             Thread.sleep(LONG_WAIT * 1000);
@@ -453,13 +458,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                         //Still running?
                         if(AbstractHarvester.this.running) {
                             //Then kill it!
-                            log.error("Forcefully stopping harvester '" + 
+                            log.error("Forcefully stopping harvester '" +
                                     AbstractHarvester.this.getID() + "'.");
-                            try {                
+                            try {
                                 AbstractHarvester.this.running = false;
-                                settingMan.setValue("harvesting/id:" + id + "/options/status", newStatus);
+                                harvesterSettingsManager.setValue("harvesting/id:" + id + "/options/status", newStatus);
                                 AbstractHarvester.this.status = newStatus;
-                                
+
                                 //Restart scheduling. Something went terribly wrong!
                                 doUnschedule();
                                 doSchedule();
@@ -477,7 +482,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 lock.unlock();
             }
         }
-        return OperResult.ERROR;          
+        return OperResult.ERROR;
     }
 
     /**
@@ -507,7 +512,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 lock.unlock();
             }
         }
-        return OperResult.ERROR;  
+        return OperResult.ERROR;
     }
 
     /**
@@ -559,7 +564,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                     //--- restart executor
                     error = null;
                     doSchedule();
-                }                
+                }
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
             }
@@ -660,13 +665,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         if (log.isDebugEnabled()) {
             log.debug("AbstractHarvester login: ownerId = " + ownerId);
         }
-        
+
         UserRepository repository = this.context.getBean(UserRepository.class);
         User user = null;
         if (StringUtils.isNotEmpty(ownerId)) {
             user = repository.findOne(ownerId);
         }
-        
+
         // for harvesters created before owner was added to the harvester code,
         // or harvesters belonging to a user that no longer exists
         if (user == null || StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(this.context, Integer.parseInt(ownerId))) {
@@ -712,7 +717,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                         login();
 
                         //--- update lastRun
-                        settingMan.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
+                        harvesterSettingsManager.setValue("harvesting/id:" + id + "/info/lastRun", lastRun);
 
                         //--- proper harvesting
                         logger.info("Started harvesting from node : " + nodeName);
@@ -729,7 +734,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                                      + this.getType()
                                      + "] didn't accept some of the parameters sent.");
 
-                        errors.add(new HarvestError(context,e, logger));
+                        errors.add(new HarvestError(context,e));
                         error = e;
                         operResult = OperResult.ERROR;
                     } catch (Throwable t) {
@@ -739,7 +744,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                         logger.warning(" (C) Message : " + t.getMessage());
                         error = t;
                         t.printStackTrace();
-                        errors.add(new HarvestError(context, t, logger));
+                        errors.add(new HarvestError(context, t));
                     } finally {
                         List<HarvestError> harvesterErrors = getErrors();
                         if (harvesterErrors != null) {
@@ -753,7 +758,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 } finally {
                     cancelMonitor.set(false);
                     running = false;
-                }    
+                }
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
                 log.error("Harvester '" + this.getID() + "' hasn't initiated.");
@@ -767,9 +772,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             }
         }
 
-        return operResult;  
-        
-        
+        return operResult;
+
+
     }
 
     private void logHarvest(String logfile, Logger logger, String nodeName, String lastRun, long elapsedTime) {
@@ -860,7 +865,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @return
      */
     public final String getType() {
-        // FIXME: context is null when removing record 
+        // FIXME: context is null when removing record
         // eg. http://localhost:8080/geonetwork/node1/eng/admin.harvester.clear@json?id=585
         final String[] types = context.getApplicationContext().getBeanNamesForType(getClass());
         return types[0];
@@ -955,52 +960,53 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     protected void storeNode(AbstractParams params, String path) throws SQLException {
-        String siteId = settingMan.add(path, "site", "");
-        String translations = settingMan.add(ID_PREFIX + siteId, AbstractParams.TRANSLATIONS, "");
-        String optionsId = settingMan.add(path, "options", "");
-        String infoId = settingMan.add(path, "info", "");
-        String contentId = settingMan.add(path, "content", "");
+        String siteId = harvesterSettingsManager.add(path, "site", "");
+        String translations = harvesterSettingsManager.add(ID_PREFIX + siteId, AbstractParams.TRANSLATIONS, "");
+        String optionsId = harvesterSettingsManager.add(path, "options", "");
+        String infoId = harvesterSettingsManager.add(path, "info", "");
+        String contentId = harvesterSettingsManager.add(path, "content", "");
 
         //--- setup site node ----------------------------------------
 
-        settingMan.add(ID_PREFIX + siteId, "name", params.getName());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "name", params.getName());
         for (Map.Entry<String, String> entry : params.getTranslations().entrySet()) {
-            settingMan.add(ID_PREFIX + translations, entry.getKey(), entry.getValue());
+            harvesterSettingsManager.add(ID_PREFIX + translations, entry.getKey(), entry.getValue());
         }
-        settingMan.add(ID_PREFIX + siteId, "uuid", params.getUuid());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "uuid", params.getUuid());
 
         /**
          * User who created or updated this node.
          */
-        settingMan.add(ID_PREFIX + siteId, "ownerId", params.getOwnerId());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerId", params.getOwnerId());
         /**
          * User selected by user who created or updated this node.
          */
-        settingMan.add(ID_PREFIX + siteId, "ownerUser", params.getOwnerIdUser());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerUser", params.getOwnerIdUser());
         /**
          * Group selected by user who created or updated this node.
          */
-        settingMan.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
+        harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
 
-        String useAccId = settingMan.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
+        String useAccId = harvesterSettingsManager.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
 
-        settingMan.add(ID_PREFIX + useAccId, "username", params.getUsername());
-        settingMan.add(ID_PREFIX + useAccId, "password", params.getPassword());
+        harvesterSettingsManager.add(ID_PREFIX + useAccId, "username", params.getUsername());
+        harvesterSettingsManager.add(ID_PREFIX + useAccId, "password", params.getPassword());
 
         //--- setup options node ---------------------------------------
 
-        settingMan.add(ID_PREFIX + optionsId, "every", params.getEvery());
-        settingMan.add(ID_PREFIX + optionsId, "oneRunOnly", params.isOneRunOnly());
-        settingMan.add(ID_PREFIX + optionsId, "status", status);
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "every", params.getEvery());
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "oneRunOnly", params.isOneRunOnly());
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "overrideUUID", params.getOverrideUuid());
+        harvesterSettingsManager.add(ID_PREFIX + optionsId, "status", status);
 
         //--- setup content node ---------------------------------------
 
-        settingMan.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
-        settingMan.add(ID_PREFIX + contentId, "validate", params.getValidate());
+        harvesterSettingsManager.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
+        harvesterSettingsManager.add(ID_PREFIX + contentId, "validate", params.getValidate());
 
         //--- setup stats node ----------------------------------------
 
-        settingMan.add(ID_PREFIX + infoId, "lastRun", "");
+        harvesterSettingsManager.add(ID_PREFIX + infoId, "lastRun", "");
 
         //--- store privileges and categories ------------------------
 
@@ -1018,12 +1024,12 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     protected void storePrivileges(AbstractParams params, String path) throws SQLException {
-        String privId = settingMan.add(path, "privileges", "");
+        String privId = harvesterSettingsManager.add(path, "privileges", "");
 
         for (Privileges p : params.getPrivileges()) {
-            String groupId = settingMan.add(ID_PREFIX + privId, "group", p.getGroupId());
+            String groupId = harvesterSettingsManager.add(ID_PREFIX + privId, "group", p.getGroupId());
             for (int oper : p.getOperations()) {
-                settingMan.add(ID_PREFIX + groupId, "operation", oper);
+                harvesterSettingsManager.add(ID_PREFIX + groupId, "operation", oper);
             }
         }
     }
@@ -1036,10 +1042,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     protected void storeCategories(AbstractParams params, String path) throws SQLException {
-        String categId = settingMan.add(path, "categories", "");
+        String categId = harvesterSettingsManager.add(path, "categories", "");
 
         for (String id : params.getCategories()) {
-            settingMan.add(ID_PREFIX + categId, "category", id);
+            harvesterSettingsManager.add(ID_PREFIX + categId, "category", id);
         }
     }
 
@@ -1141,6 +1147,40 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     /**
+     * Get the list of not disabled registered harvesters
+     *
+     * @param context
+     * @return
+     */
+    public static String[] getNonDisabledHarvesterTypes(ServiceContext context) {
+        String[] availableTypes = context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
+        SettingManager localSettingManager = context.getApplicationContext().getBean(SettingManager.class);
+        String disabledTypesString = StringUtils.defaultIfBlank(localSettingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES), "");
+        String[] disabledTypes = StringUtils.split(disabledTypesString.toLowerCase().replace(',', ' '), " ");
+
+        String[] result = Arrays.stream(availableTypes)
+            .filter(type -> Arrays.stream(disabledTypes).noneMatch(type::equalsIgnoreCase))
+            .collect(Collectors.toList()).toArray(new String[]{});
+
+        return result;
+
+    }
+
+    /**
+     * Check if the harvester's type is in the list of disabled harvesters.
+     * @return <code>true</code> if the harvester's type is disabled in the settings, <code>false</code> otherwise.
+     */
+    public boolean isHarvesterTypeDisabled() {
+        String[] disabledTypes = StringUtils.split(
+            StringUtils.defaultIfBlank(
+                settingManager.getValue(Settings.SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES),
+                "").toLowerCase().replace(',', ' '),
+            " ");
+        String type = getType();
+        return Arrays.stream(disabledTypes).anyMatch(disabledType -> disabledType.equalsIgnoreCase(type));
+    }
+
+    /**
      * Who should we notify by default?
      *
      * @return
@@ -1169,7 +1209,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<HarvestError>());
     private volatile boolean running = false;
-    
+
     /**
      * Should we cancel the harvester?
      */
@@ -1178,7 +1218,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     protected ServiceContext context;
 
-    protected HarvesterSettingsManager settingMan;
+    protected HarvesterSettingsManager harvesterSettingsManager;
+    protected SettingManager settingManager;
 
     protected DataManager dataMan;
 

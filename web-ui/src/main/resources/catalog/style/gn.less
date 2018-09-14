@@ -53,7 +53,15 @@ div[gn-transfer-ownership] * .list-group {
   line-height: 1.33;
   border-radius: 35px;
 }
-
+// help button
+[data-gn-need-help] {
+  margin-top: 10px;
+}
+.panel-heading {
+  [data-gn-need-help] {
+    margin-top: 0;
+  }
+}
 
 
 /* An update to 3.2 could provide responsive class
@@ -93,7 +101,7 @@ div[gn-transfer-ownership] * .list-group {
   margin-bottom: 10px;
   border: 1px solid #e7e7e7;
   border-top: 0;
-  z-index: 1;
+  z-index: 5;
 }
 [ng-app="gn_editor"] {
   .gn-top-bar {
@@ -113,8 +121,9 @@ div[gn-transfer-ownership] * .list-group {
   .gn-editor-board {
     padding-top: 120px;
   }
-  .gn-editor-container, .gn-batch-editor, #gn-directory-container {
-    padding-top: 65px;
+  .gn-editor-container, .gn-batch-editor, #gn-directory-container,
+  #gn-new-metadata-container, #gn-import-container {
+    padding-top: 70px;
   }
 }
 
@@ -319,6 +328,11 @@ div.gn-scroll-spy {
       max-height: 76vh;
       overflow: auto;
       min-height: 500px;
+      .gn-modal-content {
+        // height of modal body - 2 * padding - height of button(s)
+        max-height: calc(~"76vh - 30px - 30px");
+        overflow: auto;
+      }
     }
   }
   .modal-dialog {
@@ -387,7 +401,7 @@ img.thumb-small {
 }
 
 
-.tt-dropdown-menu {
+.tt-menu {
   width: 422px;
   margin-top: 4px;
   padding: 8px 0;
@@ -779,6 +793,84 @@ input.ng-invalid {
   }
   .no-data a {
     color: @gray-light;
+  }
+}
+
+
+.navbar {
+  margin-bottom: 14px;
+  .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 50px;
+    font-size: 16px;
+  }
+
+  // handle hover dropdowns for editor and admin menu (only if not on mobile)
+  @media (min-width: @screen-sm-min) {
+    li.dropdown-hover {
+      & > .dropdown-toggle {
+        position: relative;
+        &:after {
+          font-family: FontAwesome;
+          content: "\f0d7";
+          position: absolute;
+          bottom: -5px;
+          left: 50%;
+          transform: translate(-50%, 0);
+          font-size: 0.9em;
+        }
+      }
+      &.open:not(.active) > .dropdown-toggle {
+        background: none;
+      }
+      ul {
+        display: none;
+      }
+      &:hover ul, & > a:focus + ul, & > a:active + ul {
+        display: block;
+      }
+    }
+  }
+
+  .gn-user-info {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -6px 0px;
+    line-height: 1em;
+    .gn-user-role {
+      text-transform: uppercase;
+      opacity: 0.7;
+      font-size: 0.8em;
+    }
+  }
+}
+.navbar-form {
+  border:none;
+  margin: 8px 0px;
+}
+
+// styles for the username dropdown in the navbar
+.username-dropdown {
+  .dropdown-menu {
+    & > .active > a {
+      color: #333;
+      background-color: transparent;
+      font-weight: 500;
+    }
+  }
+}
+// styles for login popup in the navbar
+.signin-dropdown {
+  .dropdown-menu {
+    border-color: #e7e7e7;
+    .navbar-form {
+      .input-group {
+        .form-control {
+          min-width: 110px;
+        }
+      }
+    }
   }
 }
 

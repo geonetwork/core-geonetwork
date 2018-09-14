@@ -187,7 +187,6 @@
            replace: true,
            transclude: true,
            scope: {
-             mode: '@gnKeywordSelector',
              elementRef: '@',
              thesaurusKey: '@',
              keywords: '@',
@@ -314,7 +313,6 @@
                }
 
                // Then register search filter change
-               // Only applies to multiselect mode
                scope.$watch('filter', search);
              };
 
@@ -384,6 +382,7 @@
                      }, {
                        name: 'keyword',
                        displayKey: 'label',
+                       limit: Infinity,
                        source: keywordsAutocompleter.ttAdapter()
                      }).bind('typeahead:selected',
                      $.proxy(function(obj, keyword) {
@@ -405,20 +404,6 @@
                        .tagsinput('items'), scope.selected);
                        getSnippet();
                      });
-
-                     // When clicking the element trigger input
-                     // to show autocompletion list.
-                     // https://github.com/twitter/typeahead.js/issues/798
-                     field.on('typeahead:opened', function() {
-                       var initial = field.val(),
-                       ev = $.Event('keydown');
-                       ev.keyCode = ev.which = 40;
-                       field.trigger(ev);
-                       if (field.val() != initial) {
-                         field.val('');
-                       }
-                       return true;
-                     });
                    });
                  } catch (e) {
                    console.warn('No tagsinput for ' + id +
@@ -434,9 +419,7 @@
                  scope.$watch('results', getSnippet);
                  scope.$watch('selected', getSnippet);
 
-                 if (scope.mode === 'tagsinput') {
-                   initTagsInput();
-                 }
+                 initTagsInput();
                } else if (scope.invalidKeywordMatch) {
                  // invalidate element ref to not trigger
                  // an update of the record with an invalid

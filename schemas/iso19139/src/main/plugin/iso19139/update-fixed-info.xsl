@@ -196,6 +196,12 @@
 
   <!-- ================================================================= -->
 
+  <xsl:template
+    match="gmd:topicCategory[not(gmd:MD_TopicCategoryCode)]"
+    priority="10" />
+
+  <!-- ================================================================= -->
+
   <xsl:template match="@gml:id">
     <xsl:choose>
       <xsl:when test="normalize-space(.)=''">
@@ -257,7 +263,7 @@
 
       <!-- Add nileason if text is empty -->
       <xsl:variable name="isEmpty"
-                    select="if ($isMultilingual)
+                    select="if ($isMultilingual and not($excluded))
                             then $valueInPtFreeTextForMainLanguage = ''
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
@@ -598,6 +604,14 @@
   </xsl:template>
 
 
+  <!-- Remove geographic/temporal extent if doesn't contain child elements.
+       Used to clean up the element, for example when removing the the temporal extent
+       in the editor, to avoid an element like <gmd:extent><gmd:EX_Extent></gmd:EX_Extent></gmd:extent>,
+       that causes a validation error in schematron iso: [ISOFTDS19139:2005-TableA1-Row23] - Extent element required
+  -->
+  <xsl:template match="gmd:extent[gmd:EX_Extent/not(*)]|srv:extent[gmd:EX_Extent/not(*)]"/>
+
+
   <!-- ================================================================= -->
   <!-- copy everything else as is -->
 
@@ -605,6 +619,12 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="@xsi:schemaLocation">
+    <xsl:if test="java:getSettingValue('system/metadata/validation/removeSchemaLocation') = 'false'">
+      <xsl:copy-of select="."/>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>

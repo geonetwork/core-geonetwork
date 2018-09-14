@@ -1,5 +1,5 @@
 <form name="wfsFilterForm">
-  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <!--WFS not available alert-->
   <div data-ng-show="isWfsAvailable == false" class="alert alert-warning">
@@ -24,21 +24,6 @@
       {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
     </div>
 
-    <!--search input-->
-    <div data-ng-show="isFeaturesIndexed"
-         class="gn-layertree-filter">
-      <span class="fa fa-times-circle clear"
-            data-ng-click="clearInput()"
-            title="{{'clear' | translate}}"></span>
-      <input type="text"
-             data-gn-focus-on="isFeaturesIndexed"
-             data-ng-model="searchInput"
-             data-ng-change="filterFacets()"
-             data-ng-model-options="{ debounce: 400 }"
-             class="layerfilter form-control input-sm"
-             placeholder="{{'filter'|translate}}..."/>
-    </div>
-
     <!--Facet fields-->
     <div data-ng-if="isFeaturesIndexed"
          class="gn-facet"
@@ -48,6 +33,20 @@
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !isFilterActive(field.name, field)}"></span>
         {{field.label}}
       </h5>
+
+      <!-- value filter field -->
+      <div class="filter-input wfs-layertree-filter"
+        ng-if="!field.dates && (field.more || facetFilters[field.name] || (field.tree.nodes.length > 20))" ng-show="field.expanded">
+        <span class="fa fa-times-circle clear" title="clear"
+          ng-click="facetFilters[field.name] = ''; filterFacets()"
+          ng-show="facetFilters[field.name]"></span>
+        <input type="text" class="form-control input-sm layerfilter"
+          placeholder="{{ 'filter' | translate }}"
+          ng-model="facetFilters[field.name]"
+          ng-model-options="{debounce: 300}"
+          ng-change="filterFacets()">
+      </div>
+
       <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
         <div class="list-group">
           <div class="list-group-item"
@@ -71,7 +70,9 @@
               callback="onUpdateDateRange(field, from, to)">
           </div>
         </div>
-        <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
+        <a href class="see-more" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">
+          <span translate>more</span>...
+        </a>
       </div>
     </div>
     <!--Geometry Field-->
@@ -99,14 +100,14 @@
         <i class="fa fa-filter"></i>&nbsp;
         <span data-translate="">applyFilter</span>
       </button>
-      <button data-ng-if="::user.canEditRecord(md) || md.isHarvested == 'y'"
+      <button data-ng-if="user.canEditRecord(md) || md.isHarvested == 'y'"
               type="button" class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
-          data-ng-if="::user.canEditRecord(md) || md.isHarvested == 'y'">
+          data-ng-if="user.canEditRecord(md) || md.isHarvested == 'y'">
         <li>
           <a href="" data-ng-click="indexWFSFeatures('1.0.0')">
             <i class="fa fa-pie-chart"></i>&nbsp;
@@ -140,12 +141,16 @@
       </button>
     </div>
 
-    <div data-ng-show="hmActive">
-      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
+    <div ng-if="hmActive">
+      <label ng-show="map" ng-show="source.getFeatures().length > 0">
         <input type="checkbox"
-               data-ng-model="isHeatMapVisible"/>
-        <span data-translate="">displayHeatMap</span>
+               ng-model="isHeatMapVisible"/>
+        <span translate>displayHeatMap</span>
       </label>
+      <gn-heatmap ng-if="map" map="map"
+        feature-type="url + '#' + featureTypeName"
+        filter="{ params: output, geometry: filterGeometry, any: searchInput}"
+        enabled="isHeatMapVisible"/>
     </div>
 
 

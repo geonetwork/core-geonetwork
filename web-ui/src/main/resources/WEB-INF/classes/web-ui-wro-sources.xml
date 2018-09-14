@@ -33,7 +33,7 @@
   </require>
   <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
@@ -48,6 +48,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/bindHtml.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/buttons.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/modal.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/position.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/slider.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/rating.js"/>
@@ -84,11 +85,12 @@
     <jsSource webappPath="/catalog/lib/base64.js"/>
     <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/geohash.js"/>
   </declarative>
   <!-- Same as previous + ol3cesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
     <jsSource webappPath="/catalog/lib/modernizr.js" minimize="false"/>
-    <jsSource webappPath="/catalog/lib/jquery-2.0.3.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery-2.2.4.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/moment+langs.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-filter.min.js" minimize="false"/>
@@ -105,13 +107,13 @@
     <jsSource webappPath="/catalog/lib/angular.ext/bindHtml.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/buttons.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/datetimepicker.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/modal.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/position.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/slider.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/rating.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/tabs.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/typeahead.js"/>
-    <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.min.js"
-              minimize="false"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
@@ -154,5 +156,6 @@
     <jsSource webappPath="/catalog/lib/base64.js"/>
     <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/geohash.js"/>
   </declarative>
 </sources>

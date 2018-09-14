@@ -191,9 +191,24 @@ public class MetadataUtils {
             if (listOfTypes.size() == 0 ||
                 listOfTypes.contains(RelatedItemType.fcats)) {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedFeatureCatalogueUUIDs(md);
+                Element fcat = null;
+
                 if (listOfUUIDs != null && listOfUUIDs.size() > 0) {
-                    String joinedUUIDs = Joiner.on(" or ").join(listOfUUIDs);
-                    relatedRecords.addContent(search(joinedUUIDs, "fcats", context, from, to, fast));
+
+                    fcat = new Element("fcats");
+
+                    for (String fcat_uuid : listOfUUIDs) {
+                        Element metadata = new Element("metadata");
+                        Element response = new Element("response");
+                        Element current = getRecord(fcat_uuid, context, dm);
+                        metadata.addContent(current);
+                        response.addContent(metadata);
+                        fcat.addContent(response);
+                    }
+                }
+
+                if (fcat != null) {
+                    relatedRecords.addContent(fcat);
                 }
             }
         }
@@ -245,8 +260,10 @@ public class MetadataUtils {
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("hassources".equals(type))
                 parameters.addContent(new Element("hassource").setText(uuid));
-            else if ("associated".equals(type))
+            else if ("associated".equals(type)) {
                 parameters.addContent(new Element("agg_associated").setText(uuid));
+                parameters.addContent(new Element(Geonet.SearchResult.EXTRA_DUMP_FIELDS).setText("agg_*"));
+            }
             else if ("datasets".equals(type) || "fcats".equals(type) ||
                 "sources".equals(type) || "siblings".equals(type) ||
                 "parent".equals(type))
@@ -344,7 +361,7 @@ public class MetadataUtils {
 
         Path file = null;
         try {
-            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false);
+            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false);
             Files.createDirectories(outDir);
             try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {

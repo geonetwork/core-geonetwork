@@ -34,5 +34,4 @@ public interface UserSavedSelectionRepository extends
     GeonetRepository<UserSavedSelection, UserSavedSelectionId>,
     JpaSpecificationExecutor<UserSavedSelection>,
     UserSavedSelectionRepositoryCustom {
-
 }

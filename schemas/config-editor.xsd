@@ -69,6 +69,7 @@ a set of views with at least one.
       <xs:sequence>
         <xs:element minOccurs="0" maxOccurs="1" ref="fields"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="fieldsWithFieldset"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="fieldsWithAnchorOption"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="multilingualFields"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="tableFields"/>
         <xs:element minOccurs="1" maxOccurs="1" ref="views"/>
@@ -155,6 +156,38 @@ section and should usually be displayed as a group of information.
       </xs:sequence>
     </xs:complexType>
     <xs:unique name="uniqueFieldswithFieldset">
+      <xs:selector xpath="name"/>
+      <xs:field xpath="."/>
+    </xs:unique>
+  </xs:element>
+
+  <xs:element name="fieldsWithAnchorOption">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+
+Defining elements to display a replacement selection for CharacterString or Anchor
+----------------------------------------------------------------------------------
+
+List of element to display a replacement selection for CharacterString or Anchor
+when adding them to the editor.
+
+.. code-block:: xml
+
+    <editor>
+       <fields>...</fields>
+       <fieldsWithFieldset>...</fieldsWithFieldset>
+       <fieldsWithAnchorOption>
+        <name>gfc::code</name>
+
+        ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="name"/>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="uniqueFieldsWithAnchorOption">
       <xs:selector xpath="name"/>
       <xs:field xpath="."/>
     </xs:unique>
@@ -784,7 +817,7 @@ eg. only 2 INSPIRE themes.
 .. code-block:: xml
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    fieldset="false"
                    transformations=""/>

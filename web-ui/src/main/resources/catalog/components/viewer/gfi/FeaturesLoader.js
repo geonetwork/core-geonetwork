@@ -50,7 +50,6 @@
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
     this.urlUtils = this.$injector.get('gnUrlUtils');
-    this.gnProxyUrl = this.$injector.get('gnGlobalSettings').proxyUrl;
 
     this.layer = config.layer;
     this.map = config.map;
@@ -65,9 +64,6 @@
     return this.loading;
   };
 
-  geonetwork.GnFeaturesLoader.prototype.proxyfyUrl = function(url) {
-    return this.gnProxyUrl + encodeURIComponent(url);
-  };
 
   /**
    *
@@ -88,47 +84,92 @@
         map = this.map,
         coordinates = this.coordinates;
 
+    var uuid;
+    if(layer.get('md')) {
+      uuid = layer.get('md').getUuid();
+    } else if(layer.get('metadataUuid')) {
+      uuid = layer.get('metadataUuid');
+    }
+
+    var infoFormat = layer.ncInfo ? 'text/xml' :
+                'application/vnd.ogc.gml';
+
+    //check if infoFormat is available in getCapabilities
+    if(layer.get('capRequest') &&
+      layer.get('capRequest').GetFeatureInfo &&
+      angular.isArray(layer.get('capRequest').GetFeatureInfo.Format) &&
+      layer.get('capRequest').GetFeatureInfo.Format.length > 0) {
+      if($.inArray(infoFormat,
+          layer.get('capRequest').GetFeatureInfo.Format) == -1) {
+        //use a valid format
+        infoFormat = layer.get('capRequest').GetFeatureInfo.Format[0];
+
+        //if xml available, use it:
+        if(!$.inArray('text/xml',
+            layer.get('capRequest').GetFeatureInfo.Format) >= 0) {
+          infoFormat = 'text/xml';
+        }
+      }
+    }
+
+    layer.infoFormat = infoFormat;
+
     var uri = layer.getSource().getGetFeatureInfoUrl(
         coordinates,
         map.getView().getResolution(),
         map.getView().getProjection(),
-        {
-          INFO_FORMAT: layer.ncInfo ? 'text/xml' : 'application/vnd.ogc.gml'
-        }
-        );
+        { INFO_FORMAT: infoFormat });
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
-    this.promise = this.$http.get(
-        this.proxyfyUrl(uri)).then(function(response) {
-
-          this.loading = false;
-          if (layer.ncInfo) {
-            var doc = ol.xml.parse(response.data);
-            var props = {};
-            ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
-              var node = doc.getElementsByTagName(v);
-              if (node && node.length > 0) {
-                props[v] = ol.xml.getAllTextContent(node[0], true);
-              }
-            });
-            this.features = (props.value && props.value != 'none') ?
-                [new ol.Feature(props)] : [];
-          } else {
-            var format = new ol.format.WMSGetFeatureInfo();
-            this.features = format.readFeatures(response.data, {
-              featureProjection: map.getView().getProjection()
-            });
+    this.promise = this.$http.get(uri,{
+      "data": "",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }).then(function(response) {
+      this.loading = false;
+      if (layer.ncInfo) {
+        var doc = ol.xml.parse(response.data);
+        var props = {};
+        ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
+          var node = doc.getElementsByTagName(v);
+          if (node && node.length > 0) {
+            props[v] = ol.xml.getAllTextContent(node[0], true);
           }
+        });
+        this.features = (props.value && props.value != 'none') ?
+                [new ol.Feature(props)] : [];
+      } else {
+        var format = new ol.format.WMSGetFeatureInfo();
+        this.features = format.readFeatures(response.data, {
+          featureProjection: map.getView().getProjection()
+        });
+      }
 
-          return this.features;
+      return this.features;
 
-        }.bind(this), function() {
+    }.bind(this), function() {
 
-          this.loading = false;
-          this.error = true;
+      this.loading = false;
+      this.error = true;
 
-        }.bind(this));
+    }.bind(this));
+
+        this.dictionary = null;
+
+        if(uuid) {
+          this.dictionary = this.$http.get('../api/records/'+uuid+'/featureCatalog?_content_type=json')
+          .then(function(response) {
+            if(response.data['decodeMap']!=null) {
+              return response.data['decodeMap'];
+            } else {
+              return null;
+        	}
+          }.bind(this), function(err) {
+        	return null;
+          }.bind(this));
+        }
 
   };
 
@@ -136,8 +177,18 @@
     var pageList = [5, 10, 50, 100];
     var exclude = ['FID', 'boundedBy', 'the_geom', 'thegeom'];
     var $filter = this.$injector.get('$filter');
+    var $q = this.$injector.get('$q');
 
-    return this.promise.then(function(features) {
+    var promises = [
+      this.promise,
+      this.dictionary
+      ];
+
+    return $q.all(promises).then(function(data) {
+
+      features = data[0];
+      dictionary = data[1];
+
       if (!features || features.length == 0) {
         return;
       }
@@ -171,6 +222,17 @@
           visible: exclude.indexOf(x) == -1
         };
       });
+
+      if(dictionary  != null) {
+        for (var i = 0; i < columns.length; i++) {
+          if(!angular.isUndefined(dictionary[columns[i]['field']])) {
+            var title = dictionary[columns[i]['field']][0];
+            var desc = dictionary[columns[i]['field']][1];
+            columns[i]['title']  = title;
+            columns[i]['titleTooltip']  = desc;
+          }
+        }
+      }
 
       return {
         columns: columns,

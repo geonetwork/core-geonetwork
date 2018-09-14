@@ -43,13 +43,13 @@ This Schematron define INSPIRE IR on metadata for datasets and services.
   * Add service taxonomy rules
   * Don't generate error when conformity is missing. Then confomity is only non-evaluated
 
-NOTE : 
+NOTE :
  * A record could be "INSPIRE valid" in GeoNetwork
 and not in INSPIRE metadata validator if INSPIRE theme
 are defined in an other language than english for example (multilingual validation
 not available in INSPIRE geoportal for the time being).
- * inspired by the schematron_rules.xml released under EUPL by 
-Kristian Senkler (conterra), Gianluca Luraschi (JRC), Ioannis Kanellopoulos (JRC)  
+ * inspired by the schematron_rules.xml released under EUPL by
+Kristian Senkler (conterra), Gianluca Luraschi (JRC), Ioannis Kanellopoulos (JRC)
 
 
 TODO :
@@ -60,19 +60,19 @@ TODO :
  as we check we have one INSPIRE theme.
  * INSPIRE metadata validation engine is not using same ISO19139 schema
  gmd:language is a codelist not a gco:CharacterString.
- 
- 
- 
 
-This work is licensed under the Creative Commons Attribution 2.5 License. 
-To view a copy of this license, visit 
-    http://creativecommons.org/licenses/by/2.5/ 
+
+
+
+This work is licensed under the Creative Commons Attribution 2.5 License.
+To view a copy of this license, visit
+    http://creativecommons.org/licenses/by/2.5/
 
 or send a letter to:
 
-Creative Commons, 
-543 Howard Street, 5th Floor, 
-San Francisco, California, 94105, 
+Creative Commons,
+543 Howard Street, 5th Floor,
+San Francisco, California, 94105,
 USA.
 
 -->
@@ -186,10 +186,10 @@ USA.
             -->
             <sch:let name="resourceLanguage" value="string-join(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue, ', ')"/>
             <sch:let name="euLanguage" value="
-				not(gmd:language/@gco:nilReason='missing') and 
-				geonet:contains-any-of($resourceLanguage, 
-				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt', 
-				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul', 
+				not(gmd:language/@gco:nilReason='missing') and
+				geonet:contains-any-of($resourceLanguage,
+				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt',
+				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul',
 				'hun', 'swe', 'gle'))"/>
             <sch:assert test="$euLanguage">
                 <sch:value-of select="$loc/strings/alert.M55/div"/>
@@ -277,14 +277,14 @@ USA.
             <!-- Check that INSPIRE theme are available.
                 Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
             -->
-            <sch:let name="thesaurusURL" value="concat('file:///', $thesaurusDir, '/external/thesauri/theme/inspire-theme.rdf')"/>
+            <sch:let name="thesaurusURL" value="concat('file:///', $thesaurusDir, '/external/thesauri/theme/httpinspireeceuropaeutheme-theme.rdf')"/>
             <sch:let name="inspire-thesaurus" value="document($thesaurusURL)"/>
             <sch:let name="inspire-theme" value="$inspire-thesaurus//skos:Concept"/>
 
             <!-- Display error if INSPIRE Theme thesaurus is not available. -->
             <sch:assert test="count($inspire-theme) > 0">
                 INSPIRE Theme thesaurus not found (at <sch:value-of select="$thesaurusURL" />. Check installation in codelist/external/thesauri/theme.
-                Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
+                Download thesaurus from INSPIRE Registry.
             </sch:assert>
 
 
@@ -542,15 +542,15 @@ USA.
             -->
             <sch:let name="accessConstraints"
                 value="
-				count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])&gt;0 
+				count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])&gt;0
 				and (
-				not(gmd:resourceConstraints/*/gmd:otherConstraints)     
+				not(gmd:resourceConstraints/*/gmd:otherConstraints)
 				or gmd:resourceConstraints/*/gmd:otherConstraints[@gco:nilReason='missing']
 				)"/>
             <sch:let name="otherConstraints"
                 value="
 				gmd:resourceConstraints/*/gmd:otherConstraints and
-				gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString!='' and 
+				gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString!='' and
 				count(gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode[@codeListValue='otherRestrictions'])=0
 				"/>
             <sch:let name="otherConstraintInfo"
@@ -631,8 +631,8 @@ USA.
 			|//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:pointOfContact
 			|//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:pointOfContact">
             <sch:let name="missing" value="not(*/gmd:organisationName)
-				or (*/gmd:organisationName/@gco:nilReason) 
-				or not(*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
+				or (*/gmd:organisationName/@gco:nilReason)
+				or not(*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress)
 				or (*/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
             <sch:let name="organisationName" value="*/gmd:organisationName/*/text()"/>
             <sch:let name="role" value="normalize-space(*/gmd:role/*/@codeListValue)"/>
@@ -674,8 +674,8 @@ USA.
             <!--  Language -->
             <sch:let name="language" value="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue"/>
             <sch:let name="language_present" value="geonet:contains-any-of($language,
-				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt', 
-				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul', 
+				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt',
+				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul',
 				'hun', 'swe', 'gle'))"/>
 
             <sch:assert test="$language_present">
@@ -700,8 +700,8 @@ USA.
 
         <sch:rule context="//gmd:MD_Metadata/gmd:contact">
             <sch:let name="missing" value="not(gmd:CI_ResponsibleParty/gmd:organisationName)
-				or (gmd:CI_ResponsibleParty/gmd:organisationName/@gco:nilReason) 
-				or not(gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress) 
+				or (gmd:CI_ResponsibleParty/gmd:organisationName/@gco:nilReason)
+				or not(gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress)
 				or (gmd:CI_ResponsibleParty/gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/@gco:nilReason)"/>
             <sch:let name="organisationName" value="gmd:CI_ResponsibleParty/gmd:organisationName/*/text()"/>
             <!--

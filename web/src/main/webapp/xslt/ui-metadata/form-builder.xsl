@@ -23,7 +23,7 @@
   -->
 
 <xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -100,6 +100,8 @@
 
     <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
 
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+
     <!-- Required status is defined in parent element for
     some profiles like ISO19139. If not set, the element
     editing information is used.
@@ -110,6 +112,9 @@
         <xsl:when
           test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:when test="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),$isoType, $xpath)/condition = 'mandatory'">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
@@ -168,7 +173,7 @@
             <xsl:value-of select="$label/label"/>
           </label>
 
-          <div class="col-sm-9 gn-value">
+          <div class="col-sm-9 gn-value nopadding-in-table">
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field"
                              select="$metadataOtherLanguagesAsJson"/>
@@ -807,6 +812,32 @@
 
                     If only one choice, make a simple button
               -->
+              <xsl:when test="$qualifiedName = 'gfc:code' and $schema='iso19110'">
+
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown" title="{$i18n/addA} {$label}">
+                    <span/>
+                    <span class="caret"/>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <xsl:variable name="name" select="'gco:CharacterString'"/>
+                    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
+                    <li title="{$label/description}">
+                      <a data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{$name}', '{$id}', 'replaceWith');">
+                        <xsl:value-of select="$label/label"/>
+                      </a>
+                    </li>
+                    <xsl:variable name="name2" select="'gmx:Anchor'"/>
+                    <xsl:variable name="label2" select="gn-fn-metadata:getLabel($schema, $name2, $labels)"/>
+                    <li title="{$label2/description}">
+                      <a data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{$name2}', '{$id}', 'replaceWith');">
+                        <xsl:value-of select="$label2/label"/>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </xsl:when>
+
               <xsl:when test="count($childEditInfo/gn:choose) = 1">
                 <xsl:for-each select="$childEditInfo/gn:choose">
                   <xsl:variable name="label"
@@ -951,7 +982,6 @@
     <!-- Get variable from attribute (eg. codelist) or node (eg. gco:CharacterString).-->
     <xsl:variable name="valueToEdit"
                   select="if ($value/*) then $value/text() else $value"/>
-
     <!-- If a form field has suggestion list in helper
     then the element is hidden and the helper directive is added.
     ListOfValues could be a codelist (with entry children) or
@@ -1299,12 +1329,12 @@
         <xsl:variable name="elementToMoveRef"
                       select="if ($elementEditInfo) then $elementEditInfo/@ref else ''"/>
         <a
-          class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'invisible'}"
+          class="fa fa-angle-up {if ($elementEditInfo and $elementEditInfo/@up = 'true') then '' else 'hidden'}"
           data-gn-editor-control-move="{$elementToMoveRef}"
           data-domelement-to-move="{$domeElementToMoveRef}"
           data-direction="up" href="" tabindex="-1"></a>
         <a
-          class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'invisible'}"
+          class="fa fa-angle-down {if ($elementEditInfo and $elementEditInfo/@down = 'true') then '' else 'hidden'}"
           data-gn-editor-control-move="{$elementToMoveRef}"
           data-domelement-to-move="{$domeElementToMoveRef}"
           data-direction="down" href="" tabindex="-1"></a>
@@ -1361,6 +1391,14 @@
                   <xsl:value-of select="if ($label) then $label else $optionValue"/>
                 </option>
               </xsl:for-each>
+
+
+              <xsl:if test="count($attributeSpec/gn:text[@value = $attributeValue]) = 0">
+                <option value="{$attributeValue}" selected="">
+                  <xsl:value-of select="$attributeValue"/>
+                </option>
+
+              </xsl:if>
             </select>
           </xsl:when>
           <xsl:otherwise>
@@ -1409,10 +1447,10 @@
     <xsl:param name="insertRef" select="''"/>
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    <button type="button" class="btn btn-link btn-xs"
+    <button type="button" class="btn btn-default btn-xs"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
-      <i class="fa fa-plus"/>
+      <i class="fa fa-plus fa-fw"/>
       <xsl:value-of select="$attributeLabel/label"/>
     </button>
   </xsl:template>
@@ -1424,15 +1462,13 @@
     <xsl:param name="process-params"/>
     <xsl:param name="btnClass" required="no"/>
 
-    <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
-
-    <div class="row form-group gn-field gn-extra-field">
+    <div class="row form-group gn-field gn-extra-field gn-process-{$process-name}">
       <div class="col-xs-10 col-xs-offset-2">
         <span data-gn-batch-process-button="{$process-name}"
               data-params="{$process-params}"
               data-icon="{$btnClass}"
-              data-name="{$strings/*[name() = $process-name]}"
-              data-help="{$strings/*[name() = concat($process-name, 'Help')]}"/>
+              data-name="{normalize-space($strings/*[name() = $process-name])}"
+              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
       </div>
     </div>
   </xsl:template>

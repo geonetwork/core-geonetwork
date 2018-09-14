@@ -33,6 +33,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -94,7 +95,7 @@ public class SiteInformation {
     }
 
     @JsonProperty(value = "version")
-    public HashMap<String, String> getVersionProperties() {
+    public Map<String, String> getVersionProperties() {
         return versionProperties;
     }
 
@@ -172,16 +173,10 @@ public class SiteInformation {
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path luceneDir = dataDirectory.getLuceneDir();
         indexProperties.put("index.path", luceneDir.toAbsolutePath().normalize().toString());
-        Path lDir = dataDirectory.getSpatialIndexPath();
         if (Files.exists(luceneDir)) {
             long size = ApiUtils.sizeOfDirectory(luceneDir);
             indexProperties.put("index.size", "" + size); // lucene + Shapefile
             // if exist
-        }
-
-        if (Files.exists(lDir)) {
-            long size = ApiUtils.sizeOfDirectory(lDir);
-            indexProperties.put("index.size.lucene", "" + size);
         }
         indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
     }
@@ -225,10 +220,8 @@ public class SiteInformation {
      */
     private void loadVersionInfo(ServiceContext context) {
         Properties prop = new Properties();
-        InputStream input = null;
 
-        try {
-            input = new FileInputStream(new File(getClass().getResource("/git.properties").getPath()));
+        try (InputStream input = getClass().getResourceAsStream("/git.properties")) {
             prop.load(input);
 
             Enumeration<?> e = prop.propertyNames();
@@ -240,14 +233,6 @@ public class SiteInformation {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }

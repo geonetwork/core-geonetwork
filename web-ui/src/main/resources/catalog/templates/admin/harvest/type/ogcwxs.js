@@ -31,9 +31,12 @@ var gnHarvesterogcwxs = {
                 "lang" : "eng",
                 "topic" : "",
                 "createThumbnails" : "",
+                "serviceTemplateUuid" : "",
+                "datasetTemplateUuid" : "",
                 "useLayer" : "",
                 "useLayerMd" : "",
                 "datasetCategory" : "",
+                "overrideUuid" : "SKIP",
                 "outputSchema" : "iso19139"
             },
             "privileges" : [ {
@@ -55,7 +58,7 @@ var gnHarvesterogcwxs = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <ogctype>' + h.site.ogctype + '</ogctype>'
@@ -69,11 +72,14 @@ var gnHarvesterogcwxs = {
                 + '  </site>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>'
                 + '    <topic>' + h.options.topic + '</topic>'
                 + '    <createThumbnails>' + h.options.createThumbnails + '</createThumbnails>'
+                + '    <serviceTemplateUuid>' + h.options.serviceTemplateUuid + '</serviceTemplateUuid>'
+                + '    <datasetTemplateUuid>' + h.options.datasetTemplateUuid + '</datasetTemplateUuid>'
                 + '    <useLayer>' + h.options.useLayer + '</useLayer>'
                 + '    <useLayerMd>' + h.options.useLayerMd + '</useLayerMd>'
                 + '    <datasetCategory>' + h.options.datasetCategory + '</datasetCategory>'

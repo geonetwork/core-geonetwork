@@ -32,7 +32,15 @@ public interface MetadataStatusRepositoryCustom {
      * Delete all the entities that are related to the indicated metadata.
      *
      * @param metadataId the id of the metadata.
-     * @return the number of rows deleted
+     * @return the number of rows deleted.
      */
     int deleteAllById_MetadataId(int metadataId);
+
+    /**
+     * Delete all the entities that are related to the indicated user.
+     * @param userId the id of the user.
+     * @return the number of rows deleted.
+     */
+    int deleteAllById_UserId(int userId);
+
 }

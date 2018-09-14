@@ -24,6 +24,7 @@
 package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Sets;
 import org.fao.geonet.entitylistener.MetadataCategoryEntityListenerManager;
 
 import javax.annotation.Nonnull;
@@ -46,6 +47,8 @@ import java.util.Set;
 @EntityListeners(MetadataCategoryEntityListenerManager.class)
 @SequenceGenerator(name = MetadataCategory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataCategory extends Localized implements Serializable {
+    private static final Set<String> EXCLUDE_FROM_XML = Sets.newHashSet("records");
+
     static final String ID_SEQ_NAME = "metadata_category_id_seq";
     private int _id;
     private String _name;
@@ -103,7 +106,7 @@ public class MetadataCategory extends Localized implements Serializable {
 
     private Set<Metadata> _records = new HashSet<Metadata>();
 
-    @ManyToMany(mappedBy="metadataCategories")
+    @ManyToMany(mappedBy="metadataCategories", fetch = FetchType.LAZY)
     @Nonnull
     @JsonIgnore
     public Set<Metadata> getRecords() {
@@ -112,6 +115,11 @@ public class MetadataCategory extends Localized implements Serializable {
 
     protected void setRecords(@Nonnull Set<Metadata> records) {
         this._records = records;
+    }
+
+    @Override
+    protected Set<String> propertiesToExcludeFromXml() {
+        return EXCLUDE_FROM_XML;
     }
 
     // CHECKSTYLE:OFF

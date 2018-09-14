@@ -1146,9 +1146,6 @@
         "resolutionDistance": {
           "type": "keyword"
         },
-        "resolutionScaleDenominator": {
-          "type": "keyword"
-        },
         "resourceAbstract": {
           "type": "text",
           "fields": {

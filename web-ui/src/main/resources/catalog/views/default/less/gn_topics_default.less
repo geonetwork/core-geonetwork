@@ -1,10 +1,11 @@
 @import "../../../style/gn_search.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 // ----- topics
 .gn-row-topics {
-  background-color: #fff;
+  background-color: @gn-topics-background-color;
   padding: 30px 20px 40px 20px;
-  margin-bottom: 20px;
   h4 {
     font-size: 16px;
     margin-bottom: 20px;

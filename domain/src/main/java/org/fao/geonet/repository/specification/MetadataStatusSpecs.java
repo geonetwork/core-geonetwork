@@ -44,8 +44,8 @@ public final class MetadataStatusSpecs {
         return new Specification<MetadataStatus>() {
             @Override
             public Predicate toPredicate(Root<MetadataStatus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Integer> userIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
-                Predicate idEqualPredicate = cb.equal(userIdAttributePath, cb.literal(metadataId));
+                Path<Integer> metadataIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
+                Predicate idEqualPredicate = cb.equal(metadataIdAttributePath, cb.literal(metadataId));
                 return idEqualPredicate;
             }
         };
@@ -58,6 +58,25 @@ public final class MetadataStatusSpecs {
                 Path<Integer> userIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
                 Predicate uuidEqualPredicate = cb.equal(userIdAttributePath, cb.literal(userId));
                 return uuidEqualPredicate;
+            }
+        };
+    }
+
+    public static Specification<MetadataStatus> hasUserIdMetadataIdAndStatusId(final int userId, final int metadataId,
+                                                                               final int statusId) {
+        return new Specification<MetadataStatus>() {
+            @Override
+            public Predicate toPredicate(Root<MetadataStatus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> userIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
+                Path<Integer> metadataIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
+                Path<Integer> statusIdAttributePath = root.get(MetadataStatus_.id).get(MetadataStatusId_.statusId);
+                Predicate idEqualPredicate = cb.equal(metadataIdAttributePath, cb.literal(metadataId));
+                Predicate uuidEqualPredicate = cb.equal(userIdAttributePath, cb.literal(userId));
+                Predicate statusIdEqual = cb.equal(statusIdAttributePath, cb.literal(statusId));
+
+                return cb.and(idEqualPredicate, uuidEqualPredicate, statusIdEqual);
+
+
             }
         };
     }

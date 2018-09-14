@@ -32,6 +32,7 @@ Mapping between :
 - WFS 1.1.0
 - WPS 0.4.0
 - WPS 1.0.0
+- WPS 2.0.0
 ... to ISO19119.
  -->
 <xsl:stylesheet xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv"
@@ -43,13 +44,15 @@ Mapping between :
                 xmlns:ows="http://www.opengis.net/ows"
                 xmlns:owsg="http://www.opengeospatial.net/ows"
                 xmlns:ows11="http://www.opengis.net/ows/1.1"
+                xmlns:ows2="http://www.opengis.net/ows/2.0"
                 xmlns:wps="http://www.opengeospatial.net/wps"
                 xmlns:wps1="http://www.opengis.net/wps/1.0.0"
+                xmlns:wps2="http://www.opengis.net/wps/2.0"
                 xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
                 xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
                 version="2.0"
                 xmlns="http://www.isotc211.org/2005/gmd"
-                extension-element-prefixes="wcs ows wfs ows11 wps wps1 owsg">
+                extension-element-prefixes="wcs ows wfs ows11 wps wps1 wps2 owsg">
 
   <!-- ============================================================================= -->
 
@@ -76,15 +79,14 @@ Mapping between :
   <!-- ============================================================================= -->
 
   <xsl:template match="WMT_MS_Capabilities|wfs:WFS_Capabilities|wcs:WCS_Capabilities|
-         wps:Capabilities|wps1:Capabilities|wms:WMS_Capabilities">
+         wps:Capabilities|wps1:Capabilities|wps2:Capabilities|wms:WMS_Capabilities">
 
     <xsl:variable name="ows">
       <xsl:choose>
         <xsl:when test="(local-name(.)='WFS_Capabilities' and namespace-uri(.)='http://www.opengis.net/wfs' and @version='1.1.0')
           or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengeospatial.net/wps')
-          or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/1.0.0')">
-          true
-        </xsl:when>
+          or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/1.0.0')
+          or (local-name(.)='Capabilities' and namespace-uri(.)='http://www.opengis.net/wps/2.0')">true</xsl:when>
         <xsl:otherwise>false</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -143,13 +145,15 @@ Mapping between :
           wms:Service/wms:ContactInformation|
                     ows:ServiceProvider|
           owsg:ServiceProvider|
-          ows11:ServiceProvider">
+          ows11:ServiceProvider|
+          ows2:ServiceProvider">
           <xsl:for-each select="Service/ContactInformation|
             wfs:Service/wfs:ContactInformation|
             wms:Service/wms:ContactInformation|
                         ows:ServiceProvider|
             owsg:ServiceProvider|
-            ows11:ServiceProvider">
+            ows11:ServiceProvider|
+            ows2:ServiceProvider">
             <contact>
               <CI_ResponsibleParty>
                 <xsl:apply-templates select="." mode="RespParty"/>
@@ -230,7 +234,8 @@ Mapping between :
                       <xsl:choose>
                         <xsl:when test="$ows='true'">
                           <xsl:value-of select="//ows:Operation[@name='GetCapabilities']/ows:DCP/ows:HTTP/ows:Get/@xlink:href|
-                                                  //ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href"/>
+                                                  //ows11:Operation[@name='GetCapabilities']/ows11:DCP/ows11:HTTP/ows11:Get/@xlink:href|
+                                                //ows2:Operation[@name='GetCapabilities']/ows2:DCP/ows2:HTTP/ows2:Get/@xlink:href"/>
                         </xsl:when>
                         <xsl:when test="name(.)='WMS_Capabilities'">
                           <xsl:value-of

@@ -29,6 +29,10 @@
   var module = angular.module('gn_wps_directive', [
   ]);
 
+  function isFieldNotEmpty (value) {
+    return value !== undefined && value !== ''
+  }
+
   /**
    * @ngdoc directive
    * @name gn_viewer.directive:gnWpsProcessForm
@@ -49,11 +53,26 @@
    *
    * @directiveInfo {Object} map
    * @directiveInfo {Object} wpsLink this object holds information on the WPS
-   *  service to use: name, url and applicationProfile (optional)
+   *  service to use; expected keys are:
+   *  * `name`: required, process identifier
+   *  * `url`: required, process URL
+   *  * `labels`: optional, object holding a string for different languages (use
+   *     ISO3 language codes as returned by `$tanslate.use()`, see:
+   *     https://angular-translate.github.io/docs/#/api/pascalprecht.translate.$translate)
+   *  * `label`: optional, string
+   *  * `applicationProfile`: optional, refer to the documentation on how to
+   *    set up an application profile object for a WPS service
    * @directiveInfo {Object} wfsLink the WFS link object
    *  will be used to overload inputs based on active WFS feature filters
-   * @directiveInfo {boolean} hideExecuteButton if true,
-   *  the 'execute' button is hidden
+   * @directiveInfo {function} describedCallback will be called with no arg when
+   *  the describeProcess request has been done & processed; this means the form
+   *  is ready to use
+   * @directiveInfo {boolean} hideExecuteButton if true, the 'execute' button
+   *  will be hidden
+   * @directiveInfo {boolean} hideTitle if true, the form title will be hidden
+   * @directiveInfo {boolean} cancelPrevious if true, concurrent requests on WPS
+   *  endpoints will be allowed; this permits having several forms at the same
+   *  time in the UI
    */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
@@ -70,7 +89,8 @@
         scope: {
           map: '=',
           wpsLink: '=',
-          wfsLink: '='
+          wfsLink: '=',
+          describedCallback: '&'
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -85,11 +105,17 @@
             mimeType: ''
           };
 
-          scope.hideExecuteButton = attrs.hideExecuteButton;
+          scope.hideExecuteButton = !!scope.$eval(attrs.hideExecuteButton);
+          scope.hideTitle = !!scope.$eval(attrs.hideTitle);
+          scope.cancelPrevious = attrs.cancelPrevious !== undefined ?
+            !!scope.$eval(attrs.cancelPrevious) : true;
 
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
           scope.loadedDescriptions = {};
+
+          // this will hold the 'application profile' of the current WPS service
+          scope.applicationProfile = null;
 
           // maximum number of processes id saved in local storage
           var maxHistoryCount = attrs['maxHistory'] || 6;
@@ -125,14 +151,15 @@
 
             // parse application profile as JSON (if not already an object)
             // application profile holds 2 arrays: inputs and outputs
-            var applicationProfile = scope.wpsLink.applicationProfile;
-            if (applicationProfile && typeof applicationProfile === 'string') {
+            scope.applicationProfile = scope.wpsLink.applicationProfile || null;
+            if (scope.applicationProfile &&
+                typeof scope.applicationProfile === 'string') {
               try {
-                applicationProfile = JSON.parse(applicationProfile);
+                scope.applicationProfile = JSON.parse(scope.applicationProfile);
               }
               catch (e) {
                 console.warn('Error while loading application profile.',
-                    applicationProfile);
+                    scope.applicationProfile);
               }
             }
 
@@ -161,7 +188,7 @@
 
             // query a description and build up the form
             gnWpsService.describeProcess(newLink.uri, newLink.processId, {
-              cancelPrevious: true
+              cancelPrevious: scope.cancelPrevious
             }).then(
                 function(response) {
                   scope.describeState = 'succeeded';
@@ -183,8 +210,10 @@
                       var wfsFilterValue;
 
                       // look for input info in app profile
-                      if (applicationProfile && applicationProfile.inputs) {
-                        applicationProfile.inputs.forEach(function(input) {
+                      if (scope.applicationProfile &&
+                      scope.applicationProfile.inputs) {
+                        scope.applicationProfile.inputs.forEach(
+                        function(input) {
                           if (input.identifier == inputName) {
                             defaultValue = input.defaultValue;
 
@@ -196,18 +225,21 @@
                             // or "to" dates of a filter
                             var valueIndex = -1;
                             if (wfsFilter.substr(-5) === '.from') {
-                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 5);
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 5);
                               valueIndex = 0;
                             } else if (wfsFilter.substr(-3) === '.to') {
-                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 3);
+                              wfsFilter = wfsFilter
+                              .substr(0, wfsFilter.length - 3);
                               valueIndex = 1;
                             }
 
                             if (wfsFilter && wfsFilterValues &&
-                            wfsFilterValues[wfsFilter]) {
+                              isFieldNotEmpty(wfsFilterValues[wfsFilter])) {
                               // take value at specific index, or all values
                               if (valueIndex >= 0) {
-                                wfsFilterValue = [wfsFilterValues[wfsFilter][valueIndex]];
+                                wfsFilterValue =
+                                [wfsFilterValues[wfsFilter][valueIndex]];
                               } else {
                                 wfsFilterValue = wfsFilterValues[wfsFilter];
                               }
@@ -218,12 +250,12 @@
 
                       // display field as overriden
                       scope.inputWfsOverride[inputName] =
-                      wfsFilterValue && wfsFilterValue.length > 0;
+                      isFieldNotEmpty(wfsFilterValue) && wfsFilterValue.length > 0;
 
                       // literal data (basic form input)
-                      if (input.literalData != undefined) {
+                      if (input.literalData !== undefined) {
                         // Default value (if not already there)
-                        if (input.literalData.defaultValue != undefined &&
+                        if (input.literalData.defaultValue !== undefined &&
                         defaultValue === undefined) {
                           defaultValue = input.literalData.defaultValue;
 
@@ -286,7 +318,7 @@
                       // add enough fields to hold all default values
                       if (Array.isArray(defaultValue)) {
                         minCount = Math.max(minCount,
-                          Math.min(maxCount, defaultValue.length));
+                        Math.min(maxCount, defaultValue.length));
                       }
                       var count = inputs.length;
                       while (count < minCount) {
@@ -311,14 +343,15 @@
                         });
                       }
                       // apply default values if any
-                      else if (defaultValue) {
+                      else if (isFieldNotEmpty(defaultValue)) {
                         inputs = scope.getInputsByName(inputName);
                         var defaultValueArray = Array.isArray(defaultValue) ?
-                          defaultValue : [defaultValue];
+                        defaultValue : [defaultValue];
                         for(var i = 0; i < inputs.length; i++) {
-                          if (!inputs[i].value && defaultValueArray[i]) {
+                          if (!isFieldNotEmpty(inputs[i].value) &&
+                          isFieldNotEmpty(defaultValueArray[i])) {
                             scope.setInputValueByName(inputName, i,
-                              defaultValueArray[i]);
+                            defaultValueArray[i]);
                           }
                         }
                       }
@@ -344,8 +377,10 @@
                       output.complexOutput._default.format.mimeType;
 
                       // look for output info in app profile
-                      if (applicationProfile && applicationProfile.outputs) {
-                        applicationProfile.outputs.forEach(function(output) {
+                      if (scope.applicationProfile &&
+                      scope.applicationProfile.outputs) {
+                        scope.applicationProfile.outputs.forEach(
+                        function(output) {
                           if (output.identifier == outputName) {
                             // assign mime type if available
                             defaultMimeType = output.defaultMimeType ||
@@ -355,8 +390,8 @@
                             // (display graph options are defined)
                             // TODO: actually parse these options
                             if (output.displayGraphOptions) {
-                              scope.outputAsGraph = output.displayGraphOptions ?
-                              true : false;
+                              scope.outputAsGraph =
+                              output.displayGraphOptions ? true : false;
                             }
                           }
                         });
@@ -377,8 +412,8 @@
                     scope.wpsLink.output.mimeType = defaultMimeType;
 
                     // use output as reference unless doing a profile graph
-                    scope.wpsLink.output.asReference = scope.outputAsGraph ?
-                    false : true;
+                    scope.wpsLink.output.asReference =
+                    scope.outputAsGraph ? false : true;
 
                     scope.outputsVisible = true;
 
@@ -398,6 +433,11 @@
                     }
                     scope.loadedDescriptions[processKey] =
                     angular.extend({}, scope.processDescription);
+                  }
+
+                  // described callback
+                  if (scope.describedCallback) {
+                    scope.describedCallback();
                   }
                 },
                 function(response) {
@@ -433,7 +473,7 @@
                   // count the number of non empty values
                   var valueCount = scope.getInputsByName(input.identifier.value)
                   .filter(function(input) {
-                    return input.value;
+                    return isFieldNotEmpty(input.value);
                   }).length;
 
                   // this will be used to show errors on the form
@@ -484,10 +524,7 @@
                     if (response.status.processSucceeded &&
                         gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map, scope.wpsLink.layer, {
-                            exclude: /^OUTPUT_/i
-                          }
-                      );
+                          response, scope.map, scope.wpsLink.layer);
                     }
                   }
                 }
@@ -640,6 +677,29 @@
               return input.name !== name;
             });
           };
+
+          // checks are made against the application profile
+          scope._getInputInfo = function(name) {
+            var appProfile = scope.applicationProfile;
+            if (!appProfile || !appProfile.inputs) {
+              return false;
+            }
+            return appProfile.inputs.filter(function(input) {
+              return input.identifier === name;
+            })[0];
+          };
+          scope.isInputHidden = function(name) {
+            var input = scope._getInputInfo(name);
+            return input ? !!input.hidden : false;
+          };
+          scope.isInputDisabled = function(name) {
+            var input = scope._getInputInfo(name);
+            return input ? !!input.disabled : false;
+          };
+
+          scope.getLabel = function() {
+            return gnWpsService.getProcessLabel(scope.wpsLink);
+          }
         }
       };
     }

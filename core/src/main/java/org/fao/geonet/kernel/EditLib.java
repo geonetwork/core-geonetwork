@@ -380,42 +380,33 @@ public class EditLib {
         // Loop over each XML fragments to insert or replace
         HashMap<String, Element> nodeRefToElem = new HashMap<>();
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-            String nodeRef = entry.getKey();
-            String[] nodeConfig = nodeRef.split("_");
-            nodeRef = nodeConfig[0];
+            String[] nodeConfig = entry.getKey().split("_");
+            String nodeRef = nodeConfig[0];
 
             Element el = findElement(md, nodeRef);
             nodeRefToElem.put(nodeRef, el);
         }
 
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-            String nodeRef = entry.getKey();
             String xmlSnippetAsString = entry.getValue();
             String nodeName = null;
             boolean replaceExisting = false;
 
-            String[] nodeConfig = nodeRef.split("_");
+            String[] nodeConfig = entry.getKey().split("_");
             // Possibilities:
             // * X125
             // * X125_replace
             // * X125_gmdCOLONkeywords
             // * X125_gmdCOLONkeywords_replace
-            nodeRef = nodeConfig[0];
+            String nodeRef = nodeConfig[0];
 
-            if (nodeConfig.length > 1 && nodeConfig[1] != null) {
-                if (nodeConfig[1].equals("replace")) {
-                    replaceExisting = true;
-                } else {
-                    nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
-                }
+            if (nodeConfig[nodeConfig.length-1].equals("replace")) {
+                replaceExisting = true;
             }
 
-            if (nodeConfig.length > 2 && nodeConfig[2] != null) {
-                if (nodeConfig[2].equals("replace")) {
-                    replaceExisting = true;
-                }
+            if ((nodeConfig.length > 1) && !replaceExisting) {
+                nodeName = nodeConfig[1].replace(COLON_SEPARATOR, ":");
             }
-
 
             // Get element to fill
             Element el = nodeRefToElem.get(nodeRef);
@@ -479,7 +470,7 @@ public class EditLib {
     public int addElementOrFragmentFromXpaths(Element metadataRecord,
                                               LinkedHashMap<String, AddElemValue> xmlAndXpathInputs,
                                               MetadataSchema metadataSchema,
-                                              boolean createXpathNodeIfNotExist) {
+                                              boolean createXpathNodeIfNotExist) throws JDOMException, IOException {
 
 
         int numUpdated = 0;
@@ -487,10 +478,36 @@ public class EditLib {
         for (Map.Entry<String, AddElemValue> entry : xmlAndXpathInputs.entrySet()) {
             String xpathProperty = entry.getKey();
             AddElemValue propertyValue = entry.getValue();
-            boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValue,
-                createXpathNodeIfNotExist);
-            if (updated) {
-                numUpdated++;
+
+            final boolean isReplaceAllMode = propertyValue.getNodeValue() != null &&
+                propertyValue.getNodeValue().getName()
+                    .startsWith(SpecialUpdateTags.REPLACE_ALL);
+
+            if (isReplaceAllMode) {
+                // Remove all
+                AddElemValue propertyValueToProcess = new AddElemValue("<gn_delete></gn_delete>");
+
+                addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValueToProcess,
+                    createXpathNodeIfNotExist);
+
+                Element fragments = propertyValue.getNodeValue();
+
+                for (Element fragment : (List<Element>) fragments.getChildren()) {
+                    propertyValueToProcess = new AddElemValue("<gn_create>" + Xml.getString(fragment) + "</gn_create>");
+
+                    boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValueToProcess,
+                        createXpathNodeIfNotExist);
+                    if (updated) {
+                        numUpdated++;
+                    }
+                }
+
+            } else {
+                boolean updated = addElementOrFragmentFromXpath(metadataRecord, metadataSchema, xpathProperty, propertyValue,
+                    createXpathNodeIfNotExist);
+                if (updated) {
+                    numUpdated++;
+                }
             }
         }
         return numUpdated;
@@ -2008,21 +2025,26 @@ public class EditLib {
      */
     public static interface SpecialUpdateTags {
         /**
-         * Replace the content of the target
+         * Replace the content of the target.
          */
         String REPLACE = "gn_replace";
         /**
-         * Add to the target
+         * Add to the target.
          */
         String ADD = "gn_add";
         /**
-         * Create the target element and add
+         * Create the target element and add.
          */
         String CREATE = "gn_create";
         /**
-         * Delete the target
+         * Delete the target.
          */
         String DELETE = "gn_delete";
+
+        /**
+         * Multiple target updates
+         */
+        String REPLACE_ALL = "gn_replace_all";
     }
 
     private static class SelectResult {

@@ -1,4 +1,6 @@
 @import "../../../style/gn_search.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 .gn-full {
   min-height: 100%;
@@ -9,6 +11,16 @@
 
 html, body {
   height:100%;
+}
+
+// background image and color
+[ng-app^="gn_search_"] body, [ng-app="gn_login"] body {
+  background-image: url(@gn-background-image); 
+  background-color: @gn-background-color;
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .container-fluid {
@@ -22,7 +34,10 @@ html, body {
   margin: 2em 0 4em;
 }
 
-.gn-row-info {}
+.gn-row-info {
+  padding-top: 20px;
+  background-color: @gn-info-background-color;
+}
 
 .cookie-warning {
   .alert;

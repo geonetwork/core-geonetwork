@@ -69,7 +69,6 @@ public class GeonetworkDataDirectory {
     private Path webappDir;
     private Path systemDataDir;
     private Path luceneDir;
-    private Path spatialIndexPath;
     private Path configDir;
     private Path thesauriDir;
     private Path schemaPluginsDir;
@@ -80,6 +79,7 @@ public class GeonetworkDataDirectory {
     private Path htmlCacheDir;
     private Path uploadDir;
     private Path formatterDir;
+    private Path nodeLessFiles;
     private String nodeId;
 
     private boolean isDefaultNode;
@@ -291,8 +291,6 @@ public class GeonetworkDataDirectory {
         // Set subfolder data directory
         luceneDir = setDir(jeevesServlet, webappName, handlerConfig, luceneDir, ".lucene" + KEY_SUFFIX,
             Geonet.Config.LUCENE_DIR, "index");
-        spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, spatialIndexPath, "spatial" + KEY_SUFFIX,
-            null, "spatialindex");
 
         configDir = setDir(jeevesServlet, webappName, handlerConfig, configDir, ".config" + KEY_SUFFIX,
             Geonet.Config.CONFIG_DIR, "config");
@@ -322,6 +320,9 @@ public class GeonetworkDataDirectory {
         );
         backupDir = setDir(jeevesServlet, webappName, handlerConfig, backupDir,
             ".backup" + KEY_SUFFIX, Geonet.Config.BACKUP_DIR, "data", "backup"
+        );
+        nodeLessFiles = setDir(jeevesServlet, webappName, handlerConfig, nodeLessFiles,
+            ".node_less_files" + KEY_SUFFIX, Geonet.Config.NODE_LESS_DIR, "data", "node_less_files"
         );
 
         handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, this.systemDataDir.toString());
@@ -528,24 +529,6 @@ public class GeonetworkDataDirectory {
     }
 
     /**
-     * Get the directory to store the metadata spatial index. If the spatial index is to be stored
-     * locally this is the directory to use.
-     *
-     * @return the directory to store the metadata spatial index
-     */
-    public Path getSpatialIndexPath() {
-        return spatialIndexPath;
-    }
-
-    /**
-     * Set the directory to store the metadata spatial index. If the spatial index is to be stored
-     * locally this is the directory to use.
-     */
-    public void setSpatialIndexPath(Path spatialIndexPath) {
-        this.spatialIndexPath = spatialIndexPath;
-    }
-
-    /**
      * Return the directory containing the configuration file.
      *
      * @return the directory containing the configuration file.
@@ -696,6 +679,14 @@ public class GeonetworkDataDirectory {
 
     public void setFormatterDir(Path formatterDir) {
         this.formatterDir = formatterDir;
+    }
+
+    public Path getNodeLessFiles() {
+        return nodeLessFiles;
+    }
+
+    public void setNodeLessFiles(Path nodeLessFiles) {
+        this.nodeLessFiles = nodeLessFiles;
     }
 
     public Path resolveWebResource(String resourcePath) {

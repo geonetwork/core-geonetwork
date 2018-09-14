@@ -43,8 +43,10 @@
     'gnSearchManagerService',
     'Metadata',
     'gnViewerSettings',
+    'gnGlobalSettings',
     function(gnOwsCapabilities, gnMap, $translate, $timeout,
-             gnSearchManagerService, Metadata, gnViewerSettings) {
+             gnSearchManagerService, Metadata, gnViewerSettings,
+             gnGlobalSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -61,12 +63,23 @@
          * and add it to the map.
          *
          * @param {Object} getCapLayer
+         * @param {string} name of the style to use
          * @return {*}
          */
-          this.addLayer = function(getCapLayer) {
+          this.addLayer = function(getCapLayer, style) {
             getCapLayer.version = $scope.capability.version;
+            getCapLayer.capRequest = $scope.capability.Request;
+  
+            //check if proxy is needed
+            var url = $scope.url.split('/');
+            getCapLayer.useProxy = false;
+            url = url[0] + '/' + url[1] + '/' + url[2] + '/';
+            if ($.inArray(url, gnGlobalSettings.requireProxy) >= 0) {
+              getCapLayer.useProxy = true;
+            }
             if ($scope.format == 'wms') {
-              var layer = gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
+              var layer =
+                  gnMap.addWmsToMapFromCap($scope.map, getCapLayer, style);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wfs') {
@@ -82,12 +95,19 @@
         }],
         link: function(scope, element, attrs) {
           scope.loading = false;
+          scope.error = {wms: null, wmts: null, wfs: null};
           scope.format = attrs['gnWmsImport'] != '' ?
               attrs['gnWmsImport'] : 'all';
           scope.serviceDesc = null;
           scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
           scope.catServicesList = [];
           var type = scope.format.toUpperCase();
+
+          //Update require proxy
+          //this is done because gnGlobalSettings is not configured at this point
+          scope.$watch('gnGlobalSettings.requireProxy', function(settings){
+            scope.requireProxy = gnGlobalSettings.requireProxy;
+          });
 
           function addLinks(md, type) {
             angular.forEach(md.getLinksByType(type), function(link) {
@@ -135,12 +155,26 @@
           scope.load = function() {
             if (scope.url) {
               scope.loading = true;
+              scope.error[type] = null;
+              scope.capability = null;
               gnOwsCapabilities['get' + type.toUpperCase() +
                   'Capabilities'](scope.url).then(function(capability) {
                 scope.loading = false;
                 scope.capability = capability;
+              }, function(error) {
+                scope.loading = false;
+                scope.error[type] = error;
               });
             }
+          };
+
+          // reset a service URL and clear the result list
+          scope.reset = function() {
+            scope.loading = false;
+            scope.capability = null;
+            scope.serviceDesc = null;
+            scope.servicesList = [];
+            scope.url = '';
           };
 
           // watch url as input
@@ -168,7 +202,8 @@
   module.directive('gnKmlImport', [
     'ngeoDecorateLayer',
     'gnAlertService',
-    function(ngeoDecorateLayer, gnAlertService) {
+    '$translate',
+    function(ngeoDecorateLayer, gnAlertService, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -178,8 +213,8 @@
           map: '=gnKmlImportMap'
         },
         controllerAs: 'kmlCtrl',
-        controller: ['$scope', '$http', '$translate',
-          function($scope, $http, $translate) {
+        controller: ['$scope', '$http',
+          function($scope, $http) {
 
             /**
            * Create new vector Kml file from url and add it to
@@ -405,42 +440,55 @@
         scope: {
           member: '='
         },
-        template: "<li class='list-group-item' ng-click='handle($event)' " +
-            "ng-class='(!isParentNode()) ? \"leaf\" : \"\"'><label>" +
-            "<span class='fa'  ng-class='isParentNode() ? \"fa-folder-o\" :" +
-            " \"fa-plus-square-o\"'></span>" +
-            ' {{member.Title || member.title}}</label></li>',
+        templateUrl: '../../catalog/components/viewer/wmsimport/' +
+            'partials/layer.html',
         link: function(scope, element, attrs, controller) {
           var el = element;
-          var select = function() {
-            controller.addLayer(scope.member);
-            gnAlertService.addAlert({
-              msg: $translate.instant('layerAdded', {layer:
-                    (scope.member.Title || scope.member.title)
-              }),
-              type: 'success'
-            });
-          };
-          var toggleNode = function() {
+
+          scope.toggleNode = function(evt) {
             el.find('.fa').first().toggleClass('fa-folder-o')
                 .toggleClass('fa-folder-open-o');
             el.children('ul').toggle();
+            evt.stopPropagation();
           };
+
+          scope.addLayer = function(c) {
+            controller.addLayer(scope.member, c ? c.Name : null);
+          };
+
+          scope.isParentNode = angular.isDefined(scope.member.Layer);
+
+          // Add all subchildren
           if (angular.isArray(scope.member.Layer)) {
             element.append("<gn-cap-tree-col class='list-group' " +
                 "collection='member.Layer'></gn-cap-tree-col>");
-            $compile(element.contents())(scope);
+            $compile(element.find('gn-cap-tree-col'))(scope);
           }
-          scope.handle = function(evt) {
-            if (scope.isParentNode()) {
-              toggleNode();
-            } else {
-              select();
+        }
+      };
+    }]);
+  module.directive('gnLayerStyles', [
+    function() {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/viewer/wmsimport/' +
+            'partials/styles.html',
+        scope: {
+          styles: '=gnLayerStyles',
+          onClick: '&gnLayerStylesOnClick',
+          current: '=gnLayerStylesCurrent',
+          // 'select' or default is list
+          layout: '@gnLayerStylesLayout'
+        },
+        link: function(scope) {
+          scope.data = {currentStyle: scope.current};
+          scope.$watch('data.currentStyle', function(n, o) {
+            if (n && n !== o) {
+              scope.clickFn(n);
             }
-            evt.stopPropagation();
-          };
-          scope.isParentNode = function() {
-            return angular.isDefined(scope.member.Layer);
+          });
+          scope.clickFn = function(s) {
+            scope.onClick({style: s});
           };
         }
       };

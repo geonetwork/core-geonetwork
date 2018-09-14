@@ -4,63 +4,74 @@
       <input data-gn-selection-md type="checkbox"
              data-ng-model="md['geonet:info'].selected"
              data-ng-change="change()"/>
+    </td>
+    <td>
       <gn-md-type-widget metadata="md"></gn-md-type-widget>
-      <a href=""
-         data-ng-show="md.isTemplate != 's'"
-         data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
-         title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
-      <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>
-      <br/>
-      <div class="gn-record-details">
-        <span title="{{'metadataAuthor' | translate}}">{{md.getOwnername()}}</span>
-        <span class="pull-right text-muted"
-              data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-              data-ng-show="md.mdStatus">{{('status-' + md.mdStatus) | translate}}</span>
+    </td>
+    <td>
+
+      <div class="row">
+        <div class="col-lg-8 col-md-8">
+          <a href=""
+             data-ng-show="md.isTemplate != 's'"
+             data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
+             title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
+          <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>
+          <br/>
+          <div class="gn-record-details text-muted">
+            <small><span data-translate="">owner</span>:</small>
+            <small>{{::md.getOwnername()}}</small>
+            &nbsp;
+            <small data-translate="">updatedOn</small>
+            <small class="text-muted"
+                   data-gn-humanize-time="{{md['geonet:info'].changeDate}}"
+                   data-from-now=""></small>
+
+            <span class="pull-right text-muted"
+                  data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+                  data-ng-show="md.mdStatus">{{('status-' + md.mdStatus) | translate}}</span>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <div class="btn-group pull-right1">
+            <a class="btn btn-default"
+               data-ng-href=""
+               data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
+               data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
+               title="{{'privileges' | translate}}">
+              <i class="fa text-muted"
+                 data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></i>
+            </a>
+            <!-- TODO: subtemplate link for editing is different -->
+            <a class="btn btn-default"
+               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
+               data-ng-href="#/metadata/{{md['geonet:info'].id}}?redirectUrl=catalog.edit"
+               title="{{'edit' | translate}}">
+              <i class="fa fa-pencil"></i>
+            </a>
+            <a class="btn btn-default"
+               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
+               data-gn-click-and-spin="deleteRecord(md)"
+               data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
+               title="{{'delete' | translate}}">
+              <i class="fa fa-times text-danger"></i>
+            </a>
+            <a class="btn btn-default"
+               data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
+               data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
+               title="{{'createChild' | translate}}">
+              <i class="fa fa-sitemap text-muted"></i>
+            </a>
+            <a class="btn btn-default"
+               data-ng-class="user.canEditRecord(md) ? '' : 'btn-single'"
+               data-ng-show="md.isTemplate != 's'"
+               data-ng-href="#/create?from={{md['geonet:info'].id}}"
+               title="{{'duplicate' | translate}}">
+              <i class="fa fa-copy text-muted"></i>
+            </a>
+          </div>
+        </div>
       </div>
-    </td>
-    <td>
-      <a class="btn btn-link"
-         data-ng-href=""
-         data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
-         data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
-         title="{{'privileges' | translate}}">
-        <i class="fa text-muted"
-           data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></i>
-      </a>
-    </td>
-    <td>
-      <!-- TODO: subtemplate link for editing is different -->
-      <a class="btn btn-link"
-         data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-         data-ng-href="#/metadata/{{md['geonet:info'].id}}"
-         title="{{'edit' | translate}}">
-        <i class="fa fa-pencil"></i>
-      </a>
-    </td>
-    <td>
-      <a class="btn btn-link"
-         data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-         data-gn-click-and-spin="deleteRecord(md)"
-         data-gn-confirm-click="{{'deleteRecordConfirm' | translate:md}}"
-         title="{{'delete' | translate}}">
-        <i class="fa fa-times text-danger"></i>
-      </a>
-    </td>
-    <td>
-      <a class="btn btn-link"
-         data-ng-show="md.isTemplate != 's'"
-         data-ng-href="#/create?from={{md['geonet:info'].id}}"
-         title="{{'duplicate' | translate}}">
-        <i class="fa fa-copy text-muted"></i>
-      </a>
-    </td>
-    <td>
-      <a class="btn btn-link"
-         data-ng-show="user.canEditRecord(md) && md.isTemplate != 's'"
-         data-ng-href="#/create?childOf={{md['geonet:info'].id}}"
-         title="{{'createChild' | translate}}">
-        <i class="fa fa-sitemap text-muted"></i>
-      </a>
     </td>
   </tr>
 </table>

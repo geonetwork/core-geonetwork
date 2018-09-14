@@ -1,17 +1,21 @@
 <div data-ng-controller="GnMdViewController" class="container">
   <div class="alert alert-warning"
-       data-ng-hide="mdView.current.record"
+       data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
        data-translate=""
-       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
+       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}', url: '{{url | encodeURIComponent}}'}">
     recordNotFound
+  </div>
+  <div class="row"
+       data-ng-show="!mdView.loadDetailsFinished">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
   </div>
 
   <div class="row gn-md-view"
        data-ng-show="mdView.current.record">
     <button class="btn btn-primary"
             data-ng-click="closeRecord(mdView.current.record)">
-      <i class="fa fa-search"></i>
-      <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
+      <i class="fa fa-search"></i> <span><span>
+      {{'backTo' + (fromView || 'search') | translate}}</span></span>
     </button>
 
     <button class="btn btn-link"
@@ -39,11 +43,12 @@
       <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown"
               aria-expanded="false">
-        <i class="fa fa-eye"></i>&nbsp;
+        <i class="fa fa-eye"></i>
+        <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li class="dropdown-header" data-translate="">chooseAView</li>
+        <!-- <li class="dropdown-header" data-translate="">chooseAView</li> -->
         <li data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
           <a href="" data-ng-click="format()">
             <i class="fa fa-fw"></i>
@@ -55,13 +60,6 @@
           <a href="" data-ng-click="format(f)">
             <i class="fa fa-fw"></i>
             {{f.label | translate}}
-          </a>
-        </li>
-        <li>
-          <a data-ng-href="{{gnUrl}}api/records/{{md.getUuid()}}/formatters/xml"
-                 target="_blank">
-            <i class="fa fa-file-code-o"></i>&nbsp;
-            <span data-translate="">xmlView</span>
           </a>
         </li>
       </ul>
@@ -77,16 +75,16 @@
        title="{{'delete' | translate}}">
 
       <i class="fa fa-times"></i>
+      <span data-translate="" class="hidden-sm hidden-xs">delete</span>
     </a>
 
     <a class="btn btn-primary gn-md-edit-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
-       data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
+       data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
        title="{{'edit' | translate}}">
       <i class="fa fa-pencil"></i>
+      <span data-translate="" class="hidden-sm hidden-xs">edit</span>
     </a>
-
-    <div class="gnMdfeedback"></div>
 
     <div data-ng-show="usingFormatter"
          id="gn-metadata-display"
@@ -104,8 +102,8 @@
         </h1>
 
         <div class="alert alert-info"
-             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | newlines"/>
-        
+             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
+
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="mdView.current.record.status_text.length > 0"
              title="{{mdView.current.record.status_text[0]}}"
@@ -132,17 +130,19 @@
           <tbody>
           <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
                           mdView.current.record.inspirethemewithac.length > 0">
-            <th data-translate="">inspireThemes</th>
-            <td>
-              <button data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
-                   data-ng-click="search({'inspirethemewithac': cat})"
-                   class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
-                   title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
-                <span class="iti-{{cat.split('|')[0]}}"></span>
-              </button>
-            </td>
-          </tr>
-          <tr data-ng-if="mdView.current.record.category.length > 0 ||
+              <th data-translate="">inspireThemes</th>
+              <td>
+                <button
+                  data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                  data-ng-click="search({'inspirethemewithac': cat})"
+                  class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                  title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+                  <span class="iti-{{cat.split('|')[0]}}"></span>
+                </button>
+              </td>
+            </tr>
+            <tr
+              data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
             <th data-translate="">listOfCategories</th>
             <td>
@@ -169,9 +169,17 @@
               <ul>
                 <li data-ng-repeat="k in keywords track by $index"
                     data-ng-if="k"
-                    class="tt-cursor"
-                    title="{{'clickToFilterOn' | translate}} {{k}}">
-                    <a href="" data-ng-click="search({'keyword': k})">{{k}}</a>
+                    class="tt-cursor">
+                    <span data-ng-show="k.link == ''">{{k.value}}</span>
+                    <a href=""
+                       data-ng-href="{{k.link}}"
+                       data-ng-hide="k.link == ''">
+                      {{k.value}}</a>&nbsp;
+                    <a href=""
+                       title="{{'clickToFilterOn' | translate}} {{k.value}}"
+                       data-ng-click="search({'keyword': k.value})">
+                      <i class="fa fa-search"/>
+                    </a>
                 </li>
               </ul>
             </td>
@@ -203,8 +211,8 @@
           <tr data-ng-if="mdView.current.record.legalConstraints">
             <th data-translate="">legalConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index"
-                 data-ng-bind-html="c | newlines">
+              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -212,8 +220,8 @@
           <tr data-ng-if="mdView.current.record.securityConstraints">
             <th data-translate="">securityConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index"
-                 data-ng-bind-html="c | newlines">
+              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -222,8 +230,8 @@
           <tr data-ng-if="mdView.current.record.resourceConstraints">
             <th data-translate="">resourceConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index"
-                 data-ng-bind-html="c | newlines">
+              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index">
+                <span data-gn-lynky="{{c}}" />
               </p>
             </td>
           </tr>
@@ -309,7 +317,7 @@
           <tr data-ng-if="mdView.current.record.lineage">
             <th data-translate="">lineage</th>
             <td>
-              <p data-ng-bind-html="mdView.current.record.lineage | newlines"/>
+              <p data-ng-bind-html="mdView.current.record.lineage | linky | newlines"/>
             </td>
           </tr>
           <tr>
@@ -384,7 +392,7 @@
       </div>
 
       <div class="col-md-4 gn-md-side">
-        <section data-ng-if="mdView.current.record.overviews.length > 0">
+        <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overviews.length > 0">
           <h4>
             <i class="fa fa-fw fa-image"></i>
             <span data-translate="">overview</span>
@@ -403,8 +411,26 @@
         </section>
         </br>
 
+        <div data-gn-userfeedback='mdView.current.record'
+             data-gn-user={{user.username}}
+             data-ng-if="isUserFeedbackEnabled">
+        </div>
+        <div class="gn-md-feedback-buttons clearfix">
+          <div class="pull-left"
+                  data-gn-userfeedbackfull='mdView.current.record'
+                  data-gn-user={{user.username}}
+                  data-ng-if="isUserFeedbackEnabled">
+          </div>
+          <div class="pull-left"
+                  data-gn-userfeedbacknew='mdView.current.record'
+                  data-gn-user={{user.username}}
+                  data-ng-if="isUserFeedbackEnabled">
+          </div>
 
-        <section data-ng-if="mdView.current.record.geoBox.length > 0">
+        </div>
+        <div data-gn-md-feedback="mdView.current.record"></div>
+
+        <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>
             <i class="fa fa-fw fa-map-marker"></i>
             <span data-translate="">extent</span>
@@ -417,13 +443,13 @@
           <!-- TODO: use map config -->
           <p data-ng-repeat="bbox in mdView.current.record.geoBox">
             <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
-                 data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+                 data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=settings&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
           </p>
 
         </section>
-        </br>
 
-        <section data-ng-if="mdView.current.record.creationDate ||
+        <section class="gn-md-side-dates"
+                 data-ng-if="mdView.current.record.creationDate ||
                              mdView.current.record.publicationDate ||
                              mdView.current.record.revisionDate ||
                              mdView.current.record.tempExtentBegin ||
@@ -434,33 +460,36 @@
           </h4>
 
           <p>
-          <dl data-ng-show="mdView.current.record.creationDate">
+          <dl data-ng-show="mdView.current.record.creationDate.length > 0">
             <dt data-translate>creationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
+            <dd data-ng-repeat="creaDate in mdView.current.record.creationDate track by $index"
+                data-gn-humanize-time="{{creaDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.publicationDate">
+          <dl data-ng-show="mdView.current.record.publicationDate.length > 0">
             <dt data-translate>publicationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
+            <dd data-ng-repeat="pubDate in mdView.current.record.publicationDate track by $index"
+                data-gn-humanize-time="{{pubDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.revisionDate">
+          <dl data-ng-show="mdView.current.record.revisionDate.length > 0">
             <dt data-translate>revisionDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
+            <dd data-ng-repeat="revDate in mdView.current.record.revisionDate track by $index"
+                data-gn-humanize-time="{{revDate}}"
                 data-format="YYYY-MM-DD"/>
           </dl>
-          <dl data-ng-show="mdView.current.record.tempExtentBegin ||
+          <dl
+            data-ng-show="mdView.current.record.tempExtentBegin ||
                               mdView.current.record.tempExtentEnd">
             <dt data-translate>tempExtentBegin</dt>
             <dd>
               <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
-              &nbsp;<i class="fa fa-forward"></i>&nbsp;
+              &nbsp;<i class="fa fa-fw fa-forward"></i>
               <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
             </dd>
           </dl>
           </p>
         </section>
-        </br>
 
         <!--<section data-ng-repeat="c in mdView.current.record.getAllContacts().resource track by $index">
           <h4>
@@ -494,8 +523,7 @@
           </div>
         </section></br>-->
 
-
-        <section>
+        <section class="gn-md-side-providedby">
           <h4>
             <i class="fa fa-fw fa-cog"></i>
             <span data-translate="">sourceCatalog</span>
@@ -503,11 +531,10 @@
           <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
                class="gn-source-logo"/>
         </section>
-        </br>
 
-        <section>
+        <section class="gn-md-side-calendar">
           <h4>
-            <i class="fa fa-calendar"></i>&nbsp;
+            <i class="fa fa-fw fa-calendar"></i>
             <span data-translate="">updatedOn</span>
           </h4>
           <p>
@@ -515,9 +542,8 @@
                   data-from-now=""></span>
           </p>
         </section>
-        </br>
 
-        <section>
+        <section class="gn-md-side-social">
           <h4>
             <i class="fa fa-fw fa-share-square-o"></i>
             <span data-translate="">shareOn</span>
@@ -551,15 +577,13 @@
             title="{{'permalink' | translate}}"
             class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
         </section>
-        </br>
 
-        <section>
+        <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
           <h4>
             <i class="fa fa-fw"></i>
             <span data-translate="">rate</span>
           </h4>
           <div data-gn-metadata-rate="mdView.current.record"/>
-
         </section>
       </div>
 

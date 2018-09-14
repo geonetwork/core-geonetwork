@@ -116,7 +116,7 @@
                                   $prefixUrl,
                                   'api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=',
                                    if (thesaurus/key) then thesaurus/key else /root/request/thesaurus,
-                                  '&amp;id=', /root/request/id,
+                                  '&amp;id=', encode-for-uri(/root/request/id),
                                   if (/root/request/lang) then concat('&amp;lang=', /root/request/lang) else '',
                                   if ($textgroupOnly) then '&amp;textgroupOnly' else '')"/>
         </xsl:when>
@@ -199,9 +199,19 @@
               <!-- ... default mode -->
               <xsl:choose>
                 <xsl:when test="$withAnchor">
-                  <!-- TODO multilingual Anchor ? -->
-                  <gmx:Anchor
-                    xlink:href="{$serviceUrl}api/registries/vocabularies/keyword?thesaurus={thesaurus/key}&amp;id={uri}">
+                  <!-- TODO multilingual Anchor ?
+                  -->
+                  <gmx:Anchor>
+                    <xsl:attribute name="xlink:href">
+                      <xsl:choose>
+                        <xsl:when test="matches(uri, '^http.*')">
+                          <xsl:value-of select="uri"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:value-of select="concat($serviceUrl, 'api/registries/vocabularies/keyword?thesaurus=', thesaurus/key, '&amp;id=', uri)"/>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:attribute>
                     <xsl:value-of select="value"/>
                   </gmx:Anchor>
                 </xsl:when>

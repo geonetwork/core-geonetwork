@@ -224,10 +224,21 @@ input[type=text], input[type=number], select {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    padding: 6px;
-
-    .gn-record-details {
-      padding-left: 38px;
+    padding: 6px 3px;
+    .btn-group {
+      margin-top: 3px;
+      .btn-single {
+        border-radius: 4px;
+      }
+    }
+    .col-lg-8, .col-md-8, .col-lg-4, .col-md-4 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @media (min-width: @screen-md-min) {
+      .btn-group {
+        float: right;
+      }
     }
   }
 }
@@ -297,6 +308,17 @@ form.gn-editor {
 
   .form-group {
     margin-bottom: 0px;
+  }
+  div.well {
+    .form-group {
+      margin-bottom: 10px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .btn + .form-group {
+      margin-top: 10px;
+    }
   }
 
   legend {
@@ -634,6 +656,10 @@ form.gn-tab-xml {
       }
     }
   }
+  .nopadding-in-table {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 // search filter boxes
@@ -674,7 +700,7 @@ form.gn-tab-xml {
   position: relative;
 }
 
-.tt-dropdown-menu {
+.tt-menu {
   border-radius: 0;
 }
 
@@ -683,7 +709,7 @@ form.gn-tab-xml {
 }
 
 .input-group {
-  .tt-dropdown-menu {
+  .tt-menu {
     top: 31px !important;
     left: 8px !important;
   }
@@ -772,7 +798,6 @@ gn-directory-associated-md {
 // md type widget (used only in editor for now)
 gn-md-type-widget {
   display: inline-block;
-
   & > div {
     border-radius: 1000px;
     width: 24px;
@@ -811,6 +836,20 @@ gn-md-type-widget {
     }
   }
 }
+.gn-editor-board {
+  .table.gn-results-editor td {
+    gn-md-type-widget {
+      margin-top: 5px;
+    }
+  }
+}
+
+.gn-fixed-scroll {
+  position:fixed;
+  top:60px;
+}
+
+
 
 gn-bounding-polygon {
   label {

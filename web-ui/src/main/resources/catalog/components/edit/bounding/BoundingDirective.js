@@ -231,7 +231,7 @@
               }
 
               var outputCrs = $attrs['outputCrs'] ? $attrs['outputCrs'] :
-                ctrl.currentProjection;
+                  ctrl.currentProjection;
 
               // print output (skip if readonly)
               if (!ctrl.readOnly) {

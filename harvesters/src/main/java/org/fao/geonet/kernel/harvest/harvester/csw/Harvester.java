@@ -143,19 +143,19 @@ class Harvester implements IHarvester<HarvestResult> {
             records.addAll(search(server, s));
 
             //--- align local node
-            Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
+            Aligner aligner = new Aligner(cancelMonitor, context, server, params);
             result = aligner.align(records, errors);
         } catch (Exception t) {
             error = true;
             log.error("Unknown error trying to harvest");
             log.error(t.getMessage());
             log.error(t);
-            errors.add(new HarvestError(context, t, log));
+            errors.add(new HarvestError(context, t));
         } catch (Throwable t) {
             error = true;
             log.fatal("Something unknown and terrible happened while harvesting");
             log.fatal(t.getMessage());
-            errors.add(new HarvestError(context, t, log));
+            errors.add(new HarvestError(context, t));
         }
 
         log.info("Total records processed in all searches :" + records.size());
@@ -207,7 +207,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 throw new OperationAbortedEx("GetRecordById operation not found");
 
         } catch (BadXmlResponseEx e) {
-            errors.add(new HarvestError(context, e, log, params.capabUrl));
+            errors.add(new HarvestError(context, e, params.capabUrl));
             throw e;
         }
 
@@ -251,8 +251,6 @@ class Harvester implements IHarvester<HarvestResult> {
 
         // Use the preferred HTTP method and check one exist.
         configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
-        // Force csw:Record outputSchema
-        request.setOutputSchema(Csw.NAMESPACE_CSW.getURI());
 
         if (params.isUseAccount()) {
             log.debug("Logging into server (" + params.getUsername() + ")");
@@ -268,11 +266,9 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.debug(ex.getMessage());
                 log.debug(String.format("Due to errors, changing CSW harvester method to HTTP %s method.", PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET"));
             }
-            errors.add(new HarvestError(context, ex, log));
+            errors.add(new HarvestError(context, ex));
 
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
-            // Force csw:Record outputSchema
-            request.setOutputSchema(Csw.NAMESPACE_CSW.getURI());
         }
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
@@ -321,7 +317,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
 
                 } catch (Exception ex) {
-                    errors.add(new HarvestError(context, ex, log));
+                    errors.add(new HarvestError(context, ex));
                     log.error("Unable to process record from csw (" + this.params.getName() + ")");
                     log.error("   Record failed: " + foundCnt);
                     log.debug("   Record: " + ((Element) record).getName());
@@ -614,7 +610,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
             return response;
         } catch (Exception e) {
-            errors.add(new HarvestError(context, e, log));
+            errors.add(new HarvestError(context, e));
             log.warning("Raised exception when searching : " + e);
             log.warning("Url: " + request.getHost());
             log.warning("Method: " + request.getMethod());

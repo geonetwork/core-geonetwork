@@ -526,3 +526,10 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'fin','Rejected');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'fin','Preferred records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'fin','Watch list');
 
+
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'fin', 'Average');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (0,'fin', 'Completeness#Is the information on this page complete enough to know what you can expect from this dataset?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (1,'fin', 'Discoverability#Was it easy to find this information page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (2,'fin', 'Readability#Was it easy to read and understand the contents of this page?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (3,'fin', 'Data quality#Does the dataset contain the information you expected, the dataset has enough accuracy, the data is valid/up-to-date?');
+INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (4,'fin', 'Service quality#The dataset is provided as a service or mediatype that is easy to work with?');

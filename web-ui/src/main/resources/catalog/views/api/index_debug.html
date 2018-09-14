@@ -10,7 +10,7 @@
 <script src="/geonetwork/catalog/lib/modernizr.js"></script>
 <script src="/geonetwork/catalog/lib/closure/base.js"></script>
 <script src="/geonetwork/catalog/lib/base64.js"></script>
-<script src="/geonetwork/catalog/lib/jquery-2.0.3.js"></script>
+<script src="/geonetwork/catalog/lib/jquery-2.2.4.js"></script>
 <script src="/geonetwork/catalog/lib/moment+langs.min.js"></script>
 <script src="/geonetwork/catalog/lib/angular/angular.js"></script>
 <script src="/geonetwork/catalog/lib/angular/angular-resource.js"></script>
@@ -30,6 +30,8 @@
 <script src="/geonetwork/catalog/lib/angular.ext/bindHtml.js"></script>
 <script src="/geonetwork/catalog/lib/angular.ext/tabs.js"></script>
 <script src="/geonetwork/catalog/lib/angular.ext/slider.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/date.js"></script>
+<script src="/geonetwork/catalog/lib/angular.ext/angular-floatThead.js"></script>
 <script src="/geonetwork/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.js"></script>
 <script src="/geonetwork/catalog/lib/tinycolor.js"></script>
 <script src="/geonetwork/catalog/lib/style/bootstrap/dist/js/bootstrap.js"></script>
@@ -88,10 +90,10 @@
             "eng": "en",
             "dut": "du",
             "fre": "fr",
-            "ger": "ge",
+            "ger": "de",
             "kor": "ko",
             "spa": "es",
-            "cze": "cz",
+            "cze": "cs",
             "cat": "ca",
             "fin": "fi",
             "ice": "is"
@@ -207,8 +209,8 @@
     config = defaultConfig;
   }
 
-  var module = angular.module('gn_search');
-  module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+  var cfgModule = angular.module('gn_config', []);
+  cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
     function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
       gnGlobalSettings.init(config, 'http://localhost:8080/geonetwork/srv/', gnViewerSettings, gnSearchSettings);
     }]);

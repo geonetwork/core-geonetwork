@@ -127,8 +127,7 @@
           featureTypeName: '@',
           wfsUrl: '@',
           displayCount: '@',
-          layer: '=',
-          heatmapConfig: '@'
+          layer: '='
         },
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
@@ -143,8 +142,6 @@
           // Display or not the results count
           scope.showCount = angular.isDefined(attrs['showcount']);
 
-          scope.heatmapConfig = angular.fromJson(scope.heatmapConfig);
-
           scope.ctrl = {
             searchGeometry: undefined
           };
@@ -156,69 +153,16 @@
           scope.filtersChanged = false;
           scope.previousFilterState = {
             params: {},
-            any: '',
             geometry: ''
           };
 
+          // this will hold filters entered by the user for each facet
+          // keys are facet names
+          scope.facetFilters = {};
+
           // Get an instance of index object
-          var indexObject, geometry, extentFilter;
-
-          var heatmapsRequest =
-              gnIndexRequestManager.register('WfsFilter', 'heatmaps');
-          var defaultHeatmapConfig = {
-            radius: 30,
-            blur: 55,
-            opacity: .7,
-            //gradient: ['#0f0', '#ff0', '#f00', '#fff'],
-            visible: false
-          };
-          var hmEventKeys = [];
-
-          scope.isHeatMapVisible = false;
-          scope.heatmapLayer = null;
-          scope.source = null;
-          if (scope.map) {
-            scope.source = new ol.source.Vector();
-            scope.heatmapLayer = new ol.layer.Heatmap(
-                angular.extend({
-                  source: scope.source,
-                  visible: scope.isHeatMapVisible
-                }, defaultHeatmapConfig, scope.heatmapConfig));
-            scope.map.addLayer(scope.heatmapLayer);
-
-            $('body').append('<div id="heatmap-info" data-content=""' +
-                'style="position: absolute; z-index: 100;"/>');
-            var info = $('#heatmap-info');
-            var displayFeatureInfo = function(pixel) {
-              var feature = scope.map.forEachFeatureAtPixel(pixel,
-                  function(feature, layer) {
-                    if (layer == scope.heatmapLayer) {
-                      return feature;
-                    }
-                  }, undefined, function(layer) {
-                    return layer instanceof ol.layer.Vector;
-                  });
-              if (feature) {
-                var mapTop = scope.map.getTarget().getBoundingClientRect().top;
-                info.css({
-                  left: pixel[0] + 'px',
-                  top: (pixel[1] + mapTop) + 'px'
-                });
-                info.attr('data-original-title', feature.get('count'))
-                    .tooltip('show');
-              } else {
-                info.tooltip('hide');
-              }
-            };
-
-            scope.map.on('pointermove', ngeoDebounce(function(evt) {
-              if (evt.dragging) {
-                info.tooltip('hide');
-                return;
-              }
-              displayFeatureInfo(scope.map.getEventPixel(evt.originalEvent));
-            }, 300));
-          }
+          var indexObject, extentFilter;
+          scope.filterGeometry = undefined;
 
           /**
            * Init the directive when the scope.layer has changed.
@@ -247,6 +191,7 @@
             uuid = scope.md && scope.md.getUuid();
             ftName = scope.featureTypeName ||
                 scope.layer.getSource().getParams().LAYERS;
+            scope.featureTypeName = ftName;
 
             appProfile = null;
             appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
@@ -269,11 +214,6 @@
 
             scope.checkWFSServerUrl();
             scope.initIndexRequest();
-
-            if (scope.map) {
-              resetHeatMap();
-              hmEventKeys.push(map.on('moveend', refreshHeatmap));
-            }
           };
 
           /**
@@ -334,7 +274,6 @@
             var docFields = [];
             scope.countTotal = null;
 
-            heatmapsRequest.init(config);
             indexObject.getDocTypeInfo(config).then(function() {
               scope.isFeaturesIndexed = true;
               scope.status = null;
@@ -401,7 +340,6 @@
               };
               output[fieldName].values[facetKey] = true;
             }
-            scope.searchInput = '';
             scope.filterFacets();
           };
           ctrl.onCheckboxClick = scope.onCheckboxClick;
@@ -449,39 +387,42 @@
               }
             });
 
-            indexObject.searchWithFacets({
-              params: scope.output,
-              any: scope.searchInput,
-              geometry: geometry
-            }).
-                then(function(resp) {
-                  indexObject.pushState();
-                  scope.fields = resp.facets;
-                  scope.count = resp.count;
-                  angular.forEach(scope.fields, function(f) {
-                    if (expandedFields.indexOf(f.name) >= 0) {
-                      f.expanded = true;
-                    }
-                  });
-                  refreshHeatmap();
-                });
-          };
+            // use value filters for facets
+            var aggs = {};
+            Object.keys(scope.facetFilters).forEach(function(facetName) {
+              var filter = scope.facetFilters[facetName];
+              if (!filter) { return; }
 
-          function refreshHeatmap() {
-            return;
-            if (scope.isFeaturesIndexed && scope.isHeatMapVisible) {
-              heatmapsRequest.searchWithFacets({
+              // make the filter case insensitive, ie : abc => [aA][bB][cC]
+              filter = filter.replace(/./g, function(match) {
+                return '[' + match.toLowerCase() + match.toUpperCase() + ']';
+              });
+
+              aggs[facetName] = {
+                terms: {
+                  include: '.*' + filter + '.*'
+                }
+              };
+            });
+
+            //indexObject is only available if Elastic is configured
+            if (indexObject) {
+              indexObject.searchWithFacets({
                 params: scope.output,
-                any: scope.searchInput
-              },
-              gnIndexService.getHeatmapParams(scope.map)).
+                geometry: scope.filterGeometry
+              }, aggs).
                   then(function(resp) {
-                    scope.heatmaps = resp.aggs;
-                    // resp.indexData.facet_counts.facet_heatmaps;
+                    indexObject.pushState();
+                    scope.fields = resp.facets;
+                    scope.count = resp.count;
+                    angular.forEach(scope.fields, function(f) {
+                      if (expandedFields.indexOf(f.name) >= 0) {
+                        f.expanded = true;
+                      }
+                    });
                   });
             }
-          }
-
+          };
 
           scope.getMore = function(field) {
             indexObject.getFacetMoreResults(field).then(function(response) {
@@ -496,7 +437,6 @@
            */
           scope.resetFacets = function() {
             scope.output = {};
-            scope.searchInput = '';
 
             scope.resetSLDFilters();
 
@@ -514,7 +454,6 @@
                   indexObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                  refreshHeatmap();
                 });
           };
 
@@ -532,7 +471,6 @@
 
             // apply filters to form
             scope.output = initialFilters.qParams || {};
-            scope.searchInput = initialFilters.any || '';
             if (initialFilters.geometry) {
               scope.ctrl.searchGeometry =
                   initialFilters.geometry[0][0] + ',' +
@@ -544,7 +482,6 @@
             // resend a search with initial filters to alter the facets
             return indexObject.searchWithFacets({
               params: initialFilters.qParams,
-              any: initialFilters.any,
               geometry: initialFilters.geometry
             }).then(function(resp) {
               indexObject.pushState();
@@ -559,7 +496,6 @@
               });
 
               scope.$broadcast('FiltersChanged');
-              refreshHeatmap();
             });
           };
 
@@ -578,7 +514,6 @@
             // save this filter state for future comparison
             scope.previousFilterState.params = angular.merge({}, scope.output);
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
-            scope.previousFilterState.any = scope.searchInput;
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
@@ -642,24 +577,13 @@
             });
           };
 
-          /**
-           * Clear the search input
-           */
-          scope.clearInput = function() {
-            scope.searchInput = '';
-            scope.filterFacets();
-          };
-          scope.searchInput = '';
-
           // Init the directive
           if (scope.layer) {
             init();
           }
           else {
             scope.$watch('layer', function(n, o) {
-              if (n === null && scope.map) {
-                resetHeatMap();
-              } else if (n !== o) {
+              if (n !== o) {
                 init();
               }
             });
@@ -668,59 +592,24 @@
           //Manage geographic search
           scope.$watch('ctrl.searchGeometry', function(geom, old) {
             extentFilter = undefined;
+            scope.filterGeometry = undefined;
             if (geom && geom != ',,,') {
               extentFilter = geom.split(',').map(function(val) {
                 return parseFloat(val);
               });
-              geometry = [
+              scope.filterGeometry = [
                 [extentFilter[0], extentFilter[3]],
                 [extentFilter[2], extentFilter[1]]
               ];
               scope.filterFacets();
             }
             // when reset from gnBbox directive
-            else if (old && geom != '') {
-              scope.filterFacets();
-            }
-            else if (!old && geom === ',,,') {
-              geometry = undefined;
+            else {
               scope.filterFacets();
             }
             // reset from wfsFilter directive: only signal change of filter
             scope.$broadcast('FiltersChanged');
           });
-
-          function resetHeatMap() {
-            if (scope.source) {
-              scope.source.clear();
-            }
-            while (hmEventKeys.length) {
-              map.unByKey(hmEventKeys.pop());
-            }
-          }
-
-          scope.$watch('isHeatMapVisible', function(n, o) {
-            if (n != o) {
-              refreshHeatmap();
-              scope.heatmapLayer.setVisible(n);
-            }
-          });
-
-          // Update heatmap layers from index response
-          scope.$watch('heatmaps', function(n, o) {
-            if (n != o) {
-              // TODO: May contains multiple heatmaps
-              if (angular.isArray(n.geom)) {
-                scope.source.clear();
-                scope.source.addFeatures(
-                    gnIndexService.heatmapToFeatures(
-                    n.geom,
-                    scope.map.getView().getProjection())
-                );
-              }
-            }
-          });
-
 
           scope.showTable = function() {
             gnFeaturesTableManager.clear();
@@ -736,36 +625,7 @@
 
           element.on('$destroy', function() {
             scope.$destroy();
-            resetHeatMap();
           });
-
-          scope.toSqlOgr = function() {
-            indexObject.pushState();
-            var state = indexObject.getState();
-
-            if (!state.any) {
-              var where = [];
-              angular.forEach(state.qParams, function(fObj, fName) {
-                var clause = [];
-                angular.forEach(fObj.values, function(v, k) {
-                  clause.push(fName + '=' + k);
-                });
-                where.push('(' + clause.join(' OR ') + ')');
-              });
-              console.log(where.join(' AND '));
-            }
-            else {
-              indexObject.search_es({
-                size: scope.count || 10000,
-                aggs: {}
-              }).then(function(data) {
-                var where = data.hits.hits.map(function(res) {
-                  return res._id;
-                });
-                console.log(where.join(' OR '));
-              });
-            }
-          };
 
           // triggered when the filter state is changed
           // (compares with previous state)
@@ -774,31 +634,35 @@
             // or equal to ',,,' or '', which all amount to the same thing
             function normalize(s) { return (s || '').replace(',,,', ''); }
 
-            var inputChanged = scope.searchInput !=
-                scope.previousFilterState.any;
             var geomChanged = normalize(scope.ctrl.searchGeometry) !==
                 normalize(scope.previousFilterState.geometry);
 
             // only compare params object if necessary
             var paramsChanged = false;
-            if (!inputChanged && !geomChanged) {
+            if (!geomChanged) {
               paramsChanged = !angular.equals(
                   scope.previousFilterState.params, scope.output);
             }
 
-            scope.filtersChanged = inputChanged || paramsChanged || geomChanged;
+            scope.filtersChanged = paramsChanged || geomChanged;
           });
 
           // returns true if there is an active filter for this field
           // field object is optional
           scope.isFilterActive = function(facetName, field) {
+            // special case for geometry
+            if (facetName == 'geometry') {
+              return !!scope.filterGeometry;
+            }
+
             // no available value: return false
             if (!scope.output[facetName]) {
               return false;
             }
 
             // special case for dates
-            if (scope.output[facetName].type == 'date') {
+            if (scope.output[facetName].type == 'date' ||
+                scope.output[facetName].type == 'rangeDate') {
               var values = scope.output[facetName].values;
 
               // no dates defined: leave
@@ -808,25 +672,19 @@
 
               // check if there is a valid "higher than" or "lower than" filter
               var lowerBound = field.dates && field.dates[0];
-              var upperBound = field.dates && field.dates[field.dates.length-1];
+              var upperBound = field.dates && field.dates[field.dates.length - 1];
               var lowerActive = values.from &&
-                moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf()
-                > lowerBound;
+                  moment(values.from, 'DD-MM-YYYY').startOf('day').valueOf() >
+                  lowerBound;
               var upperActive = values.to &&
-                moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf()
-                < upperBound;
+                  moment(values.to, 'DD-MM-YYYY').endOf('day').valueOf() <
+                  upperBound;
               return lowerActive || upperActive;
-            }
-
-            // special case for geometry
-            if (facetName == 'geometry') {
-              return scope.ctrl.searchGeometry &&
-                scope.ctrl.searchGeometry !== ',,,';
             }
 
             // other fields: the filter must be active
             return true;
-          }
+          };
         }
       };
     }]);

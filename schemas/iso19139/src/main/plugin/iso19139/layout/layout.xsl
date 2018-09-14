@@ -101,11 +101,13 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="refToDelete" required="no"/>
+    <xsl:param name="overrideLabel" required="no"/>
 
     <xsl:apply-templates mode="mode-iso19139" select="*|@*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
       <xsl:with-param name="refToDelete" select="$refToDelete"/>
+      <xsl:with-param name="overrideLabel" select="$overrideLabel"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -170,6 +172,80 @@
 
   </xsl:template>
 
+  <!-- Render simple element with gmx:Anchor -->
+  <xsl:template mode="mode-iso19139" priority="200"
+                match="*[gmx:Anchor]">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
+
+    <xsl:variable name="elementName" select="name()"/>
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig"
+                  select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+    <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
+
+    <xsl:variable name="attributes">
+      <xsl:if test="$isEditing">
+
+        <!-- Create form for all existing attribute (not in gn namespace)
+        and all non existing attributes not already present for the
+        current element and its children (eg. @uom in gco:Distance).
+        A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
+        <xsl:apply-templates mode="render-for-field-for-attribute"
+                             select="
+              @*|
+              gn:attribute[not(@name = parent::node()/@*/name())]">
+          <xsl:with-param name="ref" select="gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates mode="render-for-field-for-attribute"
+                             select="
+          */@*|
+          */gn:attribute[not(@name = parent::node()/@*/name())]">
+          <xsl:with-param name="ref" select="*/gn:element/@ref"/>
+          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+        </xsl:apply-templates>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:variable name="labelConfig">
+      <xsl:choose>
+        <xsl:when test="$overrideLabel != ''">
+          <element>
+            <label><xsl:value-of select="$overrideLabel"/></label>
+          </element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="$labelConfig"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label" select="$labelConfig/*[1]"/>
+      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <!--<xsl:with-param name="widget"/>
+      <xsl:with-param name="widgetParams"/>-->
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="attributesSnippet" select="$attributes"/>
+      <xsl:with-param name="forceDisplayAttributes" select="true()" />
+      <xsl:with-param name="type"
+                      select="gn-fn-metadata:getFieldType($editorConfig, name(),
+            name(gmx:Anchor))"/>
+      <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo"
+                      select="if ($refToDelete) then $refToDelete else gn:element"/>
+      <!-- TODO: Handle conditional helper -->
+      <xsl:with-param name="listOfValues" select="$helper"/>
+      <xsl:with-param name="isFirst"
+                      select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
+    </xsl:call-template>
+  </xsl:template>
 
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19139" priority="200"
@@ -516,4 +592,46 @@
       <xsl:with-param name="listOfValues" select="$helper"/>
     </xsl:call-template>
   </xsl:template>
+
+
+  <xsl:template mode="mode-iso19139"
+                match="gmd:topicCategory[1]"
+                priority="2100">
+
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+
+    <xsl:variable name="elementName" select="name()" />
+
+    <xsl:variable name="topicCategories">
+      <xsl:for-each select="../*[name() = $elementName]">
+        <xsl:value-of select="gmd:MD_TopicCategoryCode/text()" />
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label"
+                      select="$labelConfig"/>
+      <xsl:with-param name="value" select="$topicCategories"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="directive" select="'gn-topiccategory-selector'"/>
+      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- Ignore the following topic categories-->
+  <xsl:template mode="mode-iso19139"
+                match="gmd:topicCategory[
+                        preceding-sibling::*[1]/name() = name()]"
+                priority="2100"/>
+
+  <xsl:template mode="mode-iso19139"
+                match="gn:child[@name = 'topicCategory' and count(../gmd:topicCategory) > 0]"
+                priority="2100" />
+
 </xsl:stylesheet>

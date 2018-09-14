@@ -28,9 +28,11 @@ import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -277,8 +279,12 @@ public class AjaxEditUtils extends EditUtils {
         //--- locate the geonet:element and geonet:info elements and clone for
         //--- later re-use
         Element refEl = (Element) (el.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE)).clone();
-        Element info = (Element) (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)).clone();
-        md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        Element info = null;
+        
+        if(md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE) != null) {
+            info = (Element) (md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE)).clone();
+            md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        }
 
         Element child = null;
         MetadataSchema mds = dataManager.getSchema(schema);
@@ -337,11 +343,38 @@ public class AjaxEditUtils extends EditUtils {
             editLib.expandTree(mds, el);
 
         }
-        //--- attach the info element to the child
-        child.addContent(info);
+        if(info != null) {
+            //--- attach the info element to the child
+            child.addContent(info);
+        }
 
-        //--- attach the info element to the metadata root)
-        md.addContent((Element) info.clone());
+          /* When adding an gmx:Anchor to an element, due to the following code gets also a gco:CharacterString in EditLib.
+
+           Remove the gco:CharacterString subelement in this case.
+
+          } else if (isISOPlugin &&
+            type.getElementList().contains(
+                isoPlugin.getBasicTypeCharacterStringName()) &&
+            !hasSuggestion) {
+            // expand element which have no suggestion
+            // and have a gco:CharacterString substitute.
+            // gco:CharacterString is the default.
+            if (Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                Log.debug(Geonet.EDITORFILLELEMENT, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+            }
+            Element child = isoPlugin.createBasicTypeCharacterString();
+            element.addContent(child);
+        */
+        if (childName != null && childName.equals("gmx:Anchor")) {
+            if (child.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
+                child.removeChild("CharacterString", ISO19139Namespaces.GCO);
+            }
+        }
+
+        if(info != null) {
+            //--- attach the info element to the metadata root)
+            md.addContent((Element) info.clone());
+        }
 
         //--- store the metadata in the session again
         setMetadataIntoSession(session, (Element) md.clone(), id);
@@ -542,6 +575,7 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
+        Processor.processXLink(md, this.context);
 
         //--- do the validation on the metadata
         return dataManager.doValidate(session, schema, id, md, lang, false).one();

@@ -52,6 +52,7 @@ public class MetadataResourceDatabaseMigrationTest extends AbstractServiceIntegr
             "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
             "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
     public static final String XPATH_AFTER_UPDATE = "*//*[contains(text(), 'api/records')]";
+
     private static String resources =
         AbstractCoreIntegrationTest.getClassFile(
             MetadataResourceDatabaseMigrationTest.class).getParent();
@@ -103,5 +104,32 @@ public class MetadataResourceDatabaseMigrationTest extends AbstractServiceIntegr
         // 3 links and a thumbnail
         assertEquals("New links with correct URL",
             NUMBER_OF_LINKS_TO_UPDATE + 1, links.size());
+    }
+    
+    
+    @Test
+    public void testMetadataResourceThumbnailMigration() throws Exception {
+        final String fileName = "record-with-external-url-for-thumbnails.xml";
+        File metadataFile = new File(resources, fileName);
+        Element metadata = Xml.loadStream(new FileInputStream(metadataFile));
+
+        String XPATH_THUMBNAIL_WITH_EXTERNAL_URL =
+    			"*//gmd:graphicOverview/gmd:MD_BrowseGraphic[gmd:fileDescription/gco:CharacterString]/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http://external.com')]";
+
+        List<Element> linksThumbnail =
+            Lists.newArrayList((Iterable<? extends Element>)
+                Xml.selectNodes(metadata, XPATH_THUMBNAIL_WITH_EXTERNAL_URL));
+        assertEquals("Two thumbnail link using external domain",
+            2, linksThumbnail.size());
+
+        boolean changed = MetadataResourceDatabaseMigration.updateMetadataResourcesLink(
+            metadata, null, settingManager
+        );
+        
+        linksThumbnail =
+            Lists.newArrayList((Iterable<? extends Element>)
+                Xml.selectNodes(metadata, XPATH_THUMBNAIL_WITH_EXTERNAL_URL));
+        assertEquals("Old thumbnails are now removed", linksThumbnail.size(), 0);
+
     }
 }

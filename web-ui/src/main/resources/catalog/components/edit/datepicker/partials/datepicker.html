@@ -1,7 +1,7 @@
-<div class="form-group gn-field"
+<div class="form-group gn-field gn-nopadding-top gn-nopadding-bottom"
      data-ng-class="{'has-error': !isValidDate, 'gn-required': required}">
   <label class="control-label col-sm-2" data-ng-if="label">{{label}}</label>
-  <div data-ng-class="label ? 'col-sm-9' : 'col-sm-12'">
+  <div data-ng-class="label ? 'col-sm-9' : 'col-sm-12'" class="gn-nopadding-left gn-nopadding-right">
     <!-- The hidden field with the value. -->
     <input type="hidden" class="form-control"
            name="{{elementRef}}" value="{{xmlSnippet}}"/>
@@ -16,6 +16,7 @@
            data-selected-info="indeterminatePosition"
            data-gn-schema-info="indeterminatePosition"
            data-allow-blank=""
+           data-init-on-load="true"
            lang="lang"></div>
 
       <input type="number" class="form-control"

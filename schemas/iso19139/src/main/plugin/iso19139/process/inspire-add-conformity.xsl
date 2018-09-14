@@ -109,9 +109,7 @@
 
   <!-- TODO : retrieve local copy -->
   <xsl:variable name="inspire-thesaurus"
-                select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
-  <!--<xsl:variable name="inspire-thesaurus"
-    select="document('http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/inspire-theme.rdf')"/>-->
+                select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/httpinspireeceuropaeutheme-theme.rdf'))"/>
 
   <xsl:variable name="inspire-theme" select="$inspire-thesaurus//skos:Concept"/>
 

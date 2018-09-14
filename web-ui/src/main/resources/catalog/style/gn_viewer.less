@@ -9,6 +9,7 @@
 [gn-main-viewer],
 .gn-main-viewer {
   position: relative;
+  height:  calc(~"100vh - 102px");
 
   [role=tooltip] {
     position: absolute;
@@ -37,7 +38,7 @@
   }
   [ngeo-map] {
     width: 100%;
-    height: 89.9vh;
+    height:  calc(~"100vh - 102px");
     &.gn-gfi-loading:hover {
       cursor: wait;
     }
@@ -102,7 +103,7 @@
     top: @viewport-padding;
     right: 0;
     width: 2.8em;
-    button {
+    button, [role="button"] {
       margin-bottom: .2em;
       border-right-width: none;
       border-top-right-radius: 0;
@@ -113,9 +114,9 @@
       &.active {
         width: 3.0em;
         border-left: medium none;
-        border-radius: 0px;
+        border-radius: 0;
         margin-left: -0.2em;
-        background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.7);
+        background: none repeat scroll 0 0 rgba(0, 0, 0, 0.7);
         border-color: transparent;
         color: #FFF;
       }
@@ -127,7 +128,8 @@
   }
   .control-tools {
     top: auto;
-    bottom: @viewport-padding;
+    bottom: 50px;
+    position: fixed;
   }
   & > .panel {
     background: rgba(255,255,255,.8);
@@ -142,10 +144,19 @@
     max-width: ~"calc(100% - 4em)";
     overflow-y: auto;
     transition: opacity @transition-params;
+    h3 {
+      margin-top: 15px;
+    }
     li[gn-layermanager-item] {
       .fa-arrows-alt,.gn-layer-ordering {
         opacity: 0;
         transition: opacity @transition-params;
+      }
+      label {
+        padding: 0px;
+        display: block;
+        margin-bottom: 0px;
+
       }
     }
     .gn-layer-outofrange > label {
@@ -244,6 +255,10 @@
       width: 100%;
       font-style: italic;
       font-size: 13px;
+    }
+    label {
+      padding: 10px 0;
+      font-weight: normal;
     }
   }
 
@@ -598,8 +613,9 @@ gn-wps-process-form {
     box-shadow: none;
 
     .panel-heading {
-      height: 2em;
-      line-height: 1.6em;
+      height: auto;
+      line-height: 1.2em;
+      padding: 6px 15px;
 
       .close {
         margin-right: -0.2em;
@@ -632,6 +648,25 @@ gn-geometry-tool .btn-group {
  }
 
 .layermanager-item-menu {
+  margin: -9px -14px;
+  ul {
+    li {
+      padding: 8px 10px !important;
+      border-top: 1px solid #ccc;
+      a {
+        font-size: 14px;
+      }
+      &:first-child {
+        border-top: 0;
+      }
+      label {
+        color: #757575;
+      }
+    }
+    input[type="range"] {
+      width: 100% !important;
+    }
+  }
 }
 
 [gn-ows-context] {
@@ -657,4 +692,14 @@ gn-geometry-tool .btn-group {
     height: 40px;
     margin: 2px !important;
   }
+}
+
+// heatmap overlay with count info
+.heatmap-overlay {
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 6px;
+  line-height: 1em;
+  color: white;
+  pointer-events: none;
 }

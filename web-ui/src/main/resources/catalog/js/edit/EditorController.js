@@ -45,6 +45,7 @@
   goog.require('gn_scroll_spy');
   goog.require('gn_share');
   goog.require('gn_thesaurus');
+  goog.require('gn_topiccategory');
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
@@ -52,7 +53,8 @@
        'gn_import_controller', 'gn_batchedit_controller',
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
+       'gn_scroll_spy', 'gn_thesaurus', 'gn_topiccategory',
+       'ui.bootstrap.datetimepicker',
        'ngRoute', 'gn_mdactions_service', 'pascalprecht.translate']);
 
   var tplFolder = '../../catalog/templates/editor/';
@@ -64,13 +66,8 @@
       $routeProvider.
           when('/metadata/:id', {
             templateUrl: tplFolder + 'editor.html',
-            controller: 'GnEditorController'}).
-          when('/metadata/:id/tab/:tab', {
-            templateUrl: tplFolder + 'editor.html',
-            controller: 'GnEditorController'}).
-          when('/metadata/:id/tab/:tab/:displayAttributes', {
-            templateUrl: tplFolder + 'editor.html',
-            controller: 'GnEditorController'}).
+            controller: 'GnEditorController',
+            reloadOnSearch: false}).
           when('/create', {
             templateUrl: gnGlobalSettings.gnCfg.mods.editor.createPageTpl,
             controller: 'GnNewMetadataController'}).
@@ -130,6 +127,7 @@
       $scope.gnConfig = gnConfig;
       $scope.unsupportedSchema = false;
       $scope.gnOnlinesrc = gnOnlinesrc;
+      $scope.redirectUrl = null;
 
       /**
        * Animation duration for slide up/down
@@ -172,13 +170,13 @@
               $scope.id = $routeParams.id;
 
               $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
-              $scope.mdCategories = [];
+              $scope.mdCategories = {values: []};
               var categories = data.metadata[0].category;
               if (categories) {
                 if (angular.isArray(categories)) {
-                  $scope.mdCategories = categories;
+                  $scope.mdCategories.values = categories;
                 } else {
-                  $scope.mdCategories.push(categories);
+                  $scope.mdCategories.values.push(categories);
                 }
               }
 
@@ -188,7 +186,7 @@
 
               // Get the schema configuration for the current record
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
-
+              $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {
 
@@ -229,10 +227,10 @@
                   id: $routeParams.id,
                   formId: '#gn-editor-' + $routeParams.id,
                   containerId: '#gn-editor-container-' + $routeParams.id,
-                  tab: $routeParams.tab || defaultTab,
-                  displayAttributes: $routeParams.displayAttributes === 'true',
-                  displayTooltips: $routeParams.displayTooltips === 'true',
-                  displayTooltipsMode: $routeParams.displayTooltipsMode || '',
+                  tab: $location.search()['tab'] || defaultTab,
+                  displayAttributes: $location.search()['displayAttributes'] === 'true',
+                  displayTooltips: $location.search()['displayTooltips'] === 'true',
+                  displayTooltipsMode: $location.search()['displayTooltipsMode'] || '',
                   compileScope: $scope,
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
@@ -260,8 +258,25 @@
                   editorFormUrl += '&displayTooltips=true';
                 }
 
+                if (gnCurrentEdit.displayTooltipsMode != '') {
+                  editorFormUrl += '&displayTooltipsMode='
+                    + gnCurrentEdit.displayTooltipsMode ;
+                }
+
                 gnEditor.load(editorFormUrl).then(function() {
                   // $scope.onFormLoad();
+                  // Once the editor form is loaded, then
+                  // user might have set a target element
+                  // to scroll to.
+                  var target = $location.search()['scrollTo'];
+                  if (target) {
+                    $timeout(function () {
+                      gnUtilityService.scrollTo(target);
+                    }, 300);
+                    // Delayed a bit, the time to the form
+                    // and all directives to be rendered which
+                    // may affect element positions.
+                  }
                 });
 
                 window.onbeforeunload = function() {
@@ -333,6 +348,8 @@
         // Disable form + indicator ?
         //        $($scope.formId + ' > fieldset').fadeOut(duration);
         $scope.save(true);
+
+        $location.search('tab', tabIdentifier);
       };
 
       /**
@@ -448,14 +465,16 @@
         window.onbeforeunload = null;
 
         // if there is no history, attempt to close tab
-        if (window.history.length == 1) {
+        if ($scope.redirectUrl != null) {
+          window.location.replace($scope.redirectUrl);
+        } else if (window.history.length == 1) {
           window.close();
           // This last point may trigger
           // "Scripts may close only the windows that were opened by it."
           // when the editor was not opened by a script.
+        } else {
+          window.history.back();
         }
-
-        window.history.back();
       };
 
       $scope.cancel = function(refreshForm) {
@@ -521,7 +540,7 @@
 
         // else: do a mandatory validation check to ensure that if the MD is
         // invalid, the user can decide to stay in the editor to fix it
-        gnValidation.errorCheck().then(function (hasErrors) {
+        gnValidation.errorCheck().then(function(hasErrors) {
           // if record unpublish on save is enabled: ask for confirmation
           // before saving and closing the editor
           if (hasErrors) {
@@ -530,7 +549,7 @@
             $scope.confirmClose();
           }
         });
-      }
+      };
       $scope.confirmClose = function() {
         var promise = gnEditor.save(false, null, true)
             .then(function(form) {

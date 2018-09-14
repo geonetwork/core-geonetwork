@@ -1,12 +1,17 @@
 <table class="table table-striped">
   <tr>
     <th data-translate="">attributeName</th>
+    <th data-translate="" data-ng-show="showCodeColumn">attributeCode</th>
     <th data-translate="">attributeDefinition</th>
   </tr>
   <tr data-ng-repeat="attribute in attributeTable track by $index">
     <td>
       <strong>{{attribute.name}}</strong>
       <span data-ng-show="attribute.type">&nbsp;({{attribute.type}})</span>
+    </td>
+    <td data-ng-show="showCodeColumn">
+      <strong data-ng-show="{{attribute.link == null || attribute.link == ''}}" >{{attribute.code}}</strong>
+      <a href="{{attribute.link}}" data-ng-show="{{attribute.link != null && attribute.link > ''}}" >{{attribute.code}}</a>
     </td>
     <td>
       {{attribute.definition}}

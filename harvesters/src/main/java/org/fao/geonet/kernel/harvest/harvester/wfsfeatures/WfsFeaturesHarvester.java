@@ -80,7 +80,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult> {
         //--- force the creation of a new uuid
         params.setUuid(UUID.randomUUID().toString());
 
-        String id = settingMan.add("harvesting", "node", getType());
+        String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
@@ -101,7 +101,7 @@ public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult> {
 
         String path = "harvesting/id:" + id;
 
-        settingMan.removeChildren(path);
+        harvesterSettingsManager.removeChildren(path);
 
         //--- update database
         storeNode(copy, path);
@@ -127,16 +127,16 @@ public class WfsFeaturesHarvester extends AbstractHarvester<HarvestResult> {
                                   String siteId, String optionsId) throws SQLException {
         WfsFeaturesParams params = (WfsFeaturesParams) p;
 
-        settingMan.add("id:" + siteId, "url", params.url);
-        settingMan.add("id:" + siteId, "icon", params.icon);
-        settingMan.add("id:" + optionsId, "lang", params.lang);
-        settingMan.add("id:" + optionsId, "query", params.query);
-        settingMan.add("id:" + optionsId, "outputSchema", params.outputSchema);
-        settingMan.add("id:" + optionsId, "stylesheet", params.stylesheet);
-        settingMan.add("id:" + optionsId, "streamFeatures", params.streamFeatures);
-        settingMan.add("id:" + optionsId, "createSubtemplates", params.createSubtemplates);
-        settingMan.add("id:" + optionsId, "templateId", params.templateId);
-        settingMan.add("id:" + optionsId, "recordsCategory", params.recordsCategory);
+        harvesterSettingsManager.add("id:" + siteId, "url", params.url);
+        harvesterSettingsManager.add("id:" + siteId, "icon", params.icon);
+        harvesterSettingsManager.add("id:" + optionsId, "lang", params.lang);
+        harvesterSettingsManager.add("id:" + optionsId, "query", params.query);
+        harvesterSettingsManager.add("id:" + optionsId, "outputSchema", params.outputSchema);
+        harvesterSettingsManager.add("id:" + optionsId, "stylesheet", params.stylesheet);
+        harvesterSettingsManager.add("id:" + optionsId, "streamFeatures", params.streamFeatures);
+        harvesterSettingsManager.add("id:" + optionsId, "createSubtemplates", params.createSubtemplates);
+        harvesterSettingsManager.add("id:" + optionsId, "templateId", params.templateId);
+        harvesterSettingsManager.add("id:" + optionsId, "recordsCategory", params.recordsCategory);
     }
 
     //---------------------------------------------------------------------------

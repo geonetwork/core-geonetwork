@@ -32,7 +32,8 @@
     '$rootScope',
     '$http',
     'gnHttp',
-    function(gnUtilityService, $q, $rootScope, $http, gnHttp) {
+    function(gnUtilityService, $q, $rootScope,
+             $http, gnHttp) {
       /**
        * Utility to format a search response. JSON response
        * when containing one element will not make an array.
@@ -190,9 +191,10 @@
 
       // TODO: remove search call to use params instead
       // of url and use gnSearch only (then rename it to search)
-      var gnSearch = function(params, error) {
+      var gnSearch = function(params, error, internal) {
         var defer = $q.defer();
-        gnHttp.callService('search', params).
+        gnHttp.callService(internal ? 'internalSearch' : 'search',
+            params).
             success(function(data, status) {
               defer.resolve(format(data));
             }).
@@ -201,6 +203,7 @@
             });
         return defer.promise;
       };
+
       var indexSetOfRecords = function(params) {
         var defer = $q.defer();
         var defaultParams = {
@@ -219,6 +222,8 @@
           } else {
             defer.reject('No records to index');
           }
+        }, function(reason) {
+          defer.reject('error: ' + reason);
         });
         return defer.promise;
       };

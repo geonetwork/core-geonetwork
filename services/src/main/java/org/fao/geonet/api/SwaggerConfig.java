@@ -76,7 +76,7 @@ public class SwaggerConfig {
             .apis(RequestHandlerSelectors.any())
             .paths(paths())
             .build()
-            .pathMapping("/srv/")
+            .pathMapping("/")
             .directModelSubstitute(LocalDate.class, String.class)
             .directModelSubstitute(UserSecurity.class, Object.class)
             .directModelSubstitute(Element.class, Object.class)

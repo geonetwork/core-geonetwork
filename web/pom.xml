@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.4.0-SNAPSHOT</version>
+    <version>3.4.4-SNAPSHOT</version>
   </parent>
 
 
@@ -346,6 +346,12 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>core</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -496,23 +502,48 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19110</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-dublin-core</artifactId>
-      <version>${project.version}</version>
+      <version>${gn.schemas.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>wfsfeature-harvester</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>servlet-api-2.5</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-servlet_3.0_spec</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jsp-api-2.1</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -531,21 +562,8 @@
 
 
   <build>
+
     <plugins>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>src/main/webapp/WEB-INF/data/config/schema_plugins</directory>
-              <includes>
-                <include>**/*</include>
-              </includes>
-              <followSymlinks>false</followSymlinks>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
 
       <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
 	    <plugin>
@@ -553,7 +571,8 @@
 	        <artifactId>git-commit-id-plugin</artifactId>
 	        <version>2.2.1</version>
 	        <executions>
-	            <execution>
+                  <execution>
+                    <phase>initialize</phase>
 	                <id>get-the-git-infos</id>
 	                <goals>
 	                    <goal>revision</goal>
@@ -568,19 +587,24 @@
 	            <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
 	            <verbose>false</verbose>
 	            <generateGitPropertiesFile>true</generateGitPropertiesFile>
-	            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+	            <generateGitPropertiesFilename>src/main/webResources/WEB-INF/classes/git.properties</generateGitPropertiesFilename>
 	            <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json". Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
 	            <format>properties</format>
 	            <skipPoms>true</skipPoms>
-	            <injectAllReactorProjects>false</injectAllReactorProjects>
+	            <injectAllReactorProjects>true</injectAllReactorProjects>
 	            <failOnNoGitDirectory>false</failOnNoGitDirectory>
 	            <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
 	            <skip>false</skip>
-	            <runOnlyOnce>true</runOnlyOnce>
+	            <runOnlyOnce>false</runOnlyOnce>
 	            <excludeProperties>
 	            </excludeProperties>
-	            <includeOnlyProperties>
-	            </includeOnlyProperties>
+							<includeOnlyProperties>
+								<includeOnlyProperty>^git.tags$</includeOnlyProperty>
+								<includeOnlyProperty>^git.branch$</includeOnlyProperty>
+								<includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
+								<includeOnlyProperty>^git.commit.id.describe.short$</includeOnlyProperty>
+								<includeOnlyProperty>^git.build.time$</includeOnlyProperty>
+							</includeOnlyProperties>
 	            <replacementProperties>
 	            </replacementProperties>
 	            <useNativeGit>false</useNativeGit>
@@ -622,6 +646,21 @@
 	        </configuration>
 
 	    </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/webapp/WEB-INF/data/config/schema_plugins</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -715,25 +754,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-          <revisionOnScmFailure>true</revisionOnScmFailure>
-        </configuration>
-      </plugin>
 
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
@@ -743,7 +763,7 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
             <manifestEntries>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
+              <Implementation-Build>${git.commit.id}</Implementation-Build>
             </manifestEntries>
           </archive>
           <archiveClasses>true</archiveClasses>
@@ -767,13 +787,33 @@
           <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
           <packagingExcludes>
             xml/schemas/**,
+            WEB-INF/data/*.db,
+            WEB-INF/data/index/**,
+            WEB-INF/data/data/backup/**,
+            WEB-INF/data/data/resources/htmlcache/**,
             catalog/lib/style/bootstrap/docs/**,
             catalog/lib/style/bootstrap/fonts/**,
             catalog/lib/style/bootstrap/grunt/**,
             catalog/lib/style/bootstrap/test-infra/**,
             catalog/lib/style/font-awesome/css/**,
             catalog/lib/style/font-awesome/src/**,
-            catalog/lib/style/font-awesome/scss/**
+            catalog/lib/style/font-awesome/scss/**,
+            catalog/lib/style/font-awesome/*.json,
+            catalog/lib/style/font-awesome/Gemfile*,
+            catalog/lib/style/font-awesome/.*,
+            catalog/lib/style/font-awesome/*.txt,
+            catalog/lib/style/font-awesome/*.md,
+            catalog/lib/style/bootstrap/*.json,
+            catalog/lib/style/bootstrap/Gemfile*,
+            catalog/lib/style/bootstrap/.*,
+            catalog/lib/style/bootstrap/*.txt,
+            catalog/lib/style/bootstrap/*.md,
+            catalog/lib/bootstrap-table/*.json,
+            catalog/lib/bootstrap-table/Gemfile*,
+            catalog/lib/bootstrap-table/.*,
+            catalog/lib/bootstrap-table/*.txt,
+            catalog/lib/bootstrap-table/*.md,
+            catalog/lib/bootstrap-table/docs/**
           </packagingExcludes>
           <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>

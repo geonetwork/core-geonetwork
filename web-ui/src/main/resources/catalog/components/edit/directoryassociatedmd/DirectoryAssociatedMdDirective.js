@@ -50,6 +50,7 @@
                 sortBy: 'title',
                 _xlink: '*'
               },
+              internal: true,
               sortbyValues: [
                 {
                   sortBy: 'title'

@@ -78,7 +78,7 @@
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
 
         <script src="{$uiResourcesPath}lib/base64.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
+        <script src="{$uiResourcesPath}lib/jquery-2.2.4.js"></script>
 
         <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
 
@@ -93,6 +93,7 @@
         <script src="{$uiResourcesPath}lib/angular-filter.min.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/hotkeys/hotkeys.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/modal.js"></script>        
         <script src="{$uiResourcesPath}lib/angular.ext/buttons.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/rating.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js"></script>
@@ -161,6 +162,7 @@
 
         <script src="{$uiResourcesPath}lib/underscore/underscore-min.js"></script>
         <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js"></script>
+        <script src="{$uiResourcesPath}lib/geohash.js"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
@@ -200,16 +202,8 @@
       <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
       <script type="text/javascript">
         var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-        function(gnViewerSettings, gnGlobalSettings) {
-        <xsl:if test="$owsContext">
-          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        </xsl:if>
-        <xsl:if test="$wmsUrl and $layerName">
-          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-          gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
-        </xsl:if>
+        module.config(['gnGlobalSettings',
+        function(gnGlobalSettings) {
         gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
         }]);
       </script>

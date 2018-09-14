@@ -93,8 +93,14 @@
 
   <xsl:template mode="getMetadataAbstract" match="gmd:MD_Metadata">
     <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
-      <xsl:call-template name="localised">
-        <xsl:with-param name="langId" select="$langId"/>
+
+      <xsl:variable name="txt">
+        <xsl:call-template name="localised">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:call-template name="addLineBreaksAndHyperlinks">
+        <xsl:with-param name="txt" select="$txt"/>
       </xsl:call-template>
     </xsl:for-each>
   </xsl:template>
@@ -103,35 +109,45 @@
     <xsl:value-of select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue"/>
   </xsl:template>
 
+  <xsl:template mode="getMetadataThumbnail" match="gmd:MD_Metadata">
+    <xsl:value-of select="gmd:identificationInfo/*/gmd:graphicOverview[1]/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString"/>
+  </xsl:template>
+
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
-    <h4>
-      <i class="fa fa-fw fa-image">&#160;</i>&#160;
-      <span>
-        <xsl:value-of select="$schemaStrings/overviews"/>
-      </span>
-    </h4>
+    <section class="gn-md-side-overview">
+      <h4>
+        <i class="fa fa-fw fa-image">&#160;</i>
+        <span>
+          <xsl:value-of select="$schemaStrings/overviews"/>
+        </span>
+      </h4>
 
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-      <img class="gn-img-thumbnail center-block"
-           src="{gmd:fileName/*}"/>
+      <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
+        <img class="gn-img-thumbnail center-block"
+             src="{gmd:fileName/*}"/>
 
-      <xsl:for-each select="gmd:fileDescription">
-        <div class="gn-img-thumbnail-caption">
-          <xsl:call-template name="localised">
-            <xsl:with-param name="langId" select="$langId"/>
-          </xsl:call-template>
-        </div>
+        <xsl:for-each select="gmd:fileDescription">
+          <div class="gn-img-thumbnail-caption">
+            <xsl:call-template name="localised">
+              <xsl:with-param name="langId" select="$langId"/>
+            </xsl:call-template>
+          </div>
+        </xsl:for-each>
+
       </xsl:for-each>
-      <br/>
-
-    </xsl:for-each>
+    </section>
   </xsl:template>
 
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
     <div class="alert alert-info">
       <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
-        <xsl:call-template name="localised">
-          <xsl:with-param name="langId" select="$langId"/>
+        <xsl:variable name="txt">
+          <xsl:call-template name="localised">
+            <xsl:with-param name="langId" select="$langId"/>
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:call-template name="addLineBreaksAndHyperlinks">
+          <xsl:with-param name="txt" select="$txt"/>
         </xsl:call-template>
       </xsl:for-each>
     </div>
@@ -711,7 +727,7 @@
           <ul>
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
               <li>
-                <a href="#uuid={@uuidref}">
+                <a href="#/metadata/{@uuidref}">
                   <i class="fa fa-link">&#160;</i>
                   <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/>
                 </a>
@@ -738,9 +754,15 @@
    <xsl:template mode="render-value"
                 match="*[gco:CharacterString]">
 
-    <xsl:apply-templates mode="localised" select=".">
-      <xsl:with-param name="langId" select="$langId"/>
-    </xsl:apply-templates>
+     <xsl:variable name="txt">
+       <xsl:apply-templates mode="localised" select=".">
+         <xsl:with-param name="langId" select="$langId"/>
+       </xsl:apply-templates>
+     </xsl:variable>
+
+     <xsl:call-template name="addLineBreaksAndHyperlinks">
+       <xsl:with-param name="txt" select="$txt"/>
+     </xsl:call-template>
   </xsl:template>
 
   <xsl:template mode="render-value"

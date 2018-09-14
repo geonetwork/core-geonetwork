@@ -263,6 +263,7 @@
           when('/settings', {
             templateUrl: tplFolder + 'page-layout.html',
             controller: 'GnSettingsController',
+            reloadOnSearch: false,
             resolve: {
               permission: function() {
                 authorizationService.$get[0]().check('Administrator');
@@ -340,6 +341,8 @@
             $scope.href = value.href;
           }
         });
+        //do not try to load undefined.html
+        if (!pageMenu || !pageMenu.folder || !$scope.type) return '';
         return tplFolder + pageMenu.folder + $scope.type + '.html';
       };
 

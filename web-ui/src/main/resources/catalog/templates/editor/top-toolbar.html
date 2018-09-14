@@ -19,6 +19,8 @@
     </button>-->
 
 
+    <!-- If using the category selector in the editor
+    form directly, remove this directive. -->
     <div data-gn-metadata-category-updater="mdCategories"
          data-gn-group-owner="groupOwner"
          data-metadata-uuid="gnCurrentEdit.uuid" title="{{'categories'|translate}}"/>
@@ -45,12 +47,7 @@
       </ul>
     </div>
 
-    <button type="button" class="btn btn-default navbar-btn"
-            title="{{'validate'|translate}}" gn-click-and-spin="validate()">
-      <i class="fa fa-check"/>&nbsp;
-      <span class="visible-lg" data-translate=""
-            title="{{'validate-help' | translate}}">validate</span>
-    </button>
+    <data-gn-md-validation-tools></data-gn-md-validation-tools>
     <!-- TODO: automatic save status -->
     <button type="button" class="btn btn-default navbar-btn gn-tooltip"
             gn-click-and-spin="cancel()"

@@ -1,7 +1,18 @@
 package org.fao.geonet.api.records;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import static junit.framework.Assert.assertEquals;
+import static org.fao.geonet.domain.MetadataValidationStatus.VALID;
+import static org.fao.geonet.kernel.UpdateDatestamp.NO;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.net.URL;
+import java.util.List;
+import java.util.UUID;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -28,18 +39,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.net.URL;
-import java.util.List;
-import java.util.UUID;
-
-import static junit.framework.Assert.assertEquals;
-import static org.fao.geonet.domain.MetadataValidationStatus.VALID;
-import static org.fao.geonet.kernel.UpdateDatestamp.NO;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     private static final int SUBTEMPLATE_TEST_OWNER = 42;
@@ -66,7 +67,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
@@ -87,7 +88,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
@@ -108,7 +109,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -128,7 +129,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAnonymous();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
@@ -149,7 +150,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate")
+        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))

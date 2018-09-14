@@ -16,158 +16,158 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="relatedResponse">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="children" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ * <complexType name="relatedResponse">
+ *   <complexContent>
+ *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       <sequence>
+ *         <element name="children" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="parent" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="parent" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="siblings" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedSiblingMetadataItem"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="siblings" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedSiblingMetadataItem"
  * maxOccurs="unbounded" minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="associated" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="associated" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="service" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="service" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="dataset" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="dataset" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="fcat" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="fcat" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="source" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="source" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="hassource" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="hassource" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="related" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="related" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="online" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedLinkItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="online" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedLinkItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="thumbnail" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded"
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *         <element name="thumbnail" minOccurs="0">
+ *           <complexType>
+ *             <complexContent>
+ *               <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 <sequence>
+ *                   <element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded"
  * minOccurs="0"/>
- *                 &lt;/sequence>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ *                 </sequence>
+ *               </restriction>
+ *             </complexContent>
+ *           </complexType>
+ *         </element>
+ *       </sequence>
+ *     </restriction>
+ *   </complexContent>
+ * </complexType>
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -430,16 +430,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -448,7 +448,7 @@ public class RelatedResponse {
     })
     public static class Associated implements IListOnlyClassToArray {
 
-        protected List<RelatedMetadataItem> item;
+        protected List<AssociatedSiblingMetadataItem> item;
 
         /**
          * Gets the value of the item property.
@@ -463,12 +463,12 @@ public class RelatedResponse {
          * </pre>
          *
          *
-         * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
+         * <p> Objects of the following type(s) are allowed in the list {@link AssociatedSiblingMetadataItem
          * }
          */
-        public List<RelatedMetadataItem> getItem() {
+        public List<AssociatedSiblingMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<AssociatedSiblingMetadataItem>();
             }
             return this.item;
         }
@@ -482,16 +482,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -534,16 +534,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -586,16 +586,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -604,7 +604,7 @@ public class RelatedResponse {
     })
     public static class Fcat implements IListOnlyClassToArray {
 
-        protected List<RelatedMetadataItem> item;
+        protected List<FCRelatedMetadataItem> item;
 
         /**
          * Gets the value of the item property.
@@ -622,9 +622,9 @@ public class RelatedResponse {
          * <p> Objects of the following type(s) are allowed in the list {@link RelatedMetadataItem
          * }
          */
-        public List<RelatedMetadataItem> getItem() {
+        public List<FCRelatedMetadataItem> getItem() {
             if (item == null) {
-                item = new ArrayList<RelatedMetadataItem>();
+                item = new ArrayList<FCRelatedMetadataItem>();
             }
             return this.item;
         }
@@ -638,16 +638,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -688,16 +688,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -740,16 +740,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedLinkItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedLinkItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -791,16 +791,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -843,16 +843,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -895,16 +895,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -947,16 +947,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedSiblingMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedSiblingMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -999,16 +999,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedMetadataItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -1051,16 +1051,16 @@ public class RelatedResponse {
      * <p>The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded"
+     * <complexType>
+     *   <complexContent>
+     *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+     *       <sequence>
+     *         <element name="item" type="{}relatedThumbnailItem" maxOccurs="unbounded"
      * minOccurs="0"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     *       </sequence>
+     *     </restriction>
+     *   </complexContent>
+     * </complexType>
      * </pre>
      */
     @XmlAccessorType(XmlAccessType.FIELD)

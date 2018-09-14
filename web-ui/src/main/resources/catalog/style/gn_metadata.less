@@ -141,6 +141,15 @@
     }
   }
 
+  div.md-text {
+    display: table;
+    width: 100%;
+    border-spacing: 10px 0;
+    dd, dt {
+      display: table-cell;
+    }
+  }
+
   dl {
     margin-bottom: 0;
     padding-bottom: 10px;
@@ -156,8 +165,10 @@
     font-style: italic;
     color: @gray;
     clear: none;
-    padding-left: 15px;
+    float: none;
+    padding-left: 0.5em;
     text-align: left;
+    white-space: normal;
   }
 
   .target {
@@ -213,14 +224,12 @@
     }
     */
     .dl-horizontal {
-      dt { width: (@large-offset - 20); }
-      dd { margin-left: @large-offset; }
-    }
-    .dl-horizontal[class~=col-sm-6],
-    /* .dl-horizontal .dl-horizontal { */
-    .dl-horizontal {
-      dt { width: (@component-offset-horizontal - 20); }
-      dd { margin-left: @component-offset-horizontal; }
+      dt {
+        width: (@component-offset-horizontal - 20);
+      }
+      dd {
+        margin-left: @component-offset-horizontal;
+      }
     }
   }
 
@@ -244,6 +253,7 @@
   dd, .offseted {
     border-left: 1px solid @gray-light;
     background: @gray-lighter;
+    padding-left: 0.6em;
   }
 }
 
@@ -319,9 +329,6 @@ ul.view-outline a[disabled] {
   pointer-events: none;
   cursor: default;
   color: #C0C0C0;
-}
-ul.view-outline > li {
-  max-width: 10em;
 }
 
 a {

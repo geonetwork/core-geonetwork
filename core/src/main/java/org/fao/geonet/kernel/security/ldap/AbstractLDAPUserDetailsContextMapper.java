@@ -39,13 +39,12 @@ import org.springframework.security.ldap.userdetails.InetOrgPerson;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -69,6 +68,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     private String ldapBaseDnPattern = "uid={0},ou=users";
 
     private String ldapBaseDn;
+    private boolean ldapUsernameCaseInsensitive = true;
 
 
     public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
@@ -101,6 +101,10 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
         Map<String, ArrayList<String>> userInfo = ldapUtils
             .convertAttributes(userCtx.getAttributes().getAll());
+
+        if (this.isLdapUsernameCaseInsensitive()) {
+            username = username.toLowerCase();
+        }
 
         LDAPUser userDetails = new LDAPUser(username);
         User user = userDetails.getUser();
@@ -337,4 +341,11 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         this.ldapBaseDn = ldapBaseDn;
     }
 
+    public void setLdapUsernameCaseInsensitive(boolean ldapUsernameCaseInsensitive) {
+        this.ldapUsernameCaseInsensitive = ldapUsernameCaseInsensitive;
+    }
+
+    public boolean isLdapUsernameCaseInsensitive() {
+        return ldapUsernameCaseInsensitive;
+    }
 }

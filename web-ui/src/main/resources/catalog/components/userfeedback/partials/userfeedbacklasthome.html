@@ -1,0 +1,30 @@
+<div>
+  <div data-ng-show="lastCommentsList.length">
+    <div class="gn-userfeedback-card"
+      data-ng-repeat="row in lastCommentsList">
+      <div class="gn-userfeedback-pre-title" data-translate="">GUFfeedbackOn</div>
+      <h4>
+        <a data-ng-href="#/metadata/{{row.metadataUUID}}">{{row.metadataTitle}}</a>
+      </h4>
+      <q class="gn-quote" data-ng-show="row.comment">{{row.comment}}</q>
+      <div class="clearfix">
+        <div
+          class="gn-userfeedback-score gn-userfeedback-score-{{row.ratingAVG}} gn-userfeedback-badge"
+          data-ng-show="row.ratingAVG">
+          {{row.ratingAVG}} / 5 <span class="fa fa-fw fa-star">&nbsp;</span>
+        </div>
+        <div class="gn-userfeedback-score" data-ng-hide="row.ratingAVG">
+          - / - <span class="fa fa-fw fa-star">&nbsp;</span>
+        </div>
+        <div class="gn-userfeedback-reply">
+          <em>{{row.authorName}}</em><br>on {{row.date | date:'medium'}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div data-ng-hide="lastCommentsList.length" data-translate="">GUFnoComments</div>
+
+</div>
+
+

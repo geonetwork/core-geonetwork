@@ -22,16 +22,19 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent">
     <skos:prefLabel xml:lang="en">Continents</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Continents</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Kontinente</skos:prefLabel>
     <skos:inScheme rdf:resource="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country">
     <skos:prefLabel xml:lang="en">Countries</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Pays</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Länder</skos:prefLabel>
     <skos:inScheme rdf:resource="http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/Dependency">
     <skos:prefLabel xml:lang="en">Dependency</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Dépendances</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Kolonien</skos:prefLabel>
     <skos:inScheme rdf:resource="http://vocab.nerc.ac.uk/collection/C19/current/#SeaVoXGazetteer"/>
   </skos:Concept>
 
@@ -41,6 +44,7 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent/North America">
     <skos:prefLabel xml:lang="en">North America</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">North America</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Nordamerika</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -95,6 +99,7 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent/South America">
     <skos:prefLabel xml:lang="en">South America</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">South America</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Südamerika</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -120,6 +125,7 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent/Oceania">
     <skos:prefLabel xml:lang="en">Oceania</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Oceania</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Ozeanien</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -158,6 +164,7 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent/Africa">
     <skos:prefLabel xml:lang="en">Africa</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Africa</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Afrika</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -224,6 +231,7 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent/Europe">
     <skos:prefLabel xml:lang="en">Europe</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Europe</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Europa</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -287,6 +295,7 @@
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Continent/Asia">
     <skos:prefLabel xml:lang="en">Asia</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">Asia</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Asien</skos:prefLabel>
     <skos:altLabel/>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
@@ -4201,6 +4210,7 @@
     <skos:prefLabel xml:lang="en">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
     <skos:prefLabel xml:lang="es">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
     <skos:inScheme rdf:resource="http://geonetwork-opensource.org/regions"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_1/">

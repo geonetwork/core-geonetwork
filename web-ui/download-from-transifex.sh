@@ -8,7 +8,10 @@ mkdir transifex-src
 cd transifex-src
 tx init --host=www.transifex.com
 tx set --auto-remote https://www.transifex.com/projects/p/core-geonetwork/
-tx pull -a
+tx pull -a -r 'core-geonetwork.editor'
+tx pull -a -r 'core-geonetwork.admin'
+tx pull -a -r 'core-geonetwork.core'
+tx pull -a -r 'core-geonetwork.search'
 cd ..
 
 TRANSLATION_DIR=transifex-src/translations/core-geonetwork.
@@ -17,14 +20,16 @@ SRC_DIR=src/main/resources/catalog/locales
 l=(
     'es::es'
     'fr::fr'
-    'ge::de'
+    'de::de'
     'it::it'
     'ko::ko'
     'nl::nl'
-    'cz::cs_CZ'
+    'cs::cs_CZ'
     'ca::ca'
     'fi::fi'
     'is::is'
+    'ru::ru'
+    'zh::zh'
 )
 
 for index in "${l[@]}" ; do
@@ -32,7 +37,7 @@ for index in "${l[@]}" ; do
     VALUE="${index##*::}"
   echo "Language $VALUE"
   for mod in admin core editor search
-  do 
+  do
     cp $TRANSLATION_DIR$mod/$VALUE.json $SRC_DIR/$KEY-$mod.json
   done;
 done

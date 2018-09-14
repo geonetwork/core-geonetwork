@@ -62,6 +62,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <Document locale="">
+                        <Field name="_docLocale" string="{$isoDocLangId}" store="true" index="true"/>
                         <xsl:apply-templates mode="index" select="$root">
                         </xsl:apply-templates>
                     </Document>

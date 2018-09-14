@@ -120,9 +120,9 @@
    */
   module.directive('gnSavedSelections', [
     'gnSearchManagerService', 'gnSavedSelectionConfig',
-    '$http', '$q', '$rootScope',
+    '$http', '$q', '$rootScope', '$translate',
     function(gnSearchManagerService, gnSavedSelectionConfig,
-             $http, $q, $rootScope) {
+             $http, $q, $rootScope, $translate) {
 
       // List of persistent selections
       // and user records in each selections
@@ -135,6 +135,7 @@
 
       var user = null;
       var storagePrefix = 'basket';
+      var maxSize = 200;
 
       function SavedSelectionController(scope) {
       };
@@ -146,6 +147,13 @@
           function(defer, selections, allRecords) {
         selections.notFound = [];
         var ctrl = this;
+
+        if (allRecords.length === 0) {
+          selections.records = {};
+          selections.size = 0;
+          defer.resolve(selections);
+          return;
+        }
 
         // TODO: Handle case when there is
         // too many items in the saved selections
@@ -259,6 +267,15 @@
       SavedSelectionController.prototype.add =
           function(selection, user, uuid) {
         var ctrl = this;
+
+        var tooManyItems = selection.records.length > maxSize;
+        if (tooManyItems) {
+          $rootScope.$broadcast('StatusUpdated', {
+            msg: $translate.instant('tooManyItemsInSelection', {maxSize: maxSize}),
+            timeout: 0,
+            type: 'danger'});
+          return;
+        }
 
         if (selection.id > -1) {
           if (typeof selection === 'string') {
@@ -474,10 +491,12 @@
                isValidRecord = true;
              }
 
-             if (isValidRecord && canBeAdded) {
+             if (angular.isArray(selection.records) &&
+                 isValidRecord && canBeAdded) {
                // Check if record already in current selection
                return selection.records.indexOf(scope.uuid) === -1;
-             } else if (isValidRecord && canBeAdded === false) {
+             } else if (angular.isArray(selection.records) &&
+                        isValidRecord && canBeAdded === false) {
                // Check if record not already in current selection
                return selection.records.indexOf(scope.uuid) !== -1;
              } else {

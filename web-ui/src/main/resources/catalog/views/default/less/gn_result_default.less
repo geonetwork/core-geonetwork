@@ -1,11 +1,19 @@
 @import "../../../style/gn_search.less";
+// variables for manipulating the theme
+@import "gn_variables_default.less"; // must be last
 
 // styling for a single result: metadata view
+
 .gn-md-view {
+  padding: 15px 20px;
+  background-color: @gn-md-view-background-color;
   .gn-md-side {
     .gn-img-thumbnail,
     .gn-img-extent {
       width: 100%;
+    }
+    section {
+      margin-bottom: 20px;
     }
   }
   .view-header {
@@ -47,5 +55,9 @@
     left:-75px;
     top:50%;
     margin-top:-1.25em;
+  }
+  // IE11 flexbox fix
+  .gn-record > table {
+    table-layout: fixed;
   }
 }

@@ -35,6 +35,13 @@
 
   <!-- =================================================================== -->
 
+  <!-- Convert ISO profile elements to their base type -->
+  <xsl:template match="*[@gco:isoType]">
+    <xsl:element name="{@gco:isoType}">
+      <xsl:apply-templates select="@*[name() != 'gco:isoType']|*"/>
+    </xsl:element>
+  </xsl:template>
+
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:variable name="info" select="geonet:info"/>
     <xsl:element name="{if (@gco:isoType) then @gco:isoType else name()}">
@@ -105,10 +112,6 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-
-  <!-- Avoid insertion of schema location in the CSW
-  response - which is invalid. -->
-  <xsl:template match="@xsi:schemaLocation"/>
 
 </xsl:stylesheet>
 

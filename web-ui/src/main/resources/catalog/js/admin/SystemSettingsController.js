@@ -41,6 +41,24 @@
       return filtered;
     }
   });
+
+  /**
+   * Filters internal settings used by GeoNetwork,
+   * not intended to be configured by the user.
+   */
+  module.filter('hideGeoNetworkInternalSettings', function() {
+    return function(input) {
+      var filtered = [];
+      var internal = ['system/userFeedback/lastNotificationDate'];
+      angular.forEach(input, function(el) {
+        if (internal.indexOf(el.name) === -1) {
+          filtered.push(el);
+        }
+      });
+      return filtered;
+    }
+  });
+
   module.filter('orderObjectBy', function() {
     return function(input, attribute) {
       if (!angular.isObject(input)) return input;
@@ -68,9 +86,9 @@
    */
   module.controller('GnSystemSettingsController', [
     '$scope', '$http', '$rootScope', '$translate', '$location',
-    'gnUtilityService',
+    'gnUtilityService', '$timeout',
     function($scope, $http, $rootScope, $translate, $location,
-        gnUtilityService) {
+        gnUtilityService, $timeout) {
 
       $scope.settings = [];
       $scope.initalSettings = [];
@@ -161,6 +179,13 @@
                       'children': filterBySection($scope.settings, level2name)
                     });
                   }
+                }
+
+                var target = $location.search()['scrollTo'];
+                if (target) {
+                  $timeout(function () {
+                    gnUtilityService.scrollTo(target);
+                  }, 300);
                 }
               }
             }).error(function(data) {

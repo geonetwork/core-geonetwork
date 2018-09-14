@@ -290,7 +290,9 @@
     "uploadFile": "Upload a file from your computer",
     "uuidAction": "Record identifier processing",
     "validate-help": "Check record against standard validation rules",
-    "validationReport": "Validation",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
+    "validationReport": "Validazione",
     "runValidation": "Run validation check",
     "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
@@ -302,6 +304,7 @@
     "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Your metadata",
     "searchKeyword": "Ricerca ...",
+    "searchTopicCategory": "Ricerca ...",
     "searchOrTypeKeyword": "Type or search ...",
     "tagsAllowed": "tag(s) allowed",
     "suggestionListError": "Oops, something went wrong when retrieving suggestions!",
@@ -358,5 +361,12 @@
     "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
     "selectKeyword": "Add keywords",
-    "saveLinkToSibling": "Save link to other resource"
+    "saveLinkToSibling": "Save link to other resource",
+    "confirmCloseInvalidTitle": "Confirm editor close",
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?",
+    "hotkeyDirectory": "Manage directories (eg. contact)",
+    "hotkeyImportRecord": "Import new records",
+    "hotkeyAddRecord": "Add new record",
+    "hotkeyBatchEdit": "Batch editing",
+    "hotkeyEditorBoard": "Editor board"
 }

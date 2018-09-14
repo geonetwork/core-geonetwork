@@ -35,6 +35,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,7 +74,9 @@ import javax.persistence.Transient;
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataEntityListenerManager.class)
 @SequenceGenerator(name = Metadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
-public class Metadata extends GeonetEntity {
+public class Metadata extends GeonetEntity  implements Serializable {
+
+    private static final long serialVersionUID = -5557599895424227101L;
     public static final String TABLENAME = "Metadata";
     public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";

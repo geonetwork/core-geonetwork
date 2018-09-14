@@ -90,6 +90,7 @@
       $scope.ownerGroup = null;
       $scope.defaultSearchObj = {
         selectionBucket: 'd101',
+        any: '',
         params: {
           _isTemplate: 's',
           any: '',
@@ -238,6 +239,7 @@
       $scope.getEntries = function(type) {
         if (type) {
           $scope.searchObj.params._root = type;
+          $scope.defaultSearchObj.params._root = type;
         }
         $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
@@ -545,17 +547,6 @@
         $('#gn-share').modal('hide');
       });
 
-      // UI utils
-      $scope.getOwnerName = function(e) {
-        return e.userinfo.split('|')[0];
-      };
-      $scope.getCreateDate = function(e) {
-        return moment(e['geonet:info'].createDate).format('LLL');
-      };
-      $scope.getChangeDate = function(e) {
-        return moment(e['geonet:info'].changeDate).format('LLL');
-      };
-
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function(b) {
         $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
@@ -564,6 +555,12 @@
       };
       $scope.templatesShown = function() {
         return $scope.searchObj.params._isTemplate === 't';
+      };
+
+      // Append * for like search
+      $scope.updateParams = function() {
+        $scope.searchObj.params.any =
+            '*' + $scope.searchObj.any + '*';
       };
 
       init();
