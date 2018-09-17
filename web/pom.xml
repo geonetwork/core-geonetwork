@@ -524,16 +524,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139.emodnet.hydrography</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139.emodnet.chemistry</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139.myocean</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
@@ -550,11 +540,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139.myocean.short</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139.sdn-product</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
@@ -771,18 +756,6 @@
                 </resource>
                 <resource>
                   <directory>${project.basedir}/../schemas/iso19139.myocean.short/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139.emodnet.chemistry/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139.emodnet.hydrography/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139.sdn-product/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
                 <resource>
