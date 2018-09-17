@@ -39,6 +39,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -145,7 +146,17 @@ public class TransferApi {
         final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         List<UserGroupsResponse> list = new ArrayList<>();
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin) {
+            // add all admins first
             List<User> allAdmin = userRepository.findAllByProfile(Profile.Administrator);
+            Group adminGroup = new Group();
+            adminGroup.setName("allAdmins");
+            for (User u : allAdmin) {
+                list.add(
+                    new UserGroupsResponse(u, adminGroup, Profile.Administrator.name())
+                );
+            }
+
+            // add all users
             List<UserGroup> userGroups;
 
             if (myProfile == Profile.Administrator) {
@@ -158,11 +169,6 @@ public class TransferApi {
                 list.add(
                     new UserGroupsResponse(ug.getUser(), ug.getGroup(), ug.getProfile().name())
                 );
-                for (User u : allAdmin) {
-                    list.add(
-                        new UserGroupsResponse(u, ug.getGroup(), Profile.Administrator.name())
-                    );
-                }
             }
             return list;
         } else {
