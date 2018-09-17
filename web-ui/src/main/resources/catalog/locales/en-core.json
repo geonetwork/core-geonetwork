@@ -399,5 +399,6 @@
     "avatar": "Avatar",
     "first": "First",
     "editorHome": "Editor board",
-    "adminHome": "Summary"
+    "adminHome": "Summary",
+    "allAdmins": "Administrators"
 }
