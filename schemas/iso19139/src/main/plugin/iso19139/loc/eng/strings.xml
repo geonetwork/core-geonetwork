@@ -481,4 +481,28 @@
 
   <sds-section-custodian>Responsible custodian</sds-section-custodian>
   <sds-addOperation>Add Operation</sds-addOperation>
+
+  <copernicus-marine>Copernicus Marine</copernicus-marine>
+  <cm-main-info>Product identification</cm-main-info>
+  <cm-quicklookAndKeywords>Descriptive keywords</cm-quicklookAndKeywords>
+  <cm-display-priority>Display priority</cm-display-priority>
+  <cm-spatioTemporalCoverage>Spatio-temporal extent</cm-spatioTemporalCoverage>
+  <cm-geoCoverage>Geographical extent</cm-geoCoverage>
+  <cm-verticalCoverage>Vertical extent</cm-verticalCoverage>
+  <cm-temporalCoverage>Temporal extent</cm-temporalCoverage>
+  <cm-processingOperation>Processing operations</cm-processingOperation>
+  <cm-processingSchedule>Processing Schedule</cm-processingSchedule>
+  <cm-org>Organisations responsible for management and processing, point of contact</cm-org>
+  <cm-orgOriginator>Production center</cm-orgOriginator>
+  <cm-orgCustodian>Product manager</cm-orgCustodian>
+  <cm-orgServiceDesk>Local service desk</cm-orgServiceDesk>
+  <cm-orgProductionUnit>Production unit</cm-orgProductionUnit>
+  <cm-orgDisseminationUnit>Dissemination unit</cm-orgDisseminationUnit>
+  <cm-externalShortName>External shortname</cm-externalShortName>
+  <cm-abstract>Overview</cm-abstract>
+  <cm-version>Version</cm-version>
+  <cm-update>Update date</cm-update>
+  <cm-missionType>Mission type</cm-missionType>
+  <cm-oceanVariables>Ocean variables</cm-oceanVariables>
+
 </strings>
