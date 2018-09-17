@@ -4,30 +4,28 @@
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
-  ~ This program is free software; you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation; either version 2 of the License, or (at
-  ~ your option) any later version.
+  ~ Tento program je slobodný softvér: môžete ho šíriť a upravovať podľa ustanovení Všeobecnej
+  ~ verejnej licencie GNU (GNU General Public Licence), vydávanej nadáciou Free Software Foundation,
+  ~ a to buď podľa 2. verzie tejto Licencie, alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie.
   ~
-  ~ This program is distributed in the hope that it will be useful, but
-  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ General Public License for more details.
+  ~ Tento program je šírený v nádeji, že bude užitočný, avšak BEZ AKEJKOĽVEK ZÁRUKY. Neposkytujú
+  ~ sa ani odvodené záruky OBCHODOVATEĽNOSTI alebo VHODNOSTI PRE URČITÝ ÚČEL. Ďalšie
+  ~ podrobnosti hľadajte vo Všeobecnej verejnej licencii GNU.
   ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program; if not, write to the Free Software
-  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~ Kópiu Všeobecnej verejnej licencie GNU ste mali dostať spolu s týmto programom. Ak sa tak nestalo,
+  ~ napíšte na: Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+  ~ USA.
   ~
-  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-  ~ Rome - Italy. email: geonetwork@osgeo.org
+  ~ Kontakt: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rím - Taliansko. email: geonetwork@osgeo.org
   -->
 
 <strings>
-  <xml_iso19110>Save this metadata as an ISO19110 XML file</xml_iso19110>
-  <xml_iso19110Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19110Tooai_dc>
+  <xml_iso19110>Uložiť metaúdaje ako súbor XML ISO19110</xml_iso19110>
+  <xml_iso19110Tooai_dc>Uložiť metaúdaje ako súbor XML OAI Dublin Core</xml_iso19110Tooai_dc>
 
 
-  <advanced>Full</advanced>
-  <default>Simple</default>
+  <advanced>Celý rozsah</advanced>
+  <default>Jednoduchý</default>
   <xml>XML</xml>
 </strings>

@@ -5,22 +5,20 @@
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
-  ~ This program is free software; you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation; either version 2 of the License, or (at
-  ~ your option) any later version.
+  ~ Tento program je slobodný softvér: môžete ho šíriť a upravovať podľa ustanovení Všeobecnej
+  ~ verejnej licencie GNU (GNU General Public Licence), vydávanej nadáciou Free Software Foundation,
+  ~ a to buď podľa 2. verzie tejto Licencie, alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie.
   ~
-  ~ This program is distributed in the hope that it will be useful, but
-  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  ~ General Public License for more details.
+  ~ Tento program je šírený v nádeji, že bude užitočný, avšak BEZ AKEJKOĽVEK ZÁRUKY. Neposkytujú
+  ~ sa ani odvodené záruky OBCHODOVATEĽNOSTI alebo VHODNOSTI PRE URČITÝ ÚČEL. Ďalšie
+  ~ podrobnosti hľadajte vo Všeobecnej verejnej licencii GNU.
   ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program; if not, write to the Free Software
-  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~ Kópiu Všeobecnej verejnej licencie GNU ste mali dostať spolu s týmto programom. Ak sa tak nestalo,
+  ~ napíšte na: Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+  ~ USA.
   ~
-  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-  ~ Rome - Italy. email: geonetwork@osgeo.org
+  ~ Kontakt: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rím - Taliansko. email: geonetwork@osgeo.org
   -->
 
 <labels xmlns:gfc="http://www.isotc211.org/2005/gfc"
@@ -29,98 +27,98 @@
         xmlns:gmd="http://www.isotc211.org/2005/gmd">
 
   <element name="gfc:FC_FeatureCatalogue">
-    <label>Feature Catalogue description</label>
+    <label>Popis katalógu objektov</label>
     <description></description>
   </element>
   <element name="gfc:FC_FeatureAttribute">
-    <label>Attribute</label>
+    <label>Atribút</label>
   </element>
   <element name="gfc:name">
-    <label>Name</label>
-    <description>Feature catalogue name</description>
+    <label>Meno</label>
+    <description>Meno katalógu objektov</description>
   </element>
   <element name="gfc:scope">
-    <label>Scope</label>
-    <description>Scope definition</description>
+    <label>Rozsah</label>
+    <description>Definícia rozsahu</description>
   </element>
   <element name="gfc:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
+    <label>Verzia</label>
+    <description>Verzia katalógu</description>
   </element>
   <element name="gfc:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
+    <label>Dátum</label>
+    <description>Dátum katalógu</description>
   </element>
   <element name="gfc:producer">
-    <label>Catalogue producer</label>
-    <description>Catalogue responsible</description>
+    <label>Výrobca katalógu</label>
+    <description>Zodpovedný za katalóg</description>
   </element>
   <element name="gfc:featureType">
-    <label>Property description</label>
-    <description>Property description</description>
+    <label>Popis vlastnosti</label>
+    <description>Popis vlastnosti</description>
   </element>
   <element name="gfc:isAbstract">
-    <label>Abstract</label>
-    <description>Is this element an abstract element ?</description>
+    <label>Abstrakt</label>
+    <description>Je tento element abstrakt ?</description>
   </element>
   <element name="gfc:FC_FeatureType">
-    <label>Attribute table description</label>
-    <description>Attribute table description</description>
+    <label>Popis atribútovej tabuľky</label>
+    <description>Popis atribútovej tabuľky</description>
   </element>
   <element name="gfc:typeName">
-    <label>Property name</label>
+    <label>Meno vlastnosti</label>
     <description></description>
   </element>
   <element name="gfc:carrierOfCharacteristics">
-    <label>Elements</label>
-    <description>Association, attribute, operation, ...</description>
+    <label>Prvky</label>
+    <description>Prepojenia, atribúty, operácie, ...</description>
   </element>
   <element name="gfc:definition">
-    <label>Definition</label>
-    <description>Property definition</description>
+    <label>Definícia</label>
+    <description>Definícia vlastnosti</description>
   </element>
   <element name="gfc:fieldOfApplication">
-    <label>Field of application</label>
-    <description>Field of application</description>
+    <label>Oblasť použitia</label>
+    <description>Oblasť použitia</description>
   </element>
   <element name="gmd:responsibleParty">
-    <label>Responsible party</label>
-    <description>Responsible party</description>
+    <label>Zodpovedná strana</label>
+    <description>Zodpovedná strana</description>
   </element>
   <element name="gmd:CI_ResponsibleParty">
-    <label>Responsible party</label>
-    <description>Responsible party</description>
+    <label>Zodpovedná strana</label>
+    <description>Zodpovedná strana</description>
   </element>
   <element name="gco:lower">
-    <label>Lower cardinality</label>
-    <description>Lower cardinality</description>
+    <label>Nižšie právo</label>
+    <description>Nižšie právo</description>
   </element>
   <element name="gco:upper">
-    <label>Upper cardinality</label>
-    <description>Upper cardinality</description>
+    <label>Vyššie právo</label>
+    <description>Vyššie právo</description>
   </element>
   <element name="gfc:cardinality">
-    <label>Cardinalities</label>
-    <description>Cardinalities</description>
+    <label>Oprávnenia</label>
+    <description>Oprávnenia</description>
   </element>
   <element name="gfc:label">
-    <label>Label</label>
+    <label>Popis</label>
     <description/>
   </element>
   <element name="gfc:listedValue">
-    <label>Codelist</label>
-    <description>List of values for this element.</description>
+    <label>Zoznam kódov</label>
+    <description>Zoznam hodnôt pre tento element.</description>
   </element>
   <element name="gfc:constrainedBy">
-    <label>Constrained by</label>
+    <label>Obmedzený</label>
     <description></description>
   </element>
   <element name="gfc:definitionReference">
-    <label>Definition reference</label>
+    <label>Definícia prepojenia</label>
     <description></description>
   </element>
   <element name="gfc:code">
-    <label>Code</label>
+    <label>Kód</label>
     <description></description>
   </element>
   <element name="gfc:isOrdered">
@@ -128,113 +126,113 @@
     <description></description>
   </element>
   <element name="gfc:isNavigable">
-    <label>Is navigable</label>
+    <label>Je schopný navigácie</label>
     <description></description>
   </element>
   <element name="gfc:roleType">
-    <label>Role type</label>
+    <label>Typ role</label>
     <description></description>
   </element>
   <element name="gfc:inheritsFrom">
-    <label>Inherits from</label>
+    <label>Preberá z</label>
     <description></description>
   </element>
   <element name="gfc:inheritsTo">
-    <label>Inherits to</label>
+    <label>Dedí</label>
     <description></description>
   </element>
   <element name="gfc:FC_InheritanceRelation">
-    <label>Heritance relation</label>
+    <label>Dedičný vzťah</label>
     <description></description>
   </element>
   <element name="gfc:functionalLanguage">
-    <label>Functional language</label>
+    <label>Funkčný jazyk</label>
     <description></description>
   </element>
   <element name="gfc:definitionSource">
-    <label>Definition source</label>
+    <label>Zdroj definície</label>
     <description></description>
   </element>
   <element name="gfc:FC_FeatureOperation">
-    <label>Feature operation</label>
+    <label>Funkcia prvku</label>
     <description></description>
   </element>
   <element name="gfc:FC_FeatureAssociation">
-    <label>Feature association</label>
+    <label>Spojenie prvku</label>
     <description></description>
   </element>
   <element name="gfc:FC_AssociationRole">
-    <label>Association role</label>
+    <label>Spojená rola</label>
     <description></description>
   </element>
   <element name="gfc:FC_RoleType">
-    <label>Role type</label>
+    <label>Typ role</label>
     <description></description>
   </element>
   <element name="gfc:description">
-    <label>Description</label>
+    <label>Popis</label>
     <description></description>
   </element>
   <element name="gfc:aliases">
-    <label>Aliases</label>
+    <label>Aliasy</label>
     <description></description>
   </element>
   <element name="gfc:FC_ListedValue">
-    <label>Codelist</label>
+    <label>Zoznam kódov</label>
     <description></description>
   </element>
   <element name="gfc:valueType">
-    <label>Value type</label>
+    <label>Typ hodnoty</label>
     <description></description>
   </element>
   <element name="gfc:memberName">
-    <label>Member name</label>
+    <label>Meno člena</label>
     <description></description>
   </element>
   <element name="gfc:FC_Constraint">
-    <label>Constraint</label>
+    <label>Obmedzenie</label>
     <description></description>
   </element>
   <element name="gfc:uniqueInstance">
-    <label>Unique instance</label>
+    <label>Jedinečná inštancia</label>
     <description></description>
   </element>
   <element name="gfc:type">
-    <label>Type</label>
+    <label>Typ</label>
     <description></description>
   </element>
   <element name="gfc:relation">
-    <label>Relation</label>
+    <label>Vzťah</label>
     <description></description>
   </element>
   <element name="gfc:featureCatalogue">
-    <label>Feature catalogue</label>
+    <label>Katalóg prvkov</label>
     <description></description>
   </element>
   <element name="gfc:roleName">
-    <label>Role name</label>
+    <label>Meno role</label>
     <description></description>
   </element>
   <element name="gfc:signature">
-    <label>Signature</label>
+    <label>Podpis</label>
     <description></description>
   </element>
   <element name="gfc:formalDefinition">
-    <label>Formal definition</label>
+    <label>Oficiálna definícia</label>
     <description></description>
   </element>
   <element name="gfc:triggeredByValueOf">
-    <label>Triggered by value of</label>
+    <label>Vyvolaný hodnotou z</label>
     <description></description>
   </element>
   <element name="gfc:affectsValueOf">
-    <label>Affects value of</label>
+    <label>Ovplyvnený hodnotou z</label>
   </element>
   <element name="gfc:observesValueOf">
-    <label>Observes value of</label>
+    <label>Poukazuje na hodnotu z</label>
   </element>
   <element name="gfc:valueMeasurementUnit">
-    <label>Value measurement unit</label>
+    <label>Merná jednotka hodnoty</label>
   </element>
   <element name="gco:CharacterString">
     <label>Text</label>
@@ -245,32 +243,32 @@
     <description></description>
   </element>
   <element name="gmx:FileName">
-    <label>File name</label>
+    <label>Meno súboru</label>
     <description></description>
   </element>
   <!-- ==================================================== -->
   <element name="gmx:name">
-    <label>Name</label>
-    <description>Feature catalogue name</description>
+    <label>Meno</label>
+    <description>Meno katalógu objektov</description>
   </element>
   <element name="gmx:scope">
-    <label>Scope</label>
-    <description>Scope definition</description>
+    <label>Rozsah</label>
+    <description>Definícia rozsahu</description>
   </element>
   <element name="gmx:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
+    <label>Verzia</label>
+    <description>Verzia katalógu</description>
   </element>
   <element name="gmx:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
+    <label>Dátum</label>
+    <description>Dátum katalógu</description>
   </element>
   <element name="gmx:fieldOfApplication">
-    <label>Field of application</label>
-    <description>Field of application</description>
+    <label>Zameranie aplikácie</label>
+    <description>Zameranie aplikácie</description>
   </element>
   <element name="gco:nilReason">
-    <label>Nil reason</label>
+    <label>Žiadne riešenie</label>
     <description/>
     <help/>
     <condition/>
