@@ -82,7 +82,7 @@
                           var oldProj = view.getProjection();
                           var newProj = ol.proj.get(projection);
 
-                          if (oldProj == newProj) {
+                          if (oldProj.getCode() == newProj.getCode()) {
                             // There is no real change, don't do anything
                             return;
                           }
