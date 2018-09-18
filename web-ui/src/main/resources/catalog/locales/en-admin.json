@@ -1273,5 +1273,21 @@
     "ui-externalViewer-openNewWindow-help": "If checked, the external viewer will be opened in a new tab/window.",
     "indexInEsDoneError": "There is an error with the ElasticSearch index. See the logs for details",
     "indexInEsDone": "The ElasticSearch index completed successfully",
-    "projectionSwitcherTool": "Projection Switcher Tool"
+    "projectionSwitcherTool": "Projection Switcher Tool",
+    "ui-minx": "Min X",
+    "ui-maxx": "Max X",
+    "ui-miny": "Min Y",
+    "ui-maxy": "Max Y",
+    "ui-worldExtent": "World Extent",
+    "ui-extent": "Extent",
+    "ui-resolutions": "Resolutions",
+    "ui-definition": "Definition",
+    "ui-label": "Label",
+    "ui-code": "Code",
+    "ui-extent-help": "This is the default extension of the map on this projection. You can define it as an array of four components or by each coordinate. This is an optional field.",
+    "ui-worldExtent-help": "This is the maximum extension of the map on this projection.You can define it as an array of four components or by each coordinate. This is an optional field.",
+    "ui-label-help": "Label to show on the user interface to identify this projection. This is a mandatory field.",
+    "ui-code-help": "EPSG unique identifier for this projection eg. 'EPSG:4326'. This is a mandatory field.",
+    "ui-resolutions-help": "Allowed resolutions (zooms) for this projection. This is an optional field.",
+    "ui-definition-help": "Definition for Proj4 library. This is a mandatory field if the projection is not defined already on GeoNetwork. Without a definition, the map can't work."
 }

@@ -21,12 +21,10 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
+(function () {
   goog.provide('gn_projectionswitcher');
 
-  var module = angular.module('gn_projectionswitcher', [
-  ]);
-
+  var module = angular.module('gn_projectionswitcher', []);
 
   /**
    * @ngdoc directive
@@ -35,172 +33,185 @@
    * @description The `gnProjectionSwitcher` directive adds a button to the map
    *              that allows you to change the projection.
    */
-  module.directive('gnProjectionSwitcher', [
-    'gnViewerSettings',
-    function(gnViewerSettings) {
-      return {
-        restrict: 'A',
-        templateUrl: '../../catalog/components/viewer/projectionSwitcher/' +
-            'partials/projectionSwitcher.html',
-        scope: {
-          map: '=gnProjectionSwitcher'
-        },
-        controllerAs: 'gnProjectionSwitcherCtrl',
-        controller: ['$scope', 'gnViewerSettings', 'gnMap', '$rootScope', 
-          function(scope, gnViewerSettings, gnMap, $rootScope) {
+  module
+      .directive(
+          'gnProjectionSwitcher',
+          [
+              'gnViewerSettings',
+              function (gnViewerSettings) {
+                return {
+                  restrict : 'A',
+                  templateUrl : '../../catalog/components/viewer/projectionSwitcher/'
+                      + 'partials/projectionSwitcher.html',
+                  scope : {
+                    map : '=gnProjectionSwitcher'
+                  },
+                  controllerAs : 'gnProjectionSwitcherCtrl',
+                  controller : [
+                      '$scope',
+                      'gnViewerSettings',
+                      'gnMap',
+                      '$rootScope',
+                      function (scope, gnViewerSettings, gnMap, $rootScope) {
 
-          //Change the projection of an existing layer
-          scope.changeLayerProjection = function(
-            layer, oldProj, newProj) {
-            if (layer instanceof ol.layer.Group) {
-              layer.getLayers().forEach(
-                  function(subLayer) {
-                    this.changeLayerProjection(
-                      subLayer, oldProj,
-                      newProj);
-                  });
-            } else if (layer instanceof ol.layer.Tile) {
-              var tileLoadFunc = layer.getSource()
-                .getTileLoadFunction();
-              layer.getSource().setTileLoadFunction(
-                tileLoadFunc);
-            } else if (layer instanceof ol.layer.Vector) {
-              var features = layer.getSource().getFeatures();
-              for (var i = 0; i < features.length; i += 1) {
-                features[i].getGeometry().transform(
-                  oldProj, newProj);
-              }
-            }
-          };
-          
-          //Main function to switch the projection
-          scope.switchProjection = function(projection) {
-              var view = scope.map.getView();
-              var oldProj = view.getProjection();
-              var newProj = ol.proj.get(projection);
-              
-              if(oldProj == newProj) {
-                //There is no real change, don't do anything
-                return;
-              }
-              
-              //First, get all the info to populate the map
-              
-              var projectionConfig = {};
-              
-              gnViewerSettings.mapConfig.switcherProjectionList.forEach(function(config) {
-                if(config['code'] == projection) {
-                  projectionConfig = config;
-                }
-              });
-              
-              var newExtent = ol.proj.transformExtent(
-                  view.calculateExtent(scope.map.getSize()), oldProj, newProj);
-              
-              if(newProj.getExtent()) {
-                newExtent = newProj.getExtent();
-              }
-              
-              var newCenter = ol.proj.transform(scope.map.getView().getCenter(), oldProj, newProj);
-              
-              if(projectionConfig.center) {
-                newCenter = JSON.parse(projectionConfig.center);
-              }
+                        // Change the projection of an existing layer
+                        scope.changeLayerProjection = function (layer, oldProj,
+                            newProj) {
+                          if (layer instanceof ol.layer.Group) {
+                            layer.getLayers().forEach(
+                                function (subLayer) {
+                                  this.changeLayerProjection(subLayer, oldProj,
+                                      newProj);
+                                });
+                          } else if (layer instanceof ol.layer.Tile) {
+                            var tileLoadFunc = layer.getSource()
+                                .getTileLoadFunction();
+                            layer.getSource().setTileLoadFunction(tileLoadFunc);
+                          } else if (layer instanceof ol.layer.Vector) {
+                            var features = layer.getSource().getFeatures();
+                            for (var i = 0; i < features.length; i += 1) {
+                              features[i].getGeometry().transform(oldProj,
+                                  newProj);
+                            }
+                          }
+                        };
 
-              var mapsConfig = {
-                projection: newProj,
-                extent: newExtent,
-                center: newCenter
-              };
-              
-              if (projectionConfig.resolutions) {
-                angular.extend(mapsConfig, {resolutions: JSON.parse(projectionConfig.resolutions)})
-              }
+                        // Main function to switch the projection
+                        scope.switchProjection = function (projection) {
+                          var view = scope.map.getView();
+                          var oldProj = view.getProjection();
+                          var newProj = ol.proj.get(projection);
 
-              var newView = new ol.View(mapsConfig);
-              
-              // Rearrange base layers to adapt (if possible) to new projection
-              var layersToRemove = [];
-              var bgLayers = [];
+                          if (oldProj == newProj) {
+                            // There is no real change, don't do anything
+                            return;
+                          }
 
-              gnViewerSettings.bgLayers.forEach(function(layer) {
-                //is this layer coming from original context?
-                //layers from original context should be kept
-                if(!layer.get("fromGNSettings")){
-                  bgLayers.push(layer);
-                  //Remember current background, if possible
-                  layer.set("currentBackground", layer.getVisible());
-                }
-              });
-              
-              // Loop over all background layers currently on the map
-              // to start from scratch
-              scope.map.getLayers().forEach(function(layer) {
-                if (layer.get("group") == 'Background layers' 
-                  || !layer.displayInLayerManager) {
-                  
-                  //is this layer coming from original context?
-                  //layers from original context should be kept
-                  if(layer.get("fromGNSettings")){
-                    layersToRemove.push(layer);                    
-                  } 
-                }
-              });
-              
-              // Remove from map all base layers that don't belong to this projection
-              // different loop from previous one as it may break forEach
-             layersToRemove.forEach(function(layer){
-               scope.map.removeLayer(layer);
-             }); 
+                          // First, get all the info to populate the map
 
-              // Renew base layers from settings
-              var layers = gnViewerSettings.mapConfig['map-viewer'].layers;
-              if (layers && layers.length) {
-                layers.forEach(function(layerInfo) {
-                  gnMap.createLayerFromProperties(layerInfo, scope.map)
-                    .then(function(layer) {
-                      if (layer) {
-                        layer.displayInLayerManager = false;
-                        layer.set("group", "Background layers");
-                        layer.set("fromGNSettings", true);
-                        layer.set("currentBackground", false);
-                        bgLayers.push(layer);
-                      }
-                    });
-                });
-              }
-              
-              //We have all the info, change the map
+                          var projectionConfig = {};
 
-              // Set the view
-              scope.map.setView(newView);
-              
-              //Update Background Layers to trigger tool changes
-              gnViewerSettings.bgLayers = bgLayers;
+                          gnViewerSettings.mapConfig.switcherProjectionList
+                              .forEach(function (config) {
+                                if (config['code'] == projection) {
+                                  projectionConfig = config;
+                                }
+                              });
 
-              // Reproject all layers in the map
-              scope.map.getLayers().forEach(function(layer) {
-                scope.changeLayerProjection(layer, oldProj, newProj);
-              });
+                          var newExtent = ol.proj.transformExtent(view
+                              .calculateExtent(scope.map.getSize()), oldProj,
+                              newProj);
 
-              // Reproject all controls in the map
-              scope.map.getControls().forEach(function(control) {
-                if (typeof control.setProjection === "function") {
-                  control.setProjection(newProj);
-                }
-              });
-              
-              //Relocate map to extent
-              scope.map.getView().fit(newExtent, scope.map.getSize());
+                          if (newProj.getExtent()) {
+                            newExtent = newProj.getExtent();
+                          }
 
-          };
-        
-          
-        }],
-        link: function(scope, element, attrs) {
-          scope.projections = gnViewerSettings.mapConfig.switcherProjectionList;
-        }
-      };
-    }]);
+                          var mapsConfig = {
+                            projection : newProj,
+                            extent : newExtent
+                          };
+
+                          if (projectionConfig.resolutions
+                              && projectionConfig.resolutions.length
+                              && projectionConfig.resolutions.length > 0) {
+                            angular.extend(mapsConfig, {
+                              resolutions : projectionConfig.resolutions
+                            })
+                          }
+
+                          var newView = new ol.View(mapsConfig);
+
+                          // Rearrange base layers to adapt (if possible) to new
+                          // projection
+                          var layersToRemove = [];
+                          var bgLayers = [];
+
+                          gnViewerSettings.bgLayers
+                              .forEach(function (layer) {
+                                // is this layer coming from original context?
+                                // layers from original context should be kept
+                                if (!layer.get("fromGNSettings")) {
+                                  bgLayers.push(layer);
+                                  // Remember current background, if possible
+                                  layer.set("currentBackground", layer
+                                      .getVisible());
+                                }
+                              });
+
+                          // Loop over all background layers currently on the
+                          // map
+                          // to start from scratch
+                          scope.map.getLayers().forEach(
+                              function (layer) {
+                                if (layer.get("group") == 'Background layers'
+                                    || !layer.displayInLayerManager) {
+
+                                  // is this layer coming from original context?
+                                  // layers from original context should be kept
+                                  if (layer.get("fromGNSettings")) {
+                                    layersToRemove.push(layer);
+                                  }
+                                }
+                              });
+
+                          // Remove from map all base layers that don't belong
+                          // to this projection
+                          // different loop from previous one as it may break
+                          // forEach
+                          layersToRemove.forEach(function (layer) {
+                            scope.map.removeLayer(layer);
+                          });
+
+                          // Renew base layers from settings
+                          var layers = gnViewerSettings.mapConfig['map-viewer'].layers;
+                          if (layers && layers.length) {
+                            layers.forEach(function (layerInfo) {
+                              gnMap.createLayerFromProperties(layerInfo,
+                                  scope.map).then(function (layer) {
+                                if (layer) {
+                                  layer.displayInLayerManager = false;
+                                  layer.set("group", "Background layers");
+                                  layer.set("fromGNSettings", true);
+                                  layer.set("currentBackground", false);
+                                  bgLayers.push(layer);
+                                }
+                              });
+                            });
+                          }
+
+                          // We have all the info, change the map
+
+                          // Set the view
+                          scope.map.setView(newView);
+
+                          // Update Background Layers to trigger tool changes
+                          gnViewerSettings.bgLayers = bgLayers;
+
+                          // Reproject all layers in the map
+                          scope.map.getLayers().forEach(
+                              function (layer) {
+                                scope.changeLayerProjection(layer, oldProj,
+                                    newProj);
+                              });
+
+                          // Reproject all controls in the map
+                          scope.map.getControls().forEach(function (control) {
+                            if (typeof control.setProjection === "function") {
+                              control.setProjection(newProj);
+                            }
+                          });
+
+                          // Relocate map to extent
+                          scope.map.getView().fit(newExtent,
+                              scope.map.getSize());
+
+                        };
+
+                      } ],
+                  link : function (scope, element, attrs) {
+                    scope.projections = gnViewerSettings.mapConfig.switcherProjectionList;
+                  }
+                };
+              } ]);
 
 })();
