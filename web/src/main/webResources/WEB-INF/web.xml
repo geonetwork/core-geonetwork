@@ -381,6 +381,10 @@
       <param-name>log</param-name>
       <param-value>true</param-value>
     </init-param>
+    <init-param>
+      <param-name>http.protocol.handle-redirects</param-name>
+      <param-value>true</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>HttpProxy</servlet-name>
