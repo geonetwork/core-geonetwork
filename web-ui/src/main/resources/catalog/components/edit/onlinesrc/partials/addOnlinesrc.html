@@ -170,7 +170,7 @@
                              !params.linkType.fields.desc.hidden && !(OGCProtocol && !isEditing)">
             <label for="onlinesrcDescr"
                    class="col-sm-2 control-label"
-                   data-translate="">Description</label>
+                   data-translate="">description</label>
             <div class="col-sm-10"
                  data-ng-if="!isFieldMultilingual('desc')">
               <textarea rows="3"
@@ -178,7 +178,7 @@
                         data-ng-model="params.desc"
                         class="form-control input-sm"
                         id="onlinesrcDescr"
-                        placeholder="Description"
+                        placeholder="description"
                         name="description"/>
             </div>
             <div class="col-sm-10"
@@ -191,7 +191,7 @@
                         lang="{{val}}"
                         data-ng-model="params.desc[val]"
                         class="form-control input-sm"
-                        placeholder="Description"
+                        placeholder="description"
                         name="description"/>
             </div>
           </div>
