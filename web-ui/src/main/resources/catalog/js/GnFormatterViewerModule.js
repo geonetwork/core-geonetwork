@@ -108,6 +108,14 @@
 
          var url = '../api/records' + $location.url();
 
+         // special case for sextant (TODO: remove this when not used anymore)
+         if ($routeParams.uuid) {
+            gnMdFormatter.loadGn($routeParams.uuid, '.formatter-container', $scope,
+                '../api/records/' + $routeParams.uuid + '/formatters/xsl-view?'
+                 + 'view=' + $location.search()['view'] + '&css=' + $location.search()['css']);
+            return;
+         }
+
          gnMdFormatter.loadGn(mdId, '.formatter-container', $scope, url);
        }]);
 
@@ -121,6 +129,12 @@
           controller: 'GnFormatterViewer'})
         .when(
         '/:mdId', {
+          templateUrl: tpls + 'formatter-viewer.html',
+          controller: 'GnFormatterViewer'})
+
+        // TEMP SEXTANT
+        .when(
+        '/', {
           templateUrl: tpls + 'formatter-viewer.html',
           controller: 'GnFormatterViewer'});
   }]);
