@@ -403,5 +403,5 @@
     "allAdmins": "Administrators",
     "group": "Group",
     "showOptions": "Show options",
-    "ProjectionSwitcher": "Projection Switcher"
+    "projectionSwitcher": "Projection Switcher"
 }

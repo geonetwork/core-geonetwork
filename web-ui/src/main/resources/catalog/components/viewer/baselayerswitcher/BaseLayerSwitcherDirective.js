@@ -57,9 +57,11 @@
             layer.setVisible(true);
             var layers = scope.map.getLayers();
             if(layers.getLength() > 0) {
+              layers.item(0).set("currentBackground", false)
               layers.removeAt(0);
             }
             layers.insertAt(0, layer);
+            layer.set("currentBackground", true);
             return false;
           };
 
@@ -68,11 +70,23 @@
             scope.setBgLayer(layer);
           };
           
-          scope.$watch(function() { return gnViewerSettings.bgLayers}, function(bgLayers) {
-            if(bgLayers && bgLayers.length && bgLayers.length > 0 ) {
-              scope.layers = bgLayers;
-              scope.setBgLayer(scope.layers[0]);
-            }
+          scope.$watch(function() { return gnViewerSettings.bgLayers}, 
+              function(bgLayers) {
+                if(bgLayers && bgLayers.length && bgLayers.length > 0 ) {
+                  scope.layers = bgLayers;
+                  
+                  //Do we remember the previous background layer?
+                  var i = 0;
+                  var j = 0;
+                  bgLayers.forEach(function(layer) {
+                    if(layer.get("currentBackground")) {
+                      i = j;
+                    }
+                    j++;
+                  });
+                  
+                  scope.setBgLayer(scope.layers[i]);
+                }
           });
 
           scope.reset = function() {
