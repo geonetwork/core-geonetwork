@@ -500,11 +500,14 @@
     function(gnThesaurusService, $compile, $translate, gnCurrentEdit) {
       return {
         restrict: 'A',
-        scope: {},
+        scope: {
+        },
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
+
+
 
           var displayDefinition = attrs.displayDefinition || '';
           var numberOfSuggestions = attrs.numberOfSuggestions || 20;
@@ -602,10 +605,23 @@
                 } else {
                   $(obj.currentTarget).val(keyword.label);
                 }
+
+                if(scope.conceptIdElement) {
+                  var keywordKey = keyword.props.uri;
+                  scope.conceptIdElement.val(keywordKey);
+                }
               }, $(element))
             );
 
+
             // TODO: Anchor support
+            if (angular.isDefined(attrs.thesaurusConceptIdAttribute)) {
+              var conceptIdElementName = attrs.name + '_' + attrs.thesaurusConceptIdAttribute;
+
+              var conceptIdElement =  angular.element('<input name="' + conceptIdElementName + '" class="hidden"></input>');
+              element.after(conceptIdElement);
+              scope.conceptIdElement = conceptIdElement;
+            }
 
 
             // When clicking the element trigger input
@@ -628,6 +644,12 @@
 
           scope.$watch('thesaurusKey', function(newValue) {
             init();
+          });
+
+          element.on('$destroy', function () {
+            if (scope.conceptIdElement) {
+              scope.conceptIdElement.remove();
+            }
           });
         }
       };
