@@ -2207,6 +2207,7 @@
       <option value="OGC:WNS">OGC-WNS Web Notification Service</option>
       <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
       <option value="OGC:OWS-C">OGC OWS Context</option>
+      <option value="TMS">Tiled Map Service</option>
       <option value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</option>
       <option value="WWW:DOWNLOAD-1.0-http--download">File for download</option>
       <option value="FILE:GEO">GIS file</option>

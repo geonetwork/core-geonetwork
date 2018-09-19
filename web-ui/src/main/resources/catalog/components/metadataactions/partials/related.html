@@ -102,6 +102,21 @@
             </div>
           </div>
 
+          <div data-ng-switch-when="WMTS">
+            <div
+              data-gn-wmts-download="r.title"
+              data-layer-name="{{r.title | gnLocalized: lang}}"
+              data-url="{{r.url | gnLocalized: lang}}"
+              data-md="md">
+            </div>
+          </div>
+          
+          <div data-ng-switch-when="TMS">
+            <span data-translate=""
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                  tmsLinkDetails</span>
+          </div>
+          
           <div data-ng-switch-when="SOS">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
