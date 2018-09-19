@@ -122,21 +122,21 @@
 
 
         var query = '{' +
-          '  "sort" : [{"resourceTitle.keyword": "asc"}],' +
-          '  "query": {' +
-          '    "bool": {' +
-          '      "must": [' +
-          (filter.length > 0 ? filter.join(',') : '{"match_all": {}}') +
-          '      ]' +
-          '    }' +
-          '  },' +
-          '  "from": 0,' +
-          '  "size": ' + $scope.size + ',' +
-          '  "_source": "resourceTitle", ' +
-          '  "script_fields": {' +
-          scriptFields.join(',') +
-          '  }' +
-          '}';
+            '  "sort" : [{"resourceTitle.keyword": "asc"}],' +
+            '  "query": {' +
+            '    "bool": {' +
+            '      "must": [' +
+            (filter.length > 0 ? filter.join(',') : '{"match_all": {}}') +
+            '      ]' +
+            '    }' +
+            '  },' +
+            '  "from": 0,' +
+            '  "size": ' + $scope.size + ',' +
+            '  "_source": ["resourceTitle", "uuid"], ' +
+            '  "script_fields": {' +
+            scriptFields.join(',') +
+            '  }' +
+            '}';
 
         $http.post('../../index/records/_search', query, {
           headers: {'Content-type': 'application/json'}

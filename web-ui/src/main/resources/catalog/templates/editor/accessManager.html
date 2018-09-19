@@ -18,6 +18,7 @@
               <input type="text"
                      class="form-control"
                      data-ng-model="params.any"
+                     data-ng-model-options="{debounce: 300}"
                      placeholder="{{'anyPlaceHolder' | translate}}"
                      aria-label="{{'anyPlaceHolder' | translate}}">
 
@@ -75,7 +76,7 @@
               </th>
             </tr>
             <tr data-ng-repeat="r in results.hits.hits">
-              <td>{{r._source.resourceTitle}}</td>
+              <td><a data-ng-href="catalog.search#/metadata/{{r._source.uuid}}">{{r._source.resourceTitle}}</a></td>
               <td data-ng-repeat="c in columns"
                   class="{{r.fields[c.fieldName][0] == false ? 'danger' : 'success'}}">
                 &nbsp;
