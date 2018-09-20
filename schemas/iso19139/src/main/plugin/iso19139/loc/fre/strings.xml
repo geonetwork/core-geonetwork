@@ -473,4 +473,47 @@
   <sdn-verticalExtent>Vertical extent</sdn-verticalExtent>
   <sdn-metadata>Metadata</sdn-metadata>
 
+  <copernicus-marine>Copernicus Marine</copernicus-marine>
+  <cm-main-info>Product identification</cm-main-info>
+  <cm-quicklookAndKeywords>Descriptive keywords</cm-quicklookAndKeywords>
+  <cm-display-priority>Display priority</cm-display-priority>
+  <cm-spatioTemporalCoverage>Spatio-temporal extent</cm-spatioTemporalCoverage>
+  <cm-geoCoverage>Geographical extent</cm-geoCoverage>
+  <cm-verticalCoverage>Vertical extent</cm-verticalCoverage>
+  <cm-temporalCoverage>Temporal extent</cm-temporalCoverage>
+  <cm-processingOperation>Processing operations</cm-processingOperation>
+  <cm-processingSchedule>Processing Schedule</cm-processingSchedule>
+  <cm-org>Organisations responsible for management and processing, point of contact</cm-org>
+  <cm-orgOriginator>Production center</cm-orgOriginator>
+  <cm-orgCustodian>Product manager</cm-orgCustodian>
+  <cm-orgServiceDesk>Local service desk</cm-orgServiceDesk>
+  <cm-orgProductionUnit>Production unit</cm-orgProductionUnit>
+  <cm-orgDisseminationUnit>Dissemination unit</cm-orgDisseminationUnit>
+  <cm-externalShortName>External shortname</cm-externalShortName>
+  <cm-abstract>Overview</cm-abstract>
+  <cm-version>Version</cm-version>
+  <cm-update>Update date</cm-update>
+  <cm-missionType>Mission type</cm-missionType>
+  <cm-oceanVariables>Ocean variables</cm-oceanVariables>
+  <cm-resy>Resolution latitude (y)</cm-resy>
+  <cm-resx>Resolution longitude (x)</cm-resx>
+  <cm-refArea>MyOcean reference areas</cm-refArea>
+  <cm-minLevel>Minimum level</cm-minLevel>
+  <cm-maxLevel>Maximum level</cm-maxLevel>
+  <cm-nbOfVerticalLevels>Number of vertical levels</cm-nbOfVerticalLevels>
+  <cm-temporalResolution>Temporal resolution</cm-temporalResolution>
+
+  <cm-crs>Coordinate reference system</cm-crs>
+  <cm-addCrsEPSG4326>WGS 84 (EPSG 4326)</cm-addCrsEPSG4326>
+  <cm-addCrsEPSG41001>WGS 84 / Simple Mercator (EPSG 41001)</cm-addCrsEPSG41001>
+  <cm-addCrsEPSG3035>Lambert Azimuthal Equal Area (EPSG 3035)</cm-addCrsEPSG3035>
+  <cm-addCrsEPSG4258>ETRS89 (EPSG 4258)</cm-addCrsEPSG4258>
+  <cm-addCrsEPSG32662>WGS 84 / Plate Carree (EPSG 32662)</cm-addCrsEPSG32662>
+  <cm-addCrsEPSG3395>WGS 84 / World Mercator (EPSG 3395)</cm-addCrsEPSG3395>
+  <cm-addCrsORCA025>MYO Arakawa-C ORCA025 native grid (ORCA025)</cm-addCrsORCA025>
+  <cm-addCrsEPSG3411>NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</cm-addCrsEPSG3411>
+  <cm-addCrsEPSG3412>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</cm-addCrsEPSG3412>
+  <cm-addCrsEPSG6404>Spherical 3D CS (EPSG 6404)</cm-addCrsEPSG6404>
+  <cm-addCrsSR-ORG29>WRF Lambert Conformal Conic (SR-ORG 29)</cm-addCrsSR-ORG29>
+
 </strings>
