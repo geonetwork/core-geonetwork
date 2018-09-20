@@ -147,22 +147,20 @@
           - SAMEORIGIN, which only allows the current site to frame the content.
           - ALLOW-FROM uri, which permits the specified 'uri' to frame this page.
             Not all browsers support this mode.
-            Use ',' to separate multiple uri
-            Use 'db' to use the host list defined for the CORS headers
     -->
     <init-param>
       <param-name>mode</param-name>
-      <param-value>ALLOW-FROM</param-value>
+      <param-value>SAMEORIGIN</param-value>
     </init-param>
     <!-- Allowed url. Used in ALLOW-FROM mode only -->
-    <init-param>
+    <!--<init-param>
       <param-name>url</param-name>
-      <param-value>db</param-value>
-    </init-param>
+      <param-value>http://localhost:8888/</param-value>
+    </init-param>-->
   </filter>
   <filter-mapping>
     <filter-name>XFrameOptionsFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/TEMP_DISABLED/*</url-pattern> <!-- Sextant: reenable filter when CORS settings can be used -->
   </filter-mapping>
 
 
