@@ -160,13 +160,9 @@
                 <i class="fa fa-anchor fa-fw"></i>
                 <span translate>ncwms</span>
               </tab-heading>
-              <div class="ncwms-root">
-                <div ng-repeat="layer in map.getLayers().getArray()" class="ncwms-item">
-                  <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
-                    <div class="panel-heading">{{layer.get('label')}}</div>
-                    <div gn-ncwms-transect="" map="map" layer="layer"></div>
-                  </div>
-                </div>
+              <div class="panel panel-default panel-ncwms-container" ng-if="active.NCWMS">
+                <div class="panel-heading">{{active.NCWMS.get('label')}}</div>
+                <div gn-ncwms-transect map="map" layer="active.NCWMS"></div>
               </div>
             </tab>
 

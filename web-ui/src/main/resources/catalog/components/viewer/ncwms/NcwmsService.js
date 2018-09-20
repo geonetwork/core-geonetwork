@@ -29,6 +29,10 @@
   var OCEANOTRON_INFO_URL_TEMPLATE =
     '**path**/OPENDAP/opendap/**layer**.dds';
 
+  var LAYERTYPE_WMS = 0;
+  var LAYERTYPE_WMS_NCWMS = 1;
+  var LAYERTYPE_WMS_OCEANOTRON = 2;
+
   /**
    * @ngdoc service
    * @kind function
@@ -52,107 +56,106 @@
     function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnGlobalSettings,
              $q) {
 
-    this.DATE_INPUT_FORMAT = 'DD-MM-YYYY';
-
-      /**
-       * @ngdoc method
-       * @methodOf gn_viewer.service:gnNcWms
-       * @name gnNcWms#createNcWmsLayer
-       *
-       * @description
-       * Create sample NCWMS layers.
-       *
-       * @param {Object} capLayer layer ob from capabilities
-       */
-      this.createNcWmsLayer = function(capLayer) {
-        var source = new ol.source.TileWMS({
-          params: {
-            LAYERS: 'TEMP'
-          },
-          url: 'http://tds0.ifremer.fr/thredds/wms/' +
-              'CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE'
-        });
-        var layer = new ol.layer.Tile({
-          url: 'http://tds0.ifremer.fr/thredds/wms/' +
-              'CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE',
-          type: 'WMS',
-          source: source,
-          label: 'Super NCWMS'
-        });
-
-      };
-
       /**
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
        * @name gnNcWms#feedOlLayer
        *
        * @description
-       * Call the NCWMS getMetadata request to fill the layers with
-       * additionnal info.
+       * This will attempt requests on the WMS service to determine the type
+       * of the current layer (LAYERTYPE_*)
        *
-       * @param {Object} capLayer layer ob from capabilities
+       * @param {ol.Layer} layer
+       * @returns {defer} promise
        */
       this.feedOlLayer = function(layer) {
-        if (layer.get('advanced') == true) {
-          var url = this.getMetadataUrl(layer);
-          var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-          return $http.get(proxyUrl)
-            .success(function(json) {
-              if (angular.isObject(json)) {
-                layer.ncInfo = json;
-                layer.isNcwms = true;
-                layer.set('oceanotron', !!layer.ncInfo.multiFeature);
-                if(layer.get('oceanotron')) {
-                  this.initOceanotronParams(layer);
-                }
-              }
-              else {
-                layer.isNcwms = false;
-                layer.ncInfo = {
-                  'time': {'units': layer.get('time').units,
-                    'values' : layer.get('time').values},
-
-                  'zaxis': {'units': layer.get('elevation').units,
-                    'values' : layer.get('elevation').values}
-                }
-              }
-            }.bind(this));
-        }
-        else {
+        // advanced means the layer has advanced functionalities (time, style...)
+        if (!layer.get('advanced')) {
           return $q.resolve();
         }
 
+        // already done
+        if (layer.get('advancedMetadata')) {
+          return $q.resolve();
+        }
+
+        var url = this.getMetadataUrl(layer);
+        return $http.get(url)
+          .success(function(json) {
+            // metadata object was received: layer is a ncwms/oceanotron
+            if (angular.isObject(json)) {
+              layer.set('advancedMetadata', json);
+              if (json.multiFeature || json.queryable) {
+                layer.set('advancedType', LAYERTYPE_WMS_OCEANOTRON);
+                return this.initOceanotronParams(layer);
+              } else {
+                layer.set('advancedType', LAYERTYPE_WMS_NCWMS);
+              }
+              this.formatNcwmsAvailableDates(layer);
+            }
+            // build the metadata object ourselves to handle wms params
+            else {
+              layer.set('advancedType', LAYERTYPE_WMS);
+              layer.set('advancedMetadata', {
+                simpleWMS: true
+              })
+            }
+          }.bind(this));
       };
+
+      // dates are reformatted from iso8601 string to epoch int
+      this.formatNcwmsAvailableDates = function(layer) {
+        if (!layer.get('time')) { return; }
+        if (this.isLayerOceanotron(layer)) {
+          var dates = [];
+          var dateParts = layer.get('time').values[0].split('/');
+          var current = moment(dateParts[0], 'YYYY-MM-DD');
+          var end = moment(dateParts[1], 'YYYY-MM-DD');
+          while (current.isBefore(end)) {
+            dates.push(current.valueOf());
+            current.add(1, 'day');
+          }
+          layer.get('time').values = dates;
+        } else {
+          layer.get('time').values = layer.get('time').values.map(function(date) {
+            return moment(date).valueOf();
+          });
+        }
+      }
 
       this.initOceanotronParams = function(layer) {
-        var ncInfo = layer.ncInfo;
-        var elevation = '0/1';
-        var palettes = this.parseStyles(ncInfo);
-        var styles = palettes[ncInfo.defaultPalette || ncInfo.palettes[0]];
+        var metadata = layer.get('advancedMetadata');
+        var palettes = this.parseStyles(metadata);
 
-        var day = new Date();
-        day.setDate(day.getDate());
-        var to = moment(day).format(this.DATE_INPUT_FORMAT);
-        day.setDate(day.getDate() - 2);
-        var from = moment(day).format(this.DATE_INPUT_FORMAT);
+        var to = moment().toISOString();
+        var from = moment().subtract(2, 'days').toISOString();
 
         layer.getSource().updateParams({
-          STYLES: styles,
-          ELEVATION: elevation,
-          TIME: this.formatTimeSeries(from, to)
+          STYLES: palettes[metadata.defaultPalette || metadata.palettes[0]],
+          ELEVATION: '0/1',
+          TIME: from + '/' + to,
+          TIMEUNIT: layer.get('time').units
         })
 
+        var promise1 = this.getOceanotronInfo(layer).then(function(type) {
+          layer.set('oceanotronType', type);
+        });
+        var promise2 = this.getColorRangesBounds(scope.layer, [-180, -90, 180, 90])
+        .success(function(data) {
+          layer.set('oceanotronScaleRange', [data.min, data.max]);
+        })
+
+        return $q.all([promise1, promise2]);
       };
 
-      this.parseStyles = function(info) {
+      this.parseStyles = function(layerMetadata) {
         var t = {};
-        if (angular.isArray(info.supportedStyles) &&
-          info.supportedStyles.length) {
-          angular.forEach(info.supportedStyles, function(s) {
+        if (angular.isArray(layerMetadata.supportedStyles) &&
+          layerMetadata.supportedStyles.length) {
+          angular.forEach(layerMetadata.supportedStyles, function(s) {
             if (s == 'boxfill') {
-              if (angular.isArray(info.palettes)) {
-                angular.forEach(info.palettes, function(p) {
+              if (angular.isArray(layerMetadata.palettes)) {
+                angular.forEach(layerMetadata.palettes, function(p) {
                   t[p] = s + '/' + p;
                 });
               }
@@ -163,42 +166,11 @@
           });
         }
         else {
-          info.palettes.forEach(function(p) {
+          layerMetadata.palettes.forEach(function(p) {
             t[p] = p;
           });
         }
         return t;
-      };
-
-      /**
-       * @ngdoc method
-       * @methodOf gn_viewer.service:gnNcWms
-       * @name gnNcWms#getDimensionValue
-       *
-       * @description
-       * Read from capabilities object dimension properties.
-       * (DEPECRATED)
-       *
-       * @param {Object} ncInfo capabilities object.
-       * @param {string} name type of the dimension.
-       * @return {*} dimensions
-       */
-      this.getDimensionValue = function(ncInfo, name) {
-        var value;
-        if (angular.isArray(ncInfo.Dimension)) {
-          for (var i = 0; i < ncInfo.Dimension.length; i++) {
-            if (ncInfo.Dimension[i].name == name) {
-              value = ncInfo.Dimension[i].values;
-              break;
-            }
-          }
-        }
-        else if (angular.isObject(ncInfo.Dimension) &&
-            ncInfo.Dimension.name == name) {
-          value = ncInfo.Dimension.values[0] ||
-              ncInfo.Dimension.values;
-        }
-        return value;
       };
 
       /**
@@ -212,7 +184,7 @@
        *
        * @param {ol.layer} layer to request
        * @param {string} proj param
-       * @param {aol.geometry} geom param
+       * @param {ol.geometry} geom param
        * @param {string} service param
        * @return {string} url
        */
@@ -224,28 +196,25 @@
         }, options);
 
         var time = layer.getSource().getParams().TIME;
-        if (time) {
+        if (time && !p.TIME) {
           p.TIME = time;
+        }
+        var elevation = layer.getSource().getParams().ELEVATION;
+        if (elevation) {
+          p.ELEVATION = elevation;
         }
 
         if (service == 'profile') {
           p.REQUEST = 'GetVerticalProfile';
           p.POINT = gnMap.getTextFromCoordinates(geom);
-
         } else if (service == 'time') {
           p.REQUEST = 'GetTimeseries';
           p.POINT = gnMap.getTextFromCoordinates(geom);
-
         } else if (service == 'transect') {
           p.REQUEST = 'GetTransect';
           p.LINESTRING = gnMap.getTextFromCoordinates(geom);
-          var elevation = layer.getSource().getParams().ELEVATION;
-          if (elevation) {
-            p.ELEVATION = elevation;
-          }
         }
         return gnUrlUtils.append(layer.get('url'), gnUrlUtils.toKeyValue(p));
-
       };
 
       /**
@@ -340,10 +309,8 @@
       };
 
       this.getOceanotronInfo = function(layer) {
-
         return $http.get(this.getOceanotronInfoUrl(layer)
         ).then(function(response) {
-
           var type;
           if(/}\s*trajectory|time_series\s*;/.test(response.data)) {
             type = 'time';
@@ -363,7 +330,91 @@
         }).join(',');
 
         return ids;
+      }
 
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnNcWms
+       * @name gnNcWms#getResultImageUrl
+       *
+       * @description
+       * Will return the image url of the result once the process is over
+       *
+       * @param {ol.layer} layer to request
+       * @param {string} proj param
+       * @param {number} resolution param
+       * @param {ol.geometry} geom param (point or line depending on service)
+       * @param {string} service param
+       * @param {Object} options can hold timeSeries property
+       * @return {defer} promise, will resolve with the url to display
+       */
+      this.getResultImageUrl = function(layer, proj, resolution, geom, service, options) {
+        var layerParams = { INFO_FORMAT: 'image/png' };
+        var gfiUrl;
+        var me = this;
+
+        switch(layer.get('advancedType')) {
+          // simple NCWMS call
+          case LAYERTYPE_WMS_NCWMS:
+          if (service === 'time' && options.timeSeries) {
+            layerParams.TIME =
+                this.getFullTimeValue(layer, options.timeSeries.from) + '/' +
+                this.getFullTimeValue(layer, options.timeSeries.to)
+          }
+          return this.getNcwmsServiceUrl(
+            layer,
+            proj,
+            geom.getCoordinates(),
+            service,
+            layerParams
+          );
+
+          // first a GFI, then NCWMS call
+          case LAYERTYPE_WMS_OCEANOTRON:
+          layerParams.INFO_FORMAT = 'text/xml';
+          gfiUrl = layer.getSource().getGetFeatureInfoUrl(
+            geom.getCoordinates(), resolution,proj, layerParams
+          );
+          return $http.get(gfiUrl).then(
+            function(response) {
+              var ids =
+                  me.parseOceanotronXmlCapabilities(response.data);
+
+              if(!ids) return null;
+              return me.getNcwmsServiceUrl(
+                layer,
+                proj,
+                geom.getCoordinates(),
+                service,
+                { LAYER: ids }
+              );
+            });
+        }
+
+        console.warn('Cannot request a service URL on a non-Ncwms layer');
+        return $q.resolve();
+      }
+
+      this.isLayerNcwms = function(layer) {
+        return layer.get('advancedType') === LAYERTYPE_WMS_NCWMS ||
+        layer.get('advancedType') === LAYERTYPE_WMS_OCEANOTRON;
+      }
+
+      this.isLayerOceanotron = function(layer) {
+        return layer.get('advancedType') === LAYERTYPE_WMS_OCEANOTRON;
+      }
+
+      // returns an iso8601 formatted string
+      this.getFullTimeValue = function(layer, inputDate) {
+        var times = layer.get('time').values;
+        var inputMoment = moment(inputDate, 'DD-MM-YYYY');
+        for (var i = 0; i < times.length; i++) {
+          if (Math.abs(inputMoment.diff(times[i], 'days', true)) < 1) {
+            return moment(times[i]).toISOString();
+          }
+        }
+        console.warn('Full time value not found for input date ' + inputDate);
+        return null;
       }
     }
   ]);

@@ -164,7 +164,7 @@
 
       //Check if a added layer is NcWMS
       gnViewerSettings.getPreAddLayerPromise =
-        gnNcWms.feedOlLayer.bind(gnNcWms);
+          gnNcWms.feedOlLayer.bind(gnNcWms);
 
       // Manage sextantTheme thesaurus translation
       sxtGlobals.keywords['sextantThemePromise'] =
