@@ -67,6 +67,7 @@
       $scope.buildQuery = function() {
         var selectedOperations = [];
         var scriptFields = [];
+        $scope.results = undefined;
         $scope.selectedGroups = [];
         $scope.columns = [];
 
@@ -143,6 +144,9 @@
         }).
         then(function(r) {
           $scope.results = r.data;
+        }, function(r) {
+          // TODO report ES error message globally
+          $scope.hasSearchError = true;
         });
       };
 
