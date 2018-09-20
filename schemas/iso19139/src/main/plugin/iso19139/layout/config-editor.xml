@@ -2378,6 +2378,14 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
 
       </thesaurusList>
+      
+      <sidePanel>
+        <directive data-gn-onlinesrc-list=""/>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+      
       <tab id="sdn-identification" mode="flat" default="true">
         <section name="sextantidentificationTitle">
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"
