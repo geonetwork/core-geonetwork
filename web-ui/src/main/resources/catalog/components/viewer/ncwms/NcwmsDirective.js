@@ -332,10 +332,6 @@
             return gnNcWms.isLayerOceanotron(scope.layer);
           }
 
-          element.bind('$destroy', function(e) {
-            element.find('[ui-slider]').slider();
-          });
-
           // handle layer change in the directive
           scope.$watch('layer', function(layer) {
             if (!layer || !layer.getSource()) { return }
