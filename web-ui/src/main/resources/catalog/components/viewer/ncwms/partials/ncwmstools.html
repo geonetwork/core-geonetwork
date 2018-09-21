@@ -27,14 +27,14 @@
 
       <label class="col-sm-4">
         <span>
-          <span>{{colorscalerange[0]}}</span>
-          <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1]}}</span><br>
+          <span>{{colorscale.range[0]}}</span>
+          <span class="fa fa-arrows-h"></span> <span>{{colorscale.range[1]}}</span><br>
           <span>({{layer.get('advancedMetadata').units}})</span>
         </span>
       </label>
       <div class="col-sm-6">
         <div ui-slider="{range: true}" min="{{colorRange.min}}" max="{{colorRange.max}}" id="ncwmsscales"
-             use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+             use-decimals ng-model="colorscale.range" ng-change="onColorScaleChange()"></div>
       </div>
     </div>
 

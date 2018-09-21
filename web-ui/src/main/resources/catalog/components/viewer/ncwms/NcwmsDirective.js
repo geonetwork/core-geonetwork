@@ -191,8 +191,12 @@
                   scope.colorRange.max = scope.layer.get('oceanotronScaleRange')[1];
                 }
 
-                scope.colorscalerange = [scope.colorRange.min,
-                  scope.colorRange.max];
+                scope.colorscale = {
+                  range: [
+                    scope.colorRange.min,
+                    scope.colorRange.max
+                  ]
+                }
               }
 
               scope.timeSeries = {
@@ -254,8 +258,9 @@
                 map.getView().calculateExtent(map.getSize()),
                 map.getView().getProjection(), 'EPSG:4326').join(',')).
             success(function(data) {
-              scope.colorscalerange = [data.min, data.max];
-              scope.onColorscaleChange(scope.colorscalerange);
+              scope.colorscale.range[0] = data.min;
+              scope.colorscale.range[1] = data.max;
+              scope.onColorScaleChange();
               $(evt.target).removeClass('fa-spinner');
             });
           };
@@ -266,12 +271,13 @@
            * with `COLORSCALERANGE` params and refreshes it.
            * @param {?array} v the colorange array
            */
-          scope.onColorscaleChange = function(v) {
-            if (angular.isArray(v) && v.length == 2) {
-              scope.params.COLORSCALERANGE = v[0] + ',' + v[1];
+          scope.onColorScaleChange = _.debounce(function() {
+            var range = scope.colorscale.range;
+            if (angular.isArray(range) && range.length == 2) {
+              scope.params.COLORSCALERANGE = range[0] + ',' + range[1];
               scope.updateLayerParams();
             }
-          };
+          }, 400);
 
           scope.ncTime = {};
 
