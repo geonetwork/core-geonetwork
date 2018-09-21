@@ -141,6 +141,7 @@
   <bean id="securityContextRepository"
         class='org.springframework.security.web.context.HttpSessionSecurityContextRepository'>
     <property name="allowSessionCreation" value="true"/>
+    <property name="disableUrlRewriting" value="true" />
   </bean>
 
   <bean class="org.fao.geonet.web.GeoNetworkHttpSessionRequestCache" id="requestCache">
