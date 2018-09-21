@@ -25,13 +25,16 @@ package org.fao.geonet.schema.iso19139;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.jdom.Text;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
@@ -405,5 +408,31 @@ public class ISO19139SchemaPlugin
     @Override
     public Map<String, String> getExportFormats() {
         return allExportFormats;
+    }
+
+    @Override
+    public Element processElement(Element el, String attributeRef, String parsedAttributeName, String attributeValue) {
+        if (Log.isDebugEnabled(LOGGER_NAME)) {
+            Log.debug(LOGGER_NAME, "Processing element " + el + ", attribute " + attributeRef
+                + " with attributeValue " + attributeValue);
+        }
+
+        if (parsedAttributeName.equals("xlink:href")) {
+            Element originalGeonetInfo = (Element) el.getChild("element", GEONET).clone();
+            String originalValue = el.getText();
+
+            Element anchor = new Element("Anchor", GMX)
+                .setAttribute("href", "", XLINK);
+
+            Element geonetAttribute = new Element("attribute", GEONET)
+                .setAttribute("name", parsedAttributeName)
+                .setAttribute("ref", attributeRef);
+
+            anchor.setContent(Lists.newArrayList(new Text(originalValue), geonetAttribute, originalGeonetInfo));
+            return anchor;
+        } else {
+            return super.processElement(el, attributeRef, parsedAttributeName, attributeValue);
+        }
+
     }
 }
