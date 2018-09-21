@@ -24,17 +24,15 @@
 package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.ImmutableSet;
-
+import org.jdom.Element;
 import org.jdom.Namespace;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by francois on 6/16/14.
@@ -92,4 +90,17 @@ public abstract class SchemaPlugin implements CSWPlugin {
     public List<String> getXpathTitle() {
         return xpathTitle;
     }
+
+
+    /**
+     * Processes the passed element. This base class just return the same element without modifications.
+     * @param el element to process.
+     * @param attributeName
+     * @param parsedAttributeName the name of the attribute, for example <code>xlink:href</code>
+     * @param attributeValue
+     * @return the same element passed without modifications.
+     */
+    public Element processElement(Element el, String attributeName, String parsedAttributeName, String attributeValue) {
+        return el;
+    };
 }
