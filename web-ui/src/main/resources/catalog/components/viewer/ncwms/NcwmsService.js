@@ -81,17 +81,22 @@
 
         var url = this.getMetadataUrl(layer);
         return $http.get(url)
-          .success(function(json) {
+          .then(function(response) {
+            var json = response.data;
             // metadata object was received: layer is a ncwms/oceanotron
             if (angular.isObject(json)) {
               layer.set('advancedMetadata', json);
               if (json.multiFeature || json.queryable) {
                 layer.set('advancedType', LAYERTYPE_WMS_OCEANOTRON);
-                return this.initOceanotronParams(layer);
               } else {
                 layer.set('advancedType', LAYERTYPE_WMS_NCWMS);
               }
+
               this.formatNcwmsAvailableDates(layer);
+
+              if (this.isLayerOceanotron(layer)) {
+                return this.initOceanotronParams(layer);
+              }
             }
             // build the metadata object ourselves to handle wms params
             else {
@@ -140,9 +145,9 @@
         var promise1 = this.getOceanotronInfo(layer).then(function(type) {
           layer.set('oceanotronType', type);
         });
-        var promise2 = this.getColorRangesBounds(scope.layer, [-180, -90, 180, 90])
-        .success(function(data) {
-          layer.set('oceanotronScaleRange', [data.min, data.max]);
+        var promise2 = this.getColorRangesBounds(layer, [-180, -90, 180, 90])
+        .then(function(response) {
+          layer.set('oceanotronScaleRange', [response.data.min, response.data.max]);
         })
 
         return $q.all([promise1, promise2]);

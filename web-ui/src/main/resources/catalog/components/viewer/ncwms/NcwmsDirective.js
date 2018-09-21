@@ -256,10 +256,10 @@
             gnNcWms.getColorRangesBounds(scope.layer,
               ol.proj.transformExtent(
                 map.getView().calculateExtent(map.getSize()),
-                map.getView().getProjection(), 'EPSG:4326').join(',')).
-            success(function(data) {
-              scope.colorscale.range[0] = data.min;
-              scope.colorscale.range[1] = data.max;
+                map.getView().getProjection(), 'EPSG:4326').join(','))
+            .then(function(response) {
+              scope.colorscale.range[0] = response.data.min;
+              scope.colorscale.range[1] = response.data.max;
               scope.onColorScaleChange();
               $(evt.target).removeClass('fa-spinner');
             });
