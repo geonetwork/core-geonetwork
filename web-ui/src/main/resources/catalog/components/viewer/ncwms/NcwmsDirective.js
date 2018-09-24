@@ -181,8 +181,8 @@
               if (layer.get('advancedMetadata').units) {
                 scope.colorRange = {
                   step: 1,
-                  min: layerMetadata.scaleRange[0] || 0,
-                  max: layerMetadata.scaleRange[1] || 1000
+                  min: layerMetadata.scaleRange[0],
+                  max: layerMetadata.scaleRange[1]
                 };
 
                 // oceanotron: range was fetched before
@@ -243,6 +243,17 @@
               }
             }
 
+            // time
+            var time = scope.layer.get('time');
+            if (time && scope.isLayerOceanotron()) {
+              // initial values
+              parts = scope.params.TIME.split('/');
+              scope.ncTime.value = {
+                from: moment(parts[0]).format('DD-MM-YYYY'),
+                to: moment(parts[1]).format('DD-MM-YYYY')
+              };
+            }
+
             scope.updateLayerParams();
           };
 
@@ -281,6 +292,7 @@
 
           scope.ncTime = {};
 
+          // watch time argument for NcWMS/Oceanotron layers
           scope.$watch('ncTime.value', function(time) {
             if (!time) {
               return;

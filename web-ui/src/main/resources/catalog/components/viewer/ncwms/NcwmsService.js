@@ -65,7 +65,7 @@
        * This will attempt requests on the WMS service to determine the type
        * of the current layer (LAYERTYPE_*)
        *
-       * @param {ol.Layer} layer
+       * @param {ol.layer} layer param
        * @returns {defer} promise
        */
       this.feedOlLayer = function(layer) {
@@ -132,12 +132,15 @@
         var metadata = layer.get('advancedMetadata');
         var palettes = this.parseStyles(metadata);
 
-        var to = moment().toISOString();
-        var from = moment().subtract(2, 'days').toISOString();
+        var times = layer.get('time').values;
+        var from = moment(times[0]).toISOString();
+        var to = moment(times[times.length - 1]).toISOString();
+
+        var elevParts = layer.get('elevation').values[0].split('/');
 
         layer.getSource().updateParams({
           STYLES: palettes[metadata.defaultPalette || metadata.palettes[0]],
-          ELEVATION: '0/1',
+          ELEVATION: elevParts[0] + '/' + elevParts[1],
           TIME: from + '/' + to,
           TIMEUNIT: layer.get('time').units
         })
@@ -148,7 +151,7 @@
         var promise2 = this.getColorRangesBounds(layer, [-180, -90, 180, 90])
         .then(function(response) {
           layer.set('oceanotronScaleRange', [response.data.min, response.data.max]);
-        })
+        });
 
         return $q.all([promise1, promise2]);
       };
@@ -158,15 +161,12 @@
         if (angular.isArray(layerMetadata.supportedStyles) &&
           layerMetadata.supportedStyles.length) {
           angular.forEach(layerMetadata.supportedStyles, function(s) {
-            if (s == 'boxfill') {
-              if (angular.isArray(layerMetadata.palettes)) {
-                angular.forEach(layerMetadata.palettes, function(p) {
-                  t[p] = s + '/' + p;
-                });
-              }
-            }
-            else if (s == 'contour') {
+            if (s === 'contour') {
               t[s] = s; // TODO ????? + '/' + p;
+            } else if (angular.isArray(layerMetadata.palettes)) {
+              angular.forEach(layerMetadata.palettes, function(p) {
+                  t[p] = s + '/' + p;
+              });
             }
           });
         }
@@ -413,8 +413,13 @@
       this.getFullTimeValue = function(layer, inputDate) {
         var times = layer.get('time').values;
         var inputMoment = moment(inputDate, 'DD-MM-YYYY');
+        var diff;
         for (var i = 0; i < times.length; i++) {
-          if (Math.abs(inputMoment.diff(times[i], 'days', true)) < 1) {
+          diff = inputMoment.diff(times[i], 'days', true)
+
+          if ((i === 0 && diff < 0) ||
+              (i === times.length - 1 && diff > 0) ||
+              Math.abs(diff) < 1) {
             return moment(times[i]).toISOString();
           }
         }
