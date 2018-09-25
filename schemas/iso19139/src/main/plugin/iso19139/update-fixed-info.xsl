@@ -354,6 +354,34 @@
   </xsl:template>
 
   <!-- ================================================================= -->
+
+  <!-- Removes @nilReason from parents of gmd:Anchor if anchor has @xlink:href attribute filled. -->
+  <xsl:template match="*[gmx:Anchor]">
+    <xsl:copy>
+      <xsl:variable name="isEmptyAnchor" select="normalize-space(gmx:Anchor/@xlink:href) = ''" />
+      <xsl:apply-templates select="@*[not(name() = 'gco:nilReason')]"/>
+
+      <xsl:choose>
+        <xsl:when test="$isEmptyAnchor">
+          <xsl:attribute name="gco:nilReason">
+            <xsl:choose>
+              <xsl:when test="@gco:nilReason">
+                <xsl:value-of select="@gco:nilReason"/>
+              </xsl:when>
+              <xsl:otherwise>missing</xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@gco:nilReason != 'missing' and not($isEmptyAnchor)">
+          <xsl:copy-of select="@gco:nilReason"/>
+        </xsl:when>
+      </xsl:choose>
+      <xsl:apply-templates select="gmx:Anchor"/>
+    </xsl:copy>
+
+  </xsl:template>
+
+  <!-- ================================================================= -->
   <!-- codelists: set @codeList path -->
   <!-- ================================================================= -->
   <xsl:template match="gmd:LanguageCode[@codeListValue]" priority="10">
