@@ -73,6 +73,11 @@
    * @directiveInfo {boolean} cancelPrevious if true, concurrent requests on WPS
    *  endpoints will be allowed; this permits having several forms at the same
    *  time in the UI
+   *
+   *  SEXTANT SPECIFIC
+   * @directiveInfo {function} executeCallback if present, will be called with the message
+   *  as a string instead of actually calling the service; will also be called right after
+   *  initialization with the default params from WPS caps and WFS links
    */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
@@ -90,7 +95,10 @@
           map: '=',
           wpsLink: '=',
           wfsLink: '=',
-          describedCallback: '&'
+          describedCallback: '&',
+
+          // SEXTANT SPECIFIC
+          executeCallback: '&'
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -127,7 +135,10 @@
             var wpsLink = scope.wpsLink || {};
             return {
               processId: attrs['processId'] || wpsLink.name,
-              uri: attrs['uri'] || wpsLink.url
+              uri: attrs['uri'] || wpsLink.url,
+
+              // specific sextant
+              wfsLink: scope.wfsLink
             };
           }, function(newLink, oldLink) {
             // the WPS link is incomplete: leave & clear form
@@ -447,6 +458,12 @@
                   if (scope.describedCallback) {
                     scope.describedCallback();
                   }
+
+                  // SEXTANT SPECIFIC: do submit right away if executeCallback is given
+                  if (attrs['executeCallback']) {
+                      scope.submit();
+                  }
+                  // END SEXTANT SPECIFIC
                 },
                 function(response) {
                   scope.describeState = 'failed';
@@ -498,6 +515,14 @@
 
             var inputs = scope.getAllInputs();
             var output = scope.wpsLink.output;
+
+            // SEXTANT SPECIFIC: do not call service if an executeCallback is given
+            if (attrs['executeCallback']) {
+                var message = gnWpsService.printExecuteMessage(scope.processDescription, inputs, output);
+                scope.executeCallback({ msg: message });
+                return;
+            }
+            // END SEXTANT SPECIFIC
 
             updateStatus = function(statusLocation) {
               gnWpsService.getStatus(statusLocation).then(

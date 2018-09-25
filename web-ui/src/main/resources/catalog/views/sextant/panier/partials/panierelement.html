@@ -49,7 +49,7 @@
     </div>
 
     <div class="form-group sxt-processes-list" ng-show="element.processes && element.processes.length > 0">
-      <label for="processesPF" class="control-label" translate>wpsIncludedProcesses</label>&nbsp;:&nbsp;
+      <label class="control-label" translate>wpsIncludedProcesses</label>&nbsp;:&nbsp;
       <div ng-repeat="p in element.processes" class="sxt-process">
         <label ng-click="p.included = p.described && !p.included">
           <i ng-if="!p.described" class="fa fa-fw fa-spin fa-spinner"/>
@@ -57,15 +57,33 @@
             ng-class="p.included ? 'fa-check-square-o' : 'fa-square-o'"/>
           <span class="wps-label">{{ p.desc || p.name }}</span>
         </label>
-        <button type="button" data-ng-disabled="!p.included" class="btn btn-default" ng-click="editWPSForm(p)">
+        <button type="button" data-ng-disabled="!p.included" class="btn btn-default" data-toggle="modal" data-target="#process{{$index}}">
           <i class="fa fa-cogs"></i>&nbsp;
           <span translate="" class="ng-scope">{{ 'editWpsForm' | translate }}</span>
         </button>
-        <div class="hidden">
-          <gn-wps-process-form wps-link="p" wfs-link="wfsLink"
-            map="map" described-callback="describedCallback(p)"
-            cancel-previous="false">
-          </gn-wps-process-form>
+        <div class="modal fade" id="process{{$index}}" ng-if="isVisible()">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" translate>{{p.desc || 'editWpsForm'}}</h4>
+              </div>
+              <div class="modal-body">
+                <gn-wps-process-form wps-link="p" wfs-link="getWfsLink()"
+                                     map="map" execute-callback="saveExecuteMessage(msg, p)"
+                                     hide-execute-button="true" hide-title="true"
+                                     cancel-previous="false">
+                </gn-wps-process-form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-click="submitProcess($event)" translate>wpsSaveForm</button>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
     </div>
