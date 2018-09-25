@@ -45,18 +45,32 @@
     <for name="gmd:measureDescription" use="textarea"/>
     <for name="gmd:purpose" use="textarea"/>
     <for name="gmd:orderingInstructions" use="textarea"/>
-    <for name="gmd:otherConstraints" use="textarea"/>
+
+
+    <!--<for name="gmd:otherConstraints" use="textarea"/>-->
+    <for name="gmd:otherConstraints"
+         use="data-gn-keyword-picker">
+      <directiveAttributes
+        data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistOnLineDescriptionCode-OnLineDescriptionCode"
+        data-display-definition="true"
+        data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+    </for>
+
+
+
+
     <for name="gmd:statement" use="textarea"/>
     <for name="gmd:supplementalInformation" use="textarea"/>
     <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
 
-    <for name="gmd:useLimitation" use="textarea"/>
-    <!--<for name="gmd:useLimitation"
+    <!--<for name="gmd:useLimitation" use="textarea"/>-->
+    <for name="gmd:useLimitation"
          use="data-gn-keyword-picker">
-      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"/>
-    </for>-->
-    
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+    </for>
+
     <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
     <for name="gml:duration" use="data-gn-field-duration-div"/>
 
