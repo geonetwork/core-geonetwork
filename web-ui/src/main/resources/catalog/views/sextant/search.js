@@ -348,8 +348,9 @@
 
           // make sure the layer is not already there
           for (var i = 0; i < $scope.searchObj.panier.length; i++) {
-            if ($scope.searchObj.panier[i].md &&
-                $scope.searchObj.panier[i].md.getUuid() === md.getUuid()) {
+            if ($scope.searchObj.panier[i].link.name === link.name &&
+                $scope.searchObj.panier[i].link.url === link.url &&
+                $scope.searchObj.panier[i].link.protocol === link.protocol) {
               return;
             }
           }
