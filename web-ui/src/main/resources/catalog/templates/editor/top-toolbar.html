@@ -1,26 +1,19 @@
 <nav class="navbar navbar-default navbar-fixed-top gn-top-bar" role="navigation"
      data-ng-if="!unsupportedSchema">
 
-
-  <p class="navbar-text gn-tooltip"
-     data-ng-mouseover="getSaveStatus()" title="{{savedStatus}}">
-    <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span><br/>
-    <strong title="{{gnCurrentEdit.mdTitle}}">
+  <div class="navbar-text gn-tooltip"
+     data-ng-mouseover="getSaveStatus()"
+     title="{{savedStatus}}">
+    <h1 title="{{gnCurrentEdit.mdTitle}}">
       {{gnCurrentEdit.mdTitle | limitTo: 50 }}
       {{gnCurrentEdit.mdTitle.length > 50 ? '...' : ''}}
-    </strong>
-  </p>
+    </h1>
+    <span data-ng-if="savedStatus">| </span>
+    <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
+  </div>
 
-  <div class="pull-right">
-    <!--<button type="button" class="btn btn-primary navbar-btn gn-tooltip" data-ng-click="share()"
-      data-title="{{'share-help' | translate}}" data-placement="bottom">
-      <i class="fa fa-lock"/>
-      <span data-translate="">share</span>
-    </button>-->
-
-
-    <!-- If using the category selector in the editor
-    form directly, remove this directive. -->
+  <div class="gn-btn-toolbar navbar-right">
+    <!-- If using the category selector in the editor form directly, remove this directive. -->
     <div data-gn-metadata-category-updater="mdCategories"
          data-gn-group-owner="groupOwner"
          data-metadata-uuid="gnCurrentEdit.uuid" title="{{'categories'|translate}}"/>
@@ -29,55 +22,75 @@
          data-metadata-id="gnCurrentEdit.id" title="{{'group'|translate}}"/>
 
     <div class="btn-group">
-      <button class="btn btn-default dropdown-toggle"
+      <button class="btn btn-default navbar-btn dropdown-toggle"
               type="button"
-              data-toggle="dropdown" aria-expanded="true">
-        <i class="fa fa-cog"/>
+              data-toggle="dropdown"
+              aria-label="{{'tools' | translate}}"
+              aria-expanded="true">
+        <i class="fa fa-fw fa-cog"/>
+        <span class="visible-lg" data-translate="">tools</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li role="presentation">
-          <a role="menuitem" tabindex="-1"
+        <li role="menuitem">
+          <a role="menuitem"
+             tabindex="-1"
              data-gn-click-and-spin="startVersioning()"
              title="{{'startVersioning-help' | translate}}">
-            <i class="fa fa-history"/>&nbsp;
-            <span class="visible-lg" data-translate="">startVersioning</span>
+            <i class="fa fa-fw fa-history"/>
+            <span data-translate="">startVersioning</span>
           </a>
         </li>
       </ul>
     </div>
+    <!-- /.btn-group -->
 
     <data-gn-md-validation-tools></data-gn-md-validation-tools>
     <!-- TODO: automatic save status -->
-    <button type="button" class="btn btn-default navbar-btn gn-tooltip"
-            gn-click-and-spin="cancel()"
-            data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
-      <i class="fa fa-undo"/>&nbsp;
-      <span class="visible-lg" data-translate="">cancel</span>
-    </button>
-    <button type="button" class="btn btn-default navbar-btn gn-tooltip"
-            title="{{'closeEditor'|translate}}" gn-click-and-spin="close()">
-      <i class="fa fa-sign-out"/>&nbsp;
-      <span class="visible-lg" data-translate="">closeEditor</span>
-    </button>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default navbar-btn gn-tooltip"
+              gn-click-and-spin="cancel()"
+              data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
+        <i class="fa fa-fw fa-undo"/>
+        <span class="visible-lg" data-translate="">cancel</span>
+      </button>
+    </div>
+    <div class="btn-group">
+      <button type="button"
+              class="btn btn-default navbar-btn gn-tooltip"
+              aria-label="{{'closeEditor' | translate}}"
+              title="{{'closeEditor'|translate}}"
+              gn-click-and-spin="close()">
+        <i class="fa fa-fw fa-sign-out"/>
+        <span class="visible-lg" data-translate="">closeEditor</span>
+      </button>
+    </div>
+    <!-- /.btn-group -->
     <div class="btn-group" title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}">
       <button type="button"
               data-gn-click-and-spin="save(true)"
-              class="btn btn-primary">
-        <i class="fa fa-save"/>&nbsp;
-        <span
-          class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
+              aria-label="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}"
+              class="btn btn-success navbar-btn">
+        <i class="fa fa-fw fa-save"/>
+        <span class="visible-lg">{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}</span>
       </button>
-      <button type="button" class="btn btn-primary dropdown-toggle"
-              data-toggle="dropdown" aria-expanded="false">
+      <button type="button"
+              class="btn btn-success navbar-btn dropdown-toggle"
+              aria-label="{{'showOptions' | translate}}"
+              data-toggle="dropdown"
+              aria-expanded="false">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <li><a href="" title="{{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
-               data-gn-click-and-spin="switchTypeAndSave(true)">
-          {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
-        </a></li>
-        <li class="dropdown-header">
+        <li role="menuitem">
+          <a href=""
+             title="{{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
+             data-gn-click-and-spin="switchTypeAndSave(true)">
+            {{(isTemplate() ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}
+          </a>
+        </li>
+        <li class="dropdown-header"
+            role="menuitem">
           <label title="{{'minorEditHelp' | translate}}">
             <input type="checkbox" data-ng-model="gnCurrentEdit.isMinor"/>
             {{'minorEdit' | translate}}
@@ -85,17 +98,20 @@
         </li>
       </ul>
     </div>
-
-    <div class="btn-group">
-      <ul class="gn-view-menu-button nav navbar-nav">
-        <!-- An empty drown down updated when form is loaded -->
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-eye"></i>&nbsp;
-            <b class="caret"/>
-          </a>
-        </li>
-      </ul>
+    <!-- /.btn-group -->
+    <div class="btn-group gn-view-menu-button">
+      <!-- An empty drown down updated when form is loaded -->
+      <button type="button"
+              class="btn btn-default navbar-btn dropdown-toggle"
+              data-toggle="dropdown"
+              aria-label="{$i18n/selectView}"
+              title="{$i18n/selectView}"
+              aria-expanded="false">
+        <i class="fa fa-eye"></i>
+        <span class="caret"></span>
+      </button>
     </div>
+    <!-- /.btn-group -->
   </div>
+  <!-- /.navbar-right -->
 </nav>

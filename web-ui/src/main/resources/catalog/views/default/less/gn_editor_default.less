@@ -3,6 +3,44 @@
 @import "gn_view.less";
 
 [ng-app="gn_editor"] {
+  .gn-top-bar {
+    // status
+    div.gn-tooltip {
+      padding: 0;
+      margin: 15px 0;
+      h1 {
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+      }
+      span {
+        font-weight: 200;
+      }
+    }
+    .gn-btn-toolbar {
+      margin-left: -20px;
+      margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      // smartphones
+      @media (max-width: @screen-xs-max) {
+        border-bottom: 1px solid @navbar-default-border;
+        background-color: #fff;
+        li > a {
+          color: #555 !important;
+        }
+      }
+      // on really small screen the submenu should open to the right
+      @media (max-width: 424px) {
+        .dropdown-menu-right {
+          left: 0;
+        }
+      }
+    }
+  }
+
   .gn-editor-board {
     .gn-top-search {
       padding-top: 0;
