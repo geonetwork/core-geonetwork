@@ -187,30 +187,37 @@
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
+    <xsl:variable name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(),
+            name(gmx:Anchor))"/>
+    <xsl:variable name="isTypeADirective" select="starts-with($type, 'data-')" />
 
     <xsl:variable name="attributes">
-      <xsl:if test="$isEditing">
-
-        <!-- Create form for all existing attribute (not in gn namespace)
-        and all non existing attributes not already present for the
-        current element and its children (eg. @uom in gco:Distance).
-        A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
-        <xsl:apply-templates mode="render-for-field-for-attribute"
-                             select="
+      <xsl:choose>
+        <xsl:when test="not($isTypeADirective) and $isEditing">
+          <!-- Create form for all existing attribute (not in gn namespace)
+              and all non existing attributes not already present for the
+              current element and its children (eg. @uom in gco:Distance).
+              A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
+          <xsl:apply-templates mode="render-for-field-for-attribute"
+                               select="
               @*|
               gn:attribute[not(@name = parent::node()/@*/name())]">
-          <xsl:with-param name="ref" select="gn:element/@ref"/>
-          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
-        </xsl:apply-templates>
-        <xsl:apply-templates mode="render-for-field-for-attribute"
-                             select="
-          */@*|
-          */gn:attribute[not(@name = parent::node()/@*/name())]">
-          <xsl:with-param name="ref" select="*/gn:element/@ref"/>
-          <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
-        </xsl:apply-templates>
-      </xsl:if>
+            <xsl:with-param name="ref" select="gn:element/@ref"/>
+            <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+          </xsl:apply-templates>
+          <xsl:apply-templates mode="render-for-field-for-attribute"
+                               select="
+                                   */@*|
+                                   */gn:attribute[not(@name = parent::node()/@*/name())]">
+            <xsl:with-param name="ref" select="*/gn:element/@ref"/>
+            <xsl:with-param name="insertRef" select="*/gn:element/@ref"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise></xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
+
+    <xsl:variable name="directiveAttributes" select="if ($isTypeADirective) then gn-fn-metadata:getFieldDirective($editorConfig, name()) else ''"/>
 
     <xsl:variable name="labelConfig">
       <xsl:choose>
@@ -232,11 +239,13 @@
       <!--<xsl:with-param name="widget"/>
       <xsl:with-param name="widgetParams"/>-->
       <xsl:with-param name="xpath" select="$xpath"/>
-      <xsl:with-param name="attributesSnippet" select="$attributes"/>
+      <xsl:with-param name="attributesSnippet" select="if (count($attributes/*) = 0)
+        then normalize-space($attributes)
+        else $attributes"/>
       <xsl:with-param name="forceDisplayAttributes" select="true()" />
       <xsl:with-param name="type"
-                      select="gn-fn-metadata:getFieldType($editorConfig, name(),
-            name(gmx:Anchor))"/>
+                      select="$type"/>
+      <xsl:with-param name="directiveAttributes" select="$directiveAttributes" />
       <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo"
