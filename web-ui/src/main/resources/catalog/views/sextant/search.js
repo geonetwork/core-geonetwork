@@ -345,6 +345,15 @@
             window.open(link.url);
             return;
           }
+
+          // make sure the layer is not already there
+          for (var i = 0; i < $scope.searchObj.panier.length; i++) {
+            if ($scope.searchObj.panier[i].md &&
+                $scope.searchObj.panier[i].md.getUuid() === md.getUuid()) {
+              return;
+            }
+          }
+
           $scope.searchObj.panier.push({
             link: link,
             md: md
