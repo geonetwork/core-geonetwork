@@ -79,7 +79,7 @@
 
             // init map
             ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
-            ctrl.map.get('creationPromise').then(function() {
+            ctrl.map.get('sizePromise').then(function() {
               ctrl.initValue();
             });
 

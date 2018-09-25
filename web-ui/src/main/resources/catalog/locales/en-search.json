@@ -47,6 +47,7 @@
   "displayHeatMap": "Heat map",
   "removeFeatures": "Remove features",
   "refresh": "Refresh",
+  "mapLegend": "Legend",
   "kmlFile": "{{layer}} (KML)",
   "wmsLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
   "wmsServiceLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a>.",
@@ -71,6 +72,7 @@
   "wcsCapabilitiesNotAvailable": "Couldn't check the GetCapabilities response",
   "wcsLayerNotAvailable": "The coverage {{layerName}} is not available in the WCS service. However, you can view one of the available ones",
   "wcsChooseLayerToAdd": "Choose a coverage to add to the map",
+  "Unable_to_connect_to_service": "Unable to connect to service",
   "databaseLayerDetails": "This dataset is published in the database <strong>{{url}}</strong> in table <strong>{{layer}}</strong>.",
   "fileLayerDetails": "{{name}}. This dataset is available in the local network <strong>{{url}}</strong>.",
   "wfsNotAvailable": "<a href='{{url}}' target='_blank'>WFS</a> not available.",
@@ -169,6 +171,7 @@
   "formats": "Formats",
   "addLayers": "Add layers",
   "serviceUrl": "http://...",
+  "serviceUrlLabel": "Service URL",
   "CurrentLayers": "Layers",
   "SearchLayer": "Search",
   "addLayerFromMaps": "Maps",
@@ -466,5 +469,9 @@
   "GUFdeleteConfirm": "Do you want to delete this comment?",
   "GUFrequired": "Required",
   "GUFtooLong": "Too long",
-  "GUFnotValidFormat": "Not a valid format"
+  "GUFnotValidFormat": "Not a valid format",
+  "clickToSelect": "Click to select or unselect",
+  "filterDataDescription": "Select a layer on the map to begin filtering associated WFS features (if any). Features must first have been indexed by an administrator.",
+  "WPSDescription": "Enter a WPS endpoint URL to begin using the process through a dynamic form. Recently used WPS processes are shown in the second tab.",
+  "noLayersFound": "No layers found"
 }

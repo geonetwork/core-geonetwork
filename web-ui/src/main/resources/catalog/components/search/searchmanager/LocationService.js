@@ -31,7 +31,12 @@
     '$rootScope',
     '$timeout',
     'gnGlobalSettings',
-    function($location, $rootScope, $timeout, gnGlobalSettings) {
+    'gnExternalViewer',
+    function($location,
+      $rootScope,
+      $timeout,
+      gnGlobalSettings,
+      gnExternalViewer) {
 
       this.SEARCH = '/search';
       this.MAP = '/map';
@@ -88,7 +93,8 @@
       };
 
       this.setMap = function() {
-        if (gnGlobalSettings.isMapViewerEnabled) {
+        if (gnGlobalSettings.isMapViewerEnabled &&
+            !gnExternalViewer.isEnabled()) {
           $location.path(this.MAP);
         }
       };

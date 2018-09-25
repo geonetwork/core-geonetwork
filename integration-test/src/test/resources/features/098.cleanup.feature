@@ -23,12 +23,15 @@ Feature: Cleanup Draft Tests
         When I navigate to "{endPointToTest}/srv/eng/admin.console#/organization"
         Then I click on link having partial text "Edi Thor"
         Then I click on element having css "button.btn-danger"
+        And I accept alert
         And I wait for 1 sec
         Then I click on link having partial text "Revi Ewer"
         Then I click on element having css "button.btn-danger"
+        And I accept alert
         And I wait for 1 sec
         Then I click on link having partial text "Edi Thor"
         Then I click on element having css "button.btn-danger"
+        And I accept alert
         
         # Logout   
         When I hover over element having css ".gn-user-info"  

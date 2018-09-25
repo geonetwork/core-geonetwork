@@ -27,15 +27,39 @@ import com.google.common.collect.Sets;
 
 import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
 import org.hibernate.annotations.Type;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import static javax.persistence.CascadeType.*;
+import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
+import org.hibernate.engine.internal.Cascade;
+
+import com.google.common.collect.Sets;
 
 /**
  * An entity representing a harvester configuration setting.
@@ -87,13 +111,14 @@ public class HarvesterSetting extends GeonetEntity {
     /**
      * Get the parent setting object. This is a nullable property.
      */
-    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = {PERSIST, MERGE, DETACH})
+    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "parentid")
+    @OnDelete(action=OnDeleteAction.CASCADE)
     public
     @Nullable
     HarvesterSetting getParent() {
         return _parent;
-    }
+    }                         
 
     /**
      * Set the parent setting object for this setting. The may be null.

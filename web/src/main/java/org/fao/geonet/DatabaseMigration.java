@@ -166,9 +166,13 @@ public class DatabaseMigration implements BeanPostProcessor {
         // Migrate db if needed
         _logger.info("      Webapp   version:" + webappVersion + " subversion:" + subVersion);
         _logger.info("      Database version:" + dbVersion + " subversion:" + dbSubVersion);
-        if (dbVersion == null || webappVersion == null) {
-            _logger.warning("      Database does not contain any version information. Check that the database is a GeoNetwork "
-                + "database with data. The database is probably empty, no migration required.");
+        if (dbVersion == null) {
+            _logger.warning("      Unable to retrieve the current GeoNetwork version from the database. "
+                + "If this is an initial run of the software, then the database will be auto-populated. "
+                + "Else check that the database is properly configured");
+            return true;
+        } else if (webappVersion == null) {
+            _logger.warning("      Unable to retrieve the GeoNetwork version from the application code.");
             return true;
         }
 
@@ -176,9 +180,14 @@ public class DatabaseMigration implements BeanPostProcessor {
 
         try {
             from = parseVersionNumber(dbVersion);
+        } catch (Exception e) {
+            _logger.warning("      Error parsing the GeoNetwork version (" + dbVersion + "." + dbSubVersion + ") from the database: " + e.getMessage());
+            e.printStackTrace();
+        }
+        try {
             to = parseVersionNumber(webappVersion);
         } catch (Exception e) {
-            _logger.warning("      Error parsing version numbers: " + e.getMessage());
+            _logger.warning("      Error parsing GeoNetwork version (" + webappVersion + "." + subVersion + ") from the application code: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -187,7 +196,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                 _logger.info("      Running on a newer database version.");
                 break;
             case 0:
-                _logger.info("      Webapp version = Database version, no migration task to apply.");
+                _logger.info("      Application version equals the Database version, no migration task to apply.");
                 break;
             case -1:
                 boolean anyMigrationAction = false;

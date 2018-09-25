@@ -42,6 +42,7 @@
     <div class="btn-group pull-right">
       <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown"
+              aria-label="{{'chooseAView' | translate}}"
               aria-expanded="false">
         <i class="fa fa-eye"></i>
         <span data-translate="" class="hidden-sm hidden-xs">chooseAView</span>
@@ -49,13 +50,14 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <!-- <li class="dropdown-header" data-translate="">chooseAView</li> -->
-        <li data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
+        <li role="menuitem" data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
           <a href="" data-ng-click="format()">
             <i class="fa fa-fw"></i>
             <span data-translate="">defaultView</span>
           </a>
         </li>
-        <li data-ng-repeat="f in formatter.list"
+        <li role="menuitem"
+            data-ng-repeat="f in formatter.list"
             data-ng-class="f === currentFormatter ? 'disabled' : ''">
           <a href="" data-ng-click="format(f)">
             <i class="fa fa-fw"></i>
@@ -73,7 +75,6 @@
        data-gn-click-and-spin="deleteRecord(mdView.current.record)"
        data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
        title="{{'delete' | translate}}">
-
       <i class="fa fa-times"></i>
       <span data-translate="" class="hidden-sm hidden-xs">delete</span>
     </a>
@@ -98,7 +99,6 @@
         <h1>
           <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
           {{mdView.current.record.title || mdView.current.record.defaultTitle}}
-
         </h1>
 
         <div class="alert alert-info"
@@ -301,8 +301,7 @@
             <td>
               <ul>
                 <li data-ng-repeat="r in mdView.current.record.crsDetails">
-                  <span ng-if="r.name != ''">{{ r.name }} ({{ r.code }})</span>
-                  <span ng-if="r.name == ''">{{ r.code }}</span>
+                  {{ mdService.formatCrs(r) }}
                 </li>
               </ul>
             </td>
@@ -393,10 +392,10 @@
 
       <div class="col-md-4 gn-md-side">
         <section class="gn-md-side-overview" data-ng-if="mdView.current.record.overviews.length > 0">
-          <h4>
+          <h2>
             <i class="fa fa-fw fa-image"></i>
             <span data-translate="">overview</span>
-          </h4>
+          </h2>
 
           <div data-ng-repeat="img in mdView.current.record.overviews">
             <img data-gn-img-modal="img"
@@ -431,10 +430,10 @@
         <div data-gn-md-feedback="mdView.current.record"></div>
 
         <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
-          <h4>
+          <h2>
             <i class="fa fa-fw fa-map-marker"></i>
             <span data-translate="">extent</span>
-          </h4>
+          </h2>
           <p data-ng-if="mdView.current.record.geoDesc">
           <ul>
             <li data-ng-repeat="d in mdView.current.record.geoDesc">{{d}}</li>
@@ -443,6 +442,8 @@
           <!-- TODO: use map config -->
           <p data-ng-repeat="bbox in mdView.current.record.geoBox">
             <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
+                 alt="{{'extent' | translate}}"
+                 aria-label="{{'extent' | translate}}"
                  data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=settings&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
           </p>
 
@@ -454,10 +455,10 @@
                              mdView.current.record.revisionDate ||
                              mdView.current.record.tempExtentBegin ||
                              mdView.current.record.tempExtentEnd">
-          <h4>
+          <h2>
             <i class="fa fa-fw fa-clock-o"></i>
             <span data-translate="">tempExtent</span>
-          </h4>
+          </h2>
 
           <p>
           <dl data-ng-show="mdView.current.record.creationDate.length > 0">
@@ -524,19 +525,20 @@
         </section></br>-->
 
         <section class="gn-md-side-providedby">
-          <h4>
+          <h2>
             <i class="fa fa-fw fa-cog"></i>
             <span data-translate="">sourceCatalog</span>
-          </h4>
+          </h2>
           <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
+               aria-label="{{'sourceCatalog' | translate}}"
                class="gn-source-logo"/>
         </section>
 
         <section class="gn-md-side-calendar">
-          <h4>
+          <h2>
             <i class="fa fa-fw fa-calendar"></i>
             <span data-translate="">updatedOn</span>
-          </h4>
+          </h2>
           <p>
             <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
                   data-from-now=""></span>
@@ -544,10 +546,10 @@
         </section>
 
         <section class="gn-md-side-social">
-          <h4>
+          <h2>
             <i class="fa fa-fw fa-share-square-o"></i>
             <span data-translate="">shareOn</span>
-          </h4>
+          </h2>
           <a data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
              title="{{'shareOnTwitter' | translate}}"
              target="_blank"
@@ -579,10 +581,10 @@
         </section>
 
         <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
-          <h4>
+          <h2>
             <i class="fa fa-fw"></i>
             <span data-translate="">rate</span>
-          </h4>
+          </h2>
           <div data-gn-metadata-rate="mdView.current.record"/>
         </section>
       </div>

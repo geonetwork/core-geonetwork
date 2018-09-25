@@ -393,6 +393,7 @@
     "settings": "Settings",
     "tools": "Tools",
     "processesTool": "Use a WPS process",
+    "processesToolUrlDiscovery": "WPS URL",
     "addLayersTool": "Add layers",
     "layersTool": "Manager layers",
     "filterTool": "Search & filter features",
@@ -408,5 +409,12 @@
     "resolveCaptcha": "Resolve the captcha",
     "resolutions": "Resolution",
     "loginTitle": "Sign in",
-    "loginText": "Sign in with your username and password to add and edit metadata."
+    "loginText": "Sign in with your username and password to add and edit metadata.",
+    "siteLogo": "Logo",
+    "languageSwitcher": "Language switcher",
+    "avatar": "Avatar",
+    "first": "First",
+    "editorHome": "Editor board",
+    "adminHome": "Summary",
+    "allAdmins": "Administrators"
 }

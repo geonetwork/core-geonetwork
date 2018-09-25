@@ -51,8 +51,6 @@ ul.gn-resultview {
     .gn-md-thumbnail {
       .gn-img-thumbnail {
         max-width: @thumbnail-width;
-        max-height: 140px;
-        min-height: 40px;
         height: auto;
       }
     }
@@ -73,6 +71,43 @@ ul.gn-resultview {
         }
       }
     }
+  }
+
+  .gn-md-title {
+    margin-top: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    h3 {
+
+      /* Leave space for selection checkbox */
+      //padding-left: 20px;
+      margin-top: 0px;
+      a {
+        //text-transform: uppercase;
+        font-weight: normal;
+        font-size: 80%;
+        color: #333333;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: block;
+      }
+      a:hover {
+        color: #428bca;
+        text-decoration: none;
+      }
+    }
+  }
+  .gn-source-logo {
+    z-index: 10;
+    height: 20px;
+    float: right;
+  }
+  .gn-md-abstract {
+    cursor: pointer;
+    color: @gray-darker;
+  }
+  .gn-md-abstract.ellipsis:after {
+    background: none;
   }
 
   li.gn-grid {
@@ -98,37 +133,27 @@ ul.gn-resultview {
       vertical-align: text-bottom;
     }
     .gn-md-title {
-      margin-top: 2px;
       min-height: 3.5em;
       max-height: 3.5em;
-      overflow: hidden;
-      cursor: pointer;
-      h3 {
-
-        /* Leave space for selection checkbox */
-        //padding-left: 20px;
-        margin-top: 0px;
-        a {
-          //text-transform: uppercase;
-          font-weight: normal;
-          font-size: 80%;
-          color: #333333;
+      h3{
+        a{
           max-height: 82px;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          display: block;
-        }
-        a:hover {
-          color: #428bca;
-          text-decoration: none;
         }
       }
     }
-    .gn-source-logo {
-      z-index: 10;
-      height: 20px;
-      float: right;
+    input {
+      float: left;
     }
+    .gn-md-links {
+      //position: absolute;
+      //bottom: @grid-bottom-margin;
+      background: none;
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      padding: 5px;
+    }
+
     .gn-md-thumbnail {
       //position: absolute;
       //top: 82px;
@@ -143,29 +168,101 @@ ul.gn-resultview {
         height: auto;
       }
     }
-    .gn-md-abstract {
-      cursor: pointer;
-      color: @gray-light;
-    }
-    .gn-md-abstract.ellipsis:after {
-      background: none;
-    }
-    .gn-md-links {
-      //position: absolute;
-      //bottom: @grid-bottom-margin;
-      background: none;
-      position: absolute;
-      bottom: 0px;
-      right: 0px;
-      padding: 5px;
-    }
-    input {
-      float: left;
-    }
+
     .gn-md-category {
       display: block;
       float: left;
       margin-left: 18px;
+    }
+  }
+  li.gn-list {
+    .gn-md-title {
+      h1 {
+        line-height: 1.3em;
+        font-size: 20px;
+        margin-top: 0;
+        padding-top: 5px;
+        a {
+          color: #333;
+          &:hover {
+            color: #000;
+          }
+          .fa {
+            display: inline;
+          }
+        }
+        .md-title {
+          display: block;
+          float: right;
+          width: calc(~"100% - 50px");
+        }
+      }
+    }
+    .gn-md-category {
+      a {
+        margin-left: 5px;
+      }
+    }
+    .gn-md-logo {
+      margin-top: 5px;
+    }
+    .gn-md-thumbnail {
+      border-radius: 0;
+      margin-top: 5px;
+    }
+    .gn-status {
+      position: relative;
+      border: 0;
+      padding: 0;
+      margin-top: 5px;
+      top: auto;
+      left: auto;
+      transform: none;
+      font-weight: 400;
+      font-size: 95%;
+      text-transform: uppercase;
+      float: left;
+      color: darken(@brand-info, 25%);
+    }
+    .gn-status-completed {
+      color: darken(@brand-success, 20%);
+    }
+    .gn-status-historicalArchive {
+      color: darken(@brand-warning, 20%);
+    }
+    .gn-status-obsolete {
+      color: darken(@brand-danger, 20%);
+    }
+    .gn-md-abstract {
+      p {
+        font-size: 1em;
+        color: @text-muted;
+        &:empty {
+          display: none;
+        }
+      }
+      address {
+        margin-bottom: 5px;
+      }
+      .collapse-text-toggle {
+        columns: @brand-primary;
+      }
+    }    
+    .gn-md-links {
+      background: 0;
+      margin-top: 10px;
+      border-bottom: 1px solid @list-group-border;
+      padding-bottom: 10px;
+      line-height: 1em;
+      .btn {
+        margin-right: 5px;
+        .caret {
+          margin-left: 3px;
+        }
+      }
+    }
+    &:hover {
+      background-color: rgba(240, 240, 240, 0.5)
     }
   }
 }

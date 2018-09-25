@@ -24,21 +24,17 @@
 (function() {
   goog.provide('gn_cat_controller');
 
-
-
-
-
-
-
   goog.require('gn_admin_menu');
   goog.require('gn_saved_selections');
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
+  goog.require('gn_external_viewer');
 
 
   var module = angular.module('gn_cat_controller',
       ['gn_search_manager', 'gn_session_service',
-        'gn_admin_menu', 'gn_saved_selections']);
+        'gn_admin_menu', 'gn_saved_selections',
+        'gn_external_viewer']);
 
 
   module.constant('gnSearchSettings', {});
@@ -47,15 +43,19 @@
     var defaultConfig = {
       'langDetector': {
         'fromHtmlTag': false,
-        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
+        'regexp': '^(?:\/.+)?/.+\/([a-z]{2,3})\/.+',
         'default': 'eng'
       },
       'nodeDetector': {
-        'regexp': '^\/.+\/.+\/([a-z]{3})\/',
+        'regexp': '^(?:\/.+)?\/(.+)\/[a-z]{2,3}\/.+',
         'default': 'srv'
       },
+      'serviceDetector': {
+        'regexp': '^(?:\/.+)?\/.+\/[a-z]{2,3}\/(.+)',
+        'default': 'catalog.search'
+      },
       'baseURLDetector': {
-        'regexp': '^\(/[a-zA-Z0-9_\-]+)\/[a-zA-Z0-9_\-]+\/[a-z]{3}\/',
+        'regexp': '^((?:\/.+)?)+\/.+\/[a-z]{2,3}\/.+',
         'default': '/geonetwork'
       },
       'mods': {
@@ -89,6 +89,7 @@
             'hitsPerPage': 20
           },
           'facetsSummaryType': 'details',
+          'defaultSearchString': '',
           'facetTabField': '',
           'facetConfig': [
             // {
@@ -153,7 +154,14 @@
         'map': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/map',
-          'is3DModeAllowed': false,
+          'externalViewer': {
+            'enabled': false,
+            'baseUrl': 'http://www.example.com/viewer',
+            'urlTemplate': 'http://www.example.com/viewer?url=${service.url}&type=${service.type}&layer=${service.name}',
+            'openNewWindow': false,
+            'valuesSeparator': ','
+          },
+          'is3DModeAllowed': true,
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
@@ -173,6 +181,7 @@
             'processes': false,
             'addLayers': false,
             'layers': false,
+            'legend': false,
             'filter': false,
             'contexts': false,
             'print': false,
@@ -346,7 +355,7 @@
     },
     isValidIso2Lang: function(lang) {
       for (p in this.langs) {
-        if (this.langs[p] == lang) {
+        if (this.langs[p] === lang) {
           return true;
         }
       }
@@ -357,7 +366,7 @@
     },
     getIso3Lang: function(iso2lang) {
       for (p in this.langs) {
-        if (this.langs[p] == iso2lang) {
+        if (this.langs[p] === iso2lang) {
           return p;
         }
       }
@@ -379,12 +388,12 @@
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService',
     'gnSessionService', 'gnLangs', 'gnAdminMenu',
-    'gnViewerSettings', 'gnSearchSettings', '$cookies',
+    'gnViewerSettings', 'gnSearchSettings', '$cookies', 'gnExternalViewer',
     function($scope, $http, $q, $rootScope, $translate,
              gnSearchManagerService, gnConfigService, gnConfig,
              gnGlobalSettings, $location, gnUtilityService,
              gnSessionService, gnLangs, gnAdminMenu,
-             gnViewerSettings, gnSearchSettings, $cookies) {
+             gnViewerSettings, gnSearchSettings, $cookies, gnExternalViewer) {
       $scope.version = '0.0.1';
 
 
@@ -420,6 +429,17 @@
         return detector.default || 'srv';
       }
 
+
+      function detectService(detector) {
+        if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            return res[1];
+          }
+        }
+        return detector.default;
+      }
+
       function detectBaseURL(detector) {
         if (detector.regexp) {
           var res = new RegExp(detector.regexp).exec(location.pathname);
@@ -430,6 +450,7 @@
         return detector.default || 'geonetwork';
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
+      $scope.service = detectService(gnGlobalSettings.gnCfg.serviceDetector);
       gnGlobalSettings.nodeId = $scope.nodeId;
       gnConfig.env = gnConfig.env || {};
       gnConfig.env.node = $scope.nodeId;
@@ -449,6 +470,8 @@
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+      $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
+      $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
 
       $scope.layout = {
@@ -757,6 +780,17 @@
       $scope.session = gnSessionService.getSession();
 
       $scope.loadCatalogInfo();
+
+
+      $scope.healthCheck = {};
+      function healthCheckStatus(data) {
+        angular.forEach(data, function(o) {
+          $scope.healthCheck[o.name] = (o.status === 'OK');
+        });
+      };
+      $http.get('../../warninghealthcheck')
+        .success(healthCheckStatus)
+        .error(healthCheckStatus);
     }]);
 
 })();

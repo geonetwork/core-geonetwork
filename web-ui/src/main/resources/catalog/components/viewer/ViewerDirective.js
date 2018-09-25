@@ -86,6 +86,7 @@
                 contexts: false,
                 filter: false,
                 layers: false,
+                legend: false,
                 print: false,
                 processes: false
               };

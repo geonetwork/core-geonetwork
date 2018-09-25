@@ -23,36 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
-
-import org.apache.jcs.access.exception.CacheException;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.IHarvester;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
-import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
-import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.XmlElementReader;
-import org.fao.geonet.utils.XmlRequest;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -68,6 +38,36 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.stream.FactoryConfigurationError;
+
+import org.apache.jcs.access.exception.CacheException;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
+import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
+import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
+import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlElementReader;
+import org.fao.geonet.utils.XmlRequest;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 //=============================================================================
 
@@ -205,7 +205,7 @@ class Harvester implements IHarvester<HarvestResult> {
         log.info("Retrieving metadata fragments for : " + params.getName());
 
         //--- collect all existing metadata uuids before we update
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         localUuids = new UUIDMapper(metadataRepository, params.getUuid());
 
         //--- parse the xml query from the string - TODO: default should be

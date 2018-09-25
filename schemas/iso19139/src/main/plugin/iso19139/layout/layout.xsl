@@ -85,6 +85,7 @@
       <xsl:call-template name="render-element-to-add">
         <!-- TODO: add xpath and isoType to get label ? -->
         <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
         <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
         <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
         <xsl:with-param name="directive" select="$directive"/>

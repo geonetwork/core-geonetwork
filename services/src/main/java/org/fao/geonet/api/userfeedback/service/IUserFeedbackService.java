@@ -51,8 +51,10 @@ public interface IUserFeedbackService {
      *
      * @param feedbackUuid
      *          the feedback uuid
+     * @param ip
+     * 			the ip of the user that did this
      */
-    void removeUserFeedback(String feedbackUuid);
+    void removeUserFeedback(String feedbackUuid, String ip) throws Exception;
 
     /**
      * Retrieves the ratings associated to metadata.
@@ -106,6 +108,6 @@ public interface IUserFeedbackService {
      * @param userFeedback
      *          the user feedback
      */
-    void saveUserFeedback(UserFeedback userFeedback);
+    void saveUserFeedback(UserFeedback userFeedback, String ip) throws Exception;
 
 }

@@ -24,16 +24,21 @@
 package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
-
+import jeeves.constants.Jeeves;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -42,7 +47,12 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -57,16 +67,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -123,11 +123,11 @@ public class ApiUtils {
         }
         return id;
     }
-    public static Metadata getRecord(String uuidOrInternalId)
+    public static AbstractMetadata getRecord(String uuidOrInternalId)
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-        Metadata metadata = null;
+        IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+        AbstractMetadata metadata = null;
         try {
             metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
         } catch (IncorrectResultSizeDataAccessException e){
@@ -135,6 +135,7 @@ public class ApiUtils {
                 "More than one record found with UUID '%s'. Error is '%s'.",
                 uuidOrInternalId, e.getMessage()));
         }
+
         if (metadata == null) {
             try {
                 metadata = metadataRepository.findOne(uuidOrInternalId);
@@ -221,9 +222,9 @@ public class ApiUtils {
     /**
      * Check if the current user can edit this record.
      */
-    static public Metadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+    static public AbstractMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        Metadata metadata = getRecord(metadataUuid);
+        AbstractMetadata metadata = getRecord(metadataUuid);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
         if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
@@ -235,8 +236,8 @@ public class ApiUtils {
     /**
      * Check if the current user can view this record.
      */
-    public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        Metadata metadata = getRecord(metadataUuid);
+    public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        AbstractMetadata metadata = getRecord(metadataUuid);
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {

@@ -304,7 +304,6 @@
     "noFileSelected": "Escolliu un fitxer a pujar!",
     "yourMetadata": "Les teves metadades",
     "searchKeyword": "Cerca...",
-    "searchTopicCategory": "Cerca...",
     "searchOrTypeKeyword": "Escriu o cerca...",
     "tagsAllowed": "etiquetes permeses",
     "suggestionListError": "Ui! Quelcom ha fallat mentre carregàvem els suggeriments!",
@@ -363,10 +362,5 @@
     "selectKeyword": "Add keywords",
     "saveLinkToSibling": "Save link to other resource",
     "confirmCloseInvalidTitle": "Confirm editor close",
-    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?",
-    "hotkeyDirectory": "Manage directories (eg. contact)",
-    "hotkeyImportRecord": "Importa noves entrades",
-    "hotkeyAddRecord": "Afegeix una nova entrada",
-    "hotkeyBatchEdit": "Edició massiva",
-    "hotkeyEditorBoard": "Editor board"
+    "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?"
 }

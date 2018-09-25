@@ -23,30 +23,29 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Assigns status to metadata.
@@ -84,7 +83,7 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
         Set<Integer> notFound = new HashSet<Integer>();
         Set<Integer> notOwner = new HashSet<Integer>();
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         synchronized (sm.getSelection("metadata")) {
             for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
                 String uuid = (String) iter.next();

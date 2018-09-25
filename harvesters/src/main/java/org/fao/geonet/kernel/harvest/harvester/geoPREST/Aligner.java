@@ -23,17 +23,23 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import jeeves.server.context.ServiceContext;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -41,18 +47,13 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -92,7 +93,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
 
         localCateg = new CategoryMapper(context);
         localGroups = new GroupMapper(context);
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
+        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
         dataMan.flush();
 
@@ -168,7 +169,8 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
         // insert metadata
         //
         int userid = 1;
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -182,13 +184,13 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
             setHarvested(true).
             setUuid(params.getUuid());
 
-        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
@@ -225,14 +227,14 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final AbstractMetadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getMetadataCategories().clear();
-                addCategories(metadata, params.getCategories(), localCateg, context, null, true);
+                addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
                 dataMan.flush();
 
                 dataMan.indexMetadata(id, Math.random() < 0.01, null);

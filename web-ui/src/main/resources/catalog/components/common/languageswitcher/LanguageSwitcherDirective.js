@@ -27,8 +27,8 @@
   var module = angular.module('gn_language_switcher_directive',
       ['pascalprecht.translate']);
 
-  module.directive('gnLanguageSwitcher', ['$translate',
-    function($translate) {
+  module.directive('gnLanguageSwitcher', ['$translate', 'gnGlobalSettings', 'gnLangs',
+    function($translate, gnGlobalSettings, gnLangs) {
 
       return {
         restrict: 'A',
@@ -41,16 +41,25 @@
         },
         template:
             '<select class="form-control" ' +
+            ' aria-label=' + "{{'languageSwitcher'|translate}}" + '"' +
             ' data-ng-show="isHidden()" ' +
             ' data-ng-model="lang" ' +
             ' data-ng-options="key as langLabels[key] ' +
             ' for (key, value) in langs"/>',
         link: function(scope) {
           scope.$watch('lang', function(value, o) {
-            // TODO: Define how to switch from one lang to another
-            var url = location.href.split('/');
-            if (value !== o) {
-              url[5] = value;  // Use ISO3 code
+
+            var urlLang = gnLangs.detectLang(
+              gnGlobalSettings.gnCfg.langDetector,
+              gnGlobalSettings
+            );
+
+            if (value !== urlLang) {
+              location.href = location.href.replace('\/' + urlLang + '\/', '\/' + value + '\/');
+
+
+              //if (value !== o) {
+              //  url[5] = value;  // Use ISO3 code
               // if (window.history.pushState) {
               //     // Update translate with no page reload
               //     // And adding an history state to update browser URL
@@ -58,7 +67,7 @@
               //     window.history.pushState(null, null, url.join('/'));
               // } else {
               // trigger a reload
-              location.href = url.join('/');
+              //location.href = url.join('/');
               // }
               if (moment) {
                 moment.locale(scope.langs[value]);

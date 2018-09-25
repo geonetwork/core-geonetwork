@@ -22,13 +22,26 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
-import jeeves.server.context.ServiceContext;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -49,26 +62,15 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-
-import com.google.common.collect.Sets;
 import org.jdom.Namespace;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import com.google.common.collect.Sets;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * Harvester from ArcSDE. Requires the propietary ESRI libraries containing their API. Since those
@@ -230,15 +232,34 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                     // Ignore
                 }
 
-                // No schema detected, try to convert from default ESRI md to ISO1939
-                if (schema == null) {
+                List<Namespace> esriMdNamespaces = new ArrayList<>();
+                esriMdNamespaces.add(metadataElement.getNamespace());
+                esriMdNamespaces.addAll(metadataElement.getAdditionalNamespaces());
+
+                esriMdNamespaces.add(ISO19139Namespaces.GMD);
+
+                // select all nodes that match the XPath
+                Element iso19139Element = Xml.selectElement(metadataElement, "gmd:MD_Metadata", esriMdNamespaces);
+
+                // Check if the ESRI metadata has an embedded iso19139 metadata
+                boolean hasIso19139Embedded = false;
+                if (iso19139Element != null) {
+                    try {
+                        schema = dataMan.autodetectSchema(iso19139Element, null);
+                    } catch (NoSchemaMatchesException ex) {
+                        // Ignore
+                    }
+
+                    hasIso19139Embedded = (schema != null);
+                }
+
+                log.info("Metadata has ISO13139 embedded - " + hasIso19139Embedded);
+
+                // No schema detected or not iso19139 embedded, try to convert from default ESRI md to ISO1939
+                if ((schema == null) || !hasIso19139Embedded) {
                     log.info("Convert metadata to ISO19139 - start");
 
                     // Extract picture if available
-                    List<Namespace> esriMdNamespaces = new ArrayList<>();
-                    esriMdNamespaces.add(metadataElement.getNamespace());
-                    esriMdNamespaces.addAll(metadataElement.getAdditionalNamespaces());
-
                     // select all nodes that match the XPath
                     Element thumbnailEl = Xml.selectElement(metadataElement, "Binary/Thumbnail/Data", esriMdNamespaces);
 
@@ -246,11 +267,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                         thumbnailContent = thumbnailEl.getText();
                     }
 
-                    // transform ESRI output to ISO19115
-                    Element iso19115 = Xml.transform(metadataElement, ArcToISO19115Transformer);
+                        // transform ESRI output to ISO19115
+                        Element iso19115 = Xml.transform(metadataElement, ArcToISO19115Transformer);
 
-                    // transform ISO19115 to ISO19139
-                    metadataElement = Xml.transform(iso19115, ISO19115ToISO19139Transformer);
+                        // transform ISO19115 to ISO19139
+                        metadataElement = Xml.transform(iso19115, ISO19115ToISO19139Transformer);
 
                     log.info("Convert metadata to ISO19139 - end");
 
@@ -258,6 +279,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                         schema = dataMan.autodetectSchema(metadataElement, null);
                     } catch (NoSchemaMatchesException ex) {
                         // Ignore
+                    }
+
+                } else {
+                    if (hasIso19139Embedded) {
+                        metadataElement = iso19139Element;
                     }
                 }
 
@@ -357,15 +383,15 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             changeDate = new ISODate().toString();
         }
 
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
             true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getMetadataCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
         dataMan.flush();
 
@@ -391,7 +417,8 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             createDate = new ISODate();
         }
 
-        Metadata metadata = new Metadata().setUuid(uuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(xml.getQualifiedName()).
@@ -410,13 +437,13 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         } catch (NumberFormatException e) {
         }
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         dataMan.indexMetadata(id, true, null);
 

@@ -129,6 +129,7 @@
           }, function(size) {
             if (size > 0) {
               map.updateSize();
+              map.renderSync();
               defer.resolve();
               unWatchFn();
               unBindFn();

@@ -26,7 +26,7 @@
 
   var module = angular.module('gn_printmap_service', []);
 
-  module.service('gnPrint', function() {
+  module.service('gnPrint', ['gnGlobalSettings', function(gnGlobalSettings) {
 
     var self = this;
 
@@ -233,6 +233,9 @@
           var url = layer.getSource() instanceof ol.source.ImageWMS ?
               layer.getSource().getUrl() :
               layer.getSource().getUrls()[0];
+
+          url = removeProxyUrl(url);
+
           angular.extend(enc, {
             type: 'WMS',
             baseURL: config.wmsUrl || url,
@@ -278,6 +281,9 @@
             //Remove last "/"
             url = url.substring(0, url.lastIndexOf("/"));
           }
+
+          url = removeProxyUrl(url);
+
           angular.extend(enc, {
             type: 'XYZ',
             extension: 'png',
@@ -362,6 +368,8 @@
                   source.getLayer()));
             }
           }
+
+          layerUrl = removeProxyUrl(layerUrl);
 
           angular.extend(enc, {
             type: 'WMTS',
@@ -540,5 +548,17 @@
       return literal;
     };
 
-  });
+    // Removes the proxy path and decodes the layer url,
+    // so the layer can be printed with MapFish.
+    // Otherwise Mapfish rejects it, due to relative url.
+    var removeProxyUrl = function (url) {
+      if (url.indexOf(gnGlobalSettings.proxyUrl) > -1) {
+        return decodeURIComponent(
+          url.replace(gnGlobalSettings.proxyUrl, ''));
+      } else {
+        return url;
+      }
+    };
+
+  }]);
 })();

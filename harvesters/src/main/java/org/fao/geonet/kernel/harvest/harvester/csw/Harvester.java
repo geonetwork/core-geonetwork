@@ -23,11 +23,25 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import jeeves.server.context.ServiceContext;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.*;
+import org.fao.geonet.csw.common.ConstraintLanguage;
+import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.csw.common.CswOperation;
+import org.fao.geonet.csw.common.CswServer;
+import org.fao.geonet.csw.common.ElementSetName;
+import org.fao.geonet.csw.common.ResultType;
+import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
@@ -46,9 +60,7 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -143,7 +155,7 @@ class Harvester implements IHarvester<HarvestResult> {
             records.addAll(search(server, s));
 
             //--- align local node
-            Aligner aligner = new Aligner(cancelMonitor, context, server, params);
+            Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
             result = aligner.align(records, errors);
         } catch (Exception t) {
             error = true;
@@ -523,7 +535,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         if (operator.equals("PropertyIsLike")) {
             prop = new Element(operator, Csw.NAMESPACE_OGC);
-            prop.setAttribute("wildcard", "%");
+            prop.setAttribute("wildCard", "%");
             prop.setAttribute("singleChar", "_");
             prop.setAttribute("escapeChar", "\\");
         } else {

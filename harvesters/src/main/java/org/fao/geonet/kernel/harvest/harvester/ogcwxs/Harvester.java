@@ -23,11 +23,28 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
@@ -35,6 +52,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.api.records.attachments.FilesystemStore;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataResource;
@@ -44,6 +62,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -56,6 +75,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
@@ -70,6 +90,11 @@ import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
+import jeeves.server.context.ServiceContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -208,7 +233,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         // Clean all before harvest : Remove/Add mechanism
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
         // the node will not be referenced in the catalogue until next harvesting.
-        UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
+        UUIDMapper localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
 
         // Try to load capabilities document
@@ -398,7 +423,8 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(uuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -416,7 +442,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         } catch (NumberFormatException e) {
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
@@ -432,7 +458,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
         String id = String.valueOf(metadata.getId());
         uuids.add(uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         return uuids;
     }
@@ -685,13 +711,13 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             if (mdXml != null) {    // No metadataUrl attribute for that layer
                 try {
                     xml = Xml.loadFile(new URL(mdXml));
+                    boolean isUsingTemplate = StringUtils.isNotEmpty(params.datasetTemplateUuid);
 
                     // If url is CSW GetRecordById remove envelope
                     if (xml.getName().equals("GetRecordByIdResponse")) {
                         xml = (Element) xml.getChildren().get(0);
                     } else if (xml.getName().equals("ProcessOfferings")) {
                         // Convert WPS process metadata to ISO record
-                        boolean isUsingTemplate = StringUtils.isNotEmpty(params.datasetTemplateUuid);
 
                         Map<String, Object> xsltParams = new HashMap<String, Object>();
                         xsltParams.put("lang", params.lang);
@@ -716,7 +742,8 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     reg.uuid = dataMan.extractUUID(schema, xml);
                     exist = dataMan.existsMetadataUuid(reg.uuid);
 
-                    if (exist) {
+                    // Overwrite always when using template
+                    if (exist && !isUsingTemplate) {
                         log.warning(String.format(
                             "    Metadata uuid '%s' already exist in the catalogue. Metadata for layer '%s' will not be loaded.",
                             reg.uuid, reg.name));
@@ -798,7 +825,8 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             //  insert metadata
             //
             schema = dataMan.autodetectSchema(xml);
-            Metadata metadata = new Metadata().setUuid(reg.uuid);
+            AbstractMetadata metadata = new Metadata();
+            metadata.setUuid(reg.uuid);
             metadata.getDataInfo().
                 setSchemaId(schema).
                 setRoot(xml.getQualifiedName()).
@@ -835,7 +863,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             if (log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if (log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context);
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             if (log.isDebugEnabled()) log.debug("    - Set Harvested.");
 

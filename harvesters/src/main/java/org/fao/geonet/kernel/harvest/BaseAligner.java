@@ -23,26 +23,23 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import jeeves.server.context.ServiceContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.Logger;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jeeves.server.context.ServiceContext;
 
 /**
  * This class helps {@link AbstractHarvester} instances to process all metadata collected on the
@@ -56,8 +53,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseAligner<P extends AbstractParams> extends AbstractAligner<P> {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(Geonet.HARVESTER);
-
     public final AtomicBoolean cancelMonitor;
 
     public BaseAligner(AtomicBoolean cancelMonitor) {
@@ -66,9 +61,16 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
 
 
     /**
+     * TODO Javadoc.
+     *
+     * @param categories
+     * @param localCateg
+     * @param log
+     * @param saveMetadata
+     * @throws Exception
      */
-    public void addCategories(Metadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
-                              String serverCategory, boolean saveMetadata) {
+    public void addCategories(AbstractMetadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
+                              Logger log, String serverCategory, boolean saveMetadata) {
 
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
         Map<String, MetadataCategory> nameToCategoryMap = new HashMap<String, MetadataCategory>();
@@ -79,14 +81,18 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
             String name = localCateg.getName(catId);
 
             if (name == null) {
-                LOGGER.debug("    - Skipping removed category with id:{}", catId);
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Skipping removed category with id:" + catId);
+                }
             } else {
-                LOGGER.debug("    - Setting category : {}", name);
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Setting category : " + name);
+                }
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
                     metadata.getMetadataCategories().add(metadataCategory);
                 } else {
-                    LOGGER.warn("Unable to map category: {} ({}) to a category in Geonetwork", catId, name);
+                    log.warning("Unable to map category: " + catId + " (" + name + ") to a category in Geonetwork");
                 }
             }
         }
@@ -94,18 +100,19 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
         if (serverCategory != null) {
             String catId = localCateg.getID(serverCategory);
             if (catId == null) {
-                LOGGER.debug("    - Skipping removed category :{}", serverCategory);
+                if (log.isDebugEnabled())
+                    log.debug("    - Skipping removed category :" + serverCategory);
             } else {
                 final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
                 if (metadataCategory != null) {
                     metadata.getMetadataCategories().add(metadataCategory);
                 } else {
-                    LOGGER.warn("Unable to map category: {} to a category in Geonetwork", catId);
+                    log.warning("Unable to map category: " + catId + " to a category in Geonetwork");
                 }
             }
         }
         if (saveMetadata) {
-            context.getBean(MetadataRepository.class).save(metadata);
+            context.getBean(IMetadataManager.class).save(metadata);
         }
     }
 
@@ -116,21 +123,30 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
      * @param localGroups
      * @param dataMan
      * @param context
+     * @param log
      * @throws Exception
      */
-    public void addPrivileges(String id, Iterable<Privileges> privilegesIterable, GroupMapper localGroups, DataManager dataMan, ServiceContext context) throws Exception {
+    public void addPrivileges(String id, Iterable<Privileges> privilegesIterable, GroupMapper localGroups, DataManager dataMan, ServiceContext context, Logger log) throws Exception {
         for (Privileges priv : privilegesIterable) {
             String name = localGroups.getName(priv.getGroupId());
 
             if (name == null) {
-                LOGGER.debug("    - Skipping removed group with id:{}", priv.getGroupId());
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Skipping removed group with id:" + priv.getGroupId());
+                }
             } else {
-                LOGGER.debug("    - Setting privileges for group : {}", name);
+                if (log.isDebugEnabled()) {
+                    log.debug("    - Setting privileges for group : " + name);
+                }
+
                 for (int opId : priv.getOperations()) {
                     name = dataMan.getAccessManager().getPrivilegeName(opId);
+
                     //--- all existing operation
                     if (name != null) {
-                        LOGGER.debug("       --> Operation: {}", name);
+                        if (log.isDebugEnabled()) {
+                            log.debug("       --> Operation: " + name);
+                        }
                         dataMan.setOperation(context, id, priv.getGroupId(), opId + "");
                     }
                 }

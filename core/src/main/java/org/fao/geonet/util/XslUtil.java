@@ -47,6 +47,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
@@ -99,6 +100,7 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -246,6 +248,10 @@ public final class XslUtil {
             }
         }
         return "";
+    }
+
+    public static String getBuildNumber() {
+        return ApplicationContextHolder.get().getBean(SystemInfo.class).getScmRevision();
     }
 
     /**
@@ -762,7 +768,7 @@ public final class XslUtil {
 
             final Envelope envelope = jts.getEnvelopeInternal();
             return
-                String.format("%f|%f|%f|%f",
+                String.format(Locale.US, "%f|%f|%f|%f",
                     envelope.getMinX(), envelope.getMinY(),
                     envelope.getMaxX(), envelope.getMaxY());
         } catch (Throwable e) {

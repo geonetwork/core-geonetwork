@@ -28,7 +28,7 @@
       </div>
       <div data-ng-class="mainType === 'MDFCATS' ? 'col-xs-11' : 'col-xs-7 col-sm-7'" >
         <!-- WMS & WFS contains layer name in title -->
-        <h4 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
+        <h3 data-ng-if="((mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                           mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
                           mainType === 'WFS') &&
                         !isLayerProtocol(r)) &&
@@ -36,7 +36,7 @@
                       mainType !== 'LINKDOWNLOAD' &&
                       mainType !== 'LINK'">
           {{::(r.title | gnLocalized: lang) || (r.url | gnLocalized: lang)}}
-        </h4>
+        </h3>
         <!-- Display description if available -->
         <h4 data-ng-if="(mainType === 'WMS' || mainType === 'WMSSERVICE' ||
                        mainType === 'WMTS' || mainType === 'WMTSSERVICE' ||
@@ -102,6 +102,21 @@
             </div>
           </div>
 
+          <div data-ng-switch-when="WMTS">
+            <div
+              data-gn-wmts-download="r.title"
+              data-layer-name="{{r.title | gnLocalized: lang}}"
+              data-url="{{r.url | gnLocalized: lang}}"
+              data-md="md">
+            </div>
+          </div>
+          
+          <div data-ng-switch-when="TMS">
+            <span data-translate=""
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                  tmsLinkDetails</span>
+          </div>
+          
           <div data-ng-switch-when="SOS">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
@@ -190,7 +205,7 @@
           <br/>
           <span class="visible-lg-*"
                 data-ng-if="mainType == 'MDSIBLING'">
-            ({{::r.initiativeType | translate}}{{::(r.associationType != '' ? ' / ' + (r.associationType | translate) : '')}})
+            ({{::r.associationType | translate}}{{::(r.initiativeType != '' ? ' / ' + (r.initiativeType | translate) : '')}})
           </span>
 
         </button>

@@ -13,9 +13,6 @@
   * div render a div element to be embedded in an existing webpage. -->
   <xsl:param name="root" select="'html'"/>
 
-  <!-- Enable tab view mode or not -->
-  <xsl:param name="tabs" select="'false'"/>
-
 
   <!-- Define if header and footer should be displayed or not.
    This only applies to root = html mode (ie. not when rendering a div) -->
@@ -24,6 +21,8 @@
   <!-- Display catalogue header on top to do search or login. -->
   <xsl:param name="catalogueHeader" select="'false'"/>
 
+  <!-- Enable tab view mode or not -->
+  <xsl:param name="tabs" select="'true'"/>
 
   <!-- Define the full portal link. By default, it will link
   to the catalog.search main page of the catalog. To configure a custom

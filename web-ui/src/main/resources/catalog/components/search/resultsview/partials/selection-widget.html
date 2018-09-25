@@ -8,18 +8,19 @@
          data-ng-class="getIcon()"></i>&nbsp;
       <span data-ng-show="searchResults.selectedCount > 0"
             class="badge">{{searchResults.selectedCount}}</span>
+      <span class="sr-only" data-translate="">clickToSelect</span>
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <li>
+      <li role="menuitem">
         <a href=""
            data-ng-click="selectAllInPage(true)"
            data-translate="">allInPage</a></li>
-      <li>
+      <li role="menuitem">
         <a href=""
            data-ng-click="selectAll()"
            data-translate="">all</a></li>
-      <li>
+      <li role="menuitem">
         <a href=""
            data-ng-click="unSelectAll()"
            data-translate="">none</a></li>

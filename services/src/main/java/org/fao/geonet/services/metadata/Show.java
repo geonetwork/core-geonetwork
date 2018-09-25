@@ -26,21 +26,22 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
@@ -136,7 +137,7 @@ public class Show extends ShowViewBaseService {
         // that is in the GeoNetwork schema identification and if there isn't one
         // of those then build one pointing to the XSD in GeoNetwork
 
-        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
         Attribute schemaLocAtt = sm.getSchemaLocation(info.getDataInfo().getSchemaId(), context);
 
         if (schemaLocAtt != null) {

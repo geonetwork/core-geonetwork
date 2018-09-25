@@ -63,7 +63,7 @@
               scope.formats = [];
               scope.checkWFSUrl();
             } catch (e) {
-              //console.log('Error initialising wfs: '+e.message);
+              console.log('Error initialising wfs: ' + e.message);
               scope.problemContactingServer = true;
             }
           }
@@ -79,11 +79,11 @@
               var e = map ? ol.proj.transformExtent(extent,
                   scope.map.getView().getProjection().getCode(),
                   p) : 'epsg:4326';
-              gnWfsService.download(scope.url, null, scope.typename, format,
+              gnWfsService.download(scope.url, scope.capabilities.version, scope.typename, format,
                   e[1] + ',' + e[0] + ',' + e[3] + ',' + e[2],
                   p);
             } else {
-              gnWfsService.download(scope.url, null, scope.typename, format);
+              gnWfsService.download(scope.url, scope.capabilities.version, scope.typename, format);
             }
           };
 
@@ -100,7 +100,7 @@
                   .then(function(capabilities) {
                     scope.isWfsAvailable = true;
                     scope.featureType =
-                    gnWfsService.getTypeName(capabilities, scope.typename);
+                      gnWfsService.getTypeName(capabilities, scope.typename);
                     if (scope.featureType) {
                       scope.formats =
                       gnWfsService.getOutputFormat(capabilities);
@@ -151,11 +151,12 @@
               var e = map ? ol.proj.transformExtent(extent,
                   scope.map.getView().getProjection().getCode(),
                   p) : 'epsg:4326';
-              gnWfsService.download(scope.url, null, featureTypeName, format,
+              gnWfsService.download(scope.url, scope.capabilities.version, featureTypeName, format,
                   e[1] + ',' + e[0] + ',' + e[3] + ',' + e[2],
                   p);
             } else {
-              gnWfsService.download(scope.url, null, featureTypeName, format);
+              console.log('hi4');
+              gnWfsService.download(scope.url, scope.capabilities.version, featureTypeName, format);
             }
           };
 

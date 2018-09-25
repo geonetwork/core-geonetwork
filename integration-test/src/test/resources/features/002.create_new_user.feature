@@ -1,8 +1,9 @@
 Feature: GeoNetwork Create new user
         As a user admin I should able to create new user.
  
- Scenario: I login and create a new user
+ Scenario: I login and create the user etabeta
         Given I navigate to "{endPointToTest}"
+        And I wait 5 seconds for element having css "li.signin-dropdown" to display
 	      And I click on element having css "li.signin-dropdown"
         And I enter "{adminUser}" into input field having xpath "//*[@id='inputUsername']"
         And I enter "{adminPassword}" into input field having xpath "//*[@id='inputPassword']"

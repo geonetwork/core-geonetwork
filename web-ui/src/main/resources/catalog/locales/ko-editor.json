@@ -290,8 +290,8 @@
     "uploadFile": "로컬 컴퓨터에서 파일 업로드",
     "uuidAction": "레코드 식별자 처리",
     "validate-help": "표준 유효성검사 규칙에 대한 레코드 확인",
-    "validate-inspire": "INSPIRE 유효성검사",
-    "validate-inspire-help": "INSPIRE 유효성검사 규칙에 대한 레코드 검사",
+    "validate-inspire": "Inspire validation",
+    "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "유효성 검사",
     "runValidation": "유효성 검사 실행",
     "whoCanAccess": "접근할 수 있습니다",
@@ -304,7 +304,6 @@
     "noFileSelected": "업로드할 파일 선택!",
     "yourMetadata": "메타데이터",
     "searchKeyword": "검색...",
-    "searchTopicCategory": "검색...",
     "searchOrTypeKeyword": "입력하거나 검색 ...",
     "tagsAllowed": "태그(들) 허용",
     "suggestionListError": "제안을 검색하는 중 문제가 발생했습니다!",
@@ -363,10 +362,5 @@
     "selectKeyword": "키워드 추가",
     "saveLinkToSibling": "다른 자원에 링크 저장",
     "confirmCloseInvalidTitle": "편집기 닫기 확인",
-    "confirmCloseInvalidMetadata": "현재 메타 데이터가 유효하지 않습니다. 편집기를 닫으면 게시가 취소됩니다 (응용 프로그램 설정에서 변경할 수 있음). <br><br>계속 하시겠습니까?",
-    "hotkeyDirectory": "Manage directories (eg. contact)",
-    "hotkeyImportRecord": "새로운 레코드 가져오기",
-    "hotkeyAddRecord": "새로운 레코드 추가",
-    "hotkeyBatchEdit": "일괄 편집",
-    "hotkeyEditorBoard": "Editor board"
+    "confirmCloseInvalidMetadata": "현재 메타 데이터가 유효하지 않습니다. 편집기를 닫으면 게시가 취소됩니다 (응용 프로그램 설정에서 변경할 수 있음). <br><br>계속 하시겠습니까?"
 }

@@ -45,7 +45,7 @@ import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -172,13 +172,16 @@ public class MetadataApi implements ApplicationContextAware {
             || accept.contains("application/pdf")) {
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
-            || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+                || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
             return "forward:" + (metadataUuid + "/formatters/xml");
         } else if (accept.contains("application/zip")
-            || accept.contains(MEF_V1_ACCEPT_TYPE)
-            || accept.contains(MEF_V2_ACCEPT_TYPE)) {
+                || accept.contains(MEF_V1_ACCEPT_TYPE)
+                || accept.contains(MEF_V2_ACCEPT_TYPE)) {
             return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
+            // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
+            response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
+            //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
@@ -237,13 +240,14 @@ public class MetadataApi implements ApplicationContextAware {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
-        Metadata metadata;
+        AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
@@ -266,9 +270,9 @@ public class MetadataApi implements ApplicationContextAware {
 
 
         boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
-        Element xml = withInfo ?
+        Element xml  = withInfo ?
             dataManager.getMetadata(context,
-                metadata.getId() + "", forEditing, withValidationErrors, keepXlinkAttributes) :
+            metadata.getId() + "", forEditing, withValidationErrors, keepXlinkAttributes) :
             dataManager.getMetadataNoInfo(context, metadata.getId() + "");
 
         if (addSchemaLocation) {
@@ -290,7 +294,7 @@ public class MetadataApi implements ApplicationContextAware {
 
         boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
 
-        String mode = (attachment) ? "attachment" : "inline";
+        String mode = (attachment)?"attachment":"inline";
         response.setHeader("Content-Disposition", String.format(
             mode + "; filename=\"%s.%s\"",
             metadata.getUuid(),
@@ -372,7 +376,7 @@ public class MetadataApi implements ApplicationContextAware {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
 
-        Metadata metadata;
+        AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
@@ -479,8 +483,8 @@ public class MetadataApi implements ApplicationContextAware {
             int rows,
         HttpServletRequest request) throws Exception {
 
-        Metadata md;
-        try {
+        AbstractMetadata md;
+        try{
             md = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);

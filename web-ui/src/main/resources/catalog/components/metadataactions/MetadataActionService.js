@@ -87,7 +87,7 @@ goog.require('gn_share');
        * @param {string} eventName
        */
       var openModal = function(o, scope, eventName) {
-        var popup = gnPopup.create(o, scope);
+        var popup = gnPopup.createModal(o, scope);
         var myListener = $rootScope.$on(eventName,
             function(e, o) {
               $timeout(function() {
@@ -429,6 +429,17 @@ goog.require('gn_share');
             type: 'danger'
           });
         });
+      };
+
+      /**
+       * Format a CRS description object for rendering
+       * @param {Object} crsDetails expected keys: code, codeSpace, name
+       */
+      this.formatCrs = function(crsDetails) {
+        var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ':') +
+          crsDetails.code;
+        if (crsDetails.name) return crsDetails.name + ' (' + crs + ')';
+        else return crs;
       };
     }]);
 })();

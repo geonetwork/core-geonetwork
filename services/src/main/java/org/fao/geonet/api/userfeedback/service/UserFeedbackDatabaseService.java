@@ -1,5 +1,4 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -22,12 +21,12 @@
  */
 package org.fao.geonet.api.userfeedback.service;
 
-import java.util.Date;
+import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
+
 import java.util.List;
 
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.records.formatters.groovy.EnvironmentImpl;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -35,8 +34,8 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
-import org.fao.geonet.domain.userfeedback.UserFeedback_;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.userfeedback.RatingRepository;
@@ -44,10 +43,7 @@ import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import static org.fao.geonet.domain.userfeedback.RatingCriteria.AVERAGE_ID;
 
 /**
  * User feedback provider that uses database persistence.
@@ -87,7 +83,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      * removeUserFeedback(java.lang.String)
      */
     @Override
-    public void removeUserFeedback(String feedbackUuid) {
+    public void removeUserFeedback(String feedbackUuid, String ip) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         final UserFeedbackRepository userFeedbackRepository = appContext
                 .getBean(UserFeedbackRepository.class);
@@ -98,10 +94,10 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         userFeedbackRepository.delete(userFeedback);
 
         // Then update global metadata rating
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataUtils dataManager = appContext.getBean(IMetadataUtils.class);
         UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
             .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
-        dataManager.rateMetadata(metadata.getId(), averageRating.getRatingAverages().get(AVERAGE_ID));
+        dataManager.rateMetadata(metadata.getId(), ip, averageRating.getRatingAverages().get(AVERAGE_ID));
     }
 
     /*
@@ -212,7 +208,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      * saveUserFeedback(org.fao.geonet.domain.userfeedback.UserFeedback)
      */
     @Override
-    public void saveUserFeedback(UserFeedback userFeedback) {
+    public void saveUserFeedback(UserFeedback userFeedback, String ip) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         final UserFeedbackRepository userFeedbackRepository = appContext
                 .getBean(UserFeedbackRepository.class);
@@ -239,13 +235,13 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         userFeedbackRepository.save(userFeedback);
 
         // Then update global metadata rating
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataUtils dataManager = appContext.getBean(IMetadataUtils.class);
         UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
             .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
         Integer average =  averageRating.getRatingAverages().get(AVERAGE_ID);
         // May be null if first comment not yet published
         if (average != null) {
-            dataManager.rateMetadata(metadata.getId(), averageRating.getRatingAverages().get(AVERAGE_ID));
+            dataManager.rateMetadata(metadata.getId(), ip, averageRating.getRatingAverages().get(AVERAGE_ID));
         }
     }
 }

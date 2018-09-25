@@ -22,12 +22,20 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
-import com.google.common.collect.Lists;
-
-import jeeves.server.context.ServiceContext;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -49,16 +57,11 @@ import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.sql.SQLException;
 import java.util.*;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Harvester for local filesystem.
@@ -116,7 +119,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
      */
     private HarvestResult align(Path root) throws Exception {
         log.debug("Start of alignment for : " + params.getName());
-        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(cancelMonitor, context, params, this, log);
         if (params.recurse) {
             Files.walkFileTree(root, visitor);
         } else {
@@ -179,15 +182,15 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         String language = context.getLanguage();
 
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
+        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
             true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getMetadataCategories().clear();
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
         dataMan.flush();
 
@@ -216,7 +219,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(uuid);
+        AbstractMetadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(xml.getQualifiedName()).
@@ -231,13 +235,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             setHarvested(true).
             setUuid(params.getUuid());
 
-        aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
-        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
+        aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         dataMan.flush();
 

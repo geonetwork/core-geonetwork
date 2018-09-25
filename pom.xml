@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.4.4-SNAPSHOT</version>
+  <version>3.5.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -1134,7 +1134,7 @@
       <dependency>
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
-        <version>2.0.3</version>
+        <version>6.3.1</version>
       </dependency>
 
       <!-- Apache commons csv -->
@@ -1357,8 +1357,8 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>5.6.1</es.version>
-    <es.version.md5>9b426819d29ef8dd499c593629feede8</es.version.md5>
+    <es.version>6.4.0</es.version>
+    <es.version.sha512>6f465378a51c487f1f6a84a0843ac1038db60170ee8a5d96874a759f6dbbf2de9f7bcbbf55616f49f28f1098c82f2e585c917267d02b8b1f43627a1984b3da66</es.version.sha512>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>
@@ -1378,7 +1378,7 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.md5>e44777c3fb7ccfa4300884ce72869180</kb.version.md5>
+    <kb.version.sha512>ae0f6ede637bf373e44eb5711b5a07ce726bb72009d792c8e9a16d7eb32b2361cdda556a19c3f5fd50207320e86950217cf5e9a1a06607004d4b7f30d3dbb344</kb.version.sha512>
     <kb.port>5601</kb.port>
     <kb.url>http://localhost:${kb.port}</kb.url>
 
@@ -1413,7 +1413,10 @@
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
+
     <wro.version>1.7.7</wro.version>
+    <wro.debug>false</wro.debug>
+
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
@@ -1425,6 +1428,6 @@
     <slf4j.version>1.7.7</slf4j.version>
     <xbean.version>3.18</xbean.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
-    <gn.schemas.version>3.4</gn.schemas.version>
+    <gn.schemas.version>3.5</gn.schemas.version>
   </properties>
 </project>

@@ -23,30 +23,17 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.reflect.Constructor;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -85,6 +72,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
@@ -112,18 +100,27 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * search metadata locally using lucene.
@@ -504,36 +501,36 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
                 returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
             }
-		}
-		else if (name.equals("RangeQuery"))
-		{
-			String  fld        = xmlQuery.getAttributeValue("fld");
-			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
-			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
-			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
-			boolean inclusive  = "true".equals(sInclusive);
+        }
+        else if (name.equals("RangeQuery"))
+        {
+            String  fld        = xmlQuery.getAttributeValue("fld");
+            String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+            String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+            String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+            boolean inclusive  = "true".equals(sInclusive);
 
-			LuceneConfigNumericField fieldConfig = numericFieldSet .get(fld);
-			if (fieldConfig != null) {
-				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType(), fieldConfig.getPrecisionStep());
-			} else {
-				lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
-				upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
+            LuceneConfigNumericField fieldConfig = numericFieldSet .get(fld);
+            if (fieldConfig != null) {
+                returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType(), fieldConfig.getPrecisionStep());
+            } else {
+                lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
+                upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
 
-				returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
-			}
-		}
-		else if (name.equals("DateRangeQuery"))
-		{
-			String  fld        = xmlQuery.getAttributeValue("fld");
-			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
-			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
-			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
-			returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
-		}
-		else if (name.equals("BooleanQuery"))
-		{
-			BooleanQuery query = new BooleanQuery();
+                returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
+            }
+        }
+        else if (name.equals("DateRangeQuery"))
+        {
+            String  fld        = xmlQuery.getAttributeValue("fld");
+            String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+            String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+            String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+            returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
+        }
+        else if (name.equals("BooleanQuery"))
+        {
+            BooleanQuery query = new BooleanQuery();
             for (Object o : xmlQuery.getChildren()) {
                 Element xmlBooleanClause = (Element) o;
                 String sRequired = xmlBooleanClause.getAttributeValue("required");
@@ -1648,21 +1645,33 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     }
 
     /**
-     * TODO javadoc.
+     * Parses the {@link Geonet.SearchResult#GEOMETRY} parameter. Allowed values are:
+     * <ul>
+     *  <li>A list of region identifiers prefixed by <code>region:</code> separated by spaces.</li>
+     *  <li>A geometry expressed in Well Kown Text (WKT).</li>
+     * </ul>
+     *
+     *
+     * @throws IllegalArgumentException if the geometry param is prefixed by <code>region:</code> but the region is not
+     * found in the available sources.
+     * @throws com.vividsolutions.jts.io.ParseException if geometry is not a valid WKT string and it doesn't start by
+     * <code>region:</code>
+     * @return a collection of {@link Geometry} obtained of the {@link Geonet.SearchResult#GEOMETRY} parameter or null if the
+     * parameter is not present in the request.
      */
     private Collection<Geometry> getGeometry(ServiceContext context, Element request) throws Exception {
         String geomWKT = Util.getParam(request, Geonet.SearchResult.GEOMETRY, null);
         final String prefix = "region:";
-        if (geomWKT != null && geomWKT.substring(0, prefix.length()).equalsIgnoreCase(prefix)) {
+        if (StringUtils.startsWithIgnoreCase(geomWKT, prefix)) {
             boolean isWithinFilter = Geonet.SearchResult.Relation.WITHIN.equalsIgnoreCase(Util.getParam(request, Geonet.SearchResult.RELATION, null));
             Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
             if (regionDAOs.isEmpty()) {
                 throw new IllegalArgumentException(
-                    "Found search with a regions geometry prefix but no RegsionsDAO objects are registered!\nThis is probably a configuration error.  Make sure the RegionsDAO objects are registered in spring");
+                    "Found search with a regions geometry prefix but no RegionsDAO objects are registered!\nThis is probably a configuration error.  Make sure the RegionsDAO objects are registered in spring");
             }
             String[] regionIds = geomWKT.substring(prefix.length()).split("\\s*,\\s*");
             Geometry unionedGeom = null;
-            List<Geometry> geoms = new ArrayList<>();
+            List<Geometry> foundGeometries = new ArrayList<>();
             for (String regionId : regionIds) {
                 if (regionId.startsWith(prefix)) {
                     regionId = regionId.substring(0, prefix.length());
@@ -1670,7 +1679,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 for (RegionsDAO dao : regionDAOs) {
                     Geometry geom = dao.getGeom(context, regionId, false, Region.WGS84);
                     if (geom != null) {
-                        geoms.add(geom);
+                        foundGeometries.add(geom);
                         if (isWithinFilter) {
                             if (unionedGeom == null) {
                                 unionedGeom = geom;
@@ -1680,13 +1689,15 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         }
                         break; // break out of looking through all RegionDAOs
                     }
-
                 }
             }
             if (regionIds.length > 1 && isWithinFilter) {
-                geoms.add(0, unionedGeom);
+                foundGeometries.add(0, unionedGeom);
             }
-            return geoms;
+            if (foundGeometries.size() == 0) {
+                throw new IllegalArgumentException(String.format("Geometry %s not found in the available source RegionDAO objects", geomWKT));
+            }
+            return foundGeometries;
         } else if (geomWKT != null) {
             WKTReader reader = new WKTReader();
             return Arrays.asList(reader.read(geomWKT));
@@ -1725,9 +1736,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     /**
      * <p> Gets all metadata info as a int Map in current searcher. </p>
      */
-    public Map<Integer, Metadata> getAllMdInfo(ServiceContext context, int maxHits) throws Exception {
+    public Map<Integer, AbstractMetadata> getAllMdInfo(ServiceContext context, int maxHits) throws Exception {
 
-        Map<Integer, Metadata> response = new HashMap<Integer, Metadata>();
+        Map<Integer, AbstractMetadata> response = new HashMap<Integer, AbstractMetadata>();
         TopDocs tdocs = performQuery(context, 0, maxHits, false);
         IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
         _versionToken = indexAndTaxonomy.version;

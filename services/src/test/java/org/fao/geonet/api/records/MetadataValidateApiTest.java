@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
@@ -62,7 +63,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsTrue() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -83,7 +84,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsFalse() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -104,7 +105,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsNotSet() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -124,7 +125,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsTrueButNotLoggedAsAdmin() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAnonymous();
@@ -145,7 +146,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidSetButTemplate() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsertAsMetadata();
+        AbstractMetadata subTemplate = subTemplateOnLineResourceDbInsertAsMetadata();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -171,21 +172,22 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         this.context = createServiceContext();
     }
 
-    private Metadata subTemplateOnLineResourceDbInsert() throws Exception {
+    private AbstractMetadata subTemplateOnLineResourceDbInsert() throws Exception {
         return subTemplateOnLineResourceDbInsert(MetadataType.SUB_TEMPLATE);
     }
 
-    private Metadata subTemplateOnLineResourceDbInsertAsMetadata() throws Exception {
+    private AbstractMetadata subTemplateOnLineResourceDbInsertAsMetadata() throws Exception {
         return subTemplateOnLineResourceDbInsert(MetadataType.METADATA);
     }
 
-    private Metadata subTemplateOnLineResourceDbInsert(MetadataType type) throws Exception {
+    private AbstractMetadata subTemplateOnLineResourceDbInsert(MetadataType type) throws Exception {
         loginAsAdmin(context);
 
         URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/sub-OnlineResource.xml");
         Element sampleMetadataXml = Xml.loadStream(resource.openStream());
 
-        Metadata metadata = new Metadata()
+        Metadata metadata = new Metadata();
+        metadata
                 .setDataAndFixCR(sampleMetadataXml)
                 .setUuid(UUID.randomUUID().toString());
         metadata.getDataInfo()
@@ -199,7 +201,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        Metadata dbInsertedMetadata = dataManager.insertMetadata(
+        AbstractMetadata dbInsertedMetadata = dataManager.insertMetadata(
                 context,
                 metadata,
                 sampleMetadataXml,
