@@ -188,7 +188,7 @@
             'layers': []
           },
           'map-search': {
-            'context': '',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
             'layers': []
           },
