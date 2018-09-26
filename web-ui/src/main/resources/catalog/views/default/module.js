@@ -231,15 +231,9 @@
        * @param  {String} type Type of list selected
        */
       $scope.toggleListType = function(type) {
-        // remove active class form the toggle buttons
-        $('.gn-row-info .btn-group button').removeClass('active');
-        // remove all list classes
-        $('.gn-row-info').removeClass('gn-info-list-small gn-info-list-large gn-info-list-blocks');
-        // add chosen type
-        $('.gn-row-info').addClass('gn-info-list-' + type);
-        // set clicked button active
-        $('#btn-toggle-' + type).addClass('active');
+        $scope.type = type;
       };
+      // $scope.type = 'blocks';
 
       $scope.infoTabs = {
         lastRecords: {

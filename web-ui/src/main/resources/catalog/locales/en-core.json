@@ -400,5 +400,8 @@
     "first": "First",
     "editorHome": "Editor board",
     "adminHome": "Summary",
-    "allAdmins": "Administrators"
+    "allAdmins": "Administrators",
+    "listTypeBlocks": "Switch to Blocked list",
+    "listTypeLarge": "Switch to Large list",
+    "listTypeSmall": "Switch to Small list"
 }
