@@ -396,5 +396,8 @@
     "siteLogo": "Logo",
     "languageSwitcher": "Language switcher",
     "avatar": "Avatar",
-    "first": "First"
+    "first": "First",
+    "listTypeBlocks": "Switch to Blocked list",
+    "listTypeLarge": "Switch to Large list",
+    "listTypeSmall": "Switch to Small list"
 }
