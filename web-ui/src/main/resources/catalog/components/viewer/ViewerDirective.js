@@ -95,6 +95,11 @@
               /** optional tabs **/
               scope.disabledTools = gnViewerSettings.mapConfig.disabledTools;
 
+              /** If only one projection on the list, hide **/
+              if(gnViewerSettings.mapConfig.switcherProjectionList.length < 2) {
+                scope.disabledTools.projectionSwitcher = true;
+              }
+              
               /** wps process tabs */
               scope.wpsTabs = {
                 byUrl: true,
