@@ -92,7 +92,6 @@ import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -173,8 +172,6 @@ public class BaseMetadataManager implements IMetadataManager {
 	private AccessManager accessManager;
 	@Autowired
 	private UserSavedSelectionRepository userSavedSelectionRepository;
-	@Autowired
-	private UserFeedbackRepository userFeedbackRepository;
 
 	private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 	private String baseURL;
@@ -224,7 +221,6 @@ public class BaseMetadataManager implements IMetadataManager {
 		schemaManager = context.getBean(SchemaManager.class);
 		thesaurusManager = context.getBean(ThesaurusManager.class);
 		accessManager = context.getBean(AccessManager.class);
-		userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
 
 		// From DataManager:
 
@@ -350,9 +346,6 @@ public class BaseMetadataManager implements IMetadataManager {
 		// --- remove operations
 		metadataOperations.deleteMetadataOper(context, id, false);
 
-		// --- remove user comments
-		deleteMetadataUserFeedback_byMetadataId(context, metadata.getUuid());
-
 		int intId = Integer.parseInt(id);
 		metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
 		metadataValidationRepository.deleteAllById_MetadataId(intId);
@@ -372,13 +365,6 @@ public class BaseMetadataManager implements IMetadataManager {
 
 		// --- remove metadata
 		getXmlSerializer().delete(id, context);
-	}
-
-	/**
-	 * Removes all userfeedbacks associated with metadata.
-	 */
-	private void deleteMetadataUserFeedback_byMetadataId(ServiceContext context, String metadataUUId) throws Exception {
-		userFeedbackRepository.deleteByMetadata_Uuid(metadataUUId);
 	}
 
 	private MetaSearcher searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata)

@@ -208,13 +208,6 @@ public class UserFeedbackUtils {
         metadata.setUuid(inputDto.getMetadataUUID());
         userfeedback.setMetadata(metadata);
 
-        // parent userfeedback (so is a comment o a comment)
-        if (inputDto.getParentUuid() != null) {
-            final UserFeedback parent = new UserFeedback();
-            parent.setUuid(inputDto.getParentUuid());
-            userfeedback.setParent(parent);
-        }
-
         userfeedback.setCreationDate(new ISODate(System.currentTimeMillis()).toDate());
 
         if (author != null) {
@@ -263,9 +256,6 @@ public class UserFeedbackUtils {
             userfeedbackDto.setAuthorUserId(input.getAuthorId().getId());
         } else {
             userfeedbackDto.setAuthorUserId(0);
-        }
-        if (input.getParent() != null) {
-            userfeedbackDto.setParentUuid(input.getParent().getUuid());
         }
 
         final List<Rating> ratingList = input.getDetailedRatingList();

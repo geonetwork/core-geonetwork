@@ -66,7 +66,6 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     private String commentText;
     private List<Rating> detailedRatingList;
     private Metadata metadata;
-    private UserFeedback parent;
     private User authorId;
     private String authorName;
     private String authorOrganization;
@@ -101,14 +100,6 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     public Metadata getMetadata() {
         return metadata;
     }
-
-
-    @ManyToOne
-    @JoinColumn(name = "parent_uuid", referencedColumnName = "uuid")
-    public UserFeedback getParent() {
-        return parent;
-    }
-
 
     @ManyToOne
     @Nullable
@@ -195,11 +186,6 @@ public class UserFeedback extends GeonetEntity implements Serializable {
 
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
-    }
-
-
-    public void setParent(UserFeedback parent) {
-        this.parent = parent;
     }
 
 
