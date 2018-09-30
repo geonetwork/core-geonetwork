@@ -101,7 +101,8 @@ public abstract class SchemaPlugin implements CSWPlugin {
      * @param attributeName
      * @param parsedAttributeName the name of the attribute, for example <code>xlink:href</code>
      * @param attributeValue
-     * @return the same element passed without modifications.
+     *
+     * @return the processed element.
      */
     public Element processElement(Element el, String attributeName, String parsedAttributeName, String attributeValue) {
         return el;
