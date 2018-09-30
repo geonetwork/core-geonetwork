@@ -410,26 +410,56 @@ public class ISO19139SchemaPlugin
         return allExportFormats;
     }
 
+    /**
+     * Process some of the ISO elements which can have substitute.
+     *
+     * For example, a CharacterString can have a gmx:Anchor as a substitute
+     * to encode a text value + an extra URL. To make the transition between
+     * CharacterString and Anchor transparent, this method takes care of
+     * creating the appropriate element depending on the presence of an xlink:href attribute.
+     * If the attribute is empty, then a CharacterString is used, if a value is set, an Anchor is created.
+     *
+     * @param el element to process.
+     * @param attributeRef the attribute reference
+     * @param parsedAttributeName the name of the attribute, for example <code>xlink:href</code>
+     * @param attributeValue the attribute value
+     * @return
+     */
     @Override
-    public Element processElement(Element el, String attributeRef, String parsedAttributeName, String attributeValue) {
+    public Element processElement(Element el,
+                                  String attributeRef,
+                                  String parsedAttributeName,
+                                  String attributeValue) {
         if (Log.isDebugEnabled(LOGGER_NAME)) {
-            Log.debug(LOGGER_NAME, "Processing element " + el + ", attribute " + attributeRef
-                + " with attributeValue " + attributeValue);
+            Log.debug(LOGGER_NAME, String.format(
+                "Processing element %s, attribute %s with attributeValue %s.",
+                    el, attributeRef, attributeValue));
         }
 
         if (parsedAttributeName.equals("xlink:href")) {
+            boolean isEmptyLink = StringUtils.isEmpty(attributeValue);
             Element originalGeonetInfo = (Element) el.getChild("element", GEONET).clone();
             String originalValue = el.getText();
 
-            Element anchor = new Element("Anchor", GMX)
-                .setAttribute("href", "", XLINK);
+            if (isEmptyLink) {
+                Element characterString =
+                    new Element("CharacterString", GCO);
+                characterString.setContent(Lists.newArrayList(new Text(originalValue),
+                    originalGeonetInfo));
+                return characterString;
+            } else {
+                Element anchor =
+                    new Element("Anchor", GMX).setAttribute("href", "", XLINK);
 
-            Element geonetAttribute = new Element("attribute", GEONET)
-                .setAttribute("name", parsedAttributeName)
-                .setAttribute("ref", attributeRef);
+                Element geonetAttribute = new Element("attribute", GEONET)
+                    .setAttribute("name", parsedAttributeName)
+                    .setAttribute("ref", attributeRef);
 
-            anchor.setContent(Lists.newArrayList(new Text(originalValue), geonetAttribute, originalGeonetInfo));
-            return anchor;
+                anchor.setContent(Lists.newArrayList(new Text(originalValue),
+                                        geonetAttribute,
+                                        originalGeonetInfo));
+                return anchor;
+            }
         } else {
             return super.processElement(el, attributeRef, parsedAttributeName, attributeValue);
         }
