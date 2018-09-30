@@ -93,7 +93,10 @@ public abstract class SchemaPlugin implements CSWPlugin {
 
 
     /**
-     * Processes the passed element. This base class just return the same element without modifications.
+     * Processes the passed element. This base class just return the same element without modifications
+     * but can be overridden in a schema plugin in order to modify an element
+     * by one of its substitutes.
+     *
      * @param el element to process.
      * @param attributeName
      * @param parsedAttributeName the name of the attribute, for example <code>xlink:href</code>
