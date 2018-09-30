@@ -1372,8 +1372,7 @@
     <xsl:variable name="attributeSpec" select="../gn:attribute[@name = $attributeName]"/>
 
     <xsl:variable name="directive"
-                  select="gn-fn-metadata:getFieldType($editorConfig, name(),
-      name(..))"/>
+                  select="gn-fn-metadata:getAttributeFieldType($editorConfig, concat(name(..), '/@', name()))"/>
 
     <!-- Form field name escaping ":" which will be invalid character for
     Jeeves request parameters. -->
