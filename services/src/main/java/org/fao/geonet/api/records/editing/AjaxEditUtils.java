@@ -180,14 +180,12 @@ public class AjaxEditUtils extends EditUtils {
             }
             SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
             Element processedElement =  schemaPlugin.processElement(el, originalRef, parsedAttributeName, value);
-            Log.debug(Geonet.EDITOR, "processed element: " + processedElement);
             if (processedElement != el) {
+                Log.debug(Geonet.EDITOR, "Replacing processed element: " + processedElement);
                 Element parent = el.getParentElement();
                 int elIndex = parent.indexOf(el);
                 parent.setContent(elIndex, processedElement);
             }
-
-
         }
 
         // --- update elements
