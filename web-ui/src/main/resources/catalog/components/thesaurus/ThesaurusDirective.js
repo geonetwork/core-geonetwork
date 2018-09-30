@@ -614,13 +614,32 @@
             );
 
 
-            // TODO: Anchor support
+            // When concept id attribute is set, then an extra input field is used.
+            // Eg. in ISO schema, an Anchor element is used.
+            // In such case, an xlink:href attribute store the concept id.
+            // By default, such an attribute is identified in the form by
+            // the parent element id + '_' + attribute name
             if (angular.isDefined(attrs.thesaurusConceptIdAttribute)) {
               var conceptIdElementName = attrs.name + '_' + attrs.thesaurusConceptIdAttribute;
 
-              var conceptIdElement =  angular.element('<input name="' + conceptIdElementName + '" class="hidden"></input>');
-              element.after(conceptIdElement);
-              scope.conceptIdElement = conceptIdElement;
+              // Check that the element does not exist already in the form
+              // Could be in the case it was already encoded.
+              var input = element.parent().parent().find('[name=' + conceptIdElementName + ']');
+
+              if (input.length === 0) {
+                // Add an extra form element to store the value
+                var conceptIdElement =  angular.element(
+                  '<div class="well well-sm">' +
+                  '<label class="col-sm-4" data-translate>Link</label>' +
+                  '<input name="' + conceptIdElementName + '" ' +
+                  '       class="gn-field-link form-control"/>' +
+                  '</div>');
+                element.after(conceptIdElement);
+
+                var input = element.parent().parent().find('[name=' + conceptIdElementName + ']');
+              }
+
+              scope.conceptIdElement =  $(input.get(0));
             }
 
 
