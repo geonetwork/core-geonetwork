@@ -438,27 +438,25 @@ public class ISO19139SchemaPlugin
 
         if (parsedAttributeName.equals("xlink:href")) {
             boolean isEmptyLink = StringUtils.isEmpty(attributeValue);
-            Element originalGeonetInfo = (Element) el.getChild("element", GEONET).clone();
-            String originalValue = el.getText();
+            boolean isMultilingualElement = el.getName().equals("LocalisedCharacterString");
+
+            if (isMultilingualElement) {
+                // The attribute provided relates to the CharacterString and not to the LocalisedCharacterString
+                Element targetElement = el.getParentElement().getParentElement().getParentElement()
+                                            .getChild("CharacterString", GCO);
+                if (targetElement != null) {
+                    el = targetElement;
+                }
+            }
 
             if (isEmptyLink) {
-                Element characterString =
-                    new Element("CharacterString", GCO);
-                characterString.setContent(Lists.newArrayList(new Text(originalValue),
-                    originalGeonetInfo));
-                return characterString;
+                el.setNamespace(GCO).setName("CharacterString");
+                el.removeAttribute("href", XLINK);
+                return el;
             } else {
-                Element anchor =
-                    new Element("Anchor", GMX).setAttribute("href", "", XLINK);
-
-                Element geonetAttribute = new Element("attribute", GEONET)
-                    .setAttribute("name", parsedAttributeName)
-                    .setAttribute("ref", attributeRef);
-
-                anchor.setContent(Lists.newArrayList(new Text(originalValue),
-                                        geonetAttribute,
-                                        originalGeonetInfo));
-                return anchor;
+                el.setNamespace(GMX).setName("Anchor");
+                el.setAttribute("href", "", XLINK);
+                return el;
             }
         } else {
             return super.processElement(el, attributeRef, parsedAttributeName, attributeValue);
