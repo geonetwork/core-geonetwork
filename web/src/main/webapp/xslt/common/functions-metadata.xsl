@@ -366,6 +366,21 @@
     />
   </xsl:function>
 
+  <xsl:function name="gn-fn-metadata:getAttributeFieldType" as="xs:string">
+    <xsl:param name="configuration" as="node()"/>
+    <!-- The container element gmx:fileName/@src-->
+    <xsl:param name="attributeNameWithParent" as="xs:string"/>
+
+    <xsl:variable name="type"
+                  select="normalize-space($configuration/editor/fields/for[@name = $attributeNameWithParent]/@use)"/>
+
+    <xsl:value-of
+      select="if ($type != '')
+      then $type
+      else $defaultFieldType"
+    />
+  </xsl:function>
+
 
   <!-- Return the directive to use for editing. -->
   <xsl:function name="gn-fn-metadata:getFieldDirective" as="node()">

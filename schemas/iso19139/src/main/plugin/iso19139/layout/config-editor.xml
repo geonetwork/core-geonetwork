@@ -86,7 +86,7 @@
 
 
     <!-- gmx:FileName/@src attribute -->
-    <for name="src" use="data-gn-logo-selector"/>
+    <for name="gmx:FileName/@src" use="data-gn-logo-selector"/>
 
     <for name="gmd:electronicMailAddress" use="email"/>
 
