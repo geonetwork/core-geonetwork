@@ -567,37 +567,15 @@ public class Transaction extends AbstractOperation implements CatalogService {
         }
     }
 
-
     private static Element applyCswBrief(ServiceContext context, SchemaManager schemaManager, String schema,
                                                Element md,
                                                String id, String displayLanguage) throws Exception
     {
-        return applyElementSetName(context, schemaManager, schema, md, "csw", ElementSetName.BRIEF, id, displayLanguage);
+        return org.fao.geonet.csw.common.util.Xml.applyElementSetName(
+                context, schemaManager, schema, md,
+                "csw", ElementSetName.BRIEF, ResultType.RESULTS,
+                id, displayLanguage);
     }
-
-    private static Element applyElementSetName(ServiceContext context, SchemaManager smgr, String schema,
-                                               Element md, String outputSchema, ElementSetName esn,
-                                               String id, String lang) throws Exception {
-        Path schemaDir = smgr.getSchemaCSWPresentDir(schema);
-        Path styleSheet = schemaDir.resolve(outputSchema + "-" + esn + ".xsl");
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("lang", lang);
-        params.put("displayInfo", "false");
-
-        try {
-            md = Xml.transform(md, styleSheet, params);
-        } catch (Exception e) {
-            String msg = String.format(
-                "Error occured while transforming metadata with id '%s' using '%s'.",
-                id, styleSheet.getFileName());
-            context.error(msg);
-            context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
-            throw new Exception(msg, e);
-        }
-        return md;
-    }
-
 
     /**
      * @param totalInserted
