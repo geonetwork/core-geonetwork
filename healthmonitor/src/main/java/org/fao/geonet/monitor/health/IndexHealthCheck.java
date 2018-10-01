@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.springframework.beans.factory.BeanCreationException;
 
 /**
  * Checks to ensure that the Elasticsearch index is up and running.
@@ -42,26 +43,33 @@ public class IndexHealthCheck implements HealthCheckFactory {
             protected Result check() throws Exception {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-                EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
-
                 try {
-                    Search search = new Search.Builder("")
-                        .addIndex(searchMan.getIndex())
-                        .build();
-                    final SearchResult result = searchMan.getClient().getClient().execute(search);
+                    EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
 
-                    if (result.isSucceeded()) {
-                        return Result.healthy(String.format(
-                            "%s records indexed in remote index currently.", result.getTotal()
-                        ));
-                    } else {
-                        return Result.unhealthy(
-                            "Index storing records is not available currently. " +
-                                "This component is only required if you use WFS features indexing " +
-                                "and dashboards.");
+                    try {
+                        Search search = new Search.Builder("")
+                            .addIndex(searchMan.getIndex())
+                            .build();
+                        final SearchResult result = searchMan.getClient().getClient().execute(search);
+
+                        if (result.isSucceeded()) {
+                            return Result.healthy(String.format(
+                                "%s records indexed in remote index currently.", result.getTotal()
+                            ));
+                        } else {
+                            return Result.unhealthy(
+                                "Index storing records is not available currently. " +
+                                    "This component is only required if you use WFS features indexing " +
+                                    "and dashboards.");
+                        }
+                    } catch (Throwable e) {
+                        return Result.unhealthy(e);
                     }
-                } catch (Throwable e) {
-                    return Result.unhealthy(e);
+
+                } catch (BeanCreationException e) {
+                    return Result.unhealthy("Remote index module is not installed in your catalogue " +
+                        "installation. Add 'es' to the spring.profiles.active in WEB-INF/web.xml to " +
+                        "activate it.");
                 }
             }
         };
