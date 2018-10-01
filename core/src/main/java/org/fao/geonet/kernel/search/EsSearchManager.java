@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.BulkResult;
@@ -66,9 +67,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
+
 
 public class EsSearchManager implements ISearchManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.INDEX_ENGINE);
@@ -323,6 +331,26 @@ public class EsSearchManager implements ISearchManager {
             }
         }
     }
+    private static ImmutableSet<String> booleanFields;
+    private static ImmutableSet<String> booleanValues;
+
+    static {
+        booleanFields = ImmutableSet.<String>builder()
+            .add("hasxlinks")
+            .add("hasInspireTheme")
+            .add("hasOverview")
+            .add("isHarvested")
+            .add("isValid")
+            .add("isSchemaValid")
+            .add("isAboveThreshold")
+            .add("isOpenData")
+            .build();
+        booleanValues = ImmutableSet.<String>builder()
+            .add("1")
+            .add("y")
+            .add("true")
+            .build();
+    }
 
     /**
      * Convert document to JSON.
@@ -331,6 +359,14 @@ public class EsSearchManager implements ISearchManager {
         ObjectNode doc = new ObjectMapper().createObjectNode();
         ObjectMapper mapper = new ObjectMapper();
 
+        List<Element> records = xml.getChildren();
+        Map<String, ObjectNode> listOfXcb = new HashMap<>();
+        Set<String> booleanFields = new HashSet();
+        booleanFields.add(IndexFields.HAS_ATOM);
+        booleanFields.add(Geonet.IndexFieldNames.HASXLINKS);
+        booleanFields.add("hasxlinks");
+        booleanFields.add("isHarvested");
+
 
         List<String> elementNames = new ArrayList();
         List<Element> fields = xml.getChildren();
@@ -338,6 +374,9 @@ public class EsSearchManager implements ISearchManager {
         // Loop on doc fields
         for (Element currentField: fields) {
             String name = currentField.getName();
+
+            // JSON object may be generated in the XSL processing.
+            // In such case an object type attribute is set.
             boolean isObject = "object".equals(currentField.getAttributeValue("type"));
 
             if (elementNames.contains(name)) {
@@ -346,6 +385,7 @@ public class EsSearchManager implements ISearchManager {
 
             // Register list of already processed names
             elementNames.add(name);
+
             // Field starting with _ not supported in Kibana
             // Those are usually GN internal fields
             String propertyName = name.startsWith("_") ? name.substring(1) : name;
@@ -358,13 +398,17 @@ public class EsSearchManager implements ISearchManager {
                     if (isObject) {
                         try {
                             arrayNode.add(
-                                    mapper.readTree(node.getTextNormalize()));
+                                mapper.readTree(node.getTextNormalize()));
                         } catch (IOException e) {
                             // Invalid JSON object provided
                             e.printStackTrace();
                         }
                     } else {
-                        arrayNode.add(node.getTextNormalize());
+                        arrayNode.add(
+                            booleanFields.contains(propertyName) ?
+                                parseBoolean(node.getTextNormalize()) :
+                                node.getTextNormalize());
+
                     }
 
                 }
@@ -388,13 +432,24 @@ public class EsSearchManager implements ISearchManager {
                         e.printStackTrace();
                     }
                 } else {
-                    doc.put(propertyName, nodeElements.get(0).getTextNormalize());
+                    doc.put(propertyName,
+                        booleanFields.contains(propertyName) ?
+                            parseBoolean(nodeElements.get(0).getTextNormalize()) :
+                            nodeElements.get(0).getTextNormalize());
                 }
 
             }
         }
         return doc;
     }
+
+    /*
+     * Normalize various GN boolean value to only true/false allowed in boolean fields in ES
+     */
+    private String parseBoolean(String value) {
+        return String.valueOf(booleanValues.contains(value));
+    }
+
     @Override
     public void forceIndexChanges() throws IOException {
         sendDocumentsToIndex();
@@ -680,5 +735,14 @@ public class EsSearchManager implements ISearchManager {
 
     public Map<String, String>  getIndexList() {
         return indexList;
+    }
+
+    public static String analyzeField(String analyzer,
+                                      String fieldValue) {
+
+        return EsClient.analyzeField(
+                            ApplicationContextHolder.get().getBean(EsSearchManager.class).getDefaultIndex(),
+                            analyzer,
+                            fieldValue);
     }
 }

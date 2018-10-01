@@ -62,6 +62,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -231,15 +232,34 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                     // Ignore
                 }
 
-                // No schema detected, try to convert from default ESRI md to ISO1939
-                if (schema == null) {
+                List<Namespace> esriMdNamespaces = new ArrayList<>();
+                esriMdNamespaces.add(metadataElement.getNamespace());
+                esriMdNamespaces.addAll(metadataElement.getAdditionalNamespaces());
+
+                esriMdNamespaces.add(ISO19139Namespaces.GMD);
+
+                // select all nodes that match the XPath
+                Element iso19139Element = Xml.selectElement(metadataElement, "gmd:MD_Metadata", esriMdNamespaces);
+
+                // Check if the ESRI metadata has an embedded iso19139 metadata
+                boolean hasIso19139Embedded = false;
+                if (iso19139Element != null) {
+                    try {
+                        schema = dataMan.autodetectSchema(iso19139Element, null);
+                    } catch (NoSchemaMatchesException ex) {
+                        // Ignore
+                    }
+
+                    hasIso19139Embedded = (schema != null);
+                }
+
+                log.info("Metadata has ISO13139 embedded - " + hasIso19139Embedded);
+
+                // No schema detected or not iso19139 embedded, try to convert from default ESRI md to ISO1939
+                if ((schema == null) || !hasIso19139Embedded) {
                     log.info("Convert metadata to ISO19139 - start");
 
                     // Extract picture if available
-                    List<Namespace> esriMdNamespaces = new ArrayList<>();
-                    esriMdNamespaces.add(metadataElement.getNamespace());
-                    esriMdNamespaces.addAll(metadataElement.getAdditionalNamespaces());
-
                     // select all nodes that match the XPath
                     Element thumbnailEl = Xml.selectElement(metadataElement, "Binary/Thumbnail/Data", esriMdNamespaces);
 
@@ -247,11 +267,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                         thumbnailContent = thumbnailEl.getText();
                     }
 
-                    // transform ESRI output to ISO19115
-                    Element iso19115 = Xml.transform(metadataElement, ArcToISO19115Transformer);
+                        // transform ESRI output to ISO19115
+                        Element iso19115 = Xml.transform(metadataElement, ArcToISO19115Transformer);
 
-                    // transform ISO19115 to ISO19139
-                    metadataElement = Xml.transform(iso19115, ISO19115ToISO19139Transformer);
+                        // transform ISO19115 to ISO19139
+                        metadataElement = Xml.transform(iso19115, ISO19115ToISO19139Transformer);
 
                     log.info("Convert metadata to ISO19139 - end");
 
@@ -259,6 +279,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                         schema = dataMan.autodetectSchema(metadataElement, null);
                     } catch (NoSchemaMatchesException ex) {
                         // Ignore
+                    }
+
+                } else {
+                    if (hasIso19139Embedded) {
+                        metadataElement = iso19139Element;
                     }
                 }
 

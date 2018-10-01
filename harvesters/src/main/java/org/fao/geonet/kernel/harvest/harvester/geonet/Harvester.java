@@ -28,7 +28,11 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.*;
+import org.fao.geonet.exceptions.BadServerResponseEx;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -48,7 +52,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
@@ -98,7 +108,12 @@ class Harvester implements IHarvester<HarvestResult> {
 
     public HarvestResult harvest(Logger log) throws Exception {
         this.log = log;
-        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
+        String host = params.host;
+        if (new URL(host).getPath().equals("")) {
+            // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
+            host += "/";
+        }
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(host));
 
         Lib.net.setupProxy(context, req);
 
@@ -128,7 +143,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         //--- retrieve info on categories and groups
 
-        log.info("Retrieving information from : " + params.host);
+        log.info("Retrieving information from : " + host);
 
         req.setAddress(params.getServletPath() + "/" + params.getNode()
             + "/en/" + Geonet.Service.XML_INFO);
@@ -198,7 +213,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
                 Map<String, Source> sources = buildSources(remoteInfo);
                 updateSources(records, sources);
-             } catch (Exception t) {
+            } catch (Exception t) {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 errors.add(new HarvestError(this.context, t));
@@ -211,10 +226,10 @@ class Harvester implements IHarvester<HarvestResult> {
             log.warning("Due to previous errors the align process has not been called");
         }
 
-		log.info("Total records processed in all searches :"+ records.size());
+        log.info("Total records processed in all searches :" + records.size());
 
-		return result;
-	}
+        return result;
+    }
 
     //---------------------------------------------------------------------------
 
@@ -373,10 +388,14 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private void retrieveLogo(ServiceContext context, String url, String uuid) throws MalformedURLException {
         String logo = uuid + ".gif";
-
-        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
+        String baseUrl = url;
+        if (!new URL(baseUrl).getPath().endsWith("/")) {
+            // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
+            baseUrl += "/";
+        }
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(baseUrl));
         Lib.net.setupProxy(context, req);
-        req.setAddress(req.getAddress() + "/images/logos/" + logo);
+        req.setAddress(req.getAddress() + "images/logos/" + logo);
 
         Path logoFile = Resources.locateLogosDir(context).resolve(logo);
 

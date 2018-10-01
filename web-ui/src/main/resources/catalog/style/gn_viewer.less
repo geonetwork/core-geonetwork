@@ -17,6 +17,40 @@
     right: 0;
   }
 
+  button:focus [role=tooltip],
+  button:hover [role=tooltip] {
+    clip: auto;
+    right: 3.5em;
+    background: @brand-success;
+    color: #fff;
+    padding: 8px 12px;
+    margin-top: -7px;
+    font-size: 12px;
+    border-radius: 0;
+    text-shadow: none;
+    z-index: 9000;
+  }
+  .search-container {
+    button:focus [role=tooltip],
+    button:hover [role=tooltip] {
+      right: auto;
+      margin-left: 1.5em;
+      margin-top: -7px;
+      padding-top: 9px;
+    }
+  }
+  @media screen and (max-height: 768px) {
+    .control-tools {
+      button:focus [role=tooltip],
+      button:hover [role=tooltip] {
+        right: auto;
+        margin-left: 1.5em;
+        margin-top: -7px;
+        padding-top: 9px;
+      }
+    }
+  }
+
   fieldset legend {
     margin-bottom: 2px;
   }
@@ -59,6 +93,7 @@
     top: @viewport-padding;
     left: @viewport-padding;
     width: 20em;
+    max-width: 75%;
     .dropdown-menu {
       width: 100%;
       top: ~"calc(100% - 3px)";
@@ -97,28 +132,31 @@
         color: #222;
       }
     }
+    .input-group-addon:first-child, .input-group-btn:last-child > .btn {
+      border-radius: 0;
+    }
   }
   .tools {
     position: absolute;
     top: @viewport-padding;
-    right: 0;
+    right: 1em;
     width: 2.8em;
+    border-top: 1px solid @btn-default-border;
+    z-index: 85;
     button, [role="button"] {
-      margin-bottom: .2em;
-      border-right-width: none;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      background: rgba(255,255,255,.8);
+      border-top: 0;
+      height: 2.8em;
+      border-radius: 0;
+      background: #f5f5f5;
       width: 2.8em;
       transition: background @transition-params;
       &.active {
-        width: 3.0em;
-        border-left: medium none;
+        border-left-color: #fff;
         border-radius: 0;
-        margin-left: -0.2em;
-        background: none repeat scroll 0 0 rgba(0, 0, 0, 0.7);
-        border-color: transparent;
-        color: #FFF;
+        box-shadow: none;
+        border-color: @btn-default-border;
+        border-left-color: #fff;
+        background: #fff;
       }
     }
 
@@ -128,24 +166,36 @@
   }
   .control-tools {
     top: auto;
-    bottom: 50px;
+    bottom: calc(~"50px + 1em");
     position: fixed;
+    @media screen and (max-height: 768px) {
+      left: @viewport-padding;
+    }
   }
+
   & > .panel {
-    background: rgba(255,255,255,.8);
+    background: #fff;
   }
   .panel-tools {
     position: absolute;
     top: @viewport-padding;
-    right: 3em;
+    right: 3.8em;
     width: 26em;
-    min-height: 12.8em;
+    margin-right: -1px;
+    border-radius: 0;
+    min-height: 30em;
     max-height: ~"calc(100% - 2em)";
-    max-width: ~"calc(100% - 4em)";
+    max-width: ~"calc(100% - 4.5em)";
     overflow-y: auto;
     transition: opacity @transition-params;
-    h3 {
-      margin-top: 15px;
+    z-index: 80;
+    border-color: #ccc;
+    .panel-heading {
+      border-bottom: 0;
+      h3 {
+        margin-top: 15px;
+        font-size: 22px;
+      }
     }
     li[gn-layermanager-item] {
       .fa-arrows-alt,.gn-layer-ordering {
@@ -156,7 +206,6 @@
         padding: 0px;
         display: block;
         margin-bottom: 0px;
-
       }
     }
     .gn-layer-outofrange > label {
@@ -215,8 +264,14 @@
     }
     .unfold,
     .close {
-      margin-top: -.1em;
+      margin-top: -.4em;
       margin-right: .2em;
+      opacity: 1;
+      &:hover, &:active {
+        background: 0;
+        box-shadow: none;
+        color: @brand-danger;
+      }
     }
     .details {
       font-size: 90%;
@@ -257,8 +312,23 @@
       font-size: 13px;
     }
     label {
-      padding: 10px 0;
+      font-size: 90%;
       font-weight: normal;
+    }
+    .checkbox {
+      label {
+        font-size: 100%;
+      }
+    }
+    .panel-carousel {
+      .list-group-item {
+        border: 0;
+        padding-bottom: 0;
+        h5 {
+          margin: 0.3em 0;
+          line-height: 1.4;
+        }
+      }
     }
   }
 
@@ -375,11 +445,15 @@
     .alert {
       margin-top: 1em;
     }
+    dl {
+      margin-top: 10px;
+    }
     dt {
-      width: 120px;
+      width: 100px;
+      text-align: left;
     }
     dd {
-      margin-left: 130px;
+      margin-left: 110px;
     }
   }
 
@@ -394,6 +468,12 @@
   [gn-localisation-input] {
     .dropdown-menu {
       padding-bottom: 0;
+      border-radius: 0;
+      .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+      }
     }
   }
   .gn-draw-styleform {
@@ -407,7 +487,7 @@
     }
     form {
       margin-top: 10px;
-      padding-bottom: 100px;
+      min-height: 17em;
       input[type='text'] {
         width: 146px;
       }
@@ -550,11 +630,16 @@
 gn-features-tables, .gn-viewer-info-pane {
   display          : block;
   position         : absolute;
-  bottom           : 1em;
+  bottom           : 0;
   left             : 1em;
-  right            : 3.8em;
-  background-color : rgba(255,255,255, .6);
-  border-radius    : 3px;
+  right            : 4.5em;
+  background-color:#fff;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  z-index: 85;
+  @media screen and (max-height: 768px) {
+    left: 4.5em;
+  }
   .nav li a {
     background  : rgba(255, 255, 255, .5);
     text-shadow : 0 0 1px white;
@@ -569,6 +654,7 @@ gn-features-tables, .gn-viewer-info-pane {
   }
   .gn-features-table {
     padding          : .25em;
+    box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
   }
   .layername {
     display        : inline-block;
@@ -671,19 +757,33 @@ gn-geometry-tool .btn-group {
 
 [gn-ows-context] {
   ul.gn-resultview li.gn-grid {
-    width: 150px;
-    min-width: 150px;
+    min-width: calc(~"50% - 10px");
     max-height: 170px;
-    padding: 2px;
-    margin: 2px;
-    font-size: 80%;
-    text-align: center;
+    height: auto;
+    padding: 0px;
+    margin: 0px 4px 4px 0;
+    border-radius: 2px;
+    text-align: left;
+    .gn-img-thumbnail-caption {
+      display: inline-block;
+      padding: 3px 3px 3px 6px;
+      font-style: normal;
+      font-size: 100%;
+    }
+    a:hover {
+      .gn-img-thumbnail-caption {
+        text-decoration: none;
+      }
+    }
   }
-  .gn-md-thumbnail {
-    float:left;
-    width: 110px;
-    height: 110px;
-    margin: 2px !important;
+  .gn-resultview .gn-md-thumbnail {
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0px !important;
+    .gn-img-thumbnail {
+      max-width: 100%;
+    }
   }
 }
 [data-gn-search-layer-for-map] {

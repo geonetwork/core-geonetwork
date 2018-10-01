@@ -230,7 +230,7 @@
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|
        gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
-       gco:LocalName|gmd:PT_FreeText|gml:beginPosition|gml:endPosition|
+       gco:LocalName|gmd:PT_FreeText|
        gco:Date|gco:DateTime|*/@codeListValue]"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
@@ -251,7 +251,7 @@
   </xsl:template>
 
   <xsl:template mode="render-field"
-                match="*[gco:CharacterString]"
+                match="*[gco:CharacterString]|gml:beginPosition[. != '']|gml:endPosition[. != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
@@ -569,9 +569,14 @@
   </xsl:template>
 
 
-  <!-- Display thesaurus name and the list of keywords -->
+  <!-- Display thesaurus name and the list of keywords if at least one keyword is set -->
   <xsl:template mode="render-field"
-                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title]"
+                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title and
+                count(*/gmd:keyword/*[. != '']) = 0]"
+                priority="100"/>
+  <xsl:template mode="render-field"
+                match="gmd:descriptiveKeywords[*/gmd:thesaurusName/gmd:CI_Citation/gmd:title and
+                count(*/gmd:keyword/*[. != '']) > 0]"
                 priority="100">
     <dl class="gn-keyword">
       <dt>

@@ -26,15 +26,17 @@ package org.fao.geonet.api.registries.vocabularies;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -863,7 +865,9 @@ public class KeywordsApi {
             Path rdfFile = Files.createTempFile("thesaurus", ".rdf");
             XMLOutputter xmlOutput = new XMLOutputter();
             xmlOutput.setFormat(Format.getCompactFormat());
-            xmlOutput.output(transform, new FileWriter(rdfFile.toFile()));
+            xmlOutput.output(transform,
+                new OutputStreamWriter(new FileOutputStream(rdfFile.toFile().getCanonicalPath()),
+                    StandardCharsets.UTF_8));
             return rdfFile;
 
         }

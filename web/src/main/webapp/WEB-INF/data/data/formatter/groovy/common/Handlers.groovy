@@ -125,11 +125,19 @@ public class Handlers {
 
     def htmlOrXmlEnd = {
         def required = "";
+        def tabToggle = "";
+        def activeTab = env.param('tab').toString();
+
+        if (activeTab != 'Null Value') {
+            tabToggle = "gnFormatter.toggleTab('$activeTab');"
+        }
+
         if (!func.isPDFOutput()) {
             required = """
 <script type="text/javascript">
 //<![CDATA[
     gnFormatter.formatterOnComplete();
+    $tabToggle
 //]]>
 </script>"""
         }

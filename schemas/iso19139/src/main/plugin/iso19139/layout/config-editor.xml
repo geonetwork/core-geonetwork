@@ -183,7 +183,7 @@
 
       To restrict the list of thesaurus allowed, set the include attribute
       for the directive:
-      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      <directiveAttributes data-include="external.theme.httpinspireeceuropaeutheme-theme,external.place.regions"/>
 
       Exclude a thesaurus:
       <directiveAttributes data-include="-external.place.regions"/>
@@ -268,6 +268,7 @@
       <name>gmd:metadataStandardName</name>
       <name>gmd:metadataStandardVersion</name>
       <name>gmd:hierarchyLevelName</name>
+      <name>gmd:parentIdentifier</name>
       <name>gmd:dataSetURI</name>
       <name>gmd:postalCode</name>
       <name>gmd:city</name>
@@ -1204,8 +1205,8 @@
                           <gmd:MD_Identifier>
                             <gmd:code>
                               <gmx:Anchor
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">
-                                geonetwork.thesaurus.external.theme.inspire-theme
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeutheme-theme">
+                                geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme
                               </gmx:Anchor>
                             </gmd:code>
                           </gmd:MD_Identifier>
@@ -1330,9 +1331,10 @@
                    if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
-                  <!-- Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                  <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree
+                        but this will make the XSLT formatter fails. Using // to access the element in both case. -->
                   <key label="beginPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
@@ -1341,7 +1343,7 @@
 
                   </key>
                   <key label="endPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes
@@ -1396,13 +1398,13 @@
                 <values>
                   <!-- Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
                   <key label="beginPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
                     <directiveAttributes data-tag-name="gml:beginPosition"/>
                   </key>
                   <key label="endPosition"
-                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                       xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
                        use="gn-date-picker"
                        tooltip="gmd:extent|gmd:EX_TemporalExtent"
                   >
@@ -3136,7 +3138,7 @@
       eg. only 2 INSPIRE themes with Anchor.
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>

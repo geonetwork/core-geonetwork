@@ -1,12 +1,13 @@
-<p data-ng-show="formats.length > 0 && featureType" data-translate=""
+<p data-ng-show="isWfsAvailable && featureType" data-translate=""
    wfsDownloadDataInstruction
 </p>
-<div data-ng-hide="isWfsAvailable">
+<div data-ng-show="!isWfsAvailable">
   <i class="fa fa-warning fa-2x fa-fw pull-left" />
   {{'Unable_to_connect_to_service'|translate}}
 </div>
-<div class="btn-group "
-     data-ng-show="formats.length > 0 && featureType && isWfsAvailable">
+
+<div class="btn-group"
+     data-ng-show="featureType && isWfsAvailable">
 
   <button type="button"
           class="btn btn-default btn-sm dropdown-toggle"
@@ -53,6 +54,7 @@
     <div class="col-md-8 gn-nopadding-left">
       <select class="form-control"
         data-ng-model="ftSelected"
+        aria-label="{{'wfsChooseFeatureTypeToDownload' | translate}}"
         data-ng-options="featType as featType.name.localPart for featType in capabilities.featureTypeList.featureType | orderBy: 'name.localPart' track by featType.name.key">
         <option value="">{{'wfsChooseFeatureTypeToDownload' | translate}}</option>
       </select>
@@ -70,7 +72,7 @@
         </button>
         <ul class="dropdown-menu">
           <li data-ng-repeat="format in formats | orderBy:format">
-            <a data-gn-click-and-spin="downloadFeatureType(format, ftSelected, ftSelected.name.localPart)">
+            <a data-gn-click-and-spin="downloadFeatureType(format, ftSelected, ftSelected.name.prefix+':'+ftSelected.name.localPart)">
               {{format|lowercase}}
             </a>
           </li>

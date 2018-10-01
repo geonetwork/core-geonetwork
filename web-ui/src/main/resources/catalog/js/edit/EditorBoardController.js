@@ -183,6 +183,12 @@
             $location.path('/import');
           }
         }).add({
+          combo: 'r',
+          description: $translate.instant('hotkeyAccessManager'),
+          callback: function(event) {
+            $location.path('/accessManager');
+          }
+        }).add({
           combo: 'h',
           description: $translate.instant('hotkeyEditorBoard'),
           callback: function(event) {

@@ -313,6 +313,8 @@
         <xsl:variable name="listOfKeywords"
                       select="gmd:keyword/gco:CharacterString|
                                         gmd:keyword/gmx:Anchor"/>
+        <xsl:variable name="thesaurusName" select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[1]"/>
+
         <xsl:for-each select="$listOfKeywords">
           <xsl:variable name="keyword" select="string(.)"/>
 
@@ -320,7 +322,8 @@
 
           <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
                and index annex, theme and theme in english. -->
-          <xsl:if test="$inspire='true'">
+          <xsl:if test="$inspire='true' and normalize-space(lower-case($thesaurusName)) = 'gemet - inspire themes, version 1.0'">
+
             <xsl:if test="string-length(.) &gt; 0">
 
               <xsl:variable name="inspireannex">
@@ -433,7 +436,7 @@
         <xsl:for-each-group select="//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/*/text() != '']"
                             group-by="gmd:thesaurusName/*/gmd:title/*/text()">
           '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
-          <xsl:for-each select="gmd:keyword/(gco:CharacterString|gmx:Anchor)">
+          <xsl:for-each select="current-group()/gmd:keyword/(gco:CharacterString|gmx:Anchor)">
             {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
             'link': '<xsl:value-of select="@xlink:href"/>'}
             <xsl:if test="position() != last()">,</xsl:if>
@@ -942,7 +945,8 @@
 
             <xsl:variable name="crsDetails">
             {
-              "code": "<xsl:value-of select="gmd:codeSpace/*/text()"/>:<xsl:value-of select="gmd:code/*/text()"/>",
+              "code": "<xsl:value-of select="gmd:code/*/text()"/>",
+              "codeSpace": "<xsl:value-of select="gmd:codeSpace/*/text()"/>",
               "name": "<xsl:value-of select="gmd:code/*/@xlink:title"/>",
               "url": "<xsl:value-of select="gmd:code/*/@xlink:href"/>"
             }

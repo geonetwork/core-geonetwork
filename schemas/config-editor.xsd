@@ -817,7 +817,7 @@ eg. only 2 INSPIRE themes.
 .. code-block:: xml
 
       <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    maxtags="2"
                    fieldset="false"
                    transformations=""/>
@@ -1521,6 +1521,11 @@ An XPath expression to evaluate. If true, the control is displayed. eg.
 will only displayed the action control if the resource identifier does not end
 with the metadata identifier.
           ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="class" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Optional CSS class to add to the parent div element. eg. gn-required to show a *.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="btnLabel" type="xs:string">

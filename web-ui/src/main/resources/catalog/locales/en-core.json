@@ -377,6 +377,7 @@
     "settings": "Settings",
     "tools": "Tools",
     "processesTool": "Use a WPS process",
+    "processesToolUrlDiscovery": "WPS URL",
     "addLayersTool": "Add layers",
     "layersTool": "Manager layers",
     "filterTool": "Search & filter features",
@@ -395,5 +396,9 @@
     "loginText": "Sign in with your username and password to add and edit metadata.",
     "siteLogo": "Logo",
     "languageSwitcher": "Language switcher",
-    "avatar": "Avatar"
+    "avatar": "Avatar",
+    "first": "First",
+    "editorHome": "Editor board",
+    "adminHome": "Summary",
+    "allAdmins": "Administrators"
 }

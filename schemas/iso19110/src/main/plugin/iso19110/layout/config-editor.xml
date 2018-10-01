@@ -37,7 +37,15 @@
     <for name="gfc:functionalLanguage" use="data-gn-language-picker"/>
     <for name="gmd:languageCode" use="data-gn-language-picker"/>
 
-    <for name="gfc:producer" addDirective="data-gn-directory-entry-selector"/>
+    <for name="gfc:producer" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="contact"
+        data-insert-modes=""
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+    </for>
   </fields>
 
   <fieldsWithFieldset>

@@ -711,13 +711,13 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             if (mdXml != null) {    // No metadataUrl attribute for that layer
                 try {
                     xml = Xml.loadFile(new URL(mdXml));
+                    boolean isUsingTemplate = StringUtils.isNotEmpty(params.datasetTemplateUuid);
 
                     // If url is CSW GetRecordById remove envelope
                     if (xml.getName().equals("GetRecordByIdResponse")) {
                         xml = (Element) xml.getChildren().get(0);
                     } else if (xml.getName().equals("ProcessOfferings")) {
                         // Convert WPS process metadata to ISO record
-                        boolean isUsingTemplate = StringUtils.isNotEmpty(params.datasetTemplateUuid);
 
                         Map<String, Object> xsltParams = new HashMap<String, Object>();
                         xsltParams.put("lang", params.lang);
@@ -742,7 +742,8 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                     reg.uuid = dataMan.extractUUID(schema, xml);
                     exist = dataMan.existsMetadataUuid(reg.uuid);
 
-                    if (exist) {
+                    // Overwrite always when using template
+                    if (exist && !isUsingTemplate) {
                         log.warning(String.format(
                             "    Metadata uuid '%s' already exist in the catalogue. Metadata for layer '%s' will not be loaded.",
                             reg.uuid, reg.name));

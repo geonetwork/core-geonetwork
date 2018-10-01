@@ -70,8 +70,15 @@ public class LDAPUtils {
         }
         User toSave = getUser(user, importPrivilegesFromLdap, userName);
 
-        // Add user groups
-        if (user.getPrivileges().size() > 0) {
+        // Add user groups if the user has no group assigned.
+        // This means that if some privileges has been assigned
+        // to the user after the creation, those are preserved.
+        // The default one from the LDAP config are only set
+        // it user has no privileges.
+        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+        List<UserGroup> existingGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(user.getUser().getId()));
+
+        if (existingGroups.size() == 0 && user.getPrivileges().size() > 0) {
             entityManager.flush();
             entityManager.clear();
             List<UserGroup> ug = getPrivilegesAndCreateGroups(user,

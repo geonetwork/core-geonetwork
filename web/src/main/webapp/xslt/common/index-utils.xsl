@@ -57,7 +57,6 @@
   </xsl:function>
 
   <!-- Add a JSON object field in the index.
-
   A JSON object field is inserted here with JSON properly formatted
   as a String. The java part then parse the JSON as an object
   before sending it to the index. -->
@@ -74,7 +73,6 @@
 
 
   <!-- Add a multilingual field to the index.
-
    A multilingual field is composed of one root field
    with the default language value. Then one field per language
    is added with a suffix "_lang{{iso3letterLangCode}}".

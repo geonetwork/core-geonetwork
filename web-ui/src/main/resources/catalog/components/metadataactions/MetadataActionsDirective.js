@@ -419,6 +419,9 @@
                   var key = g.groupId + '-' + g.userId;
                   if (!uniqueUserGroups[key]) {
                     uniqueUserGroups[key] = g;
+                    uniqueUserGroups[key].groupNameTranslated = g.groupName === 'allAdmins' ?
+                        $translate.instant(g.groupName) :
+                        $translate.instant('group-' + g.groupId);
                   }
                 });
                 scope.userGroups = uniqueUserGroups;

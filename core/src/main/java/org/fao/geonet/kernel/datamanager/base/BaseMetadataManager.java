@@ -4,7 +4,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.*;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
@@ -16,18 +20,60 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.*;
-import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataFileUpload_;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.HarvestInfoProvider;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataOperations;
+import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.PathSpec;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -35,6 +81,7 @@ import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -54,9 +101,22 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Root;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
+
 
 public class BaseMetadataManager implements IMetadataManager {
 
@@ -423,7 +483,9 @@ public class BaseMetadataManager implements IMetadataManager {
 		String schema = templateMetadata.getDataInfo().getSchemaId();
 		String data = templateMetadata.getData();
 		Element xml = Xml.loadString(data, false);
-		if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
+		boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
+		setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
+		if (isMetadata) {
 			xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO,
 					context);
 		}
@@ -454,7 +516,47 @@ public class BaseMetadataManager implements IMetadataManager {
 		return String.valueOf(finalId);
 	}
 
-	/**
+    /**
+     * Update XML document title as defined by schema plugin
+     * in xpathTitle property.
+     */
+    private void setMetadataTitle(String schema, Element xml, String language, boolean fromTemplate) {
+        ResourceBundle messages = ResourceBundle.getBundle(
+            "org.fao.geonet.api.Messages",
+            new Locale(language));
+
+        SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
+        List<String> xpathTitle = schemaPlugin.getXpathTitle();
+        if (xpathTitle != null) {
+            xpathTitle.forEach(path -> {
+                List<?> titleNodes = null;
+                try {
+                    titleNodes = Xml.selectNodes(
+                        xml,
+                        path,
+                        new ArrayList(schemaPlugin.getNamespaces()));
+
+                    for (Object o : titleNodes) {
+                        if (o instanceof Element) {
+                            Element title = (Element) o;
+                            title.setText(String.format(
+                                messages.getString(
+                                    "metadata.title.createdFrom" + (fromTemplate ? "Template" :  "Record")),
+                                title.getTextTrim(),
+                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                            ));
+                        }
+                    }
+                } catch (JDOMException e) {
+                    Log.debug(Geonet.DATA_MANAGER,
+                        String.format("Check xpath '%s' for schema plugin '%s'. Error is '%s'.",
+                        path, schema, e.getMessage()));
+                }
+            });
+        }
+    }
+
+    /**
 	 * Inserts a metadata into the database, optionally indexing it, and optionally
 	 * applying automatic changes to it (update-fixed-info).
 	 *

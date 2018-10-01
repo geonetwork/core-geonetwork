@@ -44,7 +44,7 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.2.1</version>
+            <version>1.4.0</version>
             <executions>
               <execution>
                 <id>download-elastic-search</id>
@@ -57,7 +57,7 @@
                   </url>
                   <unpack>true</unpack>
                   <outputDirectory>${project.basedir}</outputDirectory>
-                  <md5>${kb.version.md5}</md5>
+                  <sha512>${kb.version.sha512}</sha512>
                 </configuration>
               </execution>
             </executions>
@@ -96,7 +96,7 @@
         <kb.executable>kibana.bat</kb.executable>
         <kb.platform>windows-x86</kb.platform>
         <kb.installer.extension>zip</kb.installer.extension>
-        <kb.version.md5>bb1dbfe5b4eef2c17370fb09eb41f3c9</kb.version.md5>
+        <kb.version.sha512>795b19d5be8841d9bbc3d11f174a118bf1f71de2d1789e6285ff835ae37d6b09d47063b2bc35fa2df802df1cfd19e13e9deb46ede657c78f62b3a99346463913</kb.version.sha512>
       </properties>
     </profile>
   </profiles>

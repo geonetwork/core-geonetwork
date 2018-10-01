@@ -17,60 +17,74 @@
   <!--Top right buttons - Tools-->
   <div class="tools" gi-btn-group>
     <button class="btn btn-default" ng-model="activeTools.addLayers"
-            type="submit" gi-btn="active" ng-hide="disabledTools.addLayers">
+            type="submit" gi-btn="active" ng-hide="disabledTools.addLayers"
+            aria-label="{{'addLayers' | translate}}">
       <span class="fa fa-plus"></span>
       <span class="label" ng-show="showToolLabels" translate="">addLayers</span>
       <span role="tooltip" translate="">addLayers</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.layers"
-            type="submit" gi-btn="active" ng-hide="disabledTools.layers">
+            type="submit" gi-btn="active" ng-hide="disabledTools.layers"
+            aria-label="{{'Layers' | translate}}">
       <span class="fa fa-tasks"></span>
       <span class="label" ng-show="showToolLabels" translate="">Layers</span>
       <span role="tooltip" translate="">Layers</span>
     </button>
+    <button class="btn btn-default" ng-model="activeTools.legend"
+            type="submit" gi-btn="active" ng-hide="disabledTools.legend"
+            aria-label="{{'mapLegend' | translate}}">
+      <span class="fa fa-th-list"></span>
+      <span class="label" ng-show="showToolLabels" translate="">mapLegend</span>
+      <span role="tooltip" translate="">mapLegend</span>
+    </button>
     <button class="btn btn-default" ng-model="activeTools.filter"
-            type="submit" gi-btn="active" ng-hide="disabledTools.filter">
+            type="submit" gi-btn="active" ng-hide="disabledTools.filter"
+            aria-label="{{'filterData' | translate}}">
       <span class="fa fa-filter"></span>
       <span class="label" ng-show="showToolLabels" translate="">filterData</span>
       <span role="tooltip" translate="">filterData</span>
     </button>
 
     <button class="btn btn-default" ng-model="activeTools.processes"
-            type="submit" gi-btn="active" ng-hide="disabledTools.processes">
+            type="submit" gi-btn="active" ng-hide="disabledTools.processes"
+            aria-label="{{'processesTool' | translate}}">
       <span class="fa fa-cogs"></span>
       <span class="label" ng-show="showToolLabels" translate="">processesTool</span>
       <span role="tooltip" translate="">processesTool</span>
     </button>
 
     <button class="btn btn-default" ng-model="activeTools.contexts"
-            type="submit" gi-btn="active" ng-hide="disabledTools.contexts">
+            type="submit" gi-btn="active" ng-hide="disabledTools.contexts"
+            aria-label="{{'Contexts' | translate}}">
       <span class="fa fa-map"></span>
       <span class="label" ng-show="showToolLabels" translate="">Contexts</span>
       <span role="tooltip" translate="">Contexts</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.print"
-            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.print">
+            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.print"
+            aria-label="{{'Print' | translate}}">
       <span class="fa fa-print"></span>
       <span class="label" ng-show="showToolLabels" translate="">Print</span>
       <span role="tooltip" translate="">Print</span>
     </button>
 
     <button class="btn btn-default" ng-model="mInteraction.active"
-            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.mInteraction">
+            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.mInteraction"
+            aria-label="{{'Measure' | translate}}">
       <span class="fa fa-expand"></span>
       <span class="label" ng-show="showToolLabels" translate="">Measure</span>
       <span role="tooltip" translate="">Measure</span>
     </button>
     <button class="btn btn-default" ng-model="drawVector.active"
-            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.drawVector">
+            type="submit" gi-btn="active" ng-hide="is3dEnabled || disabledTools.drawVector"
+            aria-label="{{'Annotations' | translate}}">
       <span class="fa fa-pencil"></span>
       <span class="label" ng-show="showToolLabels" translate="">Annotations</span>
       <span role="tooltip" translate="">Annotations</span>
     </button>
 
-    <div class="tools-spacer"></div>
-
-    <button class="btn btn-default" type="submit" ng-click="syncMod()" ng-hide="disabledTools.syncAllLayers">
+    <button class="btn btn-default" type="submit" ng-click="syncMod()" ng-hide="disabledTools.syncAllLayers"
+            aria-label="{{'syncAllLayers' | translate}}">
       <span class="fa fa-sync" ng-class="synAllLayers ? 'fa-lock' : 'fa-unlock'"/>
       <span class="label" ng-show="showToolLabels" translate="">syncAllLayers</span>
       <span role="tooltip" translate="">syncAllLayers</span>
@@ -78,21 +92,25 @@
   </div>
   <!--Bottom right buttons - Navigation-->
   <div class="tools control-tools">
-    <button class="btn btn-default" type="submit" data-ng-click="zoom(map,1)">
+    <button class="btn btn-default" type="submit" data-ng-click="zoom(map,1)"
+            aria-label="{{'ZoomIn' | translate}}">
       <span class="fa fa-plus"></span>
       <span role="tooltip" data-translate="">ZoomIn</span>
     </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)">
+    <button class="btn btn-default" type="submit" data-ng-click="zoom(map,-1)"
+            aria-label="{{'ZoomOut' | translate}}">
       <span class="fa fa-minus"></span>
       <span role="tooltip" data-translate="">ZoomOut</span>
     </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)">
+    <button class="btn btn-default" type="submit" data-ng-click="zoomToMaxExtent(map)"
+            aria-label="{{'ZoomToMapMaxExtent' | translate}}">
       <span class="fa fa-arrows-alt"></span>
       <span role="tooltip" data-translate="">ZoomToMapMaxExtent</span>
     </button>
     <button class="btn btn-default" type="submit"
             data-ng-if="is3DModeAllowed"
-            data-ng-click="switch2D3D(map)">
+            data-ng-click="switch2D3D(map)"
+            aria-label="{{'switchFrom2DTo3D' | translate}}">
       <span class="fa fa-cube"
             data-ng-class="is3dEnabled ? 'fa-cube' : 'fa-square-o'"/>
       <span role="tooltip" data-translate="">switchFrom2DTo3D</span>
@@ -102,7 +120,7 @@
             graticule-ogc-service="graticuleOgcService"></button>
   </div>
 
-
+  <!-- Add layers -->
   <div class="panel panel-default panel-tools"
        ng-show="activeTools.addLayers">
     <div class="panel-heading">
@@ -117,19 +135,23 @@
       <tabset class="info-tabset">
 
         <tab heading="{{'addLayerFromMaps' | translate}}"
-             active="addLayerTabs.maps">
+             active="addLayerTabs.maps"
+             role="tab">
           <br/>
           <div data-gn-search-layer-for-map="map" data-mode="map"></div>
         </tab>
 
         <tab heading="{{'SearchLayer' | translate}}"
-             active="addLayerTabs.search">
+             active="addLayerTabs.search"
+             role="tab">
           <br/>
           <div data-gn-search-layer-for-map="map"></div>
         </tab>
 
         <tab heading="{{'addLayerFromServices' | translate}}"
-             active="addLayerTabs.services">
+             active="addLayerTabs.services"
+             role="tab">
+          <br/>   
           <div gn-wms-import="wms"
                gn-wms-import-map="map"
                gn-wms-import-url="addLayerUrl.wms"
@@ -144,7 +166,8 @@
                services-list-from-catalog="true"></div>
         </tab>
         <tab heading="{{'addLayerFromFiles' | translate}}"
-             active="addLayerTabs.kml">
+             active="addLayerTabs.kml"
+             role="tab">
           <label>{{'LayerKML' | translate}}</label>
           <div gn-kml-import="" gn-kml-import-map="map"></div>
         </tab>
@@ -152,7 +175,7 @@
     </div>
   </div>
 
-
+  <!-- Manage layers -->
   <div class="panel panel-default panel-tools"
        ng-show="activeTools.layers">
     <div class="panel-heading">
@@ -176,7 +199,21 @@
     </div>
   </div>
 
+  <!-- Legend -->
+  <div class="panel panel-default panel-tools"
+       ng-show="activeTools.legend">
+    <div class="panel-heading">
+      <h3>{{'mapLegend' | translate}}
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.legend" gi-btn>
+          &times;
+        </button>
+      </h3>
+    </div>
+    <div class="panel-carousel" gn-legend-panel="map"></div>
+  </div>
 
+  <!-- Filter data -->
   <div class="panel panel-default panel-tools gn-data-filter-view"
        ng-show="activeTools.filter">
     <div class="panel-heading">
@@ -188,11 +225,12 @@
       </h3>
     </div>
     <div class="panel-body">
+      <p translate="" class="text-muted">filterDataDescription</p>
       <div data-gn-data-filter-view="map"/>
     </div>
   </div>
 
-
+  <!-- Maps -->
   <div class="panel panel-default panel-tools"
        ng-show="activeTools.contexts">
     <div class="panel-heading">
@@ -208,7 +246,6 @@
     </div>
   </div>
 
-
   <!--Measure Info Panel-->
   <div class="panel panel-default panel-tools"
        ng-show="mInteraction.active">
@@ -220,9 +257,9 @@
         </button>
       </h3>
     </div>
-    <div class="panel-body panel-sm">
+    <div class="panel-body">
       <div class="gn-measure-text">
-        <div class="alert alert-warning hidden-print" translate>measure_instruction</div>
+        <div class="text-muted hidden-print" translate>measure_instruction</div>
         <dl class="dl-horizontal">
           <dt>{{'Distance' | translate}}</dt>
           <dd>{{measureObj.distance | measure}}</dd>
@@ -232,7 +269,6 @@
       </div>
     </div>
   </div>
-
 
   <!--Draw Panel-->
   <div class="panel panel-default panel-tools"
@@ -251,7 +287,7 @@
     </div>
   </div>
 
-
+  <!-- Print -->
   <div class="panel panel-default panel-tools"
        ng-show="activeTools.print">
     <div class="panel-heading">
@@ -279,14 +315,17 @@
       </h3>
     </div>
     <div class="panel-body">
+      <p translate="" class="text-muted">WPSDescription</p>
       <tabset class="info-tabset">
         <tab heading="{{'wpsByUrl' | translate}}"
-             active="wpsTabs.byUrl">
+             active="wpsTabs.byUrl"
+             role="tab">
           <br/>
           <gn-wps-url-discovery wps-link="selectedWps"/>
         </tab>
         <tab heading="{{'wpsRecent' | translate}}"
-             active="wpsTabs.recent">
+             active="wpsTabs.recent"
+             role="tab">
           <br/>
           <gn-wps-recent-list wps-link="selectedWps"/>
         </tab>

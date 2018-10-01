@@ -8,7 +8,7 @@ Feature: Create (draft) editor
         And I enter "{adminUser}" into input field having xpath "//*[@id='inputUsername']"
         And I enter "{adminPassword}" into input field having xpath "//*[@id='inputPassword']"
         And I click on element having css "form > button.btn-primary"
-        And I wait 1 seconds for element having css "div.search-over" to display
+        And I wait 5 seconds for element having css "div.search-over" to display
         
         # Add editor
         Then I navigate to "{endPointToTest}/srv/eng/admin.console#/organization"
@@ -23,7 +23,7 @@ Feature: Create (draft) editor
         And I double click on element having css "div[data-gn-multiselect*='Editor'] option"
         And I wait 3 seconds for element having css "select[data-ng-model='currentSelectionRight'] > option" to display
         When I click on element having id "gn-btn-user-save"
-        And I wait 2 seconds for element having css "div.alert.gn-info" to display
+        And I wait 5 seconds for element having css "div.alert.gn-info" to display
         
         # Add editor 2
         Then I navigate to "{endPointToTest}/srv/eng/admin.console#/organization"
@@ -38,7 +38,7 @@ Feature: Create (draft) editor
         And I double click on element having css "div[data-gn-multiselect*='Editor'] option"
         And I wait 3 seconds for element having css "select[data-ng-model='currentSelectionRight'] > option" to display
         When I click on element having id "gn-btn-user-save"
-        And I wait 2 seconds for element having css "div.alert.gn-info" to display
+        And I wait 5 seconds for element having css "div.alert.gn-info" to display
 
         # Add reviewer
         And I click on element having id "gn-btn-user-add"
@@ -52,7 +52,7 @@ Feature: Create (draft) editor
         And I double click on element having css "div[data-gn-multiselect*='Reviewer'] option"
         And I wait 3 seconds for element having css "select[data-ng-model='currentSelectionRight'] > option" to display
         When I click on element having id "gn-btn-user-save"
-        Then I wait 2 seconds for element having css "div.alert.gn-info" to display
+        Then I wait 5 seconds for element having css "div.alert.gn-info" to display
         
         # Import templates, just in case
         Given I navigate to "{endPointToTest}/srv/eng/admin.console#/metadata"

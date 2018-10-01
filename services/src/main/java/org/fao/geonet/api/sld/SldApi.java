@@ -4,6 +4,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.TextFile;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.TextFileRepository;
 import org.fao.geonet.utils.Xml;
 import org.geonetwork.map.wms.SLDUtil;
@@ -136,13 +137,14 @@ public class SldApi {
     public List<String> getSLD(HttpServletRequest request) {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         TextFileRepository fileRepository = appContext.getBean(TextFileRepository.class);
+        SettingManager settingManager = appContext.getBean(SettingManager.class);
 
         List<TextFile> files = fileRepository.findAll();
         List<String> response = new ArrayList<>(files.size());
         String pathPrefix = request.getContextPath() + request.getServletPath();
         for (TextFile file : files) {
-            response.add(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                + pathPrefix + "/api/tools/ogc/sld/" + file.getId() + ".xml");
+            response.add(
+                settingManager.getNodeURL() + "api/tools/ogc/sld/" + file.getId() + ".xml");
         }
         return response;
 
@@ -187,6 +189,7 @@ public class SldApi {
         try {
             ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
             TextFileRepository fileRepository = appContext.getBean(TextFileRepository.class);
+            SettingManager settingManager = appContext.getBean(SettingManager.class);
 
             HashMap<String, String> hash = SLDUtil.parseSLD(new URL(serverURL), layers);
 
@@ -209,8 +212,7 @@ public class SldApi {
             fileRepository.save(sld);
 
             String pathPrefix = request.getContextPath() + request.getServletPath();
-            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                + pathPrefix + "/api/tools/ogc/sld/" + sld.getId() + ".xml";
+            String url = settingManager.getNodeURL() + "api/tools/ogc/sld/" + sld.getId() + ".xml";
 
             return url;
         } catch (Exception e) {

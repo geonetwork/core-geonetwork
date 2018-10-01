@@ -4,7 +4,17 @@
       class="list-group-item">
     <h5>{{layer.get('label')}}</h5>
     <p>
-      <img ng-src="{{layer.get('legend')}}"/>
+      <img ng-src="{{layer.get('legend')}}"
+           aria-label="{{layer.get('label')}} {{'mapLegend' | translate}}"/>
     </p>
+    <h6 ng-if="layer.get('attribution')">
+      <span data-translate="">Attribution</span>
+      <em>{{layer.get('attribution')}}</em>
+    </h6>
+  </li>
+  <li data-ng-if="(layers | gnReverse | filter:layerFilterFn).length == 0"
+      class="list-group-item">
+    <span data-translate="">noLayersFound</span>
   </li>
 </ul>
+

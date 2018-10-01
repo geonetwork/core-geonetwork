@@ -25,6 +25,8 @@ package org.fao.geonet.kernel.setting;
 
 import org.fao.geonet.ApplicationContextHolder;
 
+import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
+
 public class SettingInfo {
 
     public String getSiteName() {
@@ -82,10 +84,10 @@ public class SettingInfo {
 
         sb.append(host);
 
-        if (port != null) {
-            sb.append(":");
-            sb.append(port);
-        }
+		if (isPortRequired(protocol, port + "")) {
+			sb.append(":");
+			sb.append(port);
+		}
 
         return sb.toString();
     }

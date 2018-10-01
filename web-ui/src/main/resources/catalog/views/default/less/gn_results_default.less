@@ -104,7 +104,7 @@ ul.gn-resultview {
   }
   .gn-md-abstract {
     cursor: pointer;
-    color: @gray-light;
+    color: @gray-darker;
   }
   .gn-md-abstract.ellipsis:after {
     background: none;
@@ -173,6 +173,96 @@ ul.gn-resultview {
       display: block;
       float: left;
       margin-left: 18px;
+    }
+  }
+  li.gn-list {
+    .gn-md-title {
+      h1 {
+        line-height: 1.3em;
+        font-size: 20px;
+        margin-top: 0;
+        padding-top: 5px;
+        a {
+          color: #333;
+          &:hover {
+            color: #000;
+          }
+          .fa {
+            display: inline;
+          }
+        }
+        .md-title {
+          display: block;
+          float: right;
+          width: calc(~"100% - 50px");
+        }
+      }
+    }
+    .gn-md-category {
+      a {
+        margin-left: 5px;
+      }
+    }
+    .gn-md-logo {
+      margin-top: 5px;
+    }
+    .gn-md-thumbnail {
+      border-radius: 0;
+      margin-top: 5px;
+    }
+    .gn-status {
+      position: relative;
+      border: 0;
+      padding: 0;
+      margin-top: 5px;
+      top: auto;
+      left: auto;
+      transform: none;
+      font-weight: 400;
+      font-size: 95%;
+      text-transform: uppercase;
+      float: left;
+      color: darken(@brand-info, 25%);
+    }
+    .gn-status-completed {
+      color: darken(@brand-success, 20%);
+    }
+    .gn-status-historicalArchive {
+      color: darken(@brand-warning, 20%);
+    }
+    .gn-status-obsolete {
+      color: darken(@brand-danger, 20%);
+    }
+    .gn-md-abstract {
+      p {
+        font-size: 1em;
+        color: @text-muted;
+        &:empty {
+          display: none;
+        }
+      }
+      address {
+        margin-bottom: 5px;
+      }
+      .collapse-text-toggle {
+        columns: @brand-primary;
+      }
+    }    
+    .gn-md-links {
+      background: 0;
+      margin-top: 10px;
+      border-bottom: 1px solid @list-group-border;
+      padding-bottom: 10px;
+      line-height: 1em;
+      .btn {
+        margin-right: 5px;
+        .caret {
+          margin-left: 3px;
+        }
+      }
+    }
+    &:hover {
+      background-color: rgba(240, 240, 240, 0.5)
     }
   }
 }
