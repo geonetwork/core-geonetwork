@@ -72,6 +72,7 @@ import io.swagger.annotations.ApiOperation;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
+import java.util.stream.Collectors;
 
 @RequestMapping(value = {
     "/api/users",
@@ -162,7 +163,9 @@ public class TransferApi {
             if (myProfile == Profile.Administrator) {
                 userGroups = userGroupRepository.findAll();
             } else {
-                userGroups  = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+                List<Integer> myGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()))
+                        .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
+                userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
             }
 
             for (UserGroup ug : userGroups) {
