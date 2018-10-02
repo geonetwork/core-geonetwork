@@ -65,8 +65,8 @@
   <xsl:template match="simpledc"
                 mode="index">
     <!-- Main variables for the document -->
-    <xsl:variable name="identifier" as="xs:string"
-                  select="dc:identifier"/>
+    <xsl:variable name="identifier" as="xs:string?"
+                  select="dc:identifier[1]"/>
 
     <!-- Create a first document representing the main record. -->
     <doc>

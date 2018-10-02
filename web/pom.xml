@@ -553,16 +553,6 @@
       <artifactId>schema-iso19115-3</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19110</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-dublin-core</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
