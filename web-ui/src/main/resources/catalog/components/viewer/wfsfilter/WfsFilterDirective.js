@@ -427,6 +427,7 @@
           scope.getMore = function(field) {
             indexObject.getFacetMoreResults(field).then(function(response) {
               field.values = response.facets[0].values;
+              field.more = response.facets[0].more;
             });
           };
 
