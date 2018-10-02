@@ -1,0 +1,20 @@
+@sxt-base-color-dark: #2F6383;
+@sxt-base-color: lighten(@sxt-base-color-dark, 20%);
+@sxt-base-color: #4BA2D9;
+@sxt-base-color-light: lighten(@sxt-base-color-dark, 28%);
+@sxt-base-color-light: #81BEE4;
+@sxt-font-color: black;
+
+.gn-metadata-view-groovy .md-keywords {
+  ul.md-value-list {
+    display: none;
+    &[data-thesaurus-code="geonetwork.thesaurus.external.theme.inspire-theme"],
+    &[data-thesaurus-code="geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme"],
+    &[data-thesaurus-code="geonetwork.thesaurus.local.theme.sextant-theme"],
+    &[data-thesaurus-code="geonetwork.thesaurus.external.parameter.NVS.A05"],
+    &[data-thesaurus-code="geonetwork.thesaurus.local.theme.atlantos_element"],
+    &[data-thesaurus-code=""] {
+      display: initial;
+    }
+  }
+}

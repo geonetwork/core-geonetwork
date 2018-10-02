@@ -1,7 +1,7 @@
-    <ul class="container-list">
-        <li fmt-repeat="(type, words) in keywords">
-            <ul class="md-value-list nocolon">
-                <li fmt-repeat="word in words">{{word}}</li>
+    <ul class="container-list md-keywords">
+        <li fmt-repeat="(type, keywordProps) in keywords">
+            <ul class="md-value-list nocolon" data-thesaurus-code="{{keywordProps.thesaurusId}}">
+                <li fmt-repeat="word in keywordProps.words">{{word}}</li>
             </ul>
         </li>
     </ul>
