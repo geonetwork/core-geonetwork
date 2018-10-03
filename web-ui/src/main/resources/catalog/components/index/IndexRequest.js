@@ -293,7 +293,7 @@
       any: this.requestParams.any,
       params: this.requestParams.qParams,
       geometry: this.requestParams.geometry
-    }, aggs);
+    }, aggs, false, true);
   };
 
   geonetwork.gnIndexRequest.prototype.searchQuiet =
@@ -325,11 +325,11 @@
    * @return {string} the updated url
    */
   geonetwork.gnIndexRequest.prototype.search_ =
-      function(qParams, aggs, quiet) {
+      function(qParams, aggs, quiet, doNotSaveParams) {
 
     var params = this.buildESParams(qParams, aggs);
 
-    this.reqParams = params;
+    if (!doNotSaveParams) this.reqParams = params;
 
     return this.$http.post(this.ES_URL, params).then(angular.bind(this,
         function(r) {
