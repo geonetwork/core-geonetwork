@@ -1806,8 +1806,9 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
     <helper relAtt="uom">
-      <option title="Arc seconds (North)">Arc seconds (North)</option>
-      <option title="meter">meters</option>
+      <option title="Arc second">Arc second</option>
+      <option title="Arc minute">Arc minute</option>
+      <option title="meter">meter</option>
       <option title="degree">degree</option>
     </helper>
     <!--<helper relAtt="uom">
