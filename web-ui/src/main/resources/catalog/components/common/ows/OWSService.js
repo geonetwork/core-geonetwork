@@ -318,7 +318,7 @@
                       var xfsCap = parseWFSCapabilities(data);
 
                       if (!xfsCap || xfsCap.exception != undefined) {
-                        defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                        defer.reject({msg: $translate.instant('wfsGetCapabilitiesFailed'),
                           owsExceptionReport: xfsCap});
                       } else {
                         defer.resolve(xfsCap);
