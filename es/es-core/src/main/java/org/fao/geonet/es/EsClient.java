@@ -42,10 +42,7 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -62,8 +59,6 @@ import java.util.Map;
  * Client to connect to Elasticsearch
  */
 public class EsClient implements InitializingBean {
-    private static Logger LOGGER =  LoggerFactory.getLogger("geonetwork.harvest.wfs.features");
-
     private static EsClient instance;
 
     private JestClient client;
@@ -263,12 +258,12 @@ public class EsClient implements InitializingBean {
                         return token.get("token").getAsString();
                     }
                 }
-                return fieldValue;
+                return "";
             } else {
-                return fieldValue;
+                return "";
             }
         } catch (Exception ex) {
-            return fieldValue;
+            return "";
         }
     }
 
