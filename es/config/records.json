@@ -2,6 +2,12 @@
   "settings": {
     "index": {
       "analysis": {
+        "tokenizer": {
+          "pathSextantThemes": {
+            "type": "path_hierarchy",
+            "delimiter": "/"
+          }
+        },
         "analyzer": {
           "synInspireAnnexes": {
             "tokenizer": "keyword",
@@ -25,6 +31,9 @@
               "lowercase",
               "synSextantThemes"
             ]
+          },
+          "pathSextantThemes": {
+            "tokenizer": "pathSextantThemes"
           },
           "keepInspireServiceTypes": {
             "tokenizer": "keyword",
@@ -1283,6 +1292,11 @@
         },
         "dateStamp": {
           "type": "date"
+        },
+        "sextantThemePath": {
+          "type": "text",
+          "fielddata": true,
+          "analyzer": "pathSextantThemes"
         },
         "document": {
           "type" : "text",
