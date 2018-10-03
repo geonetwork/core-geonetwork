@@ -1078,7 +1078,7 @@
               }
 
               if (!isLayerAvailableInMapProjection) {
-                errors.push($translate.instant('layerNotAvailableInMapProj'));
+              //  errors.push($translate.instant('layerNotAvailableInMapProj'));
                 console.warn($translate.instant('layerNotAvailableInMapProj'));
               }
 
