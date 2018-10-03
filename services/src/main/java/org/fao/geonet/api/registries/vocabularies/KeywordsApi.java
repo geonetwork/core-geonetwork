@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -632,12 +633,16 @@ public class KeywordsApi {
         // Upload RDF file
         Path rdfFile = null;
         String fname = null;
+        File tempDir = null;
 
         if (fileUpload) {
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus file: " + file.getOriginalFilename());
 
-            File convFile = new File(file.getOriginalFilename());
+            tempDir = Files.createTempDirectory("thesaurus").toFile();
+
+            Path tempFilePath = tempDir.toPath().resolve(file.getOriginalFilename());
+            File convFile = tempFilePath.toFile();
             file.transferTo(convFile);
 
             rdfFile = convFile.toPath();
@@ -648,6 +653,7 @@ public class KeywordsApi {
             throw new MissingServletRequestParameterException("Thesaurus source not provided", "file");
         }
 
+        try {
         if (StringUtils.isEmpty(fname)) {
             throw new Exception("File upload from URL or file return null");
         }
@@ -684,6 +690,11 @@ public class KeywordsApi {
 
         return String.format("Thesaurus '%s' loaded in %d sec.",
             fname, duration);
+        } finally {
+            if (tempDir != null) {
+                FileUtils.deleteQuietly(tempDir);
+            }
+        }
     }
 
 
