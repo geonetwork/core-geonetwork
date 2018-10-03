@@ -49,8 +49,12 @@
     '$rootScope',
     '$location',
     'gnSearchLocation',
+
+    // Sextant specific dependancies
+    'gnGlobalSettings',
+    '$http',
     function($q, gnMap, gnOwsContextService, gnViewerSettings, $rootScope,
-             $location, gnSearchLocation) {
+             $location, gnSearchLocation, gnGlobalSettings, $http) {
 
       var mapParams = {};
       if(gnSearchLocation.isMap()) {
@@ -169,15 +173,25 @@
 
             // SPECIFIC SEXTANT
             // keep backwards compat with these params
+            var logUrl = gnGlobalSettings.gnUrl + '../deprecated.params.log';
             if (gnViewerSettings.owscontext) {
               console.warn('Url parameter usage "catalog.search?owscontext" is deprecated.\nPlease use catalog.search#/map?owscontext= instead.');
               mapParams.owscontext = gnViewerSettings.owscontext;
+              $http.post(logUrl, JSON.stringify({
+                location: $location.absUrl(),
+                owscontext: gnViewerSettings.owscontext
+              }));
             }
             if (gnViewerSettings.wmsurl && gnViewerSettings.layername) {
               console.warn('Url parameter usage "catalog.search?wmsurl=...&layername=..." is deprecated.\nPlease use catalog.search#/map?wmsurl=...&layername=... instead.');
               mapParams.wmsurl = gnViewerSettings.wmsurl;
               mapParams.layername = gnViewerSettings.layername;
               mapParams.layergroup = gnViewerSettings.layergroup;
+              $http.post(logUrl, JSON.stringify({
+                location: $location.absUrl(),
+                wmsurl: gnViewerSettings.wmsurl,
+                layername: gnViewerSettings.layername
+              }));
             }
             // end specific sextant
 
