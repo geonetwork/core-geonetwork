@@ -207,9 +207,12 @@ div.gn, div.g, * {
     background: @sxt-button-color-light;
     color: white;
   }
-  &.disabled, &[disabled], &.disabled:focus, &[disabled]:focus {
-    background: @sxt-button-color-light;
-    color: white;
+  &.disabled, &[disabled] {
+    &, &:hover, &:active, &:focus {
+      background: @sxt-button-color-disabled;
+      color: white;
+      opacity: 1;
+    }
   }
 }
 [sxt-main-viewer] .sxt-btn-group {
@@ -454,9 +457,6 @@ div.gn, div.g, * {
     transform: translate(-50%, 0%);
     box-shadow: @sxt-shadow;
     border-radius: 2px;
-    &[disabled] {
-      background: @sxt-button-color-light;
-    }
   }
 }
 .sxt-center-panel {
