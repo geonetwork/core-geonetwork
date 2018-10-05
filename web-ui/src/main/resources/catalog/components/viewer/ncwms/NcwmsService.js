@@ -299,7 +299,7 @@
        * @param {string} legendUrl
        * @return {string}
        */
-      this.updateLengendUrl = function(legendUrl, params) {
+      this.updateLegendUrl = function(legendUrl, params) {
         if(!legendUrl) return;
 
         var parts = legendUrl.split('?');

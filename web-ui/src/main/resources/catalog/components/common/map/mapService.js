@@ -739,7 +739,6 @@
               attributionUrl: options.attributionUrl,
               label: options.label,
               group: options.group,
-              isNcwms: options.isNcwms,
               advanced: options.advanced,
               minResolution: options.minResolution,
               maxResolution: options.maxResolution,
@@ -801,6 +800,7 @@
                     msg: msg
                   });
                 });
+
             return olLayer;
           },
 
@@ -1288,6 +1288,7 @@
                 label: layerInfo.name
               }
               );
+
               map.addLayer(layer);
               return layer;
             }
