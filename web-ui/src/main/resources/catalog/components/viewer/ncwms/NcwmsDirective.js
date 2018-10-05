@@ -230,7 +230,7 @@
                 scope.elevationMax = parseFloat(parts[1]);
                 scope.elevRange =
                     scope.elevationMin.toFixed(1) + elevation.units + ' / ' +
-                    scope.elevationMax.toFixed(1) + elevation.units
+                    scope.elevationMax.toFixed(1) + elevation.units;
 
                 // initial values
                 parts = scope.params.ELEVATION.split('/');
@@ -248,8 +248,8 @@
               if (scope.isLayerOceanotron()) {
                 parts = scope.params.TIME.split('/');
                 scope.ncTime.value = {
-                    from: moment(parts[0]).format('DD-MM-YYYY'),
-                    to: moment(parts[1]).format('DD-MM-YYYY')
+                  from: moment(parts[0]).format('DD-MM-YYYY'),
+                  to: moment(parts[1]).format('DD-MM-YYYY')
                 };
               }
             }

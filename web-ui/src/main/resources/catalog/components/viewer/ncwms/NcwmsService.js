@@ -138,8 +138,8 @@
         var palettes = this.parseStyles(layer);
 
         var times = layer.get('time').values;
-        var from = moment(times[0]).toISOString();
         var to = moment(times[times.length - 1]).toISOString();
+        var from = moment(to).subtract(2, 'days').toISOString();
 
         var elevParts = layer.get('elevation').values[0].split('/');
 
