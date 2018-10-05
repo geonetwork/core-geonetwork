@@ -160,7 +160,7 @@
                 <i class="fa fa-anchor fa-fw"></i>
                 <span translate>ncwms</span>
               </tab-heading>
-              <div class="panel panel-default panel-ncwms-container" ng-if="active.NCWMS">
+              <div class="panel panel-default panel-ncwms-container ncwms-root" ng-if="active.NCWMS">
                 <div class="panel-heading">{{active.NCWMS.get('label')}}</div>
                 <div gn-ncwms-transect map="map" layer="active.NCWMS"></div>
               </div>
