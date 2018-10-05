@@ -963,12 +963,20 @@
                       units: dimension.units,
                       values: dimension.values.split(',')
                     });
+
+                    if (dimension.default) {
+                      layer.getSource().updateParams({ ELEVATION: dimension.default });
+                    }
                   }
                   if (dimension.name == 'time') {
                     layer.set('time', {
                       units: dimension.units,
                       values: dimension.values.split(',')
                     });
+
+                    if (dimension.default) {
+                        layer.getSource().updateParams({ TIME: dimension.default });
+                    }
                   }
                 }
               }

@@ -238,20 +238,20 @@
                   low: parseFloat(parts[0]),
                   high: parseFloat(parts[1])
                 };
-              } else {
-                scope.params.ELEVATION = elevation.values[0];
               }
             }
 
             // time
             var time = scope.layer.get('time');
-            if (time && scope.isLayerOceanotron()) {
+            if (time) {
               // initial values
-              parts = scope.params.TIME.split('/');
-              scope.ncTime.value = {
-                from: moment(parts[0]).format('DD-MM-YYYY'),
-                to: moment(parts[1]).format('DD-MM-YYYY')
-              };
+              if (scope.isLayerOceanotron()) {
+                parts = scope.params.TIME.split('/');
+                scope.ncTime.value = {
+                    from: moment(parts[0]).format('DD-MM-YYYY'),
+                    to: moment(parts[1]).format('DD-MM-YYYY')
+                };
+              }
             }
 
             scope.updateLayerParams();
