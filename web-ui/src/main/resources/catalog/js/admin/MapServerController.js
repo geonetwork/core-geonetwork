@@ -110,12 +110,17 @@
       };
 
       $scope.saveNewPassword = function() {
-        $http.post('../api/mapservers/' +
-            $scope.mapserverSelected.id + '/auth', null, {params:
-                  {
+        var data = $.param( {
                     username: $scope.resetUsername,
                     password: $scope.resetPassword
-                  }})
+        });
+
+        $http.post('../api/mapservers/' +
+          $scope.mapserverSelected.id + '/auth',
+          data,
+          {
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          })
             .success(function(data) {
               $scope.resetPassword = null;
               $('#passwordResetModal').modal('hide');
