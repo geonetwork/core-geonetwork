@@ -122,7 +122,7 @@
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
-        
+
         // -- check if projection is available in ol
         if (!ol.proj.get(projection)){
          console.warn('Projection '+ projection +' is not available, map will be projected in a spherical mercator projection');
@@ -446,6 +446,14 @@
           resourceList.layer.push(params);
         });
 
+        function getNonProxifiedUrl(url) {
+          if (url.indexOf('../../proxy') === 0) {
+            return decodeURIComponent(url.replace('../../proxy?url=', ''));
+          } else {
+            return url;
+          }
+        }
+
         map.getLayers().forEach(function(layer) {
           var source = layer.getSource();
           var url = '', version = null;
@@ -459,14 +467,14 @@
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             version = source.getParams().VERSION;
-            url = source.getUrl();
+            url = getNonProxifiedUrl(source.getUrl());
           } else if (source instanceof ol.source.TileWMS ||
               source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
-            url = layer.get('url');
+            url = getNonProxifiedUrl(layer.get('url'));
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
-            url = layer.get('urlCap');
+            url = getNonProxifiedUrl(layer.get('urlCap'));
           } else {
             return;
           }
