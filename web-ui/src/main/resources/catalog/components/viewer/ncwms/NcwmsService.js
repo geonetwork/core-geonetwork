@@ -83,6 +83,7 @@
         return $http.get(url)
           .then(function(response) {
             var json = response.data;
+
             // metadata object was received: layer is a ncwms/oceanotron
             if (angular.isObject(json)) {
               layer.set('advancedMetadata', json);
@@ -98,7 +99,7 @@
                 return this.initOceanotronParams(layer);
               }
             }
-            // build the metadata object ourselves to handle wms params
+            // put a dummy metadata object
             else {
               layer.set('advancedType', LAYERTYPE_WMS);
               layer.set('advancedMetadata', {
@@ -108,9 +109,10 @@
           }.bind(this));
       };
 
-      // dates are reformatted from iso8601 string to epoch int
       this.formatNcwmsAvailableDates = function(layer) {
         if (!layer.get('time')) { return; }
+
+        // Oceanotron: convert date range (start/end) to an array of all days
         if (this.isLayerOceanotron(layer)) {
           var dates = [];
           var dateParts = layer.get('time').values[0].split('/');
@@ -121,16 +123,19 @@
             current.add(1, 'day');
           }
           layer.get('time').values = dates;
-        } else {
+        }
+        // NCWMS: dates are reformatted from iso8601 string to epoch int
+        else {
           layer.get('time').values = layer.get('time').values.map(function(date) {
             return moment(date).valueOf();
           });
         }
-      }
+      };
 
+      // returns a promise
       this.initOceanotronParams = function(layer) {
         var metadata = layer.get('advancedMetadata');
-        var palettes = this.parseStyles(metadata);
+        var palettes = this.parseStyles(layer);
 
         var times = layer.get('time').values;
         var from = moment(times[0]).toISOString();
@@ -143,7 +148,7 @@
           ELEVATION: elevParts[0] + '/' + elevParts[1],
           TIME: from + '/' + to,
           TIMEUNIT: layer.get('time').units
-        })
+        });
 
         var promise1 = this.getOceanotronInfo(layer).then(function(type) {
           layer.set('oceanotronType', type);
@@ -156,25 +161,35 @@
         return $q.all([promise1, promise2]);
       };
 
-      this.parseStyles = function(layerMetadata) {
+      // produces an array of available styles
+      this.parseStyles = function(layer) {
         var t = {};
-        if (angular.isArray(layerMetadata.supportedStyles) &&
-          layerMetadata.supportedStyles.length) {
-          angular.forEach(layerMetadata.supportedStyles, function(s) {
-            if (s === 'contour') {
-              t[s] = s; // TODO ????? + '/' + p;
-            } else if (angular.isArray(layerMetadata.palettes)) {
-              angular.forEach(layerMetadata.palettes, function(p) {
-                  t[p] = s + '/' + p;
+
+        if(this.isLayerNcwms(layer)) {
+          var metadata = layer.get('advancedMetadata');
+          if (angular.isArray(metadata.supportedStyles) &&
+              metadata.supportedStyles.length) {
+              angular.forEach(metadata.supportedStyles, function (s) {
+                  if (s === 'contour') {
+                      t[s] = s; // TODO ????? + '/' + p;
+                  } else if (angular.isArray(metadata.palettes)) {
+                      angular.forEach(metadata.palettes, function (p) {
+                          t[p] = s + '/' + p;
+                      });
+                  }
               });
-            }
+          }
+          else {
+              metadata.palettes.forEach(function (p) {
+                  t[p] = p;
+              });
+          }
+        } else if (layer.get('style')) {
+          layer.get('style').forEach(function(s) {
+            t[s.Title] = s.Name;
           });
         }
-        else {
-          layerMetadata.palettes.forEach(function(p) {
-            t[p] = p;
-          });
-        }
+
         return t;
       };
 
@@ -335,7 +350,7 @@
         }).join(',');
 
         return ids;
-      }
+      };
 
       /**
        * @ngdoc method
@@ -398,16 +413,16 @@
 
         console.warn('Cannot request a service URL on a non-Ncwms layer');
         return $q.resolve();
-      }
+      };
 
       this.isLayerNcwms = function(layer) {
         return layer.get('advancedType') === LAYERTYPE_WMS_NCWMS ||
         layer.get('advancedType') === LAYERTYPE_WMS_OCEANOTRON;
-      }
+      };
 
       this.isLayerOceanotron = function(layer) {
         return layer.get('advancedType') === LAYERTYPE_WMS_OCEANOTRON;
-      }
+      };
 
       // returns an iso8601 formatted string
       this.getFullTimeValue = function(layer, inputDate) {

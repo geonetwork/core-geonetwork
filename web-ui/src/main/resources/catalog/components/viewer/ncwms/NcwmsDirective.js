@@ -203,18 +203,18 @@
                 from: undefined,
                 to: undefined
               };
-              scope.palettes = gnNcWms.parseStyles(layerMetadata);
 
               // make sure there is a value for LOGSCALE
               if (scope.params.LOGSCALE === undefined) {
                 scope.params.LOGSCALE = 'false';
               }
-
-              // Set default STYLES= to WMS
-              scope.palette = {
-                value: layerMetadata.defaultPalette || layerMetadata.palettes[0]
-              }
             }
+
+            // styles: init array & set default value
+            scope.palettes = gnNcWms.parseStyles(layer);
+            scope.palette = {
+              value: layerMetadata.defaultPalette || ''
+            };
 
             // elevation (zaxis)
             var elevation = scope.layer.get('elevation');
