@@ -52,7 +52,7 @@
         params: {
           sortBy: 'popularity',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
@@ -68,7 +68,7 @@
         params: {
           sortBy: 'changeDate',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
@@ -225,6 +225,15 @@
           $scope.openRecord(prevRecordId);
         }
       };
+
+      /**
+       * Toggle the list types on the homepage
+       * @param  {String} type Type of list selected
+       */
+      $scope.toggleListType = function(type) {
+        $scope.type = type;
+      };
+      // $scope.type = 'blocks';
 
       $scope.infoTabs = {
         lastRecords: {
