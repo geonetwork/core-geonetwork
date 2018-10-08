@@ -202,7 +202,7 @@
 
     <!-- For some fields, always display attributes.
     TODO: move to editor config ? -->
-    <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
+    <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName|gmx:Anchor) > 0"/>
 
     <!-- TODO: Support gmd:LocalisedCharacterString -->
     <xsl:variable name="monoLingualValue" select="gco:CharacterString|gmx:Anchor|gco:Integer|gco:Decimal|
