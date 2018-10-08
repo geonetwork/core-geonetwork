@@ -125,7 +125,15 @@ public class ApiUtils {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
-        AbstractMetadata metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+        AbstractMetadata metadata = null;
+        try {
+            metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+        } catch (IncorrectResultSizeDataAccessException e){
+            Log.warning(Geonet.GEONETWORK, String.format(
+                "More than one record found with UUID '%s'. Error is '%s'.",
+                uuidOrInternalId, e.getMessage()));
+        }
+
         if (metadata == null) {
             try {
                 metadata = metadataRepository.findOne(uuidOrInternalId);
