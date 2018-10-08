@@ -45,18 +45,36 @@
     <for name="gmd:measureDescription" use="textarea"/>
     <for name="gmd:purpose" use="textarea"/>
     <for name="gmd:orderingInstructions" use="textarea"/>
-<for name="gmd:otherConstraints" use="textarea"/>
+    <for name="gmd:otherConstraints" use="textarea"/>
     <for name="gmd:statement" use="textarea"/>
     <for name="gmd:supplementalInformation" use="textarea"/>
     <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
     <for name="gmd:useLimitation" use="textarea"/>
-    <!-- Example configuration to use INSPIRE codelist to set use limitation.
-    This will apply to all views in the editor
+    <!-- Example configuration to use thesaurus to populate a CharacterString field
+    (including multilingual fields).
+
+    eg. INSPIRE codelist to set use limitation. This will apply to all views in the editor
+    1) Set the CharacterString value with the concept value
+    <for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"/>
+    </for>
+
+    2) Use the concept Identifier in the xlink:href attribute.
+    This will automatically use the appropriate substitute depending on the presence
+    or not of the xlink:href. Either a CharacterString or an Anchor is used.
     <for name="gmd:useLimitation"
          use="data-gn-keyword-picker">
       <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
                            data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+    </for>
+
+    3) Use the concept identifier to populate another attribute (not having namespace)
+    <for name="gmd:featureTypes"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="codeSpace"/>
     </for>
     -->
 

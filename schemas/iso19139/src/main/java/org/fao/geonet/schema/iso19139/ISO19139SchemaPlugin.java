@@ -458,6 +458,11 @@ public class ISO19139SchemaPlugin
                 el.setAttribute("href", "", XLINK);
                 return el;
             }
+        } else if (StringUtils.isNotEmpty(parsedAttributeName) &&
+            parsedAttributeName.startsWith(":")) {
+            // eg. :codeSpace
+            el.setAttribute(parsedAttributeName.substring(1), attributeValue);
+            return el;
         } else {
             return super.processElement(el, attributeRef, parsedAttributeName, attributeValue);
         }
