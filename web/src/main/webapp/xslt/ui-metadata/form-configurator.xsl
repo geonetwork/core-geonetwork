@@ -192,6 +192,8 @@
     <xsl:param name="base" as="node()"/>
 
     <xsl:if test="@xpath">
+      <xsl:variable name="config" select="."/>
+
       <!-- Seach any nodes in the metadata matching the XPath.
 
       We could have called saxon-evaluate from here like:
@@ -295,6 +297,7 @@
                                         then $overrideLabel
                                         else ''"/>
                   <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+                  <xsl:with-param name="config" select="$config"/>
                 </saxon:call-template>
               </xsl:when>
               <xsl:otherwise>
@@ -318,6 +321,7 @@
                                         then $overrideLabel
                                         else ''"/>
                     <xsl:with-param name="refToDelete" select="$refToDelete/gn:element"/>
+                    <xsl:with-param name="config" select="$config"/>
                   </saxon:call-template>
                 </xsl:for-each>
               </xsl:otherwise>
