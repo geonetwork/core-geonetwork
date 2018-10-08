@@ -191,7 +191,7 @@ div.gn, div.g, * {
 
 
 .btn-default {
-  &, &.dropdown-toggle, .open &.dropdown-toggle {
+  &, &.dropdown-toggle, .open &.dropdown-toggle, &:focus {
     background: @sxt-button-color;
     color: white;
     border: none;
@@ -203,7 +203,7 @@ div.gn, div.g, * {
     */
   }
   border-radius: 2px;
-  &.active, &:hover, &:focus {
+  &.active, &:hover {
     background: @sxt-button-color-light;
     color: white;
   }
