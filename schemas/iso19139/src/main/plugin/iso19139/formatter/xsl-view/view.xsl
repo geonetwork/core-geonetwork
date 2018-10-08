@@ -806,6 +806,24 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- filename -->
+  <xsl:template mode="render-value"
+                match="gmx:FileName[@src != '']">
+    <xsl:variable name="href" select="@src"/>
+    <xsl:variable name="label" select="."/>
+
+    <xsl:choose>
+      <xsl:when test="ends-with($href, '.jpg') or ends-with($href, '.png') or ends-with($href, '.gif')">
+        <img src="{$href}" title="{$label}" alt="{$label}"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <a href="{$href}">
+          <xsl:value-of select="$label"/>&#160;
+        </a>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <!-- ... URL -->
   <xsl:template mode="render-value"
                 match="gmd:URL">
