@@ -387,6 +387,10 @@
               //Add Info for Requests:
               if (capObj.Request) {
                 layers[i].capRequest = capObj.Request;
+              } 
+              
+              if(!layers[i].version) {
+                layers[i].version = capObj.version;                  
               }
 
               //check layername

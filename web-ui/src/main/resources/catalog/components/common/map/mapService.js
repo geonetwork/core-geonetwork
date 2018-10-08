@@ -1077,17 +1077,14 @@
                   //Default format
                   var vectorFormat = new ol.format.WFS();
               }
-
+              
+              var urlService = url;
+              
               var vectorSource = new ol.source.Vector({
                 format: vectorFormat,
-                loader: function(extent, resolution, projection) {
-                  if (this.loadingLayer) {
-                    return;
-                  }
+                url: function(extent, resolution, projection) {
 
-                  this.loadingLayer = true;
-
-                  var parts = url.split('?');
+                  var parts = urlService.split('?');
 
                   var urlGetFeature = gnUrlUtils.append(parts[0],
                       gnUrlUtils.toKeyValue({
@@ -1095,7 +1092,8 @@
                         request: 'GetFeature',
                         version: getCapLayer.version,
                         srsName: map.getView().getProjection().getCode(),
-                        bbox: extent.join(','),
+                        bbox: extent.join(',') + "," + 
+                          map.getView().getProjection().getCode(),
                         typename: getCapLayer.name.prefix + ':' +
                                    getCapLayer.name.localPart}));
 
@@ -1119,22 +1117,10 @@
                     urlGetFeature = gnGlobalSettings.proxyUrl
                                         + encodeURIComponent(urlGetFeature);
                   }
-
-                  $.ajax({
-                    url: urlGetFeature
-                  })
-                      .done(function(response) {
-                        // TODO: Check WFS exception
-                        vectorSource.addFeatures(vectorFormat.
-                            readFeatures(response));
-                      })
-                      .then(function() {
-                        this.loadingLayer = false;
-                      });
+                  
+                  return urlGetFeature;
                 },
-                strategy: ol.loadingstrategy.bbox,
-                projection: map.getView().getProjection().getCode(),
-                url: url
+                strategy: ol.loadingstrategy.bbox
               });
 
               var extent = null;
