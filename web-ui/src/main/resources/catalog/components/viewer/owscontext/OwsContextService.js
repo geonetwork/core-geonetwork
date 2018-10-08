@@ -446,14 +446,6 @@
           resourceList.layer.push(params);
         });
 
-        function getNonProxifiedUrl(url) {
-          if (url.indexOf('../../proxy') === 0) {
-            return decodeURIComponent(url.replace('../../proxy?url=', ''));
-          } else {
-            return url;
-          }
-        }
-
         map.getLayers().forEach(function(layer) {
           var source = layer.getSource();
           var url = '', version = null;
@@ -467,14 +459,14 @@
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             version = source.getParams().VERSION;
-            url = getNonProxifiedUrl(source.getUrl());
+            url = gnGlobalSettings.getNonProxifiedUrl(source.getUrl());
           } else if (source instanceof ol.source.TileWMS ||
               source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
-            url = getNonProxifiedUrl(layer.get('url'));
+            url = gnGlobalSettings.getNonProxifiedUrl(layer.get('url'));
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
-            url = getNonProxifiedUrl(layer.get('urlCap'));
+            url = gnGlobalSettings.getNonProxifiedUrl(layer.get('urlCap'));
           } else {
             return;
           }

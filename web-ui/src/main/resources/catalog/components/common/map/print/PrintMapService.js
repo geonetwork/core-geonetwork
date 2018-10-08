@@ -234,7 +234,7 @@
               layer.getSource().getUrl() :
               layer.getSource().getUrls()[0];
 
-          url = removeProxyUrl(url);
+          url = gnGlobalSettings.getNonProxifiedUrl(url);
 
           angular.extend(enc, {
             type: 'WMS',
@@ -282,7 +282,7 @@
             url = url.substring(0, url.lastIndexOf("/"));
           }
 
-          url = removeProxyUrl(url);
+          url = gnGlobalSettings.getNonProxifiedUrl(url);
 
           angular.extend(enc, {
             type: 'XYZ',
@@ -369,7 +369,7 @@
             }
           }
 
-          layerUrl = removeProxyUrl(layerUrl);
+          layerUrl = gnGlobalSettings.getNonProxifiedUrl(layerUrl);
 
           angular.extend(enc, {
             type: 'WMTS',
@@ -547,18 +547,5 @@
 
       return literal;
     };
-
-    // Removes the proxy path and decodes the layer url,
-    // so the layer can be printed with MapFish.
-    // Otherwise Mapfish rejects it, due to relative url.
-    var removeProxyUrl = function (url) {
-      if (url.indexOf(gnGlobalSettings.proxyUrl) > -1) {
-        return decodeURIComponent(
-          url.replace(gnGlobalSettings.proxyUrl, ''));
-      } else {
-        return url;
-      }
-    };
-
   }]);
 })();
