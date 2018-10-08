@@ -267,9 +267,9 @@
                             then $valueInPtFreeTextForMainLanguage = ''
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
-                            else normalize-space(gco:CharacterString) = ''"/>
+                            else normalize-space(gco:CharacterString|gmx:Anchor) = ''"/>
 
-      <!-- Removes @nilReason from parents of gmx:Anchor if anchor has @xlink:href attribute filled. -->
+      <!-- TODO ? Removes @nilReason from parents of gmx:Anchor if anchor has @xlink:href attribute filled. -->
       <xsl:variable name="isEmptyAnchor"
                     select="normalize-space(gmx:Anchor/@xlink:href) = ''" />
 
@@ -306,7 +306,7 @@
           import may use this encoding. -->
         <xsl:when test="not($isMultilingual) and
                         $valueInPtFreeTextForMainLanguage != '' and
-                        normalize-space(gco:CharacterString) = ''">
+                        normalize-space(gco:CharacterString|gmx:Anchor) = ''">
           <xsl:element name="{if (gmx:Anchor) then 'gmx:Anchor' else 'gco:CharacterString'}">
             <xsl:copy-of select="gmx:Anchor/@*"/>
             <xsl:value-of select="$valueInPtFreeTextForMainLanguage"/>
@@ -315,7 +315,7 @@
         <xsl:when test="not($isMultilingual) or
                         $excluded">
           <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->
-          <xsl:apply-templates select="gco:CharacterString"/>
+          <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- Add xsi:type for multilingual element. -->
