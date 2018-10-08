@@ -1139,8 +1139,9 @@
                            select="concat('_', $name)"/>
             <xsl:if test="$isDirective">
               <xsl:attribute name="{$type}"/>
+
               <xsl:if test="$directiveAttributes instance of node()+">
-                <xsl:copy-of select="$directiveAttributes/@*"/>
+                <xsl:copy-of select="$directiveAttributes//@*"/>
               </xsl:if>
             </xsl:if>
             <xsl:if test="$tooltip">

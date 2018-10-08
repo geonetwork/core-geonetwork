@@ -185,6 +185,7 @@
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
     <xsl:param name="refToDelete" required="no"/>
+    <xsl:param name="config" required="no"/>
 
     <xsl:variable name="elementName" select="name()"/>
     <xsl:variable name="excluded"
@@ -331,10 +332,23 @@
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
       <xsl:with-param name="type"
-                      select="gn-fn-metadata:getFieldType($editorConfig, name(),
+                      select="if ($config and $config/@use != '')
+                              then $config/@use
+                              else gn-fn-metadata:getFieldType($editorConfig, name(),
         name($theElement))"/>
-      <xsl:with-param name="directiveAttributes"
-                      select="gn-fn-metadata:getFieldDirective($editorConfig, name())"/>
+      <xsl:with-param name="directiveAttributes">
+        <xsl:choose>
+          <xsl:when test="$config and $config/@use != ''">
+            <xsl:element name="directive">
+              <xsl:attribute name="data-directive-name" select="$config/@use"/>
+              <xsl:copy-of select="$config/directiveAttributes/@*"/>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="gn-fn-metadata:getFieldDirective($editorConfig, name())"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
       <xsl:with-param name="name" select="$theElement/gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
       <xsl:with-param name="parentEditInfo"
