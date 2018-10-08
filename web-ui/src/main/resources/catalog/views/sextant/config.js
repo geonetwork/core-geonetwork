@@ -205,6 +205,7 @@
       searchSettings.formatter = {
         defaultUrl: function(md) {
           var url;
+          var uuid = encodeURIComponent(md.getUuid());
 
           // a formatter is specified in the configuration: use it
           // else: determine formatter url based on schema
@@ -214,31 +215,31 @@
               case 'checkpoint-dps':
               case 'medsea':
                 url = 'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' +
-                  searchSettings.metadataFormatter + '&uuid=' + md.getUuid();
+                  searchSettings.metadataFormatter + '&uuid=' + uuid;
                 break;
               case 'emodnet-hydrography':
               case 'emodnet-bathymetry':
-                url = 'md.format.xml?root=div&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + md.getUuid();
+                url = 'md.format.xml?root=div&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + uuid;
                 break;
               case 'seadatanet':
-                url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+                url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + uuid;
                 break;
               case 'emodnet':
-                url = 'md.format.xml?xsl=emodnet&uuid=' + md.getUuid();
+                url = 'md.format.xml?xsl=emodnet&uuid=' + uuid;
                 break;
               case 'sextant':
-                url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+                url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
                 break;
               default:
                 url = 'md.format.xml?xsl=' + searchSettings.metadataFormatter +
-                  '&uuid=' + md.getUuid();
+                  '&uuid=' + uuid;
             }
           } else if(md.getSchema() == 'iso19139.sdn-product') {
-            url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+            url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + uuid;
           } else if(md.getSchema() == 'iso19139.emodnet.hydrography') {
-            url = 'md.format.xml?xsl=emodnet&uuid=' + md.getUuid();
+            url = 'md.format.xml?xsl=emodnet&uuid=' + uuid;
           } else if(md.getSchema() == 'dublin-core') {
-            url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+            url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
           } else if(md.getSchema() == 'iso19115-3') {
             var view;
             if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
@@ -252,16 +253,16 @@
             }
             url = view ?
               'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' + view +
-              '&uuid=' + md.getUuid() :
-              'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+              '&uuid=' + uuid :
+              'md.format.xml?xsl=sxt_view&uuid=' + uuid;
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + md.getUuid();
+              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + uuid;
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&view=sdn&uuid=' + md.getUuid();
+              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&view=sdn&uuid=' + uuid;
             } else {
-              url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+              url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
             }
           }
           return url;

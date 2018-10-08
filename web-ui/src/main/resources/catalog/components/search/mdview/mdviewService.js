@@ -241,7 +241,7 @@
 
         return promiseMd.then(function(md) {
           if (angular.isString(fUrl)) {
-            url = fUrl.replace('{{uuid}}', md.getUuid());
+            url = fUrl.replace('{{uuid}}', encodeURIComponent(md.getUuid()));
           }
           else if (angular.isFunction(fUrl)) {
             url = fUrl(md);

@@ -234,7 +234,7 @@
          * @return {HttpPromise} of the $http get
          */
         getMdObjByUuid: function(uuid, isTemplate) {
-          return $http.get('qi?_uuid=' + uuid + '' +
+          return $http.get('qi?_uuid=' + encodeURIComponent(uuid) + '' +
               '&fast=index&_content_type=json&buildSummary=false' +
               (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
               then(function(resp) {
