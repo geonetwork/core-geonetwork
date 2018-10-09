@@ -103,6 +103,10 @@
       <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
       <constructor-arg value="loc-pol-"/>
     </bean>
+    <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+      <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+      <constructor-arg value="loc-slo-"/>
+    </bean>
   </util:list>
 
 </beans>

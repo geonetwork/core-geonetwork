@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<strings>
+  <schematron.title>INSPIRE pravidlá</schematron.title>
+  <!-- INSPIRE metadata rules translation / START -->
+  <!-- List of pattern title -->
+  <identification>Identifikácia</identification>
+  <dataidentification>Identifikácia údajov</dataidentification>
+  <serviceidentification>Identifikácia služieb</serviceidentification>
+  <theme>Kľúčové slová a témy INSPIRE</theme>
+  <servicetaxonomy>Taxonomická služba INSPIRE</servicetaxonomy>
+  <geo>Geografická poloha</geo>
+  <temporal>Časový odkaz</temporal>
+  <quality>Kvalita a platnosť</quality>
+  <conformity>Kompatibilita</conformity>
+  <constraints>Obmedzenia prístupu a používania</constraints>
+  <org>Zodpovedná organizácia</org>
+  <metadata>Metaúdaje o metaúdajoch</metadata>
+  <alert.m35>
+    <div>
+      <h2>Názov zdroja chýba</h2>
+    </div>
+  </alert.m35>
+  <report.m35>
+    <div>
+      <h2>Názov zdroja zistený:</h2>
+    </div>
+  </report.m35>
+  <alert.m36>
+    <div><h2>Obsah zdroja chýba</h2><br/><b>Príklad:</b><br/>
+      Súbor údajov obsahuje rozsiahlu topografiu (1: 1.000), ktorá pokrýva celú krajinu.
+    </div>
+  </alert.m36>
+  <report.m36>
+    <div>
+      <h2>Obsah zdroja :</h2>
+    </div>
+  </report.m36>
+  <alert.m37>
+    <div><h2>Typ zdroja neexistuje alebo má neplatnú hodnotu.</h2><br/><b>Pokyny na implementáciu:</b><br/>
+      Hodnoty MD_ScopeCode v rámci smernice (Pozri SC4 v bode 1.2) sú:
+      <ul><li>Súbor údajov pre priestorové súbory údajov;</li><li>Série pre série priestorových súborov údajov;</li><li>Služby pre služby priestorových údajov.</li></ul>
+      Hodnota hierarchyLevel nie je podľa ISO 19115 povinná,
+      ale je povinná na dodržiavanie pravidiel implementácie metaúdajov INSPIRE ((pozri SC2 v bode 1.2).
+    </div>
+  </alert.m37>
+  <report.m37>
+    <div>
+      <h2>Typ zdroja:</h2>
+    </div>
+  </report.m37>
+  <alert.m38>
+    <div><h2>Chýba jedinečný identifikátor zdroja</h2><br/><b>Vykonávacie predpisy</b><br/>
+      Povinné pre súbory údajov a série údajov.
+      <br/><b>Napríklad:</b>
+      527c4cac-070c-4bca-9aaf-92bece7be902
+    </div>
+  </alert.m38>
+  <report.m38>
+    <div>Jedinečný identifikátor zdroja:</div>
+  </report.m38>
+  <report.m38.codespace>
+    <div>Menný priestor jedinečného identifikátora zdroja:</div>
+  </report.m38.codespace>
+  <alert.m39>
+    <div><h2>Je potrebná tematická kategória INSPIRE</h2><br/>
+      Tematické kategórie uvedené v časti D 2 dokumentu INSPIRE
+      Vykonávacie predpisy pre metaúdaje sú odvodené priamo z tematických kategórií, ktoré sú definované v B.5.27 normy ISO 19115. 
+      INSPIRE Vykonávacie predpisy pre metaúdaje definujú
+      INSPIRE témy údajov, ku ktorým je každá tématická kategória aplikovaná, napr. Administratívne jednotky (I.4) a štatistické jednotky (III.1) sú INSPIRE témy priestorových údajov súvisiacich s kategóriou "hranice".
+      Hodnota prvku metaúdajov 
+      ISO 19115 / ISO 19119 je hodnota , ktorá sa nachádza 
+      v stĺpci "meno" v tabuľke B.5.27 v norme ISO 19115.
+    </div>
+  </alert.m39>
+  <report.m39>
+    <div>Tematická kategória ISO:</div>
+  </report.m39>
+  <alert.m40>
+    <div>
+      <h2>Priestorové údaje INSPIRE sú povinné</h2>
+    </div>
+  </alert.m40>
+  <report.m40>
+    <div>Bola nájdená téma údajov INSPIRE</div>
+  </report.m40>
+  <alert.m41>
+    <div>
+      <h2>INSPIRE - Geografické ohraničenie je povinné</h2>
+      <br/>
+      <ul>
+        <li>Povinné pre súbory sériových a priestorových údajov.</li>
+        <li>Podmienené pre služby priestorových údajov: Keď sa dá určiť 
+          priestorový rozsah služby</li>
+      </ul>
+      <b>Vykonávacie predpisy</b>
+      <ul>
+        <li>Existuje toľko ohraničení definujúcich geografickú
+          polohu zdroja ako inštancí
+          identificationInfo[1]/*/extent/*/geographicElement s vlastnosťami 
+          westBoundLongitude, eastBoundLongitude,
+          southBoundLatitude a northBoundLatitude.
+          Štyri súradnice ohraničenia pochádzajú z rovnakej inštancie.
+          </li>
+        <li>Ohraničenie musí byť čo najmenšie.</li>
+        <li>Ak ohraničenie prekročí 180° poludník, potom hodnota 
+          WestBoundLongitude bude väčšia ako hodnota 
+          eastBoundLongitude.</li>
+        <li>Súradnice ohraničenia sú vyjadrené v ľubovoľnom 
+          geografickom súradnicovom referenčnom systéme so základným 
+          poludníkom v Greenwich (pozri SC13 v 1.2).</li>
+      </ul>
+    </div>
+  </alert.m41>
+  <alert.m41.n>
+    <div>NorthBoundLongitude je neplatný alebo má nesprávnu hodnotu</div>
+  </alert.m41.n>
+  <alert.m41.s>
+    <div>SouthBoundLongitude je neplatný alebo má nesprávnu hodnotu</div>
+  </alert.m41.s>
+  <alert.m41.e>
+    <div>EastBoundLongitude je neplatný alebo má nesprávnu hodnotu</div>
+  </alert.m41.e>
+  <alert.m41.w>
+    <div>WestBoundLongitude je neplatný alebo má nesprávnu hodnotu</div>
+  </alert.m41.w>
+  <report.m41.n>
+    <div>NorthBoundLongitude nájdený:</div>
+  </report.m41.n>
+  <report.m41.s>
+    <div>SouthBoundLongitude nájdený:</div>
+  </report.m41.s>
+  <report.m41.e>
+    <div>EastBoundLongitude nájdený:</div>
+  </report.m41.e>
+  <report.m41.w>
+    <div>WestBoundLongitude nájdený:</div>
+  </report.m41.w>
+  <alert.m42>
+    <div><h2>INSPIRE - Časový údaj je povinný</h2>
+      Neexistovala žiadna inštancia časového odkazu.
+      <b>Vykonávacie pokyny</b>
+      <br/>
+      Toto obdobie môže byť vyjadrené v jednej z týchto foriem:
+ - dátum,
+ - rozsah dátumov vyjadrený dátumom začiatku a dátumom ukončenia intervalu,
+ - kombinácia dátumu a rozsahu dátumov.
+      <br/>
+      Alebo referenčný dátum citovaného zdroja (publikácia, posledná revízia alebo vytvorenie).
+      <br/><b>Napríklad:</b>
+      Od 1977-03-10T11:45:30 do 2005-01-15T09:10:00
+    </div>
+  </alert.m42>
+  <alert.m42.creation>
+    <div>MD_Metadata.identificationInfo [1] .MD_Identification.citation.CI_Citation.date deklarovaný ako dátum vytvorenia by sa nemal vyskytovať viac ako raz.  (napr. CI_Date.dateType)</div>
+  </alert.m42.creation>
+  <report.m42.begin>
+    <div>Bol nájdený časový rozsah (začiatok):</div>
+  </report.m42.begin>
+  <report.m42.end>
+    <div>Bol nájdený časový rozsah (koniec): </div>
+  </report.m42.end>
+  <report.m42.publication>
+    <div>Dátum zverejnenia nájdeného zdroja:</div>
+  </report.m42.publication>
+  <report.m42.creation>
+    <div>Bol nájdený dátum zverejnenia zdroja:</div>
+  </report.m42.creation>
+  <report.m42.revision>
+    <div>Bol nájdený dátum revízie zdroja: </div>
+  </report.m42.revision>
+  <alert.m43>
+    <div><h2>INSPIRE - Pôvod zdroja je povinný</h2><br/><ul><li>Povinné pre priestorové údaje a sériu priestorových údajov.</li><li>Neplatí pre služby.</li></ul>
+      In addition to general explanation of the data producer’s knowledge
+      about the lineage of a dataset it is possible to put data quality
+      statements here.
+      <br/>
+      A single ISO 19115 metadata set may comprise more than one set of
+      Implementing instructions quality information, each of them having one or zero lineage
+      statement. There shall be one and only one set of quality information
+      scoped to the full resource and having a lineage statement (See
+      SC6 in 1.2).
+      <br/><b>Example:</b>
+      Dataset has been digitised from the standard 1:5.000 map
+
+    </div>
+  </alert.m43>
+  <report.m43>
+    <div>
+      <h2>Bol nájdený pôvod.</h2>
+    </div>
+  </report.m43>
+  <alert.m44>
+    <div><h2>INSPIRE - Súlad je povinný (in DQ_DomainConsistency.result.DQ_ConformanceResult)</h2><br/><b>Vykonávacie pokyny</b><br/>
+     Prvé dva stupne zhody definované v časti D 5 z
+     vykonávacích predpisov INSPIRE pre mapovanie metaúdajov na 
+      dve hodnoty booleovskej domény podľa normy ISO 19115. Posledná hodnota zodpovedá prípadu, v ktorom nie je v metaúdajoch vyjadrená
+      žiadna zhoda pre príslušnú špecifikáciu.
+      <br/><b>Napríklad:</b>
+     "INSPIRE Vykonávacie predpisy špecifikujú
+       technické opatrenia pre interoperabilitu a
+ harmonizácia administratívnych hraníc ".
+
+    </div>
+  </alert.m44>
+  <report.m44.nonev>
+    <div>Miera súladu zdroja ešte nebola vyhodnotená.</div>
+  </report.m44.nonev>
+  <report.m44.degree>
+    <div>Bola nájdená miera súladu:</div>
+  </report.m44.degree>
+  <report.m44.spec>
+    <div>Špecifikácia:</div>
+  </report.m44.spec>
+  <alert.m45.rc>
+    <div>
+      <h2>Musí existovať najmenej jeden prípad
+        MD_Metadata.identificationInfo[1].MD_Identification.resourceConstraints</h2>
+    </div>
+  </alert.m45.rc>
+  <report.m45.ac>
+    <div>Bolo zistené obmedzenie verejného prístupu (accessConstraints):</div>
+  </report.m45.ac>
+  <report.m45.class>
+    <div>Bolo zistené obmedzenie verejného prístupu (klasifikácia):</div>
+  </report.m45.class>
+  <alert.m45.ca>
+    <div>Musí existovať najmenej jeden prípad "accessConstraints"</div>
+  </alert.m45.ca>
+  <report.m45.ca>
+    <div>Bol nájdený príklad  'accessConstraints'.</div>
+  </report.m45.ca>
+  <alert.m45.or>
+    <div>Hodnota 'accessConstraints' by mala byť špecifikovaná ako 'otherRestrictions',
+      ak sú špecifikované prvky 'otherConstraints', ktoré určujú obmedzenia vo verejnom prístupe. Skontrolujte 
+      prístupové podmienky použitia a ďalšie obmedzenia textového poľa.</div>
+  </alert.m45.or>
+  <report.m45.or>
+    <div>Bolo zistené obmedzenie verejného prístupu (otherConstraints): </div>
+  </report.m45.or>
+  <alert.m45.us>
+    <div>Chýbajú podmienky týkajúce sa prístupu a použitia </div>
+  </alert.m45.us>
+  <report.m45.us>
+    <div>Boli nájdené podmienky týkajúce sa prístupu a použitia </div>
+  </report.m45.us>
+  <alert.m45>
+    <div>
+      <h2>INSPIRE - Podmienky prístupu a používania sú povinné</h2>
+      <br/>
+    </div>
+  </alert.m45>
+  <alert.m46>
+    <div>
+      <h2>INSPIRE - obmedzenie verejného prístupu je povinné</h2>
+    </div>
+  </alert.m46>
+  <alert.m47>
+    <div><h2>INSPIRE - Zodpovedná organizácia pre zdroj je povinná</h2><br/>
+      Pokiaľ ide o zodpovednú organizáciu, je možné určiť
+      viac organizácií zodpovedných za jeden zdroj. Vyžaduje sa názov organizácie a e-mail.
+      required.
+      <br/>
+      Pozrite sekciu identifikácie / kontaktné miesto.
+    </div>
+  </alert.m47>
+  <report.m47>
+    <div>Organizácia zodpovedná za nájdený zdroj</div>
+  </report.m47>
+  <alert.m47.info>
+    <div>Názov a e-mail zodpovednej organizácie sa nenašiel.</div>
+  </alert.m47.info>
+  <report.m47.info>
+    <div>Bol nájdený názov a e-mail zodpovednej organizácie </div>
+  </report.m47.info>
+  <alert.m48>
+    <div><h2>INSPIRE - kontaktný bod pre metaúdaje  je povinný</h2><br/><b>Vykonávacie pokyny:</b><br/>
+      Aby bol v súlade s normou ISO 19115, musí byť špecifikovaná
+      osoba alebo organizácia zodpovedná za metaúdaje.
+      Úloha zodpovednej organizácie by sa mala definovať ako kontaktný bod (pointOfContact).
+      <br/>
+      Pozri sekciu metaúdajov
+    </div>
+  </alert.m48>
+  <alert.m48.role>
+    <div>Contact role is empty.</div>
+  </alert.m48.role>
+  <report.m48>
+    <div>Bol nájdený kontaktný bod pre metaúdaje.</div>
+  </report.m48>
+  <alert.m48.info>
+    <div>Názov a e-mailová adresa organizácie zodpovednej za metaúdaje nebol nájdený.</div>
+  </alert.m48.info>
+  <report.m48.info>
+    <div>Bol nájdený názov a e-mail zodpovednej organizácie </div>
+  </report.m48.info>
+  <alert.m49>
+    <div><h2>INSPIRE - Jazyk metaúdajov je povinný</h2><br/>
+      Vykonávacie predpisy pre metaúdaje uvedené v norme ISO 19115 vyžadujú, aby ste špecifikovali jazyk,
+     v ktorom boli vytvorené metaúdaje.
+    </div>
+  </alert.m49>
+  <report.m49>
+    <div>Jazyk metaúdajov :</div>
+  </report.m49>
+  <alert.m50>
+    <div>
+      <h2>Časový odkaz na metaúdaje sa nenašiel</h2>
+    </div>
+  </alert.m50>
+  <report.m50>
+    <div>
+      <h2>Časový odkaz na metaúdaje:</h2>
+    </div>
+  </report.m50>
+  <alert.m51>
+    <div><h2>INSPIRE (služba) - Prvok "Súvisiace zdroje" je povinný, ak je k dispozícii prepojenie na súbory údajov, na ktorých služba funguje</h2><br/><b>Vykonávacie pokyny</b><br/>
+      Nevzťahuje sa na súbory údajov a série.
+      <br/>
+      Podmienka pre služby: Povinné, ak je adresa na dáta, na ktorých je 
+      služba v prevádzke k dispozícií.
+      <br/><ul><li>Objekt sa implementuje odkazom (Pozri 
+          SC11 v 1.2) a referenčnou hodnotou 
+          objektu a MD_DataIdentification je kód elementu metaúdajov 
+          združeného zdroja.</li><li>Pre konzistenciu by mal byť kódom elementu metaúdajov združeného
+           zdroja aj kód jedného z jedinečných identifikátorov zdrojov 
+          zodpovedajúceho združeného zdroja. </li></ul>
+</div>
+  </alert.m51>
+  <report.m51>
+    <div>Boli nájdené združené zdroje:</div>
+  </report.m51>
+  <alert.m52>
+    <div><h2>INSPIRE - Lokalizátor zdrojov je povinný, ak je k dispozícii adresa zdroja</h2><br/>
+      Pozri predbežný pohľad / distribúciu / iba zdrojový prvok.
+      <br/><b>Vykonávacie pokyny:</b>
+      <br/><ul><li>Zadajte platnú adresu URL zdroja. Ak nie je k dispozícii žiadny priamy odkaz,
+ zadajte do kontaktného miesta, kde sú k dispozícii informácie o zdroji.</li><li>Pre služby môže byť lokalizátor zdroja 
+          uvedený ako:</li><ul><li>Odkaz na dokument o funkciách služby;</li><li>Odkaz na dokument služby WSDL (SOAP Binding); </li><li>Odkaz na webovú stránku s ďalšími pokynmi</li><li>Odkaz na klientskú aplikáciu, ktorá má priamy prístup k službe</li></ul></ul>
+</div>
+  </alert.m52>
+  <report.m52>
+    <div>Nájdený zdroj lokátora:</div>
+  </report.m52>
+  <alert.m53>
+    <div><h2>INSPIRE - Môže existovať žiadna alebo jedna podmienka, ktorá sa vzťahuje na prístup a použitie</h2><br/>
+      Prístupové obmedzenia uplatňované na zabezpečenie 
+      ochrany súkromia alebo duševného vlastníctva a akékoľvek 
+      osobitné obmedzenia alebo obmedzenia pri získavaní zdroja
+      <br/><b>Napríklad:</b>
+      intellectualPropertyRights (práva na finančný prospech 
+      a kontrolu distribúcie nehmotného majetku, ktorá
+       je výsledkom kreativity).
+      <br/>
+      Klasifikácia:
+      <b>Napríklad:</b>
+      obmedzené (nie pre všeobecné uverejnenie)
+      <br/>
+      Obmedzenie používania:
+      <b>Napríklad:</b>
+      nepoužívať na navigáciu
+      <br/>
+</div>
+  </alert.m53>
+  <alert.m54>
+    <div>
+      <h2>INSPIRE - hodnota accessConstraints je otherRestrictions, len ak
+ existujú ďalšie otherConstraints, ktoré vyjadrujú 
+       obmedzenia prístupu verejnosti.</h2>
+    </div>
+  </alert.m54>
+  <alert.m55>
+    <div><h2>INSPIRE (zbierky a série) - Jazyk zdroja je povinný, ak zdroj obsahuje 
+textové informácie</h2><br/>
+      An instance of the language property is mandated by ISO
+      19115 ; it can be defaulted to the value of the Metadata
+      Implementing instructions Language when the dataset or the dataset series does not
+      contain textual information.
+      <br/><b>Implementing instructions:</b>
+      <br/>
+      Codelist (See ISO/TS 19139) based on alpha-3 codes of
+      ISO 639-2.
+    </div>
+  </alert.m55>
+  <report.m55>
+    <div>Jazyk zdroja:</div>
+  </report.m55>
+  <alert.m56>
+    <div><h2>INSPIRE - Priestorové rozlíšenie je povinné, ak je možné špecifikovať ekvivalentnú stupnicu alebo rozlišovaciu vzdialenosť</h2><br/><b>Vykonávacie pokyny:</b><ul><li>Každé priestorové rozlíšenie je buď ekvivalentnou stupnicou ALEBO
+          vzdialenosť snímkovania zeme.</li><li>Ak sú vyjadrené dve ekvivalentné stupnice alebo dve vzdialenosti snímkovania zeme, priestorové rozlíšenie je interval ohraničený týmito dvoma 
+          hodnotami.</li></ul><b>Napríklad:</b>
+      5000 (napr. mapa mierky 1:5000 )
+    </div>
+  </alert.m56>
+  <report.m56>
+    <div>Priestorové rozlíšenie je nastavené.</div>
+  </report.m56>
+  <alert.m57>
+    <div>
+      <h2>[ISO19119 pre služby] - OperationName je povinný</h2>
+    </div>
+  </alert.m57>
+  <alert.m58>
+    <div>Chýbajúce informácie o službe taxonomie (vyberte jedno alebo viac kľúčových 
+     slov z  "inspire-service-taxonomy.rdf" thesaurus)</div>
+  </alert.m58>
+  <report.m58>
+    <div>klasifikácia služby taxonomie definovaná</div>
+  </report.m58>
+  <alert.m59>
+    <div>
+      <h2>[ISO19119 pre služby] - ConnectPoint je povinný</h2>
+    </div>
+  </alert.m59>
+  <alert.m60>
+    <div><h2>[ISO19119 pre služby] - ServiceType je povinný</h2><br/>
+      Povinné pre služby.
+      <br/>
+      Nevzťahuje sa na súbor údajov a množinu údajov
+      <br/><b>Napríklad:</b>
+      "zobrazenie", "objav", "sťahovanie", "transformácia", "vyvolanie", "iné"
+    </div>
+  </alert.m60>
+  <report.m60>
+    <div>Typ služby:</div>
+  </report.m60>
+  <!-- INSPIRE metadata rules translation / END -->
+</strings>
