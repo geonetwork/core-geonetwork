@@ -110,7 +110,11 @@
 
             if (sortOnSelection) {
               scope.selected.sort(scope.sortFn);
+              scope.options.sort(scope.sortFn);
             }
+
+            scope.currentSelectionLeft = [];
+            scope.currentSelectionRight = [];
           };
 
           scope.sortFn = function(a, b) {
@@ -133,10 +137,15 @@
                   break;
                 }
               }
+
+              scope.currentSelectionLeft = [];
+              scope.currentSelectionRight = [];
+
               return !unselect;
             });
 
             if (sortOnSelection) {
+              scope.selected.sort(scope.sortFn);
               scope.options.sort(scope.sortFn);
             }
           };
