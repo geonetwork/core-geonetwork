@@ -105,7 +105,7 @@
     </bean>
     <bean class="org.fao.geonet.domain.Pair" factory-method="read">
       <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
-      <constructor-arg value="loc-slo-"/>
+      <constructor-arg value="loc-slk-"/>
     </bean>
   </util:list>
 

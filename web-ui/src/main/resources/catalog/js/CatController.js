@@ -75,7 +75,7 @@
             'ita' : 'it',
             'rus': 'ru',
             'chi': 'zh',
-            'slo': 'sk'
+            'slk': 'sk'
           }
         },
         'home': {
@@ -443,7 +443,7 @@
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
-        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
+        'rus': 'русский', 'chi': '中文', 'slk': 'Slovenčina'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;
