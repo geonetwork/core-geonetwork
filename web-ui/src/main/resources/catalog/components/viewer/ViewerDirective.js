@@ -83,6 +83,7 @@
               /** active tool selector */
               scope.activeTools = {
                 addLayers: false,
+                projectionSwitcher: false,
                 contexts: false,
                 filter: false,
                 layers: false,
@@ -94,6 +95,11 @@
               /** optional tabs **/
               scope.disabledTools = gnViewerSettings.mapConfig.disabledTools;
 
+              /** If only one projection on the list, hide **/
+              if(gnViewerSettings.mapConfig.switcherProjectionList.length < 2) {
+                scope.disabledTools.projectionSwitcher = true;
+              }
+              
               /** wps process tabs */
               scope.wpsTabs = {
                 byUrl: true,
@@ -324,8 +330,10 @@
               }, function(openedTool) {
                 // open the correct tool using gi-btn magic
                 switch (openedTool.name.toLowerCase()) {
-                  case 'addlayers':
-                    scope.activeTools.addLayers = true; break;
+                case 'addlayers':
+                  scope.activeTools.addLayers = true; break;
+                case 'projectionSwitcher':
+                  scope.activeTools.projectionSwitcher = true; break;
                   case 'contexts':
                     scope.activeTools.contexts = true; break;
                   case 'filter':

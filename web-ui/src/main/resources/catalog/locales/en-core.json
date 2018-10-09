@@ -215,7 +215,6 @@
     "sendPasswordLinkToMyEmail": "Send password link to my email",
     "service": "Service",
     "serviceType": "Service type",
-    "serviceType": "Service type",
     "serviceTypes": "Service types",
     "signIn": "Sign in",
     "signedInAs": "Signed in as",
@@ -403,5 +402,7 @@
     "adminHome": "Summary",
     "allAdmins": "Administrators",
     "group": "Group",
-    "showOptions": "Show options"
+    "showOptions": "Show options",
+    "projectionSwitcher": "Projection Switcher",
+    "projection": "Projection"
 }
