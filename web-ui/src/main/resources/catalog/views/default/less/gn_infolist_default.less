@@ -1,0 +1,37 @@
+@import "../../../style/gn_bootstrap.less";
+@import "gn_variables_default.less";
+
+// row for the info lists
+.gn-row-info {
+    padding: 30px 20px 40px 20px;
+    background-color: @gn-info-background-color;
+    .nav-pills {
+      text-align: left !important;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+  }
+  
+  // custom colors for the blocks in the info list
+  .gn-info-list-blocks {
+    .gn-info-list {
+      li {
+        .resultcard {
+          .title {
+            background: @gn-resultcard-title-background-color;
+            border: @gn-resultcard-title-border;
+            h4 {
+              color: @gn-resultcard-title-color;
+            }
+          }
+        }
+        .resultcard.hasThumbnail {
+          &:hover {
+            .title {
+              background: @gn-resultcard-title-background-color-hover;
+            }
+          }
+        }
+      }
+    }
+  }

@@ -404,5 +404,8 @@
     "group": "Group",
     "showOptions": "Show options",
     "projectionSwitcher": "Projection Switcher",
-    "projection": "Projection"
+    "projection": "Projection",
+    "listTypeBlocks": "Switch to Blocked list",
+    "listTypeLarge": "Switch to Large list",
+    "listTypeSmall": "Switch to Small list"
 }
