@@ -23,9 +23,9 @@
 
 package org.fao.geonet.domain;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import org.apache.lucene.document.Document;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
@@ -37,11 +37,12 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.apache.lucene.document.Document;
-import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @See {@link AbstractMetadata}
@@ -51,11 +52,12 @@ import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 @Table(name = Metadata.TABLENAME)
 @Access(AccessType.PROPERTY)
 @EntityListeners(MetadataEntityListenerManager.class)
-public class Metadata extends AbstractMetadata  implements Serializable {
+public class Metadata extends AbstractMetadata implements Serializable {
 
     private static final long serialVersionUID = -5557599895424227101L;
     public static final String TABLENAME = "Metadata";
     private Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
+    private List<UserFeedback> userFeedbacks;
 
     public Metadata() {
         super();
@@ -68,7 +70,8 @@ public class Metadata extends AbstractMetadata  implements Serializable {
     }
 
     /**
-     * Get the set of metadata categories this metadata is part of. This is lazily loaded and all operations are cascaded
+     * Get the set of metadata categories this metadata is part of. This is lazily
+     * loaded and all operations are cascaded
      *
      * @return the metadata categories
      */
@@ -86,5 +89,14 @@ public class Metadata extends AbstractMetadata  implements Serializable {
      */
     public void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
         this.metadataCategories = categories;
+    }
+
+    @OneToMany(mappedBy = "metadata", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public List<UserFeedback> getUserFeedbacks() {
+        return userFeedbacks;
+    }
+
+    public void setUserFeedbacks(@Nonnull List<UserFeedback> userFeedbacks) {
+        this.userFeedbacks = userFeedbacks;
     }
 }
