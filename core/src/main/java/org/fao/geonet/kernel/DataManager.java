@@ -2321,9 +2321,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- remove operations
         deleteMetadataOper(context, id, false);
 
-        //--- remove user comments
-        deleteMetadataUserFeedback_byMetadataId(context, metadata.getUuid());
-
         int intId = Integer.parseInt(id);
         getApplicationContext().getBean(MetadataRatingByIpRepository.class).deleteAllById_MetadataId(intId);
         getBean(MetadataValidationRepository.class).deleteAllById_MetadataId(intId);
@@ -2346,13 +2343,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         getXmlSerializer().delete(id, context);
     }
 
-    /**
-     * Removes all userfeedbacks associated with metadata.
-     */
-    public void deleteMetadataUserFeedback_byMetadataId(ServiceContext context, String metadataUUId) throws Exception {
-        UserFeedbackRepository userfeedbackRepository = context.getBean(UserFeedbackRepository.class);
-        userfeedbackRepository.deleteByMetadata_Uuid(metadataUUId);
-    }
 
     private MetaSearcher searcherForReferencingMetadata(ServiceContext context, Metadata metadata) throws Exception {
         MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
