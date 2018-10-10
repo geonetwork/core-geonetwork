@@ -414,7 +414,7 @@ INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (382,'sin', 'si');
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (383,'sio', NULL);
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (384,'sit', NULL);
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (385,'sla', NULL);
-INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (386,'slk', 'sk');
+INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (386,'slo', 'sk');
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (387,'slv', 'sl');
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (388,'sma', NULL);
 INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (389,'sme', 'se');

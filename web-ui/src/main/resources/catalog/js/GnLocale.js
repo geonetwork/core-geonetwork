@@ -47,7 +47,7 @@
       'dut' : 'nl',
       'ice' : 'is',
       'ita' : 'it',
-      'slk' : 'sk'
+      'slo' : 'sk'
     };
     var lang = specialCases[threeCharLang];
     if (angular.isDefined(lang)) {
