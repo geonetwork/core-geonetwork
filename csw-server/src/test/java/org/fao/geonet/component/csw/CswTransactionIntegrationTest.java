@@ -53,6 +53,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_CSW;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_OGC;
+import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -136,6 +137,31 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(1, getUpdatedCount(response, TOTAL_INSERTED));
         assertEquals(1, _metadataRepository.count());
         assertNotNull(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID));
+    }
+
+    @Test
+    public void testInsertResponse() throws Exception {
+        assertEquals(0, _metadataRepository.count());
+
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
+        Element params = createInsertTransactionRequest(metadata);
+        Element response = _transaction.execute(params, serviceContext);
+
+        assertEquals(1, getUpdatedCount(response, TOTAL_INSERTED));
+
+        final Element insertResult = response.getChild("InsertResult", NAMESPACE_CSW);
+        assertNotNull("InsertResult not found", insertResult);
+        final Element briefRecord = insertResult.getChild("BriefRecord", NAMESPACE_CSW);
+        assertNotNull("BriefRecord not found", briefRecord);
+        final Element dcIdentifier = briefRecord.getChild("identifier", NAMESPACE_DC);
+        assertNotNull("dc:identifier not found", dcIdentifier);
+        final Element dcTitle = briefRecord.getChild("title", NAMESPACE_DC);
+        assertNotNull("dc:title not found", dcTitle);
+
+        assertEquals("Bad identifier found", PHOTOGRAPHIC_UUID, dcIdentifier.getText());
     }
 
     @Test
