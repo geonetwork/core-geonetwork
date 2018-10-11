@@ -1289,5 +1289,8 @@
     "ui-label-help": "Label to show on the user interface to identify this projection. This is a mandatory field.",
     "ui-code-help": "EPSG unique identifier for this projection eg. 'EPSG:4326'. This is a mandatory field.",
     "ui-resolutions-help": "Allowed resolutions (zooms) for this projection. This is an optional field.",
-    "ui-definition-help": "Definition for Proj4 library. This is a mandatory field if the projection is not defined already on GeoNetwork. Without a definition, the map can't work."
+    "ui-definition-help": "Definition for Proj4 library. This is a mandatory field if the projection is not defined already on GeoNetwork. Without a definition, the map can't work.",
+    "ui-mod-recordview": "Record View",
+    "ui-isSocialbarEnabled": "Show Socialbar",
+    "ui-isSocialbarEnabled-help": "Show the button bar with all the social buttons (facebook, twitter, etc.)"
 }
