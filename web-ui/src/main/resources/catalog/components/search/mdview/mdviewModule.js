@@ -46,10 +46,10 @@
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
-    'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
+    'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig', 'gnGlobalSettings',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
-             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig) {
+             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig, gnGlobalSettings) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -59,6 +59,7 @@
       $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
+      $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
 
       statusSystemRating =
          gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
