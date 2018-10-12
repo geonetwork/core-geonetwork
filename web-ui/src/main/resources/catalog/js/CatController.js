@@ -214,6 +214,10 @@
             'enabled': true,
             'appUrl': 'https://secure.geonames.org/searchJSON'
         },
+        'recordview': {
+          'enabled': true,
+          'isSocialbarEnabled': true
+        },
         'editor': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.edit',
