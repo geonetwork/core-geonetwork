@@ -1,0 +1,2862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<labels xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gmx="http://www.isotc211.org/2005/gmx" xsi:nonamespaceschemalocation="../../../../../../../schema-labels.xsd">
+  <element name="gmd:MD_ScopeCode">
+    <label>Rozsah kódu</label>
+    <description>Trieda informácií, na ktorú sa vzťahuje referenčná entita</description>
+  </element>
+  <element name="code" id="207.0" context="gmd:MD_Identifier">
+    <label>Kód</label>
+    <description>Alfanumerická hodnota identifikujúca inštanciu v danom mennom priestore</description>
+    <help>Alfanumerická hodnota identifikujúca inštanciu v danom mennom priestore</help>
+  </element>
+  <element name="code">
+    <label>Kód systému</label>
+    <description>Kód, napríklad kód EPSG.</description>
+  </element>
+  <element name="code" id="547.0" context="gmd:MD_CodeValue">
+    <label>Kód</label>
+    <description>Kód hodnoty</description>
+    <help>Kód hodnoty (napríklad číselný)</help>
+  </element>
+  <element name="codeSpace" id="208.1">
+    <label>Zodpovedný orgán</label>
+    <description>Orgán zodpovedný za kodifikáciu, napríklad EPSG</description>
+  </element>
+  <element name="gco:Date" id="364.0" context="gmd:CI_Citation">
+    <label>Dátum vydania</label>
+    <description>Dátum vydania</description>
+  </element>
+  <element name="gco:Date" id="393.0">
+    <label>Dátum</label>
+    <description>Formátované ako RRRR-MM-DD</description>
+    <help>referenčný dátum a čas, ktoré sa používajú na opis</help>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gco:DateTime" id="64.0" context="gmd:MD_Usage">
+    <description>Formátované ako RRRR-MM-DDTHH:mm:ss</description>
+    <label>Dátum a čas plánovaného prístupu</label>
+    <help>dátum a čas prvého použitia alebo rozsahu použitia série zdrojov a / alebo sérií
+      zdrojov</help>
+  </element>
+  <element name="gco:DateTime" id="300.0" context="gmd:MD_StandardOrderProcess">
+    <description>Formátované ako RRRR-MM-DDTHH:mm:ss</description>
+    <label>Plánovaný dostupný dátum / čas</label>
+    <help>dátum a čas, kedy bude zdroj dostupný</help>
+  </element>
+  <element name="gco:DateTime">
+    <label>Dátum a čas</label>
+    <description>Dátum a čas alebo rozsah dátumu a času, kedy alebo po ktorom sa procesný krok vyskytol
+      (RRRR-MM-DDThh:mm:ss)</description>
+  </element>
+  <element name="gco:Measure" id="100.0" context="gmd:DQ_Element">
+    <label>Názov opatrenia</label>
+    <description>Názov testu použitého pre údaje</description>
+  </element>
+  <element name="gco:Measure" id="357.0" context="gmd:EX_VerticalExtent">
+    <label>Merná jednotka</label>
+    <description>Jednotky používané pre informácie vo vertikálnom rozsahu Napríklad: metre, stopy,
+      milimetre, hektopascaly</description>
+    <_condition>M</_condition>
+  </element>
+  <element name="gmd:CI_Address" id="380.0">
+    <label>Adresa</label>
+    <description>Poloha zodpovednej osoby alebo organizácie</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:CI_Citation" id="359.0">
+    <label>Citácia</label>
+    <description>Štandardizovaný odkaz na zdroj</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:CI_Contact" id="387.0">
+    <label>Kontakt</label>
+    <description>Informácie potrebné na umožnenie kontaktu so zodpovednou osobou a / alebo 
+      organizáciou</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:CI_Date" id="393.0">
+    <label>Dátum</label>
+    <description>Referenčný dátum a čas, ktoré sa používajú na opis (RRRR-MM-DD)</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:CI_OnlineResource" id="396.0">
+    <label> On-line sieťový zdroj</label>
+    <description>Informácie o on-line zdrojoch, z ktorých možno získať súbor údajov, špecifikáciu alebo 
+      názov profilu komunity a rozšírené prvky metadát</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:CI_ResponsibleParty" id="374.0">
+    <label>Zodpovedná strana</label>
+    <description>
+Identifikácia a možnosti komunikácie s osobou (osobami) a organizáciami 
+      súvisiacimi so súborom údajov</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:CI_Series" id="403.0">
+    <label>Série</label>
+    <description>Informácie o sériách alebo agregovanom dátovom súbore,
+      ktorého súbor údajov je jeho súčasťou</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:CI_Telephone" id="407.0">
+    <label>Telefón</label>
+    <description>Telefónne číslo na kontaktovanie zodpovednej osoby alebo
+      organizácie</description>
+    <_condition>Použitie povinnosti / podmienky z referenčného objektu</_condition>
+  </element>
+  <element name="gmd:DQ_AbsoluteExternalPositionalAccuracy" id="117.0">
+    <label>Úplná presnosť vonkajšej polohy</label>
+    <description>Aproximácia zaznamenaných hodnôt súradníc na hodnoty prijaté ako
+      skutočné</description>
+  </element>
+  <element name="gmd:DQ_AccuracyOfATimeMeasurement" id="121.0">
+    <label>Presnosť merania času</label>
+    <description>Správnosť polohy časových referencií (zaznamenanie chýb 
+      v meraní času)</description>
+  </element>
+  <element name="gmd:DQ_CompletenessCommission" id="109.0">
+    <label>Kompletná komisia</label>
+    <description>Nadbytočné údaje v súbore údajov vo vzťahu k opísanému rozsahu</description>
+  </element>
+  <element name="gmd:DQ_CompletenessOmission" id="110.0">
+    <label>Kompletná komisia</label>
+    <description>Žiadne údaje v súbore údajov vo vzťahu k opísanému rozsahu</description>
+  </element>
+  <element name="gmd:DQ_ConceptualConsistency" id="112.0">
+    <label>Koncepčná konzistencia</label>
+    <description>Dodržiavanie pravidiel koncepčnej schémy</description>
+  </element>
+  <element name="gmd:DQ_ConformanceResult" id="129.0">
+    <label>Výsledok zhody</label>
+    <description>Informácie o výsledku vyhodnotenia získanej hodnoty (alebo množiny 
+      hodnôt) v porovnaní s prijatou špecifickou úrovňou kvality </description>
+  </element>
+  <element name="gmd:DQ_DataQuality" id="78.0">
+    <label>Kvalita údajov</label>
+    <description>informácie o kvalite údajov definovaných rozsahom 
+     kvality údajov</description>
+  </element>
+  <element name="gmd:DQ_DomainConsistency" id="113.0">
+    <label>Súdržnosť oblasti</label>
+    <description>Dodržiavanie hodnôt z hodnotových domén</description>
+  </element>
+  <element name="gmd:DQ_FormatConsistency" id="114.0">
+    <label>Formátovanie konzistencie</label>
+    <description>Stupeň, do ktorého sa údaje ukladajú v súlade s fyzickou štruktúrou 
+       súboru údajov, ako je opísané v rozsahu</description>
+  </element>
+  <element name="gmd:DQ_GriddedDataPositionalAccuracy" id="118.0">
+    <label>Presnosť polohy údajov v mriežke</label>
+    <description>Aproximovanie hodnoty polohy údajov v mriežke na hodnoty prijaté 
+      ako skutočné</description>
+  </element>
+  <element name="gmd:DQ_NonQuantitativeAttributeAccuracy" id="126.0">
+    <label>Nekvantitatívna presnosť atribútu</label>
+    <description>Správnosť nekvantitatívnej presnosti atribútov</description>
+  </element>
+  <element name="gmd:DQ_QuantitativeAttributeAccuracy" id="127.0">
+    <label>Kvantitatívna presnosť atribútu</label>
+    <description>Správnosť kvantitatívnych atribútov</description>
+  </element>
+  <element name="gmd:DQ_QuantitativeResult" id="133.0">
+    <label>Kvantitatívny výsledok</label>
+    <description>Hodnoty alebo informácie o hodnote (alebo skupine hodnôt) získaných ako výsledok 
+     uplatňovania opatrení kvality údajov</description>
+  </element>
+  <element name="gmd:DQ_RelativeInternalPositionalAccuracy" id="119.0">
+    <label>Nepriama presnosť vnútornej polohy</label>
+    <description>Aproximujú medziľahlé polohy objektov v ich príslušnom
+     rozsahu medzipolohy prijaté ako skutočné</description>
+  </element>
+  <element name="gmd:DQ_Scope" id="138.0">
+    <label>Rozsah</label>
+    <description>Opis údajov špecifikovaných rozsahom</description>
+    <help>Rozsah charakteristiky údajov, pre ktoré sú hlásené informácie 
+      o kvalite</help>
+  </element>
+  <element name="gmd:DQ_TemporalConsistency" id="122.0">
+    <label>Časová súdržnosť</label>
+    <description>Správnosť poradia udalostí alebo postupnosť udalostí, ak boli zaznamenané</description>
+  </element>
+  <element name="gmd:DQ_TemporalValidity" id="123.0">
+    <label>Časová dôveryhodnosť</label>
+    <description>Spoľahlivosť údajov určených rozsahom s ohľadom na čas</description>
+  </element>
+  <element name="gmd:DQ_ThematicClassificationCorrectness" id="125.0">
+    <label>Správnosť tematickej klasifikácie</label>
+    <description>Porovnanie tried priradených objektom alebo ich atribútom 
+      v klasifikácii</description>
+  </element>
+  <element name="gmd:DQ_TopologicalConsistency" id="115.0">
+    <label>Topografická konzistencia</label>
+    <description>Správnosť priamo kódovaných topologických vlastností 
+      súboru údajov, ako je opísané v tejto oblasti</description>
+  </element>
+  <element name="gmd:EX_BoundingPolygon" id="341.0">
+    <label>Ohraničenie polygónom</label>
+    <description>Hranica, ktorá obklopuje súbor údajov, vyjadrená ako uzavretá sústava (x, y) 
+      súradníc polygónu (posledný bod je opakovanie prvého bodu)</description>
+  </element>
+  <element name="gmd:EX_Extent" id="334.0">
+    <label>Rozsah</label>
+    <description>Informácie o priestorovom, vertikálnom a časovom rozsahu</description>
+  </element>
+  <element name="gmd:EX_GeographicBoundingBox" id="343.0">
+    <label>Geografické ohraničenie</label>
+    <description>Geografická poloha súboru údajov</description>
+  </element>
+  <element name="gmd:EX_GeographicDescription" id="348.0">
+    <label>Geografický opis</label>
+    <description>Opis geografickej oblasti pomocou identifikátorov</description>
+  </element>
+  <element name="gmd:EX_SpatialTemporalExtent" id="352.0">
+    <label>Priestorový časový rozsah</label>
+    <description>Rozsah s ohľadom na čas/dátum a priestorové hranice</description>
+  </element>
+  <element name="gmd:EX_TemporalExtent" id="350.0">
+    <label>Časový rozsah</label>
+    <description>Časové obdobie, na ktoré sa vzťahuje obsah súboru údajov</description>
+  </element>
+  <element name="gmd:EX_VerticalExtent" id="354.0">
+    <label>Vertikálny rozsah</label>
+    <description>Vertikálne pole súboru údajov</description>
+  </element>
+  <element name="gmd:ISBN" id="372.0">
+    <label>ISBN</label>
+    <description>Medzinárodné štandardné číslo knihy</description>
+  </element>
+  <element name="gmd:ISSN" id="373.0">
+    <label>ISSN</label>
+    <description>Medzinárodné štandardné poradové číslo</description>
+  </element>
+  <element name="gmd:LI_Lineage" id="82.0">
+    <label>Pôvod</label>
+    <description>Informácie o udalostiach alebo zdrojových údajoch použitých pri zostavovaní údajov 
+      definovaných rozsahom alebo nedostatkom vedomostí o pôvode</description>
+  </element>
+  <element name="gmd:LI_ProcessStep" id="86.0">
+    <label>Krok procesu</label>
+    <description>Informácie o udalosti v procese vytvárania údajov špecifikovaných
+       podľa rozsahu</description>
+    <help>Informácie o udalosti alebo transformácii v priebehu životnosti súboru údajov, vrátane 
+      procesu používaného na udržiavanie súboru údajov</help>
+  </element>
+  <element name="gmd:LI_Source" id="92.0">
+    <label>Zdroj</label>
+    <description>Informácie o zdrojových údajoch použitých pri vytváraní údajov špecifikovaných
+       rozsahom</description>
+  </element>
+  <element name="gmd:MD_AggregateInformation" id="66.1">
+    <label>Súhrnné informácie</label>
+    <description>Informácie o agregovanom dátovom súbore</description>
+  </element>
+  <element name="gmd:MD_ApplicationSchemaInformation" id="320.0">
+    <description>Informácie o schéme aplikácie, ktorá sa použila na zostavenie
+      súboru údajov</description>
+    <label>Informácie o schéme aplikácie</label>
+  </element>
+  <element name="gmd:MD_Band" id="259.0">
+    <label>Pásmo</label>
+    <description>Rozsah vlnových dĺžok v elektromagnetickom spektre</description>
+    <help>Rozsah vlnových dĺžok v elektromagnetickom spektre</help>
+  </element>
+  <element name="gmd:MD_BrowseGraphic" id="48.0">
+    <description>Grafika, ktorá znázorňuje súbor údajov (má obsahovať legendu 
+      pre grafiku)</description>
+    <label>Grafický prehliadač</label>
+  </element>
+  <element name="gmd:MD_Constraints" id="67.0">
+    <label>Obmedzenia</label>
+    <description>Obmedzenia prístupu a používania zdroja alebo metaúdajov</description>
+  </element>
+  <element name="gmd:MD_CoverageDescription" id="239.0">
+    <label>Popis pokrytia</label>
+    <description>Informácie o obsahu bunky dátovej siete</description>
+  </element>
+  <element name="gmd:MD_DataIdentification" id="36.0">
+    <label>Identifikácia údajov</label>
+    <description>Informácie potrebné na identifikáciu súboru údajov</description>
+  </element>
+  <element name="gmd:MD_DigitalTransferOptions" id="274.0">
+    <label>Možnosti digitálneho prenosu</label>
+    <description>Technické prostriedky a médiá, ktorými bol zdroj získaný od 
+      distribútora</description>
+  </element>
+  <element name="gmd:MD_Dimension" id="179.0">
+    <label>Rozmer</label>
+    <description>Vlastnosti osí</description>
+  </element>
+  <element name="gmd:MD_Distribution" id="270.0">
+    <label>Rozširovanie</label>
+    <description>Informácie o distribútorovi a možnostiach získania 
+      zdroja</description>
+  </element>
+  <element name="gmd:MD_Distributor" id="279.0">
+    <label>Distribútor</label>
+    <description>Informácie o distribútorovi</description>
+  </element>
+  <element name="gmd:MD_ExtendedElementInformation" id="306.0">
+    <description>Nový prvok metaúdajov, ktorý nie je definovaný v norme ISO 19115, potrebný na opis 
+      geografických údajov</description>
+    <label>Informácie o rozšírených prvkoch</label>
+  </element>
+  <element name="gmd:MD_FeatureCatalogueDescription" id="233.0">
+    <label>Popis katalógu prvkov</label>
+    <description>Informácie identifikujúce katalóg prvkov alebo koncepčnú 
+      schému</description>
+  </element>
+  <element name="gmd:MD_Format" id="284.0">
+    <label>Formát</label>
+    <description>Opis štruktúry počítačového jazyka, ktorý určuje zobrazenie dátových objektov v záznamovom, súborovom, správnom, pamäťovom alebo prenosovom kanáli</description>
+  </element>
+  <element name="gmd:MD_GeometricObjects" id="183.0">
+    <label>Geometrické objekty</label>
+    <description>Počet objektov vymenovaných podľa typu geometrického objektu v súbore údajov</description>
+  </element>
+  <element name="gmd:MD_Georectified" id="162.0">
+    <label>Georektifikovaný</label>
+    <description>Raster, ktorej bunky sú pravidelne rozmiestnené v geografickom
+      alebo mapovom súradnicovom systéme definovaného v systéme priestorového referenčného systému (SRS) takým spôsobom, že každá bunka rastra môže byť
+      lokalizovaná vzhľadom na jej súradnicovú sústavu, začiatok rastrového systému, rozstup buniek, 
+      a orientáciu</description>
+  </element>
+  <element name="gmd:MD_Georeferenceable" id="170.0">
+    <label>Georeferencovateľný</label>
+    <description>Raster s nepravidelne rozmiestnenými bunkami v ľubovoľnej geografickej sústave / súradniciach geografickej / mapy projekcie, 
+     ktorých jednotlivé bunky môžu byť geolokované pomocou údajov o geolokácii poskytnutých s údajmi, ale nemôžu byť geolokované z vlastností 
+      rastra</description>
+  </element>
+  <element name="gmd:MD_GridSpatialRepresentation" id="157.0">
+    <label>Rastrová priestorová reprezentácia</label>
+    <description>Informácie o priestorových objektoch v súbore údajov</description>
+  </element>
+  <element name="gmd:MD_Identifier" id="205.0">
+    <label>Identifikátor</label>
+    <description>Hodnota, ktorá jednoznačne identifikuje objekt v priestore názvov</description>
+  </element>
+  <element name="gmd:MD_ImageDescription" id="243.0">
+    <label>Popis obrázka</label>
+    <description>Informácie o vhodnosti použitia snímky / obrázku</description>
+  </element>
+  <element name="gmd:MD_Keywords" id="52.0">
+    <label>Kľúčové slová</label>
+    <description>Kľúčové slová, ich typ a referenčný zdroj</description>
+  </element>
+  <element name="gmd:MD_LegalConstraints" id="69.0">
+    <label>Právne obmedzenia</label>
+    <description>Obmedzenia a právne predpoklady pre použitie a prístup k zdrojom metaúdajov</description>
+  </element>
+  <element name="gmd:MD_MaintenanceInformation" id="142.0">
+    <label>Informácie o údržbe</label>
+    <description>Informácie o rozsahu a pravidelnosti aktualizácie</description>
+  </element>
+  <element name="gmd:MD_Medium" id="291.0">
+    <label>Prostriedok</label>
+    <description>informácie o médiách, na ktorých môže byť zdroj
+      distribuovaný</description>
+  </element>
+  <element name="gmd:MD_Metadata" id="1.0">
+    <label>Metaúdaje</label>
+    <abbrlabel>Metaúdaje</abbrlabel>
+    <description>Základná entita, ktorá definuje metaúdaje o zdroji alebo zdrojoch</description>
+  </element>
+  <element name="gmd:MD_MetadataExtensionInformation" id="303.0">
+    <description>Informácie opisujúce rozšírenia metaúdajov</description>
+    <label>Informácie o rozšírení metaúdajov</label>
+  </element>
+  <element name="gmd:MD_PortrayalCatalogueReference" id="268.0">
+    <label>Odkaz na opisný adresár</label>
+    <description>Informácie identifikujúce zoznam použitých opisov</description>
+  </element>
+  <element name="gmd:MD_RangeDimension" id="256.0">
+    <label>Rozsah dimenzie</label>
+    <description>Informácie o rozsahu každého rozmeru meranej hodnoty
+      bunky</description>
+  </element>
+  <element name="gmd:MD_ReferenceSystem" id="186.0">
+    <label>Referenčný systém</label>
+    <description>Informácie o referenčnom systéme.</description>
+    <help>Informácie o referenčnom systéme.</help>
+  </element>
+  <element name="gmd:MD_RepresentativeFraction" id="56.0">
+    <label>Reprezentatívna frakcia</label>
+    <description>Odvodený od škály, kde MD_RepresentativeFraction.denominator = 1 /
+      Scale.measure And Scale.targetUnits = Scale.sourceUnits</description>
+  </element>
+  <element name="gmd:MD_Resolution" id="59.0">
+    <label>Rozlíšenie</label>
+    <description>Úroveň podrobnosti vyjadrená ako faktor stupnice alebo vzdialenosť nad zemou</description>
+  </element>
+  <element name="gmd:MD_ScopeDescription" id="149.0">
+    <label>Opis rozsahu</label>
+    <description>Opis triedy informácií, na ktoré sa vzťahujú 
+      informácie</description>
+    <condition>Musia byť poskytnuté buď atribúty, prvky, inštancie prvkov, inštancie atribútov, súbor údajov alebo iné</condition>
+  </element>
+  <element name="gmd:MD_SecurityConstraints" id="73.0">
+    <label>Bezpečnostné obmedzenia</label>
+    <description>Obmedzenia uložené na zdroji alebo metaúdaje národnej bezpečnosti 
+      alebo bezpečnosti podobného významu</description>
+  </element>
+  <element name="gmd:MD_ServiceIdentification" id="47.0">
+    <label>Identifikácia služby</label>
+    <description>Identifikácia možností, ktoré poskytovateľ poskytne používateľovi
+ cez sadu rozhraní, ktoré definujú správanie - oboznámte sa s normou
+ ISO 19119 na získanie ďalších informácií
+    </description>
+  </element>
+  <element name="gmd:MD_StandardOrderProcess" id="298.0">
+    <label>Štandardný proces služby</label>
+    <description>Spoločné metódy získavania alebo prijímania zdrojov a súvisiace
+      pokyny a informácie o poplatkoch</description>
+  </element>
+  <element name="gmd:MD_Usage" id="62.0">
+    <label>Použitie</label>
+    <description>Stručný opis spôsobov, akými sú zdroje v súčasnosti 
+      používané</description>
+  </element>
+  <element name="gmd:MD_VectorSpatialRepresentation" id="176.0">
+    <label>Vektorová priestorová reprezentácia</label>
+    <description>Informácie o vektorových priestorových objektoch v súbore údajov</description>
+  </element>
+  <element name="gmd:PT_FreeText" id="601.0">
+    <label>Voľný text</label>
+    <description>Opis prvku metaúdajov vo viacjazyčnom voľnom texte</description>
+  </element>
+  <element name="gmd:RS_Identifier" id="208.0">
+    <description>Identifikátor použitý pre referenčné systémy</description>
+    <label>Identifikátor</label>
+  </element>
+  <element name="gmd:URL" id="608.0">
+    <label>URL</label>
+    <description>URL</description>
+  </element>
+  <element name="gmd:abstract" id="25.0">
+    <label>Abstraktný</label>
+    <description>Stručné zhrnutie obsahu zdroja (zdrojov)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:accessConstraints" id="70.0">
+    <label>Obmedzenia prístupu</label>
+    <description>Obmedzenia prístupu na zabezpečenie ochrany súkromia alebo
+duševného 
+      vlastníctva a všetkých ďalších obmedzení alebo upozornení týkajúce sa získania 
+      zdroja alebo metadát</description>
+  </element>
+  <element name="gmd:address" id="525.0" context="gmd:CI_ResponsibleParty">
+    <label>Adresa</label>
+    <description>Adresa zodpovednej strany</description>
+  </element>
+  <element name="gmd:address" id="389.0">
+    <label>Adresa</label>
+    <description>Fyzická a mailová adresa kde môže byť kontaktovaná organizácia alebo 
+      zodpovedná osoba</description>
+  </element>
+  <element name="gmd:administrativeArea" id="383.0">
+    <label>Administratívna oblasť</label>
+    <description>Štát, oblasť umiestnenia </description>
+  </element>
+  <element name="gmd:aggregateDataSetIdentifier" id="66.3">
+    <label>Súhrnný identifikátor súboru údajov</label>
+    <description>Informácie o názve agregovaného súboru údajov</description>
+  </element>
+  <element name="gmd:aggregateDataSetName" id="66.2">
+    <label>Súhrnný názov súboru údajov</label>
+    <description>Citačné informácie o agregovanom súbore údajov</description>
+    <_condition>C / ak aggregateDataSetIdentifier nie je zdokumentovaný?</_condition>
+  </element>
+  <element name="gmd:aggregationInfo" id="35.1">
+    <label>Informácie o agregácií</label>
+    <description>Poskytuje informácie o agregovanom súbore priestorových údajov</description>
+  </element>
+  <element name="gmd:alternateTitle" id="361.0">
+    <label>Alternatívny názov</label>
+    <description>Krátky názov alebo iný názov jazyka, podľa ktorého sú citované informácie známe.
+      Napríklad: "DCW" ako alternatívny názov pre "Digital Chart of the World</description>
+  </element>
+  <element name="gmd:amendmentNumber" id="287.0">
+    <label>Číslo zmeny a doplnenia</label>
+    <description>Číslo zmeny a doplnenia verzie daného formátu</description>
+  </element>
+  <element name="gmd:applicationProfile" id="399.0">
+    <label>Profil aplikácie</label>
+    <description>Názov profilu aplikácie, ktorá možno použiť s online
+      zdrojom</description>
+  </element>
+  <element name="gmd:applicationSchemaInfo" id="21.0">
+    <label>Informácie o schéme aplikácie</label>
+    <abbrlabel>Schéma aplikácie</abbrlabel>
+    <description>Poskytuje informácie o koncepčnej schéme súboru údajov</description>
+  </element>
+  <element name="gmd:associationType" id="66.4">
+    <label>Typ pripojenia</label>
+    <description>Typ pripojenia agregovaného súboru údajov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:attributeDescription" id="240.0">
+    <label>Opis atribútu</label>
+    <description>Popis atribútu nameranými hodnotami</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:attributeInstances" id="153.0">Inštancie atribútov<description>Inštancie atribútov, na ktoré sa tieto informácie vzťahujú</description><condition/></element>
+  <element name="gmd:attributes" id="150.0">
+    <label>Atribúty</label>
+    <description>Atribúty, na ktoré sa vzťahujú informácie </description>
+    <condition/>
+  </element>
+  <element name="gmd:authority" id="206.0">
+    <label>Autorita</label>
+    <description>Osoba alebo strana zodpovedná za udržiavanie menného priestoru</description>
+  </element>
+  <element name="gmd:axisDimensionProperties" id="159.0">
+    <label>Vlastnosti rozmerov osí </label>
+    <description>Informácie o priestorových a časových vlastnostiach osí</description>
+    <_condition>M</_condition>
+  </element>
+  <element name="gmd:bitsPerValue" id="264.0">
+    <label>Počet bitov na hodnotu</label>
+    <description>Maximálny počet významných bitov v nekomprimovanej reprezentácii pre 
+      hodnotu v každom pásme každého pixelu</description>
+  </element>
+  <element name="gmd:cameraCalibrationInformationAvailability" id="253.0">
+    <label>Dostupnosť informácií o kalibrácii fotoaparátu</label>
+    <description>Označenie, či sú k dispozícii konštanty, ktoré umožňujú opravy 
+      kalibrácie fotoaparátu</description>
+  </element>
+  <element name="gmd:cellGeometry" id="160.0">
+    <label>Geometria buniek</label>
+    <description>Identifikácia rastrových údajov ako bod alebo bunka</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:centerPoint" id="166.0">
+    <label>Stredový bod</label>
+    <description>Umiestnenie Zeme v súradnicovom systéme definovanom priestorovým referenčným systémom
+      a rastrové súradnice bunky v polovici medzi protiľahlými koncami rastra  
+      v priestorových rozmeroch</description>
+  </element>
+  <element name="gmd:characterSet" id="4.0" context="gmd:MD_Metadata">
+    <label>Znaková sada</label>
+    <description>Úplný názov normy pre písanie znakov použitých 
+      v súbore údajov</description>
+    <condition>Podmienený </condition>
+    <_condition>Podmienený /  ISO/IEC 10646-1 nepoužitý a nedefinovaný kódovaním?</_condition>
+  </element>
+  <element name="gmd:characterSet" id="40.0" context="gmd:MD_DataIdentification">
+    <label>Znaková sada</label>
+    <description>Úplný názov štandardu kódovania znakov použitého pre súbor údajov</description>
+    <_condition>Podmienený / ISO 10646-1 nepoužitý ?</_condition>
+  </element>
+  <element name="gmd:characterSet" id="4.0">
+    <label>Znaková sada</label>
+    <description>Úplný názov normy pre písanie znakov použitých 
+      v súbore údajov</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:checkPointAvailability" id="163.0">
+    <description>Indikácia, či sú k dispozícii geografické polohové body na testovanie 
+      presnosti georeferenčných rastrových dát siete</description>
+    <condition>Povinný</condition>
+    <label>Dostupnosť kontrolného bodu</label>
+  </element>
+  <element name="gmd:checkPointDescription" id="164.0">
+    <description>Opis geografických polôh bodov použitých na testovanie 
+ presnosti 
+      georeferencovaných rastrových dát </description>
+    <condition>Podmienený </condition>
+    <label>Opis kontrolného bodu </label>
+  </element>
+  <element name="gmd:citation" id="24.0" context="gmd:MD_Identification">
+    <label>Citácia</label>
+    <description>Citačné údaje pre zdroj (zdroje)</description>
+  </element>
+  <element name="gmd:citation" id="576.0" context="gmd:MD_Authority">
+    <label>Citácia</label>
+    <description>Citácia, ktorá patrí odborníkovi </description>
+  </element>
+  <element name="gmd:citation" id="581.0" context="gmd:MD_Thesaurus">
+    <label>Citácia</label>
+    <description>Citácia tezauru</description>
+  </element>
+  <element name="gmd:citation" id="581.0">
+    <label>Citácia</label>
+    <description>Citačné údaje pre zdroj (zdroje)</description>
+  </element>
+  <element name="gmd:citedResponsibleParty" id="367.0">
+    <label>Citovaná zodpovedná strana</label>
+    <btnlabel>Pridanie zodpovednej strany</btnlabel>
+    <btnclass>fa fa-user-plus </btnclass>
+    <description>Informácie o názve a pozícii osoby alebo organizácie
+       zodpovednej za zdroj</description>
+  </element>
+  <element name="gmd:city" id="382.0">
+    <label>Mesto</label>
+    <description>Umiestnenie mesta</description>
+  </element>
+  <element name="gmd:classification" id="74.0">
+    <condition>Povinný</condition>
+    <label>Klasifikácia</label>
+    <description>Názov obmedzenia manipulácie s prostriedkom alebo metaúdajmi </description>
+  </element>
+  <element name="gmd:classificationSystem" id="76.0">
+    <label>Systém klasifikácie</label>
+    <description>Názov systému klasifikácie </description>
+  </element>
+  <element name="gmd:cloudCoverPercentage" id="248.0">
+    <label>Oblačnosť v percentách</label>
+    <description>Oblasť súboru údajov zakrytá oblakmi, vyjadrená ako percento z 
+      priestorového rozsahu</description>
+  </element>
+  <element name="gmd:code" id="207.0" context="gmd:RS_Identifier">
+    <label>Jedinečný identifikátor zdroja</label>
+    <description>Alfanumerická hodnota identifikujúca inštanciu v danom mennom priestore</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
+    <label>Kód</label>
+    <description>Alfanumerická hodnota identifikujúca inštanciu v danom mennom priestore</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:code" id="547.0" context="gmd:MD_CodeValue">
+    <label>Kód</label>
+    <description>Kód hodnoty</description>
+    <help>Kód hodnoty (napríklad číselný)</help>
+  </element>
+  <element name="gmd:codeSpace" id="208.1">
+    <label>Kódový priestor</label>
+    <description>Názov identifikátora zodpovednej osoby alebo organizácie za 
+      menný priestor</description>
+    <helper>
+      <option value="EPSG">EPSG</option>
+    </helper>
+  </element>
+  <element name="gmd:collectiveTitle" id="371.0">
+    <label>Kolektívny názov</label>
+    <description>Spoločný názov s poznámkou o mieste uloženia. POZNÁMKA: názov kolektívne identifikuje prvky série
+       pripojením informácií o tom, ktoré objemy sú k dispozícii v citovanom zdroji
+      </description>
+    <help>Toto pole je použiívané na pomenovanie základných geoúdajov ako je definované v prílohe GeoIV Annex I,  pretože je možné, že na 1 právoplatný vstup je priradený viac ako 1 "fyzický" súbor údajov. Napr .: Vstup č. 47 "Geophysikalisches Kartenwerk" pozostávajúci z 3 súborov údajov "Geophysikalische Karten
+      1:500000", "Geophysikalische Spezialkarten" a "Gravimetrischer Atlas 1:100000"</help>
+  </element>
+  <element name="gmd:complianceCode" id="234.0">
+    <label>Kód kompatibility</label>
+    <description>Označenie, či je referenčný katalóg prvkov v súlade s normou ISO
+      19110</description>
+  </element>
+  <element name="gmd:compressionGenerationQuantity" id="250.0">
+    <label>Kompresný pomer</label>
+    <description>Určuje počet stratových cyklov kompresie vytvorených na 
+      obrázku / snímke</description>
+  </element>
+  <element name="gmd:condition" id="312.0">
+    <label>Podmienka</label>
+    <description>Podmienka, podľa ktorej je rozšírený prvok povinný</description>
+  </element>
+  <element name="gmd:constraintLanguage" id="323.0">
+    <label>Jazyk obmedzenia</label>
+    <description>Formálny jazyk používaný v schéme aplikácie</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
+    <condition>Povinný</condition>
+    <label>Kontakt</label>
+    <btnlabel>Pridať kontakt</btnlabel>
+    <btnclass>fa fa-user-plus </btnclass>
+    <description>Strana zodpovedná za informácie o metaúdajoch </description>
+  </element>
+  <element name="gmd:contact" id="148.1" context="gmd:MD_MaintenanceInformation">
+    <label>Kontakt</label>
+    <btnlabel>Pridať osobu zodpovednú za udržiavanie</btnlabel>
+    <btnclass>fa fa-user-plus </btnclass>
+    <description>Identifikácia a prostriedky komunikácie s osobami a organizáciami 
+      zodpovednými za údržbu metaúdajov</description>
+  </element>
+  <element name="gmd:contact" id="8.0">
+    <label>Autor metaúdajov</label>
+    <btnlabel>Pridať autora </btnlabel>
+    <btnclass>fa fa-user-plus </btnclass>
+    <description>Strana zodpovedná za informácie o metaúdajoch </description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:contactInfo" id="378.0">
+    <description>Adresa zodpovednej strany</description>
+    <label>Kontaktné informácie</label>
+  </element>
+  <element name="gmd:contactInstructions" id="392.0">
+    <label>Kontaktné inštrukcie</label>
+    <description>Doplnkové pokyny o tom, ako alebo kedy kontaktovať jednotlivca alebo
+       organizáciu</description>
+  </element>
+  <element name="gmd:contentInfo" id="16.0">
+    <description>Poskytuje informácie o katalógu prvkov a opisuje vlastnosti pokrytia a 
+      obrazových údajov</description>
+    <label>Informácie o obsahu</label>
+    <abbrlabel>Informácie o obsahu</abbrlabel>
+  </element>
+  <element name="gmd:contentType" id="241.0">
+    <label>Druh obsahu</label>
+    <description>Typ informácií reprezentovaných hodnotou bunky</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:controlPointAvailability" id="171.0">
+    <description>Označenie, či existujú alebo neexistujú kontrolné body</description>
+    <condition>Povinný</condition>
+    <label>Dostupnosť kontrolného bodu</label>
+  </element>
+  <element name="gmd:cornerPoints" id="165.0">
+    <label>Rohové body</label>
+    <description>Umiestnenie Zeme v súradnicovom systéme definovanom priestorovým referenčným systémom 
+      a rastrovým súradnicovým systémom buniek na protiľahlých stranách rastra pozdĺž dvoch uhlopriečok v priestorových rozmeroch rastra. V georektifikovanom rastri sú štyri rohové body; sú potrebné aspoň dva rohové body pozdĺž jednej uhlopriečky</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:country" id="612.0">
+    <label>Krajina</label>
+    <description>Stav fyzickej adresy</description>
+  </element>
+  <element name="gmd:country" id="508.0" context="gmd:MD_Legislation">
+    <label>Krajina</label>
+    <description>Krajina, v ktorej bol zákon vydaný</description>
+  </element>
+  <element name="gmd:country" id="605.0" context="PT_Group">
+    <label>Krajina</label>
+    <description>Krajina, ktorej jazyk je používaný na dokumentáciu obyčajného textu</description>
+  </element>
+  <element name="gmd:credit" id="27.0">
+    <label>Credit</label>
+    <description>Uznanie tých, ktorí prispeli k zdroju (zdrojom)</description>
+  </element>
+  <element name="gmd:dataQualityInfo" id="18.0">
+    <label>Informácie o kvalite údajov</label>
+    <abbrlabel>Kvalita údajov</abbrlabel>
+    <description>Zabezpečenie celkového hodnotenia kvality zdroja (zdrojov)</description>
+  </element>
+  <element name="gmd:dataSetURI" id="11.1">
+    <label>URI súbor údajov </label>
+    <description>Identifikátor súboru údajov (URI), na ktorý sa vzťahujú metaúdaje</description>
+    <help>Identifikátor súboru údajov (URI), na ktorý sa vzťahujú metaúdaje. Tento
+      odkaz sa vzťahuje priamo na strojovo čitateľný súbor údajov.</help>
+  </element>
+  <element name="gmd:dataType" id="313.0">
+    <label>Druh údajov</label>
+    <description>Kód, ktorý identifikuje typ hodnoty daného rozšíreného 
+      prvku</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:dataset" id="154.0">
+    <description>Súbor údajov, na ktorý sa vzťahujú informácie </description>
+    <condition/>
+    <label>Súbor údajov</label>
+  </element>
+  <element name="gmd:date" id="570.0">
+    <label>Dátum</label>
+    <btnclass>fa fa-calendar-plus-o</btnclass>
+    <description>Referenčný dátum pre citovaný zdroj (RRRR-MM-DD)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:date" id="570.0" context="gmd:MD_Revision">
+    <label>Dátum poslednej aktualizácie</label>
+    <btnclass>fa fa-calendar-plus-o</btnclass>
+    <description>Dátum poslednej aktualizácie</description>
+  </element>
+  <element name="gmd:date" id="144.0" context="gmd:MD_MaintenanceInformation">
+    <label>Dátum nasledujúcej aktualizácie</label>
+    <btnclass>fa fa-calendar-plus-o</btnclass>
+    <description>Plánovaný dátum revízie zdroja</description>
+  </element>
+  <element name="gmd:date" id="362.0" context="gmd:CI_Citation">
+    <condition>Povinný</condition>
+    <label>Dátum</label>
+    <btnclass>fa fa-calendar-plus-o</btnclass>
+    <description>Referenčný dátum pre citovaný zdroj</description>
+    <_condition>M</_condition>
+  </element>
+  <element name="gmd:date" id="394.0" context="gmd:CI_Date">
+    <condition>Povinný</condition>
+    <label>Dátum</label>
+    <btnclass>fa fa-calendar-plus-o</btnclass>
+    <description>Referenčný dátum pre citovaný zdroj</description>
+    <_condition>M</_condition>
+  </element>
+  <element name="gmd:dateOfNextUpdate" id="144.0">
+    <label>Dátum nasledujúcej aktualizácie</label>
+    <btnclass>fa fa-calendar-plus-o</btnclass>
+    <description>Plánovaný dátum revízie zdroja (RRRR-MM-DD)</description>
+  </element>
+  <element name="gmd:dateStamp" id="9.0">
+    <label>Pečiatka s dátumom</label>
+    <btnclass>fa fa-calendar-plus-o</btnclass>
+    <description>Dátum vytvorenia metaúdajov (RRRR-MM-DDThh:mm:ss)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:dateTime" id="89.0">
+    <label>Dátum / Čas</label>
+    <description>Dátum a čas, alebo rozsah dátumu a času cez ktorý sa uskutočnil 
+      procesný krok (RRRR-MM-DDThh:mm:ss)</description>
+  </element>
+  <element name="gmd:dateTime" id="89.0" context="LI_ProcessStep">
+    <description>Dátum a čas, alebo rozsah dátumu a času cez ktorý sa uskutočnil 
+      procesný krok (RRRR-MM-DDThh:mm:ss)</description>
+    <label>Dátum / Čas</label>
+  </element>
+  <element name="gmd:dateTime" id="106.0" context="gmd:DQ_Element">
+    <label>Dátum / Čas</label>
+    <description>Dátum alebo časový interval, kedy bolo uplatnené opatrenie kvality údajov</description>
+  </element>
+  <element name="gmd:dateType" id="395.0">
+    <label>Typ dátumu</label>
+    <description>Udalosť použitá pre referenčný dátum</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:definition" id="310.0">
+    <label>Definícia</label>
+    <description>Definícia rozšíreného prvku</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:deliveryPoint" id="381.0">
+    <label>Miesto dodania</label>
+    <description>Poloha adresného umiestnenia (opísaná v ISO 11180, príloha A)</description>
+  </element>
+  <element name="gmd:denominator" id="57.0">
+    <label>Menovateľ</label>
+    <description>Číslo pod riadkom bežnej frakcie</description>
+    <condition>Pridanie menovateľa alebo vzdialenosti</condition>
+    <helper>
+      <option value="5000">1:5 000</option>
+      <option value="10000">1:10 000</option>
+      <option value="25000">1:25 000</option>
+      <option value="50000">1:50 000</option>
+      <option value="100000">1:100 000</option>
+      <option value="200000">1:200 000</option>
+      <option value="300000">1:300 000</option>
+      <option value="500000">1:500 000</option>
+      <option value="1000000">1:1 000 000</option>
+    </helper>
+  </element>
+  <element name="gmd:density" id="293.0">
+    <label>Hustota</label>
+    <description>Hustota, pri ktorej sú údaje zaznamenané</description>
+  </element>
+  <element name="gmd:densityUnits" id="294.0">
+    <label>Jednotky hustoty </label>
+    <description>Jednotky hustoty merania </description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:description" id="561.0">
+    <label>Opis</label>
+    <description>Opis udalosti vrátane súvisiacich parametrov alebo 
+      tolerancií</description>
+  </element>
+  <element name="gmd:description" id="561.0" context="gmd:MD_AbstractClass">
+    <label>Opis</label>
+    <description>Opis</description>
+  </element>
+  <element name="gmd:description" id="87.0" context="LI_ProcessStep">
+    <condition>Povinný</condition>
+    <label>Opis</label>
+    <description>Opis udalosti vrátane súvisiacich parametrov alebo 
+      tolerancií</description>
+  </element>
+  <element name="gmd:description" id="93.0" context="LI_Source">
+    <label>Opis</label>
+    <description>Podrobný opis úrovne zdrojových údajov</description>
+    <_condition>Podmienený / zdroj rozsah nie je poskytnutý?</_condition>
+  </element>
+  <element name="gmd:description" id="335.0" context="gmd:EX_Extent">
+    <label>Opis</label>
+    <description>Priestorový a časový rozsah referenčného objektu</description>
+    <_condition>Podmienený / geografický, časový a vertikálny prvok nie je 
+      dokumentovaný?</_condition>
+  </element>
+  <element name="gmd:description" id="401.0" context="gmd:CI_OnlineResource">
+    <label>Opis</label>
+    <description>Podrobný textový popis toho, čo je / robí online zdroj</description>
+  </element>
+  <element name="gmd:description" id="541.0" context="gmd:MD_CodeDomain">
+    <label>Opis</label>
+    <description>Popis kódovej domény</description>
+  </element>
+  <element name="gmd:description" id="549.0" context="gmd:MD_CodeValue">
+    <label>Opis hodnoty</label>
+    <description>Opis hodnoty</description>
+  </element>
+  <element name="gmd:description" id="552.0" context="gmd:MD_Attribute">
+    <label>Opis</label>
+    <description>Opis atribútov</description>
+  </element>
+  <element name="gmd:description" id="557.0" context="gmd:MD_Role">
+    <label>Opis</label>
+    <description>Opis úlohy</description>
+  </element>
+  <element name="gmd:descriptiveKeywords" id="33.0">
+    <label>Popisné kľúčové slová</label>
+    <description>Poskytnutie kategórií kľúčových slov, ich typov a referenčných zdrojov </description>
+  </element>
+  <element name="gmd:descriptor" id="258.0">
+    <label>Deskriptor</label>
+    <description>Opis rozsahu meranej hodnoty bunky</description>
+  </element>
+  <element name="gmd:dimension" id="242.0">
+    <label>Rozmer</label>
+    <description>Informácie o dimenziách meranej hodnoty bunky</description>
+  </element>
+  <element name="gmd:dimensionName" id="180.0">
+    <label>Názov dimenzie</label>
+    <description>Názov osí</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:dimensionSize" id="181.0">
+    <label>Veľkosť dimenzie</label>
+    <description>Počet prvkov pozdĺž osí</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:distance" id="61.0">
+    <label>Vzdialenosť</label>
+    <description>Vzorkovacia vzdialenosť terénu</description>
+    <condition>Uveďte vzdialenosť, ak nie je zdokumentovaná žiadna ekvivalentná mierka</condition>
+    <helper relatt="uom">
+      <option value="0.10" title="m">10 cm</option>
+      <option value="0.25" title="m">25 cm</option>
+      <option value="0.50" title="m">50 cm</option>
+      <option value="1" title="m">1 m</option>
+      <!-- To only set unit without changing the value
+			<option title="m">m</option>
+			-->
+      <option value="30" title="m">30 m</option>
+      <option value="100" title="m">100 m</option>
+    </helper>
+  </element>
+  <element name="gmd:distributionFormat" id="271.0">
+    <label>Distribučný formát</label>
+    <condition>Povinný</condition>
+    <description>Poskytuje popis formátu údajov, ktoré sa majú 
+      distribuovať</description>
+  </element>
+  <element name="gmd:distributionInfo" id="17.0">
+    <description>Poskytuje informácie o distribútorovi a možnostiach získania zdroja</description>
+    <label>Informácie o distribúcii</label>
+    <abbrlabel>Distribúcia</abbrlabel>
+  </element>
+  <element name="gmd:distributionOrderProcess" id="281.0">
+    <label>Proces distribúcie / objednávky</label>
+    <description>Poskytuje informácie o spôsobe získania zdroja a súvisiacich pokynoch a 
+      informáciách o poplatkoch</description>
+  </element>
+  <element name="gmd:distributor" id="272.0">
+    <label>Distribútor</label>
+    <description>Poskytuje informácie o distribútorovi</description>
+  </element>
+  <element name="gmd:distributorContact" id="280.0">
+    <label>Kontakt na distribútora</label>
+    <btnlabel>Pridať distribútora</btnlabel>
+    <btnclass>fa fa-user-plus </btnclass>
+    <description>Strana, od ktorej môžete získať zdroj. Tento zoznam nemusí byť 
+      úplný</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:distributorFormat" id="282.0">
+    <label>Formát distribútora</label>
+    <description>Poskytuje informácie o formáte použitom distribútorom</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:distributorTransferOptions" id="283.0">
+    <label>Možnosti prenosu distribútora</label>
+    <description>Poskytuje informácie o technických prostriedkoch a médiách, ktoré používa 
+      distribútor</description>
+  </element>
+  <element name="gmd:domainCode" id="309.0">
+    <label>Kód domény</label>
+    <description>Trojmiestny kód priradený rozšírenému prvku</description>
+    <_condition>Podmienený / je dátový typ? Zoznam kódov prvok?</_condition>
+  </element>
+  <element name="gmd:domainOfValidity" id="197.0">
+    <label>Doména platnosti</label>
+    <description>Rozsah, ktorý je platný pre referenčný systém</description>
+  </element>
+  <element name="gmd:domainValue" id="315.0">
+    <label>Hodnota domény</label>
+    <description>Platné hodnoty, ktoré možno priradiť rozšírenému prvku</description>
+    <_condition>Podmienené / údajový typ nie 'codelist', 'enumeration' alebo 'codelistElement'</_condition>
+  </element>
+  <element name="gmd:eastBoundLongitude" id="345.0">
+    <label>Východná hranica</label>
+    <description>Najvzdialenejšia východná súradnica z rozsahu súboru údajov,
+ vyjadrená 
+      zemepisnou dĺžkou v desatinných stupňoch (kladná orientácia na východ)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:edition" id="363.0">
+    <label>Vydanie</label>
+    <description>Verzia citovaného zdroja</description>
+  </element>
+  <element name="gmd:editionDate" id="364.0">
+    <label>Dátum vydania</label>
+    <description>Dátum vydania (RRRR-MM-DD) </description>
+  </element>
+  <element name="gmd:electronicMailAddress" id="386.0">
+    <label>Elektronická mailová adresa</label>
+    <description>Adresa elektronickej schránky zodpovednej organizácie alebo 
+      konkrétnej osoby</description>
+  </element>
+  <element name="gmd:environmentDescription" id="44.0">
+    <label>Opis prostredia</label>
+    <description>Opis súboru údajov v procesnom prostredí výrobcu 
+      vrátane položiek, ako je softvér, operačný systém počítača, názov súboru a veľkosť súboru údajov</description>
+  </element>
+  <element name="gmd:equivalentScale" id="60.0">
+    <label>Ekvivalentná stupnica</label>
+    <description>Úroveň podrobnosti vyjadrená ako miera porovnateľnej tlačenej mapy alebo
+      tabuľka</description>
+    <_condition>Podmienka / vzdialenosť nie je zdokumentovaná?</_condition>
+  </element>
+  <element name="gmd:errorStatistic" id="136.0">
+    <label>Štatistika chýb</label>
+    <description>Štatistická metóda použitá na určenie hodnoty</description>
+  </element>
+  <element name="gmd:evaluationMethodDescription" id="104.0">
+    <label>Opis metódy hodnotenia</label>
+    <description>Opis metódy hodnotenia</description>
+  </element>
+  <element name="gmd:evaluationMethodType" id="103.0">
+    <label>Metóda hodnotenia</label>
+    <description>Druh metódy používaný na hodnotenie kvality súboru údajov</description>
+  </element>
+  <element name="gmd:evaluationProcedure" id="105.0">
+    <label>Postup hodnotenia</label>
+    <description>Odkaz na informácie o postupe</description>
+  </element>
+  <element name="gmd:explanation" id="131.0">
+    <label>Vysvetlenie</label>
+    <description>Vysvetlenie významu zhody pre tento výsledok</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:extendedElementInformation" id="305.0">
+    <label>Informácie o rozšírenom prvku</label>
+    <description>Poskytuje informácie o novom prvku metaúdajov, ktorý sa nenachádza v ISO 19115, ale sa vyžaduje na opis geografických údajov</description>
+  </element>
+  <element name="gmd:extensionOnLineResource" id="304.0">
+    <label>Rozšírenie sieťového zdroja</label>
+    <description>informácie o on-line zdrojoch, ktoré obsahujú názov profilu komunity
+ a prvky rozšírených metaúdajov. 
+      Informácie pre všetky nové prvky metaúdajov</description>
+  </element>
+  <element name="gmd:extent" id="45.0" context="gmd:MD_DataIdentification">
+    <label>Rozsah</label>
+    <description>Rozsah informácií vrátane ohraničujúceho polygónu, vertikálneho a časového rozsahu </description>
+    <_condition>Podmienený / ak hierarchyLevel equals "dataset"? tak aj
+      extent.geographicElement.EX_GeographicBoundingBox alebo
+      extent.geographicElement.EX_GeographicDescription sú potrebné</_condition>
+  </element>
+  <element name="gmd:extent" id="140.0" context="gmd:DQ_Scope">
+    <label>Rozsah</label>
+    <description>Informácie o horizontálnom, vertikálnom a časovom pokrytí údajov
+      špecifikovaných rozsahom</description>
+  </element>
+  <element name="gmd:extent" id="351.0" context="gmd:EX_TemporalExtent">
+    <label>Rozsah</label>
+    <description>Dátum a čas pre obsah súboru údajov</description>
+    <_condition>Povinný</_condition>
+  </element>
+  <element name="gmd:extentTypeCode" id="340.0">
+    <label>Kód druhu rozšírenia</label>
+    <description>Označenie, či ohraničujúci polygón zahŕňa oblasť pokrytú tými údajmi alebo oblasť, kde nie sú prítomné údaje. Možné hodnoty: "1" pre zaradenie alebo "0" pre vylúčenie</description>
+  </element>
+  <element name="gmd:facsimile" id="409.0">
+    <label>Fax</label>
+    <description>Telefónne číslo faxu organizácie alebo zodpovednej osoby</description>
+  </element>
+  <element name="gmd:featureCatalogueCitation" id="238.0">
+    <label>Zoznam katalógov prvkov</label>
+    <description>Kompletný bibliografický odkaz na jeden alebo viac externých 
+      katalógov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:featureInstances" id="152.0">
+    <label>Inštancie prvkov</label>
+    <description>Inštancie prvkov, na ktoré sa tieto informácie vzťahujú</description>
+    <condition/>
+  </element>
+  <element name="gmd:featureTypes" id="237.0">
+    <label>Druhy prvkov</label>
+    <description>Podmnožina druhov prvkov z katalógu prvkov citovaných v údajoch</description>
+  </element>
+  <element name="gmd:features" id="151.0">
+    <label>Vlastnosti</label>
+    <description>Vlastnosti, na ktoré sa vzťahujú informácie</description>
+    <condition/>
+  </element>
+  <element name="gmd:fees" id="299.0">
+    <label>Poplatky</label>
+    <description>Poplatky a podmienky na získanie zdroja. Zahŕňa menové jednotky
+       (podľa normy ISO 4217)</description>
+  </element>
+  <element name="gmd:fileDecompressionTechnique" id="289.0">
+    <label>Technika dekompresie súborov</label>
+    <description>Odporúčané algoritmy alebo procesy, ktoré sa dajú použiť na čítanie
+ alebo rozšírenie zdrojov, pre ktoré boli použité kompresné techniky</description>
+  </element>
+  <element name="gmd:fileDescription" id="50.0">
+    <label>Opis súboru</label>
+    <description>Textový popis ilustrácie</description>
+  </element>
+  <element name="gmd:fileIdentifier" id="2.0">
+    <label>Identifikátor súboru</label>
+    <description>Unikátny identifikátor pre tento súbor metaúdajov</description>
+  </element>
+  <element name="gmd:fileName" id="49.0">
+    <label>Názov súboru</label>
+    <description>Názov súboru obsahujúci grafiku, ktorá poskytuje ilustráciu súboru údajov. 
+     Mohla by to byť verejná adresa dokumentu URL.</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:fileType" id="51.0">
+    <label>Druh súboru</label>
+    <description>Formát, v ktorom je zakódovaná ilustrácia</description>
+    <help>Formát, v ktorom je zakódovaná ilustrácia. Napríklad: CGM, EPS, GIF, JPEG, PBM, PS, TIFF, XWD </help>
+  </element>
+  <element name="gmd:filmDistortionInformationAvailability" id="254.0">
+    <label>Dostupnosť informácií o skreslení filmu</label>
+    <description>Uvedenie informácie o tom, či sú alebo nie sú k dispozícii informácie o kalibrácii Reseau</description>
+  </element>
+  <element name="gmd:formatDistributor" id="290.0">
+    <label>Formát distribútora</label>
+    <description>Poskytuje informácie o formáte distribútora</description>
+  </element>
+  <element name="gmd:function" id="402.0">
+    <label>Funkcia</label>
+    <description>Kód funkcie vykonávanej online zdrojom</description>
+  </element>
+  <element name="gmd:geographicElement" id="336.0">
+    <label>Geografický prvok</label>
+    <description>Poskytuje geografickú zložku rozsahu referenčného 
+      objektu</description>
+    <_condition>Podmienený / popis, časový prvok a vertikálny prvok nie sú
+      dokumentované?</_condition>
+  </element>
+  <element name="gmd:geographicIdentifier" id="349.0">
+    <label>Geografický identifikátor</label>
+    <description>Identifikátor používaný na reprezentáciu geografickej oblasti</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:geometricObjectCount" id="185.0">
+    <label>Počet geometrických objektov</label>
+    <description>Celkový počet druhov bodových alebo vektorových objektov vyskytujúcich sa v súbore údajov</description>
+  </element>
+  <element name="gmd:geometricObjectType" id="184.0">
+    <label>Druh geometrického objektu</label>
+    <description>Názov bodu alebo vektorových objektov použitých na lokalizáciu
+ nulovej, dvojrozmernej a trojrozmernej 
+      priestorovej polohy v súbore údajov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:geometricObjects" id="178.0">
+    <label>Geometrické objekty</label>
+    <description>Informácie o geografických objektoch použitých v súbore údajov</description>
+  </element>
+  <element name="gmd:georeferencedParameters" id="174.0">
+    <label>Georeferencované parametre</label>
+    <description>Georeferencované parametre</description>
+  </element>
+  <element name="gmd:graphicOverview" id="31.0">
+    <label>Grafický prehľad</label>
+    <description>Poskytuje grafiku, ktorá znázorňuje zdroj (zdroje) (mala by obsahovať 
+      legendu pre grafiku)</description>
+  </element>
+  <element name="gmd:graphicsFile" id="325.0">
+    <label>Grafické súbory</label>
+    <description>Plná schéma aplikácie uvedená ako grafický súbor</description>
+  </element>
+  <element name="gmd:handlingDescription" id="77.0">
+    <label>Popis spracovania</label>
+    <description>Ďalšie informácie o obmedzeniach pri manipulácii s týmto
+      zdrojom</description>
+  </element>
+  <element name="gmd:hierarchyLevel" id="6.0">
+    <label>Úroveň hierarchie </label>
+    <description>Rozsah, na ktorý sa vzťahujú metaúdaje (viac informácií o hierarchii 
+      metaúdajov nájdete v prílohe H)</description>
+  </element>
+  <element name="gmd:hierarchyLevelName" id="7.0">
+    <label>Názov úrovne hierarchie</label>
+    <description>Názvy úrovní hierarchie, pre ktoré sú poskytované metaúdaje</description>
+    <_condition>Podmienený / názov úrovne nie je totožný so súborom údajov?</_condition>
+  </element>
+  <element name="gmd:hoursOfService" id="391.0">
+    <label>Servisné hodiny</label>
+    <description>Časové obdobie (vrátane časového pásma), kedy je možné kontaktovať organizáciu
+       alebo danú osobu</description>
+  </element>
+  <element name="gmd:identificationInfo" id="15.0">
+    <label>Informácie o identifikácií</label>
+    <abbrlabel>Identifikácia</abbrlabel>
+    <description>Základné informácie o zdroji (zdrojoch), na ktoré sa vzťahujú 
+      metadúdaje</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:identifier" id="573.0">
+    <label>Identifikátor</label>
+    <description>Jedinečný identifikátor pre zdroje. NAPRIKLAD: Univerzálny kód produktu (UPC),
+      Národné skladové číslo  (NSN)</description>
+  </element>
+  <element name="gmd:identifier" id="573.0" context="gmd:CI_Citation">
+    <label>Identifikátor citácie</label>
+    <description>Identifikátor citácie</description>
+  </element>
+  <element name="gmd:identifier" id="575.0" context="gmd:MD_Authority">
+    <label>Identifikátor</label>
+    <description>Identifikátor, ktorý patrí organizácií</description>
+  </element>
+  <element name="gmd:illuminationAzimuthAngle" id="245.0">
+    <label>Uhol sklonu osvetlenia</label>
+    <description>Azimut osvetlenia meraný v stupňoch v smere hodinových ručičiek od skutočného severu v čase, 
+      kedy bol nasnímaný obraz. Informácie o snímkach zo skenovacieho zariadenia nájdete v strednom pixeli 
+      obrázka / snímky</description>
+  </element>
+  <element name="gmd:illuminationElevationAngle" id="244.0">
+    <label>Uhol vyvýšenia osvetlenia</label>
+    <description>Výška osvetlenia meraná v stupňoch v smere hodinových ručičiek od cieľovej roviny pri priesečníku 
+      optickej línie s povrchom Zeme. Pri obrázkoch / snímkach zo skenovacieho zariadenia pozrite stredový snímkovací bod obrázka / snímky</description>
+  </element>
+  <element name="gmd:imageQualityCode" id="247.0">
+    <label>Kód kvality obrázka / snímky</label>
+    <description>Určuje kvalitu obrázkov / snímok</description>
+    <help>Určuje kvalitu obrázkov / snímok </help>
+  </element>
+  <element name="gmd:imagingCondition" id="246.0">
+    <label>Podmienka zobrazovania</label>
+    <description>Podmienky ovplyvňujúce obraz</description>
+  </element>
+  <element name="gmd:includedWithDataset" id="236.0">
+    <label>Súčasťou súboru údajov</label>
+    <description>Informácia o tom, či je alebo nie je zahrnutý katalóg prvkov
+       v súbore údajov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:individualName" id="375.0">
+    <label>Samostatný názov</label>
+    <description>Meno zodpovednej osoby - priezvisko, krstné meno, titul oddelené 
+      oddeľovačom</description>
+    <_condition>Podmienený / organisationName a positionName nie sú zdokumentované? </_condition>
+  </element>
+  <element name="gmd:initiativeType" id="66.5">
+    <label>Druh iniciatívy </label>
+    <description>Druh iniciatívy, počas ktorej bol agregovaný súbor údajov vytvorený</description>
+  </element>
+  <element name="gmd:issueIdentification" id="405.0">
+    <label>Identifikácia čísel</label>
+    <description>Informácie identifikujúce číslo šarže</description>
+  </element>
+  <element name="gmd:keyword" id="53.0">
+    <label>Kľúčové slovo</label>
+    <btnclass>fa fa-tag</btnclass>
+    <description>Bežne používané slová, formalizované slová alebo frázy používané na opis 
+      predmetu</description>
+  </element>
+  <element name="gmd:language" id="3.0">
+    <label>Jazyk metaúdajov</label>
+    <description>Jazyk používaný na dokumentáciu metaúdajov</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:language" context="gmd:MD_DataIdentification" id="39.0">
+    <label>Jazyk</label>
+    <description>Jazyk (jazyky) použitý v súbore údajov</description>
+    <help>Jazyk (jazyky) použitý v súbore údajov</help>
+    <_condition>Povinný</_condition>
+  </element>
+  <element name="gmd:language" context="gmd:MD_FeatureCatalogueDescription" id="235.0">
+    <label>Jazyk</label>
+    <description>Jazyk (jazyky) použitý v katalógu</description>
+  </element>
+  <element name="gmd:lensDistortionInformationAvailability" id="255.0">
+    <label>Informácie o skreslení objektívu</label>
+    <description>Označenie, či sú alebo nie sú k dispozícii informácie na korekciu 
+      aberácie šošovky</description>
+  </element>
+  <element name="gmd:level" id="139.0">
+    <label>Úroveň hierarchie </label>
+    <description>Hierarchické usporiadanie údajov určených rozsahom</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:levelDescription" id="141.0">
+    <label>Popis úrovne</label>
+    <description>Podrobný opis úrovne údajov určených rozsahom </description>
+    <_condition>Podmienený / nie totožné "súbor údajov" alebo "série"?</_condition>
+  </element>
+  <element name="gmd:lineage" id="81.0">
+    <label>Pôvod</label>
+    <description>Nekvantitatívne kvalitatívne informácie o histórii údajov definovaných 
+      rozsahom</description>
+    <_condition>Podmienené / hlásenie nie je poskytnuté?</_condition>
+  </element>
+  <element name="gmd:linkage" id="397.0">
+    <label>Spojenie</label>
+    <description>Miesto (adresa) pre on-line prístup pomocou adresy Uniform Resource Locator alebo podobnej schémy adresovania, 
+      ako napríklad http://www.statkart.no/isotc211</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
+    <label>Frekvencia udržovania a aktualizácie</label>
+    <description>Frekvencia zmeny a doplnenia zdroja po ukončení
+       pôvodného zdroja</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:maintenanceNote" id="148.0">
+    <label>Poznámka k údržbe</label>
+    <description>Informácie týkajúce sa špecifických požiadaviek na zachovanie
+      zdroja</description>
+  </element>
+  <element name="gmd:maxValue" id="260.0">
+    <label>Najvyššia hodnota</label>
+    <description>Najdlhšia vlnová dĺžka, ktorú snímač dokáže zbierať v určenom 
+      pásme</description>
+  </element>
+  <element name="gmd:maximumValue" id="356.0">
+    <label>Najvyššia hodnota</label>
+    <description>Najvyšší vertikálny rozsah obsiahnutý v súbore údajov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:measureDescription" id="102.0">
+    <label>Opis opatrenia</label>
+    <description>Opis určeného opatrenia</description>
+  </element>
+  <element name="gmd:measureIdentification" id="101.0">
+    <label>Identifikácia opatrenia</label>
+    <description>Kód identifikujúci registrovaný štandardný postup</description>
+  </element>
+  <element name="gmd:mediumFormat" id="296.0">
+    <label>Formát média</label>
+    <description>Metóda používaná na zápis do média</description>
+  </element>
+  <element name="gmd:mediumNote" id="297.0">
+    <label>Poznámky k médiu</label>
+    <description>Opis iných obmedzení alebo požiadaviek na používanie 
+      média</description>
+  </element>
+  <element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
+    <label>Obmedzenia metaúdajov</label>
+    <abbrlabel>Obmedzenia </abbrlabel>
+    <description>Poskytuje obmedzenia týkajúce sa prístupu a používania metaúdajov</description>
+  </element>
+  <element name="gmd:metadataConstraints">
+    <label>Obmedzenia metaúdajov</label>
+    <abbrlabel>Obmedzenia </abbrlabel>
+    <description>Poskytuje obmedzenia týkajúce sa prístupu a používania údajov </description>
+  </element>
+  <element name="gmd:metadataExtensionInfo" id="14.0">
+    <description>Informácie opisujúce rozšírenia metaúdajov</description>
+    <label>Informácie o rozšírení metaúdajov</label>
+    <abbrlabel>Informácie o rozšírení</abbrlabel>
+  </element>
+  <element name="gmd:metadataMaintenance" id="22.0">
+    <label>Uchovávanie metaúdajov</label>
+    <abbrlabel>Uchovávanie </abbrlabel>
+    <description>Poskytuje informácie o frekvencii aktualizácií metaúdajov a rozsahu 
+      týchto aktualizácií</description>
+  </element>
+  <element name="gmd:metadataStandardName" id="10.0">
+    <label>Štandardný názov metaúdajov</label>
+    <description>Názov metaúdajového štandardu (vrátane názvu profilu)</description>
+  </element>
+  <element name="gmd:metadataStandardVersion" id="11.0">
+    <label>Štandardná verzia metaúdajov</label>
+    <description>Verzia (profil) použitého štandardu metaúdajov</description>
+  </element>
+  <element name="gmd:minValue" id="261.0">
+    <label>Najnižšia hodnota</label>
+    <description>Najkratšia vlnová dĺžka, ktorú snímač dokáže zbierať v rámci 
+      určeného pásma</description>
+  </element>
+  <element name="gmd:minimumValue" id="355.0">
+    <label>Najnižšia hodnota</label>
+    <description>Najmenšia vertikálna hodnota obsiahnutá v súbore údajov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:name" context="gmd:MD_AbstractClass" id="560.0">
+    <label>Názov</label>
+    <description>Názov</description>
+  </element>
+  <element name="gmd:name" context="gmd:MD_Medium" id="292.0">
+    <label>Názov</label>
+    <description>Názov média, na ktorom môže byť zdroj prijatý </description>
+  </element>
+  <element name="gmd:name" context="gmd:RS_ReferenceSystem" id="196.0">
+    <label>Názov</label>
+    <description>Názov používaného referenčného systému</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:name" context="gmd:MD_Format" id="285.0">
+    <label>Názov</label>
+    <description>Názov formátu prenosu údajov</description>
+    <help>Názov formátu prenosu údajov</help>
+    <condition>Povinný</condition>
+    <helper rel="gmd:version">
+      <option value="Text">Text</option>
+      <option value="ESRI Shapefile" title="1.0">ESRI Shapefile </option>
+      <option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
+      <option value="Mapinfo TAB">Mapinfo TAB</option>
+      <option value="KML">KML</option>
+      <option value="GML" title="3.2.1">GML</option>
+      <option value="GeoTIFF" title="1.0">GeoTIFF</option>
+      <option value="TIFF">TIFF</option>
+      <option value="ECW">ECW</option>
+      <option value="JPEG2000">JPEG2000 </option>
+      <option value="ZIP">ZIP</option>
+      <option value="PDF">PDF</option>
+      <option value="PNG">PNG</option>
+      <option value="JPEG">JPEG</option>
+      <option value="OGC:WMC">OGC:WMC</option>
+      <option value="OGC:OWS-C">OGC OWS Context</option>
+    </helper>
+  </element>
+  <element name="gmd:name" context="gmd:MD_ExtendedElementInformation" id="307.0">
+    <label>Názov</label>
+    <description>Názov rozšíreného prvku metaúdajov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:name" context="gmd:MD_ApplicationSchemaInformation" id="321.0">
+    <label>Názov</label>
+    <description>Názov použitej schémy aplikácie</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:name" context="gmd:CI_OnlineResource" id="400.0">
+    <label>Názov zdroja</label>
+    <description>Názov online zdroja</description>
+  </element>
+  <element name="gmd:name" context="gmd:CI_Series" id="404.0">
+    <label>Názov</label>
+    <description>Názov série alebo súhrnného súboru údajov, ktorých súbor údajov je jej súčasťou</description>
+  </element>
+  <element name="gmd:name" context="gmd:MD_CodeDomain" id="537.0">
+    <label>Názov</label>
+    <description>Názov domény kódu</description>
+  </element>
+  <element name="gmd:name" context="gmd:MD_CodeValue" id="546.0">
+    <label>Názov</label>
+    <description>Názov hodnoty</description>
+  </element>
+  <element name="gmd:name" context="gmd:MD_Attribute" id="551.0">
+    <label>Názov</label>
+    <description>Názov atribútu</description>
+  </element>
+  <element name="gmd:name" context="gmd:MD_Role" id="556.0">
+    <label>Názov</label>
+    <description>Názov úlohy</description>
+  </element>
+  <element name="gmd:name">
+    <label>Názov</label>
+    <description/>
+  </element>
+  <element name="gmd:nameOfMeasure" id="100.0">
+    <label>Názov opatrenia</label>
+    <description>Názov testu použitého pre údaje</description>
+    <!-- ISO19138 Data quality basic measures Annex C - under revision ISO
+			19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
+    <helper rel="gmd:measureDescription">
+      <option value="">-- Úplnosť --</option>
+      <option value="Excess item" title="Informácia, či je položka v údajoch nesprávne poskytovaná " id="ISO19138:2006:measure:1">Nadbytočná položka</option>
+      <option value="Number of excess items" title="Počet položiek v súbore údajov, ktoré by nemali byť v súbore údajov" id="ISO19138:2006:measure:2">Počet nadbytočných položiek</option>
+      <option value="Rate of excess items" title="Počet nadbytočných položiek v súbore údajov vo vzťahu k počtu položiek, ktoré by mali byť prítomné" id="ISO19138:2006:measure:3">Množstvo nadbytočných položiek</option>
+      <option value="Number of duplicate feature instances" title="Celkový počet presných duplikácií inštancií prvkov v rámci údajov. Počet všetkých položiek v nesprávne extrahovaných údajoch s duplicitnou geometriou" id="ISO19138:2006:measure:4">Počet duplicitných inštancií prvkov</option>
+      <option value="Missing item" title="Indikátor, ktorý ukazuje, že v údajoch chýba konkrétna položka" id="ISO19138:2006:measure:5">Chýba položka</option>
+      <option value="Number of missing items" title="Počet všetkých položiek, ktoré mali byť v súbore údajov a nie sú" id="ISO19138:2006:measure:6">Počet chýbajúcich položiek </option>
+      <option value="Rate of missing items" title="Počet chýbajúcich položiek v súbore údajov vo vzťahu k počtu položiek, ktoré mali byť prítomné" id="ISO19138:2006:measure:7">Množstvo chýbajúcich položiek</option>
+      <option value="">-- Logická konzistencia / Koncepčná konzistencia -- </option>
+      <option value="Conceptual schema noncompliance" title="Označenie, že položka nie je v súlade s pravidlami príslušnej koncepčnej schémy" id="ISO19138:2006:measure:8">Nedodržanie konceptuálnej schémy</option>
+      <option value="Conceptual schema compliance" title="Označenie, že daná položka je v súlade s pravidlami príslušnej koncepčnej schémy" id="ISO19138:2006:measure:9">Dodržanie koncepčnej schémy</option>
+      <option value="Number of items noncompliant to the rules of the conceptual schema" title="Počet všetkých položiek v súbore údajov, ktoré nie sú v súlade s pravidlami koncepčnej schémy. Ak koncepčná schéma priamo alebo nepriamo opisuje pravidlá, musia sa tieto pravidlá dodržiavať . Porušenie týchto pravidiel predstavuje napr. neplatné umiestnenie prvkov v rámci definovanej tolerancie, duplicity prvkov a neplatné prekrytie prvkov." id="ISO19138:2006:measure:10">Počet položiek, ktoré nie sú v súlade s pravidlami koncepčnej schémy</option>
+      <option value="Number of invalid overlaps of surfaces" title="Celkový počet chybných prekrytí v údajoch ktorých povrchy sa môžu prekrývať a ktoré nesmú závisieť od aplikácie. Nie všetky prekrývajúce sa plochy sú nevyhnutne chybné. Pri oznamovaní tohto merania kvality údajov sa musia tiež uviesť druhy tried prvkov, ktoré zodpovedajú nedovoleným prekrývajúcim sa povrchom." id="ISO19138:2006:measure:11">Počet neplatných prekrývajúcich sa povrchov</option>
+      <option value="Non-compliance rate with respect to the rules of the conceptual schema" title="Počet položiek v súbore údajov, ktoré nie sú v súlade s pravidlami koncepčnej schémy vo vzťahu k celkovému počtu týchto položiek, ktoré sa majú nachádzať v súbore údajov" id="ISO19138:2006:measure:12">Miera nedodržiavania pravidiel vo vzťahu k pravidlám
+        koncepčnej schémy</option>
+      <option value=" Compliance rate with the rules of the conceptual schema" title="Počet položiek v súbore údajov v súlade s pravidlami koncepčnej schémy vo vzťahu k celkovému počtu položiek" id="ISO19138:2006:measure:13">Miera súladu s pravidlami koncepčnej schémy</option>
+      <option value="">- Logická konzistencia / konzistencia domény -</option>
+      <option value="Value domain non-conformance" title="Označenie, či položka nie je v súlade s jej doménou hodnôt" id="ISO19138:2006:measure:14">Nesúlad s doménou hodnôt</option>
+      <option value="Value domain conformance" title="Označenie, či sa položka zhoduje s jej doménou hodnôt" id="ISO19138:2006:measure:15">Súlad s doménou hodnôt </option>
+      <option value="Number of items not in conformance with their value domain" title="Počet všetkých položiek v súbore údajov, ktoré sú v rozpore s ich doménou hodnôt." id="ISO19138:2006:measure:16">Počet položiek, ktoré sú v rozpore s ich doménou 
+        hodnôt</option>
+      <option value="Value domain conformance rate" title="Počet položiek v súbore údajov, ktoré sú v súlade s ich doménou hodnôt vo vzťahu k celkovému počtu položiek v súbore údajov" id="ISO19138:2006:measure:17">Miera zhody s doménou hodnôt</option>
+      <option value="Value domain non-conformance rate" title="Počet položiek v súbore údajov, ktoré sú v rozpore s ich doménou hodnôt vo vzťahu k celkovému počtu položiek" id="ISO19138:2006:measure:18">Miera nesúladu domény hodnôt</option>
+      <option value="Physical structure conflicts" title="Počet všetkých položiek v súbore údajov, ktoré sú uložené v rozpore s fyzickou štruktúrou súboru údajov" id="ISO19138:2006:measure:19">Nesúlad fyzickej štruktúry</option>
+      <option value="Physical structure conflict rate" title="Počet položiek v súbore údajov, ktoré sú uložené v rozpore s fyzickou štruktúrou súboru údajov, vydelený celkovým počtom položiek" id="ISO19138:2006:measure:20">Miera nesúladu fyzickej štruktúry</option>
+      <option value="">-- Logická konzistencia / Topologická konzistencia --</option>
+      <option value="Number of faulty point-curve connections" title="Počet chybných spojení bodov krivky v súbore údajov. K dispozícii je bod krivky, kde sa dotýkajú rôzne krivky. Tieto krivky majú vnútorný topologický vzťah, ktorý musí odrážať skutočnú konšteláciu. Ak je spojenie bodov krivky v rozpore, dané spojenie je v súvislosti s týmto meraním kvality údajov chybné. Meranie kvality údajov počíta množstvo takýchto chýb." id="ISO19138:2006:measure:21">Počet chybných spojení bodov krivky</option>
+      <option value="Rate of faulty point-curve connections" title="Počet uzlových pripojení chybného spojenia vo vzťahu k počtu predpokladaných pripojení uzla spojenia" id="ISO19138:2006:measure:22">Počet chybných pripojení bodov krivky</option>
+      <option value="Number of missing connection due to undershoots" title="Počet položiek v súbore údajov v rámci tolerancie parametrov, ktoré sú chybné v dôsledku neočakávaných udalostí " id="ISO19138:2006:measure:23">Počet chýbajúcich pripojení v dôsledku neočakávaných udalostí</option>
+      <option value="Number of missing connections due to overshoots" title="Počet položiek v súbore údajov v rámci tolerancie parametrov, ktoré sa nezhodujú v dôsledku prekročenia" id="ISO19138:2006:measure:24">Počet chýbajúcich spojení kvôli prekročeniu</option>
+      <option value="Number of invalid slivers" title="Počet všetkých položiek v súbore údajov, ktoré sú neplatné povrchy prameňa. Prameň je nezamýšľaná oblasť, ktorá sa vyskytuje, keď susediace plochy nie sú správne digitalizované. Okraje susedných plôch môžu neúmyselne prenikať alebo prekrývať v malých množstvách a spôsobiť topologickú chybu." id="ISO19138:2006:measure:25">Počet neplatných skratiek</option>
+      <option value="Number of invalid self intersect errors" title="Počet všetkých položiek v údajoch, ktoré sa sami nedovolene pretínajú " id="ISO19138:2006:measure:26">Počet neplatných chýb pri samotnom pretínaní</option>
+      <option value="Number of invalid self overlap errors" title="Množstvo všetkých položiek v údajoch, ktoré sa nedovolene prekrývajú" id="ISO19138:2006:measure:27">Počet neplatných chýb spôsobených vlastným prekrývaním</option>
+      <option value="">-- Polohová presnosť / absolútna alebo vonkajšia 
+        presnosť / všeobecné opatrenia --</option>
+      <option value="Mean value of positional uncertainties" title="Stredná hodnota neistoty v určení polohy pre súbor polôh, kde sú polohové neistoty definované ako vzdialenosť medzi nameranou polohou a tým, čo sa považuje za prislúchajúcu skutočnú polohu" id="ISO19138:2006:measure:28">Stredná hodnota neistoty určenia polohy</option>
+      <option value="Mean value of positional uncertainties excluding outliers" title="Pre súbor bodov, kde vzdialenosť nepresahuje stanovenú dovolenú hodnotu, aritmetický priemer vzdialeností medzi ich nameranými polohami a tým, čo sa považuje za zodpovedajúcu skutočnú polohu " id="ISO19138:2006:measure:29">Stredná hodnota polohových neistôt s výnimkou mimoriadnych hodnôt</option>
+      <option value="Number of positional uncertainties above a given threshold" title="Počet polohových neistôt nad danou hranicou  pre súbor polôh. Chyby sú definované ako vzdialenosť medzi nameranou polohou a tým, čo sa považuje za zodpovedajúcu skutočnú polohu." id="ISO19138:2006:measure:30">Množstvo polohových neistôt nad hraničnou hodnotou</option>
+      <option value="Rate of positional errors above a given threshold" title="Počet neistôt v polohe nad danou hraničnou hodnotou pre súbor polôh vo vzťahu k celkovému počtu meraných polôh. Chyby sú definované ako vzdialenosť medzi nameranou polohou a tým, čo sa považuje za zodpovedajúcu skutočnú polohu." id="ISO19138:2006:measure:31">Množstvo nepresností v polohe nad danou hodnotou tolerancie</option>
+      <option value="Covariance matrix" title="Symetrická štvorcová matica, kde na hlavnej diagonále sa nachádzajú odchýlky súradníc bodov a prvky mimo diagonály predstavujú kovarianciu medzi týmito súradnicami ." id="ISO19138:2006:measure:32">Kovariančná matica</option>
+      <option value="">- Polohová presnosť  / absolútna alebo vonkajšia 
+presnosť / vertikálna -</option>
+      <option value="Linear error probable" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej skutočná hodnota leží s pravdepodobnosťou 50%." id="ISO19138:2006:measure:33">Pravdepodobná lineárna odchýlka</option>
+      <option value="Standard linear error" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej skutočná hodnota leží s pravdepodobnosťou 68,3%." id="ISO19138:2006:measure:34">Štandardná lineárna odchýlka</option>
+      <option value="Linear map accuracy at 90% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota nachádza s pravdepodobnosťou 90%." id="ISO19138:2006:measure:35">Lineárna presnosť mapy s 90% úrovňou významnosti</option>
+      <option value="Linear map accuracy at 95% significance level" title="Polovica dĺžky intervalu definovaného hornou a dolnou hranicou, v ktorej sa skutočná hodnota nachádza s pravdepodobnosťou 95%. " id="ISO19138:2006:measure:36">Lineárna presnosť mapy s 95% úrovňou významnosti</option>
+      <option value="Linear map accuracy at 99% significance level" title="Polovica dĺžky intervalu definovaného hornou a dolnou hranicou, v ktorej sa skutočná hodnota nachádza s pravdepodobnosťou 99%. " id="ISO19138:2006:measure:37">Lineárna presnosť mapy s 95% úrovňou významnosti </option>
+      <option value="Near certainty linear error" title="Polovica dĺžky intervalu definovaného hornou a dolnou hranicou, v ktorej sa skutočná hodnota nachádza s pravdepodobnosťou 99,8%." id="ISO19138:2006:measure:38">Near certainty linear error</option>
+      <option value="Root mean square error" title="Štandardná odchýlka, kde skutočná hodnota nie je odhadnutá z pozorovaní, ale poznáme apriori. " id="ISO19138:2006:measure:39">Stredná kvadratická chyba (?)</option>
+      <option value="Absolute linear error at 90% significance level of biased vertical data (Alternative 1)" title="Absolútna vertikálna presnosť súradníc dát, vyjadrená ako lineárna chyba s pravdepodobnosťou 90%, ak je prítomná odchýlka." id="ISO19138:2006:measure:40">Absolútna lineárna chyba na úrovni 90% významnosti skreslených 
+        vertikálnych údajov (Alternative 1) </option>
+      <option value="Absolute linear error at 90% significance level of biased vertical data" title="Absolútna vertikálna presnosť súradníc dát, vyjadrená ako lineárna chyba s pravdepodobnosťou 90%, ak je prítomná odchýlka." id="ISO19138:2006:measure:41">Absolútna lineárna chyba pri 90% úrovni významnosti skreslených 
+        vertikálnych údajov</option>
+      <option value="">- Presnosť polohovania / Absolútna alebo vonkajšia 
+        presnosť / Horizontálna -</option>
+      <option value="Circular standard deviation" title="Polomer opisujúci kružnicu, v ktorej sa skutočná poloha bodu nachádza s pravdepodobnosťou 39.4%. " id="ISO19138:2006:measure:42">Štandardná odchýlka (?)</option>
+      <option value="Circular error probable" title="Polomer opisujúci kružnicu, v ktorej sa skutočná poloha bodu nachádza s pravdepodobnosťou 50%." id="ISO19138:2006:measure:43">Stredná kružnica chýb (?)</option>
+      <option value=" Circular map accuracy standard" title="Polomer opisujúci kružnicu, v ktorej sa skutočná poloha bodu nachádza s pravdepodobnosťou 90%." id="ISO19138:2006:measure:44">Štandardná kruhová mapa presnosti (?)</option>
+      <option value="Circular error at 95% significance level" title="Polomer opisujúci kružnicu, v ktorej sa skutočná poloha bodu nachádza s pravdepodobnosťou 95%." id="ISO19138:2006:measure:45">Kružnica chýb pri úrovni významnosti 95%</option>
+      <option value="Circular near certainty error" title="Polomer kružnice, v ktorej sa skutočná poloha bodu nachádza s pravdepodobnosťou 99,8%." id="ISO19138:2006:measure:46">Stredná kružnica chýb </option>
+      <option value="Root mean square error of planimetry" title="Polomer kružnice okolo daného bodu, v ktorom sa skutočná hodnota nachádza s pravdepodobnosťou P." id="ISO19138:2006:measure:47">Stredná kvadratická chyba planimetrie</option>
+      <option value="Absolute circular error at 90% significance level of biased data (Alternative 2)" title="Absolútna horizontálna presnosť súradníc údajov, vyjadrená ako kružnica chýb s pravdepodobnosťou 90%, ak je prítomná odchýlka." id="ISO19138:2006:measure:48">Absolútna kružnica chýb pri úrovni významnosti 90% skreslených
+        údajov 
+        (Alternative 2)</option>
+      <option value="Absolute circular error at 90% significance level of biased data" title="Absolútna horizontálna presnosť súradníc údajov, vyjadrená ako kružnica chýb s pravdepodobnosťou 90%, ak je prítomná odchýlka." id="ISO19138:2006:measure:49">Absolútna kružnica chýb pri úrovni 90% významnosti skreslených
+        údajov</option>
+      <option value="Uncertainty ellipse" title="2D elipsa s dvoma hlavnými osami, ktorá udáva smer a veľkosť najvyššej a najnižšej neistoty 2D bodu" id="ISO19138:2006:measure:50">Neistota elipsy</option>
+      <option value="Confidence ellipse" title="2D elipsa s dvoma hlavnými osami, ktorá udáva smer a veľkosť najvyššej a najnižšej neistoty 2D bodu" id="ISO19138:2006:measure:51">Stredná elipsa chýb</option>
+      <option value="">- Polohová presnosť / Relatívna alebo vnútorná 
+        presnosť -</option>
+      <option value="Relative vertical error" title="Vyhodnotenie náhodných chýb jedného reliéfneho prvku na druhý v rovnakom súbore údajov alebo na tej istej mape / grafe. Je to funkcia náhodných chýb v oboch výškach vzhľadom na spoločný vertikálny vzťažný bod." id="ISO19138:2006:measure:52">Relatívna vertikálna chyba </option>
+      <option value="Relative horizontal error" title="Vyhodnotenie náhodných chýb v horizontálnej polohe jedného prvku na iný v rovnakom súbore údajov alebo na rovnakej mape / grafe." id="ISO19138:2006:measure:53">Relatívna horizontálna chyba</option>
+      <option value="">- Časová presnosť / Presnosť 
+        merania času -</option>
+      <option value="Time accuracy at 68.3% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota pre časovú inštanciu nachádza s pravdepodobnosťou 68.3%." id="ISO19138:2006:measure:54">Časová presnosť na úrovni významnosti 68.3% </option>
+      <option value="Time accuracy at 50% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota pre časovú inštanciu nachádza s pravdepodobnosťou 50%." id="ISO19138:2006:measure:55">Časová presnosť na úrovni významnosti 50% </option>
+      <option value="Time accuracy at 90% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota pre časovú inštanciu nachádza s pravdepodobnosťou 90%." id="ISO19138:2006:measure:56">Časová presnosť na úrovni významnosti 90% </option>
+      <option value="Time accuracy at 95% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota pre časovú inštanciu nachádza s pravdepodobnosťou 95%." id="ISO19138:2006:measure:57">Časová presnosť na úrovni významnosti 95% </option>
+      <option value="Time accuracy at 99% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota pre časovú inštanciu nachádza s pravdepodobnosťou 99%." id="ISO19138:2006:measure:58">Časová presnosť na úrovni významnosti 99% </option>
+      <option value="Time accuracy at 99.8% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota pre časovú inštanciu nachádza s pravdepodobnosťou 99,8%." id="ISO19138:2006:measure:59">Časová presnosť na úrovni významnosti 99,8%</option>
+      <option value="">- Tematická presnosť / Správnosť
+        klasifikácie -</option>
+      <option value="Number of incorrectly classified features" title="Počet nesprávne klasifikovaných prvkov" id="ISO19138:2006:measure:60">Počet nesprávne klasifikovaných prvkov </option>
+      <option value="Misclassification rate" title="Počet nesprávne klasifikovaných prvkov vo vzťahu k počtu prvkov, ktoré sa tam majú nachádzať" id="ISO19138:2006:measure:61">Miera zlej klasifikácie</option>
+      <option value="Misclassification matrix" title="Matica, ktorá označuje počet položiek triedy (i) klasifikovaných ako trieda (j)." id="ISO19138:2006:measure:62">Matica nesprávnej klasifikácie</option>
+      <option value="Relative misclassification matrix" title="Matica, ktorá označuje počet položiek triedy (i) klasifikovaných ako trieda (i) vydelená počtom položiek triedy (i)" id="ISO19138:2006:measure:63">Relatívna maticová klasifikácia</option>
+      <option value="Kappa coefficient" title="Koeficient na kvantifikáciu podielu odsúhlasenia priradení k triedam odstránením nesprávnych klasifikácií" id="ISO19138:2006:measure:64">Kappa koeficient</option>
+      <option value="">- Tematická presnosť / Nekvantitatívna - správnosť atribútu -</option>
+      <option value="Number of incorrect attribute values" title="Celkový počet chybných hodnôt atribútov v príslušnej časti súboru údajov" id="ISO19138:2006:measure:65">Počet nesprávnych hodnôt atribútov</option>
+      <option value="Rate of correct attribute values" title="Počet správnych hodnôt atribútov vo vzťahu k celkovému počtu hodnôt atribútov" id="ISO19138:2006:measure:66">Pomer správnych hodnôt atribútov</option>
+      <option value="Rate of incorrect attribute values" title="Počet hodnôt atribútov, ktorým sú priradené nesprávne hodnoty vo vzťahu k celkovému počtu hodnôt atribútov" id="ISO19138:2006:measure:67">Pomer nesprávnych hodnôt atribútov</option>
+      <option value="">- Tematická presnosť / Presnosť kvantitatívnych 
+        atribútov -</option>
+      <option value="Attribute value uncertainty at 68.3% significance level" title="Polovičná dĺžka intervalu definovaného hornou a dolnou hranicou, v ktorej sa skutočná hodnota pre kvantitatívny atribút nachádza s pravdepodobnosťou 68.3%. " id="ISO19138:2006:measure:68">Neurčitosť hodnoty atribútu na úrovni významnosti 68.3% </option>
+      <option value="Attribute value uncertainty at 50% significance level" title="Polovičná dĺžka intervalu definovaného hornou a dolnou hranicou, v ktorej sa skutočná hodnota pre kvantitatívny atribút nachádza s pravdepodobnosťou 50%. " id="ISO19138:2006:measure:69">Neurčitosť hodnoty atribútu na úrovni významnosti 50% </option>
+      <option value="Attribute value uncertainty at 90% significance level" title="Polovičná dĺžka intervalu definovaného hornou a dolnou hranicou, v ktorej skutočná hodnota pre kvantitatívny atribút leží s pravdepodobnosťou 90%." id="ISO19138:2006:measure:70">Neurčitosť hodnoty atribútu na úrovni významnosti 90% </option>
+      <option value="Attribute value uncertainty at 95% significance level" title="Polovica dĺžky intervalu definovaného hornou a dolnou hranicou, v ktorej sa skutočná hodnota pre kvantitatívny atribút nachádza s pravdepodobnosťou 95%." id="ISO19138:2006:measure:71">Neurčitosť hodnoty atribútu na úrovni významnosti 95% </option>
+      <option value="Attribute value uncertainty at 99% significance level" title="Polovičná dĺžka intervalu definovaného hornou a dolnou hranicou, v ktorej sa skutočná hodnota pre kvantitatívny atribút nachádza s pravdepodobnosťou 99%." id="ISO19138:2006:measure:72">Neurčitosť hodnoty atribútu na úrovni významnosti 99%</option>
+      <option value="Attribute value uncertainty at 99.8% significance level" title="Polovičná dĺžka intervalu definovaného hornou a spodnou hranicou, v ktorej sa skutočná hodnota pre kvantitatívny atribút nachádza s pravdepodobnosťou 99,8%." id="ISO19138:2006:measure:73">Neurčitosť hodnoty atribútu na úrovni významnosti 99,8%</option>
+    </helper>
+  </element>
+  <element name="gmd:northBoundLatitude" id="347.0">
+    <label>Severná hranica zemepisnej šírky</label>
+    <description>Najsevernejšia súradnica rozsahu hranice súboru údajov, vyjadrená v 
+      zemepisnej šírke v desatinných stupňoch (kladne na sever)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:numberOfDimensions" id="158.0">
+    <label>Počet dimenzií</label>
+    <description>Počet nezávislých priestorovo-časových osí</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:obligation" id="311.0">
+    <label>Povinnosť</label>
+    <description>Povinný charakter rozšíreného prvku</description>
+  </element>
+  <element name="gmd:offLine" id="278.0">
+    <label>Offline</label>
+    <description>Informácie o nesieťových médiách, na ktorých možno získať 
+      zdroj</description>
+  </element>
+  <element name="gmd:offset" id="267.0">
+    <label>Offset</label>
+    <description>Fyzická hodnota zodpovedajúca nulovej hodnote bunky</description>
+  </element>
+  <element name="gmd:onLine" id="277.0">
+    <label> On-line sieťový zdroj</label>
+    <description>Informácie o online zdrojoch, z ktorých možno získať 
+      zdroj</description>
+  </element>
+  <element name="gmd:onlineResource" id="390.0">
+    <help>Vymedzte URL pre prístup na webovú stránku</help>
+    <label>Webová stránka</label>
+    <description>Informácie o sieti, ktoré možno použiť na kontaktovanie osoby alebo
+      organizácie</description>
+  </element>
+  <element name="gmd:orderingInstructions" id="301.0">
+    <label>Pokyny pre objednávku</label>
+    <description>Všeobecné pokyny, podmienky a služby poskytované 
+      distribútorom</description>
+  </element>
+  <element name="gmd:organisationName" id="376.0">
+    <label>Názov organizácie</label>
+    <description>Názov zodpovednej organizácie </description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:orientationParameterAvailability" id="172.0">
+    <label>Dostupnosť parametrov orientácie</label>
+    <description>Ukazovateľ, či sú alebo nie sú k dispozícii parametre orientácie</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:orientationParameterDescription" id="173.0">
+    <label>Opis parametrov orientácie</label>
+    <description>Opis parametrov používaných na popis orientácie snímača</description>
+  </element>
+  <element name="gmd:other" id="155.0">
+    <label>Ostatné</label>
+    <description>Trieda informácií, ktorá nespadá do iných kategórií, na ktoré sa vzťahujú 
+      tieto informácie</description>
+    <condition/>
+  </element>
+  <element name="gmd:otherCitationDetails" id="370.0">
+    <label>Ostatné informácie o citácií</label>
+    <description>Ďalšie informácie potrebné na dokončenie citácie, ktorá nie je inde 
+      zaznamenaná</description>
+  </element>
+  <element name="gmd:otherConstraints" id="72.0">
+    <label>Ostatné obmedzenia</label>
+    <description>Ďalšie obmedzenia a právne predpoklady pre prístup k prostriedku a jeho 
+      použitie</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:page" id="406.0">
+    <label>Strana</label>
+    <description>Podrobnosti o tom, ktoré strany publikácie boli publikované</description>
+  </element>
+  <element name="gmd:parameterCitation" id="175.0">
+    <label>Citácia parametrov</label>
+    <description>Odkaz poskytujúci opis parametrov</description>
+  </element>
+  <element name="gmd:parentEntity" id="316.0">
+    <label>Rodičovská entita</label>
+    <description>Názov subjektu metaúdajov, pod ktorým sa môže tento rozšírený prvok metaúdajov zobraziť.
+      Názov (názvy) môže byť štandardným prvkom metaúdajov alebo iný rozšírený prvok metaúdajov.</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:parentIdentifier" id="5.0">
+    <label>Rodičovské ID</label>
+    <btnlabel>Pridať záznam</btnlabel>
+    <btnclass>fa fa-sitemap</btnclass>
+    <description>identifikátor súboru metaúdajov, pre ktorý sú tieto metaúdaje nastavené
+      je podmnožina (dieťa)</description>
+  </element>
+  <element name="gmd:pass" id="132.0">
+    <label>Stav</label>
+    <description>Označenie výsledku zhody, kde 0 = neprešiel a 1 = prešiel</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:peakResponse" id="263.0">
+    <label>Špičková odpoveď</label>
+    <description>Vlnová dĺžka, pre ktorú je odpoveď najsilnejšia</description>
+  </element>
+  <element name="gmd:phone" id="526.0">
+    <label>Telefón</label>
+    <description>Telefónne čísla, kde môžete kontaktovať danú osobu alebo 
+      organizáciu</description>
+  </element>
+  <element name="gmd:plannedAvailableDateTime" id="300.0">
+    <label>Plánovaný čas dostupnosti</label>
+    <description>Dátum a čas, kedy bude súbor údajov k dispozícii
+       (RRRR-MM-DDThh:mm:ss) </description>
+  </element>
+  <element name="gmd:pointInPixel" id="167.0">
+    <label>Bod v pixeloch</label>
+    <description>Bod v pixeli zodpovedajúci umiestneniu pixelov na zemi</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:pointOfContact" id="29.0">
+    <label>Kontaktné miesto</label>
+    <btnlabel>Pridať kontakt</btnlabel>
+    <btnclass>fa fa-user-plus </btnclass>
+    <description>Identifikácia a spôsob komunikácie s osobou (osobami)
+ a organizáciami súvisiacimi so zdrojom (zdrojmi)</description>
+  </element>
+  <element name="gmd:polygon" id="342.0">
+    <label>Polygón</label>
+    <description>Súbory bodov definujúcich hraničný polygón</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:portrayalCatalogueCitation" id="269.0">
+    <label>Citácia v katalógu zobrazovania</label>
+    <description>Bibliografický odkaz na citovaný katalóg zobrazení</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:portrayalCatalogueInfo" id="19.0">
+    <label>Informácie o katalógu zobrazovania</label>
+    <abbrlabel>Zobrazenie</abbrlabel>
+    <description>Poskytuje informácie o katalógu pravidiel definovaných na zobrazenie 
+      zdroja (zdrojov)</description>
+  </element>
+  <element name="gmd:positionName" id="377.0">
+    <label>Názov pozície</label>
+    <description>Úloha alebo postavenie zodpovednej osoby</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:postalCode" id="384.0">
+    <label>Poštové smerovacie číslo</label>
+    <description>PSČ alebo iný poštový smerovací kód</description>
+  </element>
+  <element name="gmd:presentationForm" id="368.0">
+    <label>Forma prezentácie</label>
+    <description>Režim, v ktorom je zdroj reprezentovaný</description>
+  </element>
+  <element name="gmd:processStep" id="84.0">
+    <label>Krok procesu</label>
+    <description>Informácie o udalosti v procese vytvárania údajov špecifikovaných
+       podľa rozsahu</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:processingLevelCode" id="249.0">
+    <label>Kód úrovne procesu</label>
+    <description>Kód distribútora obrazu / snímky, ktorý identifikuje úroveň použitej
+      radiometrickej a geometrickej úpravy</description>
+  </element>
+  <element name="gmd:processor" id="90.0">
+    <label>Procesor</label>
+    <description>Identifikácia a prostriedky komunikácie s osobami a organizáciami 
+      spojenými s procesným krokom</description>
+  </element>
+  <element name="gmd:protocol" id="398.0" alias="protocol">
+    <label>Protokol</label>
+    <description>Použitý protokol pripojenia</description>
+    <helper sort="true">
+      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</option>
+      <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
+      <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
+      <option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)</option>
+      <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
+      <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
+      <option value="OGC:GML">OGC-GML Geography Markup Language</option>
+      <option value="OGC:ODS">OGC-ODS OpenLS Directory Service</option>
+      <option value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
+      <option value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
+      <option value="OGC:OPS">OGC-ODS OpenLS Presentation Service</option>
+      <option value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
+      <option value="OGC:SOS">OGC-SOS Sensor Observation Service</option>
+      <option value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
+      <option value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
+      <option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
+      <option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
+      <option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
+      <option value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
+      <option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
+      <option value="OGC:WMC">OGC-WMC Web Map Context</option>
+      <option value="OGC:WMS">OGC-WMS Web Map Service</option>
+      <option value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)</option>
+      <option value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)</option>
+      <option value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)</option>
+      <option value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)</option>
+      <option value="OGC:WMTS">OGC-WMTS Web Map Tiled Service</option>
+      <option value="OGC:WMTS-1.0.0-http-get-capabilities">OGC-WMTS Capabilities service (ver 1.0.0)</option>
+      <option value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</option>
+      <option value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</option>
+      <option value="OGC:WNS">OGC-WNS Web Notification Service</option>
+      <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
+      <option value="OGC:OWS-C">OGC OWS Context</option>
+      <option value="WWW:DOWNLOAD-1.0-ftp--download">Súbor na stiahnutie cez FTP</option>
+      <option value="WWW:DOWNLOAD-1.0-http--download">Súbor na stiahnutie </option>
+      <option value="FILE:GEO">Súbor GIS</option>
+      <option value="FILE:RASTER">Súbor GIS RASTER</option>
+      <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
+      <option value="WWW:LINK-1.0-http--link" default="">Webová adresa (URL)</option>
+      <option value="WWW:LINK-1.0-http--partners">Webová adresa partnera (adresa URL)</option>
+      <option value="WWW:LINK-1.0-http--related">Súvisiaci odkaz (URL)</option>
+      <option value="WWW:LINK-1.0-http--rss">RSS informačný kanál (URL)</option>
+      <option value="WWW:LINK-1.0-http--samples">Zobraziť produkt (URL)</option>
+      <option value="DB:POSTGIS">Databázová tabuľka PostGIS</option>
+      <option value="DB:ORACLE">Databázová tabuľka ORACLE</option>
+      <option value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
+      <option value="RBNB:DATATURBINE">Data Turbine</option>
+      <option value="UKST">Neznámy typ služby</option>
+    </helper>
+  </element>
+  <element name="gmd:purpose" id="26.0">
+    <label>Účel </label>
+    <description>Zhrnutie zámerov, s ktorými bol zdroj (zdroje)
+      vyvinutý</description>
+  </element>
+  <element name="gmd:radiometricCalibrationDataAvailability" id="252.0">
+    <label>Dostupnosť údajov o rádiometrickej kalibrácii</label>
+    <description>Označenie, či sú alebo nie sú k dispozícii rádiometrické informácie o kalibrácii, ktoré 
+      generujú rádiometricky kalibrovaný štandardný údajový 
+      produkt</description>
+  </element>
+  <element name="gmd:rationale" id="88.0">
+    <label>Zdôvodnenie</label>
+    <description>Požiadavka alebo účel kroku procesu</description>
+  </element>
+  <element name="gmd:rationale" id="318.0" context="gmd:MD_ExtendedElementInformation">
+    <label>Zdôvodnenie</label>
+    <description>Dôvod vytvorenia rozšíreného prvku</description>
+  </element>
+  <element name="gmd:referenceSystemIdentifier" id="187.0">
+    <label>Identifikátor referenčného systému</label>
+    <description>Názov referenčného systému</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:referenceSystemInfo" id="13.0">
+    <label>Informácie o referenčnom systéme</label>
+    <abbrlabel>Referenčný systém</abbrlabel>
+    <description>Opis priestorových a časových referenčných systémov používaných
+       v súbore údajov</description>
+  </element>
+  <element name="gmd:report" id="80.0">
+    <label>Report</label>
+    <description>Kvantitatívne informácie o kvalite pre údaje špecifikované
+       v rozsahu</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:resolution" id="182.0">
+    <label>Rozlíšenie</label>
+    <description>Stupeň podrobností v rastrovom súbore údajov </description>
+  </element>
+  <element name="gmd:resourceConstraints" id="35.0">
+    <label>Obmedzenia zdrojov</label>
+    <description>Poskytuje informácie o obmedzeniach, ktoré sa vzťahujú na zdroj
+      (zdroje)</description>
+  </element>
+  <element name="gmd:resourceFormat" id="32.0">
+    <label>Formát zdrojov</label>
+    <description>Poskytuje opis formátu zdroja (zdrojov)</description>
+  </element>
+  <element name="gmd:resourceMaintenance" id="30.0">
+    <label>Údržba zdrojov</label>
+    <description>Poskytuje informácie o frekvencii aktualizácií zdrojov a rozsahu
+       týchto aktualizácií</description>
+  </element>
+  <element name="gmd:resourceSpecificUsage" id="34.0">
+    <label>Špecifické využívanie zdrojov</label>
+    <description>Poskytuje základné informácie o konkrétnej aplikácii,
+ pre ktorú bol zdroj (zdroje) použitý alebo je používaný rôznymi používateľmi</description>
+  </element>
+  <element name="gmd:result" id="107.0">
+    <label>Výsledok</label>
+    <description>Hodnota (alebo súbor hodnôt) získaná aplikáciou opatrenia na meranie kvality 
+      údajov alebo výsledkom hodnotenia získanej hodnoty (alebo súboru hodnôt) v porovnaní s určenou
+       prijateľnou úrovňou kvality súladu</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:role" id="566.0" context="gmd:MD_Association">
+    <label>Úloha</label>
+    <description>Odkaz na konce (úlohy) konkrétnej asociácie</description>
+  </element>
+  <element name="gmd:role" id="379.0">
+    <label>Úloha</label>
+    <description>Funkcia vykonávaná zodpovednou stranou</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:rule" id="317.0">
+    <label>Pravidlo</label>
+    <description>Určuje, ako sa rozšírený prvok týka iných existujúcich prvkov
+       a entít </description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:scaleDenominator" id="94.0">
+    <label>Nominálna hodnota stupnice</label>
+    <description>Menovateľ reprezentatívnej frakcie na zdrojovej mape</description>
+  </element>
+  <element name="gmd:scaleFactor" id="266.0">
+    <label>Mierkový faktor</label>
+    <description>Faktor mierky, ktorý sa použil na hodnotu bunky</description>
+  </element>
+  <element name="gmd:schemaAscii" id="324.0">
+    <description>Úplná schéma aplikácie uvedená ako súbor ASCII</description>
+    <label>Schéma ASCII</label>
+  </element>
+  <element name="gmd:schemaLanguage" id="322.0">
+    <label>Jazyk schémy</label>
+    <description>Identifikácia použitého jazyka schémy</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:scope" id="79.0">
+    <label>Rozsah</label>
+    <description>Konkrétne údaje, na ktoré sa vzťahujú informácie o kvalite údajov</description>
+  </element>
+  <element name="gmd:sequenceIdentifier" id="257.0">
+    <label>Identifikátor sekvencie</label>
+    <description>Číslo, ktoré jednoznačne identifikuje inštancie pásiem vlnových dĺžok, na 
+      ktorých senzor pracuje </description>
+  </element>
+  <element name="gmd:series" id="369.0">
+    <label>Série</label>
+    <description>Informácie o sériových alebo agregovaných údajových súboroch,
+ ktorej súčasťou je súbor údajov</description>
+  </element>
+  <element name="gmd:shortName" id="308.0">
+    <label>Krátky názov</label>
+    <description>Krátka forma vhodná na použitie v metóde implementácie, ako je XML alebo SGML.
+     POZNÁMKA môžu byť použité iné metódy</description>
+  </element>
+  <element name="gmd:softwareDevelopmentFile" id="326.0">
+    <label>Súbor s vývojom softvéru</label>
+    <description>Úplná schéma aplikácie uvedená v súbore vývoja softvéru</description>
+  </element>
+  <element name="gmd:softwareDevelopmentFileFormat" id="327.0">
+    <label>Formát súboru vývoja softvéru</label>
+    <description>Formát závislý od softvéru, ktorý sa používa pre súbor závislý na schéme 
+      aplikácie</description>
+  </element>
+  <element name="gmd:source" id="85.0">
+    <label>Zdroj</label>
+    <description>Informácie o zdrojových údajoch použitých pri vytváraní údajov špecifikovaných
+       rozsahom</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:source" id="319.0" context="gmd:MD_ExtendedElementInformation">
+    <condition>Povinný</condition>
+    <label>Zdroj</label>
+    <description>Názov osoby alebo organizácie, ktorá vytvára rozšírený prvok</description>
+  </element>
+  <element name="gmd:sourceCitation" id="96.0">
+    <label>Citácia zdroja</label>
+    <description>Odporúčaný odkaz sa má použiť pre zdrojové údaje</description>
+  </element>
+  <element name="gmd:sourceExtent" id="97.0">
+    <label>Rozsah zdroja</label>
+    <description>Informácie o priestorovom, vertikálnom a časovom rozsahu údajov 
+      zdroja</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:sourceReferenceSystem" id="95.0">
+    <label>Zdrojový referenčný systém</label>
+    <description>Priestorový referenčný systém používaný zdrojovými údajmi</description>
+  </element>
+  <element name="gmd:sourceStep" id="98.0">
+    <label>Zdrojový krok</label>
+    <description>Informácie o udalosti v procese vytvárania údajov 
+      zdroja</description>
+  </element>
+  <element name="gmd:southBoundLatitude" id="346.0">
+    <label>Južná hranica</label>
+    <description>Najjužnejšia súradnica hranice rozsahu súbory údajov vyjadrená v 
+      zemepisnej šírke v desatinných stupňoch (kladne na sever)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:spatialExtent" id="353.0">
+    <label>Priestorový rozsah</label>
+    <description>Priestorová zložka kombinovaného priestorového a časového rozsahu</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:spatialRepresentationInfo" id="12.0">
+    <label>Informácie o priestorových reprezentáciách</label>
+    <abbrlabel>Priestorová reprezentácia</abbrlabel>
+    <description>Digitálne zobrazenie priestorových informácií v súbore údajov</description>
+  </element>
+  <element name="gmd:spatialRepresentationType" id="37.0">
+    <label>Typ priestorového zobrazenia</label>
+    <description>Metóda používaná na priestorové reprezentovanie geografických informácií</description>
+  </element>
+  <element name="gmd:spatialResolution" id="38.0">
+    <label>Priestorové rozlíšenie</label>
+    <description>Faktor, ktorý poskytuje všeobecné pochopenie hustoty priestorových údajov v súbore údajov</description>
+  </element>
+  <element name="gmd:specificUsage" id="63.0">
+    <label>Špecifické využitie</label>
+    <description>Stručný opis použitia zdroja a / alebo série zdrojov</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:specification" id="130.0" context="gmd:DQ_ConformanceResult">
+    <condition>Povinný</condition>
+    <label>Śpecifikácia</label>
+    <description>Citácia špecifikácie výrobku alebo požiadavky používateľa, pre ktoré
+ sa vyhodnocujú údaje </description>
+  </element>
+  <element name="gmd:specification" id="288.0" context="gmd:MD_Format">
+    <label>Śpecifikácia</label>
+    <description>Názov podmnožiny, profilu alebo výrobnej špecifikácie formátu</description>
+  </element>
+  <element name="gmd:specification">
+    <label>Śpecifikácia</label>
+  </element>
+  <element name="gmd:statement" id="83.0">
+    <label>Vyhlásenie</label>
+    <description>Všeobecné vysvetlenie poznatkov výrobcu o histórii súboru údajov</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:status" id="28.0">
+    <label>Stav</label>
+    <description>Stav zdroja (zdrojov)</description>
+  </element>
+  <element name="gmd:supplementalInformation" id="46.0">
+    <label>Doplňujúce informácie</label>
+    <description>Akékoľvek ďalšie popisné informácie o súbore údajov</description>
+  </element>
+  <element name="gmd:temporalElement" id="337.0">
+    <label>Časový prvok</label>
+    <description>Poskytuje časovú zložku rozsahu odkazujúceho objektu</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:textGroup" id="602.0">
+    <label>Textová skupina</label>
+    <description>Textová skupina</description>
+  </element>
+  <element name="gmd:thesaurusName" id="55.0">
+    <label>Názov tezauru</label>
+    <description>Názov oficiálne zaregistrovaného tezauru alebo podobného autoritatívneho zdroja
+       kľúčových slov</description>
+  </element>
+  <element name="gmd:title" id="360.0">
+    <label>Názov</label>
+    <description>Názov, pod ktorým je uvedený zdroj známy</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:title" id="507.0" context="gmd:MD_Legislation">
+    <label>Názov</label>
+    <description>Odkaz na platný názov</description>
+  </element>
+  <element name="gmd:toneGradation" id="265.0">
+    <label>Gradient tónov</label>
+    <description>Počet diskrétnych číselných hodnôt v rastrových údajoch </description>
+  </element>
+  <element name="gmd:topicCategory" id="41.0">
+    <label>Kategória tém</label>
+    <description>Hlavná téma (témy) dátového súboru</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:MD_TopicCategoryCode">
+    <label>Kód kategórie témy</label>
+    <description>Tematická klasifikácia geografických údajov na vysokej úrovni, ktorá pomáha pri zoskupovaní 
+      a vyhľadávaní dostupných geografických dátových súborov. Môže sa použiť aj na zlučovanie kľúčových slov. Uvedené príklady nie sú vyčerpávajúce.POZNÁMKA: Rozumie sa, že 
+      základné kategórie sa môžu prekrývať a podporovať. Používateľovi odporúčame vybrať jednu z najvhodnejších kategórií.</description>
+  </element>
+  <element name="gmd:topologyLevel" id="177.0">
+    <label>Úroveň topológie</label>
+    <description>Kód, ktorý identifikuje stupeň zložitosti priestorových 
+      vzťahov</description>
+  </element>
+  <element name="gmd:transferOptions" id="273.0">
+    <label>Možnosti prenosu</label>
+    <description>Poskytuje informácie o technických prostriedkoch a médiách, pomocou ktorých je zdroj 
+      získaný od distribútora</description>
+  </element>
+  <element name="gmd:transferSize" id="276.0">
+    <label>Veľkosť prenosu</label>
+    <description>Odhadovaná veľkosť jednotky v určenom formáte prenosu, vyjadrená 
+      v megabajtoch. Veľkosť prenosu je &gt; 0,0</description>
+  </element>
+  <element name="gmd:transformationDimensionDescription" id="168.0">
+    <label>Opis rozmeru transformácie</label>
+    <description>Opis informácií o tom, ktoré rozmery siete sú priestorové 
+      rozmery</description>
+  </element>
+  <element name="gmd:transformationDimensionMapping" id="169.0">
+    <label>Mapovanie rozmerov transformácie</label>
+    <description>Informácie o tom, ktoré rozmery siete sú priestorové 
+      rozmery</description>
+  </element>
+  <element name="gmd:transformationParameterAvailability" id="161.0">
+    <label>Dostupnosť parametra transformácie</label>
+    <condition>Povinný</condition>
+    <description>Označenie, či existujú parametre pre transformáciu medzi 
+      súradnicami obrazu / snímky a geografickými alebo mapovými súradnicami (sú k dispozícii)</description>
+  </element>
+  <element name="gmd:triangulationIndicator" id="251.0">
+    <label>Indikátor triangulácie</label>
+    <description>Indikácia, či bola triangulácia na obrázku / snímke vykonaná </description>
+  </element>
+  <element name="gmd:turnaround" id="302.0">
+    <label>Turn around</label>
+    <description>Typická doba odozvy na dokončenie objednávkového formulára</description>
+  </element>
+  <element name="gmd:type" id="54.0">
+    <label>Druh</label>
+    <description>Téma používaná na zoskupovanie podobných kľúčových slov</description>
+  </element>
+  <element name="gmd:type" id="540.0" context="gmd:MD_CodeDomain">
+    <label>Druh</label>
+    <description>Datový typ domény kódu</description>
+  </element>
+  <element name="gmd:type" id="543.0" context="gmd:MD_Type">
+    <label>Druh definície</label>
+    <description>Definícia druhu údajov</description>
+    <help>Definícia typu údajov, formálne neformálne (t. j. Text12, riadok)</help>
+  </element>
+  <element name="gmd:units" id="262.0">
+    <label>Jednotky</label>
+    <description>Jednotky, v ktorých je určená vlnová dĺžka snímača</description>
+  </element>
+  <element name="gmd:unitsOfDistribution" id="275.0">
+    <label>Distribučné jednotky</label>
+    <description>Dlaždice, vrstvy, geografické oblasti atď., v ktorých sú údaje k dispozícii </description>
+  </element>
+  <element name="gmd:updateScope" id="146.0">
+    <label>Rozsah aktualizácie</label>
+    <description>Rozsah údajov, na ktoré sa vzťahuje uchovávanie</description>
+  </element>
+  <element name="gmd:updateScopeDescription" id="147.0">
+    <label>Aktualizujte opis rozsahu</label>
+    <description>Ďalšie informácie o usporiadaní alebo rozsahu zdroja</description>
+  </element>
+  <element name="gmd:usageDateTime" id="64.0">
+    <label>Čas použitia</label>
+    <description>Dátum a čas prvého použitia alebo rozsahu použitia série zdrojov a / alebo 
+      zdrojov (RRRR-MM-DDThh: mm: ss)</description>
+  </element>
+  <element name="gmd:useConstraints" id="71.0">
+    <label>Používajte obmedzenia</label>
+    <description>Obmedzenia uplatňované na zabezpečenie ochrany súkromia alebo duševného 
+      vlastníctva a všetky ďalšie obmedzenia alebo upozornenia týkajúce sa použitia 
+      zdroja alebo metaúdajov</description>
+  </element>
+  <element name="gmd:useLimitation" id="68.0">
+    <label>Obmedzenia používania</label>
+    <description>Obmedzenie vhodnosti využívania zdrojov alebo metaúdajov.
+       Napríklad: "nemožno použiť na navigáciu"</description>
+  </element>
+  <element name="gmd:userContactInfo" id="66.0">
+    <label>Informácie o kontakte používateľa</label>
+    <description>identifikácia a spôsob komunikácie s osobou (osobami) a organizáciou (organizáciami) 
+      využívajúcimi zdroj (zdroje)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:userDefinedMaintenanceFrequency" id="145.0">
+    <label>Frekvencia aktualizácií definovaných používateľom</label>
+    <description>Iné obdobie uchovávania ako tie, ktoré sú definované</description>
+  </element>
+  <element name="gmd:userDeterminedLimitations" id="65.0">
+    <label>Používateľské obmedzenia</label>
+    <description>Používateľom špecifikované aplikácie, pre ktoré je zdroj alebo séria zdrojov 
+      nevhodná</description>
+  </element>
+  <element name="gmd:userNote" id="75.0">
+    <label>Používateľská poznámka</label>
+    <description>Vysvetlenie uplatňovania právnych obmedzení alebo iných obmedzení 
+      a právnych predpokladov na získanie a používanie zdroja alebo metaúdajov</description>
+  </element>
+  <element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
+    <condition>Povinný</condition>
+    <label>Hodnota</label>
+    <description>Kvantitatívna hodnota alebo hodnoty, ktoré sa určujú podľa použitého 
+      postupu hodnotenia</description>
+  </element>
+  <element name="gmd:value">
+    <label>Hodnota</label>
+    <description/>
+  </element>
+  <element name="gmd:value" id="544.0" context="gmd:MD_Type">
+    <label>Hodnota</label>
+    <description>Hodnota typu údajov</description>
+  </element>
+  <element name="gmd:valueType" id="134.0">
+    <label>Druh hodnoty</label>
+    <description>Kvantitatívna úroveň kvality alebo rozsah hodnôt zhody</description>
+    <helper>
+      <option value="Boolean">Boolean</option>
+      <option value="Real">Real</option>
+      <option value="Integer">Integer</option>
+      <option value="Ratio">Pomer</option>
+      <option value="Percentage">Percento</option>
+      <option value="Measure(s) (value(s) + unit(s))">Opatrenie (opatrenia) (hodnota (hodnoty) + jednotka (jednotky))</option>
+    </helper>
+  </element>
+  <element name="gmd:valueUnit" id="135.0">
+    <label>Jednotky</label>
+    <description>Hodnota jednotky na určenie výsledku kvality dát </description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:version" id="208.2" context="gmd:RS_Identifier">
+    <label>Verzia</label>
+    <description>Identifikátor verzie pre obor názvov</description>
+  </element>
+  <element name="gmd:version" id="286.0">
+    <label>Verzia</label>
+    <description>Verzia formátu (dátum, číslo atď.)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gmd:verticalElement" id="338.0">
+    <label>Vertikálny prvok</label>
+    <description>Poskytuje vertikálnu zložku rozsahu referenčného objektu</description>
+    <condition>Podmienený </condition>
+  </element>
+  <element name="gmd:voice" id="408.0">
+    <label>Voice</label>
+    <description>Telefónne číslo, na ktorom môžu ľudia kontaktovať organizáciu
+ alebo zodpovednú osobu</description>
+  </element>
+  <element name="gmd:volumes" id="295.0">
+    <label>Objemy</label>
+    <description>Počet identifikovaných položiek na médiu</description>
+  </element>
+  <element name="gmd:westBoundLongitude" id="344.0">
+    <label>Západná hranica</label>
+    <description>Najzadnejšia súradnica rozsahu súboru údajov, vyjadrená v zemepisnej dĺžke 
+      v desatinných stupňoch (kladná orientácia na východ)</description>
+    <condition>Povinný</condition>
+  </element>
+  <element name="gml:beginPosition">
+    <label>Dátum začiatku</label>
+    <description>Formátované ako RRRR-MM-DDTHH:mm:ss</description>
+  </element>
+  <element name="gml:endPosition">
+    <label>Dátum ukončenia</label>
+    <description>Formátované ako RRRR-MM-DDTHH:mm:ss</description>
+  </element>
+  <element name="gml:relatedTime">
+    <label>Súvisiaci čas</label>
+    <description>Definuje vzťah daného času k objektu.</description>
+  </element>
+  <element name="gml:coordinates">
+    <label>Súradnice</label>
+    <description>Používa sa na zaznamenávanie množstva n-tíc alebo súradníc.</description>
+  </element>
+  <element name="gml:Polygon">
+    <label>Polygón</label>
+    <description>A gml:Polygon is a special surface that is defined by a single surface patch.
+      The boundary of this patch is coplanar and the polygon uses planar interpolation in its
+      interior.</description>
+  </element>
+  <element name="gml:Point">
+    <label>Bod</label>
+    <description>A gml: Bod je definovaný jedinou n-rozmernou súradnicou.</description>
+    <example>74. -37.</example>
+  </element>
+  <element name="gml:LineString">
+    <label>Línia</label>
+    <description>A gml: LineString je špeciálna krivka, ktorá pozostáva z jedného segmentu s lineárnou interpoláciou. Je definovaná dvomi alebo viacerými n-ticami súradníc s lineárnou interpoláciou medzi nimi</description>
+  </element>
+  <element name="gml:LinearRing">
+    <label>Linear ring</label>
+    <description>A gml: LinearRing je definovaný štyrmi alebo viacerými n-ticami súradníc, s lineárnou interpoláciou medzi nimi; prvé a posledné súradnice sa zhodujú.</description>
+  </element>
+  <element name="gml:exterior">
+    <label>Vonkajšia hranica</label>
+    <description>Vonkajšia hranica priestoru (?)</description>
+  </element>
+  <element name="gml:interior">
+    <label>Vnútorná hranica</label>
+    <description>Vnútorná hranica priestoru (?) </description>
+  </element>
+  <element name="gml:begin">
+    <label>Začiatok</label>
+    <description/>
+  </element>
+  <element name="gml:end">
+    <label>Koniec</label>
+    <description/>
+  </element>
+  <element name="gml:duration">
+    <label>Trvanie</label>
+    <description>Zodpovedá syntaxi ISO 8601 pre časovú dĺžku, ktorá je implementovaná druhom trvania schém XML.
+      Druh trvania schémy.</description>
+  </element>
+  <element name="gml:timeInterval">
+    <label>Časový interval</label>
+    <description>Je v súlade s normou ISO 11404, ktorá je založená na hodnotách pohyblivých bodov pre časovú dĺžku. • Syntax ISO 11404 špecifikuje použitie pozitívneho integrátora spolu s príslušnými hodnotami pre radix a faktor. Rozlíšenie časového intervalu je na jeden radix ^ (faktor) špecifikovanej časovej jednotky. Hodnota jednotky sa buď vyberie z jednotiek pre časové intervaly podľa ISO 31-1: 1992, alebo je iná vhodná jednotka. Kódovanie je definované pre GML v gml: TimeUnitType. Druhá zložka tohto typu spojenia poskytuje metódu na indikaciu časových jednotiek iných než šesť štandardných jednotiek uvedených v zozname.</description>
+  </element>
+  <element name="gml:name">
+    <label>Názov</label>
+    <description/>
+  </element>
+  <element name="gml:metaDataProperty">
+    <label>Metadata property</label>
+    <description/>
+  </element>
+  <element name="gml:identifier">
+    <label>Identifikátor</label>
+    <description/>
+  </element>
+  <element name="gml:description">
+    <label>Opis</label>
+    <description>Textový opis prvku</description>
+  </element>
+  <element name="gml:descriptionReference">
+    <label>Opis odkazu</label>
+    <description/>
+  </element>
+  <element name="gml:TimeInstant">
+    <label>Časový okamžik</label>
+    <description/>
+  </element>
+  <element name="gml:TimePosition">
+    <label>Poloha času</label>
+    <description/>
+  </element>
+  <element name="gml:timePosition">
+    <label>Poloha času</label>
+    <description/>
+  </element>
+  <element name="gml:TimePeriod">
+    <label>Časový úsek</label>
+    <description/>
+  </element>
+  <element name="gml:TimeNode">
+    <label>Časový uzol</label>
+    <description/>
+  </element>
+  <element name="gml:TimeEdge">
+    <label>Časový rozsah</label>
+    <description/>
+  </element>
+  <element name="gml:ProjectedCRS">
+    <label>Projektovaný systém CRS</label>
+    <description/>
+  </element>
+  <element name="gml:id">
+    <label>Identifikátor</label>
+    <description>Jedinečný identifikátor</description>
+  </element>
+  <element name="gml:id" id="191.0" context="gmd:MD_CRS">
+    <label>Elipsoid</label>
+    <description>Označenie použitého elipsoidu </description>
+    <help>Označenie použitého elipsoidu </help>
+  </element>
+  <element name="id" id="191.0">
+    <label>Identifikátor</label>
+    <description>Jedinečný identifikátor</description>
+  </element>
+  <element name="indeterminatePosition">
+    <label>Neurčitá poloha</label>
+    <description/>
+  </element>
+  <element name="frame">
+    <label>Rámec</label>
+    <description>Atribút rámca poskytuje referenciu URI, ktorá identifikuje opis 
+      referenčného systému</description>
+  </element>
+  <element name="calendarEraName">
+    <label>Názov kalendárneho obdobia</label>
+    <description/>
+  </element>
+  <element name="unit">
+    <label>Jednotka</label>
+    <description/>
+  </element>
+  <element name="radix">
+    <label>Radix</label>
+    <description/>
+  </element>
+  <element name="factor">
+    <label>Faktor</label>
+    <description/>
+  </element>
+  <element name="srv:SV_ServiceIdentification">
+    <label>Identifikácia služby (19119)</label>
+    <description>Identifikácia služby ISO 19119-2005</description>
+  </element>
+  <element name="srv:SV_ParameterDirection">
+    <label>Smerový parameter</label>
+  </element>
+  <element name="srv:serviceType">
+    <!-- readonly="true" -->
+    <label>Druh služby</label>
+    <description>Názov druhu služby z registra služieb. Napríklad hodnoty atribútov 
+      nameSpace a názov atribútov GeneralName môžu byť 'OGC' a 'catalogue'</description>
+    <helper>
+      <option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
+      <option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
+      <option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
+      <option value="W3C:HTML:DOWNLOAD">Sťahovanie (W3C:HTML:DOWNLOAD)</option>
+      <option value="W3C:HTML:LINK">Informácia (W3C:HTML:LINK)</option>
+      <!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type -->
+      <option value="discovery">INSPIRE Vyhľadávacie služby (discovery)</option>
+      <option value="view">INSPIRE Služby prezerania (view)</option>
+      <option value="download">INSPIRE Služby sťahovania údajov (download)</option>
+      <option value="transformation">INSPIRE Transformačné služby (transformation)</option>
+      <option value="other">INSPIRE Ostatné služby (other)</option>
+    </helper>
+  </element>
+  <element name="srv:serviceTypeVersion">
+    <label>Verzia služby</label>
+    <description>Poskytuje vyhľadávanie na základe verzie serviceType. Môžeme mať napríklad 
+      záujem iba o služby OGC Catalogue V1.1. Ak je verzia zachovaná ako 
+      samostatný atribút, môžu používatelia ľahko vyhľadávať všetky typy služieb bez ohľadu
+       na verziu </description>
+  </element>
+  <element name="srv:accessProperties">
+    <label>Vlastnosti prístupu</label>
+    <description>Informácie o dostupnosti služby, napr. poplatky, dostupnosť, 
+      návod na použitie</description>
+  </element>
+  <element name="srv:restrictions">
+    <label>Obmedzenia</label>
+    <description>Právne a bezpečnostné obmedzenia pri prístupe k službe a distribúcii údajov 
+      generovaných službou</description>
+  </element>
+  <element name="srv:containsOperations">
+    <label>Zahŕňa operácie</label>
+    <description>Informácie o metódach poskytovaných 
+      službou</description>
+  </element>
+  <element name="srv:operatesOn">
+    <label>Ovládanie zapnuté</label>
+    <description>Informácie o súboroch údajov, na ktorých služba pracuje</description>
+  </element>
+  <element name="srv:operationName">
+    <label>Názov metódy</label>
+    <description>Jedinečný identifikátor pre toto rozhranie</description>
+  </element>
+  <element name="srv:SV_OperationMetadata">
+    <label>Metóda</label>
+    <description>Metaúdaje metódy (?)</description>
+  </element>
+  <element name="srv:DCP">
+    <label>Distribuovaná počítačová platforma</label>
+    <description>Distribuované počítačové platformy, na ktorých bola operácia 
+      implementovaná</description>
+  </element>
+  <element name="srv:operationDescription">
+    <label>Opis metódy</label>
+    <description>Voľný text popisujúci účel metódy a výsledky metódy</description>
+  </element>
+  <element name="srv:invocationName">
+    <label>Názov predvolania</label>
+    <description>Názov používaný na vyvolanie rozhrania ako súčasť distribuovanej 
+      počítačovej platformy. Názov je identický pre všetky DCP</description>
+  </element>
+  <element name="srv:parameters">
+    <label>Parametre</label>
+    <description>Parametre, ktoré sú potrebné pre toto rozhranie</description>
+  </element>
+  <element name="srv:SV_Parameter">
+    <label>Parameter</label>
+    <description>Parametre, ktoré sú potrebné pre toto rozhranie</description>
+  </element>
+  <element name="srv:direction">
+    <label>Smer</label>
+  </element>
+  <element name="srv:valueType">
+    <label>Druh hodnoty</label>
+  </element>
+  <element name="srv:connectPoint">
+    <label>Prístupový bod</label>
+    <description>Prístupový bod rozhrania služby</description>
+  </element>
+  <element name="srv:dependsOn">
+    <label>Záleží od</label>
+    <description>Zoznam metód, ktoré je potrebné vykonať pred vyvolaním aktuálnej metódy</description>
+  </element>
+  <element name="srv:providerName">
+    <label>Názov poskytovateľa</label>
+    <description>Jedinečný identifikátor pre túto organizáciu</description>
+  </element>
+  <element name="srv:serviceContact">
+    <label>Kontakt na servis</label>
+    <btnlabel>Pridať kontakt</btnlabel>
+    <btnclass>fa fa-user-plus </btnclass>
+    <description>Informácie pre kontaktovanie poskytovateľa služieb</description>
+  </element>
+  <element name="srv:name">
+    <label>Názov</label>
+    <description>Názov, ktorý používa služba pre tento reťazec alebo parameter</description>
+  </element>
+  <element name="srv:description">
+    <label>Opis</label>
+    <description>Naratívne vysvetlenie služieb v reťazci a výsledný výstup alebo 
+      úloha parametra</description>
+  </element>
+  <element name="srv:optionality">
+    <label>Voliteľnosť</label>
+    <description>Indikácia požadovaného parametra</description>
+  </element>
+  <element name="srv:repeatability">
+    <label>Opakovateľnosť</label>
+    <description>Indikácia, či môže byť poskytnutá viac ako jedna hodnota 
+      parametra</description>
+  </element>
+  <element name="srv:coupledResource">
+    <label>Pridružený zdroj</label>
+    <description>Podrobnosti o službách spojených s touto službou</description>
+    <inspireinfo>Voliteľný v INSPIRE</inspireinfo>
+  </element>
+  <element name="srv:SV_CoupledResource">
+    <label>Pridružený zdroj</label>
+    <description>Podrobnosti o službách spojených s touto službou</description>
+  </element>
+  <element name="srv:identifier">
+    <label>Identifikátor</label>
+    <description>Identifikátor zdroja, na ktorý sa operácia vzťahuje</description>
+  </element>
+  <element name="srv:couplingType">
+    <label>Typ pripojenia</label>
+    <description>Typ pripojenia</description>
+  </element>
+  <element name="srv:SV_CouplingType">
+    <label>Typ pripojenia</label>
+    <description>Typ pripojenia</description>
+  </element>
+  <element name="srv:extent">
+    <label>Rozsah</label>
+    <description>Geografický / časový rozsah služby</description>
+  </element>
+  <element name="srv:keywords">
+    <label>Kľúčové slová</label>
+    <description>Kľúčové slová popisujúce službu</description>
+  </element>
+  <element name="gmd:locale">
+    <label>Iný jazyk</label>
+    <description>Použite túto časť na definovanie ďalších metaúdajových jazykov</description>
+  </element>
+  <element name="gmd:describes">
+    <label>Opisuje</label>
+    <description>Opisuje</description>
+  </element>
+  <element name="gmd:propertyType">
+    <label>PropertyType</label>
+    <description>Typ objektu</description>
+  </element>
+  <element name="gmd:PT_Locale">
+    <label>Lokalita</label>
+    <description>Lokalita</description>
+  </element>
+  <element name="gmd:PT_LocaleContainer">
+    <label>PT_LocaleContainer</label>
+    <description>Zberné miesto</description>
+  </element>
+  <element name="gmd:featureType">
+    <label>Typ prvku</label>
+    <description>Podmnožina druhov prvkov z katalógu prvkov citovaných v údajoch</description>
+  </element>
+  <element name="gmd:featureAttribute">
+    <label>Atribút prvku </label>
+    <description/>
+  </element>
+  <element name="gmd:DS_Association">
+    <label>DS_Association</label>
+    <description>Odkaz</description>
+  </element>
+  <element name="gmd:DS_DataSet">
+    <label>DS_DataSet</label>
+    <description>Súbor údajov</description>
+  </element>
+  <element name="gmd:DS_Initiative">
+    <label>DS_Initiative</label>
+    <description>Iniciatíva</description>
+  </element>
+  <element name="gmd:DS_OtherAggregate">
+    <label>DS_OtherAggregate</label>
+    <description>Iný agregát</description>
+  </element>
+  <element name="gmd:DS_Platform">
+    <label>DS_Platform</label>
+    <description>Platforma</description>
+  </element>
+  <element name="gmd:DS_ProductionSeries">
+    <label>DS_ProductionSeries</label>
+    <description>Výrobná séria</description>
+  </element>
+  <element name="gmd:DS_Sensor">
+    <label>DS_Sensor</label>
+    <description>Senzor</description>
+  </element>
+  <element name="gmd:DS_Series">
+    <label>DS_Series</label>
+    <description>Série</description>
+  </element>
+  <element name="gmd:DS_StereoMate">
+    <label>DS_StereoMate</label>
+    <description>Stereo pár</description>
+  </element>
+  <element name="gmd:languageCode">
+    <label>Jazyk</label>
+    <description>Kód jazyka</description>
+  </element>
+  <element name="gmd:LanguageCode">
+    <label>ISO Kód jazyka</label>
+    <description>Kód jazyka</description>
+  </element>
+  <element name="gmd:characterEncoding">
+    <label>Kódovanie znakov</label>
+    <description>Kódovanie znakov</description>
+  </element>
+  <element name="uuidref">
+    <label>Metaúdaje UUID</label>
+    <description>Jedinečný identifikátor</description>
+  </element>
+  <element name="uom">
+    <label>Jednotky merania</label>
+    <description/>
+    <helper>
+      <option value="m">metre</option>
+    </helper>
+  </element>
+  <element name="gco:Record">
+    <label>Záznam</label>
+    <description/>
+  </element>
+  <element name="gco:Binary">
+    <label>Binárny</label>
+    <description/>
+  </element>
+  <element name="gco:MemberName">
+    <label>Meno člena</label>
+    <description/>
+  </element>
+  <element name="gco:aName">
+    <label>Názov</label>
+    <description/>
+  </element>
+  <element name="gco:aName" context="gco:TypeName">
+    <label>Typ názvu</label>
+    <description/>
+    <helper>
+      <option value="BOOLEAN">BOOLEAN</option>
+      <option value="BYTE">BYTE</option>
+      <option value="CHARACTER">CHARACTER</option>
+      <option value="DATE">DATE</option>
+      <option value="DATETIME">DATETIME</option>
+      <option value="DOUBLE">DOUBLE</option>
+      <option value="FLOAT">FLOAT</option>
+      <option value="INTEGER">INTEGER</option>
+      <option value="NUMERIC">NUMERIC</option>
+      <option value="REAL">REAL</option>
+      <option value="SERIAL">SERIAL</option>
+      <option value="VARCHAR">VARCHAR</option>
+      <option value="TEXT">TEXT</option>
+    </helper>
+  </element>
+  <element name="gco:attributeType">
+    <label>Typ atribútu</label>
+    <description/>
+  </element>
+  <element name="gco:TypeName">
+    <label>Typ názvu</label>
+    <description/>
+  </element>
+  <element name="gco:LocalName">
+    <label>Miestny názov</label>
+    <description/>
+  </element>
+  <element name="gco:ScopedName">
+    <label>Názov rozsahu</label>
+    <description/>
+  </element>
+  <element name="gmd:has">
+    <label>Má</label>
+    <description>Má</description>
+  </element>
+  <element name="gmd:MD_PixelOrientationCode">
+    <label>Kód orientácie pixelov</label>
+    <description>Bod v pixeli zodpovedajúci umiestneniu pixelov na zemi</description>
+  </element>
+  <element name="gmd:MD_ObligationCode">
+    <label>Povinný kód</label>
+    <description>Povinnosť prvku alebo entity</description>
+  </element>
+  <element name="gmd:maximumOccurrence">
+    <label>Maximálny výskyt</label>
+    <description>Maximálny výskyt rozšíreného prvku</description>
+  </element>
+  <element name="gco:localName">
+    <label>Názov</label>
+    <description/>
+  </element>
+  <element name="gmd:composedOf">
+    <label>Zložený z</label>
+    <description>Zložený z</description>
+  </element>
+  <element name="gmd:partOf">
+    <label>Súčasťou</label>
+    <description>Súčasťou</description>
+  </element>
+  <element name="gmd:seriesMetadata">
+    <label>Séria metaúdajov</label>
+    <description>Séria metaúdajov</description>
+  </element>
+  <element name="gmd:subset">
+    <label>Podmnožina</label>
+    <description>Podmnožina</description>
+  </element>
+  <element name="gmd:superset">
+    <label>Nadradený</label>
+    <description>Nadradený</description>
+  </element>
+  <element name="gmd:CI_RoleCode">
+    <label>Kód úlohy</label>
+    <description/>
+  </element>
+  <element name="gts:TM_PeriodDuration">
+    <label>Doba trvania </label>
+    <description>Dĺžka dátového typu sa používa na určenie časového intervalu
+
+      Časový interval je špecifikovaný v nasledujúcom tvare "PnYnMnDTnHnMnS", kde:
+
+      * P označuje obdobie (vyžaduje sa)
+      * nY označuje počet rokov
+      * nM označuje počet mesiacov 
+      * nD označuje počet dní
+      * T označuje začiatok časovej sekcie (vyžaduje sa, ak zadáte hodiny,
+      minúty alebo sekundy)
+      * nH označuje počet hodín
+      * nM označuje počet minút
+      * nS označuje počet sekúnd</description>
+  </element>
+  <element name="gco:CharacterString">
+    <label>Text</label>
+    <description/>
+  </element>
+  <element name="gco:nilReason">
+    <label>Atribút "Nil reason"</label>
+    <description/>
+  </element>
+  <element name="srv:DCPList">
+    <label>Zoznam distribuovaných počítačových platforiem</label>
+  </element>
+  <element name="gmd:verticalCRS">
+    <label>Vertikálny systém CRS</label>
+    <description>Poskytuje informácie o pôvode, z ktorého sa merajú maximálne 
+     a minimálne hodnoty</description>
+  </element>
+  <element name="gmx:FileName">
+    <label>Názov súboru</label>
+    <description>Názov súboru a zdrojová adresa URL.</description>
+  </element>
+  <element name="src">
+    <label>Zdrojová adresa URL</label>
+    <description>Adresa URL dokumentu.</description>
+  </element>
+  <element name="gmx:Anchor">
+    <label>Kotva</label>
+    <description>Podporuje schopnosti prepojenia a zabezpečuje webovú implementáciu 
+      znakov CharacterStrings</description>
+  </element>
+  <element name="xlink:href">
+    <label>Odkaz "href"</label>
+    <description>Poskytuje údaje, ktoré umožňujú aplikácii XLink nájsť vzdialený zdroj (alebo 
+      zdrojový fragment) [W3C XLINK]</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="hidden-elements">
+    <label>Skryté prvky</label>
+    <description>Child elements and attributes have been hidden because you do no have access to view those elements </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmx:name">
+    <label>Názov</label>
+    <description>Názov katalógu prvkov</description>
+  </element>
+  <element name="gmx:scope">
+    <label>Rozsah</label>
+    <description>Rozsah definície</description>
+  </element>
+  <element name="gmx:versionNumber">
+    <label>Verzia</label>
+    <description>Verzia katalógu</description>
+  </element>
+  <element name="gmx:versionDate">
+    <label>Dátum</label>
+    <description>Dátum katalógu</description>
+  </element>
+  <element name="gmx:fieldOfApplication">
+    <label>Oblasť použitia</label>
+    <description>Oblasť použitia</description>
+  </element>
+  <element name="gml:axis">
+    <label>Os</label>
+  </element>
+  <element name="gml:axisAbbrev">
+    <label>Skrátenie osi</label>
+  </element>
+  <element name="gml:axisDirection">
+    <label>Smer osi</label>
+  </element>
+  <element name="gml:maximumValue">
+    <label>Najvyššia hodnota</label>
+  </element>
+  <element name="gml:minimumValue">
+    <label>Najnižšia hodnota</label>
+  </element>
+  <element name="gml:scope">
+    <label>Rozsah</label>
+  </element>
+  <element name="gml:VerticalCRS">
+    <label>Vertikálny systém CRS</label>
+  </element>
+  <element name="gml:remarks">
+    <label>Pripomienky</label>
+  </element>
+  <element name="gml:domainOfValidity">
+    <label>Doména platnosti</label>
+  </element>
+  <element name="gml:verticalCS">
+    <label>Vertikálny súradnicový systém</label>
+  </element>
+  <element name="gml:VerticalCS">
+    <label>Vertikálny súradnicový systém</label>
+  </element>
+  <element name="gml:CoordinateSystemAxis">
+    <label>Osi súradnicového systému</label>
+  </element>
+  <element name="gml:rangeMeaning">
+    <label>Rozsah významu</label>
+  </element>
+  <element name="gml:verticalDatum">
+    <label>Vertical datum</label>
+  </element>
+  <element name="gml:VerticalDatum">
+    <label>Vertical datum</label>
+  </element>
+  <element name="gml:realizationEpoch">
+    <label>Epocha realizácie</label>
+  </element>
+  <element name="gmd:MD_ProgressCode">
+    <label>Postup</label>
+  </element>
+  <element name="gmd:MD_MaintenanceFrequencyCode">
+    <label>Frekvencia uchovávania</label>
+  </element>
+  <element name="gmd:MD_SpatialRepresentationTypeCode">
+    <label>Typ priestorového zobrazenia</label>
+  </element>
+  <element name="gmd:MD_CharacterSetCode">
+    <label>Súbor znakov</label>
+  </element>
+  <element name="gmd:MD_TopologyLevelCode">
+    <label>Úroveň topológie</label>
+  </element>
+  <element name="gmd:MD_GeometricObjectTypeCode">
+    <label>Typ geometrického objektu</label>
+  </element>
+  <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
+    <label>Obmedzenie prístupu</label>
+  </element>
+  <element name="gmd:MD_RestrictionCode" context="gmd:useConstraints">
+    <label>Obmedzenie používania</label>
+  </element>
+  <element name="gmd:DS_AssociationTypeCode">
+    <label>Typ pripojenia</label>
+  </element>
+  <element name="gmd:DS_InitiativeTypeCode">
+    <label>Druh iniciatívy </label>
+  </element>
+  <element name="gco:Angle">
+    <label>Uhol</label>
+  </element>
+  <element name="gco:Distance">
+    <label>Vzdialenosť</label>
+  </element>
+  <element name="gco:Length">
+    <label>Dĺžka</label>
+  </element>
+  <element name="gco:Measure">
+    <label>Meranie</label>
+  </element>
+  <element name="gco:Scale">
+    <label>Mierka</label>
+  </element>
+</labels>

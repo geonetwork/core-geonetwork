@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ Tento program je slobodný softvér: môžete ho šíriť a upravovať podľa ustanovení Všeobecnej
+  ~ verejnej licencie GNU (GNU General Public Licence), vydávanej nadáciou Free Software Foundation,
+  ~ a to buď podľa 2. verzie tejto Licencie, alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie.
+  ~
+  ~ Tento program je šírený v nádeji, že bude užitočný, avšak BEZ AKEJKOĽVEK ZÁRUKY. Neposkytujú
+  ~ sa ani odvodené záruky OBCHODOVATEĽNOSTI alebo VHODNOSTI PRE URČITÝ ÚČEL. Ďalšie
+  ~ podrobnosti hľadajte vo Všeobecnej verejnej licencii GNU.
+  ~
+  ~ Kópiu Všeobecnej verejnej licencie GNU ste mali dostať spolu s týmto programom. Ak sa tak nestalo,
+  ~ napíšte na: Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+  ~ USA.
+  ~
+  ~ Kontakt: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rím - Taliansko. email: geonetwork@osgeo.org
+  -->
+
+<labels xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+  <!-- ==================================================== -->
+  <element name="simpledc">
+    <label>Metaúdaje</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:title">
+    <label>Názov</label>
+    <description>Názov, ktorý identifikuje zdroj. Názov zdroja je určený typicky tak,aby bol formálne známy.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:creator">
+    <label>Autor</label>
+    <description>Autor alebo subjekt, ktorý je primárne zodpovedný za tvorbu zdroja.
+    </description>
+    <example>Príklad: Autor môže definovať osobu, organizáciu alebo službu. Obvykle by sa autor mal používať na označenie entity.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:subject">
+    <label>Predmet a Kľúčové slová</label>
+    <btnClass>fa fa-tag</btnClass>
+    <btnLabel>Pridať kľúčové slovo</btnLabel>
+    <description>Téma zdroja. Zvyčajne sa predmet zdroja vyjadruje ako kľúčové slová, kľúčové frázy alebo klasifikačné kódy, ktoré opisujú tému zdroja.
+    </description>
+    <example>Odporúčané je vybrať hodnotu z množiny slovnej zásoby alebo z formálnej schémy klasifikácie.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:description">
+    <label>Popis</label>
+    <description>Popis obsahu zdroja.</description>
+    <example>Priklad: Popis zdroja reprezentuje abstrakt, obsah, odkaz na grafický alebo textový odkaz.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:publisher">
+    <label>Vydavateľ</label>
+    <description>Entita zodpovedná za spístupnenie zdroja.</description>
+    <example>Príklad: Vydavateľom môže byť osoba, organizácia alebo služba. Obvykle by sa vydavateľ mal používať na označenie entity.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:contributor">
+    <label>Prispievateľ</label>
+    <description>Entita zodpovedná za prispievanie k obsahu zdroja.
+    </description>
+    <example>Príklad: Prispievateľ môže byť osoba, organizácia alebo služba. Obvykle by sa prispievateľ mal používať na označenie entity.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:date">
+    <label>Dátum</label>
+    <description>Dátum zmeny alebo udalosti vykonanej na zdroji. Obvykle by sa dátum mal spájať s vytvoreným alebo sprístupneným zdroja.
+    </description>
+    <example> Odporúčané je kódovať hodnoty dátumu podľa definície ISO normy 8601 vo formáte YYYY-MM-DD.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:type">
+    <label>Typ zdroja</label>
+    <description>Povaha alebo typ zdroja. Typ zdroja obsahuje výrazy popisujúce všeobecne kategórie, funkcie alebo úrovne detailu.
+    </description>
+    <example>Odporúčané je vybrať hodnotu z množiny slovnej zásoby (napr. Slovník DCMI). Ak chcete popísať analógový alebo digitálny typ zdroja použite prvok formát.
+    </example>
+    <helper>
+      <option value="dataset">Dataset</option>
+      <option value="service">Služba</option>
+    </helper>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:format">
+    <label>Formát</label>
+    <description>Analógový alebo digitálny formát zdroja. Formát zdroja charakterizuje typ média alebo rozmery zdroja. Formát môže byť využitý na identifikáciu softvéru, hardvéru alebo iného zariadenia potrebného na vizualizáciu alebo funkčnosť zdroja.
+    </description>
+    <example>Príklad: Formát rozmerov, veľkosti a trvania. Odporúčané je vybrať hodnotu z množiny hodnôt ( napríklad zoznamu typov médií).
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:identifier">
+    <label>Identifikátor zdroja</label>
+    <description>Jedinečný odkaz na zdroj v danom kontexte.</description>
+    <example>Odporúčané je identifikovať zdroj pomocou jedinečného reťazca textového alebo číselného charaktera zodpovedajúcemu formálnemu systému identifikácie. Medzi formálne systémy identifikácie zahrňujeme Uniform Resource Identifier (URI)(vrátane URL), Digital Object Identifier (DOI) a International Standard Book Number (ISBN). 
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:source">
+    <label>Zdroj</label>
+    <description>Referencia na zdroj. 
+    </description>
+    <example>Odporúčané je vytvoriť referenčný zdroj pomocou jedinečného reťazca textového alebo číselného charaktera zodpovedajúcemu formálnemu systému identifikácie.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:language">
+    <label>Jazyk</label>
+    <description>Jazyk obsahu zdroja. Odporúčané je vybrať hodnotu z množiny RFC 3066, ktorá definuje množinu jazykov podľa normy ISO 639 (definícia jazykových značiek).
+    </description>
+    <example>Príklad:"en" alebo "eng" pre Angličtinu.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:relation">
+    <label>Vzťah</label>
+    <description>Referencia na súvisiac zdroj.</description>
+    <example>Odporúčané je vytvoriť odkaz na referenčný zdroj pomocou jedinečného reťazca textového alebo číselného charaktera zodpovedajúcemu formálnemu systému identifikácie.
+    </example>
+  </element>
+  <element name="dc:URI">
+    <label>URI</label>
+    <description/>
+    <example/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:coverage">
+    <label>Rozsah</label>
+    <description>Rozsah alebo mierka obsahu zdroja. Obvykle zahrňuje priestorovú reprezentáciu (názov miesta alebo geografické súradnice) časové obdobie (dátum, obdobie, rok) alebo administratívne členenie (okres, kraj, administratívna jednotka).
+    </description>
+    <example>Príklad: "Sever 90, Juh -90, Východ 180, Západ -180. Svet". 
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:rights">
+    <label>Manažment práv</label>
+    <description>Právne informácie o zdroji.</description>
+    <example>Obvykle právne informácie o zdroji poskytujú informácie alebo odkzazy na práva o Intellectual Property Rights (IPR), licenčné zmluvy a iné. Ak nie je prítomná právna informácia obsah zdroja sa považuje za dostuoný (voľný). 
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:modified">
+    <label>Dátum modifikácie</label>
+    <description>Dátum kedy boli metaúdaje modifikované</description>
+  </element>
+  <element name="dct:created">
+    <label>Dátum vytvorenia</label>
+    <description>Dátum kedy boli metaúdaje vytvorené.</description>
+  </element>
+  <element name="dct:dateSubmitted">
+    <label>Dátum uverejnenia</label>
+    <description>Dátum kedy boli metaúdaje uverejnené</description>
+    <example>Príklad: Za dátum uverejnenia sa považuje napr. odozdanie diplomovej práce a pod.
+    </example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:abstract">
+    <label>Abstrakt</label>
+    <description>Charakteristika obsahu zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:spatial">
+    <label>Priestorová charakteristika</label>
+    <description>Priestorová charakteristika obsahu zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:audience">
+    <label>Užívateľ</label>
+    <description>Trieda entity, pre ktorú je zdroj určený alebo užitočný.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualMethod">
+    <label>Pridávanie položky</label>
+    <description>Metóda určená na pridávanie položiek do súboru.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPeriodicity">
+    <label>Periodicita pridávanie</label>
+    <description>Periodicita pridávania položiek do súboru.</description>
+    <helper>
+      <option value="continual">Priebežne</option>
+      <option value="daily">Denne</option>
+      <option value="weekly">Týždenne</option>
+      <option value="fortnightly">Dvojtýždenne</option>
+      <option value="monthly">Mesačne</option>
+      <option value="quarterly">Štvrťročne</option>
+      <option value="biannually">Polročne</option>
+      <option value="annually">Ročne</option>
+      <option value="asNeeded">Podľa potreby</option>
+      <option value="irregular">Neprevidelne</option>
+      <option value="notPlanned">Neplánovane</option>
+      <option value="unknown">Nie je známe kedy</option>
+    </helper>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPolicy">
+    <label>Pravidlá pridávania</label>
+    <description>Pravidlá určujúce pridávanie položiek do súboru.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:instructionalMethod">
+    <label>Metóda výučby</label>
+    <description>Procesy, ktoré sa používajú na podporu zdielania skúseností a zručností.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:provenance">
+    <label>Originalita</label>
+    <description>Všetky zmeny vyhradené pre pravosť, integritu a interpretáciu vo výhradnom vlastníctve zdroja.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:rightsHolder">
+    <label>Vlastník práv</label>
+    <description>Osoba alebo organizácia, ktorá vlastní alebo spravuje licencie zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isPartOf">
+    <label>Je súčasťou</label>
+    <description>Súvisiaci zdroj, v ktorom je obsiahnutý obsah zdroja.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:references">
+    <label>Súvisiaci zdroj</label>
+    <description>Súvisiaci zdroj, na ktorý sa referuje alebo inak odkazuje.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accessRights">
+    <label>Prístupové práva</label>
+    <description>Informácie o umiestnený zdroja alebo jeho bezpečnosti.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:alternative">
+    <label>Alternatívny názov</label>
+    <description>Alternatívny názov pre zdroj.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:bibliographicCitation">
+    <label>Bibliografická citácia</label>
+    <description>Bibliografická referencia o zdroji.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:conformsTo">
+    <label>V súlade s</label>
+    <description>Štandard alebo norma podľa ktorej bol zdroj zadefinovaný.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:dateAccepted">
+    <label>Dátum akceptácie</label>
+    <description>Dátum akceptácie zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:dateCopyrighted">
+    <label>Dátum kopírovanie</label>
+    <description>Dátum kopírovania zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:educationLevel">
+    <label>Úroveň vzdelania</label>
+    <description>Trieda entity definovaná z hľadiska úrovne vzdelania, pre ktorý je uvedený zdroj určený.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:extent">
+    <label>Rozsah</label>
+    <description>Rozsah alebo trvanie zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasFormat">
+    <label>Súvisiaci formát</label>
+    <description>Súvisiaci zdroj, ktorý je rovnaký ako predtým opísané zdroje, ale v inom formáte.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasPart">
+    <label>Súvisiaca časť</label>
+    <description>Súvisiaca časť zdroja, ktorá je rovnaká ako predtým opísané, ale v inom formáte.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasVersion">
+    <label>Súvisiaca verzia</label>
+    <description>Súvisiaci zdroj, ktorý je rovnaký ako predtým opísané zdroje, ale v inej verzii.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isFormatOf">
+    <label>Formát je</label>
+    <description>Súvisiaci zdroj, ktorý je rovnaký ako predtým opísané zdroje, ale v inom formáte.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isReferencedBy">
+    <label>Referencia je</label>
+    <description>Súvisiaci zdroj, ktorý odkazuje, cituje alebo inak poukazuje na iný zdroj.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isReplacedBy">
+    <label>Nahradený je</label>
+    <description>Súvisiaci zdroj, ktorý nahrádza alebo premiestňuje iný zdroj.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isRequiredBy">
+    <label>Vyžadované je</label>
+    <description>Súvisiaci zdroj, ktorý je vyžadovaný na podporu funkcionality alebo súdržnosti iného zdroja.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isVersionOf">
+    <label>Verzia je</label>
+    <description>Súvisiaci zdroj, ktorý popisuje verziu iného zdroja.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:issued">
+    <label>Dátum vydania</label>
+    <description>Dátum vydania (publikácie) zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:license">
+    <label>Licencia</label>
+    <description>Právny dokument s oficiálnym povoleným (licencia) na vykonávanie operácií s zdrojom.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:mediator">
+    <label>Sprostredkovateľ</label>
+    <description>Entita zodpovedná za sprostredkovanie prístupu k zdroju.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:medium">
+    <label>Nosič</label>
+    <description>Analógový alebo digitálny nosič zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:replaces">
+    <label>Nahradenie</label>
+    <description>Súvisiaci zdroj, ktorý je nahradený, presunutý iným zdrojom.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:requires">
+    <label>Vyžaduje</label>
+    <description>Súvisiaci zdroj, ktorý je vyžadovaný na podporu funkcionality alebo súdržnosti iného zdroja.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:tableOfContents">
+    <label>Obsah</label>
+    <description>Zoznam podjednotiek zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:temporal">
+    <label>Časová platnosť</label>
+    <description>Časová charakteristika zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:valid">
+    <label>Platnosť</label>
+    <description>Časová platnosť zdroja.</description>
+  </element>
+  <!-- ==================================================== -->
+</labels>
