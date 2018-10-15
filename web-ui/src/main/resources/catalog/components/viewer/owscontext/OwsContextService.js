@@ -240,7 +240,7 @@
                       if (olLayer) {
                         olLayer.displayInLayerManager = false;
                         olLayer.background = true;
-                        olLayer.set('group', layer.group);
+                        olLayer.set('group', layer_.group);
                         bgLayers[idx - 1] = olLayer;
 
                         if (loadingLayer.get('bgLayer')) {
