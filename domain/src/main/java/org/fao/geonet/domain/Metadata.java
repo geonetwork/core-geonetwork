@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import com.vividsolutions.jts.util.Assert;
 
 import org.apache.lucene.document.Document;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
@@ -36,6 +37,7 @@ import org.jdom.output.XMLOutputter;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +59,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -88,6 +91,7 @@ public class Metadata extends GeonetEntity  implements Serializable {
     private MetadataSourceInfo _sourceInfo = new MetadataSourceInfo();
     private MetadataHarvestInfo _harvestInfo = new MetadataHarvestInfo();
     private Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
+    private List<UserFeedback> userFeedbacks;
 
     // private List<MetadataStatus> _metadataStatus;
     // private Set<Operation> operations = new HashSet<Operation>();
@@ -393,5 +397,15 @@ public class Metadata extends GeonetEntity  implements Serializable {
      */
     protected void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
         this.metadataCategories = categories;
+    }
+
+    @OneToMany(mappedBy="metadata", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public List<UserFeedback> getUserFeedbacks() {
+        return userFeedbacks;
+    }
+
+    public void setUserFeedbacks(@Nonnull List<UserFeedback> userFeedbacks) {
+        this.userFeedbacks =
+            userFeedbacks;
     }
 }
