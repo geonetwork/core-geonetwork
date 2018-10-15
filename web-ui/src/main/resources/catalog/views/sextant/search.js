@@ -504,7 +504,7 @@
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
 
       $scope.mapfieldOpt = {
-        relations: ['within']
+        relations: ['within_bbox']
       };
 
       // Disable/enable reset button
