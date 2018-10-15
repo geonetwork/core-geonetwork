@@ -8,3 +8,11 @@
 .bootstrap-table .export>.dropdown-menu>li>a {
     color: white !important;
 }
+
+// fix popup appearing behind backdrop
+#body.fullscreen {
+    position: absolute;
+}
+body > div > header {
+    z-index: 20;
+}
