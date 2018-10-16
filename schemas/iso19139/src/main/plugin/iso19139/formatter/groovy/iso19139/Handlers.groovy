@@ -345,7 +345,8 @@ public class Handlers {
                 altTitle : handlers.processElements([el.'gmd:alternateTitle']),
                 date : handlers.processElements(el.'gmd:date'.'gmd:CI_Date'),
                 editionInfo: commonHandlers.func.textEl(el.'gmd:edition'.text(), el.'gmd:editionDate'.'gco:Date'.text()),
-                identifier : isofunc.isoWikiTextEl(el.'gmd:identifier', el.'gmd:identifier'.'*'.'gmd:code'.'gco:CharacterString'.join('<br/>')),
+                // SEXTANT SPECIFIC: use isoText instead of isoWikiText for special chars in identifier
+                identifier : isofunc.isoTextEl(el.'gmd:identifier', el.'gmd:identifier'.'*'.'gmd:code'.'gco:CharacterString'.join('<br/>')),
                 presentationForm : isofunc.isoTextEl(el.'gmd:presentationForm', f.codelistValueLabel(el.'gmd:presentationForm'.'gmd:CI_PresentationFormCode')),
                 ISBN : handlers.processElements(el.'gmd:ISBN'),
                 ISSN : handlers.processElements(el.'gmd:ISSN'),
