@@ -1525,15 +1525,15 @@
                           gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
                       links = links.concat(
                           gnCurrentEdit.metadata.getLinksByType('wms'));
-                      if (angular.isArray(links) && links.length === 1) {
+                      //todo: also support wfs, wcs, wmts, atom
+                      if (angular.isArray(links) && links.length > 0) {
                         var serviceUrl = links[0].url;
                         scope.loadCurrentLink(serviceUrl);
                         scope.srcParams.url = serviceUrl;
                         scope.srcParams.protocol = links[0].protocol || '';
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                       } else {
-                        scope.alertMsg =
-                            $translate.instant('linkToServiceWithoutURLError');
+                        console.log('No WMS url available');
                       }
                     }
                   });
