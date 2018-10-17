@@ -675,6 +675,23 @@ To include text block use the following:
         <text ref="defaultviewdesc"></text>
         ....
 
+For overview, a simple manager can be used or the general one:
+
+.. code-block:: xml
+
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
+        <directive data-gn-overview-manager=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+
+
+        <!-- General online source manager
+        <directive data-gn-onlinesrc-list=""/>
+        -->
 
 
 ]]>

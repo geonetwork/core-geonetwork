@@ -955,7 +955,19 @@
     </view>
     <view name="default" disabled="true">
       <sidePanel>
+        <!-- General online source manager
         <directive data-gn-onlinesrc-list=""/>
+        -->
+
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
+        <directive data-gn-overview-manager=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
@@ -3468,6 +3480,7 @@
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='pointOfContact']" name="cm-orgServiceDesk"/>
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='resourceProvider']" name="cm-orgProductionUnit"/>
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='distributor']" name="cm-orgDisseminationUnit"/>
+
 
           </section>
         </section>
