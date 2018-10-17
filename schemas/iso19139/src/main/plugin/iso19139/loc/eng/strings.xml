@@ -144,6 +144,8 @@
   <resource_url>URL</resource_url>
   <resource_protocol>Protocol</resource_protocol>
 
+  <addCrs2154>Lambert 93</addCrs2154>
+  <addCrs3857>WGS 84 / World Mercator</addCrs3857>
   <addCrs4936>ETRS89-XYZ</addCrs4936>
   <addCrs4937>ETRS89-GRS80h</addCrs4937>
   <addCrs4258>ETRS89-GRS80</addCrs4258>

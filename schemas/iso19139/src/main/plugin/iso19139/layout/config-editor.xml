@@ -430,11 +430,19 @@
                             'ISO 19115:2003/19139 - SEXTANT')">
 
       <thesaurusList>
-        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme" maxtags="1"/>
-        <thesaurus key="local.theme.sextant-theme" maxtags="1"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
+                   fieldset="false"
+                   maxtags="1"/>
+        <thesaurus key="local.theme.sextant-theme"
+                   fieldset="false"
+                   maxtags="1"/>
       </thesaurusList>
 
       <sidePanel>
+        <!--<directive data-gn-overview-manager=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+        -->
         <directive data-gn-onlinesrc-list=""/>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
@@ -442,7 +450,7 @@
       </sidePanel>
 
       <tab id="sextant-identification" mode="flat" default="true">
-        <section name="sextantidentificationTitle">
+        <section>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"
                  name="sextant-title"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"
@@ -473,11 +481,77 @@
                  or="date"
                  in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*"
                  name="sextant-date-resource"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>
+        </section>
+
+
+
+        <section name="sextantkeywordTitle">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.local.theme.sextant-theme']"
+                 name="sextant-theme"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"
+                 name="inspireTheme"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
+                            'geonetwork.thesaurus.local.theme.sextant-theme' and
+                          */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
+                            'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"
+                 or="descriptiveKeywords"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
+        </section>
+
+      </tab>
+      <tab id="sextant-contact" mode="flat">
+        <section>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"/>
+
+          <action type="add"
+                  name="pointOfContact"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
+            <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-search-action="false"
+              data-popup-action="true"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+          </action>
+        </section>
+      </tab>
+      <tab id="sextant-spatial" mode="flat">
+        <section name="sdnSpatialRepresentationType">
+          <!-- TODO: layout on one line ? -->
+          <action type="process"
+                  btnClass="fa fa-square-o"
+                  process="add-vector-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 0 and count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 0"/>
+          <action type="process"
+                  btnClass="fa fa-square-o"
+                  process="change-to-vector-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 1"/>
+
+
+          <action type="process"
+                  btnClass="fa fa-th"
+                  process="add-grid-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 0 and count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'grid']) = 0"/>
+          <action type="process"
+                  btnClass="fa fa-th"
+                  process="change-to-grid-info"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType[*/@codeListValue = 'vector']) = 1"/>
+
+          <text ref="change-spatial-type-alert"
+                if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
+
+
+          <!--<field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType"/>-->
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"
                  del="../.."/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
-                 del="../../../.."/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:equivalentScale/*/gmd:denominator"
+            del="../../../.."/>
 
 
           <action type="add" btnLabel="sextant-add-scale" or="spatialResolution"
@@ -516,58 +590,93 @@
             </template>
           </action>
 
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties"
+            or="axisDimensionProperties"
+            in="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*"/>
+          <field
+            xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:geometricObjects"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:geometricObjects/*/gmd:geometricObjectType"/>
+          <text ref="hr"
+                if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialRepresentationType) = 1"/>
+
         </section>
 
 
 
-        <section name="sextantkeywordTitle">
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:topicCategory"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.local.theme.sextant-theme']"
-                 name="sextant-theme"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() = 'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"
-                 name="inspireTheme"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
-                          */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
-                            'geonetwork.thesaurus.local.theme.sextant-theme' and
-                          */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
-                            'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"
-                 or="descriptiveKeywords"
-                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
-        </section>
-
-      </tab>
-      <tab id="sextant-contact" mode="flat">
-        <section name="sextantrespOrgaTitle">
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"/>
-
-          <action type="add"
-                  name="pointOfContact"
-                  addDirective="data-gn-directory-entry-selector"
-                  or="pointOfContact"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
-            <directiveAttributes
-              data-template-add-action="true"
-              data-template-type="contact"
-              data-search-action="false"
-              data-popup-action="true"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
-          </action>
-        </section>
-      </tab>
-      <tab id="sextant-spatial" mode="flat">
-
-        <section name="sextantgeoLocationTitle">
+        <section>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/*"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"
-                 or="referenceSystemInfo"
-                 in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
+
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet label="addCrs4326">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs2154">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>Lambert 93 (EPSG 2154)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3857">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG 3857)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+
         </section>
 
-        <section name="sextanttempRefTitle">
+        <section>
 
           <field name="temporalRangeSection"
                  templateModeOnly="true"
@@ -629,7 +738,7 @@
         </section>
       </tab>
       <tab id="sextant-usage" mode="flat">
-        <section name="sextantlimitationsTitle">
+        <section>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints"/>
@@ -637,7 +746,7 @@
         </section>
       </tab>
       <tab id="sextant-quality" mode="flat">
-        <section name="sextantqualityTitle">
+        <section>
           <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement"/>
           <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*/gmd:processStep"
                  or="processStep" in="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*"/>
@@ -743,7 +852,7 @@
         </section>-->
       </tab>
       <tab id="sextant-metadata" mode="flat">
-        <section name="sextantmetadataInfoTitle">
+        <section>
           <field xpath="/gmd:MD_Metadata/gmd:language"/>
 
           <field name="locale"
