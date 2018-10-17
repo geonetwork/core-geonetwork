@@ -3171,13 +3171,18 @@
         <section name="cm-main-info">
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"
                  name="sextant-title"/>
-          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:alternateTitle" name="cm-externalShortName"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract" name="cm-abstract"/>
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"
+                 name="cm-fileIdentifier"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:alternateTitle"
+                 name="cm-externalShortName"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"
+                 name="cm-abstract"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue='creation']"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:editionDate" name="cm-updateDate"/><!-- TODO:CM label override -->
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:edition" name="cm-version"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:editionDate"
+                 name="cm-updateDate"/><!-- TODO:CM label override -->
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:edition"
+                 name="cm-version"/>
         </section>
         <section name="cm-quicklookAndKeywords">
           <!--

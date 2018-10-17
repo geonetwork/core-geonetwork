@@ -478,6 +478,7 @@
 
   <copernicus-marine>Copernicus Marine</copernicus-marine>
   <cm-main-info>Product identification</cm-main-info>
+  <cm-fileIdentifier>Internal permanent shortname</cm-fileIdentifier>
   <cm-quicklookAndKeywords>Descriptive keywords</cm-quicklookAndKeywords>
   <cm-display-priority>Display priority</cm-display-priority>
   <cm-spatioTemporalCoverage>Spatio-temporal extent</cm-spatioTemporalCoverage>
