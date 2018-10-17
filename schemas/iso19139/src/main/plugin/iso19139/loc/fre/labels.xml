@@ -3948,18 +3948,6 @@ l’IGN (WPS)
       <option value="Public">Public</option>
       <option value="Confidential">Confidential</option>
     </helper>
-    <helper>
-      <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
-      <option value="Conditions inconnues">Conditions inconnues</option>
-      <option value="Données sous Licence Creative Commons 0 : https://creativecommons.org/publicdomain/zero/1.0/deed.fr">Données sous Licence Creative Commons 0 : https://creativecommons.org/publicdomain/zero/1.0/deed.fr</option>
-      <option value="Données sous Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html">Données sous Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html</option>
-      <option value="Données sous Licence Creative Commons - Attribution (BY) : http://creativecommons.fr/licences/">Données sous Licence Creative Commons - Attribution (BY): http://creativecommons.fr/licences/</option>
-      <option value="Données sous Licence Creative Commons - Attribution + Pas de Modification (BY-ND) : http://creativecommons.fr/licences/">Données sous Licence Creative Commons - Attribution + Pas de Modification (BY-ND) : http://creativecommons.fr/licences/</option>
-      <option value="Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Pas de Modification (BY-NC-ND) : http://creativecommons.fr/licences/">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Pas de Modification (BY-NC-ND) : http://creativecommons.fr/licences/</option>
-      <option value="Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale (BY-NC) : http://creativecommons.fr/licences/">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale (BY-NC) : http://creativecommons.fr/licences/</option>
-      <option value="Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Partage dans les mêmes conditions (BY-NC-SA) : http://creativecommons.fr/licences/">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Partage dans les mêmes conditions (BY-NC-SA) : http://creativecommons.fr/licences/</option>
-      <option value="Données sous Licence Creative Commons - Attribution + Partage dans les mêmes conditions (BY-SA) : http://creativecommons.fr/licences/">Données sous Licence Creative Commons - Attribution + Partage dans les mêmes conditions (BY-SA) : http://creativecommons.fr/licences/</option>
-    </helper>
   </element>
   <element name="gmd:userContactInfo" id="66.0">
     <label>Contact concernant la ressource</label>

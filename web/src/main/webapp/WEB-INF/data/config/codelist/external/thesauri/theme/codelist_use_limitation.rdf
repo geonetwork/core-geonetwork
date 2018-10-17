@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns="http://www.w3.org/2005/sparql-results#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:fn="http://www.w3.org/2005/xpath-functions"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <skos:ConceptScheme rdf:about="https://sextant.ifremer.fr/thesaurus/use_limitation/">
+    <dc:title>Conditions Applying To Access and Use</dc:title>
+    <dc:description>
+      List of values for use limitation based on INSPIRE, data.gouv.fr and Creative Commons recommendations.
+    </dc:description>
+    <dcterms:issued>2018-10-19</dcterms:issued>
+    <dcterms:modified>2018-10-19</dcterms:modified>
+  </skos:ConceptScheme>
+
+  <!--
+  INSPIRE values
+  http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/ConditionsApplyingToAccessAndUse.fr.xml
+  -->
+  <skos:Concept rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">
+    <skos:prefLabel xml:lang="en">No conditions to access and use</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Aucune condition ne s’applique pour l'accès et l'utilisation</skos:prefLabel>
+    <skos:definition xml:lang="en">No conditions apply to access and use.</skos:definition>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">
+    <skos:prefLabel xml:lang="en">Conditions to access and use unknown</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Conditions d'accès et d'utilisation inconnues</skos:prefLabel>
+    <skos:definition xml:lang="en">The conditions applying to access and use are unknown.</skos:definition>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <!-- data.gouv.fr license. -->
+  <skos:Concept rdf:about="http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html">
+    <skos:prefLabel xml:lang="en">Data under Open licence</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence ouverte</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <!-- CC licenses -->
+  <skos:Concept rdf:about="https://creativecommons.org/publicdomain/zero/1.0/">
+    <skos:prefLabel xml:lang="en">Creative Commons 0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons 0</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://creativecommons.org/licenses/by/4.0/">
+    <skos:prefLabel xml:lang="en">Creative Commons license to apply : Attribution (BY)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution (BY)</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nd/4.0">
+    <skos:prefLabel xml:lang="en">Creative Commons license to apply : Attribution + No Derivs (BY-ND)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas de Modification (BY-ND)</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nc-nd/4.0">
+    <skos:prefLabel xml:lang="en">Creative Commons license to apply : Attribution + Non Commercial + No Derivs (BY-NC-ND)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Pas de Modification (BY-NC-ND)</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nc/4.0">
+    <skos:prefLabel xml:lang="en">Creative Commons license to apply : Attribution + Non Commercial (BY-NC)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale (BY-NC)</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-nc-sa/4.0">
+    <skos:prefLabel xml:lang="en">Creative Commons license to apply : Attribution + Non Commercial + Share Alike (BY-NC-SA)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Pas d’Utilisation Commerciale + Partage dans les mêmes conditions (BY-NC-SA)</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://creativecommons.org/licenses/by-sa/4.0">
+    <skos:prefLabel xml:lang="en">Creative Commons license to apply : Attribution + Share Alike (BY-SA)</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Données sous Licence Creative Commons - Attribution + Partage dans les mêmes conditions (BY-SA)</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
+</rdf:RDF>
