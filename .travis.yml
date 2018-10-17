@@ -8,3 +8,5 @@ before_install:
 cache:
   directories:
   - $HOME/.m2
+before_cache:
+  - rm -f $HOME/.m2/repository/org/geonetwork-opensource
