@@ -4,10 +4,10 @@
   <div class="navbar-text gn-tooltip"
      data-ng-mouseover="getSaveStatus()"
      title="{{savedStatus}}">
-    <h1 title="{{gnCurrentEdit.mdTitle}}">
+    <strong title="{{gnCurrentEdit.mdTitle}}">
       {{gnCurrentEdit.mdTitle | limitTo: 50 }}
       {{gnCurrentEdit.mdTitle.length > 50 ? '...' : ''}}
-    </h1>
+    </strong>
     <span data-ng-if="savedStatus">| </span>
     <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
   </div>
