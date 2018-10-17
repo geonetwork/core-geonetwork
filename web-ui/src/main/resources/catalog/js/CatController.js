@@ -192,14 +192,14 @@
           },
           'graticuleOgcService': {},
           'map-viewer': {
-            'context': '../../map/config-viewer.xml',
+            'context': '',
             'extent': [0, 0, 0, 0],
             'layers': []
           },
           'map-search': {
-            'context': '../../map/config-viewer.xml',
+            'context': '',
             'extent': [0, 0, 0, 0],
-            'layers': []
+            'layers': [{'type': 'osm'}]
           },
           'map-editor': {
             'context': '',

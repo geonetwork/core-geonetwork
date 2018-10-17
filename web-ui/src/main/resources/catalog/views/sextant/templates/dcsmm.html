@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html xml:lang="fr-FR" xmlns="http://www.w3.org/1999/xhtml" lang="fr-FR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="margin:0">
+<div ng-app="gn_search_sextant"
+     ng-controller="GnCatController"
+     class="gn sxt-max-md"
+     sxt-size="auto "
+     ng-include="'../../catalog/views/sextant/templates/index.html'">
+</div>
+</body>
+
+<script type="text/javascript">
+    var sxtSettings = {
+        langDetector: {
+            fromHtmlTag: true,
+            regexp: '^\/([a-z]+)\/',
+            lang: 'fre'
+        },
+//    configWhat: 'AIRESMARINES,CEDRE',
+//    configWho: 'IFREMER',
+        configWhat: "DCSMM_DISPOSITIFS_RETENUS_PDS,DCSMM_EVALUATION_INITIALE,DCSMM_INVENTAIRE_DISPOSITIFS_PDS,DCSMM_SYSTEMES_BANCARISATION,DCSMM_EVAL2018_SOURCES,DCSMM_EVAL2018_INDICATEURS",
+        tabOverflow: {
+            search: true,
+            map: true,
+            panier: true
+        },
+        sortBy: ['changeDate', '-title', 'popularity'],
+
+//    defaultContext: 'https://www.ifremer.fr/sextant_doc/atlas_benthal/contexte/atl_benthal_atlantique_test.xml',
+
+//    olView: {
+//      extent: [-377935.51545759046, 5411955.532673891, 942896.3333102552,
+//        6456391.087162538],
+//      maxResolution: 2445.98490512564
+//    },
+        servicesUrl: {
+            wms: [{
+                name: 'Ifremer - Oc�anographie physique',
+                url: 'http://www.ifremer.fr/services/wms/oceanographie_physique?'
+            }, {
+                name: 'Ifremer - Biologie',
+                url: 'http://www.ifremer.fr/services/wms/biologie?'
+            }, {
+                name: 'Ifremer - G�osciences marines',
+                url: 'http://www.ifremer.fr/services/wms/geosciences?'
+            }, {
+                name: 'Ifremer - MNT',
+                url: 'http://www.ifremer.fr/ifremerWS/WS/wms/MNT?'
+            }, {
+                name: 'Ifremer - Granulats marins',
+                url: 'http://www.ifremer.fr/services/wms/granulats_marins?'
+            }, {
+                name: 'Ifremer - Surveillance littorale',
+                url: 'http://www.ifremer.fr/services/wms/surveillance_littorale?'
+            }, {
+                name: 'Ifremer - Photos anciennes',
+                url: 'http://www.ifremer.fr/services/photos_anciennes?'
+            }, {
+                name: 'Ifremer - Scan littoral',
+                url: 'http://www.ifremer.fr/ifremerWS/WS/wms/scan-littoral?'
+            }, {
+                name: 'Agence des aires marines prot�g�es',
+                url: 'http://cartographie.aires-marines.fr/wms'
+            }, {
+                name: 'BRGM G�ologie',
+                url: 'http://geoservices.brgm.fr/geologie'
+            }, {
+                name: 'BRGM Risques naturels et industriels',
+                url: 'http://geoservices.brgm.fr/risques'
+            }, {
+                name: 'BRGM Observatoire des mat�riaux',
+                url: 'http://geoservices.brgm.fr/odmgm?'
+            }, {
+                name: 'Cartorisque',
+                url: 'http://cartorisque.prim.net/wms/france?'
+            }, {
+                name: 'Geolittoral',
+                url: 'http://geolittoral.application.equipement.gouv.fr/wms2/metropole?'
+            }, {
+                name: 'Geosignal',
+                url: 'http://www.geosignal.org/cgi-bin/wmsmap?'
+            }, {
+                name: 'MNHN-INPN',
+                url: 'http://ws.carmencarto.fr/WMS/119/fxx_inpn?'
+            }, {
+                name: 'Marine Regions',
+                url: 'http://geo.vliz.be/geoserver/MarineRegions/wms?Request=getCapabilities'
+            }, {
+                name: 'SHOM',
+                url: 'http://services.data.shom.fr/INSPIRE/wms/r?version=1.3.0'
+            }],
+            wmts: [{
+                name: 'maps.ngdc.noaa.gov',
+                url: 'http://maps.ngdc.noaa.gov/arcgis/rest/services/web_mercator/etopo1_hillshade/MapServer/WMTS/1.0.0/WMTSCapabilities.xml'
+
+            }, {
+                name: 'Ifremer - Photos anciennes',
+                url: 'http://sextant.ifremer.fr/geowebcache/service/wmts?'
+            }]
+        },
+
+        layerFilter: true,
+
+        graticule: {
+            type: 'wms',
+            url: 'http://www.ifremer.fr/services/wms1',
+            layer: 'graticule_4326'
+        },
+
+        panier: {
+            projs: [{
+                value: '4326',
+                label: 'Geographique - Datum WGS84'
+            }, {
+                value: '2154',
+                label: 'Lambert - 93'
+            }, {
+                value: '27571',
+                label: 'Lambert Zone I - Datum NTF'
+            }, {
+                value: '27572',
+                label: 'Lambert Zone II - Datum NTF'
+            }, {
+                value: '27573',
+                label: 'Lambert Zone III - Datum NTF'
+            }, {
+                value: '27574',
+                label: 'Lambert Zone IV - Datum NTF'
+            }, {
+                value: '27561',
+                label: 'Lambert Nord France - Datum NTF'
+            }, {
+                value: '27562',
+                label: 'Lambert Centre France - Datum NTF'
+            }, {
+                value: '27563',
+                label: 'Lambert Sud France - Datum NTF'
+            }, {
+                value: '27564',
+                label: 'Lambert Corse - Datum NTF'
+            }, {
+                value: '32600',
+                label: 'UTM - Datum WGS84'
+            }, {
+                value: '4230',
+                label: 'Geographique - Datum ED50'
+            }, {
+                value: '4258',
+                label: 'European Terrestrial Reference System 1989 (ETRS89)'
+            }, {
+                value: '3395',
+                label: 'Mercator - Datum WGS84'
+            }, {
+                value: '22332',
+                label: 'Carthage - Zone UTM 32N'
+            }],
+            formats: {
+                vector: [
+                    {
+                        value: 'ESRI Shapefile',
+                        label: 'Shapefile'
+                    }, {
+                        value: 'MapInfo File',
+                        label: 'MapInfo'
+                    }, {
+                        value: 'GML',
+                        label: 'GML'
+                    }, {
+                        value: 'KML',
+                        label: 'KML'
+                    }, {
+                        value: 'GeoJSON',
+                        label: 'GeoJSON'
+                    }
+                ],
+                raster: [
+                    {
+                        value: 'GTiff',
+                        label: 'GeoTiff'
+                    }, {
+                        value: 'ECW',
+                        label: 'ECW'
+                    }, {
+                        value: 'JPEG2000',
+                        label: 'JPEG2000'
+                    }
+                ]
+            },
+            defaults: {
+                format: 'ESRI Shapefile',
+                proj: '4326'
+            }
+        },
+
+        theme: 'sextant-catalogue'
+
+    };
+
+</script>
+<script src="http://localhost:8080/geonetwork/static/lib.js"></script>
+<script src="http://localhost:8080/geonetwork/static/gn_search_sextant.js"></script>
+</html>

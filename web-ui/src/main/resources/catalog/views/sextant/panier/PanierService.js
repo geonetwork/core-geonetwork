@@ -41,7 +41,7 @@
                     protocol: 'WPS',
                     identifier: process.name,
                     linkage: process.url,
-                    params: btoa(process.executeMessage)
+                    params: btoa(unescape(encodeURIComponent(process.executeMessage)))
                   });
                 }
               }

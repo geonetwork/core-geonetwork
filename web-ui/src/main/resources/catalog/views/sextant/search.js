@@ -345,6 +345,16 @@
             window.open(link.url);
             return;
           }
+
+          // make sure the layer is not already there
+          for (var i = 0; i < $scope.searchObj.panier.length; i++) {
+            if ($scope.searchObj.panier[i].link.name === link.name &&
+                $scope.searchObj.panier[i].link.url === link.url &&
+                $scope.searchObj.panier[i].link.protocol === link.protocol) {
+              return;
+            }
+          }
+
           $scope.searchObj.panier.push({
             link: link,
             md: md
@@ -494,7 +504,7 @@
       $scope.thesaurus = searchSettings.defaultListOfThesaurus;
 
       $scope.mapfieldOpt = {
-        relations: ['within']
+        relations: ['within_bbox']
       };
 
       // Disable/enable reset button

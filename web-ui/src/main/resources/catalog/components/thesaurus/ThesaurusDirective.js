@@ -554,6 +554,7 @@
             }, {
               name: 'keyword',
               displayKey: 'label',
+              limit: 200,
               source: keywordsAutocompleter.ttAdapter()
               // templates: {
               // header: '<h4>' + scope.thesaurusKey + '</h4>'

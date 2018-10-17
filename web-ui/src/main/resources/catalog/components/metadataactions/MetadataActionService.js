@@ -141,7 +141,7 @@ goog.require('gn_share');
         }
         else if (angular.isString(params)) {
           // TODO: May depend on schema
-          url += gnSearchSettings.formatter.defaultPdfUrl + params;
+          url += gnSearchSettings.formatter.defaultPdfUrl + encodeURIComponent(params);
           $window.open(url, '_blank');
         }
         // if (url) {

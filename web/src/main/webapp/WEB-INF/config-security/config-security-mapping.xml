@@ -633,6 +633,8 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/generateSLD!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/getSLD/.*" access="permitAll"/>
 
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/deprecated.params.log" access="permitAll"/>
+
         <sec:intercept-url pattern="/.*" access="denyAll"/>
       </sec:filter-security-metadata-source>
     </property>

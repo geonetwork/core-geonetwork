@@ -106,13 +106,13 @@
     'gnMap',
     'gnSearchSettings',
     'gnPanierSettings',
-    'gnPopup',
-    'gnWpsService',
+    'gnSearchLocation',
+    '$timeout',
     function(gnMap,
       gnSearchSettings,
       gnPanierSettings,
-      gnPopup,
-      gnWpsService) {
+      gnSearchLocation,
+      $timeout) {
       return {
         restrict: 'A',
         require: '^sxtPanier',
@@ -252,6 +252,16 @@
 
               // by default, include WFS filters if there are any
               scope.form.useFilters = true;
+
+              // register WFS link if any
+              scope.getWfsLink = function() {
+                return scope.element.link.protocol === 'OGC:WFS' ?
+                    scope.element.link : null;
+              };
+
+              scope.isVisible = function() {
+                return gnSearchLocation.path() === '/panier';
+              }
             },
             post: function preLink(scope, iElement, iAttrs, controller) {
 
@@ -269,7 +279,7 @@
                   scope.prop.extent = format.writeGeometry(
                     ol.geom.Polygon.fromExtent(e));
                 }
-              })
+              });
 
               scope.$watch('prop.extent', function(n) {
                 if(n) {
@@ -288,61 +298,17 @@
                 }
               });
 
-              // register WFS link if any
-              scope.wfsLink = scope.element.link.protocol == 'OGC:WFS' ?
-                  scope.element.link : null;
-
               // Generate WPS form
-              scope.currentWPS = null;
-              scope.editWPSForm = function(process) {
-                if(process) {
-                  // open modal
-                  var popup = gnPopup.create({
-                    title: process.desc || 'editWpsForm',
-                    content:
-                      '<gn-wps-process-form wps-link="currentWPS" '+
-                        'wfs-link="wfsLink" map="map" ' +
-                        'hide-title="true" ' +
-                        'hide-execute-button="true">' +
-                      '</gn-wps-process-form>' +
-                      '<div class="text-center">' +
-                        '<button type="button" class="btn btn-default" ' +
-                          'ng-click="saveWPSMessage(); $parent.close()">' +
-                          '{{ "wpsSaveForm" | translate }}' +
-                        '</button>' +
-                      '</div>',
-                    className: 'wps-form-modal',
-                    onCloseCallback: function () {
-                      scope.currentWPS = null;
-                    }
-                  }, scope);
-
-                  scope.currentWPS = process;
-                }
-              };
-              scope.saveWPSMessage = function(p) {
-                var process = p || scope.currentWPS;
-
-                // do a describe process on the WPS & save execute message
-                gnWpsService.describeProcess(process.url, process.name).then(
-                  function (data) {
-                    // generate the XML message from the description
-                    var description = data.processDescription[0];
-                    var message = gnWpsService.printExecuteMessage(description,
-                      process.inputs, process.output);
-
-                    process.executeMessage = message;
-                });
-
-                // clear ref to process
-                scope.currentWPS = null;
-              };
-
-              // called when the wps process is described in the directive
-              scope.describedCallback = function(process) {
+              scope.saveExecuteMessage = function(message, process) {
+                process.executeMessage = message;
                 process.described = true;
-                scope.saveWPSMessage(process);
-              }
+              };
+
+              scope.submitProcess = function(evt) {
+                $timeout(function() {
+                  $(evt.target).parent().parent().find('button[type=submit]').click();
+                });
+              };
             }
           };
         }

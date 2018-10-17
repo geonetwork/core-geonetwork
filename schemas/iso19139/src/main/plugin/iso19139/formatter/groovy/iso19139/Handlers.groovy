@@ -345,7 +345,8 @@ public class Handlers {
                 altTitle : handlers.processElements([el.'gmd:alternateTitle']),
                 date : handlers.processElements(el.'gmd:date'.'gmd:CI_Date'),
                 editionInfo: commonHandlers.func.textEl(el.'gmd:edition'.text(), el.'gmd:editionDate'.'gco:Date'.text()),
-                identifier : isofunc.isoWikiTextEl(el.'gmd:identifier', el.'gmd:identifier'.'*'.'gmd:code'.'gco:CharacterString'.join('<br/>')),
+                // SEXTANT SPECIFIC: use isoText instead of isoWikiText for special chars in identifier
+                identifier : isofunc.isoTextEl(el.'gmd:identifier', el.'gmd:identifier'.'*'.'gmd:code'.'gco:CharacterString'.join('<br/>')),
                 presentationForm : isofunc.isoTextEl(el.'gmd:presentationForm', f.codelistValueLabel(el.'gmd:presentationForm'.'gmd:CI_PresentationFormCode')),
                 ISBN : handlers.processElements(el.'gmd:ISBN'),
                 ISSN : handlers.processElements(el.'gmd:ISSN'),
@@ -469,7 +470,7 @@ public class Handlers {
 
     // Sextant Specific : Formatters
     def keywordsElSxt = {keywords ->
-        def keywordProps = com.google.common.collect.ArrayListMultimap.create()
+        def keywordProps = com.google.common.collect.Maps.newHashMap()
         keywords.collectNested {it.'**'.findAll{it.name() == 'gmd:keyword'}}.flatten().each { k ->
             def thesaurusName = isofunc.isoText(k.parent().'gmd:thesaurusName'.'gmd:CI_Citation'.'gmd:title')
 
@@ -485,13 +486,22 @@ public class Handlers {
             }
             def keyValue = isofunc.isoText(k);
             if(!keyValue) keyValue = k.'gmx:Anchor'.text()
-            if(keyValue) keywordProps.put(thesaurusName, keyValue)
+
+            def thesaurusIdEl = k.parent().'gmd:thesaurusName'.'gmd:CI_Citation'.'gmd:identifier'.'gmd:MD_Identifier'
+            def thesaurusId = isofunc.isoText(thesaurusIdEl.'gmd:code')
+            if(!thesaurusId) thesaurusId = thesaurusIdEl.'gmd:code'.'gmx:Anchor'.text()
+
+            if (!keywordProps.get(thesaurusName) && keyValue) {
+                keywordProps.put(thesaurusName, [ words: new ArrayList(), thesaurusId: thesaurusId ])
+            }
+
+            if(keyValue) keywordProps.get(thesaurusName).get('words').push(keyValue)
         }
 
-        if(keywordProps.asMap().size() > 0)
+        if(keywordProps.size() > 0)
             return handlers.fileResult('html/sxt-keyword.html', [
                     label : f.nodeLabel("gmd:descriptiveKeywords", null),
-                    keywords: keywordProps.asMap()])
+                    keywords: keywordProps])
     }
 
 

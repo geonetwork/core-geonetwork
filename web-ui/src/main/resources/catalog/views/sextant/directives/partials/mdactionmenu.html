@@ -15,7 +15,7 @@
       </a>
     </li>
     <li>
-      <a data-ng-href="{{gnUrl}}xml.metadata.get?uuid={{md.getUuid()}}" target="_blank">
+      <a data-ng-href="{{gnUrl}}xml.metadata.get?uuid={{md.getUuid() | encodeURIComponent}}" target="_blank">
         <i class="fa fa-file-code-o"></i>&nbsp;
         <span data-translate="">sxtExportXML</span>
       </a>
