@@ -3235,20 +3235,11 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(), 'external.theme.myocean.model-assimilation')]"/>
 
 
-          <!-- TODO:CM
-          <xsl:variable name="displayPriorityPrefix" select="'display priority: '"/>
-          <input type="hidden" class="md"
-            name="_{gco:CharacterString/geonet:element/@ref}"
-            id="_{gco:CharacterString/geonet:element/@ref}"
-            value="{gco:CharacterString}" size="30"/>
-
-          <input type="number" class="md"
-            onkeyup="document.getElementById('_{gco:CharacterString/geonet:element/@ref}').value = '{$displayPriorityPrefix}' + this.value"
-            onchange="document.getElementById('_{gco:CharacterString/geonet:element/@ref}').value = '{$displayPriorityPrefix}' + this.value"
-            value="{substring-after(gco:CharacterString, $displayPriorityPrefix)}" size="30"/>
-          -->
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:supplementalInformation"
-                 name="cm-display-priority"/>
+                 name="cm-display-priority"
+                 use="data-gn-field-with-prefix-or-suffix">
+            <directiveAttributes data-prefix="display priority: " data-suffix=" meters" data-field-type="number"/>
+          </field>
         </section>
         <section name="cm-spatioTemporalCoverage">
           <section name="cm-geoCoverage">
