@@ -25,6 +25,7 @@
 <xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn="http://www.fao.org/geonetwork" xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:saxon="http://saxon.sf.net/" version="2.0"
@@ -60,18 +61,14 @@
     <!-- For editing -->
     <xsl:param name="name" required="no" as="xs:string" select="generate-id()"/>
 
-    <!-- The input type eg. number, date, datetime, email-->
+    <!-- The input type eg. number, date, datetime, email.
+    Can also be a directive name when starting with data-.
+    Then additional directiveAttributes may be set and are in the directive parameters.-->
     <xsl:param name="type" required="no" as="xs:string" select="''"/>
 
-    <!-- The AngularJS directive name eg. gn-field-duration. This creates
-     a div with a ref to the element (eg. _304) with the value and label.
-     eg.
-     <div class="col-lg-10"
-          data-gn-field-suggestions="Lineage value"
-          data-ref="_303"
-          data-label="Lineage"></div>
-     -->
-    <xsl:param name="directive" required="no" as="xs:string" select="''"/>
+    <!-- The AngularJS attribute(s) directive.
+    The type parameter contains the directive name. -->
+    <xsl:param name="directiveAttributes" required="no" select="''"/>
 
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
     <xsl:param name="editInfo" required="no"/>
@@ -136,16 +133,19 @@
       </xsl:choose>
     </xsl:variable>
 
+
     <!-- The form field identified by the element ref.
             This HTML element should be removed when action remove is called.
         -->
+    <xsl:variable name="isDivLevelDirective"
+                  select="starts-with($type, 'data-') and ends-with($type, '-div')"/>
     <xsl:choose>
-      <xsl:when test="$directive != ''">
+      <xsl:when test="$isDivLevelDirective">
         <div class="form-group" id="gn-el-{$editInfo/@ref}">
           <div class="col-lg-10">
             <xsl:choose>
               <xsl:when test="$isMultilingual">
-                <xsl:attribute name="data-{$directive}">
+                <xsl:attribute name="{$type}">
                 {
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort select="@lang"/>
@@ -157,7 +157,7 @@
                 </xsl:attribute>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:attribute name="data-{$directive}" select="$value"/>
+                <xsl:attribute name="{$type}" select="$value"/>
               </xsl:otherwise>
             </xsl:choose>
 
@@ -211,6 +211,7 @@
                       <xsl:with-param name="lang" select="@lang"/>
                       <xsl:with-param name="value" select="."/>
                       <xsl:with-param name="type" select="$type"/>
+                      <xsl:with-param name="directiveAttributes" select="$directiveAttributes"/>
                       <xsl:with-param name="tooltip" select="$tooltip"/>
                       <xsl:with-param name="isRequired" select="$isRequired"/>
                       <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
@@ -227,7 +228,9 @@
                 </xsl:for-each>
 
                 <!-- Display the helper for a multilingual field below the field.
-                 The helper will be used only to populate the main language. -->
+                 The helper will be used only to populate the main language.
+                 It is recommended to use a thesaurus instead of an helper for
+                 multilingual records. -->
                 <xsl:if test="count($listOfValues/*) > 0">
                   <xsl:call-template name="render-form-field-helper">
                     <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
@@ -253,6 +256,7 @@
                   <xsl:with-param name="name" select="$name"/>
                   <xsl:with-param name="value" select="$value"/>
                   <xsl:with-param name="type" select="$type"/>
+                  <xsl:with-param name="directiveAttributes" select="$directiveAttributes"/>
                   <xsl:with-param name="tooltip"
                                   select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
                   <xsl:with-param name="isRequired" select="$isRequired"/>
@@ -305,14 +309,14 @@
     add a hidden add action in case the element is removed. If removed,
     the client app take care of displaying this control. -->
     <xsl:if test="$service = 'md.edit' and $parentEditInfo and $parentEditInfo/@min = 0 and $parentEditInfo/@max = 1">
-      <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
+      <xsl:variable name="addDirective" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
 
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="label" select="$label/label"/>
         <xsl:with-param name="class" select="if ($label/class) then $label/class else ''"/>
         <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
         <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
-        <xsl:with-param name="directive" select="$directive"/>
+        <xsl:with-param name="directive" select="$addDirective"/>
         <xsl:with-param name="childEditInfo" select="$parentEditInfo"/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
         <xsl:with-param name="isFirst" select="false()"/>
@@ -974,7 +978,8 @@
 
   <!-- Create a form field ie. a textarea, an input, a select, ...
 
-    This could be a directive which take care of rendering form elements ?
+    This could be a directive which take care of rendering form elements
+    See type parameter.
 
     -->
   <xsl:template name="render-form-field">
@@ -983,6 +988,7 @@
     <xsl:param name="lang" required="no"/>
     <xsl:param name="hidden"/>
     <xsl:param name="type"/>
+    <xsl:param name="directiveAttributes"/>
     <xsl:param name="tooltip" required="no"/>
     <xsl:param name="isRequired"/>
     <xsl:param name="isDisabled"/>
@@ -1112,7 +1118,6 @@
           name="_{$name}"
           type="hidden"
           value="{$valueToEdit}"/>
-        <!-- FIXME : some JS here. Move to a directive ?-->
         <input class=""
                onclick="$('#{$elementId}').val(this.checked)"
                type="checkbox">
@@ -1127,13 +1132,14 @@
       <xsl:otherwise>
 
         <xsl:variable name="isDirective" select="starts-with($type, 'data-')"/>
-        <!-- Some directives needs to support values having cariage return in the
+        <!-- Some directives needs to support values having carriage return in the
         value. In that case a textarea field should be used with the value in it. -->
         <xsl:variable name="isTextareaDirective"
                       select="$isDirective and contains($type, '-textarea')"/>
 
         <xsl:variable name="textareaOrInput">
           <xsl:element name="{if ($isTextareaDirective) then 'textarea' else 'input'}">
+
             <xsl:attribute name="class"
                            select="concat('form-control ', if ($lang) then 'hidden' else '')"/>
             <xsl:attribute name="id"
@@ -1142,6 +1148,10 @@
                            select="concat('_', $name)"/>
             <xsl:if test="$isDirective">
               <xsl:attribute name="{$type}"/>
+
+              <xsl:if test="$directiveAttributes instance of node()+">
+                <xsl:copy-of select="$directiveAttributes//@*"/>
+              </xsl:if>
             </xsl:if>
             <xsl:if test="$tooltip">
               <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
@@ -1383,8 +1393,7 @@
     <xsl:variable name="attributeSpec" select="../gn:attribute[@name = $attributeName]"/>
 
     <xsl:variable name="directive"
-                  select="gn-fn-metadata:getFieldType($editorConfig, name(),
-      name(..))"/>
+                  select="gn-fn-metadata:getAttributeFieldType($editorConfig, concat(name(..), '/@', name()))"/>
 
     <!-- Form field name escaping ":" which will be invalid character for
     Jeeves request parameters. -->
@@ -1452,7 +1461,7 @@
   to a node (only for gn:attribute, see next template).
   -->
   <xsl:template mode="render-for-field-for-attribute"
-                match="@gn:xsderror|@gn:addedObj|
+                match="@gn:xsderror|@gn:addedObj|@xsi:type|
           @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
 
 

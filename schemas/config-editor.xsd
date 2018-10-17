@@ -91,7 +91,10 @@ The list of possible values are:
 
 - all HTML5 input type or
 
-- an AngularJS directive name.
+- an AngularJS directive name. MUST starts with 'data-' and
+  could end with '-textarea' to create a textarea element.
+  It could end with '-div' if the directive does not apply
+  to the input or textarea but to the div containing it.
 
 
 An element can only have one type defined.
@@ -1040,7 +1043,8 @@ Activate the "flat" mode at the tab level to make the form display only existing
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="1" ref="template"/>
+        <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="if">
         <xs:annotation>
@@ -1154,6 +1158,7 @@ displayed based on the XML template snippet field configuration. Default is fals
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute ref="use"/>
     </xs:complexType>
   </xs:element>
 
@@ -1595,7 +1600,7 @@ instead of the text input.
           <xs:restriction base="xs:string">
             <xs:enumeration value="textarea"/>
             <xs:enumeration value="number"/>
-            <xs:enumeration value="gn-date-picker">
+            <xs:enumeration value="data-gn-date-picker">
               <xs:annotation>
                 <xs:documentation>
                   Custom date picker directive which rely on
@@ -1628,9 +1633,42 @@ instead of the text input.
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="data-gn-topiccategory-selector-div">
+              <xs:annotation>
+                <xs:documentation>A directive to render topic category like keywords widget.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-field-duration-div">
+              <xs:annotation>
+                <xs:documentation>A directive to set a complete duration type informations.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-logo-selector">
+              <xs:annotation>
+                <xs:documentation>A directive to select a logo URL.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
             <xs:enumeration value="data-gn-language-picker">
               <xs:annotation>
                 <xs:documentation>An autocompletion list for languages.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-keyword-picker">
+              <xs:annotation>
+                <xs:documentation><![CDATA[
+An autocompletion list based on a thesaurus.
+
+.. code-block:: xml
+
+                  <for name="gmd:otherConstraints"
+                       use="data-gn-keyword-picker">
+                    <directiveAttributes
+                      data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistOnLineDescriptionCode-OnLineDescriptionCode"
+                      data-display-definition="true"/>
+                  </for>
+
+
+                ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
           </xs:restriction>

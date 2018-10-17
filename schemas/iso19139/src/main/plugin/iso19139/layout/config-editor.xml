@@ -54,6 +54,35 @@
     <for name="gmd:environmentDescription" use="textarea"/>
     <for name="gmd:value" use="textarea"/>
 
+    <!-- Example configuration to use thesaurus to populate a CharacterString field
+    (including multilingual fields).
+
+    eg. INSPIRE codelist to set use limitation. This will apply to all views in the editor
+    1) Set the CharacterString value with the concept value
+    <for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"/>
+    </for>
+
+    2) Use the concept Identifier in the xlink:href attribute.
+    This will automatically use the appropriate substitute depending on the presence
+    or not of the xlink:href. Either a CharacterString or an Anchor is used.
+    <for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+    </for>
+
+    3) Use the concept identifier to populate another attribute (not having namespace)
+    <for name="gmd:featureTypes"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="codeSpace"/>
+    </for>
+    -->
+
+    <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
+    <for name="gml:duration" use="data-gn-field-duration-div"/>
 
     <for name="gco:Distance" use="number"/>
     <for name="gco:Decimal" use="number"/>
@@ -68,7 +97,7 @@
 
 
     <!-- gmx:FileName/@src attribute -->
-    <for name="src" use="data-gn-logo-selector"/>
+    <for name="gmx:FileName/@src" use="data-gn-logo-selector"/>
 
     <for name="gmd:electronicMailAddress" use="email"/>
 
@@ -173,6 +202,8 @@
         data-insert-modes=""
         data-template-type="report"/>
     </for>
+
+
 
 
     <!-- Example configuration: Add onLine source from subtemplate

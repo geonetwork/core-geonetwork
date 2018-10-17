@@ -501,6 +501,19 @@ form.gn-editor {
       margin-right: 0px;
   }
 
+  /* Multilingual badge positionning when
+  having suggestion or not */
+  [data-gn-multilingual-field] {
+    span.label {
+      position: absolute;
+      right: 15px;
+      line-height: 12px;
+    }
+    .twitter-typeahead span.label {
+      right: 2px;
+      top: 2px;
+    }
+  }
 }
 
 .gn-autocomplete-list {

@@ -23,8 +23,8 @@
   -->
 
 <labels xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
-	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx">
+        xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml"
+        xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx">
 
   <!-- ==================================================== -->
   <element name="gmd:CI_OnlineResource">
@@ -2184,903 +2184,976 @@
       <option show="y" value="ESRI:AIMS--http-get-feature">ArcIMS 网络要素服务</option>
       <option show="-" value="ESRI:AIMS--http-get-image">ArcIMS 网络影像地图服务</option>
       <option show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML 服务 (ver 2.0)</option>
-			<option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
-			<option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</option>
-			<option show="-" value="OGC:GML">OGC-GML Geography Markup Language</option>
-			<option show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</option>
-			<option show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
-			<option show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
-			<option show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</option>
-			<option show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
-			<option show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</option>
-			<option show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
-			<option show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
-			<option show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</option>
-			<option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)</option>
-			<option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
-			<option show="-" value="OGC:WFS">OGC-WFS Web Feature Service</option>
-			<option show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)</option>
-			<option show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
-			<option show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)</option>
-			<option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
-			<option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.1.1)</option>
-			<option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities服务 (ver 1.3.0)</option>
-			<option show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS地图服务(ver 1.1.1)</option>
-			<option show="-" value="OGC:WMS-1.3.0-http-get-map">OGC-WMS地图服务(ver 1.3.0)</option>
-			<option show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)</option>
-			<option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)</option>
-			<option show="-" value="WWW:DOWNLOAD-1.0-ftp--download">下载文件 (FTP)</option>
-			<option show="-" value="WWW:DOWNLOAD-1.0-http--download">下载文件</option>
-			<option show="-" value="DB:POSTGIS">PostGIS database table</option>
-			<option show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--link">网站地址(URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--partners">Partner web address (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</option>
-			<option show="-" value="UKST">Unknown Service Type</option>
-		</helper>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:PT_FreeText">
-		<label>Free text</label>
-		<description>Description of a multi-language free text metadata
-			element</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:purpose">
-		<label>Purpose</label>
-		<description>Summary of the intentions with which the resource(s) was
-			developed</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:radiometricCalibrationDataAvailability">
-		<label>Radiometric calibration data availability</label>
-		<description>Indication of whether or not the radiometric calibration
-			information for
-			generating the radiometrically calibrated standard
-			data product is available</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:rationale">
-		<label>Rationale</label>
-		<description>Requirement or purpose for the process step</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:referenceSystemIdentifier">
-		<label>Reference system identifier</label>
-		<description>Name of reference system</description>
-		<condition>conditional</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:referenceSystemInfo">
-		<label>Reference system info</label>
-		<description>Description of the spatial and temporal reference systems
-			used in the
-			dataset</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:report">
-		<label>Report</label>
-		<description>Quantitative quality information for the data specified
-			by the scope</description>
-		<condition>conditional</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:resolution">
-		<label>Resolution</label>
-		<description>Degree of detail in the grid dataset</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:resourceConstraints">
-		<label>Resource constraints</label>
-		<description>Provides information about constraints which apply to the
-			resource(s)</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:resourceFormat">
-		<label>Resource format</label>
-		<description>Provides a description of the format of the resource(s)</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:resourceMaintenance">
-		<label>Resource maintenance</label>
-		<description>Provides information about the frequency of resource
-			updates, and the scope of
-			those updates</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:resourceSpecificUsage">
-		<label>Resource specific usage</label>
-		<description>Provides basic information about specific application(s)
-			for which the
-			resource(s) has/have been or is being used by different
-			users</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:result">
-		<label>Result</label>
-		<description>Value (or set of values) obtained from applying a data
-			quality measure or the out
-			come of evaluating the obtained value (or
-			set of values) against a specified acceptable
-			conformance quality
-			level</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:role">
-		<label>Role</label>
-		<description>Function performed by the responsible party</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:RS_Identifier">
-		<label>RS identifier</label>
-		<description>Identifier used for reference systems</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:rule">
-		<label>Rule</label>
-		<description>Specifies how the extended element relates to other
-			existing elements and
-			entities</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:scaleDenominator">
-		<label>Scale</label>
-		<description>Denominator of the representative fraction on a source
-			map</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:scaleFactor">
-		<label>Scale factor</label>
-		<description>Scale factor which has been applied to the cell value</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:schemaAscii">
-		<label>SchemaAscii</label>
-		<description>Full application schema given as an ASCII file</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:schemaLanguage">
-		<label>Schema language</label>
-		<description>Identification of the schema language used</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:scope">
-		<label>Scope</label>
-		<description>The specific data to which the data quality information
-			applies</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:sequenceIdentifier">
-		<label>Sequence identifier</label>
-		<description>Number that uniquely identifies instances of bands of
-			wavelengths on which a
-			sensor operates</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:series">
-		<label>Series</label>
-		<description>Information about the series, or aggregate dataset, of
-			which the dataset is a
-			part</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:shortName">
-		<label>Short name</label>
-		<description>Short form suitable for use in an implementation method
-			such as XML or SGML. NOTE
-			other methods may be used</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:softwareDevelopmentFile">
-		<label>Software development file</label>
-		<description>Full application schema given as a software development
-			file</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:softwareDevelopmentFileFormat">
-		<label>Software development file format</label>
-		<description>Software dependent format used for the application schema
-			software dependent
-			file</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:source">
-		<label>Source</label>
-		<description>Information about the source data used in creating the
-			data specified by the
-			scope</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:sourceCitation">
-		<label>Source citation</label>
-		<description>Recommended reference to be used for the source data</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:sourceExtent">
-		<label>Source extent</label>
-		<description>Information about the spatial, vertical and temporal
-			extent of the source data</description>
-		<condition>conditional</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:sourceReferenceSystem">
-		<label>Source reference system</label>
-		<description>Spatial reference system used by the source data</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:sourceStep">
-		<label>Source step</label>
-		<description>Information about an event in the creation process for
-			the source
-			data</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:southBoundLatitude">
-		<label>South bound latitude</label>
-		<description>Southern-most coordinate of the limit of the dataset
-			extent, expressed in
-			latitude in decimal degrees (positive north)</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:spatialExtent">
-		<label>Spatial extent</label>
-		<description>Spatial extent component of composite spatial and
-			temporal extent</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:spatialRepresentationInfo">
-		<label>Spatial representation info</label>
-		<description>Digital representation of spatial information in the
-			dataset</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:spatialRepresentationType">
-		<label>Spatial representation type</label>
-		<description>Method used to spatially represent geographic information</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:spatialResolution">
-		<label>Spatial resolution</label>
-		<description>Factor which provides a general understanding of the
-			density of spatial data in
-			the dataset</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:specification">
-		<label>Specification</label>
-		<description>Name of a subset, profile, or product specification of
-			the format</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:specificUsage">
-		<label>Specific usage</label>
-		<description>Brief description of the resource and/or resource series
-			usage</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:statement">
-		<label>Statement</label>
-		<description>General explanation of the data producer_s knowledge
-			about the lineage of a
-			dataset</description>
-		<condition>conditional</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:status">
-		<label>Status</label>
-		<description>Status of the resource(s)</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:supplementalInformation">
-		<label>Supplemental Information</label>
-		<description>Any other descriptive information about the dataset</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:temporalElement">
-		<label>Temporal element</label>
-		<description>Provides temporal component of the extent of the
-			referring object</description>
-		<condition>conditional</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:thesaurusName">
-		<label>Thesaurus name</label>
-		<description>Name of the formally registered thesaurus or a similar
-			authoritative source of
-			keywords</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:title">
-		<label>Title</label>
-		<description>Name by which the cited resource is known</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:toneGradation">
-		<label>Tone gradation</label>
-		<description>Number of discrete numerical values in the grid data</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:topicCategory">
-		<label>Topic category</label>
-		<description>Main theme(s) of the datset</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:topologyLevel">
-		<label>Topology level</label>
-		<description>Code which identifies the degree of complexity of the
-			spatial
-			relationships</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:transferOptions">
-		<label>Transfer options</label>
-		<description>Provides information about technical means and media by
-			which a resource is
-			obtained from the distributor</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:transferSize">
-		<label>Transfer size</label>
-		<description>Estimated size of a unit in the specified transfer
-			format, expressed in
-			megabytes. The transfer size is &gt; 0.0</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:transformationDimensionDescription">
-		<label>Transformation dimension description</label>
-		<description>Description of the information about which grid
-			dimensions are the spatial
-			dimensions</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:transformationDimensionMapping">
-		<label>Transformation dimension mapping</label>
-		<description>Information about which grid dimensions are the spatial
-			dimensions</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:transformationParameterAvailability">
-		<label>Transformation parameter availability</label>
-		<description>Indication of whether or not parameters for
-			transformation exists</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:triangulationIndicator">
-		<label>Triangulation indicator</label>
-		<description>Indication of whether or not triangulation has been
-			performed upon the
-			image</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:turnaround">
-		<label>Turnaround</label>
-		<description>Typical turnaround time for the filling of an order</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:type">
-		<label>Type</label>
-		<description>Subject matter used to group similar keywords</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:units">
-		<label>Value unit</label>
-		<description>Units in which sensor wavelengths are expressed</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:unitsOfDistribution">
-		<label>Units of distribution</label>
-		<description>Tiles, layers, geographic areas, etc., in which data is
-			available</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:updateScope">
-		<label>Update scope</label>
-		<description>Scope of data to which maintenance is applied</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:updateScopeDescription">
-		<label>Update scope description</label>
-		<description>Additional information about the range or extent of the
-			resource</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:usageDateTime">
-		<label>Usage datetime</label>
-		<description>Date and time of the first use or range of uses of the
-			resource and/or resource
-			series (YYYY-MM-DDThh:mm:ss)</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:useConstraints">
-		<label>Use constraints</label>
-		<description>Constraints applied to assure the protection of privacy
-			or intellectual property,
-			and any special restrictions or limitations
-			or warnings on using the resource</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:useLimitation">
-		<label>Use limitation</label>
-		<description>Limitation affecting the fitness for use of the resource.
-			Example, _not to be
-			used for navigation_</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:userContactInfo">
-		<label>User contact info</label>
-		<description>Identification of and means of communicating with
-			person(s) and organization(s)
-			using the resource(s)</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:userDefinedMaintenanceFrequency">
-		<label>User defined maintenance frequency</label>
-		<description>Maintenance period other than those defined</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:userDeterminedLimitations">
-		<label>User determined limitations</label>
-		<description>Applications, determined by the user for which the
-			resource and/or resource
-			series is not suitable</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:userNote">
-		<label>User note</label>
-		<description>Explanation of the application of the legal constraints
-			or other restrictions and
-			legal prerequisites for obtaining and using
-			the resource</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:value">
-		<label>Value</label>
-		<description />
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:valueType">
-		<label>Value type</label>
-		<description>Value type for reporting a data quality result</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:valueUnit">
-		<label>Value unit</label>
-		<description>Value unit for reporting a data quality result</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:version">
-		<label>Version</label>
-		<description>Version of the format (date, number, etc.)</description>
-		<condition>mandatory</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:verticalElement">
-		<label>Vertical element</label>
-		<description>Provides vertical component of the extent of the
-			referring object</description>
-		<condition>conditional</condition>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:voice">
-		<label>Voice</label>
-		<description>Telephone number by which individuals can speak to the
-			responsible organization
-			or individual</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:volumes">
-		<label>Volumes</label>
-		<description>Number of items in the media identified</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gmd:westBoundLongitude">
-		<label>West bound longitude</label>
-		<description>Western-most coordinate of the limit of the dataset
-			extent, expressed in
-			longitude in decimal degrees (positive east)</description>
-		<condition>mandatory</condition>
-	</element>
 
-	<!-- ==================================================== -->
-	<!-- === GCO namespace -->
-	<!-- ==================================================== -->
+      <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
+      <option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</option>
+      <option show="-" value="OGC:GML">OGC-GML Geography Markup Language</option>
+      <option show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service</option>
+      <option show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
+      <option show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
+      <option show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service</option>
+      <option show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
+      <option show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service</option>
+      <option show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service</option>
+      <option show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
+      <option show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</option>
+      <option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver
+        1.1.0)
+      </option>
+      <option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service</option>
+      <option show="-" value="OGC:WFS">OGC-WFS Web Feature Service</option>
+      <option show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver
+        1.0.0)
+      </option>
+      <option show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
+      <option show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver
+        1.1)
+      </option>
+      <option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
+      <option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities服务 (ver
+        1.1.1)
+      </option>
+      <option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities服务 (ver
+        1.3.0)
+      </option>
+      <option show="-" value="OGC:WMS-1.1.1-http-get-map">OGC-WMS地图服务(ver 1.1.1)</option>
+      <option show="-" value="OGC:WMS-1.3.0-http-get-map">OGC-WMS地图服务(ver 1.3.0)</option>
+      <option show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver
+        1.0.0)
+      </option>
+      <option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST)
+        (ver 1.0.0)
+      </option>
+      <option show="-" value="WWW:DOWNLOAD-1.0-ftp--download">下载文件 (FTP)</option>
+      <option show="-" value="WWW:DOWNLOAD-1.0-http--download">下载文件</option>
+      <option show="-" value="DB:POSTGIS">PostGIS database table</option>
+      <option show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
+      <option show="y" value="WWW:LINK-1.0-http--link">网站地址(URL)</option>
+      <option show="y" value="WWW:LINK-1.0-http--partners">Partner web address (URL)</option>
+      <option show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</option>
+      <option show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</option>
+      <option show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</option>
+      <option show="-" value="UKST">Unknown Service Type</option>
+    </helper>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:PT_FreeText">
+    <label>Free text</label>
+    <description>Description of a multi-language free text metadata
+      element
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:purpose">
+    <label>Purpose</label>
+    <description>Summary of the intentions with which the resource(s) was
+      developed
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:radiometricCalibrationDataAvailability">
+    <label>Radiometric calibration data availability</label>
+    <description>Indication of whether or not the radiometric calibration
+      information for
+      generating the radiometrically calibrated standard
+      data product is available
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:rationale">
+    <label>Rationale</label>
+    <description>Requirement or purpose for the process step</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:referenceSystemIdentifier">
+    <label>Reference system identifier</label>
+    <description>Name of reference system</description>
+    <condition>conditional</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:referenceSystemInfo">
+    <label>Reference system info</label>
+    <description>Description of the spatial and temporal reference systems
+      used in the
+      dataset
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:report">
+    <label>Report</label>
+    <description>Quantitative quality information for the data specified
+      by the scope
+    </description>
+    <condition>conditional</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:resolution">
+    <label>Resolution</label>
+    <description>Degree of detail in the grid dataset</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:resourceConstraints">
+    <label>Resource constraints</label>
+    <description>Provides information about constraints which apply to the
+      resource(s)
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:resourceFormat">
+    <label>Resource format</label>
+    <description>Provides a description of the format of the resource(s)</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:resourceMaintenance">
+    <label>Resource maintenance</label>
+    <description>Provides information about the frequency of resource
+      updates, and the scope of
+      those updates
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:resourceSpecificUsage">
+    <label>Resource specific usage</label>
+    <description>Provides basic information about specific application(s)
+      for which the
+      resource(s) has/have been or is being used by different
+      users
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:result">
+    <label>Result</label>
+    <description>Value (or set of values) obtained from applying a data
+      quality measure or the out
+      come of evaluating the obtained value (or
+      set of values) against a specified acceptable
+      conformance quality
+      level
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:role">
+    <label>Role</label>
+    <description>Function performed by the responsible party</description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:RS_Identifier">
+    <label>RS identifier</label>
+    <description>Identifier used for reference systems</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:rule">
+    <label>Rule</label>
+    <description>Specifies how the extended element relates to other
+      existing elements and
+      entities
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:scaleDenominator">
+    <label>Scale</label>
+    <description>Denominator of the representative fraction on a source
+      map
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:scaleFactor">
+    <label>Scale factor</label>
+    <description>Scale factor which has been applied to the cell value</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:schemaAscii">
+    <label>SchemaAscii</label>
+    <description>Full application schema given as an ASCII file</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:schemaLanguage">
+    <label>Schema language</label>
+    <description>Identification of the schema language used</description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:scope">
+    <label>Scope</label>
+    <description>The specific data to which the data quality information
+      applies
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:sequenceIdentifier">
+    <label>Sequence identifier</label>
+    <description>Number that uniquely identifies instances of bands of
+      wavelengths on which a
+      sensor operates
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:series">
+    <label>Series</label>
+    <description>Information about the series, or aggregate dataset, of
+      which the dataset is a
+      part
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:shortName">
+    <label>Short name</label>
+    <description>Short form suitable for use in an implementation method
+      such as XML or SGML. NOTE
+      other methods may be used
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:softwareDevelopmentFile">
+    <label>Software development file</label>
+    <description>Full application schema given as a software development
+      file
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:softwareDevelopmentFileFormat">
+    <label>Software development file format</label>
+    <description>Software dependent format used for the application schema
+      software dependent
+      file
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:source">
+    <label>Source</label>
+    <description>Information about the source data used in creating the
+      data specified by the
+      scope
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:sourceCitation">
+    <label>Source citation</label>
+    <description>Recommended reference to be used for the source data</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:sourceExtent">
+    <label>Source extent</label>
+    <description>Information about the spatial, vertical and temporal
+      extent of the source data
+    </description>
+    <condition>conditional</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:sourceReferenceSystem">
+    <label>Source reference system</label>
+    <description>Spatial reference system used by the source data</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:sourceStep">
+    <label>Source step</label>
+    <description>Information about an event in the creation process for
+      the source
+      data
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:southBoundLatitude">
+    <label>South bound latitude</label>
+    <description>Southern-most coordinate of the limit of the dataset
+      extent, expressed in
+      latitude in decimal degrees (positive north)
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:spatialExtent">
+    <label>Spatial extent</label>
+    <description>Spatial extent component of composite spatial and
+      temporal extent
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:spatialRepresentationInfo">
+    <label>Spatial representation info</label>
+    <description>Digital representation of spatial information in the
+      dataset
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:spatialRepresentationType">
+    <label>Spatial representation type</label>
+    <description>Method used to spatially represent geographic information</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:spatialResolution">
+    <label>Spatial resolution</label>
+    <description>Factor which provides a general understanding of the
+      density of spatial data in
+      the dataset
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:specification">
+    <label>Specification</label>
+    <description>Name of a subset, profile, or product specification of
+      the format
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:specificUsage">
+    <label>Specific usage</label>
+    <description>Brief description of the resource and/or resource series
+      usage
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:statement">
+    <label>Statement</label>
+    <description>General explanation of the data producer_s knowledge
+      about the lineage of a
+      dataset
+    </description>
+    <condition>conditional</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:status">
+    <label>Status</label>
+    <description>Status of the resource(s)</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:supplementalInformation">
+    <label>Supplemental Information</label>
+    <description>Any other descriptive information about the dataset</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:temporalElement">
+    <label>Temporal element</label>
+    <description>Provides temporal component of the extent of the
+      referring object
+    </description>
+    <condition>conditional</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:thesaurusName">
+    <label>Thesaurus name</label>
+    <description>Name of the formally registered thesaurus or a similar
+      authoritative source of
+      keywords
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:title">
+    <label>Title</label>
+    <description>Name by which the cited resource is known</description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:toneGradation">
+    <label>Tone gradation</label>
+    <description>Number of discrete numerical values in the grid data</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:topicCategory">
+    <label>Topic category</label>
+    <description>Main theme(s) of the datset</description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:topologyLevel">
+    <label>Topology level</label>
+    <description>Code which identifies the degree of complexity of the
+      spatial
+      relationships
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:transferOptions">
+    <label>Transfer options</label>
+    <description>Provides information about technical means and media by
+      which a resource is
+      obtained from the distributor
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:transferSize">
+    <label>Transfer size</label>
+    <description>Estimated size of a unit in the specified transfer
+      format, expressed in
+      megabytes. The transfer size is &gt; 0.0
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:transformationDimensionDescription">
+    <label>Transformation dimension description</label>
+    <description>Description of the information about which grid
+      dimensions are the spatial
+      dimensions
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:transformationDimensionMapping">
+    <label>Transformation dimension mapping</label>
+    <description>Information about which grid dimensions are the spatial
+      dimensions
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:transformationParameterAvailability">
+    <label>Transformation parameter availability</label>
+    <description>Indication of whether or not parameters for
+      transformation exists
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:triangulationIndicator">
+    <label>Triangulation indicator</label>
+    <description>Indication of whether or not triangulation has been
+      performed upon the
+      image
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:turnaround">
+    <label>Turnaround</label>
+    <description>Typical turnaround time for the filling of an order</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:type">
+    <label>Type</label>
+    <description>Subject matter used to group similar keywords</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:units">
+    <label>Value unit</label>
+    <description>Units in which sensor wavelengths are expressed</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:unitsOfDistribution">
+    <label>Units of distribution</label>
+    <description>Tiles, layers, geographic areas, etc., in which data is
+      available
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:updateScope">
+    <label>Update scope</label>
+    <description>Scope of data to which maintenance is applied</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:updateScopeDescription">
+    <label>Update scope description</label>
+    <description>Additional information about the range or extent of the
+      resource
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:usageDateTime">
+    <label>Usage datetime</label>
+    <description>Date and time of the first use or range of uses of the
+      resource and/or resource
+      series (YYYY-MM-DDThh:mm:ss)
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:useConstraints">
+    <label>Use constraints</label>
+    <description>Constraints applied to assure the protection of privacy
+      or intellectual property,
+      and any special restrictions or limitations
+      or warnings on using the resource
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:useLimitation">
+    <label>Use limitation</label>
+    <description>Limitation affecting the fitness for use of the resource.
+      Example, _not to be
+      used for navigation_
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:userContactInfo">
+    <label>User contact info</label>
+    <description>Identification of and means of communicating with
+      person(s) and organization(s)
+      using the resource(s)
+    </description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:userDefinedMaintenanceFrequency">
+    <label>User defined maintenance frequency</label>
+    <description>Maintenance period other than those defined</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:userDeterminedLimitations">
+    <label>User determined limitations</label>
+    <description>Applications, determined by the user for which the
+      resource and/or resource
+      series is not suitable
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:userNote">
+    <label>User note</label>
+    <description>Explanation of the application of the legal constraints
+      or other restrictions and
+      legal prerequisites for obtaining and using
+      the resource
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:value">
+    <label>Value</label>
+    <description/>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:valueType">
+    <label>Value type</label>
+    <description>Value type for reporting a data quality result</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:valueUnit">
+    <label>Value unit</label>
+    <description>Value unit for reporting a data quality result</description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:version">
+    <label>Version</label>
+    <description>Version of the format (date, number, etc.)</description>
+    <condition>mandatory</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:verticalElement">
+    <label>Vertical element</label>
+    <description>Provides vertical component of the extent of the
+      referring object
+    </description>
+    <condition>conditional</condition>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:voice">
+    <label>Voice</label>
+    <description>Telephone number by which individuals can speak to the
+      responsible organization
+      or individual
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:volumes">
+    <label>Volumes</label>
+    <description>Number of items in the media identified</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:westBoundLongitude">
+    <label>West bound longitude</label>
+    <description>Western-most coordinate of the limit of the dataset
+      extent, expressed in
+      longitude in decimal degrees (positive east)
+    </description>
+    <condition>mandatory</condition>
+  </element>
 
-	<element name="gco:Date">
-		<label>Date</label>
-		<description>Formatted as 2007-09-12 (YYYY-MM-DD)</description>
-	</element>
+  <!-- ==================================================== -->
+  <!-- === GCO namespace -->
+  <!-- ==================================================== -->
 
-	<!-- ==================================================== -->
+  <element name="gco:Date">
+    <label>Date</label>
+    <description>Formatted as 2007-09-12 (YYYY-MM-DD)</description>
+  </element>
 
-	<element name="gco:DateTime">
-		<label>Date and time</label>
-		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
-	</element>
+  <!-- ==================================================== -->
 
-	<!-- ==================================================== -->
+  <element name="gco:DateTime">
+    <label>Date and time</label>
+    <description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+  </element>
 
-	<element name="gco:Measure">
-		<label>Measure</label>
-		<description></description>
-	</element>
+  <!-- ==================================================== -->
 
-	<!-- ==================================================== -->
-	<!-- === GTS namespace -->
-	<!-- ==================================================== -->
+  <element name="gco:Measure">
+    <label>Measure</label>
+    <description></description>
+  </element>
 
-	<element name="gts:TM_PeriodDuration">
-		<label>Period duration</label>
-		<description>
-			The duration data type is used to specify a time
-			interval.
+  <!-- ==================================================== -->
+  <!-- === GTS namespace -->
+  <!-- ==================================================== -->
 
-			The time interval is specified in the following form "PnYnMnDTnHnMnS"
-			where:
+  <element name="gts:TM_PeriodDuration">
+    <label>Period duration</label>
+    <description>
+      The duration data type is used to specify a time
+      interval.
 
-			* P indicates the period (required)
-			* nY indicates the number of years
-			* nM indicates the number of months
-			* nD indicates the number of days
-			* T indicates the start of a time section (required if you are going
-			to specify hours, minutes, or seconds)
-			* nH indicates the number of
-			hours
-			* nM indicates the number of minutes
-			* nS indicates the number of
-			seconds
-		</description>
-	</element>
+      The time interval is specified in the following form "PnYnMnDTnHnMnS"
+      where:
 
-	<!-- ==================================================== -->
-	<!-- === GML namespace -->
-	<!-- ==================================================== -->
+      * P indicates the period (required)
+      * nY indicates the number of years
+      * nM indicates the number of months
+      * nD indicates the number of days
+      * T indicates the start of a time section (required if you are going
+      to specify hours, minutes, or seconds)
+      * nH indicates the number of
+      hours
+      * nM indicates the number of minutes
+      * nS indicates the number of
+      seconds
+    </description>
+  </element>
 
-	<element name="gml:beginPosition">
-		<label>Begin date</label>
-		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:endPosition">
-		<label>End date</label>
-		<description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:relatedTime">
-		<label>Related time</label>
-		<description>Defines the relation of a given time to the object.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:coordinates">
-		<label>Coordinates</label>
-		<description>Used to record an array of tuples or coordinates.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:Polygon">
-		<label>Polygon</label>
-		<description>A gml:Polygon is a special surface that is defined by a
-			single surface patch. The boundary of this
-			patch is coplanar and the polygon uses planar interpolation in its
-			interior.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:Point">
-		<label>Point</label>
-		<description>A gml:Point is defined by a single coordinate tuple.</description>
-		<example>74. -37.</example>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:LineString">
-		<label>Line</label>
-		<description>A gml:LineString is a special curve that consists of a
-			single segment with linear interpolation. It is
-			defined by two or more coordinate tuples, with linear interpolation between
-			them.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:LinearRing">
-		<label>Linear ring</label>
-		<description>A gml:LinearRing is defined by four or more coordinate
-			tuples, with linear interpolation between them; the first
-			and last coordinates shall be coincident.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:exterior">
-		<label>Outer boundary</label>
-		<description>The outer boundary of a solid.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:interior">
-		<label>Inner boundary</label>
-		<description>The inner boundary of a solid</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="gml:id">
-		<label>Identifier</label>
-		<description></description>
-	</element>
-	<!-- ==================================================== -->
-	<!-- All XML attributes declared in the GML schema are defined without namespace, 
+  <!-- ==================================================== -->
+  <!-- === GML namespace -->
+  <!-- ==================================================== -->
+
+  <element name="gml:beginPosition">
+    <label>Begin date</label>
+    <description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:endPosition">
+    <label>End date</label>
+    <description>Formatted as 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:relatedTime">
+    <label>Related time</label>
+    <description>Defines the relation of a given time to the object.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:coordinates">
+    <label>Coordinates</label>
+    <description>Used to record an array of tuples or coordinates.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:Polygon">
+    <label>Polygon</label>
+    <description>A gml:Polygon is a special surface that is defined by a
+      single surface patch. The boundary of this
+      patch is coplanar and the polygon uses planar interpolation in its
+      interior.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:Point">
+    <label>Point</label>
+    <description>A gml:Point is defined by a single coordinate tuple.</description>
+    <example>74. -37.</example>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:LineString">
+    <label>Line</label>
+    <description>A gml:LineString is a special curve that consists of a
+      single segment with linear interpolation. It is
+      defined by two or more coordinate tuples, with linear interpolation between
+      them.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:LinearRing">
+    <label>Linear ring</label>
+    <description>A gml:LinearRing is defined by four or more coordinate
+      tuples, with linear interpolation between them; the first
+      and last coordinates shall be coincident.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:exterior">
+    <label>Outer boundary</label>
+    <description>The outer boundary of a solid.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:interior">
+    <label>Inner boundary</label>
+    <description>The inner boundary of a solid</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gml:id">
+    <label>Identifier</label>
+    <description></description>
+  </element>
+  <!-- ==================================================== -->
+  <!-- All XML attributes declared in the GML schema are defined without namespace,
 		the only exception is the gml:id XML attribute. -->
-	<element name="srsName">
-		<label>Spatial Reference System Name</label>
-		<description>Name of the Spatial Reference System. By default set to
-			geographic (epsg:4326)</description>
-		<example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
-	</element>
+  <element name="srsName">
+    <label>Spatial Reference System Name</label>
+    <description>Name of the Spatial Reference System. By default set to
+      geographic (epsg:4326)
+    </description>
+    <example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+  </element>
 
-	<!-- ==================================================== -->
+  <!-- ==================================================== -->
 
-	<!-- ==================================================== -->
-	<!-- === SRV namespace for 19119 service metadata -->
-	<!-- ==================================================== -->
+  <!-- ==================================================== -->
+  <!-- === SRV namespace for 19119 service metadata -->
+  <!-- ==================================================== -->
 
-	<element name="srv:SV_ServiceIdentification">
-		<label>Service Identification (19119)</label>
-		<description>ISO 19119-2005 Service Identification</description>
-	</element>
-	<element name="srv:serviceType">
-		<label>Service Type</label>
-		<description>Service type name from a registry of services. For
-			example, the values of the nameSpace and name attributes of
-			GeneralName may be 'OGC' and 'catalogue'</description>
-	</element>
-	<element name="srv:serviceTypeVersion">
-		<label>Service Version</label>
-		<description>Provides for searching based on the version of
-			serviceType. For example, we may only be interested in OGC Catalogue
-			V1.1 services. If version is maintained as a separate attribute,
-			users can easily search for all services of a type regardless of the
-			version</description>
-	</element>
-	<element name="srv:accessProperties">
-		<label>Access Properties</label>
-		<description>Information about the availability of the service eg.
-			fees, availability, oredering instructions</description>
-	</element>
-	<element name="srv:restrictions">
-		<label>Restrictions</label>
-		<description>Legal and security constraints on accessing the service
-			and distributing data generated by the service</description>
-	</element>
-	<element name="srv:containsOperations">
-		<label>Contains Operations</label>
-		<description>Provides information about the operations that comprise
-			the service</description>
-	</element>
-	<element name="srv:operatesOn">
-		<label>Operates On</label>
-		<description>Provides information on the datasets that the service
-			operates on</description>
-	</element>
-	<element name="srv:operationName">
-		<label>Operation Name</label>
-		<description>A unique identifier for this interface</description>
-	</element>
-	<element name="srv:SV_OperationMetadata">
-		<label>Operation</label>
-		<description>Operation Metadata</description>
-	</element>
-	<element name="srv:DCP">
-		<label>Distributed Computing Platforms</label>
-		<description>Distributed computing platforms on which the operation
-			has been implemented</description>
-	</element>
-	<element name="srv:DCPList">
-		<label>Distributed Computing Platforms List</label>
-		<description>List of distributed computing platforms on which the
-			operation has been implemented</description>
-	</element>
-	<element name="srv:operationDescription">
-		<label>Operation Description</label>
-		<description>Free text description of the intent of the operation and
-			the results of the operation</description>
-	</element>
-	<element name="srv:invocationName">
-		<label>Invocation Name</label>
-		<description>The name used to invoke this interface within the context
-			of the DCP. The name is identical for all DCPs</description>
-	</element>
-	<element name="srv:parameters">
-		<label>Parameters</label>
-		<description>The parameters that are required for this interface</description>
-	</element>
-	<element name="srv:connectPoint">
-		<label>Connect Point</label>
-		<description>Handle for accessing the service interface</description>
-	</element>
-	<element name="srv:dependsOn">
-		<label>Depends On</label>
-		<description>List of operations that must be completed immediately
-			before current operation is invoked, structured as a list for
-			capturing alternate predecessor paths and sets for capturing parallel
-			predecessor paths</description>
-	</element>
-	<element name="srv:providerName">
-		<label>Provider Name</label>
-		<description>A unique identifier for this organization</description>
-	</element>
-	<element name="srv:serviceContact">
-		<label>Service Contact</label>
-		<description>Information for contacting the service provider</description>
-	</element>
-	<element name="srv:name">
-		<label>Name</label>
-		<description>The name, as used by the service for this chain or
-			paramater</description>
-	</element>
-	<element name="srv:description">
-		<label>Description</label>
-		<description>Narrative explanation of the services in the chain and
-			resulting output or role of the parameter</description>
-	</element>
-	<element name="srv:optionality">
-		<label>Optionality</label>
-		<description>Indication if the parameter is required</description>
-	</element>
-	<element name="srv:repeatability">
-		<label>Repeatability</label>
-		<description>Indication if more than one value of the parameter may be
-			provided</description>
-	</element>
-	<element name="srv:coupledResource">
-		<label>Coupled Resource</label>
-		<description>Details of services coupled with this one</description>
-	</element>
-	<element name="srv:SV_CoupledResource">
-		<label>Coupled Resource</label>
-		<description>Details of services coupled with this one</description>
-	</element>
-	<element name="srv:identifier">
-		<label>Identifier</label>
-		<description>Identifier of resource to which the operation applies</description>
-	</element>
-	<element name="srv:couplingType">
-		<label>Coupling Type</label>
-		<description>Type of Coupling</description>
-	</element>
-	<element name="srv:SV_CouplingType">
-		<label>Coupling Type</label>
-		<description>Type of Coupling</description>
-	</element>
-	<element name="srv:extent">
-		<label>Extent</label>
-		<description>Geographic/Temporal Extent of Service</description>
-	</element>
-	<element name="srv:keywords">
-		<label>Keywords</label>
-		<description>Keywords describing service</description>
-	</element>
+  <element name="srv:SV_ServiceIdentification">
+    <label>Service Identification (19119)</label>
+    <description>ISO 19119-2005 Service Identification</description>
+  </element>
+  <element name="srv:serviceType">
+    <label>Service Type</label>
+    <description>Service type name from a registry of services. For
+      example, the values of the nameSpace and name attributes of
+      GeneralName may be 'OGC' and 'catalogue'
+    </description>
+  </element>
+  <element name="srv:serviceTypeVersion">
+    <label>Service Version</label>
+    <description>Provides for searching based on the version of
+      serviceType. For example, we may only be interested in OGC Catalogue
+      V1.1 services. If version is maintained as a separate attribute,
+      users can easily search for all services of a type regardless of the
+      version
+    </description>
+  </element>
+  <element name="srv:accessProperties">
+    <label>Access Properties</label>
+    <description>Information about the availability of the service eg.
+      fees, availability, oredering instructions
+    </description>
+  </element>
+  <element name="srv:restrictions">
+    <label>Restrictions</label>
+    <description>Legal and security constraints on accessing the service
+      and distributing data generated by the service
+    </description>
+  </element>
+  <element name="srv:containsOperations">
+    <label>Contains Operations</label>
+    <description>Provides information about the operations that comprise
+      the service
+    </description>
+  </element>
+  <element name="srv:operatesOn">
+    <label>Operates On</label>
+    <description>Provides information on the datasets that the service
+      operates on
+    </description>
+  </element>
+  <element name="srv:operationName">
+    <label>Operation Name</label>
+    <description>A unique identifier for this interface</description>
+  </element>
+  <element name="srv:SV_OperationMetadata">
+    <label>Operation</label>
+    <description>Operation Metadata</description>
+  </element>
+  <element name="srv:DCP">
+    <label>Distributed Computing Platforms</label>
+    <description>Distributed computing platforms on which the operation
+      has been implemented
+    </description>
+  </element>
+  <element name="srv:DCPList">
+    <label>Distributed Computing Platforms List</label>
+    <description>List of distributed computing platforms on which the
+      operation has been implemented
+    </description>
+  </element>
+  <element name="srv:operationDescription">
+    <label>Operation Description</label>
+    <description>Free text description of the intent of the operation and
+      the results of the operation
+    </description>
+  </element>
+  <element name="srv:invocationName">
+    <label>Invocation Name</label>
+    <description>The name used to invoke this interface within the context
+      of the DCP. The name is identical for all DCPs
+    </description>
+  </element>
+  <element name="srv:parameters">
+    <label>Parameters</label>
+    <description>The parameters that are required for this interface</description>
+  </element>
+  <element name="srv:connectPoint">
+    <label>Connect Point</label>
+    <description>Handle for accessing the service interface</description>
+  </element>
+  <element name="srv:dependsOn">
+    <label>Depends On</label>
+    <description>List of operations that must be completed immediately
+      before current operation is invoked, structured as a list for
+      capturing alternate predecessor paths and sets for capturing parallel
+      predecessor paths
+    </description>
+  </element>
+  <element name="srv:providerName">
+    <label>Provider Name</label>
+    <description>A unique identifier for this organization</description>
+  </element>
+  <element name="srv:serviceContact">
+    <label>Service Contact</label>
+    <description>Information for contacting the service provider</description>
+  </element>
+  <element name="srv:name">
+    <label>Name</label>
+    <description>The name, as used by the service for this chain or
+      paramater
+    </description>
+  </element>
+  <element name="srv:description">
+    <label>Description</label>
+    <description>Narrative explanation of the services in the chain and
+      resulting output or role of the parameter
+    </description>
+  </element>
+  <element name="srv:optionality">
+    <label>Optionality</label>
+    <description>Indication if the parameter is required</description>
+  </element>
+  <element name="srv:repeatability">
+    <label>Repeatability</label>
+    <description>Indication if more than one value of the parameter may be
+      provided
+    </description>
+  </element>
+  <element name="srv:coupledResource">
+    <label>Coupled Resource</label>
+    <description>Details of services coupled with this one</description>
+  </element>
+  <element name="srv:SV_CoupledResource">
+    <label>Coupled Resource</label>
+    <description>Details of services coupled with this one</description>
+  </element>
+  <element name="srv:identifier">
+    <label>Identifier</label>
+    <description>Identifier of resource to which the operation applies</description>
+  </element>
+  <element name="srv:couplingType">
+    <label>Coupling Type</label>
+    <description>Type of Coupling</description>
+  </element>
+  <element name="srv:SV_CouplingType">
+    <label>Coupling Type</label>
+    <description>Type of Coupling</description>
+  </element>
+  <element name="srv:extent">
+    <label>Extent</label>
+    <description>Geographic/Temporal Extent of Service</description>
+  </element>
+  <element name="srv:keywords">
+    <label>Keywords</label>
+    <description>Keywords describing service</description>
+  </element>
 
-	<!-- ==================================================== -->
-	<!-- === Other labels //FIXME -->
-	<!-- ==================================================== -->
-	<element name="years">
-		<label>Years</label>
-		<description />
-	</element>
-	<!-- ==================================================== -->
-	<element name="zone">
-		<label>Zone</label>
-		<description>Unique identifier for 100,000 metre grid zone</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="InDirectReferenceSystem">
-		<label>Indirect projection system (for non geographical resources)</label>
-		<description>ReferenceSystem derived / specify that it is an indirect
-			reference</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="DirectReferenceSystem">
-		<label>Direct projection system (for geographical resources)</label>
-		<description>ReferenceSystem derived / specify that it is a direct
-			reference</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="code">
-		<label>System code</label>
-		<description>Code. i.e. EPSG code.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="label">
-		<label>Content</label>
-		<description>Content</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="codeSpace">
-		<label>Reference Authority</label>
-		<description>Authority responsible for codification. i.e. EPSG</description>
-	</element>
-	<element name="gco:aName" context="gco:TypeName">
-		<label>Type name</label>
-		<description />
-		<helper>
-			<option value="BOOLEAN">BOOLEAN</option>
-			<option value="BYTE">BYTE</option>
-			<option value="CHARACTER">CHARACTER</option>
-			<option value="DATE">DATE</option>
-			<option value="DATETIME">DATETIME</option>
-			<option value="DOUBLE">DOUBLE</option>
-			<option value="FLOAT">FLOAT</option>
-			<option value="INTEGER">INTEGER</option>
-			<option value="NUMERIC">NUMERIC</option>
-			<option value="REAL">REAL</option>
-			<option value="SERIAL">SERIAL</option>
-			<option value="VARCHAR">VARCHAR</option>
-			<option value="TEXT">TEXT</option>
-		</helper>
-	</element>
-	<element name="gmx:FileName">
-		<label>File name</label>
-		<description>File name and source URL.</description>
-	</element>
-	<element name="src">
-		<label>Source URL</label>
-		<description>URL of the document.</description>
-	</element>
-	<element name="gmx:Anchor">
-		<label>Anchor</label>
-		<description>Supports hyper-linking capabilities and ensures a
-			web-like implementation of CharacterStrings</description>
-	</element>
-	<element name="xlink:href">
-		<label>Link href</label>
-		<description>Supplies the data that allows an XLink application to
-			find a remote resource (or resource fragment) [W3C XLINK]</description>
-	</element>
-  	<!-- ==================================================== -->
-    <element name="hidden-elements">
-        <label>Hidden Elements</label>
-        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
-    </element>
-		<element name="gmx:Anchor">
-				<label>Anchor</label>
-				<description>Supports hyper-linking capabilities and ensures a web-like implementation of CharacterStrings</description>
-		</element>
-		<element name="xlink:href">
-			<label>Link href</label>
-			<description>Supplies the data that allows an XLink application to find a remote resource (or resource fragment) [W3C XLINK]</description>
-		</element>
-  	<!-- ==================================================== -->
-    <element name="hidden-elements">
-        <label>Hidden Elements</label>
-        <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
-    </element>
-    <!-- ==================================================== -->
-    <element name="gmx:name"> 
-        <label>Name</label> 
-        <description>Feature catalogue name</description> 
-    </element> 
-    <element name="gmx:scope"> 
-        <label>Scope</label> 
-        <description>Scope definition</description> 
-    </element> 
-    <element name="gmx:versionNumber"> 
-        <label>Version</label> 
-        <description>Catalogue version</description> 
-    </element> 
-    <element name="gmx:versionDate"> 
-        <label>Date</label> 
-        <description>Catalogue date</description> 
-    </element> 
-    <element name="gmx:fieldOfApplication"> 
-        <label>Field of application</label> 
-        <description>Field of application</description> 
-    </element> 
+  <!-- ==================================================== -->
+  <!-- === Other labels //FIXME -->
+  <!-- ==================================================== -->
+  <element name="years">
+    <label>Years</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="zone">
+    <label>Zone</label>
+    <description>Unique identifier for 100,000 metre grid zone</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="InDirectReferenceSystem">
+    <label>Indirect projection system (for non geographical resources)</label>
+    <description>ReferenceSystem derived / specify that it is an indirect
+      reference
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="DirectReferenceSystem">
+    <label>Direct projection system (for geographical resources)</label>
+    <description>ReferenceSystem derived / specify that it is a direct
+      reference
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="code">
+    <label>System code</label>
+    <description>Code. i.e. EPSG code.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="label">
+    <label>Content</label>
+    <description>Content</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="codeSpace">
+    <label>Reference Authority</label>
+    <description>Authority responsible for codification. i.e. EPSG</description>
+  </element>
+  <element name="gco:aName" context="gco:TypeName">
+    <label>Type name</label>
+    <description/>
+    <helper>
+      <option value="BOOLEAN">BOOLEAN</option>
+      <option value="BYTE">BYTE</option>
+      <option value="CHARACTER">CHARACTER</option>
+      <option value="DATE">DATE</option>
+      <option value="DATETIME">DATETIME</option>
+      <option value="DOUBLE">DOUBLE</option>
+      <option value="FLOAT">FLOAT</option>
+      <option value="INTEGER">INTEGER</option>
+      <option value="NUMERIC">NUMERIC</option>
+      <option value="REAL">REAL</option>
+      <option value="SERIAL">SERIAL</option>
+      <option value="VARCHAR">VARCHAR</option>
+      <option value="TEXT">TEXT</option>
+    </helper>
+  </element>
+  <element name="gmx:FileName">
+    <label>File name</label>
+    <description>File name and source URL.</description>
+  </element>
+  <element name="src">
+    <label>Source URL</label>
+    <description>URL of the document.</description>
+  </element>
+  <element name="gmx:Anchor">
+    <label>Anchor</label>
+    <description>Supports hyper-linking capabilities and ensures a web-like implementation of
+      CharacterStrings
+    </description>
+  </element>
+  <element name="xlink:href">
+    <label>URL</label>
+    <description>Supplies the data that allows an XLink application to find a remote resource (or
+      resource fragment) [W3C XLINK]
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="hidden-elements">
+    <label>Hidden Elements</label>
+    <description>Child elements and attributes have been hidden because you do no have access to
+      view those elements
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmx:name">
+    <label>Name</label>
+    <description>Feature catalogue name</description>
+  </element>
+  <element name="gmx:scope">
+    <label>Scope</label>
+    <description>Scope definition</description>
+  </element>
+  <element name="gmx:versionNumber">
+    <label>Version</label>
+    <description>Catalogue version</description>
+  </element>
+  <element name="gmx:versionDate">
+    <label>Date</label>
+    <description>Catalogue date</description>
+  </element>
+  <element name="gmx:fieldOfApplication">
+    <label>Field of application</label>
+    <description>Field of application</description>
+  </element>
 </labels>

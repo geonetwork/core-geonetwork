@@ -323,7 +323,7 @@
 
   <!-- ================================================================= -->
 
-  <xsl:template match="*[gco:CharacterString|gmd:PT_FreeText]">
+  <xsl:template match="*[gco:CharacterString|gmx:Anchor|gmd:PT_FreeText]">
     <xsl:copy>
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
@@ -342,7 +342,11 @@
                             then $valueInPtFreeTextForMainLanguage = ''
                             else if ($valueInPtFreeTextForMainLanguage != '')
                             then $valueInPtFreeTextForMainLanguage = ''
-                            else normalize-space(gco:CharacterString) = ''"/>
+                            else normalize-space(gco:CharacterString|gmx:Anchor) = ''"/>
+
+      <!-- TODO ? Removes @nilReason from parents of gmx:Anchor if anchor has @xlink:href attribute filled. -->
+      <xsl:variable name="isEmptyAnchor"
+                    select="normalize-space(gmx:Anchor/@xlink:href) = ''" />
 
 
       <xsl:choose>
@@ -361,7 +365,7 @@
 
 
       <!-- For multilingual records, for multilingual fields,
-       create a gco:CharacterString containing
+       create a gco:CharacterString or gmx:Anchor containing
        the same value as the default language PT_FreeText.
       -->
       <xsl:variable name="element" select="name()"/>
@@ -375,16 +379,16 @@
           import may use this encoding. -->
         <xsl:when test="not($isMultilingual) and
                         $valueInPtFreeTextForMainLanguage != '' and
-                        normalize-space(gco:CharacterString) = ''">
-
-          <gco:CharacterString>
+                        normalize-space(gco:CharacterString|gmx:Anchor) = ''">
+          <xsl:element name="{if (gmx:Anchor) then 'gmx:Anchor' else 'gco:CharacterString'}">
+            <xsl:copy-of select="gmx:Anchor/@*"/>
             <xsl:value-of select="$valueInPtFreeTextForMainLanguage"/>
-          </gco:CharacterString>
+          </xsl:element>
         </xsl:when>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
           <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->
-          <xsl:apply-templates select="gco:CharacterString"/>
+          <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- Add xsi:type for multilingual element. -->
@@ -401,15 +405,16 @@
               <!-- Update gco:CharacterString to contains
                    the default language value from the PT_FreeText.
                    PT_FreeText takes priority. -->
-              <gco:CharacterString>
+              <xsl:element name="{if (gmx:Anchor) then 'gmx:Anchor' else 'gco:CharacterString'}">
+                <xsl:copy-of select="gmx:Anchor/@*"/>
                 <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]/text()"/>
-              </gco:CharacterString>
+              </xsl:element>
               <xsl:apply-templates select="gmd:PT_FreeText[normalize-space(.) != '']"/>
             </xsl:when>
             <xsl:otherwise>
               <!-- Populate PT_FreeText for default language if not existing. -->
-              <xsl:apply-templates select="gco:CharacterString"/>
+              <xsl:apply-templates select="gco:CharacterString|gmx:Anchor"/>
               <gmd:PT_FreeText>
                 <gmd:textGroup>
                   <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
@@ -425,6 +430,7 @@
       </xsl:choose>
     </xsl:copy>
   </xsl:template>
+
 
   <!-- ================================================================= -->
   <!-- codelists: set @codeList path -->

@@ -74,16 +74,20 @@
           'Thesaurus',
           function($q, $rootScope, $http, gnUrlUtils, Keyword, Thesaurus) {
             var getKeywordsSearchUrl = function(filter,
-                thesaurus, lang, max, typeSearch) {
+                thesaurus, lang, max, typeSearch, outputLang) {
+              var parameters = {
+                type: typeSearch || 'CONTAINS',
+                thesaurus: thesaurus,
+                rows: max,
+                q: filter || '',
+                uri: ('*' + filter + '*') || '',
+                lang: lang || 'eng'
+              };
+              if (outputLang) {
+                parameters['pLang'] = outputLang;
+              }
               return gnUrlUtils.append('../api/registries/vocabularies/search',
-                  gnUrlUtils.toKeyValue({
-                    type: typeSearch || 'CONTAINS',
-                    thesaurus: thesaurus,
-                    rows: max,
-                    q: filter || '',
-                    uri: ('*' + filter + '*') || '',
-                    lang: lang || 'eng'
-                  })
+                  gnUrlUtils.toKeyValue(parameters)
               );
             };
 
@@ -199,7 +203,9 @@
                     url: this.getKeywordsSearchUrl('QUERY',
                         config.thesaurusKey || '',
                         config.lang,
-                        config.max || this.DEFAULT_NUMBER_OF_RESULTS),
+                        config.max || this.DEFAULT_NUMBER_OF_RESULTS,
+                        undefined,
+                        config.outputLang),
                     filter: function(data) {
                       return parseKeywordsResponse(data, config.dataToExclude);
                     }
