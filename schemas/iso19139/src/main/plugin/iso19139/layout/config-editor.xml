@@ -3197,7 +3197,23 @@
           local.feature-type.myocean.feature-type
           to-iso19139.myocean-feature-type
           -->
-          <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*[gmd:featureTypes/gco:LocalName]"/>
+          <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:featureTypes"
+                 use="data-gn-keyword-picker">
+              <directiveAttributes data-thesaurus-key="local.feature-type.myocean.feature-type"
+                                   data-thesaurus-concept-id-attribute="codeSpace"/>
+          </field>
+          <action type="add"
+                  btnLabel="cm-add-feature-type"
+                  or="featureTypes"
+                  in="/gmd:MD_Metadata/gmd:contentInfo/*">
+            <template>
+              <snippet>
+                <gmd:featureTypes>
+                  <gco:LocalName codeSpace=""></gco:LocalName>
+                </gmd:featureTypes>
+              </snippet>
+            </template>
+          </action>
 
           <!--
           local.area-of-benefit.myocean.area-of-benefit

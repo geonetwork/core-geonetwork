@@ -505,6 +505,8 @@
   <cm-abstract>Overview</cm-abstract>
   <cm-version>Version</cm-version>
   <cm-update>Update date</cm-update>
+  <cm-updateDate>Update date</cm-updateDate>
+  <cm-add-feature-type>Add feature type</cm-add-feature-type>
   <cm-missionType>Mission type</cm-missionType>
   <cm-oceanVariables>Ocean variables</cm-oceanVariables>
   <cm-resy>Resolution latitude (y)</cm-resy>
