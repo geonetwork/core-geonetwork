@@ -1,30 +1,21 @@
 package org.fao.geonet.kernel.datamanager.base;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -92,7 +83,6 @@ import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -108,23 +98,29 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
-import jeeves.xlink.Processor;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class BaseMetadataManager implements IMetadataManager {
 
@@ -173,8 +169,6 @@ public class BaseMetadataManager implements IMetadataManager {
 	private AccessManager accessManager;
 	@Autowired
 	private UserSavedSelectionRepository userSavedSelectionRepository;
-	@Autowired
-	private UserFeedbackRepository userFeedbackRepository;
 
 	private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 	private String baseURL;
@@ -224,7 +218,6 @@ public class BaseMetadataManager implements IMetadataManager {
 		schemaManager = context.getBean(SchemaManager.class);
 		thesaurusManager = context.getBean(ThesaurusManager.class);
 		accessManager = context.getBean(AccessManager.class);
-		userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
 
 		// From DataManager:
 
@@ -350,9 +343,6 @@ public class BaseMetadataManager implements IMetadataManager {
 		// --- remove operations
 		metadataOperations.deleteMetadataOper(context, id, false);
 
-		// --- remove user comments
-		deleteMetadataUserFeedback_byMetadataId(context, metadata.getUuid());
-
 		int intId = Integer.parseInt(id);
 		metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
 		metadataValidationRepository.deleteAllById_MetadataId(intId);
@@ -374,12 +364,6 @@ public class BaseMetadataManager implements IMetadataManager {
 		getXmlSerializer().delete(id, context);
 	}
 
-	/**
-	 * Removes all userfeedbacks associated with metadata.
-	 */
-	private void deleteMetadataUserFeedback_byMetadataId(ServiceContext context, String metadataUUId) throws Exception {
-		userFeedbackRepository.deleteByMetadata_Uuid(metadataUUId);
-	}
 
 	private MetaSearcher searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata)
 			throws Exception {

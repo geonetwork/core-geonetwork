@@ -1,0 +1,11 @@
+<ul class="list-group">
+	<li ng-repeat="p in (projections)" class="input-group"
+		data-ng-click="switchProjection(p.code)"
+		data-ng-class="map.getView().getProjection().getCode() == p.code ? 'active' : ''"
+		data-ng-if="map.getView().getProjection().getCode() == p.code || listOpen"><span
+		class="input-group-addon" data-ng-translate="">projection</span> <span
+		class="form-control clickable">{{p.label}} <span style="float: right"
+			class="fa clickable" data-ng-click="toggleList()"
+			data-ng-if="map.getView().getProjection().getCode() == p.code"
+			data-ng-class="listOpen? 'fa-caret-left' : 'fa-caret-down'"></span></span></li>
+</ul>

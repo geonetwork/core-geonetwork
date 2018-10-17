@@ -247,7 +247,8 @@
               //send request and decode result
               if (true) {
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data) {
                       try {
@@ -281,7 +282,8 @@
               if (gnUrlUtils.isValid(url)) {
 
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data, status, headers, config) {
                       if (data) {
@@ -312,13 +314,14 @@
 
               if (gnUrlUtils.isValid(url)) {
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data, status, headers, config) {
                       var xfsCap = parseWFSCapabilities(data);
 
                       if (!xfsCap || xfsCap.exception != undefined) {
-                        defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                        defer.reject({msg: $translate.instant('wfsGetCapabilitiesFailed'),
                           owsExceptionReport: xfsCap});
                       } else {
                         defer.resolve(xfsCap);
@@ -326,7 +329,7 @@
 
                     })
                     .error(function(data, status, headers, config) {
-                      defer.reject(status);
+                      defer.reject($translate.instant('wfsGetCapabilitiesFailed'));
                     });
               }
             }

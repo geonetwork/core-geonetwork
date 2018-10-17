@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<strings>
+  <schematron.title>Pravidlá validácie ISO </schematron.title>
+  <m6>CharacterString musí mať obsah alebo jeho nadradený (rodič) musí mať platný atribút nilReason. </m6>
+  <m7>Obmedzenia atribútov CRS </m7>
+  <m8>[ISOFTDS19139:2005-TableA1-Row24] - Vyžaduje sa meno kontaktu </m8>
+  <m9>[ISOFTDS19139:2005-TableA1-Row07] - Pri položke je potrebné vyplniť ďalšie obmedzenia prístupové obmedzenia sa rovnajú "iným obmedzeniam" </m9>
+  <m10>[ISOFTDS19139:2005-TableA1-Row16] - Jednotky požadované pre hodnoty </m10>
+  <m11>[ISOFTDS19139:2005-TableA1-Row13] - Ak nie je zdrojový rozsah, je potrebný opis </m11>
+  <m12>[ISOFTDS19139:2005-TableA1-Row14] - Zdrojový rozsah je potrebný, ak nie je uvedený žiadny opis </m12>
+  <m13>[ISOFTDS19139:2005-TableA1-Row10] - Povinný obsah súborov údajov a sérií </m13>
+  <m14>[ISOFTDS19139:2005-TableA1-Row11 Row12] - História </m14>
+  <m15>[ISOFTDS19139:2005-TableA1-Row12] - Požadovaný krok procesu, ak nie je žiadne vyhlásenie alebo zdroj </m15>
+  <m16>[ISOFTDS19139:2005-TableA1-Row08] - Súbor údajov musí mať prehľad alebo históriu </m16>
+  <m17>[ISOFTDS19139:2005-TableA1-Row09] - Vyžaduje sa úroveň popisu, ak nie je súbor dát alebo séria </m17>
+  <m18>[ISOFTDS19139:2005-TableA1-Row17] - Požadované jednotky pre hodnoty hustoty </m18>
+  <m19>[ISOFTDS19139:2005-TableA1-Row18] - Požadovaný distribučný formát </m19>
+  <m20>[ISOFTDS19139:2005-TableA1-Row23] - Požadovaný prvok prekrytia </m20>
+  <m21>[ISOFTDS19139:2005-TableA1-Row04] - Súbor údajov musí mať rozsah </m21>
+  <m22>[ISOFTDS19139:2005-TableA1-Row05] - Súbor údajov alebo séria údajov musí mať tematickú kategóriu </m22>
+  <m23>[ISOFTDS19139:2005-TableA1-Row06] - Buď aggregateDataSetName alebo aggregateDataSetIdentifier musia byť zdokumentované </m23>
+  <m24>[ISOFTDS19139:2005-TableA1-Row01] - Uvedenie jazyka </m24>
+  <m25>[ISOFTDS19139:2005-TableA1-Row02] - Označenie množiny znakov </m25>
+  <m26>[ISOFTDS19139:2005-TableA1-Row19] - Požadovaný detail, ak nie je jednoduchý </m26>
+  <m27>[ISOFTDS19139:2005-TableA1-Row20] - Podmienka </m27>
+  <m28>[ISOFTDS19139:2005-TableA1-Row21] - DomainCode </m28>
+  <m29>[ISOFTDS19139:2005-TableA1-Row22] - ShortName</m29>
+  <m30>[ISOFTDS19139:2005-TableA1-Row15] - Ak je k dispozícii požadovaný opis kontrolného bodu </m30>
+  <m61>[ISOFTDS19139:2005-TableA1] - HierarchyLevelName musí byť zdokumentovaný, ak hierarchyLevel neobsahuje "súbor priestorových údajov"</m61>
+  <alert.m6>
+    <div>Kategória tém je povinná, ak je MD_Metadata.hierarchyLevel rovnaká ako "súbor údajov" alebo "séria", alebo neexistuje. </div>
+  </alert.m6>
+  <report.m6>Tematická kategória: </report.m6>
+  <alert.m6.characterstring>
+    <div>CharacterString musí mať platný nadradený atribút nilReason, musí byť legitímne. </div>
+  </alert.m6.characterstring>
+  <alert.m6.directposition>
+    <div>Prítomnosť atribútu dimenzií znamená prítomnosť atribútu srsName. </div>
+  </alert.m6.directposition>
+  <alert.m7.axisandsrs>
+    <div>Prítomnosť atribútu axisLabels naznačuje prítomnosť atribútu srsName. </div>
+  </alert.m7.axisandsrs>
+  <alert.m7.uomandsrs>
+    <div>Prítomnosť atribútu označenia jednotkových mier naznačuje prítomnosť atribútu priestorového referenčného systému. </div>
+  </alert.m7.uomandsrs>
+  <alert.m7.uomandaxis>
+    <div>Prítomnosť atribútu uomLabels naznačuje prítomnosť atribútu axisLabels a naopak. </div>
+  </alert.m7.uomandaxis>
+  <alert.m8>
+    <div>Musí sa uviesť aspoň jedno meno osoby, názov organizácie alebo názov položky. 1Preposkytie: Skontrolujte informácie o kontakte metaúdajov alebo zodpovednej stránky, napríklad v sekcii identifikácie.</div>
+  </alert.m8>
+  <report.m8>Aspoň jedno meno osoby, názov organizácie alebo názov položky nájdete v kontaktných informáciách: </report.m8>
+  <alert.m9.access>
+    <div>Ďalšie obmedzenia by sa mali definovať, ak sú nastavené obmedzenia prístupu "Other restrictions". 1 otherConstraints: zdokumentované, ak accessConstraints = 'otherRestrictions' 2 3Návrhy: Pridajte ďalší prvok obmedzenia a vysvetliť dôvod. 3 </div>
+  </alert.m9.access>
+  <report.m9>
+    <div>Ďalšie obmedzenia sú nastavené na: </div>
+  </report.m9>
+  <alert.m9.use>
+    <div>Ďalšie obmedzenia by sa mali definovať, ak sú obmedzenia používania nastavené na "Other restrictions". 1 otherConstraints: zdokumentované, ak useConstraints = 'otherRestrictions'. 2 3Návrhy: Pridajte ďalší prvok obmedzenia a vysvetliť dôvod.</div>
+  </alert.m9.use>
+  <alert.m9>
+    <div>Prvky 'units' je povinné, ak sú uvedené "maxValue" alebo "minValue". </div>
+  </alert.m9>
+  <report.m9.units>Jednotky: </report.m9.units>
+  <report.m9.max>Najväčšia hodnota: </report.m9.max>
+  <report.m9.min>Najmenšia hodnota: </report.m9.min>
+  <alert.m11>
+    <div>Prvok "description" je povinný, ak nie je dokumentovaný "sourceExtent" 1Návrhy: Pridať popis a / alebo zdrojový rozsah.</div>
+  </alert.m11>
+  <report.m11>
+    <div>"Description" a "sourceExtent" sú zdokumentované pre históriu. </div>
+  </report.m11>
+  <alert.m13>
+    <div>Vyhlásenie je povinné, ak pre súbor údajov alebo sériu nie je definovaný žiadny zdrojový alebo procesný krok. 1 If(count(source) + count(processStep) =0) a (DQ_DataQuality.scope.level = 'dataset' alebo 'series') potom je vyhlásenie povinné. </div>
+  </alert.m13>
+  <report.m13>
+    <div>Vyhlásenie je zdokumentované. </div>
+  </report.m13>
+  <alert.m14>
+    <div>'source' je povinný ak LI_Lineage.statement a 'processStep' nie su zdokumentované. 1 2Návrhy: Definujte príkaz línie alebo krok procesu.</div>
+  </alert.m14>
+  <report.m14>Zdroj je potrebný, ak nie je žiadne vyhlásenie alebo krok procesu.</report.m14>
+  <alert.m15>
+    <div>'processStep' je povinný ak LI_Lineage.statement a 'source' nie sú zdokumentované. 1 2Návrhy: Definujte vyhlásenie o riadku alebo zdroj.</div>
+  </alert.m15>
+  <report.m15>Procesný krok sa vyžaduje, ak nie je žiadne vyhlásenie alebo zdroj </report.m15>
+  <alert.m16>
+    <div>'report' alebo 'história' sú povinné ak scope.DQ_Scope.level = 'dataset'  </div>
+  </alert.m16>
+  <report.m16>
+    <div>Report  alebo história je definovaná. </div>
+  </report.m16>
+  <alert.m17>
+    <div>'levelDescription' je povinný ak 'úroveň' nie je 'súbor údajov' alebo 'série'.  </div>
+  </alert.m17>
+  <report.m17>Popis úrovne je nastavený:</report.m17>
+  <alert.m18>
+    <div>'densityUnits' sú povinné ak 'density' je poskytovaný. </div>
+  </alert.m18>
+  <report.m18>Hustota: </report.m18>
+  <alert.m19>
+    <div>One distributor format is needed. 1 číslo (distributionFormat + distributor/MD_Distributor/distributorFormat) &gt; 0. </div>
+  </alert.m19>
+  <report.m19>Bol nájdený formát distribútora. </report.m19>
+  <alert.m20>
+    <div>V sekcii o rozsahu je potrebné definovať jeden z nasledujúcich prvkov: description, geographicElement, temporalElement, verticalElement. 1 count(description + geographicElement + temporalElement + verticalElement) &gt; 0. </div>
+  </alert.m20>
+  <report.m20>Jeden nájdený description, geographicElement, temporalElement, verticalElement. </report.m20>
+  <alert.m21>
+    <div>Pre súbor údajov je potrebné definovať rozsah. 1 MD_Metadata.hierarchyLevel = 'dataset' (t. j. predvolená hodnota tejto vlastnosti v nadradenej) znamená počet (extent.geographicElement.EX_GeographicBoundingBox) + count(extent.geographicElement.EX_GeographicDescription) &amp; gt; = 1. </div>
+  </alert.m21>
+  <report.m21>Rozsah definovaný pre súbor údajov. </report.m21>
+  <alert.m23>
+    <div>Musí sa zdokumentovať buď 'aggregateDataSetName' alebo 'aggregateDataSetIdentifier' </div>
+  </alert.m23>
+  <report.m23>aggregateDataSetName alebo aggregateDataSetIdentifier je zdokumentované. </report.m23>
+  <alert.m24>
+    <div>Chýbajúci jazyk. </div>
+  </alert.m24>
+  <alert.m26.obligation>
+    <div>Ak 'dataType' nie je 'zoznam', 'výpočet' alebo 'codelistElement' potom ''povinnosť' je povinné. 
+</div>
+  </alert.m26.obligation>
+  <alert.m26.maximumoccurence>
+    <div>Ak 'dataType' nie je rovný 'zoznam', 'enumeration' alebo 'codelistElement' potom 'maximumOccurence' je povinné. </div>
+  </alert.m26.maximumoccurence>
+  <alert.m26.domainvalue>
+    <div>Ak 'dataType' nie je 'zoznam kódov', 'výpočet' alebo 'codelistElement' potom 'domainValue' je povinné.</div>
+  </alert.m26.domainvalue>
+  <alert.m27>
+    <div>Ak 'povinnosť' = 'podmienený' potom 'podmienka' je povinná. </div>
+  </alert.m27>
+  <report.m27>Podmienka je definovaná pre podmienený prvok. </report.m27>
+  <alert.m28>
+    <div>Ak 'dataType' = 'codelistElement' potom 'domainCode' je povinný. </div>
+  </alert.m28>
+  <report.m28>Kód domény zdokumentovaný pre prvok zoznamu kódov. </report.m28>
+  <alert.m29>
+    <div>Ak 'dataType' nie je rovný 'codelistElement', potom 'shortName' je povinné. </div>
+  </alert.m29>
+  <report.m29>Krátky názov je zdokumentovaný pre typ údajov mimo "Element CodeList". </report.m29>
+  <alert.m30>
+    <div>'checkPointDescription' je povinný ak 'checkPointAvailability' = 1 alebo true. </div>
+  </alert.m30>
+  <report.m30>Opis kontrolného bodu bol zdokumentovaný. </report.m30>
+  <alert.m61>
+    <div>hierarchyLevelName musí byť zdokumentovaný ak hierarchyLevel neobsahuje 'dataset' </div>
+  </alert.m61>
+  <report.m61>Názov úrovne hierarchie: </report.m61>
+  <alert.requiredabstract>Identifikácia údajov Abstrakt je požadovaný prvok </alert.requiredabstract>
+  <report.requiredabstract>Bola nájdená identifikácia údajov Abstrakt </report.requiredabstract>
+  <alert.requiredtitle>Identifikácia údajov Názov citácie je povinný prvok </alert.requiredtitle>
+  <report.requiredtitle>Bola nájdená identifikácia údajov Názov citácie </report.requiredtitle>
+  <alert.requireddate>Identifikácia údajov Dátum citácie je povinný prvok </alert.requireddate>
+  <report.requireddate>Bola nájdená identifikácia údajov Dátum citácie </report.requireddate>
+  <alert.requireddatetype>Identifikácia údajov Typ dátumu citácie je požadovaný prvok </alert.requireddatetype>
+  <report.requireddatetype>Bola nájdená identifikácia údajov Typ dátumu citácie </report.requireddatetype>
+  <alert.requiredcontact>Kontakt je povinný prvok </alert.requiredcontact>
+  <report.requiredcontact>Bol nájdený kontakt </report.requiredcontact>
+  <alert.requiredlanguage>Jazyk je povinný prvok </alert.requiredlanguage>
+  <report.requiredlanguage>Bol nájdený jazyk </report.requiredlanguage>
+  <alert.requiredlanguage>Identifikácia údajov Jazyk je povinný prvok </alert.requiredlanguage>
+  <report.requiredlanguage>Bola nájdená identifikácia údajov Jazyk</report.requiredlanguage>
+  <alert.requiredcitation>Identifikácia údajov Citácia je povinný prvok </alert.requiredcitation>
+  <report.requiredcitation>Bola nájdená identifikácia údajov Citácia </report.requiredcitation>
+  <requiredelements>Povinný prvok </requiredelements>
+  <requirecitation>Citácia </requirecitation>
+</strings>

@@ -24,6 +24,8 @@
 package org.fao.geonet.component.csw;
 
 import com.vividsolutions.jts.util.Assert;
+import java.nio.file.Path;
+import java.util.*;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -51,16 +53,14 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-
 //=============================================================================
-
 /**
  * CSW transaction operation.
  */
@@ -91,12 +91,26 @@ public class Transaction extends AbstractOperation implements CatalogService {
     //---
     //---------------------------------------------------------------------------
 
+    @Override
     public String getName() {
         return NAME;
     }
 
     //---------------------------------------------------------------------------
 
+    static class InsertedMetadata{
+        String schema;
+        String id;
+        Element content;
+
+        public InsertedMetadata(String schema, String id, Element content) {
+            this.schema = schema;
+            this.id = id;
+            this.content = content;
+        }
+    }
+
+    @Override
     public Element execute(Element request, ServiceContext context) throws CatalogException {
         checkService(request);
         checkVersion(request);
@@ -109,7 +123,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         // Response element
         Element response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
 
-        List<String> strFileIds = new ArrayList<String>();
+        List<InsertedMetadata> inserted = new ArrayList<>();
 
         //process the transaction from the first to the last
         @SuppressWarnings("unchecked")
@@ -118,7 +132,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
 
-        Set<String> toIndex = new HashSet<String>();
+        Set<String> toIndex = new HashSet<>();
 
         try {
             //process the childlist
@@ -132,7 +146,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     if (transactionType.equals("insert")) {
                         for (Element aMdList : mdList) {
                             Element metadata = (Element) aMdList.clone();
-                            boolean insertSuccess = insertTransaction(metadata, strFileIds, context, toIndex);
+                            boolean insertSuccess = insertTransaction(metadata, inserted, context, toIndex);
                             if (insertSuccess) {
                                 totalInserted++;
                             }
@@ -160,12 +174,12 @@ public class Transaction extends AbstractOperation implements CatalogService {
             throw new NoApplicableCodeEx("Cannot process transaction: " + e.getMessage());
         } finally {
             try {
-                dataMan.indexMetadata(new ArrayList<String>(toIndex));
+                dataMan.indexMetadata(new ArrayList<>(toIndex));
             } catch (Exception e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
             }
-            getResponseResult(request, response, strFileIds, totalInserted, totalUpdated, totalDeleted);
+            getResponseResult(context, request, response, inserted, totalInserted, totalUpdated, totalDeleted);
         }
 
         return response;
@@ -173,12 +187,14 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
     //---------------------------------------------------------------------------
 
+    @Override
     public Element adaptGetRequest(Map<String, String> params) {
         return new Element(getName(), Csw.NAMESPACE_CSW);
     }
 
     //---------------------------------------------------------------------------
 
+    @Override
     public Element retrieveValues(String parameterName) throws CatalogException {
         return null;
     }
@@ -197,7 +213,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
      * @return
      * @throws Exception
      */
-    private boolean insertTransaction(Element xml, List<String> fileIds, ServiceContext context, Set<String> toIndex) throws Exception {
+    private boolean insertTransaction(Element xml, List<InsertedMetadata> documents, ServiceContext context, Set<String> toIndex)
+            throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
 
@@ -241,7 +258,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         //
         // insert metadata
         //
-        String docType = null, title = null, isTemplate = null;
+        String docType = null, isTemplate = null;
         boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
             isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
@@ -264,7 +281,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         dataMan.indexMetadata(id, true, null);
 
-        fileIds.add(uuid);
+        documents.add(new InsertedMetadata(schema, id, xml));
 
         toIndex.add(id);
         return true;
@@ -511,7 +528,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
      * @param totalUpdated
      * @param totalDeleted
      */
-    private void getResponseResult(Element request, Element response, List<String> fileIds,
+    private void getResponseResult(ServiceContext context, Element request, Element response, List<InsertedMetadata> inserted,
                                    int totalInserted, int totalUpdated, int totalDeleted) {
         // transactionSummary
         Element transactionSummary = getTransactionSummary(totalInserted, totalUpdated, totalDeleted);
@@ -527,18 +544,37 @@ public class Transaction extends AbstractOperation implements CatalogService {
             Element insertResult = new Element("InsertResult", Csw.NAMESPACE_CSW);
             insertResult.setAttribute("handleRef", "handleRefValue");
 
-            //Namespace NAMESPACE_DC = Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
-            for (String fileId : fileIds) {
-                Element briefRecord = new Element("BriefRecord", Csw.NAMESPACE_CSW);
-                Element identifier = new Element("identifier"); //,Csw.NAMESPACE_DC );
-                identifier.setText(fileId);
-                briefRecord.addContent(identifier);
+            for (InsertedMetadata md : inserted) {
+                Element briefRecord;
+
+                try {
+                    briefRecord = applyCswBrief(context, _schemaManager, md.schema, md.content, md.id, context.getLanguage());
+
+                } catch(Exception e) {
+                    // let's mock a BriefRecord, it's not complete, but it may be useful anyway
+                    Log.warning(Geonet.CSW, "Error transforming metadata: " + md.id, e);
+
+                    briefRecord = new Element("BriefRecord", Csw.NAMESPACE_CSW);
+                    Element identifier = new Element("identifier", Csw.NAMESPACE_DC );
+                    // TODO: title is mandatory
+                    identifier.setText(md.id);
+                    briefRecord.addContent(identifier);
+                }
                 insertResult.addContent(briefRecord);
             }
 
             response.addContent(insertResult);
         }
+    }
 
+    private static Element applyCswBrief(ServiceContext context, SchemaManager schemaManager, String schema,
+                                               Element md,
+                                               String id, String displayLanguage) throws Exception
+    {
+        return org.fao.geonet.csw.common.util.Xml.applyElementSetName(
+                context, schemaManager, schema, md,
+                "csw", ElementSetName.BRIEF, ResultType.RESULTS,
+                id, displayLanguage);
     }
 
     /**
@@ -570,21 +606,6 @@ public class Transaction extends AbstractOperation implements CatalogService {
 //		}
 
         return transactionSummary;
-    }
-
-    /**
-     * Retrieves namespaces based on metadata schema
-     */
-    private Map<String, String> retrieveNamepacesForSchema(MetadataSchema mdSchema) throws NoApplicableCodeEx {
-        Map<String, String> mapNs = new HashMap<String, String>();
-
-        List<Namespace> schemaNsList = mdSchema.getSchemaNS();
-
-        for (Namespace ns : schemaNsList) {
-            mapNs.put(ns.getPrefix(), ns.getURI());
-        }
-
-        return mapNs;
     }
 
 }

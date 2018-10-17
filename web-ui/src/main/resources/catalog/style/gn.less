@@ -226,48 +226,56 @@ a {
 
 div.gn-scroll-spy {
   position: fixed;
-  bottom: 0%;
+  bottom: 0px;
   right: 0px;
-  opacity: 0.8;
-  font-size: 80%;
-  width: 150px;
+  width: 350px;
   z-index: 999;
-  max-height: 99vh;
   overflow: auto;
   background-color: @panel-bg;
-  border-top-left-radius: @panel-border-radius;
-  border-top: 1px solid @panel-default-border;
   border-left: 1px solid @panel-default-border;
-
-  button {
-    .pull-right();
+  .btn-toolbar {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    button {
+      .pull-right();
+      &:hover {
+        color: @btn-primary-color;
+      }
+    }
+  }
+  ul.nav-pills {
+    height: 100vh;
+    padding-top: 10px;
   }
   ul {
-    opacity: 1;
     li {
+      margin-top: 0;
       a {
-      padding-left: 5px;
-      padding-right: 5px;
-      padding-top: 1px;
-      padding-bottom: 1px;
+        padding: 5px 15px;
+        color: @gray-dark;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 0;
+        border-left: 3px solid transparent;
       }
       ul {
         li {
           a {
-            padding-top: 1px;
-            padding-bottom: 1px;
-            padding-left: 15px;
-            font-size: 90%;
+            padding: 5px 25px;
+            font-size: 14px;
+            font-weight: normal;
           }
         }
         li.active > a {
-            font-weight: bold;
+          font-weight: bold;
         }
       }
     }
     li.active > a {
       font-weight: bold;
-      color: @brand-primary;
+      color: @gray-darker;
+      border-left-color: @gray-dark;
       background-color: @navbar-default-brand-hover-bg;
     }
   }
@@ -595,11 +603,16 @@ i.fa-times.delete:hover {
     background-color: rgba(255, 255, 255 , 0.7);
   }
   .gn-status-mdview {
-    font-size: 110%;
     position: relative;
-    float: right;
-    top: -52px;
-    margin-right: -20px;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    font-size: 100%;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-weight: normal;
+    font-size: 80%;
+    transform: none;
   }
   /* Decide here which status should be displayed
   or not and with which colors */
@@ -916,4 +929,10 @@ html {
   // See https://github.com/twbs/bootstrap/issues/18543
   // TODO Remove this if Bootstrap version is >= 4.0.0
   -ms-overflow-style: scrollbar;
+}
+
+
+// Clickable elements
+.clickable {
+  cursor: pointer;
 }

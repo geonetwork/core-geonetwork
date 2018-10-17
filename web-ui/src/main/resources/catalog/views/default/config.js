@@ -124,6 +124,37 @@
             viewerMap: viewerMap,
             searchMap: searchMap
           });
+          
+          
+          //Add projections from UI settings:
+          $.each(viewerSettings.mapConfig.switcherProjectionList, function(i, p) {
+            if(!ol.proj.get(p.code)) {
+              if(p.def) {
+                // Define an OL3 projection based on the included Proj4js projection
+                // definition and set it's extent.
+                proj4.defs(p.code,p.def);
+              } else {
+                console.error("Trying to use unknown projection '" + p.code 
+                      + "'. Please add definition on settings.");
+              }
+            }
+
+            var projection = ol.proj.get(p.code);
+            if(p.extent && p.extent.length && p.extent.length == 4
+                && !isNaN(p.extent[0]) && p.extent[0] != null
+                && !isNaN(p.extent[1]) && p.extent[1] != null
+                && !isNaN(p.extent[2]) && p.extent[2] != null
+                && !isNaN(p.extent[3]) && p.extent[3] != null) {
+              projection.setExtent(p.extent);
+            }
+            if(p.worldExtent && p.worldExtent.length && p.worldExtent.length == 4
+                && !isNaN(p.worldExtent[0]) && p.worldExtent[0] != null
+                && !isNaN(p.worldExtent[1]) && p.worldExtent[1] != null
+                && !isNaN(p.worldExtent[2]) && p.worldExtent[2] != null
+                && !isNaN(p.worldExtent[3]) && p.worldExtent[3] != null) {
+              projection.setWorldExtent(p.worldExtent);
+            }
+          });
 
         }]);
 })();

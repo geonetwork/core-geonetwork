@@ -163,6 +163,24 @@
               defer.reject();
               return $q.defer().promise;
             }
+            
+            //Check if the layer has some projection restriction
+            //If no restriction, just (try to) add it
+            if(layerInfo.projectionList && layerInfo.projectionList.length 
+                && layerInfo.projectionList.length > 0) {
+              var addIt = false;
+              
+              $.each(layerInfo.projectionList, function(i, p){
+                if(map.getView().getProjection().getCode() == p) {
+                  addIt = true;
+                }
+              });
+              
+              if(!addIt) {
+                defer.reject();
+                return $q.defer().promise;
+              }
+            }
 
             switch (layerInfo.type) {
               case 'osm':
@@ -172,11 +190,24 @@
                 }));
                 break;
 
-              case 'tms':
+              case 'tms':            
+                var prop = { 
+                  // Settings are usually encoded
+                    url: decodeURI(layerInfo.url)
+                };
+                
+                if(layerInfo.projection) {
+                  prop.projection = layerInfo.projection;
+                }
+                
+                if(layerInfo.attribution) {
+                  prop.attributions = [
+                    new ol.Attribution({"html": layerInfo.attribution})
+                  ]
+                }
+                
                 defer.resolve(new ol.layer.Tile({
-                  source: new ol.source.XYZ({
-                        url: layerInfo.url
-                  }),
+                  source: new ol.source.XYZ(prop),
                   title: layerInfo.title || 'TMS Layer'
                 }));
                 break;
@@ -220,6 +251,11 @@
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
                       }
+                      
+                      if(layerInfo.attribution) {
+                        layer.getSource().setAttributions(layerInfo.attribution);
+                      }
+                      
                       defer.resolve(layer);
                     });
                 break;
@@ -238,6 +274,11 @@
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
                       }
+                      
+                      if(layerInfo.attribution) {
+                        layer.getSource().setAttributions(layerInfo.attribution);
+                      }
+                      
                       defer.resolve(layer);
                     });
                 break;
@@ -1042,7 +1083,7 @@
               }
 
               if (!isLayerAvailableInMapProjection) {
-                errors.push($translate.instant('layerNotAvailableInMapProj'));
+              //  errors.push($translate.instant('layerNotAvailableInMapProj'));
                 console.warn($translate.instant('layerNotAvailableInMapProj'));
               }
 

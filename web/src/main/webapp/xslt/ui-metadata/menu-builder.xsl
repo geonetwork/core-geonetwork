@@ -42,19 +42,23 @@
          data-watch=""
          data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"/>
 
-    <ul class="nav nav-tabs">
+    <div class="nav nav-tabs">
       <!-- Make a drop down choice to swith to one view to another -->
-      <li class="dropdown" id="gn-view-menu-{$metadataId}">
-        <a class="dropdown-toggle" data-toggle="dropdown" href=""
-           title="{$i18n/selectView}">
+      <span id="gn-view-menu-{$metadataId}">
+        <button type="button"
+                class="btn btn-default navbar-btn dropdown-toggle"
+                data-toggle="dropdown"
+                aria-label="{$i18n/selectView}"
+                title="{$i18n/selectView}"
+                aria-expanded="false">
           <i class="fa fa-eye"></i>
-          <b class="caret"/>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-right">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
           <!-- links -->
           <xsl:choose>
             <xsl:when test="$isTemplate = 's'">
-              <li>
+              <li role="menuitem">
                 <xsl:if test="'simple' = $currentView/@name">
                   <xsl:attribute name="class">disabled</xsl:attribute>
                 </xsl:if>
@@ -62,7 +66,7 @@
                   <xsl:value-of select="$strings/*[name() = 'simple']"/>
                 </a>
               </li>
-              <li>
+              <li role="menuitem">
                 <xsl:if test="'xml' = $currentView/@name">
                   <xsl:attribute name="class">disabled</xsl:attribute>
                 </xsl:if>
@@ -83,7 +87,7 @@
 
 
                 <xsl:if test="$isViewDisplayed">
-                  <li>
+                  <li role="menuitem">
                     <xsl:if test="@name = $currentView/@name">
                       <xsl:attribute name="class">disabled</xsl:attribute>
                     </xsl:if>
@@ -98,8 +102,8 @@
                 </xsl:if>
               </xsl:for-each>
 
-              <li class="divider"/>
-              <li>
+              <li class="divider" role="menuitem"/>
+              <li role="menuitem">
                 <a data-ng-click="toggleAttributes(true)" href="">
                   <i class="fa"
                      data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
@@ -107,7 +111,7 @@
                   <span data-translate="">toggleAttributes</span>
                 </a>
               </li>
-              <li>
+              <li role="menuitem">
                 <a data-ng-click="toggleTooltips(true)" href="">
                   <i class="fa"
                      data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
@@ -118,7 +122,7 @@
             </xsl:otherwise>
           </xsl:choose>
         </ul>
-      </li>
+      </span>
 
       <!-- Make a tab switcher for all tabs of the current view -->
       <xsl:if test="count($currentView/tab) > 1">
@@ -128,16 +132,16 @@
 
         <!-- Some views may define tab to be grouped in an extra button -->
         <xsl:if test="count($config/editor/views/view[tab/@id = $tab]/tab[@toggle]) > 0">
-          <li class="dropdown">
+          <li class="dropdown" role="menuitem">
             <a class="dropdown-toggle" data-toggle="dropdown" href=""
                title="{$i18n/moreTabs}">
               <i class="fa fa-ellipsis-h"></i>
               <b class="caret"/>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" role="menu">
               <!-- links -->
               <xsl:for-each select="$config/editor/views/view[tab/@id = $tab]/tab[@toggle]">
-                <li>
+                <li role="menuitem">
                   <xsl:if test="$tab = @id">
                     <xsl:attribute name="class">disabled</xsl:attribute>
                   </xsl:if>
@@ -156,7 +160,7 @@
         </xsl:if>
       </xsl:if>
 
-    </ul>
+    </div>
   </xsl:template>
 
 
@@ -173,7 +177,7 @@
     <xsl:if test="$isTabDisplayed">
     </xsl:if>
     -->
-    <li
+    <li role="menuitem"
       class="{if ($tab = @id) then 'active' else ''} {if ($isTabDisplayed) then '' else 'disabled'}">
       <a href="">
         <xsl:if test="$tab != @id and $isTabDisplayed">

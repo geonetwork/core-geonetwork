@@ -4,9 +4,53 @@
 
 // styling for a single result: metadata view
 
+.btn-toolbar {
+  .btn-group {
+    margin-left: 0;
+    margin-right: 5px;
+  }
+  .btn-group.pull-right, .pull-right .btn-group {
+    margin-left: 5px;
+    margin-right: 0;
+  }
+}
+
 .gn-md-view {
   padding: 15px 20px;
   background-color: @gn-md-view-background-color;
+  .gn-related-item {
+    margin-top: -1px;
+    border-radius: 0;
+    padding: 10px 15px 10px 15px;
+    .col-xs-1 {
+      .fa {
+        font-size: 2em;
+      }
+      .fa-stack-1x {
+        font-size: 1em;
+      }
+      .fa-stack {
+        i {
+          opacity: 1 !important;
+        }
+        strong {
+          font-family: arial;
+          display: block;
+          margin-top: 2em;
+        }
+      }
+    }
+    h3 {
+      margin-top: 0;
+    }
+    .table-striped td {
+      padding-left: 8px;
+    }
+    .gn-atom {
+      max-height: 250px;
+      overflow: auto;
+    }
+  }
   .gn-md-side {
     .gn-img-thumbnail,
     .gn-img-extent {

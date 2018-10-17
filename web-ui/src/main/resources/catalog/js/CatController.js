@@ -74,7 +74,8 @@
             'ice': 'is',
             'ita' : 'it',
             'rus': 'ru',
-            'chi': 'zh'
+            'chi': 'zh',
+            'slo': 'sk'
           }
         },
         'home': {
@@ -177,9 +178,14 @@
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
           }],
+          'switcherProjectionList': [{
+            'code': 'EPSG:3857',
+            'label': 'Google mercator (EPSG:3857)'
+          }],
           'disabledTools': {
             'processes': false,
             'addLayers': false,
+            'projectionSwitcher': false,
             'layers': false,
             'legend': false,
             'filter': false,
@@ -461,7 +467,7 @@
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
         'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
-        'rus': 'русский', 'chi': '中文'};
+        'rus': 'русский', 'chi': '中文', 'slo': 'Slovenčina'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;

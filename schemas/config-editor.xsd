@@ -889,7 +889,11 @@ to be able:
 Adding a section to a tab
 -------------------------
 
-A section is a group of fields.
+A section is a group of fields. If a name attribute is provided,
+then it will create an HTML fieldset which is collapsible.
+If no name attribute is provided, then it just render the inner elements.
+For example, if you need a tab without a root fieldset, juste create 
+the mandatory section with no name and then the inner elements.
 
 
         ]]></xs:documentation>

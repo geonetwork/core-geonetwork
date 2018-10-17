@@ -50,6 +50,7 @@
     "viewSelectionOnly": "Selection only",
     "add": "Add",
     "address": "Address",
+    "personal": "Personal",
     "gnToggle": "Show/hide sections",
     "cookieWarning": "This webpage uses cookies. If you continue navigating this page, we will assume you accept this.",
     "moreOnCookie": "Want to know more about this message ?",
@@ -214,7 +215,6 @@
     "sendAComment": "Send us a comment",
     "sendPasswordLinkToMyEmail": "Send password link to my email",
     "service": "Service",
-    "serviceType": "Service type",
     "serviceType": "Service type",
     "serviceTypes": "Service types",
     "signIn": "Sign in",
@@ -416,5 +416,12 @@
     "first": "First",
     "editorHome": "Editor board",
     "adminHome": "Summary",
-    "allAdmins": "Administrators"
+    "allAdmins": "Administrators",
+    "group": "Group",
+    "showOptions": "Show options",
+    "projectionSwitcher": "Projection Switcher",
+    "projection": "Projection",
+    "listTypeBlocks": "Switch to Blocked list",
+    "listTypeLarge": "Switch to Large list",
+    "listTypeSmall": "Switch to Small list"
 }

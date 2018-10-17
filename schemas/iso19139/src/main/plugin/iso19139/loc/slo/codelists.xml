@@ -1,0 +1,1993 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+  <!-- ==================================================== -->
+  <codelist name="gmd:CI_DateTypeCode">
+    <entry>
+      <code>creation</code>
+      <label>Dátum vytvorenia</label>
+      <description>Referenčný dátum pre vytvorený zdroj </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>publication</code>
+      <label>Dátum uverejnenia</label>
+      <description>Referenčný dátum pre uverejnenie zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>revision</code>
+      <label>Dátum poslednej revízie</label>
+      <description>Referenčný dátum pre poslednú revíziu zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:CI_OnLineFunctionCode" alias="function">
+    <entry>
+      <code>download</code>
+      <label>Stiahnutie</label>
+      <description>On-line inštrukcie na prenos údajov z jedného zdroja alebo systému na iný </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>information</code>
+      <label>Informácia</label>
+      <description>On-line informácia o zdroji </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>offlineAccess</code>
+      <label>Off-line zdroj</label>
+      <description>On-line inštrukcie pre získanie zdroja od zodpovednej organizácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>order</code>
+      <label>Objednanie</label>
+      <description>On-line proces na objednanie zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>search</code>
+      <label>Vyhľadanie</label>
+      <description>On-line rozhranie pre vyhľadávanie informácií o zdroji </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:CI_PresentationFormCode">
+    <entry>
+      <code>documentDigital</code>
+      <label>Elektronický dokument</label>
+      <description>Digitálny dokument prevažne v textovej forme (môže obsahovať aj obrázky) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>imageDigital</code>
+      <label>Digitálny snímok/obrázok</label>
+      <description>Prírodné alebo človekom vytvorené prvky, objekty a ich činnosti zaznamenané prostredníctvom snímania vizuálneho alebo iného elektromagnetického spektra, ako sú infračervené,radarové a termálne snímky s vysokým rozlíšením uložené v digitálnom formáte </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>documentHardcopy</code>
+      <label>Analógový dokument</label>
+      <description>Analógový dokument prevažne v textovej forme (môže obsahovať aj obrázky) zaznamenaný na papieri, fotografickom materiáli alebo inom analógovom materiáli </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>imageHardcopy</code>
+      <label>Analógový snímok/obrázok</label>
+      <description>Prírodné alebo človekom vytvorené prvky, objekty a ich činnosti zaznamenané prostredníctvom snímania vizuálneho alebo iného elektromagnetického spektra, ako sú infračervené,radarové a termálne snímky s vysokým rozlíšením uložené v analógovej podobe </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>mapDigital</code>
+      <label>Digitálna mapa</label>
+      <description>Mapový výstup reprezentovaný rastrovou alebo vektorovou formou </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>mapHardcopy</code>
+      <label>Analógová mapa</label>
+      <description>Mapový výstup vytlačený na papier, fotografický materiál alebo iný analógový materiál, použiteľný pre užívateľa</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>modelDigital</code>
+      <label>Digitálny model</label>
+      <description>Mnoho-dimenzionálny digitálny model reprezentovaný procesmi, funkciami a inými </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>modelHardcopy</code>
+      <label>Analógový model</label>
+      <description>3-dimenzionálny, fyzický model </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>profileDigital</code>
+      <label>Digitálny profil</label>
+      <description>Vertikálny/kolmý prierez v digitálnej podobe </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>profileHardcopy</code>
+      <label>Analógový profil</label>
+      <description>Vertikálny/kolmý prierez v analógovej podobe </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tableDigital</code>
+      <label>Digitálna tabuľka</label>
+      <description>Digitálne zobrazenie tabuľky, ktorej jednotlivé časti sú zobrazované v riadkoch a hlavne v stĺpcoch </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tableHardcopy</code>
+      <label>Analógová tabuľka</label>
+      <description>Analógové zobrazenie tabuľky, ktorej jednotlivé časti sú zobrazované v stĺpcoch na tlačenom papieri, fotografickom materiály alebo iných analógových médiách </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>videoDigital</code>
+      <label>Digitálne video</label>
+      <description>Videozáznam zaznamenaný na digitálny nosič </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>videoHardcopy</code>
+      <label>Analógové video</label>
+      <description>Videozáznam zaznamenaný na kazete </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:CI_RoleCode" alias="roleCode">
+    <entry>
+      <code>resourceProvider</code>
+      <label>Poskytovateľ zdroja</label>
+      <description>Zodpovedná strana, ktorá poskytuje zdroj </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>custodian</code>
+      <label>Správca</label>
+      <description>Zodpovedná strana, ktorá zodpovedá za údaje a zabezpečuje aktualizáciu a údržbu zdrojov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>owner</code>
+      <label>Vlastník</label>
+      <description>Zodpovedná strana, ktorá vlastný zdroj </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>user</code>
+      <label>Používateľ</label>
+      <description>Zodpovedná strana, ktorá používa zdroj </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>distributor</code>
+      <label>Distribútor</label>
+      <description>Zodpovedná strana, ktorá distribuuje zdroj </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>originator</code>
+      <label>Tvorca</label>
+      <description>Zodpovedná strana, ktorá je tvorcom zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>pointOfContact</code>
+      <label>Kontaktné miesto</label>
+      <description>Zodpovedná strana, ktorá môže byť kontaktovaná za získanie informácií, alebo získanie zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>principalInvestigator</code>
+      <label>Hlavný výskumník</label>
+      <description>Zodpovedná strana, ktorá je hlavným výskumníkom zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>processor</code>
+      <label>Spracovateľ</label>
+      <description>Zodpovedná strana, ktorá je spracovateľom a modifikátorom údajov zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>publisher</code>
+      <label>Vydávateľ</label>
+      <description>Zodpovedná strana, ktorá je vydávateľom zdroja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>author</code>
+      <label>Autor</label>
+      <description>Zodpovedná strana, ktorá je autorom zdroja </description>
+    </entry>
+    <!-- ISO PROFIL CHE ONLY
+        <entry>
+            tx_ltsymbolcodetx_gtsymboleditortx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolEditortx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>
+        <entry>
+            tx_ltsymbolcodetx_gtsymbolpartnertx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolPartnertx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>-->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:DQ_EvaluationMethodTypeCode">
+    <entry>
+      <code>directInternal</code>
+      <label>Priame vnútornél</label>
+      <description>Metóda hodnotenia kvality dátovej sady, založená na preskúmaní elementov dátovej sady, v ktorej sú obsiahnuté údaje potrebné na hodnotenie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>directExternal</code>
+      <label>Priame externé</label>
+      <description>Metóda hodnotenia kvality dátovej sady, založená na preskúmaní elementov dátovej sady, v ktorej sú obsiahnuté externé informácie potrebné na hodnotenie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>indirect</code>
+      <label>Nepriamy</label>
+      <description>Metóda hodnotenia kvality dátovej sady, založená na externých informáciách </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
+    <entry>
+      <code>crossReference</code>
+      <label>Krížový odkaz</label>
+      <description>Referencia z jednej dátovej sady na druhú </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>largerWorkCitation</code>
+      <label>Citácia práce</label>
+      <description>Odkaz na hlavný zdroj, z ktorého bola daná časť citovaná </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>partOfSeamlessDatabase</code>
+      <label>Fragment dátovej sady</label>
+      <description>Časť štruktúrovanej množiny údajov uloženej v počítači </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>source</code>
+      <label>Zdroj</label>
+      <description>
+Informácie o mapách a grafoch, z ktorých dátová sada pochádza </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>stereoMate</code>
+      <label>Stereo pár</label>
+      <description>Fragment sady obrázkov/snímok, ktoré spolu vytvárajú trojdimenzionálny obraz </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType">
+    <entry>
+      <code>campaign</code>
+      <label>Kampaň</label>
+      <description>Zoznam plánovaných úloh </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collection</code>
+      <label>Kolekcia</label>
+      <description>Kumulácia údajov zostavená na konkrétny účel </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>exercise</code>
+      <label>Cvičenie</label>
+      <description>Špecifické vykonanie úloh alebo skupiny úloh </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>experiment</code>
+      <label>Experiment</label>
+      <description>Proces určený na kontrolu efektívnosti alebo správnosti niečoho </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>investigation</code>
+      <label>Vyhľadávanie</label>
+      <description>Vyhľadávanie alebo systematické dopytovanie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>mission</code>
+      <label>Misia</label>
+      <description>Špecifikácia prevádzky systému zberu údajov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>sensor</code>
+      <label>Snímač</label>
+      <description>Zariadenie alebo časť zariadenia, ktoré detekuje alebo zaznamenáva </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>operation</code>
+      <label>Operácia</label>
+      <description>Operácia, ktorá je súčasťou série operácií </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>platform</code>
+      <label>Platforma</label>
+      <description>Vozidlo alebo iný podstavec, ktorý drží snímač </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>process</code>
+      <label>Proces</label>
+      <description>Metóda vytvárania, ktorá zahrňuje určité množstvo krokov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>program</code>
+      <label>Program</label>
+      <description>Špecifická plánovaná činnosť </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>project</code>
+      <label>Projekt</label>
+      <description>Organizácia úloh, výskumu, alebo vývoja </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>study</code>
+      <label>Štúdium</label>
+      <description>Skúmanie alebo výskum </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>task</code>
+      <label>Úloha</label>
+      <description>Jednotlivé časti práce </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>trial</code>
+      <label>Pokus</label>
+      <description>Proces testovania výskumu, alebo preukázanie niečoho </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_CellGeometryCode">
+    <entry>
+      <code>point</code>
+      <label>Bod</label>
+      <description>Každá časť je reprezentovaná bodom </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>area</code>
+      <label>Plocha</label>
+      <description>Každá časť je reprezentovaná plochou </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_CharacterSetCode">
+    <entry>
+      <code>ucs2</code>
+      <label>UCS2</label>
+      <description>16-bitový formát s variabilnou dĺžkou zadefinovaný ISO/IEC 10646 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>ucs4</code>
+      <label>UCS4</label>
+      <description>32-bitový formát s variabilnou dĺžkou zadefinovaný ISO/IEC 10646 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>utf7</code>
+      <label>UTF7</label>
+      <description>7-bitový formát s variabilnou dĺžkou zadefinovaný ISO/IEC 10646 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>utf8</code>
+      <label>UTF8</label>
+      <description>8-bitový formát s variabilnou dĺžkou zadefinovaný ISO/IEC 10646 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>utf16</code>
+      <label>UTF16</label>
+      <description>16-bitový formát s variabilnou dĺžkou zadefinovaný ISO/IEC 10646 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part1</code>
+      <label>8859- 1</label>
+      <description>ISO/IEC 8859- 1, Informačná technológia - 8-bitová sada grafických znakov - Časť 1 : Latinská abeceda č. 1 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part2</code>
+      <label>8859- 2</label>
+      <description>ISO/IEC 8859- 2, Informačná technológia - 8-bitová sada grafických znakov - Časť 2 : Latinská abeceda č. 2 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part3</code>
+      <label>8859- 3</label>
+      <description>ISO/IEC 8859- 3, Informačná technológia - 8-bitová sada grafických znakov - Časť 3 : Latinská abeceda č. 3 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part4</code>
+      <label>8859- 4</label>
+      <description>ISO/IEC 8859- 4, Informačná technológia - 8-bitová sada grafických znakov - Časť 4 : Latinská abeceda č. 4 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part5</code>
+      <label>8859- 5</label>
+      <description>ISO/IEC 8859- 5, Informačná technológia - 8-bitová sada grafických znakov - Časť 5 : Latinská / Cyrilská abeceda </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part6</code>
+      <label>8859- 6</label>
+      <description>ISO/IEC 8859- 6, Informačná technológia - 8-bitová sada grafických znakov - Časť 6 : Latinská / Arabská abeceda </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part7</code>
+      <label>8859- 7</label>
+      <description>ISO/IEC 8859- 7, Informačná technológia - 8-bitová sada grafických znakov - Časť 7 : Latinská / Grécka abeceda </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part8</code>
+      <label>8859- 8</label>
+      <description>ISO/IEC 8859- 8, Informačná technológia - 8-bitová sada grafických znakov - Časť 8 : Latinská / Hebrejská abeceda </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part9</code>
+      <label>8859- 9</label>
+      <description>ISO/IEC 8859- 9, Informačná technológia - 8-bitová sada grafických znakov - Časť 9 : Latinská abeceda č. 5 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part10</code>
+      <label>8859- 10</label>
+      <description>ISO/IEC 8859- 10, Informačná technológia - 8-bitová sada grafických znakov - Časť 10 : Latinská abeceda č. 6 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part11</code>
+      <label>8859- 11</label>
+      <description>ISO/IEC 8859- 11, Informačná technológia - 8-bitová sada grafických znakov - Časť 11 : Latinská / Thajská abeceda </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part13</code>
+      <label>8859- 13</label>
+      <description>ISO/IEC 8859- 13, Informačná technológia - 8-bitová sada grafických znakov - Časť 13 : Latinská abeceda č. 7 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part14</code>
+      <label>28859- 14</label>
+      <description>ISO/IEC 8859- 14, Informačná technológia - 8-bitová sada grafických znakov - Časť 14 : Latinská abeceda č. 8 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part15</code>
+      <label>8859- 15</label>
+      <description>ISO/IEC 8859- 15, Informačná technológia - 8-bitová sada grafických znakov - Časť 15 : Latinská abeceda č. 9 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8859part16</code>
+      <label>28859- 16</label>
+      <description>ISO/IEC 8859- 16, Informačná technológia - 8-bitová sada grafických znakov - Časť 16 : Latinská abeceda č. 10 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>jis</code>
+      <label>JIS</label>
+      <description>Japonská znaková sada používaná na digitálny prenos </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>shiftJIS</code>
+      <label>Shift JIS</label>
+      <description>Japonská znaková sada pre MS-DOS </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>eucJP</code>
+      <label>EUC JP</label>
+      <description>Japonská znaková sada pre UNIX </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>usAscii</code>
+      <label>US ASCII</label>
+      <description>Znaková sada US ASCII (ISO 646 US) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>ebcdic</code>
+      <label>EBCDIC</label>
+      <description>Znaková sada IBM </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>eucKR</code>
+      <label>EUC KR</label>
+      <description>Kórejská znaková sada </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>big5</code>
+      <label>Big 5</label>
+      <description>Tradičná čínska znaková sada </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>GB2312</code>
+      <label>GB2312</label>
+      <description>Zjednodušená čínska znaková sada </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_ClassificationCode">
+    <entry>
+      <code>unclassified</code>
+      <label>Neklasifikované</label>
+      <description>Neobmedzený prístup</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>restricted</code>
+      <label>Obmedzený</label>
+      <description>Obmedzený prístup, neurčené pre voľné zverejňovanie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>confidential</code>
+      <label>Dôverný</label>
+      <description>Prístupné pre dôverné osoby </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>secret</code>
+      <label>Tajné</label>
+      <description>Prístupné len pre vybratú skupinu ľudí </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>topSecret</code>
+      <label>Super tajné</label>
+      <description>Najvyšší stupeň tajnosti </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_CoverageContentTypeCode">
+    <entry>
+      <code>image</code>
+      <label>Obrázok/snímka</label>
+      <description>Číselná reprezentácia fyzikálneho parametra, ktorá nie je jeho skutočnou hodnotou </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>thematicClassification</code>
+      <label>Tématická klasifikácia</label>
+      <description>Hodnota objektu bez kvantitatívnej hodnoty, ktorá sa využíva na vyjadrenie množstva </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>physicalMeasurement</code>
+      <label>Fyzikálne meranie</label>
+      <description>Hodnota objektu určená fyzikálnymi jednotkami, získanými kvantitatívnymi meraniami </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_DatatypeCode">
+    <entry>
+      <code>class</code>
+      <label>Trieda</label>
+      <description>Opis objektov, ktoré majú priradené rovnaké atribúty, operácie, metódy, vzťahy a funkčnosť </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>codelist</code>
+      <label>Zoznam</label>
+      <description>Opis objektov, ktoré majú priradené rovnaké atribúty, operácie, metódy, vzťahy a funkčnosť </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>enumeration</code>
+      <label>Výpočet</label>
+      <description>Dátové údaje tvoria inštancie zoznamov určených hodnôt, ktoré nie sú rozšíriteľné </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>codelistElement</code>
+      <label>Zoznam elementov</label>
+      <description>Zoznam elementov s hodnotami a výpočtami, ktoré im môžu byť priradené </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>abstractClass</code>
+      <label>Abstraktná trieda</label>
+      <description>Trieda, ktorá je abstraktná a nemôže byť priamo inštanciou </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>aggregateClass</code>
+      <label>Agregovaná trieda</label>
+      <description>Trieda zložená z viacerých tried, s ktorými je spojená vzájomnými prepojeniami (vzťahmi) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>specifiedClass</code>
+      <label>Špecifická trieda</label>
+      <description>Podtrieda, ktorá môže substituovať jej nadtriedu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>datatypeClass</code>
+      <label>Dátová trieda</label>
+      <description>Dátová trieda s obmedzenými alebo žiadnymi operáciami, ktorej primárny účel je zabezpečiť prenos, kódovanie, úplné alebo čiastočné uloženie abstraktu inej triedy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>interfaceClass</code>
+      <label>Prepojovacia trieda</label>
+      <description>Súbor operácií, ktoré charakterizujú fungovanie elementu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>unionClass</code>
+      <label>Spojovacia trieda</label>
+      <description>Trieda popisujúca selekciu jedného špecifického typu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>metaClass</code>
+      <label>Meta trieda</label>
+      <description>Trieda, ktorej inštancie sú triedy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>typeClass</code>
+      <label>Typ triedy</label>
+      <description>Trieda využívaná na špecifikáciu domény inštancií (objektov), spolu s operáciami aplikovanými na daný objekt. Objekt môže mať atribúty a asociácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>characterString</code>
+      <label>Textový reťazec</label>
+      <description>Textové pole </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>integer</code>
+      <label>Celočíselný</label>
+      <description>Číselné pole </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>association</code>
+      <label>Spojenie</label>
+      <description>Sémantický vzťah medzi dvoma triedami, ktorý určuje spojenie medzi ich inštanciami </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_DimensionNameTypeCode">
+    <entry>
+      <code>row</code>
+      <label>Riadok</label>
+      <description>Hlavná (-é) os (y) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>column</code>
+      <label>Stĺpec</label>
+      <description>Hlavná (-é) os (x) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>vertical</code>
+      <label>Vertikála</label>
+      <description>Hlavná (-é) os (z) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>track</code>
+      <label>Smer pohybu</label>
+      <description>Pozdĺžny smer pohybu skenovania </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>crossTrack</code>
+      <label>Križovatka línií</label>
+      <description>Križovatka kolmá na smer pohybu skenovania </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>line</code>
+      <label>Línia</label>
+      <description>Riadkové skenovanie senzorom/snímačom </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>sample</code>
+      <label>Vzor</label>
+      <description>Element riadkového skenovania </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>time</code>
+      <label>Čas</label>
+      <description>Čas trvania </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_GeometricObjectTypeCode">
+    <entry>
+      <code>complex</code>
+      <label>Komplex</label>
+      <description>Komplex hraníc primitívnych geometrických objektov, ktoré môžu predikovať prítomnosť iných primitívnych objektov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>composite</code>
+      <label>Kompozit</label>
+      <description>Kompozit kriviek, modelov a povrchov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>curve</code>
+      <label>Krivka</label>
+      <description>Obmedzený, primitívny jednodimenzionálny geometrický objekt, reprezentujúci líniový kontinuálny obraz </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>point</code>
+      <label>Bod</label>
+      <description>Primitívny 0-dimenzionálny geometrický objekt, reprezentujúci pozíciu, bez plošného rozsahu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>solid</code>
+      <label>Model</label>
+      <description>Obmedzený, primitívny trojdimenzionálny geometrický objekt, reprezentujúci kontinuálny obraz povrchu Zeme </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>surface</code>
+      <label>Povrch</label>
+      <description>Obmedzený, primitívny dvojdimenzionálny geometrický objekt, reprezentujúci kontinuálny obraz povrchu Zeme </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_ImagingConditionCode">
+    <entry>
+      <code>blurredImage</code>
+      <label>Rozmazaný obraz</label>
+      <description>Časť obrazu/snímky je rozmazaná </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>cloud</code>
+      <label>Oblak</label>
+      <description>Časť obrazu/snímky je čiastočne zakrytá oblakom </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>degradingObliquity</code>
+      <label>Veľké zakrivenie</label>
+      <description>Veľký uhol medzi eliptickou rovinou (rovina obežnej dráhy Zeme) a rovinou rovníka </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fog</code>
+      <label>Hmla</label>
+      <description>Časť obrazu/snímky je čiastočne zakrytá hmlou </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>heavySmokeOrDust</code>
+      <label>Silný dym alebo prach</label>
+      <description>Časť obrazu/snímky je čiastočne zakrytá silným dymom alebo prachom </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>night</code>
+      <label>Noc</label>
+      <description>Obraz/snímka bola vytvorená v noci </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>rain</code>
+      <label>Dážď</label>
+      <description>Obraz/snímka bola vytvorená v daždi </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>semiDarkness</code>
+      <label>Polotieň</label>
+      <description>Obraz/snímka bola vytvorená - za súmraku alebo za úsvitu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>shadow</code>
+      <label>Tieň</label>
+      <description>Časť obrazu/snímky je zakrytá tieňom </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>snow</code>
+      <label>Sneh</label>
+      <description>Časť obrazu/snímky je zakrytá snehom </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>terrainMasking</code>
+      <label>Prekryt terénu</label>
+      <description>Neprítomnosť informácií o zberaných údajoch bodového alebo plošného charakteru, spôsobených relatívnou polohou prvkou, ktoré bránia k zberu informácií medzi kolektorom a predmetom záujmu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_KeywordTypeCode">
+    <entry>
+      <code>discipline</code>
+      <label>Disciplína</label>
+      <description>Kľúčové slovo identifikujúce odbor výučby alebo špecializovaných znalostí </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>place</code>
+      <label>Poloha</label>
+      <description>Kľúčové slovo identifikujúce polohu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>stratum</code>
+      <label>Vrstva</label>
+      <description>Kľúčové slovo identifikujúce vrstvu (vrstvy) dátovej sady </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>temporal</code>
+      <label>Čas</label>
+      <description>Kúčové slovo identifikujúce časové obdobie dátovej sady </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>theme</code>
+      <label>Téma</label>
+      <description>Kľúčové slovo identifikujúce predmet alebo tému dátovej sady </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_MaintenanceFrequencyCode" sort="fixed">
+    <entry>
+      <code>continual</code>
+      <label>Priebežne</label>
+      <description>Dátové sady sa opakovane a často aktualizujú </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>daily</code>
+      <label>Denne</label>
+      <description>Dátové sady sa aktualizujú každý deň </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>weekly</code>
+      <label>Týždenne</label>
+      <description>Dátové sady sa aktualizujú týždenne </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fortnightly</code>
+      <label>Dvojtýždenne</label>
+      <description>Dátové sady sa aktualizujú dvojtýždenne </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>monthly</code>
+      <label>Mesačne</label>
+      <description>Dátové sady sa aktualizujú mesačne </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>quarterly</code>
+      <label>Štvrťročne</label>
+      <description>Dátové sady sa aktualizujú štvrťročne </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>biannually</code>
+      <label>Polročne</label>
+      <description>Dátové sady sa aktualizujú polročne</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>annually</code>
+      <label>Ročne</label>
+      <description>Dátové sady sa aktualizujú ročne </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>asNeeded</code>
+      <label>Podľa potreby</label>
+      <description>Dátové sady sa aktualizujú podľa potreby </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>irregular</code>
+      <label>Nepravidelne</label>
+      <description>Dátové sady sa aktualizujú nepravidelne </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>notPlanned</code>
+      <label>Neplánovane</label>
+      <description>Dátové sady sa aktualizujú neplánovane</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>unknown</code>
+      <label>Nie je známe kedy</label>
+      <description>Nie je známe kedy prebehne aktualizácia dátovej sady </description>
+    </entry>
+    <!-- ISO PROFIL CHE ONLY
+        <entry>
+            tx_ltsymbolcodetx_gtsymboluserDefinedtx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolUser definedtx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>
+        -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_MediumFormatCode">
+    <entry>
+      <code>cpio</code>
+      <label>CPIO</label>
+      <description>CoPy In / Out ( súborový formát a príkazový riadok UNIX) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tar</code>
+      <label>TAR</label>
+      <description>Archív na kazete </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>highSierra</code>
+      <label>High sierra</label>
+      <description>Súborový systém High sierra </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>iso9660</code>
+      <label>ISO 9660</label>
+      <description>Spracované informácie - štruktúra súborov na CD-ROM </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>iso9660RockRidge</code>
+      <label>ISO9660 Rock Ridge</label>
+      <description>Protokol o výmene Rock Ridge (UNIX) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>iso9660AppleHFS</code>
+      <label>ISO9660 Apple HFS</label>
+      <description>Hierarchický súborový systém (Macintosh) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_MediumNameCode">
+    <entry>
+      <code>cdRom</code>
+      <label>CdRom</label>
+      <description>Neprepisovateľný optický nosič </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dvd</code>
+      <label>DVD-RW</label>
+      <description>Digitálny optický dátový nosič </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dvdRom</code>
+      <label>DVDROM</label>
+      <description>Digitálny optický dátový nosič, len na čítanie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>3halfInchFloppy</code>
+      <label>Disketa 3,5pal</label>
+      <description>Disketa 3,5 palca </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>5quarterInchFloppy</code>
+      <label>Disketa 5,25pal</label>
+      <description>Disketa 5,25 palca </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>7trackTape</code>
+      <label>Mag. páska 7stop</label>
+      <description>Magnetická páska 7 stôp </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>9trackTape</code>
+      <label>Mag. páska 9stop</label>
+      <description>Magnetická páska 9 stôp </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>3480Cartridge</code>
+      <label>Kazeta 3480</label>
+      <description>Kazetová páska 3480 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>3490Cartridge</code>
+      <label>Kazeta 3490</label>
+      <description>Kazetová páska 3490 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>3580Cartridge</code>
+      <label>Kazeta 35802</label>
+      <description>Kazetová páska 3580 </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>4mmCartridgeTape</code>
+      <label>Kazeta 4 mm</label>
+      <description>4 milimetrová magnetická páska </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>8mmCartridgeTape</code>
+      <label>Kazeta 8 mm</label>
+      <description>8 milimetrová magnetická páska </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>1quarterInchCartridgeTape</code>
+      <label>Kazeta 0,25pal</label>
+      <description>0,25pal magnetická páska </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>digitalLinearTap</code>
+      <label>Digitálna páska</label>
+      <description>Pol-palcová digitálna páska </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>onLine</code>
+      <label>Počítačové spojenie</label>
+      <description>Priame pripojenie k počitáču </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>satellite</code>
+      <label>Satelitné spojenie</label>
+      <description>Spojenie prostredníctvom satelitného komunikačného systému </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>telephoneLink</code>
+      <label>Telefon. spojenie</label>
+      <description>Komunikácia prostredníctvom telefonického spojenia </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>hardcopy</code>
+      <label>Leták</label>
+      <description>Brožúra alebo leták poskytujúci opisné informácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- ISO PROFIL CHE ONLY
+        <entry>
+            tx_ltsymbolcodetx_gtsymbolzip100tx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolZip100tx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>
+        <entry>
+            tx_ltsymbolcodetx_gtsymbolzip250tx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolZip250tx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>      <entry>
+            tx_ltsymbolcodetx_gtsymbole-mailtx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolE-mailtx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>      <entry>
+            tx_ltsymbolcodetx_gtsymbolziptx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolZiptx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>      <entry>
+            tx_ltsymbolcodetx_gtsymboljaztx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolJaztx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>      <entry>
+            tx_ltsymbolcodetx_gtsymbolothertx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolOthertx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>-->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_ObligationCode">
+    <entry>
+      <code>mandatory</code>
+      <label>Povinný</label>
+      <description>Element je vždy povinný </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>optional</code>
+      <label>Voliteľný</label>
+      <description>Element je voliteľný </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>conditional</code>
+      <label>Podmienený</label>
+      <description>Element je povinný, ak je podmienený podmienkou</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_PixelOrientationCode">
+    <entry>
+      <code>center</code>
+      <label>Stred</label>
+      <description>Bod ležiaci v polovici medzi ľavým dolným a pravým horným rohom pixla </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>lowerLeft</code>
+      <label>Ľavý dolný</label>
+      <description>Roh pixela najbližší k počiatku referenčného súradnicového systému; keď dva rohy sú v tej istej vzdialenosti od počiatku, vybraný je roh s najmenšou hodnotou x </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>lowerRight</code>
+      <label>Pravý dolný</label>
+      <description>Ďalší roh ležiaci v protismere hodinových ručičiek od ľavého dolného </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>upperRight</code>
+      <label>Pravý horný</label>
+      <description>Ďalší roh ležiaci v protismere hodinových ručičiek od pravého dolného </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>upperLeft</code>
+      <label>Ľavý horný</label>
+      <description>Ďalší roh ležiaci v protismere hodinových ručičiek od pravého horného </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_ProgressCode">
+    <entry>
+      <code>completed</code>
+      <label>Ukončený</label>
+      <description>Produkcia údajov bola ukončená </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>historicalArchive</code>
+      <label>Histroický archív</label>
+      <description>Údaje zostali uložené v off-line úložnom zariadení </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>obsolete</code>
+      <label>Zastaralý</label>
+      <description>Údaje nie sú viac relevantné </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>onGoing</code>
+      <label>Trváce</label>
+      <description>Údaje sú postupne aktualizované </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>planned</code>
+      <label>Plánovaný</label>
+      <description>Boli ustanovené pevné dátumy ,do ktorých budú vytvorené alebo aktualizované údaje </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>required</code>
+      <label>Požadovaný</label>
+      <description>Údaje musia byť vygenerované alebo aktualizované </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>underDevelopment</code>
+      <label>Vo vývoji</label>
+      <description>Údaje sú aktuálne v procese vytvárania </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry hideineditmode="true">
+      <code>notobsolete</code>
+      <label>Nezastaralý</label>
+      <description/>
+    </entry>
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_RestrictionCode">
+    <entry>
+      <code>copyright</code>
+      <label>Copyright</label>
+      <description>Jedinečné práva na publikáciu, produkciu alebo predaj práv k literárnej, dramatickej, hudobnej alebo umeleckej práci alebo použite komerčnej tlače alebo vydavateľstva, právne daného na špecifikované obdobie autorovi, tvorcovi, umelcovi, distribútorovi </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>patent</code>
+      <label>Patent</label>
+      <description>Vláda udelila exkluzívne práva na vytváranie, predaj, použitie alebo licencovanie vynálezov alebo objavov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>patentPending</code>
+      <label>Čakajúci patent</label>
+      <description>Produkované alebo predané informácie čakajúce na patentovanie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>trademark</code>
+      <label>Značka</label>
+      <description>Meno, symbol alebo iné zariadenie identifikujúce produkt, oficiálne zaregistrované a legálne obmedzené na používanie vlastníka alebo výrobcu</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>license</code>
+      <label>Licencia</label>
+      <description>Formálne práva k robeniu niečoho </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>intellectualPropertyRights</code>
+      <label>Práva na intelektuálne vlastníctvo</label>
+      <description>Práva na finančný benefit a kontrolu distribúcie nehmotného vlastníctva, ktorý je výsledkom kreativity </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>restricted</code>
+      <label>Obmedzený</label>
+      <description>Zadržané zo všeobecného obehu alebo odhalenia </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>otherRestrictions</code>
+      <label>Iné obmedzenia</label>
+      <description>Obmedzenie nie je uvedené </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_ScopeCode">
+    <entry>
+      <code>attribute</code>
+      <label>Atribút</label>
+      <description>Informácie aplikované do atribútovej triedy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>attributeType</code>
+      <label>Typ atribútu</label>
+      <description>Informácie aplikované typom atribútu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionHardware</code>
+      <label>Súbor hardware</label>
+      <description>Informácie aplikované súborom hardwerov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionSession</code>
+      <label>Relácie</label>
+      <description>Informácie aplikované reláciami </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dataset</code>
+      <label>Dátová sada</label>
+      <description>Informácie aplikované do databázy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>series</code>
+      <label>Série dátových sad</label>
+      <description>Informácie aplikované do série dátových sád </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>nonGeographicDataset</code>
+      <label>Negeografická dátová sada</label>
+      <description>Informácie aplikované do negeografických dát </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dimensionGroup</code>
+      <label>Skupina rozmerov</label>
+      <description>Informácie aplikované do skupiny rozmerov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>feature</code>
+      <label>Prvok (inštancia)</label>
+      <description>Informácie aplikované do prvkov (inštancia) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>featureType</code>
+      <label>Prvok (trieda)</label>
+      <description>Informácie aplikované do prvkov (trieda) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>propertyType</code>
+      <label>Typ vlastností</label>
+      <description>Informácie aplikované typom vlastnosti </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fieldSession</code>
+      <label>Relácia polí</label>
+      <description>Informácie aplikované reláciou polí </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>software</code>
+      <label>Software</label>
+      <description>Informácie aplikované do softwaru </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>service</code>
+      <label>Služba</label>
+      <description>Informácie aplikované pomocou poskytovateľa služieb, ktorý poskytuje službu prostredníctvom rozhraní, ktorým definuje vlastnosti, napríklad možnosti využitia </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>model</code>
+      <label>Model</label>
+      <description>Informácie aplikované na reálny alebo abstraktný model reality - objekt </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tile</code>
+      <label>Podmnožina (dlaždice)</label>
+      <description>Informácie aplikované na dlaždice, priestorovú podmnožinu geografických údajov </description>
+    </entry>
+    <!-- ISO PROFIL CHE ONLY
+        <entry>
+            tx_ltsymbolcodetx_gtsymbolprojecttx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolProjecttx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>
+        <entry>
+            tx_ltsymbolcodetx_gtsymbolstationSitetx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolStation sitetx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>
+        <entry>
+            tx_ltsymbolcodetx_gtsymbolpublicationtx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolPublicationtx_ltsymbol/labeltx_gtsymbol
+            <description>Publication</description>
+        </entry>-->
+    <!-- Used for facet translation only and not displayed in editor -->
+    <entry hideineditmode="true">
+      <code>map</code>
+      <label>Mapa</label>
+      <description/>
+    </entry>
+    <entry hideineditmode="true">
+      <code>staticMap</code>
+      <label>Statická mapa</label>
+      <description/>
+    </entry>
+    <entry hideineditmode="true">
+      <code>interactiveMap</code>
+      <label>Interaktívna mapa</label>
+      <description/>
+    </entry>
+    <entry hideineditmode="true">
+      <code>featureCatalog</code>
+      <label>Katalóg objektov</label>
+      <description/>
+    </entry>
+  </codelist>
+  <codelist name="gmd:MD_ScopeCode" displayif="/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
+    <entry>
+      <code>service</code>
+      <label>Služba</label>
+      <description>Informácie aplikované pomocou poskytovateľa služieb, ktorý poskytuje službu prostredníctvom rozhraní, ktorým definuje vlastnosti, napríklad možnosti využitia </description>
+    </entry>
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_SpatialRepresentationTypeCode">
+    <entry>
+      <code>vector</code>
+      <label>Vektor</label>
+      <description>Vektorová reprezentácia priestorovej geografickej informácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>grid</code>
+      <label>Raster</label>
+      <description>Rastrová reprezentácia priestorovej geografickej informácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>textTable</code>
+      <label>Tabuľka</label>
+      <description>Tabuľková reprezentácia priestorovej geografickej informácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tin</code>
+      <label>TIN</label>
+      <description>Nepravidelná trojuholníková sieť </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>stereoModel</code>
+      <label>Stereo model</label>
+      <description>Trojdimenzionálny pohľad vytvorený prienikom homogénych lúčov disparátnych častí obrazov. </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>video</code>
+      <label>Video reprezentácia</label>
+      <description>Obraz z videozáznamu </description>
+    </entry>
+    <!-- ISO PROFIL CHE ONLY
+        <entry>
+            tx_ltsymbolcodetx_gtsymbolpaperMaptx_ltsymbol/codetx_gtsymbol
+            tx_ltsymbollabeltx_gtsymbolPaper maptx_ltsymbol/labeltx_gtsymbol
+            <description></description>
+        </entry>-->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_TopicCategoryCode" alias="topicCategory">
+    <entry>
+      <code>farming</code>
+      <label>Poľnohospodárstvo</label>
+      <description>Chov zvierat a/alebo pestovanie rastlín. Príklady: poľnohospodárstvo, zavlažovanie, akvakultúra, plantáže, pasenie, škodcovia a choroby rastlín a zvierat. </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>biota</code>
+      <label>Biota</label>
+      <description>Flóra a/alebo fauna v prirodzenom prostredí. Príklady: voľne žijúce živočíchy, vegetácia, biológia, ekológia, divočina, morský život, mokrade, biotopy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>boundaries</code>
+      <label>Hranice</label>
+      <description>Opisy právnych vzťahov k pozemkom. Príklady: štátne a administratívne hranice </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>climatologyMeteorologyAtmosphere</code>
+      <label>Klimatológia/meteorológia/podnebie</label>
+      <description>Atmosférické procesy a javy. Príklady: oblačnosť, počasie, klíma , atmosférické podmienky, zmeny klímy, zrážky </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>economy</code>
+      <label>Ekonomika</label>
+      <description>Hospodárske činnosti, podmienky a zamestnanosť. Príklady: produkcia, práca, príjmy, obchod, priemysel, cestovný ruch a agroturistika, lesníctvo, rybolov, komercia alebo životné minimum, prieskum a využívanie zdrojov ako sú nerastné suroviny, ropa a zemný plyn </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>elevation</code>
+      <label>Nadmorská výška</label>
+      <description>Výška nad alebo pod hladinou mora. Príklady: nadmorská výška, batymetria, digitálne výškové modely, sklon, odvodené produkty </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>environment</code>
+      <label>Životné prostredie</label>
+      <description>Zdroje, ochrana a zachovanie životného prostredia. Príklady: znečisťovanie životného prostredia, skladovanie odpadov a spracovanie odpadov, posudzovanie vplyvu na životné prostredie, monitorovanie environmentálnych rizík, prírodné rezervácie, krajina </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>geoscientificInformation</code>
+      <label>Geovedné informácie</label>
+      <description>Informácie týkajúce sa vied o Zemi. Príklady: geofyzikálne prvky a procesy, geológia, mineralógia, vedy zaoberajúce sa stavbou, štruktúrou a pôvodom hornín, zemetraseniami, sopečnou činnosťou, zosuvom pôdy, gravitačnými procesmi, pôdami, permafrostom, hydrogeológiou, eróziou </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>health</code>
+      <label>Zdravie</label>
+      <description>Zdravie, zdravotnícke služby, humánna ekológia a bezpečnosť. Príklady: nemoci a choroby, faktory ovplyvňujúce zdravie, hygiena, zneužívanie návykových látok, duševné a fyzické zdravie, zdravotnícke služby </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>imageryBaseMapsEarthCover</code>
+      <label>Letecké snímkovanie/základné mapy/krajinná pokrývka </label>
+      <description>Základné mapy. Príklady: krajinná pokrývka, topografické mapy, snímky, neklasifikované snímky, anotácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>intelligenceMilitary</code>
+      <label>Spravodajská služba/armáda</label>
+      <description>Vojenské základne, štruktúry, aktivity. Príklady: kasárne, tréningové plochy, vojenská doprava, zber informácií </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>inlandWaters</code>
+      <label>Vnútrozemské vody</label>
+      <description>Charakteristiky vnútrozemských vôd, odvodňovacie systémy a ich charakteristiky. Príklady: rieky a ľadovce, soľné jazerá, využitie vody, priehrady, smer prúdenia, záplavy, kvalita vody, hydrografické mapy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>location</code>
+      <label>Poloha</label>
+      <description>Informácie a služby týkajúce sa polohy. Príklady: adresy, geodetické siete, kontrolné body, poštové oblasti a služby, názvy miest </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>oceans</code>
+      <label>Oceány</label>
+      <description>Vlastnosti a charakteristika útvarov slanej vody (okrem vnútrozemských vôd). Príklady: príliv a odliv, prílivové a odlivové vlny, pobrežné informácie, útesy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>planningCadastre</code>
+      <label>Územné plánovanie/kataster</label>
+      <description>Informácie používané na prijatie vhodných opatrení týkajúcich sa budúceho využívania pôdy. Príklady: mapovanie využitia zeme, územné plánovanie, katastrálne prieskumy, kataster </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>society</code>
+      <label>Spoločnosť</label>
+      <description>Charakteristika spoločnosti a kultúr. Príklady: spoločnosť, antropológia, archeológia, vzdelávanie, relígia, folklór a zvyky, demografické údaje, rekreačné oblasti a aktivity, posúdenie sociálneho vplyvu, kriminalita a spravodlivosť, sčítanie obyvateľov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>structure</code>
+      <label>Štruktúra</label>
+      <description>Výstavba uskutočňovaná ľuďmi. Príklady: budovy, múzeá, kostoly, továrne, bývanie, monumenty, obchody, veže </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>transportation</code>
+      <label>Doprava</label>
+      <description>Prostriedky a pomôcky na prepravu osôb a/alebo tovarov. Príklady: cesty, letiská / odletové dráhy, námorné trasy, tunely, námorné mapy, lokalizácia vozidiel alebo plavidiel, letecké mapy, železnice </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>utilitiesCommunication</code>
+      <label>Inžinierske siete</label>
+      <description>Energetické, vodné a odpadové systémy a komunikačná infraštruktúra a služby. Príklady: vodné elektrárne, geotermálne elektrárne, solárne a jadrové zdroje energie, kanalizácia a vodovody, zber a likvidácia odpadových vôd, distribúcia elektriny a plynu, dátová komunikácia, telekomunikácia, rozhlas, inžinierske siete </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MD_TopologyLevelCode">
+    <entry>
+      <code>geometryOnly</code>
+      <label>Len geometria</label>
+      <description>Geometrické objekty bez špecifikácie štruktúry, ktorá popisuje topológiu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>topology1D</code>
+      <label>1D topológia</label>
+      <description>Jednodimenzionálny topologický objekt </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>planarGraph</code>
+      <label>Rovinný graf</label>
+      <description>Jednodimenzionálny rovinný topologický objekt. </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fullPlanarGraph</code>
+      <label>Plný rovinný graf</label>
+      <description>Dvojdimenzionálny rovinný topologický objekt. </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>surfaceGraph</code>
+      <label>Povrchový graf</label>
+      <description>Jednodimenzionálny topologický objekt, ktorý izomorfný pre podmnožinu povrchu. </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fullSurfaceGraph</code>
+      <label>Plný povrchový graf</label>
+      <description>Dvojdimenzionálny topologický objekt, ktorý izomorfný pre podmnožinu povrchu. </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>topology3D</code>
+      <label>3D topológia</label>
+      <description>Trojdimenzionálny topologický objekt. </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fullTopology3D</code>
+      <label>Plná 3D topológia</label>
+      <description>Úplné pokrytie trojdimenzionálneho euklidovského priestoru </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>abstract</code>
+      <label>Abstraktné (bez geometrickej realizácie)</label>
+      <description>Topologický objekt bez geometrickej špecifikácie </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="gmd:MX_ScopeCode">
+    <entry>
+      <code>attribute</code>
+      <label>Atribút</label>
+      <description>Informácie aplikované do atribútovej triedy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>attributeType</code>
+      <label>Typ atribútu</label>
+      <description>Informácie aplikované typom atribútu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionHardware</code>
+      <label>Súbor hardware</label>
+      <description>Informácie aplikované súborom hardwerov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>collectionSession</code>
+      <label>Relácie</label>
+      <description>Informácie aplikované reláciami </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dataset</code>
+      <label>Dátová sada</label>
+      <description>Informácie aplikované do databázy </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>series</code>
+      <label>Série dátových sad</label>
+      <description>Informácie aplikované do série dátových sád </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>nonGeographicDataset</code>
+      <label>Negeografická dátová sada</label>
+      <description>Informácie aplikované do negeografických dát </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>dimensionGroup</code>
+      <label>Skupina rozmerov</label>
+      <description>Informácie aplikované do skupiny rozmerov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>feature</code>
+      <label>Prvok (inštancia)</label>
+      <description>Informácie aplikované do prvkov (inštancia) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>featureType</code>
+      <label>Prvok (trieda)</label>
+      <description>Informácie aplikované do prvkov (trieda) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>propertyType</code>
+      <label>Typ vlastností</label>
+      <description>Informácie aplikované typom vlastnosti </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fieldSession</code>
+      <label>Relácia polí</label>
+      <description>Informácie aplikované reláciou polí </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>software</code>
+      <label>Software</label>
+      <description>Informácie aplikované do softwaru </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>service</code>
+      <label>Služba</label>
+      <description>Informácie aplikované pomocou poskytovateľa služieb, ktorý poskytuje službu prostredníctvom rozhraní, ktorým definuje vlastnosti, napríklad možnosti využitia </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>model</code>
+      <label>Model</label>
+      <description>Informácie aplikované na reálny alebo abstraktný model reality - objekt </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tile</code>
+      <label>Podmnožina (dlaždice)</label>
+      <description>Informácie aplikované na dlaždice, priestorovú podmnožinu geografických údajov </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>initiative</code>
+      <label>Iniciatíva</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu identifikovanú ako iniciatívu (DS_Initiative) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>stereomate</code>
+      <label>Stereopár</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu identifikovanú ako stereopár (DS_StereoMate) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>sensor</code>
+      <label>Snímač</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu identifikovanú ako senzor (DS_Sensor) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>platformSeries</code>
+      <label>Séria platforiem</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu identifikovanú ako sériu platforiem (DS_PlatformSeries) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>sensorSeries</code>
+      <label>Séria senzorov</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu identifikovanú ako sériu senzorov (DS_SensorSeries) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>productionSeries</code>
+      <label>Výrobná séria</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu identifikovanú ako výrobná séria (DS_ProductionSeries) </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>transferAggregate</code>
+      <label>Prevodná množina</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu prevodnej množiny, ktorá neexistuje mimo tohoto prevodu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>otherAggregate</code>
+      <label>Iná množina</label>
+      <description>Referenčný objekt sa vzťahuje na agregovanú triedu prevodnej množiny, ktorá existuje mimo tohoto prevodu, ale zároveň nepatrí do špecifickej triedy agregátu </description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
+  <!-- ==================================================== -->
+  <codelist name="srv:DCPList">
+    <entry>
+      <description>DCP is XML</description>
+      <code>XML</code>
+      <label>XML</label>
+    </entry>
+    <entry>
+      <description>DCP is CORBA</description>
+      <code>CORBA</code>
+      <label>CORBA</label>
+    </entry>
+    <entry>
+      <description>DCP is JAVA</description>
+      <code>JAVA</code>
+      <label>JAVA</label>
+    </entry>
+    <entry>
+      <description>DCP is COM</description>
+      <code>COM</code>
+      <label>COM</label>
+    </entry>
+    <entry>
+      <description>DCP is SQL</description>
+      <code>SQL</code>
+      <label>SQL</label>
+    </entry>
+    <entry>
+      <description>DCP is WebServices</description>
+      <code>WebServices</code>
+      <label>Webová služba</label>
+    </entry>
+  </codelist>
+  <!--=== CouplingType from ISO19119 ===-->
+  <codelist name="srv:SV_CouplingType">
+    <entry>
+      <code>tight</code>
+      <label>Pevný</label>
+      <description>Pevné pripojenie: súvisiace údaje </description>
+    </entry>
+    <entry>
+      <code>mixed</code>
+      <label>Zmiešaný</label>
+      <description>Zmiešané pripojenie: súvisiace údaje, pridanie, externých údajov a ich spracovanie </description>
+    </entry>
+    <entry>
+      <code>loose</code>
+      <label>Voľný</label>
+      <description>Voľné pripojenie: žiadne súvisiace údaje </description>
+    </entry>
+  </codelist>
+  <codelist name="srv:SV_ParameterDirection">
+    <entry>
+      <code>in</code>
+      <label>Vstup</label>
+    </entry>
+    <entry>
+      <code>out</code>
+      <label>Výstup</label>
+    </entry>
+    <entry>
+      <code>in/out</code>
+      <label>Vstup/výstup</label>
+    </entry>
+  </codelist>
+  <!-- INSPIRE SDS  ================================================== -->
+  <codelist name="SDS_category">
+    <entry>
+      <code>http://inspire.ec.europa.eu/metadata-codelist/Category/harmonised</code>
+      <label>harmonizácia</label>
+      <description>Harmonizácia </description>
+    </entry>
+    <entry>
+      <code>http://inspire.ec.europa.eu/metadata-codelist/Category/interoperable</code>
+      <label>interoperabilita</label>
+      <description>Interoperabilita </description>
+    </entry>
+    <entry>
+      <code>http://inspire.ec.europa.eu/metadata-codelist/Category/invocable</code>
+      <label>Služba</label>
+      <description>Služba</description>
+    </entry>
+  </codelist>
+  <codelist name="SDS_DCP">
+    <entry>
+      <code>xml</code>
+      <label>XML</label>
+      <description>XML</description>
+    </entry>
+    <entry>
+      <code>corba</code>
+      <label>CORBA</label>
+      <description>CORBA</description>
+    </entry>
+    <entry>
+      <code>java</code>
+      <label>JAVA</label>
+      <description>JAVA</description>
+    </entry>
+    <entry>
+      <code>com</code>
+      <label>COM</label>
+      <description>COM</description>
+    </entry>
+    <entry>
+      <code>sql</code>
+      <label>SQL</label>
+      <description>SQL</description>
+    </entry>
+    <entry>
+      <code>webServices</code>
+      <label>Sieťové služby</label>
+      <description>Sieťové služby</description>
+    </entry>
+  </codelist>
+  <codelist name="gco:nilReason">
+    <entry>
+      <code>missing</code>
+      <label>Chýbajúci</label>
+    </entry>
+    <entry>
+      <code>inapplicable</code>
+      <label>Nepoužiteľný</label>
+    </entry>
+    <entry>
+      <code>template</code>
+      <label>Šablóna</label>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>Nie je známe kedy</label>
+    </entry>
+    <entry>
+      <code>withheld</code>
+      <label>Zadržané</label>
+    </entry>
+  </codelist>
+  <codelist name="indeterminatePosition">
+    <entry>
+      <code>after</code>
+      <label>Potom</label>
+    </entry>
+    <entry>
+      <code>before</code>
+      <label>Pred</label>
+    </entry>
+    <entry>
+      <code>now</code>
+      <label>Teraz</label>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>Nie je známe kedy</label>
+    </entry>
+  </codelist>
+</codelists>
