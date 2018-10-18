@@ -3238,7 +3238,8 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:supplementalInformation"
                  name="cm-display-priority"
                  use="data-gn-field-with-prefix-or-suffix">
-            <directiveAttributes data-prefix="display priority: " data-suffix=" meters" data-field-type="number"/>
+            <directiveAttributes data-prefix="display priority: "
+                                 data-field-type="number"/>
           </field>
         </section>
         <section name="cm-spatioTemporalCoverage">
@@ -3246,7 +3247,6 @@
 
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"/>
-            <!-- TODO:CM units degree/km-->
             <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[1]/*/gmd:resolution" name="cm-resy"/>
             <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[2]/*/gmd:resolution" name="cm-resx"/>
 
@@ -3445,22 +3445,12 @@
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:minimumValue" name="cm-minLevel"/>
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:maximumValue" name="cm-maxLevel"/>
 
-            <!--
-                  <xsl:variable name="vnl_flag">vertical level number: </xsl:variable>
-									<xsl:variable name="vnl" select="substring-after(gco:CharacterString, $vnl_flag)"/>
-									<xsl:variable name="id" select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
-									<input type="hidden"
-										id="{$id}"
-										name="{$id}"
-										value="{gco:CharacterString}"/>
-									<input type="number" class="md"
-										onkeyup="validateNumber(this,true,true);"
-										onchange="validateNumber(this,true,true); document.getElementById('{$id}').value = '{$vnl_flag}' + this.value;"
-										value="{$vnl}" size="30"/>
-            -->
             <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]"
-                   name="cm-nbOfVerticalLevels"/>
-
+                   name="cm-nbOfVerticalLevels"
+                   use="data-gn-field-with-prefix-or-suffix">
+              <directiveAttributes data-prefix="vertical level number: "
+                                   data-field-type="number"/>
+            </field>
           </section>
           <section name="cm-temporalCoverage">
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod/*/gml:description"/>

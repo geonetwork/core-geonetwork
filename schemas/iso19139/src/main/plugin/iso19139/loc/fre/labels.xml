@@ -3190,7 +3190,22 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <description>Degré de détail dans le jeu de données de type raster</description>
     <help>Degré de spécification de la trame, c.-à-d. description d'une extension, d'une dimension ou d'un nombre de cellules.</help>
     <condition/>
-
+    <helper relAtt="uom" displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]"
+            editorMode="radio">
+      <option value="" title="degree">degree</option>
+      <option value="" title="km">km</option>
+    </helper>
+    <helper relAtt="uom">
+      <option value="1" title="second">seconds</option>
+      <option value="1" title="minute">minutes</option>
+      <option value="1" title="hour">hours</option>
+      <option value="1" title="day">days</option>
+      <option value="1" title="month">months</option>
+      <option value="1" title="year">years</option>
+      <option value="1" title="season">seasons</option>
+    </helper>
   </element>
   <element name="gmd:resourceConstraints" id="35.0">
     <label>Contraintes sur la ressource</label>

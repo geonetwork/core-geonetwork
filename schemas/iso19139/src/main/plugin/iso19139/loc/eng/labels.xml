@@ -1996,6 +1996,13 @@
   <element name="gmd:resolution" id="182.0">
     <label>Resolution</label>
     <description>Degree of detail in the grid dataset</description>
+    <helper relAtt="uom" displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]"
+            editorMode="radio">
+      <option value="" title="degree">degree</option>
+      <option value="" title="km">km</option>
+    </helper>
     <helper relAtt="uom">
       <option value="1" title="second">seconds</option>
       <option value="1" title="minute">minutes</option>
