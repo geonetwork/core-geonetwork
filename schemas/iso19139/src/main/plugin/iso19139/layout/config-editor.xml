@@ -3484,11 +3484,11 @@
           local.processing-level.myocean.processing-level
           to-iso19139.myocean-keyword-with-anchor
           -->
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[gmd:MD_Keywords/gmd:type/*/@codeListValue='processing-level']"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency"
                  name="cm-updateFrequency"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[gmd:MD_Keywords/gmd:type/*/@codeListValue='processing-level']"/>
-                  name="cm-updateTime"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceNote"
+                  name="cm-updateTime"/>
 
           <section name="cm-processingSchedule">
             <!-- Sliding window stuff TODO-->
