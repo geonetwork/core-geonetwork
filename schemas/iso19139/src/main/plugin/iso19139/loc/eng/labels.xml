@@ -914,6 +914,31 @@
   <element name="gmd:descriptor" id="258.0">
     <label>Descriptor</label>
     <description>Description of the range of a cell measurement value</description>
+    <helper displayIf="gco:CharacterString[contains(., 'temporal resolution: ')]">
+      <option value="temporal resolution: irregular">Irregular</option>
+      <option value="temporal resolution: instantaneous">Instantaneous</option>
+      <option value="temporal resolution: hourly mean">Hourly mean</option>
+      <option value="temporal resolution: hourly mean, weekly mean, monthly mean">Hourly mean, weekly mean, monthly mean</option>
+      <option value="temporal resolution: hourly instantaneous">Hourly instantaneous</option>
+      <option value="temporal resolution: 3 hourly mean">3 hourly mean</option>
+      <option value="temporal resolution: 3 hourly instantaneous">3 hourly instantaneous</option>
+      <option value="temporal resolution: 3 hourly instantaneous, daily mean">3 hourly instantaneous, daily mean</option>
+      <option value="temporal resolution: 6 hourly mean">6 hourly mean</option>
+      <option value="temporal resolution: 6 hourly instantaneous, hourly instantaneous, daily mean, monthly mean">6 hourly instantaneous, hourly instantaneous, daily mean, monthly mean</option>
+      <option value="temporal resolution: daily mean">Daily mean</option>
+      <option value="temporal resolution: daily instantaneous">Daily instantaneous</option>
+      <option value="temporal resolution: daily mean, hourly mean">Daily mean, hourly mean</option>
+      <option value="temporal resolution: daily mean, hourly instantaneous">Daily mean, hourly instantaneous</option>
+      <option value="temporal resolution: daily mean, monthly mean, seasonal mean">Daily mean, monthly mean, seasonal mean</option>
+      <option value="temporal resolution: daily mean, weekly mean">Daily mean, weekly mean</option>
+      <option value="temporal resolution: daily mean, weekly mean, monthly mean">Daily mean, weekly mean, monthly mean</option>
+      <option value="temporal resolution: weekly mean">Weekly mean</option>
+      <option value="temporal resolution: weekly mean, monthly mean">Weekly mean, monthly mean</option>
+      <option value="temporal resolution: monthly mean">Monthly mean</option>
+      <option value="temporal resolution: monthly mean, daily mean">Monthly mean, daily mean</option>
+      <option value="temporal resolution: monthly mean, daily mean, hourly mean">Monthly mean, daily mean, hourly mean</option>
+      <option value="temporal resolution: Pluri-annual mean">Pluri-annual mean</option>
+    </helper>
   </element>
   <element name="gmd:dimension" id="242.0">
     <label>Dimension</label>
