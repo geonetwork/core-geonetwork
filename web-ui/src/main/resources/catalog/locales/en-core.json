@@ -407,5 +407,6 @@
     "projection": "Projection",
     "listTypeBlocks": "Switch to Blocked list",
     "listTypeLarge": "Switch to Large list",
-    "listTypeSmall": "Switch to Small list"
+    "listTypeSmall": "Switch to Small list",
+    "layersWithWhiteSpaces": "Some layers on this map contains white spaces on their name. Layers with white spaces may not be properly printed."
 }
