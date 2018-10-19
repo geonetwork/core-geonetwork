@@ -209,7 +209,7 @@
         ```displayIf="gco:CharacterString[contains(., 'temporal resolution: ')]"```
 
         The result of the displayIf XPath should be one or more nodes.
-        It does not expect a boolean. For example, this does work
+        It does not expect a boolean. For example, this does not work
         ```displayIf="gco:CharacterString/contains(., 'temporal resolution: ')"``` which return true or false.
           ]]>
       </xs:documentation>
