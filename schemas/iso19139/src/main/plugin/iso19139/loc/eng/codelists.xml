@@ -207,9 +207,7 @@
 	</codelist>
 
   <codelist name="gmd:CI_RoleCode" alias="roleCode"
-            displayIf="ancestor::node()[
-              name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+            displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
     <entry>
       <code>custodian</code>
       <label>Production center</label>
