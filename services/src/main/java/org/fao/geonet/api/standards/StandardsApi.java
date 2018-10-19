@@ -27,7 +27,6 @@ import io.swagger.annotations.*;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -212,6 +211,7 @@ public class StandardsApi implements ApplicationContextAware {
         )
         @PathVariable String codelist,
         @RequestParam(required = false) String parent,
+        @RequestParam(required = false) String displayIf,
         @RequestParam(required = false) String xpath,
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
@@ -222,7 +222,7 @@ public class StandardsApi implements ApplicationContextAware {
         context.setLanguage(language.getISO3Language());
 
         Element e = StandardsUtils.getCodelist(codelist, schemaManager,
-            schema, parent, xpath, isoType, context);
+            schema, parent, xpath, isoType, context, displayIf);
 
         List<Element> listOfEntry = e.getChildren("entry");
         for (Element entry : listOfEntry) {
@@ -250,6 +250,7 @@ public class StandardsApi implements ApplicationContextAware {
         )
         @PathVariable String codelist,
         @RequestParam(required = false) String parent,
+        @RequestParam(required = false) String displayIf,
         @RequestParam(required = false) String xpath,
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
@@ -259,7 +260,7 @@ public class StandardsApi implements ApplicationContextAware {
         context.setLanguage(language.getISO3Language());
 
         Element e = StandardsUtils.getCodelist(codelist, schemaManager,
-            schema, parent, xpath, isoType, context);
+            schema, parent, xpath, isoType, context, displayIf);
 
         return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
     }
@@ -284,6 +285,7 @@ public class StandardsApi implements ApplicationContextAware {
         )
         @PathVariable String element,
         @RequestParam(required = false) String parent,
+        @RequestParam(required = false) String displayIf,
         @RequestParam(required = false) String xpath,
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
@@ -293,7 +295,7 @@ public class StandardsApi implements ApplicationContextAware {
         context.setLanguage(language.getISO3Language());
 
         Element e = StandardsUtils.getLabel(element, schemaManager,
-            schema, parent, xpath, isoType, context);
+            schema, parent, xpath, isoType, displayIf, context);
 
         return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
     }
