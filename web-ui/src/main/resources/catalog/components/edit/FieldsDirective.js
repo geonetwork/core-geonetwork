@@ -29,6 +29,74 @@
   var module = angular.module('gn_fields_directive',
       []);
 
+  /**
+   * @ngdoc directive
+   * @name gn_fields.directive:gnSlidingWindow
+   * @function
+   *
+   * @description
+   * Sliding window encoder for Copernicus Marine
+   */
+  module.directive('gnSlidingWindowDiv',
+    function() {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/edit/partials/' +
+        'sliding-window.html',
+        scope: {
+          value: '@gnSlidingWindowDiv',
+          label: '@label',
+          ref: '@ref'
+        },
+        link: function(scope, element, attrs) {
+          var token = scope.value.split('/');
+          if (token.length > 1) {
+            var regex = /-?P{1}(([0-9]*)M{1})?(([0-9]*)D{1})?(T?([0-9]*)H{1})?/;
+            var startPeriod = token[0].match(regex);
+            var endPeriod = token[1].match(regex);
+            scope.sw = {
+              startPeriod: token[0].indexOf('-') === 0 ? '-' : '',
+              smonths: Math.abs(startPeriod[2]),
+              sdays: Math.abs(startPeriod[4]),
+              shours: Math.abs(startPeriod[6]),
+              endPeriod: token[1].indexOf('-') === 0 ? '-' : '',
+              emonths: Math.abs(endPeriod[2]),
+              edays: Math.abs(endPeriod[4]),
+              ehours: Math.abs(endPeriod[6])
+            };
+          } else {
+            scope.sw = {
+              startPeriod: '',
+              smonths: '',
+              sdays: '',
+              shours: '',
+              endPeriod: '',
+              emonths: '',
+              edays: '',
+              ehours: ''
+            };
+          }
+
+          scope.$watchCollection('sw', function (n, o) {
+            if (n !== o ){
+              var p = [
+                scope.sw.startPeriod, 'P',
+                scope.sw.smonths || 0, 'M',
+                scope.sw.sdays || 0, 'DT',
+                scope.sw.shours || 0, 'H',
+                '/',
+                scope.sw.endPeriod, 'P',
+                scope.sw.emonths || 0, 'M',
+                scope.sw.edays || 0, 'DT',
+                scope.sw.ehours || 0, 'H'
+              ];
+              scope.value = p.join('');
+            }
+          });
+        }
+      };
+    });
+
   module.directive('gnCheckpointCptCovered',
       function() {
         return {

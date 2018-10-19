@@ -516,7 +516,9 @@
   <cm-maxLevel>Maximum level</cm-maxLevel>
   <cm-nbOfVerticalLevels>Number of vertical levels</cm-nbOfVerticalLevels>
   <cm-temporalResolution>Temporal resolution</cm-temporalResolution>
-
+  <cm-slidingWindow>Sliding window of updates</cm-slidingWindow>
+  <cm-updateTime>Update time</cm-updateTime>
+  <cm-updateFrequency>Update frequency</cm-updateFrequency>
   <cm-crs>Coordinate reference system</cm-crs>
   <cm-addCrsEPSG4326>WGS 84 (EPSG 4326)</cm-addCrsEPSG4326>
   <cm-addCrsEPSG41001>WGS 84 / Simple Mercator (EPSG 41001)</cm-addCrsEPSG41001>
