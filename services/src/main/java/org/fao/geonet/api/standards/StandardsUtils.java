@@ -39,34 +39,34 @@ import java.util.Set;
  */
 public class StandardsUtils {
     public static Element getCodelist(String codelist, SchemaManager schemaManager,
-                                       String schema,
-                                       String parent, String xpath,
-                                       String isoType, ServiceContext context)
+                                      String schema,
+                                      String parent, String xpath,
+                                      String isoType, ServiceContext context, String displayIf)
         throws Exception {
         return getCodelistOrLabel(codelist, schemaManager, schema,
-                                    parent, xpath, isoType, context, "codelists.xml");
+                                    parent, xpath, isoType, context, displayIf, "codelists.xml");
     }
 
     public static Element getLabel(String element, SchemaManager schemaManager,
                                    String schema,
                                    String parent, String xpath,
-                                   String isoType, ServiceContext context)
+                                   String isoType, String displayIf, ServiceContext context)
         throws Exception {
         return getCodelistOrLabel(element, schemaManager, schema,
-                                    parent, xpath, isoType, context, "labels.xml");
+                                    parent, xpath, isoType, context, displayIf, "labels.xml");
     }
 
     private static Element getCodelistOrLabel(String element, SchemaManager schemaManager,
                                               String schema, String parent, String xpath,
                                               String isoType, ServiceContext context,
-                                              String fileName) throws Exception {
+                                              String displayIf, String fileName) throws Exception {
         String elementName = StandardsUtils.findNamespace(element, schemaManager, schema);
         Element e = StandardsUtils.getHelp(schemaManager, fileName,
-            schema, elementName, parent, xpath, isoType, context);
+            schema, elementName, parent, xpath, isoType, displayIf, context);
         if (e == null) {
             if (schema.startsWith("iso19139.")) {
                 e = StandardsUtils.getHelp(schemaManager, fileName,
-                    "iso19139", elementName, parent, xpath, isoType, context);
+                    "iso19139", elementName, parent, xpath, isoType, displayIf, context);
             }
             if (e == null) {
                 throw new ResourceNotFoundException(String.format(
@@ -79,7 +79,7 @@ public class StandardsUtils {
 
 
     public static Element getHelp(SchemaManager scm, String fileName, String schema,
-                                  String name, String parent, String xpath, String isoType, ServiceContext context)
+                                  String name, String parent, String xpath, String isoType, String displayIf, ServiceContext context)
         throws Exception {
 
         XmlFile xf = scm.getSchemaInfo(schema).get(fileName);
@@ -90,15 +90,15 @@ public class StandardsUtils {
 
         Element entries = xf.exec(new Element("junk"), context);
 
-        Element result = checkEntries(scm, schema, entries, xpath, name, isoType, true);
+        Element result = checkEntries(scm, schema, entries, xpath, name, isoType, displayIf, true);
         if (result == null) {
-            result = checkEntries(scm, schema, entries, parent, name, isoType, true);
+            result = checkEntries(scm, schema, entries, parent, name, isoType, displayIf, true);
         }
         if (result == null) {
-            result = checkEntries(scm, schema, entries, xpath, name, isoType, false);
+            result = checkEntries(scm, schema, entries, xpath, name, isoType, displayIf, false);
         }
         if (result == null) {
-            result = checkEntries(scm, schema, entries, parent, name, isoType, false);
+            result = checkEntries(scm, schema, entries, parent, name, isoType, displayIf, false);
         }
 
         if (result == null) {
@@ -106,7 +106,7 @@ public class StandardsUtils {
             // help/label exists in those - stop at the first one found
             Set<String> dependentSchemas = scm.getDependencies(schema);
             for (String baseSchema : dependentSchemas) {
-                result = getHelp(scm, fileName, baseSchema, name, parent, xpath, isoType, context);
+                result = getHelp(scm, fileName, baseSchema, name, parent, xpath, isoType, displayIf, context);
                 if (result != null) break;
             }
         }
@@ -115,13 +115,14 @@ public class StandardsUtils {
     }
 
     private static Element checkEntries(SchemaManager scm, String schema, Element entries, String context,
-                                        String name, String isoType, boolean requireContextMatch) throws OperationAbortedEx {
+                                        String name, String isoType, String displayIf, boolean requireContextMatch) throws OperationAbortedEx {
 
         for (Object o : entries.getChildren()) {
             Element currElem = (Element) o;
             String currName = currElem.getAttributeValue("name");
             String aliasName = currElem.getAttributeValue("alias");
             String currContext = currElem.getAttributeValue("context");
+            String displayIfAttribute = currElem.getAttributeValue("displayIf");
 
             currName = findNamespace(currName, scm, schema);
 
@@ -140,6 +141,8 @@ public class StandardsUtils {
                 }
             }
 
+            // If a context attribute is provided check if there is a match
+            // Context can be parent element name or an xpath
             if (currContext != null && (context != null || isoType != null)) {
                 // XPath context are supposed to use same namespace prefix
                 if (!currContext.contains("/")) {
@@ -151,10 +154,21 @@ public class StandardsUtils {
                     }
                 }
 
-                if ((context != null && context.equals(currContext)) || (isoType != null && isoType.equals(currContext))) {
+                if (
+                    (context != null && context.equals(currContext)) ||
+                    (isoType != null && isoType.equals(currContext))) {
                     return (Element) currElem.clone();
                 }
-            } else if (!requireContextMatch) {
+            } else if (displayIf != null && displayIf.equals(displayIfAttribute)) {
+                // A codelist may be uniquely defined with a displayIf attribute
+                // eg.
+                // <codelist name="gmd:CI_RoleCode" alias="roleCode"
+                //           displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+
+                return (Element) currElem.clone();
+            } if (!requireContextMatch && displayIfAttribute == null) {
+                // Return an element not matching any context attribute
+                // or displayIf condition. Usually the default value of the standard.
                 return (Element) currElem.clone();
             }
         }

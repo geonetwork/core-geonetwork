@@ -77,6 +77,9 @@
               // If not using the directive in an editor context, set
               // the schema id to properly retrieve the codelists.
               schema: '@',
+              // An optional attribute matching a conditional codelist
+              // containing the same value for the displayIf attribute.
+              displayIf: '@',
               selectEntryCb: '=',
               // Can restrict how to insert the entry (xlink, text ..)
               // insertModes: '@'
@@ -296,7 +299,7 @@
 
                   var schemaId = gnCurrentEdit.schema || scope.schema;
                   gnSchemaManagerService
-                     .getCodelist(schemaId + '|' + 'roleCode')
+                     .getCodelist(schemaId + '|' + 'roleCode', scope.displayIf)
                       .then(function(data) {
                         scope.roles = data.entry;
                       });
