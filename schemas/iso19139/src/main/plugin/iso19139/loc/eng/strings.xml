@@ -485,6 +485,7 @@
   <sds-addOperation>Add Operation</sds-addOperation>
 
   <copernicus-marine>Copernicus Marine</copernicus-marine>
+  <copernicus-marine-short>Copernicus Marine Short</copernicus-marine-short>
   <cm-main-info>Product identification</cm-main-info>
   <cm-fileIdentifier>Internal permanent shortname</cm-fileIdentifier>
   <cm-quicklookAndKeywords>Descriptive keywords</cm-quicklookAndKeywords>
@@ -515,6 +516,7 @@
   <cm-minLevel>Minimum level</cm-minLevel>
   <cm-maxLevel>Maximum level</cm-maxLevel>
   <cm-nbOfVerticalLevels>Number of vertical levels</cm-nbOfVerticalLevels>
+  <cm-contact>Contact</cm-contact>
   <cm-temporalResolution>Temporal resolution</cm-temporalResolution>
   <cm-slidingWindow>Sliding window of updates</cm-slidingWindow>
   <cm-updateTime>Update time</cm-updateTime>

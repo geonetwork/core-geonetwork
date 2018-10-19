@@ -477,6 +477,7 @@
   <sdn-metadata>Metadata</sdn-metadata>
 
   <copernicus-marine>Copernicus Marine</copernicus-marine>
+  <copernicus-marine-short>Copernicus Marine Short</copernicus-marine-short>
   <cm-main-info>Product identification</cm-main-info>
   <cm-fileIdentifier>Internal permanent shortname</cm-fileIdentifier>
   <cm-quicklookAndKeywords>Descriptive keywords</cm-quicklookAndKeywords>
@@ -511,6 +512,7 @@
   <cm-slidingWindow>Sliding window of updates</cm-slidingWindow>
   <cm-updateTime>Update time</cm-updateTime>
   <cm-updateFrequency>Update frequency</cm-updateFrequency>
+  <cm-contact>Contact</cm-contact>
 
   <cm-crs>Coordinate reference system</cm-crs>
   <cm-addCrsEPSG4326>WGS 84 (EPSG 4326)</cm-addCrsEPSG4326>

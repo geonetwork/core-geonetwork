@@ -3132,9 +3132,8 @@
     -->
     <view name="copernicus-marine"
           upAndDownControlHidden="true"
-          displayIfRecord="contains(
-                              gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
-                              'ISO 19139, MyOcean profile')">
+          displayIfRecord="gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString =
+                              'ISO 19139, MyOcean profile'">
       <thesaurusList>
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
                    fieldset="false"
@@ -3505,10 +3504,67 @@
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='distributor']" name="cm-orgDisseminationUnit"/>
 
 
+            <action name="cm-contact"
+                    type="add"
+                    addDirective="data-gn-directory-entry-selector"
+                    or="pointOfContact"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/*">
+              <directiveAttributes
+                data-template-add-action="false"
+                data-search-action="true"
+                data-popup-action="true"
+                data-template-type="contact"
+                data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+            </action>
+
           </section>
         </section>
       </tab>
     </view>
+    <view name="copernicus-marine-short"
+          upAndDownControlHidden="true"
+          displayIfRecord="gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString =
+                              'ISO 19139, MyOcean profile short'">
+      <tab id="copernicus-marine-short" mode="flat" default="true">
+        <section name="cm-main-info">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"
+                 name="sextant-title"/>
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"
+                 name="cm-fileIdentifier"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"
+                 name="cm-abstract"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:status"/>
+        </section>
+        <section name="cm-geoCoverage">
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
+        </section>
+
+        <section name="cm-org">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='custodian']" name="cm-orgCustodian"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='originator']" name="cm-orgOriginator"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='pointOfContact']" name="cm-orgServiceDesk"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='resourceProvider']" name="cm-orgProductionUnit"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='distributor']" name="cm-orgDisseminationUnit"/>
+
+
+          <action name="cm-contact"
+                  type="add"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
+            <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="true"
+              data-popup-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+          </action>
+
+        </section>
+      </tab>
+    </view>
+
 
     <view name="xml">
       <sidePanel>
