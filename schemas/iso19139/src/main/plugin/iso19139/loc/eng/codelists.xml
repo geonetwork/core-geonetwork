@@ -205,6 +205,40 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
+
+  <codelist name="gmd:CI_RoleCode" alias="roleCode"
+            displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+    <entry>
+      <code>custodian</code>
+      <label>Production center</label>
+      <description>Party that accepts accountability and responsability for the data and ensures
+        appropriate care and maintenance of the resource</description>
+    </entry>
+    <entry>
+      <code>originator</code>
+      <label>Product manager</label>
+      <description>Party who created the resource</description>
+    </entry>
+    <entry>
+      <code>pointOfContact</code>
+      <label>Local service desk</label>
+      <description>Party who can be contacted for acquiring knowledge about or acquisition of the
+        resource</description>
+    </entry>
+    <entry>
+      <code>resourceProvider</code>
+      <label>Production Unit</label>
+      <description>Production Unit</description>
+    </entry>
+    <entry>
+      <code>distributor</code>
+      <label>Dissemination Unit</label>
+      <description>Dissemination Unit</description>
+    </entry>
+  </codelist>
+
 	<!-- ==================================================== -->
 	<codelist name="gmd:CI_RoleCode" alias="roleCode">
 		<entry>
@@ -289,6 +323,7 @@
 			<description></description>
 		</entry>-->
 	</codelist>
+
 	<!-- ==================================================== -->
 	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
 		<entry>
@@ -1143,6 +1178,89 @@
         -->
   </codelist>
 
+  <codelist name="gmd:MD_MaintenanceFrequencyCode"
+            displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]"
+            sort="fixed">
+    <entry>
+      <code>continual</code>
+      <label>Continual</label>
+      <description>Data is repeatedly and frequently updated</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>daily</code>
+      <label>Daily</label>
+      <description>Data is updated each day</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>weekly</code>
+      <label>Weekly</label>
+      <description>Data is updated on a weekly basis</description>
+    </entry>
+    <entry>
+      <code>twiceWeekly</code>
+      <label>Twice weekly</label>
+      <description>Data is updated two times in a week</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fortnightly</code>
+      <label>Fortnightly</label>
+      <description>Data is updated every two weeks</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>monthly</code>
+      <label>Monthly</label>
+      <description>Data is updated each month</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>quarterly</code>
+      <label>Quarterly</label>
+      <description>Data is updated every three months</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>biannually</code>
+      <label>Biannually</label>
+      <description>Data is updated twice each year</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>annually</code>
+      <label>Annually</label>
+      <description>Data is updated every year</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>asNeeded</code>
+      <label>As needed</label>
+      <description>Data is updated as deemed necessary</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>irregular</code>
+      <label>Irregular</label>
+      <description>Data is updated in intervals that are uneven in duration</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>notPlanned</code>
+      <label>Not planned</label>
+      <description>There are no plans to update the data</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>unknown</code>
+      <label>Unknown</label>
+      <description>Frequency of maintenance for the data is not known</description>
+    </entry>
+  </codelist>
+
 
 	<codelist name="gmd:MD_MaintenanceFrequencyCode" sort="fixed">
 		<entry>
@@ -1458,6 +1576,33 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
+  <codelist name="gmd:MD_ProgressCode"
+            displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+    <entry>
+      <code>ready</code>
+      <label>Ready</label>
+      <description>Not used</description>
+    </entry>
+    <entry>
+      <code>inDemonstration</code>
+      <label>inDemonstration</label>
+      <description>Non operational production</description>
+    </entry>
+    <entry>
+      <code>operational</code>
+      <label>Operational</label>
+      <description>Operational production (OLA provided)</description>
+    </entry>
+    <entry>
+      <code>retired</code>
+      <label>Retired</label>
+      <description>Not any more operational</description>
+    </entry>
+  </codelist>
+
+
 	<codelist name="gmd:MD_ProgressCode">
 		<entry>
 			<code>completed</code>
