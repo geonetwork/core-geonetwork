@@ -44,8 +44,8 @@
   </condition>
 
   <property name="appName" value="geonetwork"/>
-  <property name="version" value="3.4.4"/>
-  <property name="subVersion" value="0"/>
+  <property name="version" value="3.4.5"/>
+  <property name="subVersion" value="SNAPSHOT"/>
   <property name="javaVersion" value="1.8.0"/>
   <!-- Minimum version required -->
   <property name="jre_url" value="http://openjdk.java.net/"/>

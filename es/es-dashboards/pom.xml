@@ -23,14 +23,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.geonetwork-opensource</groupId>
-  <version>3.4.4-0</version>
+  <version>3.4.5-SNAPSHOT</version>
   <artifactId>es-dashboards</artifactId>
   <name>GeoNetwork dashboard app based on Kibana</name>
 
   <parent>
     <artifactId>es</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.4.4-0</version>
+    <version>3.4.5-SNAPSHOT</version>
   </parent>
   <profiles>
     <profile>

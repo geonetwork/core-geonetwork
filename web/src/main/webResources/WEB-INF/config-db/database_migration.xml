@@ -215,7 +215,11 @@
     <entry key="3.4.4">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v344/migrate-</value>
-        <value>java:v343.AdvancedSearchFormMigration</value>
+      </list>
+    </entry>
+    <entry key="3.4.5">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v345/migrate-</value>
       </list>
     </entry>
   </util:map>
