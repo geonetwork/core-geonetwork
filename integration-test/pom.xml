@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>geonetwork-integration-test</groupId>
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>info.cukes</groupId>
       <artifactId>cucumber-java</artifactId>
-      <version>1.2.5</version>
+      <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -21,7 +21,7 @@
     <dependency>
       <groupId>info.cukes</groupId>
       <artifactId>cucumber-junit</artifactId>
-      <version>1.2.5</version>
+      <version>${cucumber.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -79,15 +79,72 @@
           <source>1.8</source>
           <target>1.8</target>
           <compilerArgument>-Werror</compilerArgument>
-
-          <systemPropertyVariables>
-            <property>
-              <name>browser</name>
-              <value>${browser}</value>
-            </property>
-          </systemPropertyVariables>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <properties>
+    <cucumber.version>1.2.5</cucumber.version>
+    <webdriver.system>linux64</webdriver.system>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>webdriver-download</id>
+      <activation>
+        <property>
+          <name>webdriver-download</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>download-webdriver</id>
+                <phase>clean</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <url>
+                    https://chromedriver.storage.googleapis.com/2.42/chromedriver_${webdriver.system}.zip
+                  </url>
+                  <unpack>true</unpack>
+                  <outputDirectory>${project.basedir}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>itest-windows</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <webdriver.system>win32</webdriver.system>
+      </properties>
+    </profile>
+    <profile>
+      <id>itest-mac</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <properties>
+        <webdriver.system>mac64</webdriver.system>
+      </properties>
+    </profile>
+  </profiles>
 </project>
