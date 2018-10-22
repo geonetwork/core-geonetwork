@@ -112,6 +112,18 @@
     <description>Reference date and event used to describe it (YYYY-MM-DD)</description>
     <_condition>Use obligation/condition from referencing object</_condition>
   </element>
+  <element name="gmd:CI_DateTypeCode">
+    <label>Date type code</label>
+    <description/>
+  </element>
+  <element name="gmd:CI_OnLineFunctionCode">
+    <label>OnLine function code</label>
+    <description/>
+  </element>
+  <element name="gmd:CI_PresentationFormCode">
+    <label>Presentatiewijze code</label>
+    <description/>
+  </element>
   <element name="gmd:CI_OnlineResource" id="396.0">
     <label>OnLine resource</label>
     <description>Information about on-line sources from which the dataset, specification, or
@@ -179,6 +191,12 @@
   <element name="gmd:DQ_DomainConsistency" id="113.0">
     <label>Domain consistency</label>
     <description>Adherence of values to the value domains</description>
+  </element>
+  <element name="gmd:DQ_EvaluationMethodTypeCode">
+    <label>Evaluation method type code</label>
+    <description>type of method for evaluating an identified data quality
+      measure
+    </description>
   </element>
   <element name="gmd:DQ_FormatConsistency" id="114.0">
     <label>Format consistency</label>
@@ -302,6 +320,10 @@
     <label>Aggregate Information</label>
     <description>Aggregate dataset information</description>
   </element>
+  <element name="gmd:MD_DistributionUnits">
+    <label>Distribution Units</label>
+    <description></description>
+  </element>
   <element name="gmd:MD_ApplicationSchemaInformation" id="320.0">
     <description>Information about the application schema used to build the
       dataset
@@ -319,17 +341,36 @@
     </description>
     <label>Browse Graphic</label>
   </element>
-  <element name="gmd:MD_Constraints" id="67.0">
-    <label>Constraints</label>
-    <description>Restrictions on the access and use of a resource or metadata</description>
+  <element name="gmd:MD_CellGeometryCode">
+    <label>Cell geometry code</label>
+    <description>code indicating whether grid data is point or area</description>
   </element>
-  <element name="gmd:MD_CoverageDescription" id="239.0">
-    <label>Coverage description</label>
-    <description>Information about the content of a grid data cell</description>
+  <element name="gmd:MD_CharacterSetCode">
+    <label>Characterset code</label>
+    <description>name of the character coding standard used for the
+      resource
+    </description>
+  </element>
+  <element name="gmd:MD_Constraints">
+    <label>Constraints</label>
+    <description>
+    </description>
+  </element>
+  <element name="gmd:MD_CoverageContentTypeCode">
+    <label>Content type code</label>
+    <description>specific type of information represented in the cell</description>
+  </element>
+  <element name="gmd:MD_CoverageDescription">
+    <label>Coverage Description</label>
+    <description>information about the content of a grid data cell</description>
   </element>
   <element name="gmd:MD_DataIdentification" id="36.0">
     <label>Data identification</label>
     <description>Information required to identify a dataset</description>
+  </element>
+  <element name="gmd:MD_DatatypeCode">
+    <label>Data type code</label>
+    <description>datatype of element or entity</description>
   </element>
   <element name="gmd:MD_DigitalTransferOptions" id="274.0">
     <label>Digital transfer options</label>
@@ -340,6 +381,10 @@
   <element name="gmd:MD_Dimension" id="179.0">
     <label>Dimension</label>
     <description>Axis properties</description>
+  </element>
+  <element name="gmd:MD_DimensionNameTypeCode">
+    <label>Dimension type code</label>
+    <description>name of the dimension</description>
   </element>
   <element name="gmd:MD_Distribution" id="270.0">
     <label>Distribution</label>
@@ -404,9 +449,19 @@
     <label>Image description</label>
     <description>Information about an image's suitability for use</description>
   </element>
+  <element name="gmd:MD_ImagingConditionCode">
+    <label>Imaging Condition Code</label>
+    <description>code which indicates conditions which may affect the
+      image
+    </description>
+  </element>
   <element name="gmd:MD_Keywords" id="52.0">
     <label>Keywords</label>
     <description>Keywords, their type and reference source</description>
+  </element>
+  <element name="gmd:MD_KeywordTypeCode">
+    <label>Keyword Type Code</label>
+    <description>methods used to group similar keywords</description>
   </element>
   <element name="gmd:MD_LegalConstraints" id="69.0">
     <label>Legal constraints</label>
@@ -423,6 +478,14 @@
     <description>Information about the media on which the resource can be
       distributed
     </description>
+  </element>
+  <element name="gmd:MD_MediumFormatCode">
+    <label>Medium format</label>
+    <description>method used to write to the medium</description>
+  </element>
+  <element name="gmd:MD_MediumNameCode">
+    <label>Medium name code</label>
+    <description>name of the medium</description>
   </element>
   <element name="gmd:MD_Metadata" id="1.0">
     <label>Metadata</label>
@@ -2737,13 +2800,10 @@
     <label>Outer boundary</label>
     <description>The outer boundary of a solid.</description>
   </element>
-
   <element name="gml:interior">
     <label>Inner boundary</label>
     <description>The inner boundary of a solid</description>
   </element>
-
-
   <element name="gml:begin">
     <label>Begin</label>
     <description/>
@@ -2751,6 +2811,10 @@
   <element name="gml:end">
     <label>End</label>
     <description/>
+  </element>
+  <element name="gml:unitsSystem">
+    <label>unitsSystem</label>
+    <description></description>
   </element>
   <element name="gml:duration">
     <label>Duration</label>
@@ -2859,7 +2923,33 @@
     <label>Factor</label>
     <description></description>
   </element>
-
+  <element name="years">
+    <label>Years</label>
+    <description/>
+  </element>
+  <element name="zone">
+    <label>Zone</label>
+    <description>Unique identifier for 100,000 metre grid zone</description>
+  </element>
+  <element name="DirectReferenceSystem">
+    <label>Direct projection system (for geographical resources)</label>
+    <description>ReferenceSystem derived / specify that it is a direct
+      reference
+    </description>
+  </element>
+  <element name="InDirectReferenceSystem">
+    <label>Indirect projection system (for non geographical resources)</label>
+    <description>ReferenceSystem derived / specify that it is an indirect
+      reference
+    </description>
+  </element>
+  <element name="srsName">
+    <label>Spatial Reference System Name</label>
+    <description>Name of the Spatial Reference System. By default set to
+      geographic (epsg:4326)
+    </description>
+    <example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+  </element>
 
   <element name="srv:SV_ServiceIdentification">
     <label>Service Identification (19119)</label>
@@ -3032,6 +3122,15 @@
     <description>Use this section to define other metadata language (multilingual metadata).
     </description>
   </element>
+  <element name="gmd:LocalisedCharacterString">
+    <label>Localised string</label>
+    <description></description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:localisedString">
+    <label>Localised string</label>
+    <description></description>
+  </element>
   <element name="gmd:describes">
     <label>Describes</label>
     <description>Describes</description>
@@ -3047,6 +3146,10 @@
   <element name="gmd:PT_LocaleContainer">
     <label>PT_LocaleContainer</label>
     <description>PT_LocaleContainer</description>
+  </element>
+  <element name="gmd:responsibleParty">
+    <label>Responsible Party</label>
+    <description></description>
   </element>
   <element name="gmd:featureType">
     <label>Feature type</label>
@@ -3295,6 +3398,14 @@
     <label>Field of application</label>
     <description>Field of application</description>
   </element>
+  <element name="gml:catalogSymbol">
+    <label>Catalogue symbol</label>
+    <description></description>
+  </element>
+  <element name="gml:uom">
+    <label>Unit of measure</label>
+    <description></description>
+  </element>
   <element name="gml:axis">
     <label>Axis</label>
   </element>
@@ -3318,6 +3429,14 @@
   </element>
   <element name="gml:remarks">
     <label>Remarks</label>
+  </element>
+  <element name="gml:quantityType">
+    <label>Quantity Type</label>
+    <description></description>
+  </element>
+  <element name="gml:quantityTypeReference">
+    <label>Quantity Type Reference</label>
+    <description></description>
   </element>
   <element name="gml:domainOfValidity">
     <label>Domain of validity</label>
@@ -3352,8 +3471,9 @@
   <element name="gmd:MD_SpatialRepresentationTypeCode">
     <label>Spatial Representation Type</label>
   </element>
-  <element name="gmd:MD_CharacterSetCode">
-    <label>Character Set</label>
+  <element name="gmd:MD_ClassificationCode">
+    <label>Classification code</label>
+    <description>Name of the handling restrictions on the dataset</description>
   </element>
   <element name="gmd:MD_TopologyLevelCode">
     <label>Topology Level</label>
