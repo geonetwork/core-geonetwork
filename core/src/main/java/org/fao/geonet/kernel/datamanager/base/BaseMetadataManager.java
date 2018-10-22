@@ -414,8 +414,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	@Override
 	public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
 		deleteMetadataFromDB(context, metadataId);
-		// --- update search criteria
-		getSearchManager().delete(metadataId + "");
+		getSearchManager().delete(metadataId);
 	}
 
 	/**
