@@ -299,7 +299,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (formatType == null) {
             formatType = FormatType.xml;
         }
-        
+
         final String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
         final ServiceContext context = createServiceContext(
             language,
@@ -523,14 +523,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
         response.setContentType(formatType.contentType);
-        String filename = "metadata." + metadataUuid + formatType;
+        String filename = "metadata-" + metadataUuid + "." + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
         response.setStatus(HttpServletResponse.SC_OK);
         if (formatType == FormatType.pdf) {
             writerAsPDF(context, response, formattedMetadata, lang);
         } else {
             response.setCharacterEncoding(Constants.ENCODING);
-            response.setContentType("text/html");
+            response.setContentType(formatType.contentType);
             response.setContentLength(formattedMetadata.length);
             response.setHeader("Cache-Control", "no-cache");
             response.getOutputStream().write(formattedMetadata);
