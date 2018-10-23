@@ -182,10 +182,16 @@
             if (config.context) {
               mapReady = gnOwsContextService.loadContextFromUrl(
                 config.context, map);
+            } else {
+              //Failback needed for controllers that rely on map creation
+              mapReady = $q.defer();
+              mapReady.resolve();
+              mapReady = mapReady.promise;
             }
           }
-          var creationPromise = $q.when(mapReady).then(function() {
-
+          
+          //This should be called also when resetting the default map
+          $rootScope.$on('owsContextLoaded', function() {
             // extent
             if (config.extent && ol.extent.getWidth(config.extent) &&
               ol.extent.getHeight(config.extent)) {
@@ -197,17 +203,21 @@
               }
             }
 
-            // layers
+            // load layers from Settings
             if (config.layers && config.layers.length) {
               config.layers.forEach(function(layerInfo) {
                 gnMap.createLayerFromProperties(layerInfo, map)
                   .then(function(layer) {
                     if (layer) {
-                      map.addLayer(layer);
+                      layer.displayInLayerManager = false;
+                      layer.set("group", "Background layers");
+                      layer.set("fromGNSettings", true);
+                      gnViewerSettings.bgLayers.push(layer);
                     }
                   });
               });
             }
+            
             if(type == this.VIEWER_MAP) {
               if (mapParams.wmsurl && mapParams.layername) {
                 gnMap.addWmsFromScratch(map, mapParams.wmsurl,
@@ -215,14 +225,15 @@
 
                 then(function(layer) {
                   layer.set('group', mapParams.layergroup);
+                  layer.displayInLayerManager = true;
                   map.addLayer(layer);
                 });
               }
             }
-          }.bind(this));
+          });
 
           // save the promise on the map
-          map.set('creationPromise', creationPromise);
+          map.set('creationPromise', mapReady);
 
           return map;
         }
