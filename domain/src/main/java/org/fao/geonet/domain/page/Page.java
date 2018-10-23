@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -33,6 +34,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
@@ -48,7 +50,7 @@ public class Page extends GeonetEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private PageIdentity pageIdentity;
-    private String data;
+    private byte[] data;
     private PageFormat format;
     private List<PageSection> sections;
     private PageStatus status;
@@ -57,7 +59,7 @@ public class Page extends GeonetEntity implements Serializable {
 
     }
 
-    public Page(PageIdentity pageIdentity, String data, PageFormat format, List<PageSection> sections, PageStatus status) {
+    public Page(PageIdentity pageIdentity, byte[] data, PageFormat format, List<PageSection> sections, PageStatus status) {
         super();
         this.pageIdentity = pageIdentity;
         this.data = data;
@@ -65,7 +67,6 @@ public class Page extends GeonetEntity implements Serializable {
         this.sections = sections;
         this.status = status;
     }
-
 
     public enum PageStatus {
         PUBLIC,
@@ -101,7 +102,8 @@ public class Page extends GeonetEntity implements Serializable {
     @Column
     @Nullable
     @Lob
-    public String getData() {
+    @Basic(fetch = FetchType.LAZY)
+    public byte[] getData() {
         return data;
     }
 
@@ -129,7 +131,7 @@ public class Page extends GeonetEntity implements Serializable {
         this.pageIdentity = pageIdentity;
     }
 
-    public void setData(String data) {
+    public void setData(byte[] data) {
         this.data = data;
     }
 

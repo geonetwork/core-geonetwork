@@ -1,0 +1,5 @@
+<li data-ng-repeat="page in pagesList">
+  <a data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageIdentity.linkText}}?page={{page.pageIdentity.linkText}}" title="{{page.pageIdentity.linkText}}" data-ng-click="changePage($event)">
+    <span>{{page.pageIdentity.linkText}}</span>
+  </a>
+</li>

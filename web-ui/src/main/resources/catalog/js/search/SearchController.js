@@ -29,11 +29,13 @@
 
   goog.require('gn_catalog_service');
   goog.require('gn_searchsuggestion_service');
+  goog.require('gn_static_pages');
 
   var module = angular.module('gn_search_controller', [
     'ui.bootstrap.typeahead',
     'gn_searchsuggestion_service',
-    'gn_catalog_service'
+    'gn_catalog_service',
+    'gn_static_pages'
   ]);
 
   /**

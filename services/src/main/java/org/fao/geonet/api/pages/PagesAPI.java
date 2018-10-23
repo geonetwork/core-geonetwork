@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.api.pages;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,12 +43,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,7 +60,7 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
 
-@RequestMapping(value = { "/api/page", "/api/" + API.VERSION_0_1 + "/page" })
+@RequestMapping(value = { "/api/pages", "/api/" + API.VERSION_0_1 + "/pages" })
 @Api(value = "pages", tags = "pages",
 description = "Static pages inside GeoNetwork")
 @Controller("pages")
@@ -70,6 +73,7 @@ public class PagesAPI {
     private static final String PAGE_SAVED="Page saved";
     private static final String PAGE_UPDATED="Page changes saved";
     private static final String PAGE_DELETED="Page removed";
+    private static final String ERROR_FILE="File not valid";
 
     // WRITE, EDIT, DELETE, READ Page methods
 
@@ -85,14 +89,14 @@ public class PagesAPI {
             @ApiResponse(code = 200, message = PAGE_SAVED),
             @ApiResponse(code = 404, message = PAGE_NOT_FOUND),
             @ApiResponse(code = 409, message = PAGE_DUPLICATE),
-            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT),
+            @ApiResponse(code = 500, message = ERROR_FILE)
     })
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
     public void addPage(
             @RequestParam(value = "language", required=true) final String language,
             @RequestParam(value = "pageId", required=true) final String pageId,
-            @RequestParam(value = "data", required=false) final String data,
+            @RequestParam(value = "data", required=false) MultipartFile data,
             @RequestParam(value = "format", required=true) final Page.PageFormat format,
             @ApiIgnore final HttpServletResponse response
             ) {
@@ -104,7 +108,15 @@ public class PagesAPI {
 
             List<Page.PageSection> sections = new ArrayList<Page.PageSection>();
             sections.add(Page.PageSection.DRAFT);
-            Page page = new Page(new PageIdentity(language, pageId), data, format, sections, Page.PageStatus.HIDDEN);
+            byte[] bytesData;
+            try {
+                bytesData = data.getBytes();
+            } catch (Exception e) {
+                response.setStatus(HttpStatus.CONFLICT.value());
+                return;
+            }
+
+            Page page = new Page(new PageIdentity(language, pageId), bytesData, format, sections, Page.PageStatus.HIDDEN);
 
             pageRepository.save(page);
         } else {
@@ -112,24 +124,25 @@ public class PagesAPI {
         }
     }
 
+    // Isn't done with PUT because the multipart support as used by Spring
+    // doesn't support other request method then POST
     @ApiOperation(
             value = "Edit a Page object",
             notes = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>",
             nickname = "editPage")
     @RequestMapping(
             value = "/{language}/{pageId}",
-            method = RequestMethod.PUT)
+            method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = PAGE_UPDATED),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
     public void editPage(
             @PathVariable(value = "language") final String language,
             @PathVariable(value = "pageId") final String pageId,
-            @RequestParam(value = "data", required=false) final String data,
+            @RequestParam(value = "data", required=false) MultipartFile data,
             @RequestParam(value = "format", required=true) final Page.PageFormat format,
             @ApiIgnore final HttpServletResponse response
             ) {
@@ -143,7 +156,15 @@ public class PagesAPI {
             return;
         }
 
-        page.setData(data);
+        byte[] bytesData;
+        try {
+            bytesData = data.getBytes();
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.CONFLICT.value());
+            return;
+        }
+
+        page.setData(bytesData);
         page.setFormat(format);
 
         pageRepository.save(page);
@@ -163,11 +184,9 @@ public class PagesAPI {
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
     public void deletePage(
             @PathVariable(value = "language") final String language,
             @PathVariable(value = "pageId") final String pageId,
-            @RequestParam(value = "data", required=false) final String data,
             @RequestParam(value = "format", required=true) final Page.PageFormat format,
             @ApiIgnore final HttpServletResponse response
             ) {
@@ -259,7 +278,14 @@ public class PagesAPI {
             } else if(page.getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile()== null || us.getProfile()== Profile.Guest)) {
                 return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
             } else {
-                return new ResponseEntity<String>(page.getData(), HttpStatus.OK);
+                String content = "";
+                try {
+                    content = new String(page.getData(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    content = new String(page.getData());
+                }
+
+                return new ResponseEntity<String>(content, HttpStatus.OK);
             }
         }
     }
@@ -281,7 +307,6 @@ public class PagesAPI {
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
     public void addPageToSection(
             @PathVariable(value = "language") final String language,
             @PathVariable(value = "pageId") final String pageId,
@@ -324,7 +349,6 @@ public class PagesAPI {
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
     public void removePageFromSection(
             @PathVariable(value = "language") final String language,
             @PathVariable(value = "pageId") final String pageId,
@@ -369,7 +393,6 @@ public class PagesAPI {
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @PreAuthorize("hasRole('Administrator')")
-    @ResponseBody
     public void changePageStatus(
             @PathVariable(value = "language") final String language,
             @PathVariable(value = "pageId") final String pageId,
@@ -418,15 +441,30 @@ public class PagesAPI {
         PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
         UserSession us = ApiUtils.getUserSession(session);
+        List<Page> unfilteredResult = null;
 
-        List<Page> unfilteredResult = pageRepository.findAll();
+        if(language == null) {
+            unfilteredResult = pageRepository.findAll();
+        } else {
+            unfilteredResult = pageRepository.findByPageIdentityLanguage(language);
+        }
+
         List<Page> filteredResult = new ArrayList<Page>();
 
         for (Page page : unfilteredResult) {
             if((page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile()== Profile.Administrator) ||
                     (page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile()!= null && us.getProfile()!= Profile.Guest ) ||
                     page.getStatus().equals(Page.PageStatus.PUBLIC)) {
-                filteredResult.add(page);
+                if(section == null || Page.PageSection.ALL.equals(section)) {
+                    filteredResult.add(page);
+                } else {
+                    List<Page.PageSection> sections = page.getSections();
+                    boolean containsALL = sections.contains(Page.PageSection.ALL);
+                    boolean containsRequestedSection = sections.contains(section);
+                    if(containsALL || containsRequestedSection) {
+                        filteredResult.add(page);
+                    }
+                }
             }
         }
 
