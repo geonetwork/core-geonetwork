@@ -218,7 +218,7 @@ div.result-metadata-modal-content table td {
     height: 16px;
     position: absolute;
     right: 60px;
-    top: 60px;
+    top: 30px;
     width: 19px;
     z-index: 99;
     cursor:pointer;
@@ -230,7 +230,7 @@ div.result-metadata-modal-content table td {
     height: 16px;
     position: absolute;
     right: 90px;
-    top: 60px;
+    top: 30px;
     width: 16px;
     z-index: 99;
     cursor:pointer;
