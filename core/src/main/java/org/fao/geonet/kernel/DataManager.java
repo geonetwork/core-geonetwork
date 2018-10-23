@@ -28,23 +28,14 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataType;
@@ -67,30 +58,38 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
- * 
+ *
  * Deprecated in favor of
- * 
+ *
  * {@link IMetadataManager} {@link IMetadataUtils} {@link IMetadataIndexer} {@link IMetadataValidator} {@link IMetadataOperations}
  * {@link IMetadataStatus} {@link IMetadataSchemaUtils} {@link IMetadataCategory}
- * 
+ *
  */
 @Deprecated
 public class DataManager {
+
+    private static final Logger LOGGER_DATA_MANAGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
     @Autowired
     private IMetadataManager metadataManager;
@@ -139,16 +138,12 @@ public class DataManager {
 
         // FIXME this shouldn't login automatically ever!
         if (context.getUserSession() == null) {
-            Log.debug(Geonet.DATA_MANAGER, "Automatically login in as Administrator. Who is this? Who is calling this?");
+            LOGGER_DATA_MANAGER.debug( "Automatically login in as Administrator. Who is this? Who is calling this?");
             UserSession session = new UserSession();
             context.setUserSession(session);
             session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
-            try {
-                Log.debug(Geonet.DATA_MANAGER, "Hopefully this is cron job or routinely background task. Who called us?",
+            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
                         new Exception("Dummy Exception to know the stacktrace"));
-            } catch (Exception e) {
-                // Silent. This is just to log the stacktrace here
-            }
         }
     }
 
