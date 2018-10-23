@@ -26,16 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
 import org.fao.geonet.repository.page.PageRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,17 +51,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
 
-@RequestMapping(value = { "/api", "/api/" + API.VERSION_0_1 })
+@RequestMapping(value = { "/api/page", "/api/" + API.VERSION_0_1 + "/page" })
 @Api(value = "pages", tags = "pages",
 description = "Static pages inside GeoNetwork")
 @Controller("pages")
 public class PagesAPI {
 
     // HTTP status messages not from ApiParams
+    private static final String PAGE_OK="Page found";
     private static final String PAGE_NOT_FOUND="Page not found";
     private static final String PAGE_DUPLICATE="Page already in the system: use PUT";
     private static final String PAGE_SAVED="Page saved";
@@ -79,6 +87,7 @@ public class PagesAPI {
             @ApiResponse(code = 409, message = PAGE_DUPLICATE),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public void addPage(
             @RequestParam(value = "language", required=true) final String language,
@@ -115,6 +124,7 @@ public class PagesAPI {
             @ApiResponse(code = 200, message = PAGE_UPDATED),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public void editPage(
             @PathVariable(value = "language") final String language,
@@ -149,8 +159,10 @@ public class PagesAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = PAGE_DELETED),
+            @ApiResponse(code = 404, message = PAGE_NOT_FOUND),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public void deletePage(
             @PathVariable(value = "language") final String language,
@@ -182,13 +194,16 @@ public class PagesAPI {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = PAGE_OK),
+            @ApiResponse(code = 404, message = PAGE_NOT_FOUND),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public Page getPage(
+    public ResponseEntity<Page> getPage(
             @PathVariable(value = "language") final String language,
             @PathVariable(value = "pageId") final String pageId,
-            @ApiIgnore final HttpServletResponse response
+            @ApiIgnore final HttpServletResponse response,
+            @ApiIgnore final HttpSession session
             ) {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         PageRepository pageRepository = appContext.getBean(PageRepository.class);
@@ -196,11 +211,17 @@ public class PagesAPI {
         Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if(page == null) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
+            return new ResponseEntity<Page>(HttpStatus.NOT_FOUND);
+        } else {
+            UserSession us = ApiUtils.getUserSession(session);
+            if(page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile()!= Profile.Administrator) {
+                return new ResponseEntity<Page>(HttpStatus.FORBIDDEN);
+            } else if(page.getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile()== null || us.getProfile()== Profile.Guest)) {
+                return new ResponseEntity<Page>(HttpStatus.FORBIDDEN);
+            } else {
+                return new ResponseEntity<Page>(page, HttpStatus.OK);
+            }
         }
-
-        return page;
     }
 
     @ApiOperation(
@@ -213,13 +234,16 @@ public class PagesAPI {
             produces = MediaType.TEXT_HTML_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = PAGE_OK),
+            @ApiResponse(code = 404, message = PAGE_NOT_FOUND),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public String getPageContent(
+    public ResponseEntity<String> getPageContent(
             @PathVariable(value = "language") final String language,
             @PathVariable(value = "pageId") final String pageId,
-            @ApiIgnore final HttpServletResponse response
+            @ApiIgnore final HttpServletResponse response,
+            @ApiIgnore final HttpSession session
             ) {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         PageRepository pageRepository = appContext.getBean(PageRepository.class);
@@ -227,11 +251,17 @@ public class PagesAPI {
         Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if(page == null) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } else {
+            UserSession us = ApiUtils.getUserSession(session);
+            if(page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile()!= Profile.Administrator) {
+                return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+            } else if(page.getStatus().equals(Page.PageStatus.PRIVATE) && (us.getProfile()== null || us.getProfile()== Profile.Guest)) {
+                return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+            } else {
+                return new ResponseEntity<String>(page.getData(), HttpStatus.OK);
+            }
         }
-
-        return page.getData();
     }
 
 
@@ -247,8 +277,10 @@ public class PagesAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = PAGE_UPDATED),
+            @ApiResponse(code = 404, message = PAGE_NOT_FOUND),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public void addPageToSection(
             @PathVariable(value = "language") final String language,
@@ -288,8 +320,10 @@ public class PagesAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = PAGE_UPDATED),
+            @ApiResponse(code = 404, message = PAGE_NOT_FOUND),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public void removePageFromSection(
             @PathVariable(value = "language") final String language,
@@ -331,8 +365,10 @@ public class PagesAPI {
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = PAGE_UPDATED),
+            @ApiResponse(code = 404, message = PAGE_NOT_FOUND),
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseBody
     public void changePageStatus(
             @PathVariable(value = "language") final String language,
@@ -371,17 +407,30 @@ public class PagesAPI {
             @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public List<Page> listPages(
+    public ResponseEntity<List<Page>> listPages(
             @RequestParam(value = "language", required = false) final String language,
             @RequestParam(value = "section", required = false) final Page.PageSection section,
             @RequestParam(value = "format", required = false) final Page.PageFormat format,
-            @ApiIgnore final HttpServletResponse response
+            @ApiIgnore final HttpServletResponse response,
+            @ApiIgnore final HttpSession session
             ) {
         final ApplicationContext appContext = ApplicationContextHolder.get();
         PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
-        return pageRepository.findAll();
+        UserSession us = ApiUtils.getUserSession(session);
 
+        List<Page> unfilteredResult = pageRepository.findAll();
+        List<Page> filteredResult = new ArrayList<Page>();
+
+        for (Page page : unfilteredResult) {
+            if((page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile()== Profile.Administrator) ||
+                    (page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile()!= null && us.getProfile()!= Profile.Guest ) ||
+                    page.getStatus().equals(Page.PageStatus.PUBLIC)) {
+                filteredResult.add(page);
+            }
+        }
+
+        return new ResponseEntity<List<Page>>(filteredResult, HttpStatus.OK);
     }
 
 }
