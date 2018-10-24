@@ -23,13 +23,31 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.OperationAllowed_;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueType;
+import org.fao.geonet.domain.StatusValue_;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
 
 /**
  * Data Access object for accessing {@link org.fao.geonet.domain.MetadataValidation} entities.
@@ -61,4 +79,38 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         final int deleted = query.executeUpdate();
         return deleted;
     }
+
+    @Nonnull
+    @Override
+    public List<MetadataStatus> findAllByIdAndByType(int metadataId, StatusValueType type, Sort sort) {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<MetadataStatus> query = cb.createQuery(MetadataStatus.class);
+        Root<MetadataStatus> metadataStatusRoot = query.from(MetadataStatus.class);
+        Root<StatusValue> statusValueRoot = query.from(StatusValue.class);
+
+        query.select(metadataStatusRoot);
+
+        Predicate metadataIdEqualsPredicate = cb.equal(
+            metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId),
+            metadataId);
+
+        Predicate mdIdEquals = cb.equal(
+            metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId),
+            statusValueRoot.get(StatusValue_.id));
+
+        Predicate statusTypePredicate = cb.equal(
+            statusValueRoot.get(StatusValue_.type),
+            type
+        );
+
+        query.where(mdIdEquals, metadataIdEqualsPredicate, statusTypePredicate);
+
+        if (sort != null) {
+            List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, metadataStatusRoot);
+            query.orderBy(orders);
+        }
+
+        return _entityManager.createQuery(query).getResultList();
+    }
+
 }

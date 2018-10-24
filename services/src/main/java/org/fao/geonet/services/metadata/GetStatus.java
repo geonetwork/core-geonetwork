@@ -48,7 +48,7 @@ import java.util.Set;
 /**
  * Given a metadata id returns all associated status records. Called by the metadata.status service
  */
-
+@Deprecated
 public class GetStatus implements Service {
     //--------------------------------------------------------------------------
     //---

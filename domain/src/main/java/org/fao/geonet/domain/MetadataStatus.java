@@ -30,9 +30,13 @@ import javax.persistence.*;
 
 /**
  * An entity that represents a status change of a metadata.
+ *
+ * @link StatusValue
+ *
  * <p/>
- * Note: I am not the author of metadata status, but it appears that this tracks the history as well
- * since the Id consists of the User, date, metadata and statusvalue of the metadata status change.
+ * This tracks the history as well
+ * since the Id consists of the User, date, metadata and
+ * statusvalue of the metadata status change.
  *
  * @author Jesse
  */
@@ -68,6 +72,9 @@ public class MetadataStatus extends GeonetEntity {
     private MetadataStatusId id = new MetadataStatusId();
     private String changeMessage;
     private StatusValue statusValue;
+    private int _owner;
+    private ISODate _duedate;
+    private ISODate _closedate;
 
     /**
      * Get the id object of this metadata status object.
@@ -89,8 +96,8 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     /**
-     * Get the change message, the message that describes the change in status. It is application
-     * specific.
+     * Get the change message, the message that describes the change in status.
+     * It is application specific.
      *
      * @return the change message
      */
@@ -108,6 +115,91 @@ public class MetadataStatus extends GeonetEntity {
     public void setChangeMessage(String changeMessage) {
         this.changeMessage = changeMessage;
     }
+
+
+    /**
+     * Return the owner of the metadata status.
+     * <p/>
+     *
+     * This may be null for {@link StatusValueType#workflow} type
+     * as usually a list of user is notified when the status change.
+     *
+     * This is defined when a task is delegated to someone in particular
+     * and the type is {@link StatusValueType#task}.
+     *
+     *
+     * Note the author of the status is set in {@link #setId(MetadataStatusId)}.
+     *
+     * @return the user responsible for this task.
+     */
+    // TODO: set FK to user table
+//    @MapsId("ownerId")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "ownerId", referencedColumnName = "id")
+    public Integer getOwner() {
+        return _owner;
+    }
+
+    /**
+     * Set the owner of the metadata status.
+     *
+     * @param ownerId the owner of the metadata status.
+     * @return this entity object
+     */
+    public MetadataStatus setOwner(Integer ownerId) {
+        this._owner = ownerId;
+        return this;
+    }
+
+    /**
+     * Get the due date of the status in string form.
+     * <p/>
+     * This date is set when the action needs to be addressed
+     * before a certain time.
+     *
+     * @return the due date of the status change in string form.
+     */
+    @AttributeOverride(
+        name = "dateAndTime",
+        column = @Column(name = "dueDate", nullable = true, length = 30))
+    public ISODate getDueDate() {
+        return _duedate;
+    }
+
+    /**
+     * Set the due date of the status change in string form.
+     *
+     * @param duedate the due date of the status change in string form.
+     */
+    public MetadataStatus setDueDate(ISODate duedate) {
+        this._duedate = duedate;
+        return this;
+    }
+
+    /**
+     * Get the close date of the status in string form.
+     * <p/>
+     * Indicate if a task is finished. It is set when the owner did his/her work.
+     *
+     * @return the close date of the status change in string form.
+     */
+    @AttributeOverride(
+        name = "dateAndTime",
+        column = @Column(name = "closeDate", nullable = true, length = 30))
+    public ISODate getCloseDate() {
+        return _closedate;
+    }
+
+    /**
+     * Set the close date of the status change in string form.
+     *
+     * @param closedate the close date of the status change in string form.
+     */
+    public MetadataStatus setCloseDate(ISODate closedate) {
+        this._closedate = closedate;
+        return this;
+    }
+
 
     @ManyToOne
     @JoinColumn(name = "statusId", nullable = false, insertable = false, updatable = false)
