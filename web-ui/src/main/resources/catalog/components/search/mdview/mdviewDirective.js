@@ -114,6 +114,12 @@
           unRegister = scope.$on('locationBackToSearchFromMdview', function() {
             scope.dismiss();
           });
+
+          // Sextant specific: modify all relative links in the formatter output
+          element.find('.panel-body a[href^="#/"]').each(function() {
+            var me = $(this);
+            me.attr('href', window.location.origin + window.location.pathname + me.attr('href'));
+          });
         }
       };
     }]);
