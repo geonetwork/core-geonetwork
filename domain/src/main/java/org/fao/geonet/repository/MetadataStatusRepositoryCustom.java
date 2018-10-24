@@ -23,6 +23,13 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.StatusValueType;
+import org.springframework.data.domain.Sort;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
 /**
  * Custom repository methods for the MetadataValidationRepository User: Jesse Date: 9/5/13 Time:
  * 10:17 PM
@@ -43,4 +50,15 @@ public interface MetadataStatusRepositoryCustom {
      */
     int deleteAllById_UserId(int userId);
 
+    /**
+     * Find all the MetadataStatus objects corresponding to a type
+     * by the associated metadata id.
+     *
+     * @param metadataId the metadata id.
+     * @param type the status type.
+     * @param sort       how to sort the results
+     * @return all the MetadataStatus objects by the associated metadata id.
+     */
+    @Nonnull
+    List<MetadataStatus> findAllByIdAndByType(int metadataId, StatusValueType type, Sort sort);
 }

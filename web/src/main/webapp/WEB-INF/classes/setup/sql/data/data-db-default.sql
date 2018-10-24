@@ -523,12 +523,13 @@ INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (484,'zza', NULL);
 -- === Table: StatusValues
 -- ======================================================================
 
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (0,'unknown','y', 0);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (1,'draft','y', 1);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (2,'approved','y', 3);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (3,'retired','y', 5);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (4,'submitted','y', 2);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (5,'rejected','y', 4);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type) VALUES  (0,'unknown','y', 0, 'workflow');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type) VALUES  (1,'draft','y', 1, 'workflow');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type) VALUES  (2,'approved','y', 3, 'workflow');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type) VALUES  (3,'retired','y', 5, 'workflow');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type) VALUES  (4,'submitted','y', 2, 'workflow');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type) VALUES  (5,'rejected','y', 4, 'workflow');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type) VALUES  (100,'doiCreationTask','n', 100, 'task');
 
 -- ======================================================================
 -- === Table: StatusValuesDes

@@ -32,6 +32,18 @@ import java.util.Map;
 /**
  * One of the enumerated status options that a metadata can be.
  *
+ * By default a metadata has no status ie. UNKNOWN.
+ *
+ * The first step of the workflow (ie. DRAFT) can be automatically
+ * assigned for record created on a group ( {@link  org.fao.geonet.kernel.datamanager.IMetadataStatus#activateWorkflowIfConfigured}
+ *
+ * There is 2 types of status value:
+ * <ul>
+ *     <li>One is part of the general workflow (by default)</li>
+ *     <li>One is independent task that may be triggered on demand</li>
+ * </ul>
+ *
+ *
  * @author Jesse
  */
 @Entity
@@ -45,6 +57,7 @@ public class StatusValue extends Localized {
     private int _id;
     private String _name;
     private char _reserved = Constants.YN_FALSE;
+    private StatusValueType type = StatusValueType.workflow;
     private int displayOrder;
 
     /**
@@ -156,5 +169,22 @@ public class StatusValue extends Localized {
      */
     public void setDisplayOrder(int displayOrder) {
         this.displayOrder = displayOrder;
+    }
+
+
+    /**
+     * @return the type
+     */
+    @Column(nullable = true, name = "type")
+    @Enumerated(EnumType.STRING)
+    public StatusValueType getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(StatusValueType type) {
+        this.type = type;
     }
 }

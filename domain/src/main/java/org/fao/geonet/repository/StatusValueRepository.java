@@ -24,6 +24,9 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueType;
+
+import java.util.List;
 
 /**
  * Data Access object for accessing {@link StatusValue} entities.
@@ -34,4 +37,6 @@ public interface StatusValueRepository extends GeonetRepository<StatusValue, Int
     StatusValue findOneByName(String statusValueName);
 
     StatusValue findOneById(int statusValueId);
+
+    List<StatusValue> findAllByType(StatusValueType type);
 }

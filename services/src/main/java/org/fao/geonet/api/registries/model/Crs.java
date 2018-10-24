@@ -31,8 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Crs {
     private String code;
-
-    ;
     private String authority;
     private String version;
     private String codeSpace;

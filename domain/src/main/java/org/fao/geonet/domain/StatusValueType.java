@@ -21,34 +21,24 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.repository;
-
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.StatusValueType;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+package org.fao.geonet.domain;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
-
 /**
- * Data Access object for accessing {@link MetadataStatus} entities.
- *
- * @author Jesse
+ * The type of status value.
  */
-public interface MetadataStatusRepository extends GeonetRepository<MetadataStatus, MetadataStatusId>, MetadataStatusRepositoryCustom,
-    JpaSpecificationExecutor<MetadataStatus> {
+public enum StatusValueType {
     /**
-     * Find all the MetadataStatus objects by the associated metadata id.
-     *
-     * @param metadataId the metadata id.
-     * @param sort       how to sort the results
-     * @return all the MetadataStatus objects by the associated metadata id.
+     * Indicates the associated {@link StatusValue} entity is a part of the workflow.
      */
-    @Nonnull
-    List<MetadataStatus> findAllById_MetadataId(int metadataId, Sort sort);
-
-
+    workflow,
+    /**
+     * Indicates the associated {@link StatusValue} entity is an independent task.
+     */
+    task,
+    /**
+     * Indicates the associated {@link StatusValue} entity is an event.
+     */
+    event;
 }

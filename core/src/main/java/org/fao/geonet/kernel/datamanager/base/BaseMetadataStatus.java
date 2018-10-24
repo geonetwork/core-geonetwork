@@ -12,6 +12,7 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -55,16 +56,31 @@ public class BaseMetadataStatus implements IMetadataStatus {
     }
 
     /**
-     * Return all status records for the metadata id - current status is the first child due to sort by DESC on changeDate
+     * Return last workflow status for the metadata id
      */
     @Override
     public MetadataStatus getStatus(int metadataId) throws Exception {
+        String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
+        List<MetadataStatus> status = metadataStatusRepository.findAllByIdAndByType(
+            metadataId, StatusValueType.workflow, new Sort(Sort.Direction.DESC, sortField));
+        if (status.isEmpty()) {
+            return null;
+        } else {
+            return status.get(0);
+        }
+    }
+
+    /**
+     * Return all status for the metadata id
+     */
+    @Override
+    public List<MetadataStatus> getAllStatus(int metadataId) throws Exception {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
         List<MetadataStatus> status = metadataStatusRepository.findAllById_MetadataId(metadataId, new Sort(Sort.Direction.DESC, sortField));
         if (status.isEmpty()) {
             return null;
         } else {
-            return status.get(0);
+            return status;
         }
     }
 

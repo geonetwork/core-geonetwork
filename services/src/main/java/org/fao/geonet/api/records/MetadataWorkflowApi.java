@@ -29,15 +29,28 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueType;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,14 +58,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
@@ -74,11 +91,73 @@ public class MetadataWorkflowApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @ApiOperation(
+        value = "Get record status",
+        notes = "",
+        nickname = "getStatus")
+    @RequestMapping(value = "/{metadataUuid}/status/workflow/last",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Record status."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public MetadataStatusResponse getStatus(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        HttpServletRequest request
+    )
+        throws Exception {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
+
+        AccessManager am = appContext.getBean(AccessManager.class);
+        //--- only allow the owner of the record to set its status
+        if (!am.isOwner(context, String.valueOf(metadata.getId()))) {
+            throw new SecurityException(String.format(
+                "Only the owner of the metadata can get the status. User is not the owner of the metadata"
+            ));
+        }
+
+        IMetadataStatus metadataStatus = context.getBean(IMetadataStatus.class);
+        MetadataStatus recordStatus = metadataStatus.getStatus(metadata.getId());
+
+//        List<StatusValue> elStatus = context.getBean(StatusValueRepository.class).findAll();
+        List<StatusValue> elStatus = context.getBean(StatusValueRepository.class).findAllByType(StatusValueType.workflow);
+
+        //--- get the list of content reviewers for this metadata record
+        Set<Integer> ids = new HashSet<Integer>();
+        ids.add(Integer.valueOf(metadata.getId()));
+        List<Pair<Integer, User>> reviewers = context.getBean(UserRepository.class).findAllByGroupOwnerNameAndProfile(ids,
+            Profile.Reviewer, SortUtils.createSort(User_.name));
+        List<User> listOfReviewers = new ArrayList<>();
+        for (Pair<Integer, User> reviewer : reviewers) {
+            listOfReviewers.add(reviewer.two());
+        }
+        return new MetadataStatusResponse(
+            recordStatus,
+            listOfReviewers,
+            am.hasEditPermission(context, metadata.getId() + ""),
+            elStatus);
+
+    }
+
 
     @ApiOperation(
         value = "Set record status",
         notes = "",
-        nickname = "status")
+        nickname = "setStatus")
     @RequestMapping(value = "/{metadataUuid}/status",
         method = RequestMethod.PUT
     )
@@ -88,14 +167,14 @@ public class MetadataWorkflowApi {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void status(
+    public void setStatus(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
             String metadataUuid,
         @ApiParam(
-            value = "status",
+            value = "Status",
             required = true
         )
         // TODO: RequestBody could be more appropriate ?
@@ -104,7 +183,7 @@ public class MetadataWorkflowApi {
         )
             Integer status,
         @ApiParam(
-            value = "coment",
+            value = "Status change message",
             required = true
         )
         @RequestParam(

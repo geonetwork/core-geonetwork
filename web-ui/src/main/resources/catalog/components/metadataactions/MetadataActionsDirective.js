@@ -47,18 +47,11 @@
 
           var metadataId = scope.md.getId();
           function init() {
-            return $http.get('md.status.list?' +
-                '_content_type=json&id=' + metadataId).
+            return $http.get('../api/records/' + metadataId + '/status/workflow/last').
                 success(function(data) {
                   scope.status =
-                     data !== 'null' ? data.statusvalue : null;
-
-                  angular.forEach(scope.status, function(s) {
-                    if (s.on) {
-                      scope.newStatus.value = s.id;
-                      return;
-                    }
-                  });
+                     data !== 'null' ? data.status : null;
+                  scope.newStatus.value = data.currentStatus.id.statusId;
                 });
           };
 
