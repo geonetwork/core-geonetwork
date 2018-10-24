@@ -69,7 +69,7 @@
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
-        },
+        }
       };
       angular.extend($scope.searchObj, $scope.defaultSearchObj);
 
