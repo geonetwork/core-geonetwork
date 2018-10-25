@@ -1310,7 +1310,7 @@
     <cors.allowedHosts>*</cors.allowedHosts>
 
 
-    <jetty.version>9.3.9.v20160517</jetty.version>
+    <jetty.version>9.4.12.v20180830</jetty.version>
 
 
     <!-- NOTE: When updating GeoTools, check which version
