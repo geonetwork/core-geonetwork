@@ -9084,7 +9084,7 @@ goog.require('ol.geom.flat.contains');
 
 /**
  * Calculates a point that is likely to lie in the interior of the linear rings.
- * Inspired by JTS's com.vividsolutions.jts.geom.Geometry#getInteriorPoint.
+ * Inspired by JTS's org.locationtech.jts.geom.Geometry#getInteriorPoint.
  * @param {Array.<number>} flatCoordinates Flat coordinates.
  * @param {number} offset Offset.
  * @param {Array.<number>} ends Ends.

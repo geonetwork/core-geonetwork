@@ -330,9 +330,9 @@
         <version>9.1.0.8b</version>
       </dependency>
       <dependency>
-        <groupId>com.vividsolutions</groupId>
-        <artifactId>jts</artifactId>
-        <version>1.13</version>
+        <groupId>org.locationtech.jts</groupId>
+        <artifactId>jts-core</artifactId>
+        <version>1.16.0</version>
       </dependency>
       <dependency>
         <groupId>com.github.lookfirst</groupId>
@@ -665,7 +665,7 @@
       <dependency>
         <groupId>org.geotools</groupId>
         <artifactId>gt-wfs</artifactId>
-        <version>${geotools.version}</version>
+        <version>${geotools.legacy.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
@@ -1315,7 +1315,8 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>16.0</geotools.version>
+    <geotools.version>20.0</geotools.version>
+    <geotools.legacy.version>16.5</geotools.legacy.version>
     <pg.version>9.4.1211</pg.version>
 
     <lucene.version>4.9.0</lucene.version>

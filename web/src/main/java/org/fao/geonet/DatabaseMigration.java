@@ -24,7 +24,7 @@
 package org.fao.geonet;
 
 import com.google.common.util.concurrent.Callables;
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.sources.http.ServletPathFinder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;

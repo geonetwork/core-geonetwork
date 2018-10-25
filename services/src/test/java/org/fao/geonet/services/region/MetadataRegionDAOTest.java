@@ -25,7 +25,7 @@ package org.fao.geonet.services.region;
 
 import com.google.common.collect.Lists;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import jeeves.server.context.ServiceContext;
 

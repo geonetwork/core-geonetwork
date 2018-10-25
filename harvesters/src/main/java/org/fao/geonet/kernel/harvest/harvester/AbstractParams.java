@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester;
 
 import com.google.common.collect.Maps;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;

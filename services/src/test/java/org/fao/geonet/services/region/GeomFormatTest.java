@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.region;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import org.geotools.xml.Encoder;
 import org.junit.Test;

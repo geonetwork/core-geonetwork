@@ -27,7 +27,7 @@ import org.geotools.filter.spatial.WithinImpl;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Expression;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 final class WithinOrEquals extends WithinImpl {
     WithinOrEquals(FilterFactory factory, Expression e1, Expression e2) {

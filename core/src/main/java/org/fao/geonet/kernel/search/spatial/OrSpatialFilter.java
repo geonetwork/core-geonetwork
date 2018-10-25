@@ -38,8 +38,8 @@ import org.opengis.filter.FilterFactory2;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.index.SpatialIndex;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.index.SpatialIndex;
 
 
 public class OrSpatialFilter extends SpatialFilter {

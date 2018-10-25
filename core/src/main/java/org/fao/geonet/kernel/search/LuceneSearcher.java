@@ -26,8 +26,8 @@ package org.fao.geonet.kernel.search;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -1616,7 +1616,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      *
      * @throws IllegalArgumentException if the geometry param is prefixed by <code>region:</code> but the region is not
      * found in the available sources.
-     * @throws com.vividsolutions.jts.io.ParseException if geometry is not a valid WKT string and it doesn't start by
+     * @throws org.locationtech.jts.io.ParseException if geometry is not a valid WKT string and it doesn't start by
      * <code>region:</code>
      * @return a collection of {@link Geometry} obtained of the {@link Geonet.SearchResult#GEOMETRY} parameter or null if the
      * parameter is not present in the request.

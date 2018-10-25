@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.backup;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;

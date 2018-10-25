@@ -24,11 +24,11 @@ package org.fao.geonet.kernel.search.spatial;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.TopologyException;
-import com.vividsolutions.jts.index.SpatialIndex;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.TopologyException;
+import org.locationtech.jts.index.SpatialIndex;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.lucene.document.Document;
