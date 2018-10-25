@@ -472,8 +472,7 @@
     <session-timeout>${sessionTimeout}</session-timeout>
     <cookie-config>
       <http-only>true</http-only>
-      <!-- Uncomment if using https -->
-      <!--<secure>true</secure>-->
+      <secure>${cookieSecureFlag}</secure>
     </cookie-config>
  </session-config>
 
