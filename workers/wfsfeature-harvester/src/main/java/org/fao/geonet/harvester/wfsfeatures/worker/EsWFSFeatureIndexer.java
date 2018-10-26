@@ -33,6 +33,9 @@ import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 import io.searchbox.client.JestResultHandler;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
@@ -86,13 +89,13 @@ public class EsWFSFeatureIndexer {
         }
     }
 
-    private int featureCommitInterval = 300;
 
     @Value("${es.index.features}")
     private String index = "features";
 
-    @Autowired
-    private EsClient client;
+
+    @Value("${es.index.features.featureCommitInterval:300}")
+    private int featureCommitInterval;
 
     public int getFeatureCommitInterval() {
         return featureCommitInterval;
@@ -101,6 +104,33 @@ public class EsWFSFeatureIndexer {
     public void setFeatureCommitInterval(int featureCommitInterval) {
         this.featureCommitInterval = featureCommitInterval;
     }
+
+
+    @Value("${es.index.features.applyPrecisionModel:false}")
+    private boolean applyPrecisionModel;
+
+    public boolean isApplyPrecisionModel() {
+        return applyPrecisionModel;
+    }
+
+    public void setApplyPrecisionModel(boolean applyPrecisionModel) {
+        this.applyPrecisionModel = applyPrecisionModel;
+    }
+
+
+    @Value("${es.index.features.numberOfDecimals:7}")
+    private int numberOfDecimals;
+
+    public int getNumberOfDecimals() {
+        return numberOfDecimals;
+    }
+
+    public void setNumberOfDecimals(int numberOfDecimals) {
+        this.numberOfDecimals = numberOfDecimals;
+    }
+
+    @Autowired
+    private EsClient client;
 
     public void setIndex(String index) {
         this.index = index;
@@ -190,7 +220,7 @@ public class EsWFSFeatureIndexer {
         Map<String, String> featureAttributes   = state.getFields();
         TitleResolver titleResolver = getTitleResolver(state);
 
-        LOGGER.info("Indexing WFS features from service '{}' and feature type '{}'", url, typeName);
+        LOGGER.info("Indexing WFS features from service '{}' and feature type '{}'. Precision model applied: '{}', number of decimals: '{}'", url, typeName, applyPrecisionModel, numberOfDecimals);
         Report report= new Report(url, typeName);
         ObjectNode protoNode = createProtoNode(url, typeName);
         if (state.getParameters().getMetadataUuid() != null) {
@@ -230,7 +260,6 @@ public class EsWFSFeatureIndexer {
 
                     for (String attributeName : featureAttributes.keySet()) {
                         Object attributeValue = feature.getAttribute(attributeName);
-
                         if (attributeValue == null) {
 
                         } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
@@ -243,7 +272,27 @@ public class EsWFSFeatureIndexer {
                             rootNode.putPOJO(getDocumentFieldName(attributeName), arrayNode);
                         } else if (getDocumentFieldName(attributeName).equals("geom")) {
                             Geometry geom = (Geometry) feature.getDefaultGeometry();
-                            String gjson = new GeometryJSON().toString(geom);
+
+                            if (applyPrecisionModel) {
+                                PrecisionModel precisionModel = new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
+                                geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
+                                // numberOfDecimals is equal to
+                                // precisionModel.getMaximumSignificantDigits()
+                            }
+
+                            // An issue here is that GeometryJSON conversion may over simplify
+                            // the geometry by truncating coordinates based on numberOfDecimals
+                            // which on default constructor is set to 4. This may lead to
+                            // invalid geometry and Elasticsearch will fail parsing the GeoJSON
+                            // with the following type of error:
+                            // Caused by: org.locationtech.spatial4j.exception.InvalidShapeException:
+                            // Provided shape has duplicate
+                            // consecutive coordinates at: (-3.9997, 48.7463, NaN)
+                            //
+                            // To avoid this, it may be relevant to apply the reduction model
+                            // preserving topology.
+                            String gjson = new GeometryJSON(numberOfDecimals).toString(geom);
+
                             JsonNode jsonNode = jacksonMapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
                             rootNode.put(getDocumentFieldName(attributeName), jsonNode);
 
