@@ -38,6 +38,10 @@
 
   <sec:global-method-security pre-post-annotations="enabled"/>
 
+  <context:property-placeholder location="${app.properties}"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <context:component-scan base-package="org.fao.geonet"/>
 
 
@@ -52,12 +56,12 @@
 
   <bean id="localeResolver"
         class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-    <property name="defaultLocale" value="${language.default}"/>
+    <property name="defaultLocale" value="\${language.default}"/>
   </bean>
 
   <bean id="localeChangeInterceptor"
         class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-    <property name="paramName" value="${language.default}"/>
+    <property name="paramName" value="\${language.default}"/>
   </bean>
   <bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
     <property name="urlPosition" value="0"/>
