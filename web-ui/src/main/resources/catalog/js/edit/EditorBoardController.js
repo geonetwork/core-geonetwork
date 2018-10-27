@@ -86,6 +86,35 @@
         }
       });
 
+
+      $scope.tasks = [];
+
+      function loadTasks() {
+        return $http.get('../api/status/task').
+        success(function(data) {
+          $scope.tasks = data;
+        });
+      };
+
+      $scope.taskConfiguration = {
+        doiCreationTask: {
+          isApplicable: function(md) {
+            return md.isPublished();
+          },
+          run: function() {
+            // Open DOI creation panel
+          }
+        }
+      };
+
+      loadTasks();
+
+      // Transfert the scope to the popup
+      $scope.getScope = function(currentMd) {
+        $scope.md = currentMd;
+        return $scope;
+      };
+
       $scope.deleteRecord = function(md) {
         var deferred = $q.defer();
 
