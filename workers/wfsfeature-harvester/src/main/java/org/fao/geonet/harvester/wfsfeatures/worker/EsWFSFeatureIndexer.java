@@ -65,6 +65,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -197,7 +199,8 @@ public class EsWFSFeatureIndexer {
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+id:\\\"%s#%s\\\"", url, typeName));
+            client.deleteByQuery(index, String.format("+id:\\\"%s\\\"",
+                getIdentifier(url, typeName)));
             LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
 
         } catch (Exception e) {
@@ -385,19 +388,21 @@ public class EsWFSFeatureIndexer {
         ObjectNode protoNode = jacksonMapper.createObjectNode();
         protoNode.put("docType", "feature");
         protoNode.put("resourceType", "feature");
-        protoNode.put("featureTypeId", String.format("%s#%s",url, typeName));
+        protoNode.put("featureTypeId", getIdentifier(url, typeName));
         return protoNode;
     }
 
     class Report {
         private Map<String, Object> report = new HashMap<>();
+        private String url;
         private String typeName;
         private boolean pointOnlyForGeoms;
 
-        public Report(String url, String typeName) {
+        public Report(String url, String typeName) throws UnsupportedEncodingException {
             this.typeName = typeName;
+            this.url = url;
             pointOnlyForGeoms = true;
-            report.put("id", url + "#" + typeName);
+            report.put("id", getIdentifier(url, typeName));
             report.put("docType", "harvesterReport");
         }
 
@@ -428,17 +433,28 @@ public class EsWFSFeatureIndexer {
             try {
                 DocumentResult response = client.getClient().execute(search);
                 if (response.getErrorMessage() != null) {
-                    LOGGER.info("Report saved for {}. Error message when saving report was '{}'.",
+                    LOGGER.info("Failed to save report for {}. Error message when saving report was '{}'.",
                         typeName,
                         response.getErrorMessage());
                 } else {
-                    LOGGER.info("Report saved for {}.", typeName);
+                    LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
+                        url, typeName, report.get("id"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
             return true;
+        }
+    }
+
+    private String getIdentifier(String url, String typeName) {
+        try {
+            return URLEncoder.encode(url + "#" + typeName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error("  Can not build an URL encoded identifier from {}#{}. Exception is {}.",
+                url, typeName, e.getMessage());
+            return null;
         }
     }
 
