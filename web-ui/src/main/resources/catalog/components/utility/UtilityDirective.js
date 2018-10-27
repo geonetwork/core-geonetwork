@@ -137,6 +137,42 @@
       };
     }]);
 
+  module.directive('gnUserPicker', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
+          // TODO: Add by profile and by group
+          $http.get('../api/users',
+            {}, {
+              cache: true
+            }).then(function(r) {
+            // var data = data;
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              local: r.data,
+              limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              // name: 'user',
+              displayKey: 'username',
+              source: source.ttAdapter()
+            }).on('typeahead:selected', function(event, datum) {
+              // if (angular.isFunction(scope.onRegionSelect)) {
+              //   scope.onRegionSelect(datum);
+              // }
+            });
+          });
+        }
+      };
+    }]);
+
   module.directive('gnBatchReport', [
     function() {
       return {
