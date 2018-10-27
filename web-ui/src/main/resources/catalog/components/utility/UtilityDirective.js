@@ -141,6 +141,9 @@
     function($http) {
       return {
         restrict: 'A',
+        scope: {
+          user: '=gnUserPicker'
+        },
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
           // TODO: Add by profile and by group
@@ -153,20 +156,33 @@
               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
               queryTokenizer: Bloodhound.tokenizers.whitespace,
               local: r.data,
+              identify: function(obj) { return obj.username; },
               limit: 30
             });
+
+            function sourceWithDefaults(q, sync) {
+              if (q === '') {
+                sync(source.all());
+              } else {
+                source.search(q, sync);
+              }
+            }
+
             source.initialize();
             $(element).typeahead({
               minLength: 0,
               highlight: true
             }, {
-              // name: 'user',
               displayKey: 'username',
-              source: source.ttAdapter()
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum.name + ' ' + datum.surname +
+                         ' (' + datum.profile + ')</p>';
+                }
+              },
+              source: sourceWithDefaults
             }).on('typeahead:selected', function(event, datum) {
-              // if (angular.isFunction(scope.onRegionSelect)) {
-              //   scope.onRegionSelect(datum);
-              // }
+              scope.user = datum;
             });
           });
         }

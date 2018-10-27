@@ -40,10 +40,11 @@
     '$rootScope',
     '$translate',
     '$q',
+    '$http',
     'gnSearchSettings',
     'gnMetadataActions',
     'gnGlobalSettings',
-    function($scope, $location, $rootScope, $translate, $q,
+    function($scope, $location, $rootScope, $translate, $q, $http,
         gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
       $scope.onlyMyRecord = {
         is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
@@ -106,10 +107,11 @@
       $scope.taskConfiguration = {
         doiCreationTask: {
           isApplicable: function(md) {
-            return md.isPublished();
-          },
-          run: function() {
-            // Open DOI creation panel
+            // Would be good to return why a task is not applicable as tooltip
+            // TODO: Add has DOI already
+            return md.isPublished()
+              && md.isTemplate === 'n'
+              && md.isHarvested === 'n';
           }
         }
       };
