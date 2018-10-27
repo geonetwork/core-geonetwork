@@ -61,7 +61,7 @@
         <a data-ng-href=""
            data-ng-if="user.canEditRecord(md) &&
                                 md.isWorkflowEnabled()"
-           data-ng-click="mdService.openUpdateStatusPanel(getScope())">
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')">
           <i class="fa fa-bell"></i>&nbsp;
           <span data-translate="">updateStatus</span>
         </a></li>

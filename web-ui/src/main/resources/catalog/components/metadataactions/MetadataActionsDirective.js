@@ -28,6 +28,18 @@
 
   var module = angular.module('gn_mdactions_directive', []);
 
+  /**
+   * @ngdoc directive
+   * @name gn_mdactions_directive.directive:gnMetadataStatusUpdater
+   * @restrict A
+   * @requires gnMetadataStatusUpdater
+   *
+   * @description
+   * The `gnMetadataStatusUpdater` directive provides a
+   * form to update the record status. Status can be related
+   * to one of the worflow step and could also be to trigger
+   * a action.
+   */
   module.directive('gnMetadataStatusUpdater', ['$translate', '$http',
     'gnMetadataManager',
     function($translate, $http, gnMetadataManager) {
@@ -38,22 +50,40 @@
         templateUrl: '../../catalog/components/metadataactions/partials/' +
             'statusupdater.html',
         scope: {
-          md: '=gnMetadataStatusUpdater'
+          md: '=gnMetadataStatusUpdater',
+          statusType: '@',
+          taskName: '@'
         },
         link: function(scope) {
-          scope.lang = scope.$parent.lang;
           var user = scope.$parent.user;
+          var defaultType = 'workflow';
+          scope.lang = scope.$parent.lang;
           scope.newStatus = {value: '0'};
+          scope.statusType = scope.statusType || defaultType;
 
           var metadataId = scope.md.getId();
+
+          // Retrieve last status to set it in the form
           function init() {
-            return $http.get('../api/records/' + metadataId + '/status/workflow/last').
-                success(function(data) {
-                  scope.status =
-                     data !== 'null' ? data.status : null;
-                  scope.newStatus.value = data.currentStatus.id.statusId;
-                });
+            if (scope.statusType === defaultType) {
+              return $http.get('../api/records/'
+                + metadataId + '/status/'
+                + scope.statusType + '/last').
+                  success(function(data) {
+                    scope.status =
+                       data !== 'null' ? data.status : null;
+                    scope.newStatus.value = data.currentStatus.id.statusId;
+                    scope.lastStatus = data.currentStatus.id.statusId;
+                  });
+            } else {
+              return $http.get('../api/status/' + scope.statusType).
+              success(function(data) {
+                scope.status = data;
+                scope.newStatus = null;
+              });
+            }
           };
+
 
           scope.updateStatus = function() {
             return $http.put('../api/records/' + metadataId +
@@ -78,8 +108,13 @@
                 });
           };
 
-          scope.cantStatus = function(status) {
-            return ((status == 5 || status == 2 || status == 3) &&
+          var statusApproved = 2;
+          var statusSubmitted = 3;
+          var statusRejected = 5;
+          scope.cantChangeStatus = function(status) {
+            return ((status == statusRejected ||
+                     status == statusApproved ||
+                     status == statusSubmitted) &&
                 !user.isReviewerOrMore());
           };
 
@@ -87,6 +122,7 @@
         }
       };
     }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnMetadataCategoryUpdater

@@ -1,6 +1,6 @@
 <form name="myForm">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-  <div class="row">
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <div class="row" data-ng-if="statusType === 'workflow'">
     <div class="col-md-4">
       <!-- TODO: Status are disabled based on profiles and
       previous values. See https://github.com/geonetwork/core-geonetwork/blob/develop/web/src/main/webapp/xsl/metadata-status.xsl#L15 -->
@@ -11,8 +11,11 @@
           <input type="radio"
                  name="status"
                  value="{{::s.id}}"
-                 data-ng-model="newStatus.value" data-ng-disabled="cantStatus(s.id)">
+                 data-ng-model="newStatus.value" data-ng-disabled="cantChangeStatus(s.id)">
           {{s.label[lang]}}
+          <span data-ng-if="lastStatus == s.id">
+            (<span data-translate="">currentStatus</span>)
+          </span>
         </label>
       </div>
     </div>
@@ -36,6 +39,47 @@
         <div data-gn-need-help="user-guide/workflow/life-cycle.html"
              data-icon-only="true"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Task form -->
+  <div class="row" data-ng-if="statusType === 'task'">
+    <div class="col-md-4">
+      <h2>{{taskName}}</h2>
+
+
+      <div class="form-group">
+        <label for="gn-task-owner"
+               data-translate="">taskOwner</label>
+        <input class="form-control"
+               id="gn-task-owner"
+               data-gn-user-picker=""
+               type="text"
+               data-ng-model="taskOwner"></input>
+      </div>
+
+      <div class="form-group">
+        <label for="gn-task-dueDate"
+               data-translate="">taskDueDate</label>
+        <input class="form-control"
+               id="gn-task-dueDate"
+               type="date"
+               data-ng-model="dueDate"></input>
+      </div>
+
+      <div class="form-group">
+        <label for="gn-task-message"
+               data-translate="">taskMessage</label>
+        <textarea class="form-control"
+                  id="gn-task-message"
+                  data-ng-model="changeMessage"></textarea>
+      </div>
+
+      <button class="btn btn-default"
+              data-gn-click-and-spin="updateStatus()">
+        <i class="fa fa-mail-forward"></i>&nbsp;
+        <span data-translate="">triggerTask</span>
+      </button>
     </div>
   </div>
 </form>
