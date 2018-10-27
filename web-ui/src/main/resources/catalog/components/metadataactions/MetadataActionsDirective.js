@@ -57,9 +57,9 @@
         link: function(scope) {
           var user = scope.$parent.user;
           var defaultType = 'workflow';
-          scope.lang = scope.$parent.lang;
-          scope.newStatus = {value: '0'};
           scope.statusType = scope.statusType || defaultType;
+          scope.lang = scope.$parent.lang;
+          scope.newStatus = {value: '0', owner: null, dueDate: null, message: ''};
 
           var metadataId = scope.md.getId();
 
@@ -79,7 +79,7 @@
               return $http.get('../api/status/' + scope.statusType).
               success(function(data) {
                 scope.status = data;
-                scope.newStatus = null;
+                scope.newStatus = {value: '0', owner: null, dueDate: null, message: ''};
               });
             }
           };
@@ -87,8 +87,11 @@
 
           scope.updateStatus = function() {
             return $http.put('../api/records/' + metadataId +
-                '/status?status=' + scope.newStatus.value +
-                '&comment=' + (scope.changeMessage || '')
+                '/status?' +
+                'status=' + scope.newStatus.value +
+                '&owner=' + (scope.newStatus.owner ? scope.newStatus.owner.id : '') +
+                '&dueDate=' + (scope.newStatus.dueDate || '') +
+                '&comment=' + (scope.newStatus.message || '')
             ).then(
                 function(data) {
                   gnMetadataManager.updateMdObj(scope.md);
