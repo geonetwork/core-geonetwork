@@ -37,6 +37,6 @@ public interface StatusActions {
 
     public void onEdit(int id, boolean minorEdit) throws Exception;
 
-    public Set<Integer> statusChange(List<MetadataStatus> status) throws Exception;
+    public Set<Integer> onStatusChange(List<MetadataStatus> status) throws Exception;
 
 }
