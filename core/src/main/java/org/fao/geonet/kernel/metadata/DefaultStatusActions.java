@@ -23,8 +23,6 @@
 
 package org.fao.geonet.kernel.metadata;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -42,8 +40,7 @@ import org.fao.geonet.util.MailSender;
 import org.fao.geonet.util.XslUtil;
 import org.springframework.context.ApplicationContext;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -110,16 +107,13 @@ public class DefaultStatusActions implements StatusActions {
             emailNotes = false;
         }
 
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
-        fromDescr = siteName + messages.getString("status_email_title");
-
         session = context.getUserSession();
         replyTo = session.getEmailAddr();
         if (replyTo != null) {
             replyToDescr = session.getName() + " " + session.getSurname();
         } else {
             replyTo = from;
-            replyToDescr = fromDescr;
+            replyToDescr = siteName;
         }
 
         dm = applicationContext.getBean(DataManager.class);
@@ -142,8 +136,14 @@ public class DefaultStatusActions implements StatusActions {
         }
     }
 
-
-    public Set<Integer> statusChange(List<MetadataStatus> listOfStatus) throws Exception {
+    /**
+     * Called when a record status is added.
+     *
+     * @param listOfStatus
+     * @return
+     * @throws Exception
+     */
+    public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
 
         Set<Integer> unchanged = new HashSet<Integer>();
 
@@ -168,7 +168,7 @@ public class DefaultStatusActions implements StatusActions {
 
             // --- Apply changes based on status change
             // TODO: Would be good to report what has been done ?
-            applyRules(status);
+            applyRulesForStatusChange(status);
 
             // --- set status, indexing is assumed to take place later
             metadataStatusManager.setStatusExt(status);
@@ -191,7 +191,7 @@ public class DefaultStatusActions implements StatusActions {
      * @param status
      * @throws Exception
      */
-    private void applyRules(MetadataStatus status) throws Exception {
+    private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
         String statusId = status.getId().getStatusId() + "";
         if (statusId.equals(StatusValue.Status.APPROVED)) {
             // setAllOperations(mid);
@@ -213,25 +213,44 @@ public class DefaultStatusActions implements StatusActions {
 
         String translatedStatusName = getTranslatedStatusName(status.getId().getStatusId());
         // TODO: Refactor to allow custom messages based on the type of status
-        String subject = String.format(messages.getString(
-            "status_email_change_title"),
-            siteName, translatedStatusName,
-            replyToDescr, replyTo, status.getId().getChangeDate().toString()
+        String subjectTemplate = messages.getString(
+            "status_change_" + status.getStatusValue().getName() + "_email_subject");
+        if (subjectTemplate == null) {
+            subjectTemplate = messages.getString("status_change_default_email_subject");
+        }
+        String subject = MessageFormat.format(subjectTemplate,
+            siteName,
+            translatedStatusName,
+            replyToDescr // Author of the change
         );
 
         Set<Integer> listOfId = new HashSet<>(1);
         listOfId.add(status.getId().getMetadataId());
-        String listOfRecordAffected = buildMetadataChangedMessage(listOfId);
 
-        String message = String.format(messages.getString(
-            "status_email_change_text"),
+        String textTemplate = messages.getString(
+            "status_change_" + status.getStatusValue().getName() + "_email_text");
+        if (textTemplate == null) {
+            textTemplate = messages.getString("status_change_default_email_text");
+        }
+
+        UserRepository userRepository = context.getBean(UserRepository.class);
+        User owner = userRepository.findOne(status.getOwner());
+
+        String message = MessageFormat.format(textTemplate,
+            replyToDescr, // Author of the change
             status.getChangeMessage(),
-            listOfRecordAffected,
-            siteUrl,
-            status.getStatusValue().getName(),
-            status.getId().getChangeDate());
+            translatedStatusName,
+            status.getId().getChangeDate(),
+            status.getDueDate(),
+            status.getCloseDate(),
+            owner == null ? "" : owner.getName() + " " + owner.getSurname(),
+            siteUrl);
 
+        MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        Metadata metadata = metadataRepository.findOne(status.getId().getMetadataId());
 
+        subject = compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
+        message = compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
         for (User user : userToNotify) {
             sendEmail(user.getEmail(), subject, message);
         }
@@ -303,40 +322,6 @@ public class DefaultStatusActions implements StatusActions {
         for (ReservedOperation op : ReservedOperation.values()) {
             dm.forceUnsetOperation(context, mdId, allGroup, op.getId());
         }
-    }
-
-
-    private String buildMetadataChangedMessage(Set<Integer> metadata) {
-        String statusMetadataDetails = null;
-        String message = "";
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
-
-        try {
-            statusMetadataDetails = messages.getString("status_email_change_details");
-        } catch (Exception e) {
-        }
-        // Fallback on a default value if statusMetadataDetails not resolved
-        if (statusMetadataDetails == null) {
-            statusMetadataDetails = "* {{index:title}} ({{serverurl}}catalog.search#/metadata/{{index:_uuid}})";
-        }
-
-        ArrayList<String> fields = new ArrayList<String>();
-
-        Matcher m = metadataLuceneField.matcher(statusMetadataDetails);
-        Iterable<Metadata> mds = this.context.getBean(MetadataRepository.class).findAll(metadata);
-
-        while (m.find()) {
-            fields.add(m.group(1));
-        }
-
-        for (Metadata md : mds) {
-            String curMdDetails = statusMetadataDetails;
-            // First substitution for variables not stored in the index
-            curMdDetails = curMdDetails.replace("{{serverurl}}", siteUrl);
-            curMdDetails = compileMessageWithIndexFields(curMdDetails, md.getUuid(), this.language);
-            message = message.concat(curMdDetails + "\r\n");
-        }
-        return message;
     }
 
     /**

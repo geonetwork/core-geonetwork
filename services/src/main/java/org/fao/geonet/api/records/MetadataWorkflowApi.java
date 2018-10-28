@@ -296,7 +296,7 @@ public class MetadataWorkflowApi {
         MetadataStatus metadataStatus = convertParameter(metadata.getId(), status, author);
         List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
         listOfStatusChange.add(metadataStatus);
-        sa.statusChange(listOfStatusChange);
+        sa.onStatusChange(listOfStatusChange);
 
         //--- reindex metadata
         DataManager dataManager = appContext.getBean(DataManager.class);
