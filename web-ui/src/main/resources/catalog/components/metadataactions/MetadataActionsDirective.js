@@ -59,7 +59,7 @@
           var defaultType = 'workflow';
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
-          scope.newStatus = {value: '0', owner: null, dueDate: null, message: ''};
+          scope.newStatus = {status: '0', owner: null, dueDate: null, changeMessage: ''};
 
           var metadataId = scope.md.getId();
 
@@ -72,26 +72,23 @@
                   success(function(data) {
                     scope.status =
                        data !== 'null' ? data.status : null;
-                    scope.newStatus.value = data.currentStatus.id.statusId;
+                    scope.newStatus.status = data.currentStatus.id.statusId;
                     scope.lastStatus = data.currentStatus.id.statusId;
                   });
             } else {
               return $http.get('../api/status/' + scope.statusType).
               success(function(data) {
                 scope.status = data;
-                scope.newStatus = {value: '0', owner: null, dueDate: null, message: ''};
+                scope.newStatus = {status: '0', owner: null, dueDate: null, changeMessage: ''};
               });
             }
           };
 
 
           scope.updateStatus = function() {
+            scope.newStatus.owner = scope.newStatus.owner.id;
             return $http.put('../api/records/' + metadataId +
-                '/status?' +
-                'status=' + scope.newStatus.value +
-                '&owner=' + (scope.newStatus.owner ? scope.newStatus.owner.id : '') +
-                '&dueDate=' + (scope.newStatus.dueDate || '') +
-                '&comment=' + (scope.newStatus.message || '')
+                '/status', scope.newStatus
             ).then(
                 function(data) {
                   gnMetadataManager.updateMdObj(scope.md);
