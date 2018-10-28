@@ -78,7 +78,7 @@
               <ul class="dropdown-menu dropdown-menu-right">
                 <li data-ng-repeat="t in tasks"
                     data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
-                  <a data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t.name)">{{t.name}}</a>
+                  <a data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">{{t.name}}</a>
                 </li>
               </ul>
             </div>

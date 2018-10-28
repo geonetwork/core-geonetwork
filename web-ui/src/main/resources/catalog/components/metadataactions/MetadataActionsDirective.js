@@ -52,16 +52,18 @@
         scope: {
           md: '=gnMetadataStatusUpdater',
           statusType: '@',
-          taskName: '@'
+          task: '='
         },
         link: function(scope) {
           var user = scope.$parent.user;
+          var metadataId = scope.md.getId();
           var defaultType = 'workflow';
+
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
-          scope.newStatus = {status: '0', owner: null, dueDate: null, changeMessage: ''};
+          scope.task = angular.isDefined(scope.task) ? scope.task : scope.$parent.task;
+          scope.newStatus = {status: scope.task.id, owner: null, dueDate: null, changeMessage: ''};
 
-          var metadataId = scope.md.getId();
 
           // Retrieve last status to set it in the form
           function init() {
@@ -79,7 +81,7 @@
               return $http.get('../api/status/' + scope.statusType).
               success(function(data) {
                 scope.status = data;
-                scope.newStatus = {status: '0', owner: null, dueDate: null, changeMessage: ''};
+                scope.newStatus = {status: scope.task.id, owner: null, dueDate: null, changeMessage: ''};
               });
             }
           };
