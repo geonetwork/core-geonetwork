@@ -211,8 +211,9 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @param email all the email addresses.
      */
-    protected void setEmailAddresses(Set<String> email) {
+    public User setEmailAddresses(Set<String> email) {
         this._email = email;
+        return this;
     }
 
     /**
