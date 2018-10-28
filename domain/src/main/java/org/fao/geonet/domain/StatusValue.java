@@ -58,6 +58,7 @@ public class StatusValue extends Localized {
     private String _name;
     private char _reserved = Constants.YN_FALSE;
     private StatusValueType type = StatusValueType.workflow;
+    private StatusValueNotificationLevel notificationLevel;
     private int displayOrder;
 
     /**
@@ -186,6 +187,23 @@ public class StatusValue extends Localized {
      */
     public void setType(StatusValueType type) {
         this.type = type;
+    }
+
+
+    /**
+     * @return the type
+     */
+    @Column(nullable = true, name = "notificationLevel")
+    @Enumerated(EnumType.STRING)
+    public StatusValueNotificationLevel getNotificationLevel() {
+        return notificationLevel;
+    }
+
+    /**
+     * @param notificationLevel the notificationLevel to set
+     */
+    public void setNotificationLevel(StatusValueNotificationLevel notificationLevel) {
+        this.notificationLevel = notificationLevel;
     }
 
     /**
