@@ -35,6 +35,8 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.StatusValue;
@@ -46,11 +48,14 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataStatusRepositoryCustom;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -70,6 +75,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -92,11 +98,90 @@ public class MetadataWorkflowApi {
     @Autowired
     LanguageUtils languageUtils;
 
+
     @ApiOperation(
-        value = "Get record status",
+        value = "Get record status history",
+        notes = "",
+        nickname = "getRecordStatusHistory")
+    @RequestMapping(
+        value = "/{metadataUuid}/status",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<MetadataStatus> getRecordStatusHistory(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(value = "Sort direction",
+            required = false)
+        @RequestParam(
+            defaultValue = "DESC"
+        )
+            Sort.Direction sortOrder,
+        HttpServletRequest request) throws Exception {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        MetadataStatusRepositoryCustom metadataStatusRepository =
+            ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
+
+        String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
+
+        // TODO: Add paging
+        return ((MetadataStatusRepository) metadataStatusRepository).findAllById_MetadataId(
+            metadata.getId(),
+            new Sort(sortOrder, sortField));
+    }
+
+
+    @ApiOperation(
+        value = "Get record status history by type",
+        notes = "",
+        nickname = "getRecordStatusHistoryByType")
+    @RequestMapping(
+        value = "/{metadataUuid}/status/{type}",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<MetadataStatus> getRecordStatusHistoryByType(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(value = "Type",
+            required = true)
+        @PathVariable
+            StatusValueType type,
+        @ApiParam(value = "Sort direction",
+            required = false)
+        @RequestParam(
+            defaultValue = "DESC"
+        )
+            Sort.Direction sortOrder,
+        HttpServletRequest request) throws Exception {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        MetadataStatusRepositoryCustom metadataStatusRepository =
+            ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
+
+        String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
+
+        // TODO: Add paging
+        return metadataStatusRepository.findAllByIdAndByType(
+            metadata.getId(),
+            type,
+            new Sort(sortOrder, sortField));
+    }
+
+
+    @ApiOperation(
+        value = "Get last workflow status for a record",
         notes = "",
         nickname = "getStatus")
-    @RequestMapping(value = "/{metadataUuid}/status/workflow/last",
+    @RequestMapping(
+        value = "/{metadataUuid}/status/workflow/last",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -159,7 +244,8 @@ public class MetadataWorkflowApi {
         value = "Set record status",
         notes = "",
         nickname = "setStatus")
-    @RequestMapping(value = "/{metadataUuid}/status",
+    @RequestMapping(
+        value = "/{metadataUuid}/status",
         method = RequestMethod.PUT
     )
     @PreAuthorize("hasRole('Editor')")

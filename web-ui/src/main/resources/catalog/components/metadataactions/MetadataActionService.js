@@ -220,12 +220,12 @@
         }, scope, 'PrivilegesUpdated');
       };
 
-      this.openUpdateStatusPanel = function(scope, statusType, taskName) {
+      this.openUpdateStatusPanel = function(scope, statusType, t) {
+        scope.task = t;
         openModal({
           title: 'updateStatus',
           content: '<div data-gn-metadata-status-updater="md" ' +
-                        'data-status-type="' + statusType + '"' +
-                        'data-task-name="' + taskName + '"></div>'
+                        'data-status-type="' + statusType + '" task="t"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
