@@ -187,4 +187,18 @@ public class StatusValue extends Localized {
     public void setType(StatusValueType type) {
         this.type = type;
     }
+
+    /**
+     * List of predefined status part of the workflow.
+     * Those values are the default one for GeoNetwork
+     * and may be modified in the database.
+     */
+    public static final class Status {
+        public static final String UNKNOWN = "0";
+        public static final String DRAFT = "1";
+        public static final String APPROVED = "2";
+        public static final String RETIRED = "3";
+        public static final String SUBMITTED = "4";
+        public static final String REJECTED = "5";
+    }
 }

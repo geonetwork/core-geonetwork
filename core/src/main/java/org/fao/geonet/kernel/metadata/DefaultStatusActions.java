@@ -28,9 +28,9 @@ import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
@@ -62,6 +62,7 @@ public class DefaultStatusActions implements StatusActions {
     private boolean useTLS;
     private boolean ignoreSslCertificateErrors;
     private StatusValueRepository _statusValueRepository;
+    private IMetadataStatus metadataStatusManager;
 
     /**
      * Constructor.
@@ -119,6 +120,7 @@ public class DefaultStatusActions implements StatusActions {
         }
 
         dm = applicationContext.getBean(DataManager.class);
+        metadataStatusManager = applicationContext.getBean(IMetadataStatus.class);
         siteUrl = sm.getSiteURL(context);
     }
 
@@ -129,11 +131,11 @@ public class DefaultStatusActions implements StatusActions {
      * @param minorEdit If true then the edit was a minor edit.
      */
     public void onEdit(int id, boolean minorEdit) throws Exception {
-        if (!minorEdit && dm.getCurrentStatus(id).equals(Params.Status.APPROVED)) {
+        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
             unsetAllOperations(id);
-            dm.setStatus(context, id, Integer.valueOf(Params.Status.DRAFT), new ISODate(), changeMessage);
+            dm.setStatus(context, id, Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(), changeMessage);
         }
     }
 
@@ -149,6 +151,7 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeDate    The date the status was changed.
      * @param changeMessage The message explaining why the status has changed.
      */
+    @Deprecated
     public Set<Integer> statusChange(String status, Set<Integer> metadataIds, ISODate changeDate, String changeMessage) throws Exception {
 
         Set<Integer> unchanged = new HashSet<Integer>();
@@ -164,9 +167,9 @@ public class DefaultStatusActions implements StatusActions {
                 unchanged.add(mid);
             }
 
-            if (status.equals(Params.Status.APPROVED)) {
+            if (status.equals(StatusValue.Status.APPROVED)) {
                 // setAllOperations(mid); - this is a short cut that could be enabled
-            } else if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.REJECTED)) {
+            } else if (status.equals(StatusValue.Status.DRAFT) || status.equals(StatusValue.Status.REJECTED)) {
                 unsetAllOperations(mid);
             }
 
@@ -175,15 +178,63 @@ public class DefaultStatusActions implements StatusActions {
         }
 
         // --- inform content reviewers if the status is submitted
-        if (status.equals(Params.Status.SUBMITTED)) {
+        if (status.equals(StatusValue.Status.SUBMITTED)) {
             informContentReviewers(metadataIds, changeDate.toString(), changeMessage);
             // --- inform owners if status is approved
-        } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED)) {
+        } else if (status.equals(StatusValue.Status.APPROVED) || status.equals(StatusValue.Status.REJECTED)) {
             informOwners(metadataIds, changeDate.toString(), changeMessage, status);
         }
 
         return unchanged;
     }
+
+    public Set<Integer> statusChange(List<MetadataStatus> listOfStatus) throws Exception {
+
+        Set<Integer> unchanged = new HashSet<Integer>();
+
+        // -- process the metadata records to set status
+        for (MetadataStatus status : listOfStatus) {
+            String currentStatus = dm.getCurrentStatus(status.getId().getMetadataId());
+            String statusId = status.getId().getStatusId() + "";
+            // --- For the workflow, if the status is already set to value
+            // of status then do nothing. This does not apply to task and event.
+            if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
+               (statusId).equals(currentStatus)) {
+                if (context.isDebugEnabled())
+                    context.debug(String.format("Metadata %s already has status %s ",
+                        status.getId().getMetadataId(), status.getId().getStatusId()));
+                unchanged.add(status.getId().getMetadataId());
+                continue;
+            }
+
+            if (statusId.equals(StatusValue.Status.APPROVED)) {
+                // setAllOperations(mid); - this is a short cut that could be enabled
+                // to publish automatically a record which is approved.
+            } else if (statusId.equals(StatusValue.Status.DRAFT) ||
+                statusId.equals(StatusValue.Status.REJECTED)) {
+                // Unpublish record which are in draft or rejected status
+                unsetAllOperations(status.getId().getMetadataId());
+            }
+
+            // --- set status, indexing is assumed to take place later
+            metadataStatusManager.setStatusExt(status);
+
+            // --- inform content reviewers if the status is submitted
+            Set<Integer> listOfId = new HashSet<>(1);
+            listOfId.add(status.getId().getMetadataId());
+            if (statusId.equals(StatusValue.Status.SUBMITTED)) {
+                informContentReviewers(listOfId, status.getId().getChangeDate().getDateAndTime(), status.getChangeMessage());
+                // --- inform owners if status is approved
+            } else if (statusId.equals(StatusValue.Status.APPROVED) ||
+                       statusId.equals(StatusValue.Status.REJECTED)) {
+                informOwners(listOfId, status.getId().getChangeDate().getDateAndTime(), status.getChangeMessage(), status.getId().getStatusId() + "");
+            }
+
+        }
+
+        return unchanged;
+    }
+
 
     /**
      * Unset all operations on 'All' Group. Used when status changes from approved to something
@@ -220,13 +271,13 @@ public class DefaultStatusActions implements StatusActions {
             }
         });
         String mdChanged = buildMetadataChangedMessage(metadata);
-        String translatedStatusName = getTranslatedStatusName(Params.Status.SUBMITTED);
+        String translatedStatusName = getTranslatedStatusName(StatusValue.Status.SUBMITTED);
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
         String subject = String.format(messages.getString(
             "status_email_change_title"),
             siteName, translatedStatusName, replyToDescr, replyTo, changeDate
         );
-        processList(users, subject, Params.Status.SUBMITTED,
+        processList(users, subject, StatusValue.Status.SUBMITTED,
             changeDate, changeMessage, mdChanged);
     }
 

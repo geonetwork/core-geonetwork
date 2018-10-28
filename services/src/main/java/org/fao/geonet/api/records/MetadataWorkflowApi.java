@@ -24,15 +24,17 @@
 package org.fao.geonet.api.records;
 
 import io.swagger.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.StatusValue;
@@ -54,9 +56,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,7 +67,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
@@ -174,22 +175,13 @@ public class MetadataWorkflowApi {
         @PathVariable
             String metadataUuid,
         @ApiParam(
-            value = "Status",
+            value = "Metadata status",
             required = true
         )
-        // TODO: RequestBody could be more appropriate ?
-        @RequestParam(
+        @RequestBody(
             required = true
         )
-            Integer status,
-        @ApiParam(
-            value = "Status change message",
-            required = true
-        )
-        @RequestParam(
-            required = true
-        )
-            String comment,
+            MetadataStatusParameter status,
         HttpServletRequest request
     )
         throws Exception {
@@ -207,7 +199,6 @@ public class MetadataWorkflowApi {
             ));
         }
 
-        ISODate changeDate = new ISODate();
 
         //--- use StatusActionsFactory and StatusActions class to
         //--- change status and carry out behaviours for status changes
@@ -215,13 +206,45 @@ public class MetadataWorkflowApi {
 
         StatusActions sa = saf.createStatusActions(context);
 
-        Set<Integer> metadataIds = new HashSet<Integer>();
-        metadataIds.add(metadata.getId());
-
-        sa.statusChange(String.valueOf(status), metadataIds, changeDate, comment);
+        int author = context.getUserSession().getUserIdAsInt();
+        MetadataStatus metadataStatus = convertParameter(metadata.getId(), status, author);
+        List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+        listOfStatusChange.add(metadataStatus);
+        sa.statusChange(listOfStatusChange);
 
         //--- reindex metadata
         DataManager dataManager = appContext.getBean(DataManager.class);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+    }
+
+
+    public MetadataStatus convertParameter(int id, MetadataStatusParameter parameter, int author) throws Exception {
+        StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
+        StatusValue statusValue = statusValueRepository.findOne(parameter.getStatus());
+
+        MetadataStatus metadataStatus = new MetadataStatus();
+
+        MetadataStatusId mdStatusId = new MetadataStatusId()
+            .setStatusId(parameter.getStatus())
+            .setMetadataId(id)
+            .setChangeDate(new ISODate())
+            .setUserId(author);
+
+        metadataStatus.setId(mdStatusId);
+        metadataStatus.setStatusValue(statusValue);
+
+        if (parameter.getChangeMessage() != null) {
+            metadataStatus.setChangeMessage(parameter.getChangeMessage());
+        }
+        if (StringUtils.isNotEmpty(parameter.getDueDate())) {
+            metadataStatus.setDueDate(new ISODate(parameter.getDueDate()));
+        }
+        if (StringUtils.isNotEmpty(parameter.getCloseDate())) {
+            metadataStatus.setCloseDate(new ISODate(parameter.getCloseDate()));
+        }
+        if (parameter.getOwner() != null) {
+            metadataStatus.setOwner(parameter.getOwner());
+        }
+        return metadataStatus;
     }
 }
