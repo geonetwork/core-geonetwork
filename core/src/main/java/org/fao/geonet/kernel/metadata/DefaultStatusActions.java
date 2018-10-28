@@ -222,7 +222,18 @@ public class DefaultStatusActions implements StatusActions {
             // --- inform content reviewers if the status is submitted
             Set<Integer> listOfId = new HashSet<>(1);
             listOfId.add(status.getId().getMetadataId());
-            if (statusId.equals(StatusValue.Status.SUBMITTED)) {
+
+            // TODO add a status NotificationLevel which allows to trigger
+            // the different notification scenario we have to cover:
+            // * statusUserOwner
+            // * recordProfileAdministrator
+            // * recordProfileReviewer
+            // * recordUserAuthor
+            // * ...
+            if (statusId.equals("100")) {
+                informTaskOwner(status);
+                // --- inform owners if status is approved
+            } else if (statusId.equals(StatusValue.Status.SUBMITTED)) {
                 informContentReviewers(listOfId, status.getId().getChangeDate().getDateAndTime(), status.getChangeMessage());
                 // --- inform owners if status is approved
             } else if (statusId.equals(StatusValue.Status.APPROVED) ||
@@ -279,6 +290,33 @@ public class DefaultStatusActions implements StatusActions {
         );
         processList(users, subject, StatusValue.Status.SUBMITTED,
             changeDate, changeMessage, mdChanged);
+    }
+
+    protected void informTaskOwner(MetadataStatus status) throws Exception {
+
+        // --- get content reviewers (sorted on content reviewer userid)
+        UserRepository userRepository = context.getBean(UserRepository.class);
+        List<User> users = new ArrayList<>();
+
+        User owner = userRepository.findOne(status.getOwner());
+        users.add(owner);
+
+        Set<Integer> listOfId = new HashSet<>(1);
+        listOfId.add(status.getId().getMetadataId());
+        String mdChanged = buildMetadataChangedMessage(listOfId);
+        String translatedStatusName = getTranslatedStatusName(status.getId().getStatusId() + "");
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+        String subject = String.format(messages.getString(
+            "status_email_change_title"),
+            siteName, translatedStatusName, replyToDescr, replyTo,
+            status.getId().getChangeDate().getDateAndTime()
+        );
+        processList(users, subject, StatusValue.Status.SUBMITTED,
+            status.getId().getChangeDate().getDateAndTime(),
+            status.getStatusValue().getName() +
+                " / Due date: " + status.getDueDate() +
+                " / Message: " + status.getChangeMessage()
+            , mdChanged);
     }
 
 
