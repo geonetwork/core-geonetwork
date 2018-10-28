@@ -44,7 +44,15 @@ public interface IMetadataStatus {
      *
      * @return the saved status entity object
      */
+    @Deprecated
     MetadataStatus setStatusExt(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception;
+
+    /**
+     * Set status of metadata id and do not reindex metadata id afterwards.
+     *
+     * @return the saved status entity object
+     */
+    MetadataStatus setStatusExt(MetadataStatus status) throws Exception;
 
     /**
      * Set status of metadata id and reindex metadata id afterwards.

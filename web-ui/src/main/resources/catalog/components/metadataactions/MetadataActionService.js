@@ -78,6 +78,7 @@
        * @param {string} eventName
        */
       var openModal = function(o, scope, eventName) {
+        // var popup = gnPopup.create(o, scope);
         var popup = gnPopup.createModal(o, scope);
         var myListener = $rootScope.$on(eventName,
             function(e, o) {
@@ -230,7 +231,7 @@
 
       this.startWorkflow = function(md, scope) {
         return $http.put('../api/records/' + md.getId() +
-            '/status?status=1&comment=Enable workflow').then(
+            '/status', {status: 1, changeMessage: 'Enable workflow'}).then(
             function(data) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);

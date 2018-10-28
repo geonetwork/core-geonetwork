@@ -11,7 +11,7 @@
           <input type="radio"
                  name="status"
                  value="{{::s.id}}"
-                 data-ng-model="newStatus.value" data-ng-disabled="cantChangeStatus(s.id)">
+                 data-ng-model="newStatus.status" data-ng-disabled="cantChangeStatus(s.id)">
           {{s.label[lang]}}
           <span data-ng-if="lastStatus == s.id">
             (<span data-translate="">currentStatus</span>)
@@ -25,7 +25,7 @@
                data-translate="">statusLogMessage</label>
         <textarea class="form-control"
                   id="gn-change-message"
-                  data-ng-model="newStatus.message"></textarea>
+                  data-ng-model="newStatus.changeMessage"></textarea>
       </div>
 
 
@@ -71,7 +71,7 @@
                data-translate="">taskMessage</label>
         <textarea class="form-control"
                   id="gn-task-message"
-                  data-ng-model="newStatus.message"></textarea>
+                  data-ng-model="newStatus.changeMessage"></textarea>
       </div>
 
       <button class="btn btn-default"
