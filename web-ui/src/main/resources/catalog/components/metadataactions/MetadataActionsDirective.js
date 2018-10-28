@@ -62,7 +62,7 @@
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
           scope.task = angular.isDefined(scope.task) ? scope.task : scope.$parent.task;
-          scope.newStatus = {status: scope.task.id, owner: null, dueDate: null, changeMessage: ''};
+          scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
 
 
           // Retrieve last status to set it in the form
@@ -81,14 +81,17 @@
               return $http.get('../api/status/' + scope.statusType).
               success(function(data) {
                 scope.status = data;
-                scope.newStatus = {status: scope.task.id, owner: null, dueDate: null, changeMessage: ''};
+                scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
               });
             }
           };
 
 
           scope.updateStatus = function() {
-            scope.newStatus.owner = scope.newStatus.owner.id;
+            // Assign task owner id if needed
+            if (scope.newStatus.owner) {
+              scope.newStatus.owner = scope.newStatus.owner.id;
+            }
             return $http.put('../api/records/' + metadataId +
                 '/status', scope.newStatus
             ).then(
