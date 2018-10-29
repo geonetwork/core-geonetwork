@@ -213,9 +213,11 @@ public class DefaultStatusActions implements StatusActions {
 
         String translatedStatusName = getTranslatedStatusName(status.getId().getStatusId());
         // TODO: Refactor to allow custom messages based on the type of status
-        String subjectTemplate = messages.getString(
-            "status_change_" + status.getStatusValue().getName() + "_email_subject");
-        if (subjectTemplate == null) {
+        String subjectTemplate = "";
+        try {
+            subjectTemplate = messages.getString(
+                "status_change_" + status.getStatusValue().getName() + "_email_subject");
+        } catch (MissingResourceException e) {
             subjectTemplate = messages.getString("status_change_default_email_subject");
         }
         String subject = MessageFormat.format(subjectTemplate,
@@ -227,9 +229,11 @@ public class DefaultStatusActions implements StatusActions {
         Set<Integer> listOfId = new HashSet<>(1);
         listOfId.add(status.getId().getMetadataId());
 
-        String textTemplate = messages.getString(
-            "status_change_" + status.getStatusValue().getName() + "_email_text");
-        if (textTemplate == null) {
+        String textTemplate = "";
+        try {
+            textTemplate = messages.getString(
+                "status_change_" + status.getStatusValue().getName() + "_email_text");
+        } catch (MissingResourceException e) {
             textTemplate = messages.getString("status_change_default_email_text");
         }
 
