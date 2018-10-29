@@ -62,7 +62,7 @@
            data-ng-if="user.canEditRecord(md) &&
                                 md.isWorkflowEnabled()"
            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')">
-          <i class="fa fa-bell"></i>&nbsp;
+          <i class="fa fa-code-fork"></i>&nbsp;
           <span data-translate="">updateStatus</span>
         </a></li>
       <li>
@@ -71,7 +71,7 @@
            data-ng-if="user.canEditRecord(md) &&
              !md.isWorkflowEnabled()"
            data-ng-click="mdService.startWorkflow(md, getCatScope())">
-          <i class="fa fa-bell"></i>&nbsp;
+          <i class="fa fa-code-fork"></i>&nbsp;
           <span data-translate="">enableWorkflow</span>
         </a>
       </li>

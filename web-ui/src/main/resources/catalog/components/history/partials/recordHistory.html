@@ -1,0 +1,22 @@
+<section>
+  <h2><i class="fa fa-fw fa-chevron-left"/><span data-translate="">recordHistory</span></h2>
+
+  <ul class="timeline timeline-1-col" >
+    <li data-ng-repeat="h in history"
+        class="timeline-inverted">
+      <div class="timeline-badge">
+        <i class="fa fa-fw"
+           data-ng-class="{'fa-code-fork': h.statusValue.type === 'workflow', 'fa-tasks': h.statusValue.type === 'task', 'fa-calendar-empty': h.statusValue.type === 'event'}"
+           title="{{(h.statusValue.type + 'Type') | translate}}"></i>
+      </div>
+      <div class="timeline-panel">
+        <div class="timeline-heading">
+          <span data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}" data-from-now=""></span>,
+        {{h.statusValue.label[lang] || h.statusValue.name}}
+        </div>
+        <div class="timeline-body">
+        </div>
+      </div>
+    </li>
+  </ul>
+</section>
