@@ -30,6 +30,8 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.MetadataStatusParameter;
+import org.fao.geonet.api.records.model.MetadataStatusResponse;
+import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -66,9 +68,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -109,7 +113,7 @@ public class MetadataWorkflowApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<MetadataStatus> getRecordStatusHistory(
+    public List<MetadataStatusResponse> getRecordStatusHistory(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -128,10 +132,45 @@ public class MetadataWorkflowApi {
 
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
 
-        // TODO: Add paging
-        return ((MetadataStatusRepository) metadataStatusRepository).findAllById_MetadataId(
+        List<MetadataStatus> listOfStatus = ((MetadataStatusRepository) metadataStatusRepository).findAllById_MetadataId(
             metadata.getId(),
             new Sort(sortOrder, sortField));
+
+        // Add all user info in response
+        Map<Integer, User> listOfUsers = new HashMap<>();
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+
+        // Collect all user info
+        for(MetadataStatus s : listOfStatus) {
+            if (listOfUsers.get(s.getId().getUserId()) == null) {
+                listOfUsers.put(s.getId().getUserId(), userRepository.findOne(s.getId().getUserId()));
+            }
+            if (s.getOwner() != null && listOfUsers.get(s.getOwner()) == null) {
+                listOfUsers.put(s.getOwner(), userRepository.findOne(s.getOwner()));
+            }
+        }
+
+        // Add all user info to response
+        List<MetadataStatusResponse> response = new ArrayList<>();
+        for(MetadataStatus s : listOfStatus) {
+            MetadataStatusResponse status = new MetadataStatusResponse(s);
+            User author = listOfUsers.get(status.getId().getUserId());
+            if (author != null) {
+                status.setAuthorName(author.getName() + " " + author.getSurname());
+                status.setAuthorEmail(author.getEmail());
+            }
+            if (s.getOwner() != null) {
+                User owner = listOfUsers.get(status.getOwner());
+                if (owner != null) {
+                    status.setOwnerName(owner.getName() + " " + owner.getSurname());
+                    status.setOwnerEmail(owner.getEmail());
+                }
+            }
+            response.add(status);
+        }
+
+        // TODO: Add paging
+        return response;
     }
 
 
@@ -194,7 +233,7 @@ public class MetadataWorkflowApi {
     })
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public MetadataStatusResponse getStatus(
+    public MetadataWorkflowStatusResponse getStatus(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -231,7 +270,7 @@ public class MetadataWorkflowApi {
         for (Pair<Integer, User> reviewer : reviewers) {
             listOfReviewers.add(reviewer.two());
         }
-        return new MetadataStatusResponse(
+        return new MetadataWorkflowStatusResponse(
             recordStatus,
             listOfReviewers,
             am.hasEditPermission(context, metadata.getId() + ""),
