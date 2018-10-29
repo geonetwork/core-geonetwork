@@ -18,11 +18,19 @@
       </div>
       <div class="timeline-panel">
         <div class="timeline-heading">
+          <a class="btn btn-link pull-right"
+             data-ng-show="allowRemoval"
+             data-ng-click="removeStep(h)"
+             title="{{'removeHistoryStep' | translate}}">
+            <i class="fa fa-times text-danger"/>
+          </a>
           <img class="img-circle"
                ng-src="http://gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
           {{h.authorName}}<br/>
           <strong>{{h.statusValue.label[lang] || h.statusValue.name}}</strong>
-          <span data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}" data-from-now=""></span>
+          <span class="text-muted"
+                data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}"
+                data-from-now=""></span>
         </div>
         <div class="timeline-body">
         </div>

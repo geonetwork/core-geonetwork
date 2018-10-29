@@ -44,13 +44,29 @@
           '../../catalog/components/history/partials/recordHistory.html',
           link: function postLink(scope, element, attrs) {
             scope.types = [{'workflow': true}, {'task': true}, {'event': true}];
-            scope.history = [];
             scope.lang = scope.$parent.lang;
+            scope.user = scope.$parent.user;
+            scope.history = [];
+            // History step removal is only allowed to admin
+            // BTW allowRemoval attribute could control if remove button
+            // is displayed or not.
+            scope.allowRemoval =
+              angular.isDefined(attrs.allowRemoval) ?
+                attrs.allowRemoval == 'true' && scope.user.isAdministrator() :
+                scope.user.isAdministrator();
 
             function loadHistory() {
               $http.get('../api/records/' + scope.md.getUuid() + '/status').
               then(function(r) {
                 scope.history = r.data;
+              });
+            };
+
+            scope.removeStep = function(s){
+              $http.delete('../api/records/' + scope.md.getUuid() + '/status/' +
+              s.id.statusId + '.' + s.id.userId + '.' + s.id.changeDate.dateAndTime).
+              then(function(r) {
+                loadHistory();
               });
             };
 
