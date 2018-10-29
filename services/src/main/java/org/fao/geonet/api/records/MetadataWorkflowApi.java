@@ -29,6 +29,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.api.records.model.MetadataStatusResponse;
 import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
@@ -55,6 +56,7 @@ import org.fao.geonet.repository.MetadataStatusRepositoryCustom;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
@@ -136,38 +138,7 @@ public class MetadataWorkflowApi {
             metadata.getId(),
             new Sort(sortOrder, sortField));
 
-        // Add all user info in response
-        Map<Integer, User> listOfUsers = new HashMap<>();
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-
-        // Collect all user info
-        for(MetadataStatus s : listOfStatus) {
-            if (listOfUsers.get(s.getId().getUserId()) == null) {
-                listOfUsers.put(s.getId().getUserId(), userRepository.findOne(s.getId().getUserId()));
-            }
-            if (s.getOwner() != null && listOfUsers.get(s.getOwner()) == null) {
-                listOfUsers.put(s.getOwner(), userRepository.findOne(s.getOwner()));
-            }
-        }
-
-        // Add all user info to response
-        List<MetadataStatusResponse> response = new ArrayList<>();
-        for(MetadataStatus s : listOfStatus) {
-            MetadataStatusResponse status = new MetadataStatusResponse(s);
-            User author = listOfUsers.get(status.getId().getUserId());
-            if (author != null) {
-                status.setAuthorName(author.getName() + " " + author.getSurname());
-                status.setAuthorEmail(author.getEmail());
-            }
-            if (s.getOwner() != null) {
-                User owner = listOfUsers.get(status.getOwner());
-                if (owner != null) {
-                    status.setOwnerName(owner.getName() + " " + owner.getSurname());
-                    status.setOwnerEmail(owner.getEmail());
-                }
-            }
-            response.add(status);
-        }
+        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus);
 
         // TODO: Add paging
         return response;
@@ -184,7 +155,7 @@ public class MetadataWorkflowApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<MetadataStatus> getRecordStatusHistoryByType(
+    public List<MetadataStatusResponse> getRecordStatusHistoryByType(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -207,11 +178,15 @@ public class MetadataWorkflowApi {
 
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
 
-        // TODO: Add paging
-        return metadataStatusRepository.findAllByIdAndByType(
+        List<MetadataStatus> listOfStatus = metadataStatusRepository.findAllByIdAndByType(
             metadata.getId(),
             type,
             new Sort(sortOrder, sortField));
+
+        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus);
+
+        // TODO: Add paging
+        return response;
     }
 
 
@@ -280,7 +255,7 @@ public class MetadataWorkflowApi {
 
 
     @ApiOperation(
-        value = "Set record status",
+        value = "Set the record status",
         notes = "",
         nickname = "setStatus")
     @RequestMapping(
@@ -320,10 +295,9 @@ public class MetadataWorkflowApi {
         //--- only allow the owner of the record to set its status
         if (!am.isOwner(context, String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
-                "Only the owner of the metadata can set the status. User is not the owner of the metadata"
+                "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata."
             ));
         }
-
 
         //--- use StatusActionsFactory and StatusActions class to
         //--- change status and carry out behaviours for status changes
@@ -343,6 +317,65 @@ public class MetadataWorkflowApi {
     }
 
 
+    @ApiOperation(
+        value = "Delete a record status",
+        notes = "",
+        nickname = "deleteStatus")
+    @RequestMapping(
+        value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}", method = RequestMethod.DELETE
+    )
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Status removed."),
+        @ApiResponse(code = 404, message = "Status not foundcd."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRecordStatus(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(
+            value = "Status identifier",
+            required = true)
+        @PathVariable
+            int statusId,
+        @ApiParam(
+            value = "User identifier",
+            required = true)
+        @PathVariable
+            int userId,
+        @ApiParam(
+            value = "Change date",
+            required = true)
+        @PathVariable
+            String changeDate,
+        HttpServletRequest request
+    )
+        throws Exception {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+
+        MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
+        MetadataStatus metadataStatus = statusRepository.findOne(new MetadataStatusId()
+            .setMetadataId(metadata.getId())
+            .setStatusId(statusId)
+            .setUserId(userId)
+            .setChangeDate(new ISODate(changeDate)));
+        if (metadataStatus != null) {
+            statusRepository.delete(metadataStatus);
+            // TODO: Reindex record ?
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Can't find metadata status for record '%d', user '%s' at date '%s'",
+                metadataUuid, userId, changeDate));
+        }
+    }
+
+    /**
+     * Convert request parameter to a metadata status.
+     */
     public MetadataStatus convertParameter(int id, MetadataStatusParameter parameter, int author) throws Exception {
         StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
         StatusValue statusValue = statusValueRepository.findOne(parameter.getStatus());
@@ -372,4 +405,49 @@ public class MetadataWorkflowApi {
         }
         return metadataStatus;
     }
+
+
+    /**
+     * Build a list of status with additional information about users
+     * (author and owner of the status change).
+     *
+     */
+    @NotNull
+    private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus) {
+        List<MetadataStatusResponse> response = new ArrayList<>();
+
+        // Add all user info in response
+        Map<Integer, User> listOfUsers = new HashMap<>();
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+
+        // Collect all user info
+        for(MetadataStatus s : listOfStatus) {
+            if (listOfUsers.get(s.getId().getUserId()) == null) {
+                listOfUsers.put(s.getId().getUserId(), userRepository.findOne(s.getId().getUserId()));
+            }
+            if (s.getOwner() != null && listOfUsers.get(s.getOwner()) == null) {
+                listOfUsers.put(s.getOwner(), userRepository.findOne(s.getOwner()));
+            }
+        }
+
+        // Add all user info to response
+        for(MetadataStatus s : listOfStatus) {
+            MetadataStatusResponse status = new MetadataStatusResponse(s);
+            User author = listOfUsers.get(status.getId().getUserId());
+            if (author != null) {
+                status.setAuthorName(author.getName() + " " + author.getSurname());
+                status.setAuthorEmail(author.getEmail());
+            }
+            if (s.getOwner() != null) {
+                User owner = listOfUsers.get(status.getOwner());
+                if (owner != null) {
+                    status.setOwnerName(owner.getName() + " " + owner.getSurname());
+                    status.setOwnerEmail(owner.getEmail());
+                }
+            }
+            response.add(status);
+        }
+        return response;
+    }
+
 }

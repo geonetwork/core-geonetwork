@@ -265,6 +265,7 @@
     "resourceContact": "Contact for the resource",
     "enableWorkflow": "Enable workflow",
     "recordHistory": "History",
+    "removeHistoryStep": "Remove step",
     "workflowType": "Workflow step change",
     "taskType": "Record task",
     "eventType": "Record event",
