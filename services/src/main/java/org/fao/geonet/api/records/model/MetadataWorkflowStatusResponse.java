@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.records;
+package org.fao.geonet.api.records.model;
 
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
@@ -31,17 +31,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement
-public class MetadataStatusResponse {
+public class MetadataWorkflowStatusResponse {
     private MetadataStatus currentStatus;
     private List<User> reviewers;
     private boolean hasEditPermission;
     private List<StatusValue> status;
-    public MetadataStatusResponse() {};
+    public MetadataWorkflowStatusResponse() {};
 
-    public MetadataStatusResponse(MetadataStatus currentStatus,
-                                  List<User> reviewers,
-                                  boolean hasEditPermission,
-                                  List<StatusValue> status) {
+    public MetadataWorkflowStatusResponse(MetadataStatus currentStatus,
+                                          List<User> reviewers,
+                                          boolean hasEditPermission,
+                                          List<StatusValue> status) {
         this.currentStatus = currentStatus;
         this.reviewers = reviewers;
         this.hasEditPermission = hasEditPermission;

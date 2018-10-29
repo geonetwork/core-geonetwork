@@ -4,15 +4,25 @@
   <ul class="timeline timeline-1-col" >
     <li data-ng-repeat="h in history"
         class="timeline-inverted">
-      <div class="timeline-badge">
+      <div class="timeline-badge timeline-badge-small"
+           data-ng-class="{
+            'success': h.statusValue.type === 'workflow',
+            'primary': h.statusValue.type === 'task',
+            'info': h.statusValue.type === 'event'}">
         <i class="fa fa-fw"
-           data-ng-class="{'fa-code-fork': h.statusValue.type === 'workflow', 'fa-tasks': h.statusValue.type === 'task', 'fa-calendar-empty': h.statusValue.type === 'event'}"
+           data-ng-class="{
+            'fa-code-fork': h.statusValue.type === 'workflow',
+            'fa-tasks': h.statusValue.type === 'task',
+            'fa-calendar-empty': h.statusValue.type === 'event'}"
            title="{{(h.statusValue.type + 'Type') | translate}}"></i>
       </div>
       <div class="timeline-panel">
         <div class="timeline-heading">
-          <span data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}" data-from-now=""></span>,
-        {{h.statusValue.label[lang] || h.statusValue.name}}
+          <img class="img-circle"
+               ng-src="http://gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
+          {{h.authorName}}<br/>
+          <strong>{{h.statusValue.label[lang] || h.statusValue.name}}</strong>
+          <span data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}" data-from-now=""></span>
         </div>
         <div class="timeline-body">
         </div>
