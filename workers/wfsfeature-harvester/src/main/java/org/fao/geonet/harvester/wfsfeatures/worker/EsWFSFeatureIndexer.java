@@ -458,7 +458,6 @@ public class EsWFSFeatureIndexer {
         }
     }
 
-    // TODO: We should collect errors and report them
     abstract class BulkResutHandler implements JestResultHandler<BulkResult> {
 
         protected Phaser phaser;
