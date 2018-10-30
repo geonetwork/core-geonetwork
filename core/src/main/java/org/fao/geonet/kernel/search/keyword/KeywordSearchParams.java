@@ -23,9 +23,19 @@
 
 package org.fao.geonet.kernel.search.keyword;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import static org.fao.geonet.kernel.AllThesaurus.ALL_THESAURUS_KEY;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.annotation.Nullable;
 
 import org.fao.geonet.kernel.AllThesaurus;
 import org.fao.geonet.kernel.KeywordBean;
@@ -37,18 +47,9 @@ import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.annotation.Nullable;
-
-import static org.fao.geonet.kernel.AllThesaurus.ALL_THESAURUS_KEY;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class KeywordSearchParams {
 
@@ -101,7 +102,7 @@ public class KeywordSearchParams {
     }
 
     private List<KeywordBean> executeOne(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
-        List<KeywordBean> results = new ArrayList<>();
+        HashSet<KeywordBean> results = new HashSet<>();
         int id = 0;
         String thesaurusName = thesauriNames.iterator().next();
         Thesaurus thesaurus = finder.getThesaurusByName(thesaurusName);
@@ -118,7 +119,7 @@ public class KeywordSearchParams {
             results.add(keywordBean);
             id++;
         }
-        return results;
+        return setToList(results);
     }
 
     private List<KeywordBean> executeOneSorted(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
@@ -139,7 +140,7 @@ public class KeywordSearchParams {
             orderedResults.add(keywordBean);
             id++;
         }
-        return TreeSetToList(orderedResults);
+        return setToList(orderedResults);
     }
 
     private List<KeywordBean> executeSpecific(QueryBuilder<KeywordBean> queryBuilder, final ThesaurusFinder finder)
@@ -190,7 +191,7 @@ public class KeywordSearchParams {
     private List<KeywordBean> executeAllUnsorted(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException,
         MalformedQueryException, QueryEvaluationException, AccessDeniedException {
         int id = 0;
-        List<KeywordBean> results = new ArrayList<>();
+        HashSet<KeywordBean> results = new HashSet<>();
         for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
             if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
                 continue;
@@ -208,7 +209,7 @@ public class KeywordSearchParams {
             }
         }
 
-        return results;
+        return  setToList(results);
     }
 
     private List<KeywordBean> executeAllSorted(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException,
@@ -230,13 +231,18 @@ public class KeywordSearchParams {
             }
         }
 
-        return TreeSetToList(results);
+        return setToList(results);
     }
 
-    private ArrayList<KeywordBean> TreeSetToList(TreeSet<KeywordBean> results) {
-        ArrayList<KeywordBean> list = Lists.newArrayListWithCapacity(Math.min(maxResults, results.size()));
+    private ArrayList<KeywordBean> setToList(Set<KeywordBean> results) {
+    	ArrayList<KeywordBean> list = null;
+    	if(maxResults < 0) {
+            list = Lists.newArrayListWithCapacity(results.size());
+    	} else {
+            list = Lists.newArrayListWithCapacity(Math.min(maxResults, results.size()));
+    	}
         for (KeywordBean keywordBean : results) {
-            if (list.size() >= maxResults) {
+            if (maxResults > 0 && list.size() >= maxResults) {
                 break;
             }
             list.add(keywordBean);
