@@ -400,6 +400,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
             .addLang("eng")
             .offset(5)
             .addThesaurus(thesaurus.getKey())
+            .setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC))
             .maxResults(5);
         searcher.search(params.build());
         assertEquals(5, searcher.getNbResults());

@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -104,16 +103,16 @@ public class KeywordSearchParams {
     }
 
     private List<KeywordBean> executeOne(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
-        HashSet<KeywordBean> results = new HashSet<>();
+    	LinkedHashSet<KeywordBean> results = new LinkedHashSet<>();
         AtomicInteger id = new AtomicInteger();
         String thesaurusName = thesauriNames.iterator().next();
         Thesaurus thesaurus = finder.getThesaurusByName(thesaurusName);
-        Query<KeywordBean> query = queryBuilder.limit(maxResults - results.size()).build();
+        Query<KeywordBean> query = queryBuilder.limit(maxResults).build();
         if (thesaurus == null) {
             throw new IllegalArgumentException("The thesaurus " + thesaurusName + " does not exist, there for the query cannot be executed: '" + query + "'");
         }
 
-        id = executeQuery(id, results, thesaurus, query);
+        id = executeQuery(id, results, thesaurus, query, maxResults);
         return setToList(results);
     }
 
@@ -127,7 +126,7 @@ public class KeywordSearchParams {
             throw new IllegalArgumentException("The thesaurus " + thesaurusName + " does not exist, there for the query cannot be executed: '" + query + "'");
         }
 
-        id = executeQuery(id, orderedResults, thesaurus, query);
+        id = executeQuery(id, orderedResults, thesaurus, query, -1);
         return setToList(orderedResults);
     }
 
@@ -179,21 +178,21 @@ public class KeywordSearchParams {
     private List<KeywordBean> executeAllUnsorted(QueryBuilder<KeywordBean> queryBuilder, ThesaurusFinder finder) throws IOException,
         MalformedQueryException, QueryEvaluationException, AccessDeniedException {
     	AtomicInteger id = new AtomicInteger();
-        HashSet<KeywordBean> results = new HashSet<>();
+    	LinkedHashSet<KeywordBean> results = new LinkedHashSet<>();
         for (Thesaurus thesaurus : finder.getThesauriMap().values()) {
             if (thesaurus.getKey().equals(ALL_THESAURUS_KEY)) {
                 continue;
             }
             if (thesauriDomainName == null || thesauriDomainName.equals(thesaurus.getDname())) {
                 Query<KeywordBean> query = queryBuilder.limit(maxResults - results.size()).build();
-                id = executeQuery(id, results, thesaurus, query);
+                id = executeQuery(id, results, thesaurus, query, maxResults);
             }
         }
 
         return  setToList(results);
     }
 
-	private AtomicInteger executeQuery(AtomicInteger id, Collection<KeywordBean> results, Thesaurus thesaurus, Query<KeywordBean> query)
+	private AtomicInteger executeQuery(AtomicInteger id, Collection<KeywordBean> results, Thesaurus thesaurus, Query<KeywordBean> query, Integer maxResults)
 			throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
 		for (KeywordBean keywordBean : query.execute(thesaurus)) {
 		    if (maxResults > -1 && results.size() >= maxResults) {
@@ -216,7 +215,7 @@ public class KeywordSearchParams {
             }
             Query<KeywordBean> query = queryBuilder.build();
             if (thesauriDomainName == null || thesauriDomainName.equals(thesaurus.getDname())) {
-                id = executeQuery(id, results, thesaurus, query);
+                id = executeQuery(id, results, thesaurus, query, -1);
             }
         }
 

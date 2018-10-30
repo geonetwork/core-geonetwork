@@ -351,12 +351,14 @@ public class KeywordSearchParamsBuilder {
 
     }
 
-    public void requireBoundedBy(boolean require) {
+    public KeywordSearchParamsBuilder requireBoundedBy(boolean require) {
         this.requireBoundedBy = require;
+        return this;
 
     }
 
-    public void setComparator(Comparator<KeywordBean> comparator) {
+    public KeywordSearchParamsBuilder setComparator(Comparator<KeywordBean> comparator) {
         this.comparator = comparator;
+        return this;
     }
 }
