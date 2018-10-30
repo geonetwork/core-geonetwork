@@ -70,23 +70,25 @@
         /**
          * @ngdoc method
          * @methodOf gn_map.service:gnMapsManager
-         * @name gnMap#createMap
+         * @name gnMap#initProjections
          *
          * @description
          * Initialises the projections in OpenLayers. For each provided projection,
          * adds the definition to OL.
+         *
+         * @param {array} list of projection definitions (p.code,p.def,p.extent,p.worldExtent):
         **/
 
         initProjections: function(projectionConfig){
           $.each(projectionConfig, function(i, p) {
             if(!ol.proj.get(p.code)) {
-              if(p.def) {
+              if(p.def&&p.code) {
                 // Define an OL3 projection based on the included Proj4js projection
                 // definition and set it's extent.
                 proj4.defs(p.code,p.def);
               } else {
                 console.error("Trying to use unknown projection '" + p.code
-                      + "'. Please add definition on settings.");
+                      + "'. Please update definitions on admin>settings.");
               }
             }
 
