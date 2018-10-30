@@ -63,10 +63,7 @@ public class AllThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Before
     public void setUp() throws Exception {
-        final String className = AbstractThesaurusBasedTest.class.getSimpleName() + ".class";
-        Path directory = IO.toPath(AbstractThesaurusBasedTest.class.getResource(className).toURI()).getParent();
-
-        Path gcThesaurusFile = directory.resolve("secondThesaurus.rdf");
+        Path gcThesaurusFile = this.folder.getRoot().toPath().resolve("secondThesaurus.rdf");
         this.secondThesaurus = new Thesaurus(isoLangMapper, gcThesaurusFile.getFileName().toString(), null, null, "external",
             "local", gcThesaurusFile, "http://org.fao.geonet", true);
         final boolean thesauriExist = Files.exists(gcThesaurusFile);
