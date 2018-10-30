@@ -359,6 +359,12 @@
     var defer = $q.defer();
     var $filter = this.$injector.get('$filter');
 
+    // default use name for the columns
+    var useFacetLabels = false;
+    if (typeof sxtSettings !== 'undefined' &&
+      sxtSettings.useFacetLabelsInFeatureTable) {
+      useFacetLabelsInFeatureTable = true;
+    }
     var pageList = [5, 10, 50, 100],
         columns = [],
         index = this.indexObject,
@@ -367,10 +373,11 @@
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
+        var title = useFacetLabels ? field.label : field.name;
         columns.push({
           field: field.idxName,
-          title: field.label,
-          titleTooltip: field.label,
+          title: title,
+          titleTooltip: title,
           sortable: true,
           formatter: function(val, row, index) {
             var outputValue = val;
