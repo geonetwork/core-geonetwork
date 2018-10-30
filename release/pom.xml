@@ -7,13 +7,9 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>2.6.0</version>
+    <version>3.5.0-SNAPSHOT</version>
   </parent>
 
-
-  <!-- =========================================================== -->
-  <!--     Module Description                                      -->
-  <!-- =========================================================== -->
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>release</artifactId>
   <packaging>jar</packaging>
@@ -27,4 +23,61 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <profiles>
+    <profile>
+      <id>jetty-download</id>
+      <activation>
+        <property>
+          <name>jetty-download</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>download-jetty</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <url>${jetty.download}</url>
+                  <unpack>true</unpack>
+                  <outputDirectory>${project.basedir}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+              <execution>
+                <phase>install</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <echo>Rename downloaded jetty folder.</echo>
+                    <move file="${project.basedir}/${jetty.file}"
+                          tofile="${project.basedir}/jetty"/>
+                    <replace file="${project.basedir}/jetty/etc/jetty-deploy.xml">
+                      <replacefilter token='default="webapps"' value='default="../web"'/>
+                    </replace>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
