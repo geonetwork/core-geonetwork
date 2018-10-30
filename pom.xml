@@ -1194,6 +1194,7 @@
     <module>wro4j</module>
     <module>inspire-atom</module>
     <module>es</module>
+    <module>release</module>
     <module>workers</module>
     <module>messaging</module>
   </modules>
@@ -1311,7 +1312,8 @@
 
 
     <jetty.version>9.4.12.v20180830</jetty.version>
-
+    <jetty.file>jetty-distribution-9.4.12.v20180830</jetty.file>
+    <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/${jetty.file}.tar.gz</jetty.download>
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->

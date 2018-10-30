@@ -81,3 +81,4 @@ web/src/main/webapp/WEB-INF/data/node_less_files/gn_dynamic_style.json
 schemas/*/doc/*/*.rst
 *.old
 web-ui-docs/package-lock.json
+release/jetty/*
