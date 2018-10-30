@@ -102,21 +102,12 @@
             </div>
           </div>
 
-          <div data-ng-switch-when="WMTS">
-            <div
-              data-gn-wmts-download="r.title"
-              data-layer-name="{{r.title | gnLocalized: lang}}"
-              data-url="{{r.url | gnLocalized: lang}}"
-              data-md="md">
-            </div>
-          </div>
-          
           <div data-ng-switch-when="TMS">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
                   tmsLinkDetails</span>
           </div>
-          
+
           <div data-ng-switch-when="SOS">
             <span data-translate=""
                   data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
@@ -163,7 +154,7 @@
                      value="{{::r.url | gnLocalized: lang}}"/>
             </p>
           </div>
-          
+
           <div data-ng-switch-when="MDFCATS">
             <h3>{{(r.title | gnLocalized: lang) }}</h3>
             <h4 data-translate="">technicalInformation</h4>
