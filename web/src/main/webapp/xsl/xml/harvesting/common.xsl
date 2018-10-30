@@ -78,9 +78,6 @@
         <status>
           <xsl:value-of select="$opt/status/value"/>
         </status>
-        <overrideUuid>
-          <xsl:value-of select="$opt/overrideUuid/value"/>
-        </overrideUuid>
 
         <xsl:apply-templates select="$opt" mode="options"/>
       </options>
