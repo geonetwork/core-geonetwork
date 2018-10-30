@@ -62,10 +62,11 @@
       'gnGlobalSettings',
       'gnViewerSettings',
       'gnViewerService',
+      'gnAlertService',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings, gnViewerSettings, gnViewerService) {
+          gnGlobalSettings, gnViewerSettings, gnViewerService, gnAlertService) {
 
         /**
          * @description
@@ -785,7 +786,6 @@
                     url: url,
                     layer: layer
                   });
-                  console.warn(msg);
                   $rootScope.$broadcast('StatusUpdated', {
                     msg: msg,
                     timeout: 0,
@@ -1073,13 +1073,17 @@
                   }
                 }
               } else {
-                errors.push($translate.instant('layerCRSNotFound'));
-                console.warn($translate.instant('layerCRSNotFound'));
+                gnAlertService.addAlert({
+                  msg: $translate.instant('layerCRSNotFound'),
+                  delay: 5000,
+                  type: 'warning'});
               }
 
               if (!isLayerAvailableInMapProjection) {
-              //  errors.push($translate.instant('layerNotAvailableInMapProj'));
-                console.warn($translate.instant('layerNotAvailableInMapProj'));
+				gnAlertService.addAlert({
+                  msg: $translate.instant('layerNotAvailableInMapProj',{proj:mapProjection}),
+                  delay: 5000,
+                  type: 'warning'});
               }
 
               // TODO: parse better legend & attribution
@@ -1325,7 +1329,8 @@
                   var errormsg = $translate.instant(
                       'layerNotfoundInCapability', {
                         layer: name,
-                        url: url
+                        type: 'wms',
+                        url: encodeURIComponent(url)
                       });
                   var o = {
                     url: url,
@@ -1471,12 +1476,21 @@
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
                     name, capObj, md && md.getUuid());
                 if (!capL) {
+                  gnWmsQueue.removeFromQueue(url, name, map);
+                  // If layer not found in the GetCapabilities
+                  gnAlertService.addAlert({
+                    msg: $translate.instant('layerNotfoundInCapability', {
+                    layer: name,
+                    type: 'wmts',
+                    url: encodeURIComponent(url)
+                    }),
+                    delay: 20000,
+                    type: 'warning'});
                   var o = {
                     url: url,
                     name: name,
-                    msg: $translate.instant('layerNotInCap')
-                  };
-                  gnWmsQueue.error(o);
+                    msg: ""
+                  }, errors = [];
                   defer.reject(o);
                 }
                 else {
@@ -1549,36 +1563,24 @@
                   getLayerInfoFromWfsCap(name, capObj, md.getUuid()),
                   olL;
               if (!capL) {
+                gnWmsQueue.removeFromQueue(url, name, map);
                 // If layer not found in the GetCapabilities
-                // Try to add the layer from the metadata
-                // information only. A tile error loading
-                // may be reported after the layer is added
-                // to the map and will give more details.
-                var errormsg = $translate.instant('layerNotfoundInCapability', {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('layerNotfoundInCapability', {
                   layer: name,
-                  url: url
-                });
+                  type: 'wfs',
+                  url: encodeURIComponent(url)
+                  }),
+                  delay: 20000,
+                  type: 'warning'});
                 var o = {
                   url: url,
                   name: name,
-                  msg: errormsg
+                  msg: ""
                 }, errors = [];
-                olL = $this.addWmsToMap(map, o);
-
-                if (!angular.isArray(olL.get('errors'))) {
-                  olL.set('errors', []);
-                }
-
-                errors.push(errormsg);
-                console.warn(errormsg);
-
-                olL.get('errors').push(errors);
-
-                gnWmsQueue.error(o);
                 defer.reject(o);
               } else {
                 olL = $this.addWfsToMapFromCap(map, capL, url);
-
 
                 // attach the md object to the layer
                 if (md) {
