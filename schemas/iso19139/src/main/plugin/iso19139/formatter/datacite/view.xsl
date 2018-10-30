@@ -85,9 +85,17 @@
   <xsl:output method="xml"
               indent="yes"/>
 
-  <!-- TODO: retrieve from catalogue settings -->
-  <xsl:variable name="doiPrefix"
-                select="'10.5072'"/>
+  <!-- Before attribution of a DOI the ISO19139 record does not contain yet
+  the DOI value. It is built from the DOI prefix provided as parameter
+  and the UUID of the record.
+  If the DOI already exist in the record, this parameter is not set and the DOI
+  is returned as datacite:identifier -->
+  <xsl:param name="doiPrefix"
+             select="''"/>
+  <xsl:param name="defaultDoiPrefix"
+             select="'https://doi.org/'"/>
+  <xsl:param name="doiProtocolRegex"
+             select="'(DOI|WWW:LINK-1.0-http--metadata-URL)'"/>
 
   <xsl:variable name="metadata"
                 select="//gmd:MD_Metadata"/>
@@ -99,7 +107,7 @@
 
   <xsl:template match="/">
     <datacite:resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd">
+                       xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd">
       <xsl:apply-templates select="$metadata"
                            mode="toDatacite"/>
     </datacite:resource>
@@ -121,7 +129,31 @@
   <xsl:template mode="toDatacite"
                 match="gmd:MD_Metadata/gmd:fileIdentifier/*/text()">
     <datacite:identifier identifierType="DOI">
-      <xsl:value-of select="concat($doiPrefix, '/', .)"/>
+      <!-- Return existing one -->
+      <xsl:choose>
+        <xsl:when test="$doiPrefix = ''">
+          <!-- DOI can be located in different places depending on user practice.
+          At least we know two:
+          * citation identifier
+          * onlineSrc
+          -->
+          <xsl:variable name="doiFromIdentifier"
+                        select="normalize-space(../../../gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code/gco:CharacterString[starts-with(., $defaultDoiPrefix)])"/>
+          <xsl:if test="$doiFromIdentifier != ''">
+            <xsl:value-of select="$doiFromIdentifier[1]"/>
+          </xsl:if>
+
+          <xsl:variable name="doiFromOnlineSrc"
+                        select="normalize-space(../../../gmd:distributionInfo//gmd:onLine/*[matches(gmd:protocol/gco:CharacterString, $doiProtocolRegex)]/gmd:linkage/gmd:URL)"/>
+          <xsl:if test="$doiFromIdentifier = '' and $doiFromOnlineSrc != ''">
+            <xsl:value-of select="$doiFromOnlineSrc"/>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <!-- Build a new one -->
+          <xsl:value-of select="concat($doiPrefix, '/', .)"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </datacite:identifier>
   </xsl:template>
 
@@ -226,7 +258,7 @@
               </xsl:if>
               <xsl:if test="$thesaurusTitle/*/text()">
                 <xsl:attribute name="subjectScheme"
-                               select="$thesaurusTitle/*/text()"/>
+                               select="normalize-space($thesaurusTitle/(gco:CharacterString|gmx:Anchor)/text()[. != ''])"/>
               </xsl:if>
               <xsl:if test="gmx:Anchor/@xlink:href">
                 <xsl:attribute name="valueUri"
@@ -294,7 +326,7 @@
         <datacite:creator>
           <!-- The full name of the creator. -->
           <datacite:creatorName nameType="Personal">
-              <xsl:value-of select="gmd:individualName/*/text()"/>
+            <xsl:value-of select="gmd:individualName/*/text()"/>
           </datacite:creatorName>
           <!--<xsl:apply-templates mode="toDataciteLocalized" select="gmd:individualName">
             <xsl:with-param name="template">
@@ -318,7 +350,7 @@
   </xsl:template>
 
 
-  <!-- TODO
+  <!-- TODO: contributors
   The institution or person
   responsible for collecting,
   managing, distributing, or
