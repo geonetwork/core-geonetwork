@@ -113,9 +113,6 @@
                   panierItem.processes = processes;
                 }
               }
-              else {
-                panierItem.filter = null;
-              }
             });
           }
         });
