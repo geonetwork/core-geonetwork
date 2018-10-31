@@ -287,6 +287,11 @@
         label: {eng: 'Sextant', fre: 'Sextant'}
       }];
 
+      /* Use name or labels for the columns */
+      if (typeof sxtSettings !== 'undefined' && sxtSettings.useFacetLabelsInFeatureTable) {
+        searchSettings.useFacetLabelsInFeatureTable = true
+      }
+
       gnPanierSettings.projs = [{
         value: '4326',
         label: 'Geographique - Datum WGS84'

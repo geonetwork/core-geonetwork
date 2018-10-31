@@ -359,12 +359,14 @@
     var defer = $q.defer();
     var $filter = this.$injector.get('$filter');
 
-    // default use name for the columns
+    // sxt specific
     var useFacetLabels = false;
-    if (typeof sxtSettings !== 'undefined' &&
-      sxtSettings.useFacetLabelsInFeatureTable) {
-      useFacetLabelsInFeatureTable = true;
+    var sSetting = this.$injector.get('gnSearchSettings');
+    if (sSetting.useFacetLabelsInFeatureTable) {
+      useFacetLabels = sSetting.useFacetLabelsInFeatureTable;
     }
+    // end sxt specific
+
     var pageList = [5, 10, 50, 100],
         columns = [],
         index = this.indexObject,
@@ -373,7 +375,7 @@
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
-        var title = useFacetLabels ? field.label : field.name;
+        var title = field.label && useFacetLabels ? field.label : field.name;
         columns.push({
           field: field.idxName,
           title: title,
