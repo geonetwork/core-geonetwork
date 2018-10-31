@@ -139,7 +139,7 @@
                   target="_blank" class="btn btn-default">
                   <i class="fa fa-fw fa-facebook">&#160;</i>
                 </a>
-                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=Hydrological Basins in Africa (Sample record, please remove!)&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
                   target="_blank" class="btn btn-default">
                   <i class="fa fa-fw fa-linkedin">&#160;</i>
                 </a>
