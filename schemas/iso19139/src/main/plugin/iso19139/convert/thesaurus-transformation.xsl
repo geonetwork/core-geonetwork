@@ -254,6 +254,10 @@
       <gmd:thesaurusName>
         <gmd:CI_Citation>
           <gmd:title>
+            <!-- TODO:INSPIRE: Add gmx:Anchor for thesaurus title. This probably needs an
+            extra thesaurus property to store what is in here. It could be the ConceptScheme/@rdf:about
+            but this will not work for INSPIRE theme unless we fix that when importing from
+            registry. -->
             <gco:CharacterString>
               <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
             </gco:CharacterString>

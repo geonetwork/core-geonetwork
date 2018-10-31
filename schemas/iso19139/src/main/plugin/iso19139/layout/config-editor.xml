@@ -449,6 +449,15 @@
   <views>
     <!--Turn on INSPIRE according to system settings -->
     <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
+      <thesaurusList>
+        <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword-with-anchor"/>
+        <thesaurus key="external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword-with-anchor"/>
+      </thesaurusList>
+
       <sidePanel>
         <directive data-gn-onlinesrc-list=""/>
         <directive gn-geo-publisher=""
@@ -571,7 +580,7 @@
             <template>
               <values>
                 <key label="code" required="true"
-                     xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"
+                     xpath="gmd:MD_Identifier/gmd:code/gmx:Anchor/@xlink:href"
                      tooltip="gmd:code|gmd:MD_Identifier"/>
               </values>
               <snippet>
@@ -579,7 +588,7 @@
                   <gmd:MD_Identifier>
                     <gn:copy select="gmd:authority"/>
                     <gmd:code>
-                      <gco:CharacterString>{{code}}</gco:CharacterString>
+                      <gmx:Anchor xlink:href="{{code}}"/>
                       <gn:copy select="gmd:PT_FreeText"/>
                     </gmd:code>
                   </gmd:MD_Identifier>
@@ -595,7 +604,7 @@
                 <gmd:identifier>
                   <gmd:MD_Identifier>
                     <gmd:code>
-                      <gco:CharacterString></gco:CharacterString>
+                      <gmx:Anchor xlink:href=""></gmx:Anchor>
                     </gmd:code>
                   </gmd:MD_Identifier>
                 </gmd:identifier>
@@ -605,7 +614,7 @@
 
           <action type="process" process="add-resource-id"
                   if="(count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) + count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/
-            gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)])) = 1"/>
+            gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gmx:Anchor, //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)])) = 1"/>
 
 
           <!-- Resource language -->
@@ -693,7 +702,7 @@
               <values>
                 <key label="code"
                      required="true"
-                     xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"
+                     xpath="gmd:RS_Identifier/gmd:code/gmx:Anchor/@xlink:href"
                      tooltip="gmd:MD_ReferenceSystem"/>
                 <!-- TODO: Get the helper -->
               </values>
@@ -702,7 +711,7 @@
                   <gmd:RS_Identifier>
                     <gn:copy select="gmd:authority"/>
                     <gmd:code>
-                      <gco:CharacterString>{{code}}</gco:CharacterString>
+                      <gmx:Anchor xlink:href="{{code}}"/>
                     </gmd:code>
                     <gn:copy select="gmd:codeSpace"/>
                     <gn:copy select="gmd:version"/>
@@ -725,7 +734,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4936</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/4936">EPSG:4936</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -739,7 +748,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4937</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/4937">EPSG:4937</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -753,7 +762,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4258</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/4258">EPSG:4258</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -767,7 +776,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3035</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3035">EPSG:3035</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -781,7 +790,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3034</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3034">EPSG:3034</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -795,7 +804,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3038</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3038">EPSG:3038</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -809,7 +818,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3039</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3039">EPSG:3039</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -823,7 +832,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3040</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3040">EPSG:3040</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -837,7 +846,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3041</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3041">EPSG:3041</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -851,7 +860,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3042</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3042">EPSG:3042</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -865,7 +874,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3043</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3043">EPSG:3043</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -879,7 +888,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3044</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3044">EPSG:3044</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -893,7 +902,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3045</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3045">EPSG:3045</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -907,7 +916,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3046</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3046">EPSG:3046</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -921,7 +930,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3047</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3047">EPSG:3047</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -935,7 +944,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3048</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3048">EPSG:3048</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -949,7 +958,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3049</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3049">EPSG:3049</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -963,7 +972,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3050</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3050">EPSG:3050</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -977,7 +986,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3051</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3051">EPSG:3051</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -991,7 +1000,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/5730</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/5730">EPSG:5730</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -1005,7 +1014,7 @@
                     <gmd:referenceSystemIdentifier>
                       <gmd:RS_Identifier>
                         <gmd:code>
-                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/7409</gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/7409">EPSG:7409</gmx:Anchor>
                         </gmd:code>
                       </gmd:RS_Identifier>
                     </gmd:referenceSystemIdentifier>
@@ -1129,7 +1138,7 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
             gmd:descriptiveKeywords
-            [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'INSPIRE Service taxonomy']"></field>
+            [gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/(gco:CharacterString|gmx:Anchor) = 'Classification of Spatial Data Services']"></field>
           <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
 
           <action type="add" btnLabel="inspireServiceTaxonomy"
@@ -1145,9 +1154,6 @@
               <snippet>
                 <gmd:descriptiveKeywords>
                   <gmd:MD_Keywords>
-                    <gmd:keyword gco:nilReason="missing">
-                      <gco:CharacterString/>
-                    </gmd:keyword>
                     <gmd:type>
                       <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
                                               codeListValue="theme"/>
@@ -1155,12 +1161,12 @@
                     <gmd:thesaurusName>
                       <gmd:CI_Citation>
                         <gmd:title>
-                          <gco:CharacterString>INSPIRE Service taxonomy</gco:CharacterString>
+                          <gco:CharacterString>Classification of Spatial Data Services</gco:CharacterString>
                         </gmd:title>
                         <gmd:date>
                           <gmd:CI_Date>
                             <gmd:date>
-                              <gco:Date>2010-04-22</gco:Date>
+                              <gco:Date>2008-12-03</gco:Date>
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -1172,8 +1178,7 @@
                           <gmd:MD_Identifier>
                             <gmd:code>
                               <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                          xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-service-taxonomy">
-                                geonetwork.thesaurus.external.theme.inspire-service-taxonomy</gmx:Anchor>
+                                          xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory">external.theme.httpinspireeceuropaeumetadatacodelistSpatialDataServiceCategory</gmx:Anchor>
                             </gmd:code>
                           </gmd:MD_Identifier>
                         </gmd:identifier>
@@ -1190,7 +1195,7 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
             gmd:descriptiveKeywords
-            [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes')]"/>
+            [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor), 'INSPIRE themes')]"/>
           <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
           <action type="add" btnLabel="inspireTheme"
                   name="inspireTheme"
@@ -1199,15 +1204,12 @@
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/
                         gmd:descriptiveKeywords[
                           contains(gmd:MD_Keywords/gmd:thesaurusName/
-                                      gmd:CI_Citation/gmd:title/gco:CharacterString,
+                                      gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor),
                                    'INSPIRE themes')]) = 0">
             <template>
               <snippet>
                 <gmd:descriptiveKeywords>
                   <gmd:MD_Keywords>
-                    <gmd:keyword>
-                      <gco:CharacterString></gco:CharacterString>
-                    </gmd:keyword>
                     <gmd:type>
                       <gmd:MD_KeywordTypeCode
                         codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
@@ -1216,8 +1218,7 @@
                     <gmd:thesaurusName>
                       <gmd:CI_Citation>
                         <gmd:title>
-                          <gco:CharacterString>GEMET - INSPIRE themes, version 1.0
-                          </gco:CharacterString>
+                          <gmx:Anchor xlink:href="http://www.eionet.europa.eu/gemet/inspire_themes">GEMET - INSPIRE themes, version 1.0</gmx:Anchor>
                         </gmd:title>
                         <gmd:date>
                           <gmd:CI_Date>
@@ -1253,7 +1254,7 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
             gmd:descriptiveKeywords
-            [count(gmd:MD_Keywords/gmd:thesaurusName) > 0 and not(contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes'))]"/>
+            [count(gmd:MD_Keywords/gmd:thesaurusName) > 0 and not(contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor), 'INSPIRE themes'))]"/>
 
           <section name="freeTextKeywords">
             <!-- Keywords without thesaurus information of type theme -->
