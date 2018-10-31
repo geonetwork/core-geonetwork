@@ -87,6 +87,7 @@ public class EsWFSFeatureIndexer {
         try {
             Logging.ALL.setLoggerFactory("org.geotools.util.logging.Log4JLoggerFactory");
         } catch (ClassNotFoundException e) {
+            // it should not happen, and if it does, and it will happens once at startup 
             e.printStackTrace();
         }
     }
