@@ -226,17 +226,17 @@ public class StatusValue extends Localized {
      * and may be modified in the database.
      */
     public static final class Events {
-        public static final String RECORDCREATED = "0";
-        public static final String RECORDUPDATED = "1";
-        public static final String ATTACHEMENTADDED = "2";
-        public static final String ATTACHEMENTDELETED = "3";
-        public static final String RECORDOWNERCHANGE = "4";
-        public static final String RECORDGROUPOWNERCHANGE = "5";
-        public static final String RECORDPRIVILEGESCHANGE = "6";
-        public static final String RECORDCATEGORYCHANGE = "7";
-        public static final String RECORDVALIDATIONTRIGGERED = "8";
-        public static final String RECORDSTATUSCHANGE = "9";
-        public static final String RECORDPROCESSINGCHANGE = "10";
-        public static final String RECORDDELETED = "11";
+        public static final String RECORDCREATED = "50";
+        public static final String RECORDUPDATED = "51";
+        public static final String ATTACHEMENTADDED = "52";
+        public static final String ATTACHEMENTDELETED = "53";
+        public static final String RECORDOWNERCHANGE = "54";
+        public static final String RECORDGROUPOWNERCHANGE = "55";
+        public static final String RECORDPRIVILEGESCHANGE = "56";
+        public static final String RECORDCATEGORYCHANGE = "57";
+        public static final String RECORDVALIDATIONTRIGGERED = "58";
+        public static final String RECORDSTATUSCHANGE = "59";
+        public static final String RECORDPROCESSINGCHANGE = "60";
+        public static final String RECORDDELETED = "61";
     }
 }
