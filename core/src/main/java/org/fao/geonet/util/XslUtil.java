@@ -55,6 +55,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -65,6 +66,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -835,5 +837,37 @@ public final class XslUtil {
                 }
             }
         });
+    }
+
+    /**
+     * Updates the metadata schema identifier in the database. Usage in xslt processes, like:
+     *
+     * - Suggestion process to be displayed in the metadata editor, so the user can select it
+     *   to upgrade a metadata to a newer schema version.
+     * - Batch process to upgrade the metadata to a newer schema version.
+     *
+     * @param metadataUuid
+     * @param schemaId
+     */
+    public static boolean updateMetadataSchema(final String metadataUuid, final String schemaId) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+
+        SchemaManager schemaManager = applicationContext.getBean(SchemaManager.class);
+
+        if (schemaManager.existsSchema(schemaId)) {
+            MetadataRepository mdRepository = applicationContext.getBean(MetadataRepository.class);
+
+            Metadata metadata = mdRepository.findOneByUuid(metadataUuid);
+
+            if (metadata != null) {
+                metadata.getDataInfo().setSchemaId(schemaId);
+                mdRepository.save(metadata);
+            }
+
+            return true;
+
+        } else {
+            return false;
+        }
     }
 }
