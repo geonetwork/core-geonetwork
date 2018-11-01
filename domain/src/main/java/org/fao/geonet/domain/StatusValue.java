@@ -219,4 +219,24 @@ public class StatusValue extends Localized {
         public static final String SUBMITTED = "4";
         public static final String REJECTED = "5";
     }
+
+    /**
+     * List of predefined status part of the events.
+     * Those values are the default one for GeoNetwork
+     * and may be modified in the database.
+     */
+    public static final class Events {
+        public static final String RECORDCREATED = "0";
+        public static final String RECORDUPDATED = "1";
+        public static final String ATTACHEMENTADDED = "2";
+        public static final String ATTACHEMENTDELETED = "3";
+        public static final String RECORDOWNERCHANGE = "4";
+        public static final String RECORDGROUPOWNERCHANGE = "5";
+        public static final String RECORDPRIVILEGESCHANGE = "6";
+        public static final String RECORDCATEGORYCHANGE = "7";
+        public static final String RECORDVALIDATIONTRIGGERED = "8";
+        public static final String RECORDSTATUSCHANGE = "9";
+        public static final String RECORDPROCESSINGCHANGE = "10";
+        public static final String RECORDDELETED = "11";
+    }
 }
