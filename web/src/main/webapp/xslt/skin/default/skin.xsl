@@ -52,7 +52,7 @@
 
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href="{/root/gui/nodeUrl}{$lang}/signin"
+              <a href="{/root/gui/nodeUrl}{$lang}/catalog.signin"
                  title="{($t/signIn,'Log in')[1]}">
                 <i class="fa fa-sign-in">&#160;</i>&#160;
                 <xsl:value-of select="($t/signIn,'Log in')[1]"/>
@@ -126,13 +126,6 @@
         </li>
       </ul>
     </div>
-
-    <!-- map only if js activated -->
-    <script type="javascript">
-      $(document).ready(function() {
-        $("#map-menu").css("display","block");
-      }
-    </script>
   </xsl:template>
 
 
