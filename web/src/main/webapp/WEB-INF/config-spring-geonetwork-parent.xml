@@ -32,4 +32,6 @@
   <context:annotation-config/>
   <import resource="classpath*:/config-spring-geonetwork-parent.xml"/>
 
+  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false"/>
+
 </beans>

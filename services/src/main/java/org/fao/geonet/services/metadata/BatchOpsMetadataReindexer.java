@@ -41,54 +41,105 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
-
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
+import org.springframework.jmx.export.MBeanExporter;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
+import org.springframework.jmx.export.annotation.ManagedResource;
 
+import javax.management.ObjectName;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+
 
 /**
  * Class that extends MetadataIndexerProcessor to reindex the metadata changed in any of the Batch
  * operation services
  */
-public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
+@ManagedResource()
+public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implements Runnable {
 
-    Set<Integer> metadata;
+    private static JmxRemovalListener removalListener = new JmxRemovalListener();
+    private static Cache<ObjectName, ObjectName> PROBE_CACHE = CacheBuilder.newBuilder()
+            .expireAfterWrite(1,TimeUnit.MINUTES)
+            .removalListener(removalListener)
+            .build();
+
+    private Set<Integer> metadata;
+    private ExecutorService executor = null;
+    private ObjectName probeName;
+    private int toProcessCount;
+    private AtomicInteger processed = new AtomicInteger();
+    private AtomicInteger inError = new AtomicInteger();
+    private CompletableFuture<Void> allCompleted;
+    private MBeanExporter exporter;
 
     public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
         super(dm);
         this.metadata = metadata;
+        this.toProcessCount = metadata.size();
+        exporter = ApplicationContextHolder.get().getBean(MBeanExporter.class);
+        removalListener.setExporter(exporter);
+    }
+
+    @ManagedAttribute
+    public int getToProcessCount() {
+        return toProcessCount;
+    }
+
+    @ManagedAttribute
+    public int getProcessed() {
+        return processed.intValue();
+    }
+
+    @ManagedAttribute
+    public int getInError() {
+        return inError.intValue();
+    }
+
+    public void process(boolean runInCurrentThread) throws Exception {
+        wrapAsyncProcess(runInCurrentThread);
+        allCompleted.get();
     }
 
     public void process() throws Exception {
         process(false);
     }
 
-    public void process(boolean runInCurrentThread) throws Exception {
+    public String wrapAsyncProcess(boolean runInCurrentThread) throws Exception {
+        probeName = new ObjectName(String.format("geonetwork:name=indexing-task,idx=%s", this.hashCode()));
+        exporter.registerManagedResource(this, probeName);
+        return processAsync(runInCurrentThread);
+    }
+
+    private String processAsync(boolean runInCurrentThread) throws Exception {
         int threadCount = ThreadUtils.getNumberOfThreads();
-        ExecutorService executor = null;
-        try {
+
             if (runInCurrentThread) {
                 executor = MoreExecutors.sameThreadExecutor();
             } else {
                 executor = Executors.newFixedThreadPool(threadCount);
             }
-            int[] ids = new int[metadata.size()];
-            int i = 0;
-            for (Integer id : metadata) ids[i++] = id;
+
+            int[] ids = metadata.stream().mapToInt(i -> i).toArray();
 
             int perThread;
             if (ids.length < threadCount) perThread = ids.length;
             else perThread = ids.length / threadCount;
+
             int index = 0;
 
             List<BatchOpsCallable> jobs = Lists.newArrayList();
@@ -96,56 +147,64 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
                 int start = index;
                 int count = Math.min(perThread, ids.length - start);
                 // create threads to process this chunk of ids
-                jobs.add(createCallable(ids, start, count));
+                BatchOpsCallable task = new BatchOpsCallable(ids, start, count);
+                jobs.add(task);
 
                 index += count;
             }
-            List<Future<Void>> submitList = Lists.newArrayList();
-            for (i = 1; i < jobs.size(); i++) {
-                Future<Void> submit = executor.submit(jobs.get(i));
-                submitList.add(submit);
+
+            List<CompletableFuture> submitList = Lists.newArrayList();
+            for (BatchOpsCallable job : jobs) {
+                CompletableFuture completed = CompletableFuture.runAsync(job, executor);
+                submitList.add(completed);
             }
 
-            if (jobs.size() > 0) {
-                jobs.get(0).call();
-                for (Future<Void> future : submitList) {
-                    try {
-                        future.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } finally {
-            if (executor != null) {
-                executor.shutdown();
-            }
-        }
+            allCompleted = CompletableFuture.allOf(submitList.toArray(new CompletableFuture[submitList.size()]));
+            allCompleted.thenRun(this);
+            return probeName.toString();
     }
 
-    protected BatchOpsCallable createCallable(int[] ids, int start, int count) {
-        return new BatchOpsCallable(ids, start, count, getDataManager());
+    @Override
+    public void run() {
+        executor.shutdown();
+        PROBE_CACHE.cleanUp();
+        PROBE_CACHE.put(probeName, probeName);
     }
 
-    public static final class BatchOpsCallable implements Callable<Void> {
+    private final class BatchOpsCallable implements Runnable {
         private final int ids[];
         private final int beginIndex, count;
-        private final DataManager dm;
 
-        BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
+        BatchOpsCallable(int[] ids, int beginIndex, int count) {
             this.ids = ids;
             this.beginIndex = beginIndex;
             this.count = count;
-            this.dm = dm;
         }
 
-        public Void call() throws Exception {
+        @Override
+        public void run() {
             for (int i = beginIndex; i < beginIndex + count; i++) {
                 boolean doIndex = beginIndex + count - 1 == i;
-                dm.indexMetadata(ids[i] + "", doIndex, null);
+                try {
+                    dm.indexMetadata(ids[i] + "", doIndex, null);
+                    processed.incrementAndGet();
+                } catch (Exception e) {
+                    inError.incrementAndGet();
+                }
             }
+        }
+    }
 
-            return null;
+    private static class JmxRemovalListener implements com.google.common.cache.RemovalListener<ObjectName, ObjectName> {
+        private MBeanExporter exporter;
+
+        @Override
+        public void onRemoval(RemovalNotification<ObjectName, ObjectName> removalNotification) {
+            exporter.unregisterManagedResource(removalNotification.getValue());
+        }
+
+        public void setExporter(MBeanExporter exporter) {
+            this.exporter = exporter;
         }
     }
 }
