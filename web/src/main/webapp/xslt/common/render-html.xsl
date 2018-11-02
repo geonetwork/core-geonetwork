@@ -94,22 +94,19 @@
         </div>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+        <script src="//code.jquery.com/jquery-1.12.4.min.js"
                 integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
                 crossorigin="anonymous">
           &#160;
         </script>
 
         <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
                 crossorigin="anonymous">
           &#160;
         </script>
 
-        <style>
-        .hidden-nojs { display:none !important; }
-        </style>
         <script type="text/javascript">
           //show elements that require js
           $(".hidden-nojs").removeClass('hidden-nojs');

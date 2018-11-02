@@ -54,7 +54,7 @@
             <li>
               <a href="{/root/gui/nodeUrl}{$lang}/catalog.signin"
                  title="{($t/signIn,'Log in')[1]}">
-                <i class="fa fa-sign-in">&#160;</i>&#160;
+                <i class="fa fa-sign-in fa-fw">&#160;</i>
                 <xsl:value-of select="($t/signIn,'Log in')[1]"/>
               </a>
             </li>
