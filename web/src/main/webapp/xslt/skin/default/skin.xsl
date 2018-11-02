@@ -15,11 +15,11 @@
                   class="navbar-toggle collapsed"
                   data-toggle="collapse"
                   data-target="#navbar"
-                  title="{$i18n/toggleNavigation}"
+                  title="{($i18n/toggleNavigation,'Toggle navigation')[1]}"
                   aria-expanded="false"
                   aria-controls="navbar">
             <span class="sr-only">
-              <xsl:value-of select="$i18n/toggleNavigation"/>
+              <xsl:value-of select="($i18n/toggleNavigation,'Toggle navigation')[1]"/>
             </span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -27,61 +27,79 @@
           </button>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav" id="topbar-left">
             <li>
               <a href="{/root/gui/nodeUrl}{$lang}/catalog.search#/home">
                 <img class="gn-logo"
                      alt="{$i18n/siteLogo}"
                      src="{/root/gui/url}/images/logos/{$env//system/site/siteId}.png"></img>
-                <span class="hidden-xs">
                   <xsl:value-of select="$env//system/site/name"/>
-                </span>
               </a>
             </li>
             <li>
-              <div style="padding-top: 4px;">
-                <form action="{$nodeUrl}search"
-                      class="form-inline">
-                  <div class="input-group gn-form-any">
-                    <input type="text"
-                           name="any"
-                           id="fldAny"
-                           placeholder="{$t/anyPlaceHolder}"
-                           value="{/root/request/any}"
-                           class="form-control"
-                           autofocus=""/>
-                    <div class="input-group-btn">
-                      <button type="submit"
-                              class="btn btn-primary">
-                        &#160;&#160;
-                        <i class="fa fa-search">&#160;</i>
-                        &#160;&#160;
-                      </button>
-                      <a href="{$nodeUrl}search"
-                         class="btn btn-link">
-                        <i class="fa fa-times">&#160;</i>
-                      </a>
-                    </div>
-                  </div>
-                  <input type="hidden" name="fast" value="index"/>
-                </form>
-              </div>
+              <a title="{($t/search,'Search')[1]}" href="{/root/gui/nodeUrl}search" onclick="location.href=('{/root/gui/nodeUrl}{$lang}/catalog.search#/search');return false;">
+                <i class="fa fa-fw fa-search hidden-sm">&#160;</i>
+                <span><xsl:value-of select="($t/search,'Search')[1]"/></span>
+              </a>
+            </li>
+            <li id="map-menu" class="hidden-nojs">
+              <a  title="{($t/map,'Map')[1]}"
+                  href="{/root/gui/nodeUrl}{$lang}/catalog.search#/map">
+                <i class="fa fa-fw fa-globe hidden-sm">&#160;</i>
+                <span><xsl:value-of select="($t/map,'Map')[1]"/></span></a>
             </li>
           </ul>
 
-
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href="{/root/gui/nodeUrl}{lang}/signin"
-                 title="{$t/signIn}">
+              <a href="{/root/gui/nodeUrl}{$lang}/signin"
+                 title="{($t/signIn,'Log in')[1]}">
                 <i class="fa fa-sign-in">&#160;</i>&#160;
-                <xsl:value-of select="$t/signIn"/>
+                <xsl:value-of select="($t/signIn,'Log in')[1]"/>
               </a>
             </li>
           </ul>
         </div>
       </div>
     </div>
+
+    <xsl:if test="/root/search/response">
+      <form action="{$nodeUrl}search"
+            class="form-horizontal" role="form">
+        <div class="row gn-top-search" style="margin:15px auto">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-offset-4 col-md-4 relative">
+                <div class="gn-form-any input-group">
+                    <input type="text"
+                           name="any"
+                           id="gn-any-field"
+                           placeholder="{($t/anyPlaceHolder,'Search...')[1]}"
+                           value="{/root/request/any}"
+                           class="form-control input-lg"
+                           autofocus=""/>
+                    <div class="input-group-btn">
+                      <button type="submit"
+                              class="btn btn-primary btn-lg"
+                              title="{($t/search,'Search')[1]}">
+                        &#160;&#160;
+                        <i class="fa fa-search">&#160;</i>
+                        &#160;&#160;
+                      </button>
+                      <a href="{$nodeUrl}search"
+                         class="btn btn-link btn-lg"
+                         title="{($t/reset,'Reset')[1]}">
+                        <i class="fa fa-times">&#160;</i>
+                      </a>
+                    </div>
+                  </div>
+                  <input type="hidden" name="fast" value="index"/>
+                </div>
+              </div>
+            </div>
+          </div>
+      </form>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="footer">
@@ -94,20 +112,27 @@
         <li>
           <a href="http://geonetwork-opensource.org/">
             <i class="fa fa-fw">&#160;</i>
-            <span><xsl:value-of select="$t/about"/></span>
+            <span><xsl:value-of select="($t/about,'About')[1]"/></span>
           </a>
         </li>
         <li class="hidden-sm">
           <a href="https://github.com/geonetwork/core-geonetwork">
             <i class="fa fa-github">&#160;</i>
-            <span><xsl:value-of select="$t/github"/></span>
+            <span><xsl:value-of select="($t/github,'Github')[1]"/></span>
           </a>
         </li>
         <li>
-          <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}">API</a>
+          <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}"><xsl:value-of select="($t/api,'API')[1]"/></a>
         </li>
       </ul>
     </div>
+
+    <!-- map only if js activated -->
+    <script type="javascript">
+      $(document).ready(function() {
+        $("#map-menu").css("display","block");
+      }
+    </script>
   </xsl:template>
 
 

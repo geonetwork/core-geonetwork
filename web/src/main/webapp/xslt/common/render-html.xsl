@@ -107,7 +107,13 @@
           &#160;
         </script>
 
+        <style>
+        .hidden-nojs { display:none !important; }
+        </style>
         <script type="text/javascript">
+          //show elements that require js
+          $(".hidden-nojs").removeClass('hidden-nojs');
+
           // attach click to tab
           $('.nav-tabs-advanced a').click(function (e) {
             e.preventDefault();
