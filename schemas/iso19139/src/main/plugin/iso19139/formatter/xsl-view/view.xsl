@@ -179,14 +179,21 @@
             <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
           </xsl:for-each>
 
-          <!-- Publication year -->
-          <xsl:variable name="publicationDate"
-                        select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
+          <!-- Publication year: use last publication date -->
+          <xsl:variable  name="publicationDate">
+            <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
                                     gmd:dateType/*/@codeListValue = 'publication']/
-                                      gmd:date/gco:*"/>
+                                      gmd:date/gco:*">
+              <xsl:sort select="." order="descending" />
 
-          <xsl:if test="$publicationDate != ''">
-            (<xsl:value-of select="substring($publicationDate, 1, 4)"/>)
+              <xsl:if test="position() = 1">
+                <xsl:value-of select="." />
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <xsl:if test="normalize-space($publicationDate) != ''">
+            (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
           </xsl:if>
 
           <xsl:text>. </xsl:text>
