@@ -294,15 +294,33 @@
   See Appendix for definitions and
   examples.
   -->
+  <xsl:variable name="scopeMapping">
+    <entry key="attribute">Model</entry>
+    <entry key="attributeType">Model</entry>
+    <entry key="featureType">Model</entry>
+    <entry key="propertyType">Model</entry>
+    <entry key="model">Model</entry>
+    <entry key="collectionHardware">Other</entry>
+    <entry key="collectionSession">Dataset</entry>
+    <entry key="dataset">Dataset</entry>
+    <entry key="tile">Image</entry>
+    <entry key="nonGeographicDataset">Dataset</entry>
+    <entry key="dimensionGroup">Other</entry>
+    <entry key="fieldSession">Event</entry>
+    <entry key="feature">PhysicalObject</entry>
+    <entry key="series">Dataset</entry>
+    <entry key="service">Service</entry>
+    <entry key="software">Software</entry>
+  </xsl:variable>
+
   <xsl:template mode="toDatacite"
                 match="gmd:hierarchyLevel/*/@codeListValue">
-    <!-- Assuming datacite resource type correspond to ISO hierarchylevel
-    with an upper case first letter. Which is true for service and dataset which are
-    the main one used. -->
+    <xsl:variable name="key"
+                  select="."/>
     <xsl:variable name="type"
                   select="concat(upper-case(substring(.,1,1)), substring(., 2))"/>
-    <datacite:resourceType resourceTypeGeneral="{$type}">
-      <xsl:value-of select="$type"/>
+    <datacite:resourceType resourceTypeGeneral="{$scopeMapping//*[@key = $key]/text()}">
+      <xsl:value-of select="concat($key, '/', $type)"/>
     </datacite:resourceType>
   </xsl:template>
 
