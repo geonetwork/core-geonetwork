@@ -469,13 +469,14 @@ eg.
     publication or release date
     details
     -->
-    <xsl:variable name="publicationDate"
-                  select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue = 'publication']/gmd:date/substring(*, 1, 4)"/>
-    <xsl:if test="$publicationDate != ''">
-      <datacite:publicationYear>
-        <xsl:value-of select="$publicationDate"/>
-      </datacite:publicationYear>
-    </xsl:if>
+    <xsl:for-each select="$metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue = 'publication']/gmd:date[* != '']/substring(*, 1, 4)">
+      <xsl:sort select="." order="descending" />
+      <xsl:if test="position() = 1">
+        <datacite:publicationYear>
+          <xsl:value-of select="."/>
+        </datacite:publicationYear>
+      </xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
 
