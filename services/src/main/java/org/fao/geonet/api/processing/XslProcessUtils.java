@@ -32,6 +32,9 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -45,12 +48,15 @@ import java.util.Map;
 
 import jeeves.server.context.ServiceContext;
 
+import javax.annotation.Nonnull;
 import javax.xml.transform.stream.StreamResult;
 
 /**
  * Created by francois on 23/05/16.
  */
 public class XslProcessUtils {
+    private static final String SCHEMA_UPGRADE_PROCESS_SUFFIX = "-schemaupgrade";
+
     /**
      * Process a metadata record and add information about the processing to one or more sets for
      * reporting.
@@ -69,6 +75,7 @@ public class XslProcessUtils {
         DataManager dataMan = context.getBean(DataManager.class);
         SettingManager settingsMan = context.getBean(SettingManager.class);
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
 
         report.incrementProcessedRecords();
 
@@ -103,6 +110,7 @@ public class XslProcessUtils {
                 return null;
             }
 
+            boolean schemaUpgradeProcess = process.endsWith(SCHEMA_UPGRADE_PROCESS_SUFFIX);
 
             // --- Process metadata
             Element processedMetadata = null;
@@ -151,6 +159,23 @@ public class XslProcessUtils {
                     boolean validate = false;
                     boolean ufo = true;
                     String language = context.getLanguage();
+
+                    // If it's an upgrade process, update the schema id and remove validation info in the database, .
+                    if (schemaUpgradeProcess) {
+                        String newSchema = dataMan.autodetectSchema(processedMetadata);
+
+                        if (!newSchema.equalsIgnoreCase(info.getDataInfo().getSchemaId())) {
+                            metadataRepository.update(info.getId(), new Updater<Metadata>() {
+                                @Override
+                                public void apply(@Nonnull Metadata entity) {
+                                    entity.getDataInfo().setSchemaId(newSchema);
+                                }
+                            });
+
+                            metadataValidationRepository.deleteAll(MetadataValidationSpecs.hasMetadataId(info.getId()));
+                        }
+                    }
+
                     // Always udpate metadata date stamp on metadata processing (minor edit has no effect).
                     boolean updateDateStamp = true;
                     dataMan.updateMetadata(context, id, processedMetadata, validate, ufo, index, language, new ISODate().toString(), updateDateStamp);
@@ -213,7 +238,6 @@ public class XslProcessUtils {
                 report.addNoProcessFoundMetadataId(iId);
                 return null;
             }
-
 
             // --- Process metadata
             StringWriter sw = new StringWriter();
