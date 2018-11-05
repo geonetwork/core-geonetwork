@@ -399,7 +399,7 @@
             <h4 data-translate="">aboutToUpdateTheFollowing</h4>
             <ul>
               <li data-ng-repeat="record in selectedRecords.metadata">
-                {{record.title || record.defaultTitle}}
+                <a data-ng-href="catalog.search#/metadata/{{record['geonet:info'].uuid}}">{{record.title || record.defaultTitle}}</a>
               </li>
             </ul>
           </div>
