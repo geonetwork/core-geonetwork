@@ -813,7 +813,7 @@
     <xsl:variable name="label" select="."/>
 
     <xsl:choose>
-      <xsl:when test="ends-with($href, '.jpg') or ends-with($href, '.png') or ends-with($href, '.gif')">
+      <xsl:when test="matches($href, $imageExtensionsRegex, 'i')">
         <img src="{$href}" title="{$label}" alt="{$label}"/>
       </xsl:when>
       <xsl:otherwise>
