@@ -3294,6 +3294,17 @@
         <template>
           <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
+      
+      <!-- Update or replace resource status. -->
+      <field name="status"
+             xpath="gmd:identificationInfo/*/gmd:status"
+             use="data-gn-codelist-picker"
+             codelist="gmd:MD_ProgressCode"
+             indexField="cl_status"
+             insertMode="gn_replace">
+        <template>
+          <![CDATA[<gmd:MD_ProgressCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+      </field>
 
       <!-- Insert a new topic category
       Warning: Duplicates may be inserted.
