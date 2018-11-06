@@ -83,11 +83,12 @@ import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -124,7 +125,9 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class BaseMetadataManager implements IMetadataManager {
 
-	@Autowired
+    private static final Logger LOGGER_DATA_MANAGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
+
+    @Autowired
 	private IMetadataUtils metadataUtils;
 	@Autowired
 	private IMetadataIndexer metadataIndexer;
@@ -227,8 +230,7 @@ public class BaseMetadataManager implements IMetadataManager {
 		// set up results HashMap for post processing of records to be indexed
 		ArrayList<String> toIndex = new ArrayList<String>();
 
-		if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-			Log.debug(Geonet.DATA_MANAGER, "INDEX CONTENT:");
+        LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
 
 		Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
 		int currentPage = 0;
@@ -242,15 +244,13 @@ public class BaseMetadataManager implements IMetadataManager {
 				// get metadata
 				String id = String.valueOf(result.one());
 
-				if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-					Log.debug(Geonet.DATA_MANAGER, "- record (" + id + ")");
-				}
+                LOGGER_DATA_MANAGER.debug("- record ({})", id);
 
 				String idxLastChange = docs.get(id);
 
 				// if metadata is not indexed index it
 				if (idxLastChange == null) {
-					Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+                    LOGGER_DATA_MANAGER.debug("-  will be indexed");
 					toIndex.add(id);
 
 					// else, if indexed version is not the latest index it
@@ -259,15 +259,12 @@ public class BaseMetadataManager implements IMetadataManager {
 
 					String lastChange = result.two().toString();
 
-					if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-						Log.debug(Geonet.DATA_MANAGER, "- lastChange: " + lastChange);
-					if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-						Log.debug(Geonet.DATA_MANAGER, "- idxLastChange: " + idxLastChange);
+                    LOGGER_DATA_MANAGER.debug("- lastChange: {}", lastChange);
+                    LOGGER_DATA_MANAGER.debug("- idxLastChange: {}", idxLastChange);
 
 					// date in index contains 't', date in DBMS contains 'T'
 					if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
-						if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-							Log.debug(Geonet.DATA_MANAGER, "-  will be indexed");
+                        LOGGER_DATA_MANAGER.debug("-  will be indexed");
 						toIndex.add(id);
 					}
 				}
@@ -285,18 +282,13 @@ public class BaseMetadataManager implements IMetadataManager {
 		}
 
 		if (docs.size() > 0) { // anything left?
-			if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-				Log.debug(Geonet.DATA_MANAGER, "INDEX HAS RECORDS THAT ARE NOT IN DB:");
-			}
+            LOGGER_DATA_MANAGER.debug("INDEX HAS RECORDS THAT ARE NOT IN DB:");
 		}
 
 		// remove from index metadata not in DBMS
 		for (String id : docs.keySet()) {
 			getSearchManager().delete(id);
-
-			if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-				Log.debug(Geonet.DATA_MANAGER, "- removed record (" + id + ") from index");
-			}
+            LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
 		}
 	}
 
@@ -422,8 +414,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	@Override
 	public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
 		deleteMetadataFromDB(context, metadataId);
-		// --- update search criteria
-		getSearchManager().delete(metadataId + "");
+		getSearchManager().delete(metadataId);
 	}
 
 	/**
@@ -524,9 +515,8 @@ public class BaseMetadataManager implements IMetadataManager {
                         }
                     }
                 } catch (JDOMException e) {
-                    Log.debug(Geonet.DATA_MANAGER,
-                        String.format("Check xpath '%s' for schema plugin '%s'. Error is '%s'.",
-                        path, schema, e.getMessage()));
+                    LOGGER_DATA_MANAGER.debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.", new Object[] {
+                        path, schema, e.getMessage()});
                 }
             });
         }
@@ -960,10 +950,7 @@ public class BaseMetadataManager implements IMetadataManager {
 			String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
 		boolean autoFixing = settingManager.getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
 		if (autoFixing) {
-			if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-				Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: "
-						+ updateDatestamp.name() + ")");
-			}
+            LOGGER_DATA_MANAGER.debug("Autofixing is enabled, trying update-fixed-info (updateDatestamp: {})", updateDatestamp.name());
 
 			AbstractMetadata metadata = null;
 			if (metadataId.isPresent()) {
@@ -972,9 +959,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
 				// don't process templates
 				if (isTemplate) {
-					if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-						Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
-					}
+                    LOGGER_DATA_MANAGER.debug("Not applying update-fixed-info for a template");
 					return md;
 				}
 			}
@@ -1048,9 +1033,7 @@ public class BaseMetadataManager implements IMetadataManager {
 			result = Xml.transform(result, styleSheet);
 			return result;
 		} else {
-			if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-				Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
-			}
+            LOGGER_DATA_MANAGER.debug("Autofixing is disabled, not applying update-fixed-info");
 			return md;
 		}
 	}
@@ -1096,8 +1079,7 @@ public class BaseMetadataManager implements IMetadataManager {
 			// Check privileges
 			if (!accessManager.canEdit(srvContext, childId)) {
 				untreatedChildSet.add(childId);
-				if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-					Log.debug(Geonet.DATA_MANAGER, "Could not update child (" + childId + ") because of privileges.");
+                LOGGER_DATA_MANAGER.debug("Could not update child ({}) because of privileges.", childId);
 				continue;
 			}
 
@@ -1110,15 +1092,11 @@ public class BaseMetadataManager implements IMetadataManager {
 			// child are in the same schema (even not profil different)
 			if (!childSchema.equals(parentSchema)) {
 				untreatedChildSet.add(childId);
-				if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-					Log.debug(Geonet.DATA_MANAGER, "Could not update child (" + childId + ") because schema ("
-							+ childSchema + ") is different from the parent one (" + parentSchema + ").");
-				}
+                LOGGER_DATA_MANAGER.debug("Could not update child ({}) because schema ({}) is different from the parent one ({}).",
+                    new Object[] {childId, childSchema, parentSchema});
 				continue;
 			}
-
-			if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-				Log.debug(Geonet.DATA_MANAGER, "Updating child (" + childId + ") ...");
+            LOGGER_DATA_MANAGER.debug("Updating child ({}) ...", childId);
 
 			// --- setup xml element to be processed by XSLT
 
@@ -1260,8 +1238,8 @@ public class BaseMetadataManager implements IMetadataManager {
 			if (aNs.getPrefix().equals("")) { // found default namespace
 				String prefix = mds.getPrefix(aNs.getURI());
 				if (prefix == null) {
-					Log.warning(Geonet.DATA_MANAGER, "Metadata record contains a default namespace " + aNs.getURI()
-							+ " (with no prefix) which does not match any " + schema + " schema's namespaces.");
+                    LOGGER_DATA_MANAGER.warn("Metadata record contains a default namespace {} (with no prefix) which does not match any {} schema's namespaces.",
+                        aNs.getURI(), schema);
 				}
 				ns = Namespace.getNamespace(prefix, aNs.getURI());
 				metadataValidator.setNamespacePrefix(md, ns);

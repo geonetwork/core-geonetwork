@@ -2,7 +2,7 @@
   <select class="form-control " data-ng-model="ownerUser">
     <option data-ng-repeat="u in users | orderBy:'name'" value="{{u['@id'] || u.id}}"
             data-ng-selected="ownerUser == (u['@id'] ? u['@id'] : u.id)">
-              {{u.name}}
+              {{u.name}} {{u.surname}}
     </option>
   </select>
 </div>

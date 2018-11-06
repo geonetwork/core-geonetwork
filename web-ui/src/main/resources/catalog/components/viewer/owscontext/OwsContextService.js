@@ -495,14 +495,14 @@
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             version = source.getParams().VERSION;
-            url = source.getUrl();
+            url = gnGlobalSettings.getNonProxifiedUrl(source.getUrl());
           } else if (source instanceof ol.source.TileWMS ||
               source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
-            url = layer.get('url');
+            url = gnGlobalSettings.getNonProxifiedUrl(layer.get('url'));
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
-            url = layer.get('urlCap');
+            url = gnGlobalSettings.getNonProxifiedUrl(layer.get('urlCap'));
           } else {
             return;
           }

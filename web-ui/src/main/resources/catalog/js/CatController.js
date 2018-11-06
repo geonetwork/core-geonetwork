@@ -217,6 +217,10 @@
             'enabled': true,
             'appUrl': 'https://secure.geonames.org/searchJSON'
         },
+        'recordview': {
+          'enabled': true,
+          'isSocialbarEnabled': true
+        },
         'editor': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.edit',
@@ -301,6 +305,20 @@
         copy.mods.header.languages = {};
         copy.mods.search.grid.related = [];
         return copy;
+      },
+      getProxyUrl: function () {
+        return this.proxyUrl;
+      },
+      // Removes the proxy path and decodes the layer url,
+      // so the layer can be printed with MapFish.
+      // Otherwise Mapfish rejects it, due to relative url.
+      getNonProxifiedUrl: function (url) {
+        if (url.indexOf(this.proxyUrl) > -1) {
+          return decodeURIComponent(
+            url.replace(this.proxyUrl, ''));
+        } else {
+          return url;
+        }
       }
     };
   }());

@@ -31,10 +31,14 @@
         http://www.springframework.org/schema/context/spring-context-3.2.xsd
     ">
 
+  <context:property-placeholder location="${app.properties}"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <context:component-scan base-package="org.fao.geonet"/>
 
   <bean id="defaultLanguage" class="java.lang.String">
-    <constructor-arg index="0" value="eng"/>
+    <constructor-arg index="0" value="\${language.default}"/>
   </bean>
 
   <bean id="languageUtils" class="org.fao.geonet.api.tools.i18n.LanguageUtils">

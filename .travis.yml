@@ -5,3 +5,8 @@ jdk:
 before_install:
   - unset _JAVA_OPTIONS
   - export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=256M"
+cache:
+  directories:
+  - $HOME/.m2
+before_cache:
+  - rm -rf $HOME/.m2/repository/org/geonetwork-opensource

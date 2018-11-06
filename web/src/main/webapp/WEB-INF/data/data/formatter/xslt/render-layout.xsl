@@ -141,6 +141,7 @@
 
             <br/>
 
+
             <xsl:if test="$css != 'checkpoint' and
                           $view != 'emodnetHydrography' and $view != 'sdn'">
               <section>
@@ -153,35 +154,36 @@
               </section>
 
               <br/>
+              <xsl:if test="$isSocialbarEnabled">
+                <section>
+                  <h4>
+                    <i class="fa fa-fw fa-share-square-o">&#160;</i>&#160;
+                    <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
+                  </h4>
+                  <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                     target="_blank" class="btn btn-default">
+                    <i class="fa fa-fw fa-twitter">&#160;</i>&#160;
+                  </a>
+                  <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                     target="_blank" class="btn btn-default">
+                    <i class="fa fa-fw fa-google-plus">&#160;</i>&#160;
+                  </a>
+                  <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                     target="_blank" class="btn btn-default">
+                    <i class="fa fa-fw fa-facebook">&#160;</i>&#160;
+                  </a>
+                  <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                     target="_blank" class="btn btn-default">
+                    <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
+                  </a>
+                  <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                     target="_blank" class="btn btn-default">
+                    <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
+                  </a>
+                </section>
 
-              <section>
-                <h4>
-                  <i class="fa fa-fw fa-share-square-o">&#160;</i>&#160;
-                  <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
-                </h4>
-                <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                   target="_blank" class="btn btn-default">
-                  <i class="fa fa-fw fa-twitter">&#160;</i>&#160;
-                </a>
-                <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                   target="_blank" class="btn btn-default">
-                  <i class="fa fa-fw fa-google-plus">&#160;</i>&#160;
-                </a>
-                <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                   target="_blank" class="btn btn-default">
-                  <i class="fa fa-fw fa-facebook">&#160;</i>&#160;
-                </a>
-                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=Hydrological Basins in Africa (Sample record, please remove!)&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                   target="_blank" class="btn btn-default">
-                  <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
-                </a>
-                <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                   target="_blank" class="btn btn-default">
-                  <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
-                </a>
-              </section>
-
-              <br/>
+                <br/>
+              </xsl:if>
 
               <!-- Display link to portal and other view only
               when in pure HTML mode. -->

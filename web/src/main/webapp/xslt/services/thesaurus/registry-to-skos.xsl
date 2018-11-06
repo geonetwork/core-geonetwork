@@ -78,6 +78,9 @@
     <title thesaurus="GEMET - INSPIRE themes, version 1.0"
            register="INSPIRE theme register"
            date="2008-06-01"/>
+    <title thesaurus="Classification of spatial data services"
+           register="Classification of spatial data services"
+           date="2008-12-03"/>
   </xsl:variable>
 
   <xsl:variable name="isInspireThemes"

@@ -125,6 +125,11 @@
                         then true()
                         else false()"/>
 
+  <xsl:variable name="isSocialbarEnabled"
+                select="if (util:getJsonSettingValue('ui/config', 'mods.recordview.isSocialbarEnabled') = 'true')
+                        then true()
+                        else false()"/>
+
   <xsl:variable name="isRecaptchaEnabled"
                 select="$env/system/userSelfRegistration/recaptcha/enable = 'true'" />
 

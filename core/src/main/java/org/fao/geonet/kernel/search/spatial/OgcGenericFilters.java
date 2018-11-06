@@ -30,6 +30,7 @@ import com.vividsolutions.jts.index.SpatialIndex;
 
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.lucene.search.Query;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -116,13 +117,17 @@ public class OgcGenericFilters {
             Log.debug(Geonet.SEARCH_ENGINE, "Parsing filter");
         Object parseResult = parser
             .parse(new StringReader(string));
-        if (parser.getValidationErrors().size() > 0) {
+        
+        if (parser.getValidationErrors().size() > 0 && filterExpr.getContentSize() > 0) {
             Log.error(Geonet.SEARCH_ENGINE, "Errors occurred when trying to parse a filter:");
             Log.error(Geonet.SEARCH_ENGINE, "----------------------------------------------");
+            StringBuilder sb = new StringBuilder(" Errors parsing filter:");
             for (Object error : parser.getValidationErrors()) {
                 Log.error(Geonet.SEARCH_ENGINE, error);
+                sb.append("\n" + error);
             }
-            Log.error(Geonet.SEARCH_ENGINE, "----------------------------------------------");
+            Log.error(Geonet.SEARCH_ENGINE, "----------------------------------------------");                                                                                                             
+            throw new InvalidArgumentException(sb.toString());  
         }
         if (!(parseResult instanceof Filter)) {
             return null;

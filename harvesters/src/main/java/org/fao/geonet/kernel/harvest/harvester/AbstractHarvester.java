@@ -1005,10 +1005,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
         harvesterSettingsManager.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
         harvesterSettingsManager.add(ID_PREFIX + contentId, "validate", params.getValidate());
-
-        //--- setup extras --------------------------------------------
-
-        harvesterSettingsManager.add(ID_PREFIX + optionsId, "overrideUuid", params.getOverrideUuid());
         
         //--- setup stats node ----------------------------------------
 

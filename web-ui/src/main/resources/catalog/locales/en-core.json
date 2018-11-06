@@ -265,7 +265,7 @@
     "updateStatus": "Update record status",
     "resourceContact": "Contact for the resource",
     "enableWorkflow": "Enable workflow",
-    "metadataViewLoadError": "An error occured while loading a metadata view",
+    "metadataViewLoadError": "An error occurred while loading a metadata view",
     "metadataStatusUpdatedWithNoErrors": "Record status updated.",
     "metadataStatusUpdatedErrors": "Error occurs while updating status",
     "changeCategoryError": "Error occurs while updating category",
@@ -277,7 +277,7 @@
     "usernameHelp": "Name to use when sign in",
     "processError": "Processing error.",
     "processFinished": "Processing done.",
-    "processReport-done": "Number of records proccessed",
+    "processReport-done": "Number of records processed",
     "processReportChangedRecords": "Changed",
     "processReportErrors": "Records with error",
     "processReportFor": "Report for process: ",
@@ -368,7 +368,7 @@
     "link-sources": "Source datasets",
     "indexAccessError": "Error during index access.",
     "applyFilter": "Apply Filter",
-    "confirm": "Ok",
+    "confirm": "OK",
     "confirmDialogTitle": "Confirm Action",
     "close": "Close",
     "wpsSelectOutput": "Select output...",
@@ -423,5 +423,6 @@
     "projection": "Projection",
     "listTypeBlocks": "Switch to Blocked list",
     "listTypeLarge": "Switch to Large list",
-    "listTypeSmall": "Switch to Small list"
+    "listTypeSmall": "Switch to Small list",
+    "layersWithWhiteSpaces": "Some layers on this map contains white spaces on their name. Layers with white spaces may not be properly printed."
 }
