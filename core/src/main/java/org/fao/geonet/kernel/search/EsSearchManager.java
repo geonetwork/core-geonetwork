@@ -241,7 +241,11 @@ public class EsSearchManager implements ISearchManager {
             .add("hasxlinks")
             .add("hasInspireTheme")
             .add("hasOverview")
+            .add(IndexFields.HAS_ATOM)
+            .add(Geonet.IndexFieldNames.HASXLINKS)
             .add("isHarvested")
+            .add("isPublishedToAll")
+            .add("isTemplate")
             .add("isValid")
             .add("isSchemaValid")
             .add("isAboveThreshold")
@@ -262,11 +266,6 @@ public class EsSearchManager implements ISearchManager {
 
         List<Element> records = xml.getChildren("doc");
         Map<String, ObjectNode> listOfXcb = new HashMap<>();
-        Set<String> booleanFields = new HashSet();
-        booleanFields.add(IndexFields.HAS_ATOM);
-        booleanFields.add(Geonet.IndexFieldNames.HASXLINKS);
-        booleanFields.add("hasxlinks");
-        booleanFields.add("isHarvested");
 
         // Loop on docs
         for (int i = 0; i < records.size(); i++) {
