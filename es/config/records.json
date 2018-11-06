@@ -1103,6 +1103,8 @@
               "/imagery/aerial imagery/hyperspectral imagery => /imagerie/imagerie aérienne/imagerie hyperspectrale",
               "/activités humaines/campagnes océanographiques => /activités humaines/campagnes océanographiques",
               "/human activities/oceanographical cruises => /activités humaines/campagnes océanographiques",
+              "/human activities/ocean observation network => /activités humaines/réseaux d'observation de l'océan",
+              "/activités humaines/réseaux d'observation de l'océan => /activités humaines/réseaux d'observation de l'océan",
               "/physical environment/hydrodynamics/swell => /milieu physique/hydrodynamique/houle",
               "/milieu physique/hydrodynamique/houle => /milieu physique/hydrodynamique/houle",
               "/activités humaines/pollution => /activités humaines/pollution",

@@ -466,24 +466,26 @@
               <xsl:value-of select="count(gmd:keyword/(*[normalize-space() != '']))"/>
             </xsl:element>
 
-            <xsl:for-each select="gmd:keyword/(*[normalize-space() != '']|
-                                  */@xlink:href[normalize-space() != '']|
-                                  gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != ''])">
+            <xsl:for-each-group select="gmd:keyword/(gco:CharacterString|gmx:Anchor)[normalize-space() != '']|
+                                  gmd:keyword/*/@xlink:href[normalize-space() != '']|
+                                  gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space() != '']" group-by="text()">
               <xsl:element name="{$thesaurusField}">
-                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:value-of select="normalize-space(current-grouping-key())"/>
               </xsl:element>
 
               <xsl:if test="$thesaurusField = 'thesaurus_geonetworkthesauruslocalthemesextanttheme'">
                 <xsl:variable name="theme"
-                              select="index:analyzeField('synSextantThemes', normalize-space(.))"/>
+                              select="index:analyzeField('synSextantThemes', normalize-space(current-grouping-key()))"/>
+
                 <xsl:if test="$theme != ''">
                   <sextantTheme><xsl:value-of select="$theme"/></sextantTheme>
                   <sextantThemePath><xsl:value-of select="$theme"/></sextantThemePath>
                 </xsl:if>
               </xsl:if>
-            </xsl:for-each>
+            </xsl:for-each-group>
           </xsl:if>
         </xsl:for-each>
+
 
 
         <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
