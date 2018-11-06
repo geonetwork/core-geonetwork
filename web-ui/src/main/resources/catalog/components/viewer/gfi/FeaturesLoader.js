@@ -359,6 +359,14 @@
     var defer = $q.defer();
     var $filter = this.$injector.get('$filter');
 
+    // sxt specific
+    var useFacetLabels = false;
+    var sSetting = this.$injector.get('gnSearchSettings');
+    if (sSetting.useFacetLabelsInFeatureTable) {
+      useFacetLabels = sSetting.useFacetLabelsInFeatureTable;
+    }
+    // end sxt specific
+
     var pageList = [5, 10, 50, 100],
         columns = [],
         index = this.indexObject,
@@ -367,10 +375,11 @@
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
+        var title = field.label && useFacetLabels ? field.label : field.name;
         columns.push({
           field: field.idxName,
-          title: field.label,
-          titleTooltip: field.label,
+          title: title,
+          titleTooltip: title,
           sortable: true,
           formatter: function(val, row, index) {
             var outputValue = val;
