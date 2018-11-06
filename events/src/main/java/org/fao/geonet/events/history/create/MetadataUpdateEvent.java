@@ -21,22 +21,17 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.domain;
+package org.fao.geonet.events.history.create;
 
-/**
- * The type of status value.
- */
-public enum StatusValueType {
-    /**
-     * Indicates the associated {@link StatusValue} entity is a part of the workflow.
-     */
-    workflow,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an independent task.
-     */
-    task,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an event.
-     */
-    event;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.events.md.MetadataEvent;
+
+public class MetadataUpdateEvent extends MetadataHistoryEvent {
+
+    public MetadataUpdateEvent(AbstractMetadata md, int userId) {
+        super(md, userId);
+    }
+
+    private static final long serialVersionUID = 1110999025730522535L;
+
 }

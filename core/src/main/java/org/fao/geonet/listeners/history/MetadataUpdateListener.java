@@ -20,23 +20,31 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.listeners.history;
 
-package org.fao.geonet.domain;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.events.history.create.MetadataUpdateEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-/**
- * The type of status value.
- */
-public enum StatusValueType {
-    /**
-     * Indicates the associated {@link StatusValue} entity is a part of the workflow.
-     */
-    workflow,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an independent task.
-     */
-    task,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an event.
-     */
-    event;
+@Component
+public class MetadataUpdateListener extends GenericMetadataEventListner implements ApplicationListener<MetadataUpdateEvent> {
+
+    private String eventType = StatusValue.Events.RECORDUPDATED;
+    private String changeMessage = "Test";
+
+    @Override
+    public void onApplicationEvent(MetadataUpdateEvent event) {
+        handleEvent(event);
+    }
+    
+    @Override
+    public String getEventType() {
+        return eventType;          
+    }
+
+    @Override
+    public String getChangeMessage() {
+        return changeMessage;          
+    }
 }
