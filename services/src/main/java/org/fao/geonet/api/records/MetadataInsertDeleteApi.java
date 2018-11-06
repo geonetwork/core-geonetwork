@@ -70,8 +70,8 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.events.history.create.MetadataCreateEvent;
-import org.fao.geonet.events.history.create.MetadataDeleteEvent;
+import org.fao.geonet.events.history.create.RecordCreateEvent;
+import org.fao.geonet.events.history.create.RecordDeletedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -198,7 +198,7 @@ public class MetadataInsertDeleteApi {
                 String.valueOf(metadata.getId())));
 
         dataManager.deleteMetadata(context, metadataUuid);
-        ApplicationContextHolder.get().publishEvent(new MetadataDeleteEvent(metadata, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+        ApplicationContextHolder.get().publishEvent(new RecordDeletedEvent(metadata, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
 
         searchManager.forceIndexChanges();
     }
@@ -271,7 +271,7 @@ public class MetadataInsertDeleteApi {
                         String.valueOf(metadata.getId())));
 
                 dataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
-                ApplicationContextHolder.get().publishEvent(new MetadataDeleteEvent(metadata, ApiUtils.getUserSession(session).getUserIdAsInt()));
+                ApplicationContextHolder.get().publishEvent(new RecordDeletedEvent(metadata, ApiUtils.getUserSession(session).getUserIdAsInt()));
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());
@@ -447,7 +447,7 @@ public class MetadataInsertDeleteApi {
 
             // Triggers MetadataCreateEvent
             AbstractMetadata createdRecord = ApiUtils.getRecord(pair.two());
-            applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+            applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
 
             report.incrementProcessedRecords();
         }
@@ -468,7 +468,7 @@ public class MetadataInsertDeleteApi {
                     );
                     // Triggers MetadataCreateEvent
                     AbstractMetadata createdRecord = ApiUtils.getRecord(pair.two());
-                    applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+                    applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
                 }
 
                 report.incrementProcessedRecords();
@@ -521,7 +521,7 @@ public class MetadataInsertDeleteApi {
                             );
                             // Triggers MetadataCreateEvent
                             AbstractMetadata createdRecord = ApiUtils.getRecord(id);
-                            applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+                            applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
 
                             report.incrementProcessedRecords();
                         }
@@ -541,7 +541,7 @@ public class MetadataInsertDeleteApi {
                         );
                         // Triggers MetadataCreateEvent
                         AbstractMetadata createdRecord = ApiUtils.getRecord(pair.two());
-                        applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+                        applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
                     } catch (Exception e) {
                         report.addError(e);
                     }
@@ -727,7 +727,7 @@ public class MetadataInsertDeleteApi {
 
         // Triggers MetadataCreateEvent
         AbstractMetadata createdRecord = ApiUtils.getRecord(newId);
-        applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(httpSession).getUserIdAsInt()));
+        applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(httpSession).getUserIdAsInt()));
 
         dataManager.activateWorkflowIfConfigured(context, newId, group);
 
@@ -933,7 +933,7 @@ public class MetadataInsertDeleteApi {
                                     "MEF file imported '%s'. Error during log history creation.",
                                     f.getOriginalFilename()));
                             }
-                            applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+                            applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
                             report.incrementProcessedRecords();
                         });
                     } catch (Exception e) {
@@ -953,7 +953,7 @@ public class MetadataInsertDeleteApi {
                     );
                     // Triggers MetadataCreateEvent
                     AbstractMetadata createdRecord = ApiUtils.getRecord(String.valueOf(pair.one()));
-                    applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+                    applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
 
                     report.incrementProcessedRecords();
                 }
@@ -1195,7 +1195,7 @@ public class MetadataInsertDeleteApi {
 
         // Triggers MetadataCreateEvent
         AbstractMetadata createdRecord = ApiUtils.getRecord(uuid);
-        applicationContext.publishEvent(new MetadataCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+        applicationContext.publishEvent(new RecordCreateEvent(createdRecord, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
 
         report.incrementProcessedRecords();
         report.close();

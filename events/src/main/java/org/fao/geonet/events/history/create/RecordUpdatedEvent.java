@@ -24,11 +24,10 @@
 package org.fao.geonet.events.history.create;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.events.md.MetadataEvent;
 
-public class MetadataUpdateEvent extends MetadataHistoryEvent {
+public class RecordUpdatedEvent extends AbstractContentHistoryEvent {
 
-    public MetadataUpdateEvent(AbstractMetadata md, int userId) {
+    public RecordUpdatedEvent(AbstractMetadata md, int userId) {
         super(md, userId);
     }
 

@@ -49,7 +49,8 @@ import org.fao.geonet.api.records.model.suggestion.SuggestionType;
 import org.fao.geonet.api.records.model.suggestion.SuggestionsType;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.events.history.create.RecordProcessingChangeEvent;
+import org.fao.geonet.events.history.create.RecordUpdatedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -209,7 +210,7 @@ public class MetadataProcessApi {
         SettingManager sm = applicationContext.getBean(SettingManager.class);
         XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
-        Element processedMetadata =  process(process, request, metadata, save, context, sm, report);
+        Element processedMetadata =  process(applicationContext, process, request, metadata, save, context, sm, report);
 
         return new ResponseEntity<>(processedMetadata, HttpStatus.OK);
     }
@@ -257,11 +258,11 @@ public class MetadataProcessApi {
         SettingManager sm = applicationContext.getBean(SettingManager.class);
         XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
-        process(process, request, metadata, save, context, sm, report);
+        process(applicationContext, process, request, metadata, save, context, sm, report);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private Element process(String process, HttpServletRequest request,
+    private Element process(ApplicationContext applicationContext, String process, HttpServletRequest request,
             AbstractMetadata metadata, boolean save, ServiceContext context,
                          SettingManager sm, XsltMetadataProcessingReport report) throws Exception {
         Element processedMetadata;
@@ -276,6 +277,8 @@ public class MetadataProcessApi {
                     + report.getNumberOfRecordNotFound() +
                     ", Not owner:" + report.getNumberOfRecordsNotEditable() +
                     ", No process found:" + report.getNoProcessFoundCount() + ".");
+            } else {
+                applicationContext.publishEvent(new RecordProcessingChangeEvent(metadata, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
             }
         } catch (Exception e) {
             throw e;

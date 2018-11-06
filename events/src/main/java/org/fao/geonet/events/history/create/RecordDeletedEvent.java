@@ -24,11 +24,10 @@
 package org.fao.geonet.events.history.create;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.events.md.MetadataEvent;
 
-public class MetadataDeleteEvent extends MetadataHistoryEvent {
+public class RecordDeletedEvent extends AbstractContentHistoryEvent {
 
-    public MetadataDeleteEvent(AbstractMetadata md, int userId) {
+    public RecordDeletedEvent(AbstractMetadata md, int userId) {
         super(md, userId);
     }
 

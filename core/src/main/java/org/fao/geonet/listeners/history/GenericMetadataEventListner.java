@@ -28,31 +28,39 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.MetadataHistoryEvent;
-import org.fao.geonet.events.md.MetadataEvent;
+import org.fao.geonet.events.history.create.AbstractContentHistoryEvent;
+import org.fao.geonet.events.history.create.AbstractPermissionHistoryEvent;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.StatusValueRepository;
 
-public abstract class GenericMetadataEventListner  {
+public abstract class GenericMetadataEventListner {
 
     public abstract String getEventType();
+
     public abstract String getChangeMessage();
 
-    public void handleEvent(MetadataHistoryEvent event) {
+    public void handleEvent(AbstractContentHistoryEvent event) {
 
         MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
         StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
 
-        storeEvent(event, statusRepository, statusValueRepository);
+        storeContentHistoryEvent(event, statusRepository, statusValueRepository);
     }
-    
-    public void storeEvent(MetadataHistoryEvent event, MetadataStatusRepository statusRepository, StatusValueRepository statusValueRepository) {        
-               
+
+    public void handleEvent(AbstractPermissionHistoryEvent event) {
+
+        MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
+        StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
+
+        storePermissionHistoryEvent(event, statusRepository, statusValueRepository);
+    }
+
+    public void storeContentHistoryEvent(AbstractContentHistoryEvent event, MetadataStatusRepository statusRepository,
+            StatusValueRepository statusValueRepository) {
+
         AbstractMetadata metadata = event.getMd();
-        MetadataStatusId metadataStatusId = new MetadataStatusId()
-                .setMetadataId(metadata.getId())
-                .setStatusId(Integer.parseInt(getEventType()))
-                .setUserId(event.getUserId())
+        MetadataStatusId metadataStatusId = new MetadataStatusId().setMetadataId(metadata.getId())
+                .setStatusId(Integer.parseInt(getEventType())).setUserId(event.getUserId())
                 .setChangeDate(new ISODate(System.currentTimeMillis()));
 
         StatusValue status = statusValueRepository.findOneById(Integer.parseInt(getEventType()));
@@ -66,6 +74,23 @@ public abstract class GenericMetadataEventListner  {
         statusRepository.save(metadataStatus);
     }
 
+    public void storePermissionHistoryEvent(AbstractPermissionHistoryEvent event, MetadataStatusRepository statusRepository,
+            StatusValueRepository statusValueRepository) {
 
+        AbstractMetadata metadata = event.getMd();
+        MetadataStatusId metadataStatusId = new MetadataStatusId().setMetadataId(metadata.getId())
+                .setStatusId(Integer.parseInt(getEventType())).setUserId(event.getUserId())
+                .setChangeDate(new ISODate(System.currentTimeMillis()));
+
+        StatusValue status = statusValueRepository.findOneById(Integer.parseInt(getEventType()));
+
+        MetadataStatus metadataStatus = new MetadataStatus();
+        metadataStatus.setId(metadataStatusId);
+        metadataStatus.setStatusValue(status);
+        metadataStatus.setOwner(metadata.getSourceInfo().getOwner());
+        metadataStatus.setChangeMessage(getChangeMessage());
+
+        statusRepository.save(metadataStatus);
+    }
 
 }
