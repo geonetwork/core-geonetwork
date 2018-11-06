@@ -26,14 +26,14 @@ package org.fao.geonet.events.history.create;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.springframework.context.ApplicationEvent;
 
-public abstract class MetadataHistoryEvent extends ApplicationEvent {
+public abstract class AbstractContentHistoryEvent extends ApplicationEvent {
 
     private static final long serialVersionUID = 456874566246220509L;
 
     private AbstractMetadata md;
     private int userId;
 
-    public MetadataHistoryEvent(AbstractMetadata md, int userId) {
+    public AbstractContentHistoryEvent(AbstractMetadata md, int userId) {
         super(md);
         if (md == null) {
             throw new NullPointerException("Metadata cannot be null");
@@ -45,7 +45,7 @@ public abstract class MetadataHistoryEvent extends ApplicationEvent {
     public AbstractMetadata getMd() {
         return md;
     }
-    
+
     public int getUserId() {
         return userId;
     }
