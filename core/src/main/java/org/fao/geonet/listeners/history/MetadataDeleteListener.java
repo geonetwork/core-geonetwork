@@ -20,23 +20,37 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.listeners.history;
 
-package org.fao.geonet.domain;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.events.history.create.MetadataDeleteEvent;
+import org.fao.geonet.events.history.create.MetadataHistoryEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-/**
- * The type of status value.
- */
-public enum StatusValueType {
-    /**
-     * Indicates the associated {@link StatusValue} entity is a part of the workflow.
-     */
-    workflow,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an independent task.
-     */
-    task,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an event.
-     */
-    event;
+@Component
+public class MetadataDeleteListener extends GenericMetadataEventListner implements ApplicationListener<MetadataDeleteEvent> {
+
+    private String eventType = StatusValue.Events.RECORDDELETED;
+    private String changeMessage = "Test";
+
+    @Override
+    public void onApplicationEvent(MetadataDeleteEvent event) {
+        handleEvent(event);
+    }
+    
+    @Override
+    public void handleEvent(MetadataHistoryEvent event) {
+        // Delete event is not supported
+    }
+    
+    @Override
+    public String getEventType() {
+        return eventType;          
+    }
+
+    @Override
+    public String getChangeMessage() {
+        return changeMessage;          
+    }
 }

@@ -21,22 +21,33 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.domain;
+package org.fao.geonet.events.history.create;
 
-/**
- * The type of status value.
- */
-public enum StatusValueType {
-    /**
-     * Indicates the associated {@link StatusValue} entity is a part of the workflow.
-     */
-    workflow,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an independent task.
-     */
-    task,
-    /**
-     * Indicates the associated {@link StatusValue} entity is an event.
-     */
-    event;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.springframework.context.ApplicationEvent;
+
+public abstract class MetadataHistoryEvent extends ApplicationEvent {
+
+    private static final long serialVersionUID = 456874566246220509L;
+
+    private AbstractMetadata md;
+    private int userId;
+
+    public MetadataHistoryEvent(AbstractMetadata md, int userId) {
+        super(md);
+        if (md == null) {
+            throw new NullPointerException("Metadata cannot be null");
+        }
+        this.md = md;
+        this.userId = userId;
+    }
+
+    public AbstractMetadata getMd() {
+        return md;
+    }
+    
+    public int getUserId() {
+        return userId;
+    }
+
 }
