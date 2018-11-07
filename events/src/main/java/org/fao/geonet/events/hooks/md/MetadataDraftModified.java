@@ -26,12 +26,12 @@
  */
 package org.fao.geonet.events.hooks.md;
 
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.entitylistener.GeonetworkEntityListener;
 import org.fao.geonet.entitylistener.PersistentEventType;
-import org.fao.geonet.events.md.MetadataAdd;
-import org.fao.geonet.events.md.MetadataRemove;
-import org.fao.geonet.events.md.MetadataUpdate;
+import org.fao.geonet.events.md.MetadataDraftAdd;
+import org.fao.geonet.events.md.MetadataDraftRemove;
+import org.fao.geonet.events.md.MetadataDraftUpdate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
@@ -42,8 +42,9 @@ import org.springframework.stereotype.Component;
  * @author delawen
  */
 @Component
-public class MetadataModified implements GeonetworkEntityListener<Metadata>,
-    ApplicationEventPublisherAware {
+public class MetadataDraftModified
+        implements GeonetworkEntityListener<MetadataDraft>,
+        ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher eventPublisher;
 
@@ -51,22 +52,22 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#getEntityClass()
      */
     @Override
-    public Class<Metadata> getEntityClass() {
-        return Metadata.class;
+    public Class<MetadataDraft> getEntityClass() {
+        return MetadataDraft.class;
     }
 
     /**
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#handleEvent(org.fao.geonet.entitylistener.PersistentEventType,
-     * java.lang.Object)
+     *      java.lang.Object)
      */
     @Override
-    public void handleEvent(PersistentEventType type, Metadata entity) {
+    public void handleEvent(PersistentEventType type, MetadataDraft entity) {
         if (type == PersistentEventType.PostPersist) {
-            this.eventPublisher.publishEvent(new MetadataAdd(entity));
+            this.eventPublisher.publishEvent(new MetadataDraftAdd(entity));
         } else if (type == PersistentEventType.PostUpdate) {
-            this.eventPublisher.publishEvent(new MetadataUpdate(entity));
+            this.eventPublisher.publishEvent(new MetadataDraftUpdate(entity));
         } else if (type == PersistentEventType.PostRemove) {
-            this.eventPublisher.publishEvent(new MetadataRemove(entity));
+            this.eventPublisher.publishEvent(new MetadataDraftRemove(entity));
         }
     }
 
@@ -75,7 +76,7 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
      */
     @Override
     public void setApplicationEventPublisher(
-        ApplicationEventPublisher applicationEventPublisher) {
+            ApplicationEventPublisher applicationEventPublisher) {
         this.eventPublisher = applicationEventPublisher;
     }
 }

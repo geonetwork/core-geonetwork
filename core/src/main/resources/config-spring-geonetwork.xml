@@ -174,4 +174,11 @@
 
   <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false"/>
 
+    
+    <!-- Comment to get non draft metadata -->
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataCategory"/>
+     
 </beans>

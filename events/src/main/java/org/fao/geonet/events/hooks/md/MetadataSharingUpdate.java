@@ -26,12 +26,10 @@
  */
 package org.fao.geonet.events.hooks.md;
 
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.entitylistener.GeonetworkEntityListener;
 import org.fao.geonet.entitylistener.PersistentEventType;
-import org.fao.geonet.events.md.MetadataAdd;
-import org.fao.geonet.events.md.MetadataRemove;
-import org.fao.geonet.events.md.MetadataUpdate;
+import org.fao.geonet.events.md.sharing.MetadataShare;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
@@ -42,7 +40,7 @@ import org.springframework.stereotype.Component;
  * @author delawen
  */
 @Component
-public class MetadataModified implements GeonetworkEntityListener<Metadata>,
+public class MetadataSharingUpdate implements GeonetworkEntityListener<OperationAllowed>,
     ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher eventPublisher;
@@ -51,8 +49,8 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
      * @see org.fao.geonet.entitylistener.GeonetworkEntityListener#getEntityClass()
      */
     @Override
-    public Class<Metadata> getEntityClass() {
-        return Metadata.class;
+    public Class<OperationAllowed> getEntityClass() {
+        return OperationAllowed.class;
     }
 
     /**
@@ -60,13 +58,13 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
      * java.lang.Object)
      */
     @Override
-    public void handleEvent(PersistentEventType type, Metadata entity) {
+    public void handleEvent(PersistentEventType type, OperationAllowed entity) {
         if (type == PersistentEventType.PostPersist) {
-            this.eventPublisher.publishEvent(new MetadataAdd(entity));
+            this.eventPublisher.publishEvent(new MetadataShare(entity, MetadataShare.Type.ADD));
         } else if (type == PersistentEventType.PostUpdate) {
-            this.eventPublisher.publishEvent(new MetadataUpdate(entity));
+            this.eventPublisher.publishEvent(new MetadataShare(entity, MetadataShare.Type.UPDATE));
         } else if (type == PersistentEventType.PostRemove) {
-            this.eventPublisher.publishEvent(new MetadataRemove(entity));
+            this.eventPublisher.publishEvent(new MetadataShare(entity, MetadataShare.Type.REMOVE));
         }
     }
 

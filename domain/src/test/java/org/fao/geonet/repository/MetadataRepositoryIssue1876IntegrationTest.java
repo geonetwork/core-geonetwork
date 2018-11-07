@@ -45,7 +45,7 @@ public class MetadataRepositoryIssue1876IntegrationTest {
     @Test(timeout = 500)
     public void testSelectMetadata() {
         Metadata m = mdRepo.findOne(16667);
-        Set<MetadataCategory> d = m.getMetadataCategories();
+        Set<MetadataCategory> d = m.getCategories();
 
         Assert.assertNotNull("Metadata is null", m);
     }

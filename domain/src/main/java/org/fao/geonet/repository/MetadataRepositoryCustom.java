@@ -66,7 +66,7 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @param id the id in string form instead of integer.
      */
     @Nullable
-    AbstractMetadata findOne(@Nonnull String id);
+    T findOne(@Nonnull String id);
 
     /**
      * Find the list of Metadata Ids and changes dates for the metadata. <p> When constructing sort
@@ -95,7 +95,7 @@ public interface MetadataRepositoryCustom<T extends AbstractMetadata> {
      * @return the metadata with the oldest change date
      */
     @Nullable
-    AbstractMetadata findOneOldestByChangeDate();
+    T findOneOldestByChangeDate();
 
     /**
      * Load the source info objects for all the metadata selected by the spec.
