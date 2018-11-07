@@ -426,11 +426,17 @@
     function($timeout) {
       return {
         restrict: 'A',
-        link: function(scope, element, attrs) {
-
+        link: function(scope, element, attrs) {         
           var toggleLayer = attrs['gnvLayermanagerBtn'] === 'true';
           var buttons = element.find('.btn-group.flux button');
-          buttons.bind('click', function() {
+          var container = element.find('.panel-carousel-container');
+
+          container.on('focus', 'input[type="text"]', function(event) {
+            buttons.removeClass('active');
+            buttons.eq($(event.target.closest('.panel-carousel')).index()).addClass('active');
+          });
+
+          buttons.bind('click', function () {
             buttons.removeClass('active');
             element.addClass('active');
             $(this).addClass('active');
@@ -438,9 +444,8 @@
             element.find('.panel-carousel').removeClass('collapsed');
             element.find('.unfold').css('opacity', 1);
             element.find('.panel-carousel-container').css('left',
-                '-' + ($(this).index() * 100) + '%');
+              '-' + ($(this).index() * 100) + '%');
           });
-
 
           element.find('.unfold').click(function() {
             element.find('.btn-group button').removeClass('active');
