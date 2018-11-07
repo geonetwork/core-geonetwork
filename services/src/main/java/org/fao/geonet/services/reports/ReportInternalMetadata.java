@@ -84,14 +84,14 @@ public class ReportInternalMetadata implements Service {
 
         // Retrieve metadata
         //final Sort sort = new Sort(Sort.Direction.DESC, SortUtils.createPath(Metadata_.dataInfo, MetadataDataInfo_.changeDate));
-        final List<Metadata> records = context.getBean(MetadataRepository.class).getMetadataReports().
+        final List<? extends AbstractMetadata> records = context.getBean(MetadataRepository.class).getMetadataReports().
             getInternalMetadata(beginDateIso, endDateIso, groupList, OperationAllowedSpecs.isPublic(ReservedOperation.view));
 
         // Process metadata results for the report
         Element response = new Element(Jeeves.Elem.RESPONSE);
 
         // Process the records
-        for (Metadata metadata : records) {
+        for (AbstractMetadata metadata : records) {
             User userOwner = context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
             Group groupOwner = context.getBean(GroupRepository.class).findOne(metadata.getSourceInfo().getGroupOwner());
 

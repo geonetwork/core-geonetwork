@@ -520,7 +520,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 				moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "n", true, true));
 			}
 
-			for (MetadataCategory category : fullMd.getMetadataCategories()) {
+			for (MetadataCategory category : fullMd.getCategories()) {
 				moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
 			}
 

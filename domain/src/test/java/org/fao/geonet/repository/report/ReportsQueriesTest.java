@@ -232,7 +232,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         ISODate dateFrom = new ISODate("2014-01-01T00:00:0");
         ISODate dateTo = new ISODate("2014-04-01T00:00:0");
         Set<Integer> groupsSet = new HashSet<Integer>();
-        List<Metadata> updatedMetadata = _metadataRepository.getMetadataReports().
+        List<? extends AbstractMetadata> updatedMetadata = _metadataRepository.getMetadataReports().
             getInternalMetadata(dateFrom, dateTo, groupsSet, OperationAllowedSpecs.isPublic(ReservedOperation.view));
 
         assertEquals(1, updatedMetadata.size());
