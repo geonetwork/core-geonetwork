@@ -233,7 +233,7 @@ public class Aligner extends BaseAligner<GeoPRESTParams> {
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-                metadata.getMetadataCategories().clear();
+                metadata.getCategories().clear();
                 addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
                 dataMan.flush();
 

@@ -107,7 +107,7 @@ public class GetRecord implements OaiPmhService {
         h.setIdentifier(uuid);
         h.setDateStamp(new ISODate(changeDate));
 
-        for (MetadataCategory metadataCategory : metadata.getMetadataCategories()) {
+        for (MetadataCategory metadataCategory : metadata.getCategories()) {
             h.addSet(metadataCategory.getName());
         }
 

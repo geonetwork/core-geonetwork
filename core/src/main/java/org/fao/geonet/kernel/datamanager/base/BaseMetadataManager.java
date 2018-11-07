@@ -467,7 +467,7 @@ public class BaseMetadataManager implements IMetadataManager {
 		if (group.getDefaultCategory() != null) {
 			newMetadata.getMetadataCategories().add(group.getDefaultCategory());
 		}
-		Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getMetadataCategories(),
+		Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
 				new Predicate<MetadataCategory>() {
 					@Override
 					public boolean apply(@Nullable MetadataCategory input) {
@@ -894,7 +894,7 @@ public class BaseMetadataManager implements IMetadataManager {
 			addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
 		}
 
-		for (MetadataCategory category : metadata.getMetadataCategories()) {
+		for (MetadataCategory category : metadata.getCategories()) {
 			addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
 		}
 

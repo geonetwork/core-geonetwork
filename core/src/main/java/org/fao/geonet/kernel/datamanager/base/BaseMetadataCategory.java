@@ -68,7 +68,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
      */
     @Override
     public boolean isCategorySet(final String mdId, final int categId) throws Exception {
-        Set<MetadataCategory> categories = getMetadataUtils().findOne(mdId).getMetadataCategories();
+        Set<MetadataCategory> categories = getMetadataUtils().findOne(mdId).getCategories();
         for (MetadataCategory category : categories) {
             if (category.getId() == categId) {
                 return true;
@@ -91,10 +91,10 @@ public class BaseMetadataCategory implements IMetadataCategory {
             return;
         }
         boolean changed = false;
-        for (MetadataCategory category : metadata.getMetadataCategories()) {
+        for (MetadataCategory category : metadata.getCategories()) {
             if (category.getId() == categId) {
                 changed = true;
-                metadata.getMetadataCategories().remove(category);
+                metadata.getCategories().remove(category);
                 break;
             }
         }
@@ -120,7 +120,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
             throw new IllegalArgumentException("No metadata found with id: " + mdId);
         }
 
-        return metadata.getMetadataCategories();
+        return metadata.getCategories();
     }
 
     protected SvnManager getSvnManager() {

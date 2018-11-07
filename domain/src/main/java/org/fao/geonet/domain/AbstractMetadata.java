@@ -23,6 +23,7 @@
 package org.fao.geonet.domain;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -64,7 +65,6 @@ import com.vividsolutions.jts.util.Assert;
 @MappedSuperclass
 public abstract class AbstractMetadata extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_id_seq";
-    public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;
     private String _uuid;
@@ -80,7 +80,7 @@ public abstract class AbstractMetadata extends GeonetEntity {
      * @return the id of the metadata
      */
     @Id
-    @SequenceGenerator(name = Metadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
+    @SequenceGenerator(name=AbstractMetadata.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(nullable = false)
     public int getId() {
@@ -309,8 +309,10 @@ public abstract class AbstractMetadata extends GeonetEntity {
     }
 
     @Transient
-    public abstract Set<MetadataCategory> getMetadataCategories();
-
-    public abstract void setMetadataCategories(@Nonnull Set<MetadataCategory> categories);
+    public Set<MetadataCategory> getCategories() {
+        return (Set<MetadataCategory>) metadataCategories;
+    }
+    @Transient
+    protected Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
 
 }

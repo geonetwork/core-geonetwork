@@ -840,7 +840,8 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 metadataManager.save(metadata);
             }
         }
-        metadata.getMetadataCategories().clear();
+
+        metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
         metadata = metadataRepository.findOne(id);
 

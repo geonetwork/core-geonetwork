@@ -124,17 +124,17 @@ public class MetadataSpecsTest extends AbstractSpringDataTest {
         final MetadataCategory cat4 = _categoryRepo.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
 
         final Metadata metadata = newMetadata(_inc);
-        metadata.getMetadataCategories().add(cat1);
-        metadata.getMetadataCategories().add(cat2);
+        metadata.getCategories().add(cat1);
+        metadata.getCategories().add(cat2);
         Metadata md1 = _repository.save(metadata);
 
         final Metadata metadata2 = newMetadata(_inc);
-        metadata2.getMetadataCategories().add(cat1);
-        metadata2.getMetadataCategories().add(cat3);
+        metadata2.getCategories().add(cat1);
+        metadata2.getCategories().add(cat3);
         Metadata md2 = _repository.save(metadata2);
 
         final Metadata metadata3 = newMetadata(_inc);
-        metadata3.getMetadataCategories().add(cat2);
+        metadata3.getCategories().add(cat2);
         Metadata md3 = _repository.save(metadata3);
 
         List<Metadata> found = _repository.findAll(hasCategory(cat1), SortUtils.createSort(Metadata_.id));
