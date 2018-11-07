@@ -101,9 +101,8 @@
             var bPos = undefined;
             if (b.groupPosition !== undefined) bPos = b.groupPosition;
             else if (b.get && b.get('owc_position') !== undefined) bPos = b.get('owc_position');
-
-            var aName = a.name || a.get('label');
-            var bName = b.name || b.get('label');
+            var aName = a.get('label') || a.name;
+            var bName = b.get('label') || b.name;
 
             // comparing using positions (for groups or layers)
             // if one is positioned and not the other, put it first
@@ -119,7 +118,7 @@
             }
 
             // other comparisons: based on label only
-            return aName < bName ? -1 : 1;
+            return aName.localeCompare(bName);
           };
 
           var addWpsLayers = function(layer, nodes) {
@@ -288,7 +287,7 @@
             }, 100);
           };
 
-          scope.map.getLayers().on('change:length', buildTree);
+          scope.map.getLayers().on(['propertychange','change:length'], buildTree);
 
           // initial tree build
           buildTree();
