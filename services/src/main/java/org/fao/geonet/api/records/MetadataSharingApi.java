@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 
@@ -61,6 +62,8 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.events.history.create.RecordGroupOwnerChangeEvent;
+import org.fao.geonet.events.history.create.RecordOwnerChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -518,6 +521,8 @@ public class MetadataSharingApi {
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
         metadataManager.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        
+        appContext.publishEvent(new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),metadata.getSourceInfo().getGroupOwner(), groupIdentifier));
     }
 
 
@@ -650,7 +655,7 @@ public class MetadataSharingApi {
             for (String uuid : records) {
                 updateOwnership(groupIdentifier, userIdentifier,
                     report, dataManager, accessMan, metadataRepository,
-                    serviceContext, listOfUpdatedRecords, uuid);
+                    serviceContext, listOfUpdatedRecords, uuid, session);
             }
             dataManager.flush();
             dataManager.indexMetadata(listOfUpdatedRecords);
@@ -724,7 +729,7 @@ public class MetadataSharingApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
                 report, dataManager, accessMan, metadataRepository,
-                serviceContext, listOfUpdatedRecords, metadataUuid);
+                serviceContext, listOfUpdatedRecords, metadataUuid, session);
             dataManager.flush();
             dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
@@ -745,7 +750,8 @@ public class MetadataSharingApi {
                                  AccessManager accessMan,
                                  IMetadataUtils metadataRepository,
                                  ServiceContext serviceContext,
-                                 List<String> listOfUpdatedRecords, String uuid) throws Exception {
+                                 List<String> listOfUpdatedRecords, String uuid, 
+                                 HttpSession session) throws Exception {
         AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
@@ -787,6 +793,15 @@ public class MetadataSharingApi {
                         priv.getOperationId());
                 }
             }
+            
+            Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid));
+            ApplicationContext context = ApplicationContextHolder.get();
+            if(!Objects.equals(groupIdentifier, sourceGrp)) {
+              new RecordGroupOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), sourceGrp, groupIdentifier).publish(context);
+            }
+            if(!Objects.equals(userIdentifier, sourceUsr)) {
+              new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), sourceUsr, userIdentifier).publish(context);
+            }            
             // -- set the new owner into the metadata record
             dataManager.updateMetadataOwner(metadata.getId(),
                 String.valueOf(userIdentifier),

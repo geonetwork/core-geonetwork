@@ -49,8 +49,8 @@ import org.fao.geonet.api.records.model.suggestion.SuggestionType;
 import org.fao.geonet.api.records.model.suggestion.SuggestionsType;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.events.history.create.RecordCreateEvent;
 import org.fao.geonet.events.history.create.RecordProcessingChangeEvent;
-import org.fao.geonet.events.history.create.RecordUpdatedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -264,7 +264,7 @@ public class MetadataProcessApi {
 
     private Element process(ApplicationContext applicationContext, String process, HttpServletRequest request,
             AbstractMetadata metadata, boolean save, ServiceContext context,
-                         SettingManager sm, XsltMetadataProcessingReport report) throws Exception {
+            SettingManager sm, XsltMetadataProcessingReport report) throws Exception {
         Element processedMetadata;
         try {
             final String siteURL = sm.getSiteURL(context);
@@ -278,7 +278,7 @@ public class MetadataProcessApi {
                     ", Not owner:" + report.getNumberOfRecordsNotEditable() +
                     ", No process found:" + report.getNoProcessFoundCount() + ".");
             } else {
-                applicationContext.publishEvent(new RecordProcessingChangeEvent(metadata, ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()));
+                new RecordProcessingChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
             }
         } catch (Exception e) {
             throw e;
