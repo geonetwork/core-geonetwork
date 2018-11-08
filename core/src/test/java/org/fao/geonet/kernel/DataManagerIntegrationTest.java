@@ -270,7 +270,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(startIndexDocs + (2 * numDocsPerMd), numDocs(searchManager, lang));
         assertEquals(startMdCount + 2, _metadataRepository.count());
 
-        Specification<Metadata> spec = where(MetadataSpecs.hasMetadataId(md1)).or(MetadataSpecs.hasMetadataId(md2));
+        Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataId(md1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataId(md2));
         _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
         assertEquals(startMdCount, _metadataRepository.count());

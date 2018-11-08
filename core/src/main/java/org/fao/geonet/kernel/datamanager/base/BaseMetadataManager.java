@@ -16,7 +16,6 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
@@ -30,6 +29,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataFileUpload_;
 import org.fao.geonet.domain.MetadataSourceInfo;
@@ -125,9 +125,9 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 public class BaseMetadataManager implements IMetadataManager {
 
-    private static final Logger LOGGER_DATA_MANAGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
+	private static final Logger LOGGER_DATA_MANAGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
-    @Autowired
+	@Autowired
 	private IMetadataUtils metadataUtils;
 	@Autowired
 	private IMetadataIndexer metadataIndexer;
@@ -230,7 +230,7 @@ public class BaseMetadataManager implements IMetadataManager {
 		// set up results HashMap for post processing of records to be indexed
 		ArrayList<String> toIndex = new ArrayList<String>();
 
-        LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
+		LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
 
 		Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
 		int currentPage = 0;
@@ -244,13 +244,13 @@ public class BaseMetadataManager implements IMetadataManager {
 				// get metadata
 				String id = String.valueOf(result.one());
 
-                LOGGER_DATA_MANAGER.debug("- record ({})", id);
+				LOGGER_DATA_MANAGER.debug("- record ({})", id);
 
 				String idxLastChange = docs.get(id);
 
 				// if metadata is not indexed index it
 				if (idxLastChange == null) {
-                    LOGGER_DATA_MANAGER.debug("-  will be indexed");
+					LOGGER_DATA_MANAGER.debug("-  will be indexed");
 					toIndex.add(id);
 
 					// else, if indexed version is not the latest index it
@@ -259,12 +259,12 @@ public class BaseMetadataManager implements IMetadataManager {
 
 					String lastChange = result.two().toString();
 
-                    LOGGER_DATA_MANAGER.debug("- lastChange: {}", lastChange);
-                    LOGGER_DATA_MANAGER.debug("- idxLastChange: {}", idxLastChange);
+					LOGGER_DATA_MANAGER.debug("- lastChange: {}", lastChange);
+					LOGGER_DATA_MANAGER.debug("- idxLastChange: {}", idxLastChange);
 
 					// date in index contains 't', date in DBMS contains 'T'
 					if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
-                        LOGGER_DATA_MANAGER.debug("-  will be indexed");
+						LOGGER_DATA_MANAGER.debug("-  will be indexed");
 						toIndex.add(id);
 					}
 				}
@@ -282,13 +282,13 @@ public class BaseMetadataManager implements IMetadataManager {
 		}
 
 		if (docs.size() > 0) { // anything left?
-            LOGGER_DATA_MANAGER.debug("INDEX HAS RECORDS THAT ARE NOT IN DB:");
+			LOGGER_DATA_MANAGER.debug("INDEX HAS RECORDS THAT ARE NOT IN DB:");
 		}
 
 		// remove from index metadata not in DBMS
 		for (String id : docs.keySet()) {
 			getSearchManager().delete(id);
-            LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
+			LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
 		}
 	}
 
@@ -355,7 +355,6 @@ public class BaseMetadataManager implements IMetadataManager {
 		// --- remove metadata
 		getXmlSerializer().delete(id, context);
 	}
-
 
 	private MetaSearcher searcherForReferencingMetadata(ServiceContext context, AbstractMetadata metadata)
 			throws Exception {
@@ -483,46 +482,39 @@ public class BaseMetadataManager implements IMetadataManager {
 		return String.valueOf(finalId);
 	}
 
-    /**
-     * Update XML document title as defined by schema plugin
-     * in xpathTitle property.
-     */
-    private void setMetadataTitle(String schema, Element xml, String language, boolean fromTemplate) {
-        ResourceBundle messages = ResourceBundle.getBundle(
-            "org.fao.geonet.api.Messages",
-            new Locale(language));
+	/**
+	 * Update XML document title as defined by schema plugin in xpathTitle property.
+	 */
+	private void setMetadataTitle(String schema, Element xml, String language, boolean fromTemplate) {
+		ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(language));
 
-        SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
-        List<String> xpathTitle = schemaPlugin.getXpathTitle();
-        if (xpathTitle != null) {
-            xpathTitle.forEach(path -> {
-                List<?> titleNodes = null;
-                try {
-                    titleNodes = Xml.selectNodes(
-                        xml,
-                        path,
-                        new ArrayList(schemaPlugin.getNamespaces()));
+		SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
+		List<String> xpathTitle = schemaPlugin.getXpathTitle();
+		if (xpathTitle != null) {
+			xpathTitle.forEach(path -> {
+				List<?> titleNodes = null;
+				try {
+					titleNodes = Xml.selectNodes(xml, path, new ArrayList<Namespace>(schemaPlugin.getNamespaces()));
 
-                    for (Object o : titleNodes) {
-                        if (o instanceof Element) {
-                            Element title = (Element) o;
-                            title.setText(String.format(
-                                messages.getString(
-                                    "metadata.title.createdFrom" + (fromTemplate ? "Template" :  "Record")),
-                                title.getTextTrim(),
-                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                            ));
-                        }
-                    }
-                } catch (JDOMException e) {
-                    LOGGER_DATA_MANAGER.debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.", new Object[] {
-                        path, schema, e.getMessage()});
-                }
-            });
-        }
-    }
+					for (Object o : titleNodes) {
+						if (o instanceof Element) {
+							Element title = (Element) o;
+							title.setText(String.format(
+									messages.getString(
+											"metadata.title.createdFrom" + (fromTemplate ? "Template" : "Record")),
+									title.getTextTrim(),
+									new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())));
+						}
+					}
+				} catch (JDOMException e) {
+					LOGGER_DATA_MANAGER.debug("Check xpath '{}' for schema plugin '{}'. Error is '{}'.",
+							new Object[] { path, schema, e.getMessage() });
+				}
+			});
+		}
+	}
 
-    /**
+	/**
 	 * Inserts a metadata into the database, optionally indexing it, and optionally
 	 * applying automatic changes to it (update-fixed-info).
 	 *
@@ -957,7 +949,8 @@ public class BaseMetadataManager implements IMetadataManager {
 			String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
 		boolean autoFixing = settingManager.getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
 		if (autoFixing) {
-            LOGGER_DATA_MANAGER.debug("Autofixing is enabled, trying update-fixed-info (updateDatestamp: {})", updateDatestamp.name());
+			LOGGER_DATA_MANAGER.debug("Autofixing is enabled, trying update-fixed-info (updateDatestamp: {})",
+					updateDatestamp.name());
 
 			AbstractMetadata metadata = null;
 			if (metadataId.isPresent()) {
@@ -966,7 +959,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
 				// don't process templates
 				if (isTemplate) {
-                    LOGGER_DATA_MANAGER.debug("Not applying update-fixed-info for a template");
+					LOGGER_DATA_MANAGER.debug("Not applying update-fixed-info for a template");
 					return md;
 				}
 			}
@@ -1040,7 +1033,7 @@ public class BaseMetadataManager implements IMetadataManager {
 			result = Xml.transform(result, styleSheet);
 			return result;
 		} else {
-            LOGGER_DATA_MANAGER.debug("Autofixing is disabled, not applying update-fixed-info");
+			LOGGER_DATA_MANAGER.debug("Autofixing is disabled, not applying update-fixed-info");
 			return md;
 		}
 	}
@@ -1086,7 +1079,7 @@ public class BaseMetadataManager implements IMetadataManager {
 			// Check privileges
 			if (!accessManager.canEdit(srvContext, childId)) {
 				untreatedChildSet.add(childId);
-                LOGGER_DATA_MANAGER.debug("Could not update child ({}) because of privileges.", childId);
+				LOGGER_DATA_MANAGER.debug("Could not update child ({}) because of privileges.", childId);
 				continue;
 			}
 
@@ -1099,11 +1092,12 @@ public class BaseMetadataManager implements IMetadataManager {
 			// child are in the same schema (even not profil different)
 			if (!childSchema.equals(parentSchema)) {
 				untreatedChildSet.add(childId);
-                LOGGER_DATA_MANAGER.debug("Could not update child ({}) because schema ({}) is different from the parent one ({}).",
-                    new Object[] {childId, childSchema, parentSchema});
+				LOGGER_DATA_MANAGER.debug(
+						"Could not update child ({}) because schema ({}) is different from the parent one ({}).",
+						new Object[] { childId, childSchema, parentSchema });
 				continue;
 			}
-            LOGGER_DATA_MANAGER.debug("Updating child ({}) ...", childId);
+			LOGGER_DATA_MANAGER.debug("Updating child ({}) ...", childId);
 
 			// --- setup xml element to be processed by XSLT
 
@@ -1169,7 +1163,7 @@ public class BaseMetadataManager implements IMetadataManager {
 				where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
 						.and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
 		final Map<Integer, MetadataSourceInfo> allSourceInfo = metadataRepository
-				.findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
+				.findAllSourceInfo((Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(metadataIds));
 
 		for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
 			Element infoEl = entry.getValue();
@@ -1245,8 +1239,9 @@ public class BaseMetadataManager implements IMetadataManager {
 			if (aNs.getPrefix().equals("")) { // found default namespace
 				String prefix = mds.getPrefix(aNs.getURI());
 				if (prefix == null) {
-                    LOGGER_DATA_MANAGER.warn("Metadata record contains a default namespace {} (with no prefix) which does not match any {} schema's namespaces.",
-                        aNs.getURI(), schema);
+					LOGGER_DATA_MANAGER.warn(
+							"Metadata record contains a default namespace {} (with no prefix) which does not match any {} schema's namespaces.",
+							aNs.getURI(), schema);
 				}
 				ns = Namespace.getNamespace(prefix, aNs.getURI());
 				metadataValidator.setNamespacePrefix(md, ns);
@@ -1273,35 +1268,43 @@ public class BaseMetadataManager implements IMetadataManager {
 		if (info instanceof Metadata) {
 			return metadataRepository.save((Metadata) info);
 		} else {
-			throw new NotImplementedException("Unknown IMetadata subtype: " + info.getClass().getName());
+			throw new ClassCastException("Unknown AbstractMetadata subtype: " + info.getClass().getName());
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public AbstractMetadata update(int id, @Nonnull Updater<? extends AbstractMetadata> updater) {
-		return metadataRepository.update(id, (Updater<Metadata>) updater);
+		try {
+			return metadataRepository.update(id, (Updater<Metadata>) updater);
+		} catch (ClassCastException t) {
+			throw new ClassCastException("Unknown AbstractMetadata subtype: " + updater.getClass().getName());
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteAll(Specification<? extends AbstractMetadata> specs) {
 		try {
 			metadataRepository.deleteAll((Specification<Metadata>) specs);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			// Maybe it is not a Specification<Metadata>
+		} catch (ClassCastException t) {
+			throw new ClassCastException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
 		}
 	}
 
 	@Override
 	public void delete(Integer id) {
-		metadataRepository.delete(id);
+		if (metadataRepository.exists(id)) {
+			metadataRepository.delete(id);
+		}
 	}
 
 	@Override
-	public void createBatchUpdateQuery(PathSpec<Metadata, String> servicesPath, String newUuid,
-			Specification<Metadata> harvested) {
-		metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, harvested);
+	public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
+			Specification<? extends AbstractMetadata> harvested) {
+		try {
+			metadataRepository.createBatchUpdateQuery((PathSpec<Metadata, String>) servicesPath, newUuid,
+					(Specification<Metadata>) harvested);
+		} catch (ClassCastException t) {
+			throw new ClassCastException("Unknown AbstractMetadata subtype: " + servicesPath.getClass().getName());
+		}
 	}
 }

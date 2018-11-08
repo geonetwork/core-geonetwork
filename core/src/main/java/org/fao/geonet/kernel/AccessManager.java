@@ -49,6 +49,7 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryCustom;
@@ -255,7 +256,7 @@ public class AccessManager {
     public boolean isOwner(final ServiceContext context, final String id) throws Exception {
 
         //--- retrieve metadata info
-        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
 
         if (info == null)
             return false;

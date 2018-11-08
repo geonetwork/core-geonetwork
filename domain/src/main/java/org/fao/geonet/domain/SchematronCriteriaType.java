@@ -58,8 +58,8 @@ public enum SchematronCriteriaType {
             for (int i = 0; i < values.length; i++) {
                 ids[i] = Integer.valueOf(values[i]);
             }
-            final Specification<Metadata> correctOwner = MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
-            final Specification<Metadata> correctId = MetadataSpecs.hasMetadataId(metadataId);
+            final Specification<Metadata> correctOwner = (Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
+            final Specification<Metadata> correctId = (Specification<Metadata>)MetadataSpecs.hasMetadataId(metadataId);
             final Specifications<Metadata> finalSpec = Specifications.where(correctId).and(correctOwner);
             return applicationContext.getBean(MetadataRepository.class).count(finalSpec) > 0;
         }

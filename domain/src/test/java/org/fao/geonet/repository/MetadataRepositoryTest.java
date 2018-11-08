@@ -119,7 +119,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(3, _repo.count());
 
-        List<Integer> ids = _repo.findAllIdsBy(MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
+        List<Integer> ids = _repo.findAllIdsBy((Specification<Metadata>)MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
 
         assertArrayEquals(new Integer[]{metadata.getId()}, ids.toArray(new Integer[1]));
     }
@@ -243,7 +243,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         Metadata metadata2 = _repo.save(newMetadata());
         Metadata metadata3 = _repo.save(newMetadata());
 
-        final Specification<Metadata> spec = MetadataSpecs.hasMetadataIdIn(Arrays.asList(metadata.getId(), metadata3.getId()));
+        final Specification<Metadata> spec = (Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(Arrays.asList(metadata.getId(), metadata3.getId()));
         final Map<Integer, MetadataSourceInfo> allSourceInfo = _repo.findAllSourceInfo(Specifications.where(spec));
 
         assertEquals(2, allSourceInfo.size());
