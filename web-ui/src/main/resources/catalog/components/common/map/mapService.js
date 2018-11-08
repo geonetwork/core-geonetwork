@@ -1207,8 +1207,8 @@
               layer.set('url', url);
               ngeoDecorateLayer(layer);
               layer.displayInLayerManager = true;
-              layer.set('label', getCapLayer.name.prefix + ':' +
-                  getCapLayer.name.localPart);
+              layer.set('label', getCapLayer.title ||
+                (getCapLayer.name.prefix + ':' + getCapLayer.name.localPart));
               return layer;
             }
 
