@@ -30,7 +30,7 @@
   var STATUS_INPROGRESS = 0;
   var STATUS_FINISHED = 1;
   var STATUS_ERRORS = 2;
-  var STATUS_CANCELED = 3;
+  var STATUS_CANCELED = 3;  // unused for now
 
   /**
    * Renders the status of a given indexing task (queries are made to update it)
@@ -43,16 +43,57 @@
     function ($http) {
       return {
         restrict: 'E',
-        scope: {},
+        scope: {
+          taskInfo: '<'
+        },
         templateUrl: '../../catalog/components/admin/index/partials/indexingstatus.html',
         link: function (scope, element, attrs) {
-          scope.taskId = attrs['taskId'];
-        },
-        controllerAs: 'ctrl',
-        controller: function ($scope, $element, $attrs) {
-          var taskId = $scope.taskId;
-          this.statusCode = STATUS_UNDEFINED;
-          this.status = 'indexing...';
+          scope.getStatusCode = function() {
+            if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
+              return STATUS_INPROGRESS;
+            }
+            if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed && scope.taskInfo.errors > 0) {
+              return STATUS_ERRORS;
+            }
+            if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed) {
+              return STATUS_FINISHED;
+            }
+            return STATUS_UNDEFINED;
+          }
+
+          scope.getStatusLabel = function() {
+            switch(scope.getStatusCode()) {
+              case STATUS_UNDEFINED: return 'indexingTaskUndefined';
+              case STATUS_INPROGRESS: return 'indexingTaskRunning';
+              case STATUS_FINISHED: return 'indexingTaskFinished';
+              case STATUS_ERRORS: return 'indexingTaskFinishedWithErrors';
+              case STATUS_CANCELED: return 'indexingTaskCanceled';
+            }
+          }
+
+          scope.getStatusIcon = function() {
+            switch(scope.getStatusCode()) {
+              case STATUS_UNDEFINED: return 'fa-question';
+              case STATUS_INPROGRESS: return 'fa-spinner fa-spin';
+              case STATUS_FINISHED: return 'fa-check';
+              case STATUS_ERRORS: return 'fa-exclamation-triangle';
+              case STATUS_CANCELED: return 'fa-ban';
+            }
+          }
+
+          scope.getStatusClass = function(warningOnly) {
+            switch(scope.getStatusCode()) {
+              case STATUS_INPROGRESS: return '';
+              case STATUS_FINISHED: return 'success';
+              case STATUS_ERRORS: return 'warning';
+              case STATUS_CANCELED: return '';
+              default: return '';
+            }
+          }
+
+          scope.getProcessRatio = function() {
+            return Math.round(1000 * scope.taskInfo.processed / scope.taskInfo.total) * 0.001;
+          }
         }
       };
     }]
@@ -65,25 +106,50 @@
    * <gn-indexing-tasks-container />
    */
   module.directive('gnIndexingTasksContainer', [
-      function () {
-        return {
-          restrict: 'E',
-          scope: {},
-          templateUrl: '../../catalog/components/admin/index/partials/indexingstatuscontainer.html',
-          link: function (scope, element, attrs) {
-          },
-          controllerAs: 'ctrl',
-          controller: function ($scope, $element, $attrs) {
-            this.tasks = [{
-              id: '1234'
-            }, {
-              id: '6789'
-            },{
-              id: 'abcdefg'
-            }];
+    '$http',
+    function ($http) {
+      return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '../../catalog/components/admin/index/partials/indexingstatuscontainer.html',
+        link: function (scope, element, attrs) {
+        },
+        controllerAs: 'ctrl',
+        controller: [
+          '$scope', '$element', '$attrs',
+          function ($scope, $element, $attrs) {
+            this.tasks = [];
+
+            var me = this;
+
+            this.refresh = function () {
+              $http.get('../../jolokia/read/geonetwork:name=indexing-task,idx=*')
+                .then(function (result) {
+                  //console.log(result);
+                  me.tasks.length = 0;
+
+                  if (!result.data || !result.data.value) { return; }
+
+                  var probes = result.data.value;
+                  Object.keys(probes).forEach(function (probeName) {
+                    var probe = probes[probeName];
+                    me.tasks.push({
+                      id: probeName,
+                      errors: probe.InError,
+                      processed: probe.Processed,
+                      total: probe.ToProcessCount
+                    });
+                  })
+
+                  // loop
+                  setTimeout(me.refresh, 1000);
+                });
+            }
+
+            this.refresh();
           }
-        };
-      }
-    ]
+        ]
+      };
+    }]
   );
 })();
