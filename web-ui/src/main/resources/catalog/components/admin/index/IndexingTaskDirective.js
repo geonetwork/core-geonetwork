@@ -94,6 +94,11 @@
           scope.getProcessRatio = function() {
             return Math.round(1000 * scope.taskInfo.processed / scope.taskInfo.total) * 0.001;
           }
+
+          scope.getTaskInfo = function() {
+            if (!scope.taskInfo) { return 'no task info available'; }
+            return 'Task id: ' + scope.taskInfo.id;
+          }
         }
       };
     }]
