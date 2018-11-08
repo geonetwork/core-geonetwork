@@ -557,6 +557,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 				}
 				moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
 			}
+			
+			//To inject extra fields from BaseMetadataIndexer inherited beans
+			addExtraFields(fullMd, moreFields);
 
 			if (searchManager == null) {
 				searchManager = servContext.getBean(SearchManager.class);
@@ -581,6 +584,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 			this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));
 		}
 	}
+	
+
+	/**
+	 * Function to be overrided by children to add extra fields cleanly. 
+	 * Don't forget to call always super.addExtraFields, just in case
+	 * @param fullMd
+	 * @param moreFields
+	 */
+    protected void addExtraFields(AbstractMetadata fullMd, Vector<Element> moreFields) {
+    	
+    }
 
 	private XmlSerializer getXmlSerializer() {
 		return xmlSerializer;

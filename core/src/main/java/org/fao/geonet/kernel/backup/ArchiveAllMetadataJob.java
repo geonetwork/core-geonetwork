@@ -23,14 +23,20 @@
 
 package org.fao.geonet.kernel.backup;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.util.Assert;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.Nullable;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
@@ -56,15 +62,13 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nullable;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.util.Assert;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 
 @Service
 public class ArchiveAllMetadataJob extends QuartzJobBean {
@@ -120,8 +124,8 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
             final MetadataRepository metadataRepository = serviceContext.getBean(MetadataRepository.class);
 
             loginAsAdmin(serviceContext);
-            final Specification<Metadata> harvested = Specifications.where(MetadataSpecs.isHarvested(false)).
-                    and(Specifications.not(MetadataSpecs.hasType(MetadataType.SUB_TEMPLATE)));
+            final Specification<Metadata> harvested = Specifications.where((Specification<Metadata>)MetadataSpecs.isHarvested(false)).
+                    and((Specification<Metadata>)Specifications.not(MetadataSpecs.hasType(MetadataType.SUB_TEMPLATE)));
             List<String> uuids = Lists.transform(metadataRepository.findAll(harvested), new Function<Metadata,
                     String>() {
                 @Nullable

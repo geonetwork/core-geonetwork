@@ -42,6 +42,7 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
@@ -98,7 +99,7 @@ public class GetByOwner implements Service {
         Specifications<Metadata> spec;
         // if the user is an admin, return all metadata
         if (userProfile == Profile.Administrator) {
-            spec = where(MetadataSpecs.isHarvested(false));
+            spec = where((Specification<Metadata>)MetadataSpecs.isHarvested(false));
         } else if (userProfile == Profile.Reviewer || userProfile == Profile.UserAdmin) {
             final List<UserGroup> groups = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(ownerId));
             List<Integer> groupIds = Lists.transform(groups, new Function<UserGroup, Integer>() {
@@ -108,10 +109,10 @@ public class GetByOwner implements Service {
                     return input.getId().getGroupId();
                 }
             });
-            spec = where(MetadataSpecs.isHarvested(false)).and(MetadataSpecs.isOwnedByOneOfFollowingGroups(groupIds));
+            spec = where((Specification<Metadata>)MetadataSpecs.isHarvested(false)).and((Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(groupIds));
             // if the user is a reviewer, return all metadata of the user's groups
         } else if (userProfile == Profile.Editor) {
-            spec = where(MetadataSpecs.isOwnedByUser(ownerId)).and(MetadataSpecs.isHarvested(false));
+            spec = where((Specification<Metadata>)MetadataSpecs.isOwnedByUser(ownerId)).and((Specification<Metadata>)MetadataSpecs.isHarvested(false));
             // if the user is an editor, return metadata owned by this user
         } else {
             throw new OperationNotAllowedEx("Unauthorized user " + ownerId + " attempted to list editable metadata ");

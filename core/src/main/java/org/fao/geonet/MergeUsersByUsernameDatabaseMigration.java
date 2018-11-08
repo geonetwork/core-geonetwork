@@ -34,6 +34,7 @@ import org.fao.geonet.repository.specification.MetadataStatusSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,7 +120,7 @@ public class MergeUsersByUsernameDatabaseMigration implements ContextAwareTask {
             User oldOwner = oldMetadataOwnerList.get(i);
 
             // Transfer metadata to user but keep old group
-            List<Metadata> metadataList = metadataRepository.findAll(MetadataSpecs.isOwnedByUser(oldOwner.getId()));
+            List<Metadata> metadataList = metadataRepository.findAll((Specification<Metadata>)MetadataSpecs.isOwnedByUser(oldOwner.getId()));
             for (Metadata metadata : metadataList) {
                 dataManager.updateMetadataOwner(metadata.getId(), Integer.toString(newMetadataOwner.getId()),
                     Integer.toString(metadata.getSourceInfo().getGroupOwner()));

@@ -1,5 +1,7 @@
 package org.fao.geonet.kernel.datamanager;
 
+import java.util.Collection;
+
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -86,6 +88,16 @@ public interface IMetadataOperations {
     boolean setOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception;
 
     /**
+     * Set metadata privileges even if the user logged in does not have privileges
+     *
+     * @param mdId The metadata identifier
+     * @param grpId The group identifier
+     * @param opId The operation identifier
+     * @return true if the operation was set.
+     */
+    boolean forceSetOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception;
+
+    /**
      * Check that the operation has not been added and if not that it can be added.
      * <ul>
      * <li>If the operation can be added then an non-empty optional is return.</li>
@@ -150,4 +162,12 @@ public interface IMetadataOperations {
      * @throws Exception
      */
     boolean existsUser(ServiceContext context, int id) throws Exception;
+
+    /**
+     * Return all operations related to one record
+     * 
+     * @param id
+     * @return
+     */
+    public Collection<OperationAllowed> getAllOperations(int id);
 }
