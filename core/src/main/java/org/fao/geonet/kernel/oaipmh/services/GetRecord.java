@@ -148,7 +148,7 @@ public class GetRecord implements OaiPmhService {
     //---------------------------------------------------------------------------
 
     private Record buildRecord(ServiceContext context, String uuid, String prefix) throws Exception {
-        return buildRecordStat(context, hasMetadataUuid(uuid), prefix);
+        return buildRecordStat(context, (Specification<Metadata>)hasMetadataUuid(uuid), prefix);
     }
 }
 

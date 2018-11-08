@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.repository.BatchUpdateQuery;
@@ -192,8 +191,8 @@ public interface IMetadataManager {
     EditLib getEditLib();
 
     /**
-     * Saves an IMetadata into the database. Useful to avoid using the MetadataRepository classes directly, who may not know how to handle
-     * IMetadata types
+     * Saves an AbstractMetadata into the database. Useful to avoid using the MetadataRepository classes directly, who may not know how to handle
+     * AbstractMetadata types
      * 
      * @param info
      */
@@ -236,5 +235,6 @@ public interface IMetadataManager {
      * @param <V> The type of the attribute
      * @return a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      */
-    public void createBatchUpdateQuery(PathSpec<Metadata, String> servicesPath, String newUuid, Specification<Metadata> harvested);
+    public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
+            Specification<? extends AbstractMetadata> harvested);
 }

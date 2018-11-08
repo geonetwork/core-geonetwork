@@ -82,8 +82,10 @@ class UnusedSearcher extends MetaSearcher {
         context.info("UnusedSearcher : using maxDiff=" + maxDiff);
 
         //--- proper search
-        final Specifications<Metadata> spec = Specifications.where(MetadataSpecs.isType(MetadataType.TEMPLATE)).and(MetadataSpecs.isHarvested(false))
-            .and(MetadataSpecs.hasSource(siteId));
+        final Specifications<Metadata> spec = 
+        		Specifications.where((Specification<Metadata>)MetadataSpecs.isType(MetadataType.TEMPLATE))
+        		.and((Specification<Metadata>)MetadataSpecs.isHarvested(false))
+        		.and((Specification<Metadata>)MetadataSpecs.hasSource(siteId));
 
         final List<Metadata> list = context.getBean(MetadataRepository.class).findAll(spec);
 

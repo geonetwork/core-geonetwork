@@ -54,6 +54,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.IOException;
@@ -416,8 +417,8 @@ public class EsSearchManager implements ISearchManager {
             sendDocumentsToIndex();
         } else {
             final Specifications<Metadata> metadataSpec =
-                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
-                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
+                Specifications.where((Specification<Metadata>)MetadataSpecs.isType(MetadataType.METADATA))
+                    .or((Specification<Metadata>)MetadataSpecs.isType(MetadataType.TEMPLATE));
             final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
                 Specifications.where(metadataSpec)
             );

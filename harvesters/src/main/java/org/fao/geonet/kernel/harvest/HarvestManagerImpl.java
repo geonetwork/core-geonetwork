@@ -599,7 +599,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 
         String harvesterUUID = ah.getParams().getUuid();
 
-        final Specification<Metadata> specification = MetadataSpecs.hasHarvesterUuid(harvesterUUID);
+        final Specification<Metadata> specification = (Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(harvesterUUID);
         int numberOfRecordsRemoved = dataMan.batchDeleteMetadataAndUpdateIndex(specification);
         ah.emptyResult();
         elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;

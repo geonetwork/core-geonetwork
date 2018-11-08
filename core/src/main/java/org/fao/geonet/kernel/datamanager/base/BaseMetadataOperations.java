@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.datamanager.base;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +15,8 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.events.md.MetadataPublished;
+import org.fao.geonet.events.md.MetadataUnpublished;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
@@ -28,6 +31,8 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -35,7 +40,7 @@ import com.google.common.base.Optional;
 
 import jeeves.server.context.ServiceContext;
 
-public class BaseMetadataOperations implements IMetadataOperations {
+public class BaseMetadataOperations implements IMetadataOperations, ApplicationEventPublisherAware  {
 
     @Autowired
     private IMetadataUtils metadataUtils;
@@ -51,6 +56,18 @@ public class BaseMetadataOperations implements IMetadataOperations {
     @Autowired(required=false)
     private SvnManager svnManager;
 
+    private ApplicationEventPublisher eventPublisher;
+    
+    /**
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
+     */
+    @Override
+    public void setApplicationEventPublisher(
+        ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
+    }
+
+
     public void init(ServiceContext context, Boolean force) throws Exception {
         userRepository = context.getBean(UserRepository.class);
         metadataUtils = context.getBean(IMetadataUtils.class);
@@ -65,13 +82,11 @@ public class BaseMetadataOperations implements IMetadataOperations {
      */
     @Override
     public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
-        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-
         if (skipAllReservedGroup) {
             int[] exclude = new int[] { ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId() };
-            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), exclude);
+            opAllowedRepo.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), exclude);
         } else {
-            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
+            opAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }
     }
 
@@ -110,12 +125,35 @@ public class BaseMetadataOperations implements IMetadataOperations {
 
         // Set operation
         if (opAllowed.isPresent()) {
-            opAllowedRepo.save(opAllowed.get());
-            svnManager.setHistory(mdId + "", context);
-            return true;
+            return forceSetOperation(context, mdId, grpId, opId);
         }
 
         return false;
+    }
+
+    /**
+     * Set metadata privileges.
+     *
+     * @param mdId The metadata identifier
+     * @param grpId The group identifier
+     * @param opId The operation identifier
+     * @return true if the operation was set.
+     */
+    @Override
+    public boolean forceSetOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
+        Optional<OperationAllowed> opAllowed = _getOperationAllowedToAdd(context, mdId, grpId, opId, false);
+
+        opAllowedRepo.save(opAllowed.get());
+        svnManager.setHistory(mdId + "", context);
+        
+        //If it is published/unpublished, throw event
+        if(opId == ReservedOperation.view.getId() 
+                && grpId == ReservedGroup.all.getId()) {
+            this.eventPublisher.publishEvent(new MetadataPublished(
+                    metadataUtils.findOne(Integer.valueOf(mdId))));
+        }
+        
+        return true;
     }
 
     /**
@@ -129,9 +167,14 @@ public class BaseMetadataOperations implements IMetadataOperations {
     @Override
     public Optional<OperationAllowed> getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
             final int opId) {
+        return _getOperationAllowedToAdd(context, mdId, grpId, opId, true);
+    }
+
+    private Optional<OperationAllowed> _getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
+            final int opId, boolean shouldCheckPermission) {
         final OperationAllowed operationAllowed = opAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
-        if (operationAllowed == null) {
+        if (operationAllowed == null && shouldCheckPermission) {
             checkOperationPermission(context, grpId, userGroupRepo);
         }
 
@@ -226,12 +269,20 @@ public class BaseMetadataOperations implements IMetadataOperations {
     @Override
     public void forceUnsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
         OperationAllowedId id = new OperationAllowedId().setGroupId(groupId).setMetadataId(mdId).setOperationId(operId);
-        final OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        if (repository.exists(id)) {
-            repository.delete(id);
+        if (opAllowedRepo.exists(id)) {
+            opAllowedRepo.delete(id);
             if (svnManager != null) {
                 svnManager.setHistory(mdId + "", context);
             }
+            
+            //If it is published/unpublished, throw event
+            if(operId == ReservedOperation.view.getId() 
+                    && groupId == ReservedGroup.all.getId()) {
+
+                this.eventPublisher.publishEvent(new MetadataUnpublished(
+                        metadataUtils.findOne(Integer.valueOf(mdId))));
+            }
+
         }
     }
 
@@ -275,4 +326,9 @@ public class BaseMetadataOperations implements IMetadataOperations {
     public boolean existsUser(ServiceContext context, int id) throws Exception {
         return userRepository.count(where(UserSpecs.hasUserId(id))) > 0;
     }
+
+    @Override
+    public Collection<OperationAllowed> getAllOperations(int id) {
+        return opAllowedRepo.findAllById_MetadataId(id);
+  }
 }

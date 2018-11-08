@@ -39,9 +39,10 @@ public interface IMetadataCategory {
      * @param context
      * @param mdId
      * @param categId
+     * @return if the category was assigned
      * @throws Exception
      */
-    void setCategory(ServiceContext context, String mdId, String categId) throws Exception;
+    boolean setCategory(ServiceContext context, String mdId, String categId) throws Exception;
 
     /**
      * Given a record id and a category id, unassign that category from the previous record
@@ -49,9 +50,10 @@ public interface IMetadataCategory {
      * @param context
      * @param mdId
      * @param categId
+     * @return if the category was deassigned
      * @throws Exception
      */
-    void unsetCategory(ServiceContext context, String mdId, int categId) throws Exception;
+    boolean unsetCategory(ServiceContext context, String mdId, int categId) throws Exception;
 
     /**
      * Given a record id, return the list of categories associated to that record

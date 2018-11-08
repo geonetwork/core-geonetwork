@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -56,7 +57,7 @@ public class GetTypes implements Service {
 
         final Sort sort = new Sort(Sort.Direction.ASC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.root.getName());
 
-        final List<Metadata> metadatas = context.getBean(MetadataRepository.class).findAll(hasType(MetadataType.SUB_TEMPLATE), sort);
+        final List<Metadata> metadatas = context.getBean(MetadataRepository.class).findAll((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE), sort);
         Element subTemplateTypes = new Element("getTypes");
 
         for (Metadata metadata : metadatas) {

@@ -67,6 +67,7 @@ import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.collect.Sets;
 
@@ -348,7 +349,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         // not in this harvesting result
         //
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
-        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
+        List<Integer> existingMetadata = context.getBean(MetadataRepository.class).findAllIdsBy((Specification<Metadata>) MetadataSpecs.hasHarvesterUuid(params.getUuid()));
         for (Integer existingId : existingMetadata) {
 
             if (cancelMonitor.get()) {

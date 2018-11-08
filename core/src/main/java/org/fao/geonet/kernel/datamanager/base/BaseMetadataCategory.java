@@ -38,10 +38,16 @@ public class BaseMetadataCategory implements IMetadataCategory {
 
     /**
      * Adds a category to a metadata. Metadata is not reindexed.
+     * 
+     * @return if the category was assigned
      */
     @Override
-    public void setCategory(ServiceContext context, String mdId, String categId) throws Exception {
+    public boolean setCategory(ServiceContext context, String mdId, String categId) throws Exception {
 
+    	if(!getMetadataRepository().exists(Integer.valueOf(mdId))) {
+    		return false;
+    	}
+    	
         final MetadataCategory newCategory = metadataCategoryRepository.findOne(Integer.valueOf(categId));
         final boolean[] changed = new boolean[1];
         getMetadataRepository().update(Integer.valueOf(mdId), new Updater<Metadata>() {
@@ -56,7 +62,10 @@ public class BaseMetadataCategory implements IMetadataCategory {
             if (getSvnManager() != null) {
                 getSvnManager().setHistory(mdId, context);
             }
+            
+            return true;
         }
+        return false;
     }
 
     /**
@@ -82,13 +91,14 @@ public class BaseMetadataCategory implements IMetadataCategory {
      * @param mdId
      * @param categId
      * @throws Exception
+     * @return if the category was deassigned
      */
     @Override
-    public void unsetCategory(final ServiceContext context, final String mdId, final int categId) throws Exception {
+    public boolean unsetCategory(final ServiceContext context, final String mdId, final int categId) throws Exception {
         AbstractMetadata metadata = getMetadataUtils().findOne(mdId);
 
         if (metadata == null) {
-            return;
+            return false;
         }
         boolean changed = false;
         for (MetadataCategory category : metadata.getCategories()) {
@@ -105,6 +115,8 @@ public class BaseMetadataCategory implements IMetadataCategory {
                 getSvnManager().setHistory(mdId + "", context);
             }
         }
+        
+        return changed;
     }
 
     /**
