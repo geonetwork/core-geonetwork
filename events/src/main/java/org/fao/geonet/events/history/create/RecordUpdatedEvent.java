@@ -23,14 +23,33 @@
 
 package org.fao.geonet.events.history.create;
 
-import org.fao.geonet.domain.AbstractMetadata;
+import org.springframework.context.ApplicationContext;
 
-public class RecordUpdatedEvent extends AbstractContentHistoryEvent {
-
-    public RecordUpdatedEvent(AbstractMetadata md, int userId) {
-        super(md, userId);
-    }
+public class RecordUpdatedEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = 1110999025730522535L;
+
+    public RecordUpdatedEvent(Integer mdId, Integer userId) {
+        super(mdId, userId);
+    }
+
+    public RecordUpdatedEvent(Long mdId, Integer userId) {
+        super(mdId, userId);
+    }
+
+    @Override
+    public String getCurrentState() {
+        return null;
+    }
+
+    @Override
+    public String getPreviousState() {
+        return null;
+    }
+
+    @Override
+    public void publish(ApplicationContext appContext) {
+        appContext.publishEvent(new RecordUpdatedEvent(getMdId(), getUserId()));
+    }
 
 }

@@ -54,6 +54,7 @@ import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.domain.Schematron;
+import org.fao.geonet.events.history.create.RecordValidationTriggeredEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -150,6 +151,8 @@ public class MetadataValidateApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataManager = appContext.getBean(DataManager.class);
+        
+        new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(appContext);
 
         String id = String.valueOf(metadata.getId());
         String schemaName = dataManager.getMetadataSchema(id);
