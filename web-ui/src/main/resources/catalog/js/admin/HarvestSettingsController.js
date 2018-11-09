@@ -195,7 +195,6 @@
           return null;
         }
       };
-
       $scope.updatingHarvester = function() {
         $scope.harvesterUpdated = true;
       };
