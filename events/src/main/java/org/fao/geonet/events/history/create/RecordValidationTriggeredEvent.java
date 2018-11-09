@@ -27,7 +27,7 @@ import org.springframework.context.ApplicationContext;
 
 public class RecordValidationTriggeredEvent extends AbstractHistoryEvent {
 
-    private static final long serialVersionUID = 2321916584292832050L;
+    private static final long serialVersionUID = 5541971988637706317L;
 
     public RecordValidationTriggeredEvent(Integer mdId, Integer userId) {
         super(mdId, userId);
@@ -49,7 +49,7 @@ public class RecordValidationTriggeredEvent extends AbstractHistoryEvent {
 
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new RecordValidationTriggeredEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
     }
 
 }

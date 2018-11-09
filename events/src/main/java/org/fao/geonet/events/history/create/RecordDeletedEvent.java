@@ -49,7 +49,7 @@ public class RecordDeletedEvent extends AbstractHistoryEvent {
 
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new RecordDeletedEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
     }
 
 }

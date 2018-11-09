@@ -70,6 +70,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.utils.ObjectJSONConverter;
 import org.fao.geonet.events.history.create.RecordCreateEvent;
 import org.fao.geonet.events.history.create.RecordDeletedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -95,9 +96,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.input.JDOMParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
@@ -113,6 +112,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -198,7 +198,10 @@ public class MetadataInsertDeleteApi {
                 String.valueOf(metadata.getId())));
 
         dataManager.deleteMetadata(context, metadataUuid);
-
+        UserSession userSession =  ApiUtils.getUserSession(request.getSession());
+        new RecordDeletedEvent(metadata.getId(),
+                               userSession.getUserIdAsInt()
+                             ).publish(ApplicationContextHolder.get());
 
         searchManager.forceIndexChanges();
     }
@@ -271,7 +274,10 @@ public class MetadataInsertDeleteApi {
                         String.valueOf(metadata.getId())));
 
                 dataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
-                new RecordDeletedEvent((long) metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(ApplicationContextHolder.get());
+                UserSession userSession =  ApiUtils.getUserSession(request.getSession());
+                new RecordDeletedEvent(metadata.getId(),
+                                       userSession.getUserIdAsInt()
+                                       ).publish(ApplicationContextHolder.get());
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());
@@ -445,7 +451,7 @@ public class MetadataInsertDeleteApi {
                 "Metadata imported from XML with UUID '%s'", pair.two())
             );
 
-            new RecordCreateEvent(pair.one(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+            triggerCreationEvent(request, applicationContext, pair.two());
 
             report.incrementProcessedRecords();
         }
@@ -464,7 +470,8 @@ public class MetadataInsertDeleteApi {
                     report.addMetadataInfos(pair.one(), String.format(
                         "Metadata imported from URL with UUID '%s'", pair.two())
                     );
-                    new RecordCreateEvent(pair.one(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+
+                    triggerCreationEvent(request, applicationContext, pair.two());
 
                 }
 
@@ -516,7 +523,7 @@ public class MetadataInsertDeleteApi {
                             report.addMetadataInfos(Integer.parseInt(id), String.format(
                                 "Metadata imported from MEF with id '%s'", id)
                             );
-                            new RecordCreateEvent(Long.parseLong(id), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+                            triggerCreationEvent(request, applicationContext, id);
 
                             report.incrementProcessedRecords();
                         }
@@ -534,7 +541,9 @@ public class MetadataInsertDeleteApi {
                         report.addMetadataInfos(pair.one(), String.format(
                             "Metadata imported from server folder with UUID '%s'", pair.two())
                         );
-                        new RecordCreateEvent(pair.one(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+
+                        triggerCreationEvent(request, applicationContext, pair.two());
+
                     } catch (Exception e) {
                         report.addError(e);
                     }
@@ -718,7 +727,7 @@ public class MetadataInsertDeleteApi {
             isVisibleByAllGroupMembers,
             metadataUuid);
 
-        new RecordCreateEvent(Long.parseLong(newId), ApiUtils.getUserSession(httpSession).getUserIdAsInt()).publish(applicationContext);
+        triggerCreationEvent(request, applicationContext, newId);
 
         dataManager.activateWorkflowIfConfigured(context, newId, group);
 
@@ -915,7 +924,14 @@ public class MetadataInsertDeleteApi {
                                 "Metadata imported with ID '%s'", e)
                             );
 
-                            new RecordCreateEvent(Long.parseLong(e), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+                            try {
+                                triggerCreationEvent(request, applicationContext, e);
+                            } catch (Exception e1) {
+                                report.addError(e1);
+                                report.addInfos(String.format(
+                                    "Impossible to store event for '%s'. Check error for details.",
+                                    f.getOriginalFilename()));
+                            }
 
                             report.incrementProcessedRecords();
                         });
@@ -934,7 +950,8 @@ public class MetadataInsertDeleteApi {
                     report.addMetadataInfos(pair.one(), String.format(
                         "Metadata imported with UUID '%s'", pair.two())
                     );
-                    new RecordCreateEvent(pair.one(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+
+                    triggerCreationEvent(request, applicationContext, pair.two());
 
                     report.incrementProcessedRecords();
                 }
@@ -1174,11 +1191,30 @@ public class MetadataInsertDeleteApi {
         dm.indexMetadata(id);
         report.addMetadataInfos(Integer.parseInt(id.get(0)), uuid);
 
-        new RecordCreateEvent(Long.parseLong(ApiUtils.getInternalId(uuid)), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+        triggerCreationEvent(request, applicationContext, uuid);
 
         report.incrementProcessedRecords();
         report.close();
         return report;
+    }
+
+    /**
+     *  This triggers an event to
+        * @param request
+        * @param applicationContext
+        * @param uuid or id of metadata
+        * @throws Exception
+        * @throws JsonProcessingException
+     */
+    private void triggerCreationEvent(HttpServletRequest request, ApplicationContext applicationContext, String uuid)
+            throws Exception, JsonProcessingException {
+        AbstractMetadata metadata = ApiUtils.getRecord(uuid);
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new RecordCreateEvent(metadata.getId(),
+                              userSession.getUserIdAsInt(),
+                              metadata.getData(),
+                              ObjectJSONConverter.convertObjectToJsonString(userSession.getPrincipal())
+                              ).publish(applicationContext);
     }
 
 

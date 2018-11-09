@@ -29,12 +29,27 @@ public class RecordCreateEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = 1110999025730522535L;
 
-    public RecordCreateEvent(Integer mdId, Integer userId) {
+    // Status related fields
+    private String userObject, record;
+
+    private RecordCreateEvent(Integer mdId, Integer userId) {
         super(mdId, userId);
     }
 
-    public RecordCreateEvent(Long mdId, Integer userId) {
+    public RecordCreateEvent(Integer mdId, Integer userId, String userObject, String record) {
         super(mdId, userId);
+        setUserObject(userObject);
+        setRecord(record);
+    }
+
+    private RecordCreateEvent(Long mdId, Integer userId) {
+        super(mdId, userId);
+    }
+
+    public RecordCreateEvent(Long mdId, Integer userId, String userObject, String record) {
+        super(mdId, userId);
+        setUserObject(userObject);
+        setRecord(record);
     }
 
     @Override
@@ -47,9 +62,29 @@ public class RecordCreateEvent extends AbstractHistoryEvent {
         return null;
     }
 
+    public String getRecord() {
+        return record;
+
+    }
+
+    public String getUserObject() {
+        return userObject;
+
+    }
+
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new RecordCreateEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
+    }
+
+    public void setRecord(String record) {
+        this.record = record;
+
+    }
+
+    public void setUserObject(String userObject) {
+        this.userObject = userObject;
+
     }
 
 }
