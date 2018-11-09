@@ -184,14 +184,27 @@
       $scope.getTplForHarvester = function() {
         // TODO : return view by calling harvester ?
         if ($scope.harvesterSelected) {
+          if ($scope.harvesterSelected.site.ogctype.match('^(WPS2)') != null){
+            $scope.metadataTemplateType =$translate.instant('process');
+          } else {
+            $scope.metadataTemplateType =$translate.instant('layer');
+          }
           return '../../catalog/templates/admin/' + $scope.pageMenu.folder +
               'type/' + $scope.harvesterSelected['@type'] + '.html';
         } else {
           return null;
         }
       };
+
       $scope.updatingHarvester = function() {
         $scope.harvesterUpdated = true;
+        if ($scope.harvesterSelected.site.ogctype.match('^(WPS2)') != null){
+          $scope.metadataTemplateType = 'process';
+          console.log('process');
+        } else {
+          $scope.metadataTemplateType = 'layer';
+          console.log('layer');
+        }
       };
       $scope.addHarvester = function(type) {
         $scope.harvesterNew = true;
