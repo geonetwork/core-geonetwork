@@ -36,6 +36,7 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -83,7 +84,7 @@ public class GetAdminOper implements Service {
         //-----------------------------------------------------------------------
         //--- check access
 
-        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(metadataId);
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(metadataId);
 
         if (info == null)
             throw new MetadataNotFoundEx(metadataId);

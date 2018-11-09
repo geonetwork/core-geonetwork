@@ -34,9 +34,9 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -97,7 +97,7 @@ public class GetSuggestion implements Service {
 
         // Retrieve metadata record
         String id = Utils.getIdentifierFromParameters(params, context);
-        AbstractMetadata mdInfo = gc.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata mdInfo = gc.getBean(IMetadataUtils.class).findOne(id);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
         Element md = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 

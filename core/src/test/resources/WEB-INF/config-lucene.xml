@@ -151,6 +151,7 @@
       <field name="geoBox" tagName="geoBox"/>
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
+      <field name="_draft" tagName="draft"/>
     </dumpFields>
   </search>
 

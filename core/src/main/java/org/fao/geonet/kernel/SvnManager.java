@@ -44,8 +44,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.Operation;
@@ -54,10 +54,10 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -697,7 +697,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         // get owner from the database
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(id));
-        AbstractMetadata metadata = this.context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata metadata = this.context.getBean(IMetadataUtils.class).findOne(id);
         User user = this.context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
         // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
         Element xml = new Element("results").addContent(

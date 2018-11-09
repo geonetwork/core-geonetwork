@@ -23,11 +23,13 @@
 
 package org.fao.geonet.services.metadata;
 
-import com.google.common.collect.Maps;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import javax.annotation.Nonnull;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -38,23 +40,21 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.google.common.collect.Maps;
 
-import javax.annotation.Nonnull;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Inserts a new metadata to the system (data is validated).
@@ -162,7 +162,7 @@ public class Insert extends NotInReadOnlyModeService {
         final boolean hasCategory = !category.equals("_none_") && !category.trim().isEmpty();
 
         if (hasCategory || extra != null) {
-            context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            context.getBean(IMetadataManager.class).update(iId, new Updater<Metadata>() {
                 @Override
                 public void apply(@Nonnull Metadata metadata) {
                     if (hasCategory) {

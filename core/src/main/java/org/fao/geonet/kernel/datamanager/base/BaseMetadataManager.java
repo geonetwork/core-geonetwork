@@ -1,6 +1,5 @@
 package org.fao.geonet.kernel.datamanager.base;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -29,7 +28,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDataInfo_;
-import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataFileUpload_;
 import org.fao.geonet.domain.MetadataSourceInfo;
@@ -169,7 +167,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	@Autowired
 	private ThesaurusManager thesaurusManager;
 	@Autowired
-	private AccessManager accessManager;
+	protected AccessManager accessManager;
 	@Autowired
 	private UserSavedSelectionRepository userSavedSelectionRepository;
 
@@ -407,6 +405,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	/**
 	 *
 	 * @param context
+import org.fao.geonet.domain.MetadataDraft;
 	 * @param metadataId
 	 * @throws Exception
 	 */
@@ -545,6 +544,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	 * @param ufo
 	 *            whether to apply automatic changes
 	 * @param index
+import org.fao.geonet.domain.MetadataDraft;
 	 *            whether to index this metadata
 	 * @return id, as a string
 	 * @throws Exception
@@ -1139,7 +1139,6 @@ public class BaseMetadataManager implements IMetadataManager {
 	 *            a map from the metadata Id -> the info element to which the
 	 *            privilege information should be added.
 	 */
-	@VisibleForTesting
 	@Override
 	public void buildPrivilegesMetadataInfo(ServiceContext context, Map<String, Element> mdIdToInfoMap)
 			throws Exception {
@@ -1162,8 +1161,7 @@ public class BaseMetadataManager implements IMetadataManager {
 		final Set<Integer> downloadableByGuest = loadOperationsAllowed(context,
 				where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
 						.and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
-		final Map<Integer, MetadataSourceInfo> allSourceInfo = metadataRepository
-				.findAllSourceInfo((Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(metadataIds));
+		final Map<Integer, MetadataSourceInfo> allSourceInfo = findAllSourceInfo((Specification<Metadata>)MetadataSpecs.hasMetadataIdIn(metadataIds));
 
 		for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
 			Element infoEl = entry.getValue();
@@ -1201,7 +1199,7 @@ public class BaseMetadataManager implements IMetadataManager {
 		}
 	}
 
-	private SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(ServiceContext context,
+	protected SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(ServiceContext context,
 			Specification<OperationAllowed> operationAllowedSpec) {
 		final OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
 		List<OperationAllowed> operationsAllowed = operationAllowedRepo.findAll(operationAllowedSpec);
@@ -1259,7 +1257,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	 * @param name
 	 * @param value
 	 */
-	private static void addElement(Element root, String name, Object value) {
+	protected static void addElement(Element root, String name, Object value) {
 		root.addContent(new Element(name).setText(value == null ? "" : value.toString()));
 	}
 
@@ -1305,6 +1303,16 @@ public class BaseMetadataManager implements IMetadataManager {
 					(Specification<Metadata>) harvested);
 		} catch (ClassCastException t) {
 			throw new ClassCastException("Unknown AbstractMetadata subtype: " + servicesPath.getClass().getName());
+		}
+	}
+	
+
+	@Override
+	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs) {
+		try {
+			return metadataRepository.findAllSourceInfo((Specification<Metadata>) specs);
+		} catch (ClassCastException t) {
+			throw new ClassCastException("Unknown AbstractMetadata subtype: " + specs.getClass().getName());
 		}
 	}
 }

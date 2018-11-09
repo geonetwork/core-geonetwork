@@ -38,13 +38,13 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester;
 import org.fao.geonet.kernel.harvest.harvester.geonet.GeonetParams;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -136,7 +136,7 @@ public class Rate extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
 
     private String getHarvestingUuid(ServiceContext context, String id) throws Exception {
-        final AbstractMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(id);
 
         //--- if we don't have any metadata, just return
 

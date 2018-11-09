@@ -348,7 +348,7 @@ public class AccessManager {
      * @param metadataId the id of the metadata
      */
     public boolean isVisibleToAll(final String metadataId) throws Exception {
-        AbstractMetadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOne(metadataId);
+        AbstractMetadata metadata = ApplicationContextHolder.get().getBean(IMetadataUtils.class).findOne(metadataId);
         if (metadata == null) {
             return false;
         } else {

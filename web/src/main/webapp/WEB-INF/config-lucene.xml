@@ -183,6 +183,7 @@
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>
+      <field name="_draft" tagName="draft"/>
     </dumpFields>
   </search>
 

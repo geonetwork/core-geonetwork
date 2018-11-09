@@ -1,5 +1,8 @@
 package org.fao.geonet.kernel.datamanager.draft;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
@@ -7,6 +10,7 @@ import javax.persistence.EntityNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -120,6 +124,25 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 		} catch (ClassCastException t) {
 			throw new ClassCastException("Unknown AbstractMetadata subtype: " + servicesPath.getClass().getName());
 		}
-
 	}
+	
+
+	@Override
+	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs) {
+		Map<Integer, MetadataSourceInfo> res = new HashMap<Integer, MetadataSourceInfo>();
+		try {
+			res.putAll(super.findAllSourceInfo(specs));
+		} catch (ClassCastException t) {
+			// That's fine, maybe we are on the draft side
+		}
+		try {
+			res.putAll(metadataDraftRepository.findAllSourceInfo((Specification<MetadataDraft>) specs));
+		} catch (ClassCastException t) {
+			// That's fine, maybe we are on the metadata side
+		}
+		
+		return res;
+	}
+	
+
 }
