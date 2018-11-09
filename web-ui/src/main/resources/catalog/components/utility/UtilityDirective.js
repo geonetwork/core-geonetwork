@@ -262,17 +262,28 @@
                           datumTokenizer:
                               Bloodhound.tokenizers.obj.whitespace('name'),
                           queryTokenizer: Bloodhound.tokenizers.whitespace,
-                          local: data,
-                          limit: 30
+                          local: data
                         });
                         source.initialize();
+
+                        function allOrSearchFn(q, sync) {
+                          if (q === '') {
+                            sync(source.all());
+                            // This is the only change needed to get 'ALL'
+                            // items as the defaults
+                          } else {
+                            source.search(q, sync);
+                          }
+                        }
+
                         $(element).typeahead({
                           minLength: 0,
                           highlight: true
                         }, {
                           name: 'countries',
                           displayKey: 'name',
-                          source: source.ttAdapter()
+                          limit: 100,
+                          source: allOrSearchFn
                         }).on('typeahead:selected', function(event, datum) {
                           if (angular.isFunction(scope.onRegionSelect)) {
                             scope.onRegionSelect(datum);
