@@ -33,20 +33,17 @@ public abstract class AbstractHistoryEvent extends ApplicationEvent {
     private Long mdId;
     private Integer userId;
 
+    // Message related fields
+    private String userName, recordTitle;
+
     public AbstractHistoryEvent(Integer mdId, Integer userId) {
         super(mdId);
-        if (mdId == null) {
-            throw new NullPointerException("Metadata UUID cannot be null");
-        }
         this.mdId = new Long(mdId);
         this.userId = userId;
     }
 
     public AbstractHistoryEvent(Long mdId, Integer userId) {
         super(mdId);
-        if (mdId == null) {
-            throw new NullPointerException("Metadata UUID cannot be null");
-        }
         this.mdId = mdId;
         this.userId = userId;
     }
@@ -59,10 +56,26 @@ public abstract class AbstractHistoryEvent extends ApplicationEvent {
 
     public abstract String getPreviousState();
 
+    public String getRecordTitle() {
+        return recordTitle;
+    }
+
     public Integer getUserId() {
         return userId;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
     public abstract void publish(ApplicationContext appContext);
+
+    public void setRecordTitle(String recordTitle) {
+        this.recordTitle = recordTitle;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
 }

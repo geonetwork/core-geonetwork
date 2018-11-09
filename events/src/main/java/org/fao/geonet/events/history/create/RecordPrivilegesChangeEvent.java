@@ -29,12 +29,26 @@ public class RecordPrivilegesChangeEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = -5643646655572813975L;
 
-    public RecordPrivilegesChangeEvent(Integer mdId, Integer userId) {
+    private String shareOld, shareNew;
+
+    private RecordPrivilegesChangeEvent(Integer mdId, Integer userId) {
         super(mdId, userId);
     }
 
-    public RecordPrivilegesChangeEvent(Long mdId, Integer userId) {
+    public RecordPrivilegesChangeEvent(Integer mdId, Integer userId, String shareOld, String shareNew) {
         super(mdId, userId);
+        setShareOld(shareOld);
+        setShareNew(shareNew);
+    }
+
+    private RecordPrivilegesChangeEvent(Long mdId, Integer userId) {
+        super(mdId, userId);
+    }
+
+    public RecordPrivilegesChangeEvent(Long mdId, Integer userId, String shareOld, String shareNew) {
+        super(mdId, userId);
+        setShareOld(shareOld);
+        setShareNew(shareNew);
     }
 
     @Override
@@ -47,9 +61,29 @@ public class RecordPrivilegesChangeEvent extends AbstractHistoryEvent {
         return null;
     }
 
+    public String getShareNew() {
+        return shareNew;
+
+    }
+
+    public String getShareOld() {
+        return shareOld;
+
+    }
+
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new RecordPrivilegesChangeEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
+    }
+
+    public void setShareNew(String shareNew) {
+        this.shareNew = shareNew;
+
+    }
+
+    public void setShareOld(String shareOld) {
+        this.shareOld = shareOld;
+
     }
 
 }

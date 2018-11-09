@@ -64,6 +64,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.events.history.create.RecordGroupOwnerChangeEvent;
 import org.fao.geonet.events.history.create.RecordOwnerChangeEvent;
+import org.fao.geonet.events.history.create.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -197,7 +198,7 @@ public class MetadataSharingApi {
         }
 
         List<GroupOperations> privileges = sharing.getPrivileges();
-        setOperations(sharing, dataManager, context, metadata, operationMap, privileges);
+        setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges, ApiUtils.getUserSession(session).getUserIdAsInt());
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
@@ -284,7 +285,7 @@ public class MetadataSharingApi {
                     }
 
                     List<GroupOperations> privileges = sharing.getPrivileges();
-                    setOperations(sharing, dataMan, context, metadata, operationMap, privileges);
+                    setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges, ApiUtils.getUserSession(session).getUserIdAsInt());
                     report.incrementProcessedRecords();
                     listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
                 }
@@ -305,12 +306,16 @@ public class MetadataSharingApi {
         SharingParameter sharing,
         DataManager dataMan,
         ServiceContext context,
+        ApplicationContext appContext,
         AbstractMetadata metadata,
         Map<String, Integer> operationMap,
-        List<GroupOperations> privileges) throws Exception {
+        List<GroupOperations> privileges,
+        Integer userId) throws Exception {
         if (privileges != null) {
             SettingManager sm = context.getBean(SettingManager.class);
             DataManager dm = context.getBean(DataManager.class);
+
+            boolean sharingChanges = false;
 
             boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
 
@@ -330,14 +335,19 @@ public class MetadataSharingApi {
                                 continue;
                             }
                         }
-
                         dataMan.setOperation(
                             context, metadata.getId(), p.getGroup(), opId);
+                        sharingChanges = true;
                     } else if (!sharing.isClear() && !o.getValue()) {
                         dataMan.unsetOperation(
                             context, metadata.getId(), p.getGroup(), opId);
+                        sharingChanges = true;
                     }
                 }
+            }
+
+            if(sharingChanges) {
+                new RecordPrivilegesChangeEvent(metadata.getId(), userId, "", "").publish(appContext);
             }
         }
     }

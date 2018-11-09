@@ -32,7 +32,7 @@ public class RecordPrivilegesChangeListener extends GenericMetadataEventListner
         implements ApplicationListener<RecordPrivilegesChangeEvent> {
 
     private String changeMessage = "Test";
-    private String eventType = StatusValue.Events.RECORDDELETED;
+    private String eventType = StatusValue.Events.RECORDPRIVILEGESCHANGE;
 
     @Override
     public String getChangeMessage() {

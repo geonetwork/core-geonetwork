@@ -49,7 +49,7 @@ public class AttachementDeletedEvent extends AbstractHistoryEvent {
 
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new AttachementDeletedEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
     }
 
 }

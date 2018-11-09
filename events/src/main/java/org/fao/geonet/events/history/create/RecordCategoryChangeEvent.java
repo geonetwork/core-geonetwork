@@ -49,7 +49,7 @@ public class RecordCategoryChangeEvent extends AbstractHistoryEvent {
 
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new RecordCategoryChangeEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
     }
 
 }
