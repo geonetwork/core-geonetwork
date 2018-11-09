@@ -401,12 +401,22 @@ public interface IMetadataUtils {
     public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet);
 
     /**
+     * Find all the metadata with the identifiers
+     * 
+     * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
+     * @param spec
+     * @param order
+     * @return
+     */
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> spec, Sort order);
+
+    /**
      * Returns all entities matching the given {@link Specification}.
      * 
      * @param spec
      * @return
      */
-    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> hasHarvesterUuid);
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> spec);
 
     /**
      * Load only the basic info for a metadata. Used in harvesters, mostly.

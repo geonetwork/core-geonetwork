@@ -43,6 +43,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -50,7 +51,6 @@ import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.XMLOutputter;
@@ -69,6 +69,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import jeeves.server.context.ServiceContext;
@@ -142,7 +143,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
         @RequestParam
             Map<String,String> allRequestParams,
-        HttpServletRequest request
+        HttpServletRequest request,
+        HttpServletResponse response
         ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
@@ -152,8 +154,23 @@ public class MetadataEditingApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         if (starteditingsession) {
-            DataManager dm = applicationContext.getBean(DataManager.class);
-            dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            IMetadataUtils dm = applicationContext.getBean(IMetadataUtils.class);
+            Integer id2 = dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            
+            //Maybe we are redirected to another metadata?
+            if(id2 != metadata.getId()) {
+//                StringBuilder sb = new StringBuilder();
+//                sb.append(request.getContextPath());
+//                sb.append(request.getServletPath());
+//                sb.append("/catalog.edit#").append(id2);
+//                sb.append("/editor/").append("?");
+//                sb.append(request.getQueryString());
+//                response.sendRedirect(sb.toString());
+                
+                Element el = new Element("script");
+                el.setText("window.location.hash = \"#/metadata/" + id2 + "\"");
+                return el;
+            }
         }
 
         Element elMd = new AjaxEditUtils(context)

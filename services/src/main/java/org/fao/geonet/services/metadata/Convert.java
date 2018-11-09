@@ -33,9 +33,9 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -79,7 +79,7 @@ public class Convert implements Service {
         String styleSheet = Util.getParam(params, Params.STYLESHEET);
 
         //--- get metadata info and create an env that works with oai translators
-        final AbstractMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(id);
         Path schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
         final String baseUrl = context.getBaseUrl();
         final ISODate changeDate = metadata.getDataInfo().getChangeDate();

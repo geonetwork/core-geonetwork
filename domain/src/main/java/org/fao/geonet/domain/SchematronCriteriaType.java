@@ -26,6 +26,10 @@
  */
 package org.fao.geonet.domain;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
@@ -33,9 +37,6 @@ import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Used on {@link SchematronCriteria}
@@ -58,10 +59,14 @@ public enum SchematronCriteriaType {
             for (int i = 0; i < values.length; i++) {
                 ids[i] = Integer.valueOf(values[i]);
             }
+            final Specification<MetadataDraft> correctOwnerDraft = (Specification<MetadataDraft>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
+            final Specification<MetadataDraft> correctIdDraft = (Specification<MetadataDraft>)MetadataSpecs.hasMetadataId(metadataId);
+            final Specifications<MetadataDraft> finalSpecDraft = Specifications.where(correctIdDraft).and(correctOwnerDraft);
             final Specification<Metadata> correctOwner = (Specification<Metadata>)MetadataSpecs.isOwnedByOneOfFollowingGroups(Arrays.asList(ids));
             final Specification<Metadata> correctId = (Specification<Metadata>)MetadataSpecs.hasMetadataId(metadataId);
             final Specifications<Metadata> finalSpec = Specifications.where(correctId).and(correctOwner);
-            return applicationContext.getBean(MetadataRepository.class).count(finalSpec) > 0;
+            return applicationContext.getBean(MetadataRepository.class).count(finalSpec)
+            		+ applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
         }
     }),
     /**

@@ -27,6 +27,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataStatus;
@@ -40,6 +41,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -251,8 +253,8 @@ public class DefaultStatusActions implements StatusActions {
             owner == null ? "" : owner.getName() + " " + owner.getSurname(),
             siteUrl);
 
-        MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOne(status.getId().getMetadataId());
+        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+        AbstractMetadata metadata = metadataRepository.findOne(status.getId().getMetadataId());
 
         subject = compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
         message = compileMessageWithIndexFields(message, metadata.getUuid(), this.language);

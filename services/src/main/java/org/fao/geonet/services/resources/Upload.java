@@ -28,8 +28,8 @@ import java.nio.file.Path;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
 import org.jdom.Element;
@@ -78,7 +78,7 @@ public class Upload implements Service {
             username = "unknown (this shouldn't happen?)";
 
 
-        final AbstractMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(id);
 
         String mdUuid = metadata.getUuid();
 

@@ -143,17 +143,21 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     public boolean forceSetOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
         Optional<OperationAllowed> opAllowed = _getOperationAllowedToAdd(context, mdId, grpId, opId, false);
 
-        opAllowedRepo.save(opAllowed.get());
-        svnManager.setHistory(mdId + "", context);
-        
-        //If it is published/unpublished, throw event
-        if(opId == ReservedOperation.view.getId() 
-                && grpId == ReservedGroup.all.getId()) {
-            this.eventPublisher.publishEvent(new MetadataPublished(
-                    metadataUtils.findOne(Integer.valueOf(mdId))));
+        if(opAllowed.isPresent()) {
+	        opAllowedRepo.save(opAllowed.get());
+	        svnManager.setHistory(mdId + "", context);
+	        
+	        //If it is published/unpublished, throw event
+	        if(opId == ReservedOperation.view.getId() 
+	                && grpId == ReservedGroup.all.getId()) {
+	            this.eventPublisher.publishEvent(new MetadataPublished(
+	                    metadataUtils.findOne(Integer.valueOf(mdId))));
+	        }
+	        
+	        return true;
         }
         
-        return true;
+        return false;
     }
 
     /**

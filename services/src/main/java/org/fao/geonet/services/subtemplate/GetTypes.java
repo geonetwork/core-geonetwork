@@ -22,27 +22,28 @@
 //==============================================================================
 package org.fao.geonet.services.subtemplate;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasType;
+
+import java.nio.file.Path;
+import java.util.List;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.standards.StandardsUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.nio.file.Path;
-import java.util.List;
-
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasType;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 @Deprecated
 public class GetTypes implements Service {
@@ -57,10 +58,11 @@ public class GetTypes implements Service {
 
         final Sort sort = new Sort(Sort.Direction.ASC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.root.getName());
 
-        final List<Metadata> metadatas = context.getBean(MetadataRepository.class).findAll((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE), sort);
+        final List<? extends AbstractMetadata> metadatas = 
+        		context.getBean(IMetadataUtils.class).findAll((Specification<Metadata>)hasType(MetadataType.SUB_TEMPLATE), sort);
         Element subTemplateTypes = new Element("getTypes");
 
-        for (Metadata metadata : metadatas) {
+        for (AbstractMetadata metadata : metadatas) {
             subTemplateTypes.addContent(new Element("type").setText(metadata.getDataInfo().getRoot()));
             subTemplateTypes.addContent(new Element("schemaId").setText(metadata.getDataInfo().getSchemaId()));
         }

@@ -878,6 +878,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
 	}
 
 	@Override
+	public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> spec, Sort order) {
+		return metadataRepository.findAll((Specification<Metadata>) spec, order);
+	}
+
+	@Override
 	public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> specs) {
 		try {
 			return metadataRepository.findAll((Specification<Metadata>) specs);
