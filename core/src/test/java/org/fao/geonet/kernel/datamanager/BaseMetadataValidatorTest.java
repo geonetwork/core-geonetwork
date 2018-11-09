@@ -22,11 +22,6 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -36,12 +31,9 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.XmlSerializerIntegrationTest;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Document;
 import org.junit.After;
 import org.junit.Before;

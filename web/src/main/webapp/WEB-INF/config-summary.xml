@@ -126,7 +126,8 @@
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
-    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
+    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/> 
+    <facet name="draft" indexKey="_draft" label="draft"/>
   </facets>
 
   <summaryTypes>
@@ -152,6 +153,7 @@
       <item facet="serviceType"/>
       <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
       <item facet="resolution" sortBy="numValue" sortOrder="desc"/>
+      <item facet="draft"/>
       <!--
       <item facet="region"
             translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
@@ -177,6 +179,7 @@
       <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
       <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
 	    <item facet="isPublishedToAll" max="2" sortBy="value" translator="apploc:"/>
+	    <item facet="draft"/>
     </summaryType>
 
     <!-- (deprecated) old-style configuration supporting only

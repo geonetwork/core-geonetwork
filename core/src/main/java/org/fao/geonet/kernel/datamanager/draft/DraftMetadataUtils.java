@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityNotFoundException;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
@@ -386,6 +385,134 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 		}
 		
 		return res;
+	}
+	
+
+	/**
+	 * Start an editing session. This will record the original metadata record in
+	 * the session under the
+	 * {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES} +
+	 * id session property.
+	 *
+	 * The record contains geonet:info element.
+	 *
+	 * Note: Only the metadata record is stored in session. If the editing session
+	 * upload new documents or thumbnails, those documents will not be cancelled.
+	 * This needs improvements.
+	 */
+	@Override
+	public Integer startEditingSession(ServiceContext context, String id) throws Exception {
+		// Check id
+		AbstractMetadata md = findOne(Integer.valueOf(id));
+		
+		if(md == null) {
+			throw new EntityNotFoundException("We couldn't find the metadata to edit");
+		}
+
+		// Do we have a metadata draft already?
+		 if (metadataDraftRepository.findOneByUuid(md.getUuid()) != null) {
+			id = Integer.toString(metadataDraftRepository.findOneByUuid(md.getUuid()).getId());
+		} else {
+			// We have to create the draft using the metadata information
+			String parentUuid = "";
+			String schemaIdentifier = metadataSchemaUtils.getMetadataSchema(id);
+			SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
+			AssociatedResourcesSchemaPlugin schemaPlugin = null;
+			if (instance instanceof AssociatedResourcesSchemaPlugin) {
+				schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
+			}
+			if (schemaPlugin != null) {
+				Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md.getXmlData(false));
+				if (listOfUUIDs.size() > 0) {
+					// FIXME more than one parent? Is it even possible?
+					parentUuid = listOfUUIDs.iterator().next();
+				}
+			}
+
+			String groupOwner = null;
+			String source = null;
+			Integer owner = 1;
+
+			if (md.getSourceInfo() != null) {
+				if (md.getSourceInfo().getSourceId() != null) {
+					source = md.getSourceInfo().getSourceId().toString();
+				}
+				if (md.getSourceInfo().getGroupOwner() != null) {
+					groupOwner = md.getSourceInfo().getGroupOwner().toString();
+				}
+				owner = md.getSourceInfo().getOwner();
+			}
+
+			id = createDraft(context, id, groupOwner, source, owner, parentUuid,
+					md.getDataInfo().getType().codeString, md.getUuid());		
+		}
+
+		return super.startEditingSession(context, id);
+	}
+
+	private String createDraft(ServiceContext context, String templateId, String groupOwner, String source, int owner,
+			String parentUuid, String isTemplate, String uuid) throws Exception {
+		Metadata templateMetadata = getMetadataRepository().findOne(templateId);
+		if (templateMetadata == null) {
+			throw new IllegalArgumentException("Template id not found : " + templateId);
+		}
+
+		String schema = templateMetadata.getDataInfo().getSchemaId();
+		String data = templateMetadata.getData();
+		Element xml = Xml.loadString(data, false);
+		if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
+			xml = metadataManager.updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid,
+					UpdateDatestamp.NO, context);
+		}
+		final MetadataDraft newMetadata = new MetadataDraft();
+		newMetadata.setUuid(uuid);
+		newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
+				.setType(MetadataType.lookup(isTemplate));
+		if (groupOwner != null) {
+			newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
+		}
+		newMetadata.getSourceInfo().setOwner(owner);
+
+		if (source != null) {
+			newMetadata.getSourceInfo().setSourceId(source);
+		}
+		// If there is a default category for the group, use it:
+		if (groupOwner != null) {
+			Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
+			if (group.getDefaultCategory() != null) {
+				newMetadata.getCategories().add(group.getDefaultCategory());
+			}
+		}
+
+		for (MetadataCategory mc : templateMetadata.getCategories()) {
+			newMetadata.getCategories().add(mc);
+		}
+
+		try {
+			Integer finalId = metadataManager.insertMetadata(context, newMetadata, xml, false, true, true,
+					UpdateDatestamp.YES, false, true).getId();
+
+			// Copy privileges from original metadata
+			for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) { 
+				
+				//except for reserved groups
+				Group g = groupRepository.findOne(op.getId().getGroupId());
+				if (!g.isReserved()) {
+					metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
+							op.getId().getOperationId());
+				}
+			}
+
+			//We have to index both draft and approved metadata to get relation on the index
+			metadataIndexer.indexMetadata(String.valueOf(finalId), true, null);
+
+			metadataIndexer.indexMetadata(String.valueOf(templateId), true, null);
+
+			return String.valueOf(finalId);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return templateId;
 	}
 
 }

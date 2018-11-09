@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.repository.BatchUpdateQuery;
@@ -237,4 +239,7 @@ public interface IMetadataManager {
      */
     public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
             Specification<? extends AbstractMetadata> harvested);
+    
+
+	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs);
 }

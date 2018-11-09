@@ -52,8 +52,8 @@ import javax.annotation.Nullable;
 
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.main.SearchSuggestion.SORT_BY_OPTION;
@@ -99,7 +99,7 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
         importMetadata.invoke();
 
-        assertEquals(4, context.getBean(MetadataRepository.class).count((Specification<Metadata>)MetadataSpecs.hasType(MetadataType.METADATA)));
+        assertEquals(4, context.getBean(IMetadataUtils.class).count((Specification<Metadata>)MetadataSpecs.hasType(MetadataType.METADATA)));
     }
 
     @Test

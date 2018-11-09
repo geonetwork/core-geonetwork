@@ -33,9 +33,9 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
@@ -253,8 +253,8 @@ public class TagsApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         MetadataCategoryRepository categoryRepository =
             appContext.getBean(MetadataCategoryRepository.class);
-        MetadataRepository metadataRepository =
-            appContext.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository =
+            appContext.getBean(IMetadataUtils.class);
 
         MetadataCategory category = categoryRepository.findOne(tagIdentifier);
         if (category != null) {

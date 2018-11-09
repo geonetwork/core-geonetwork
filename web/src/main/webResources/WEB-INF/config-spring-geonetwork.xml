@@ -187,5 +187,13 @@
     <constructor-arg name="langCode" value="eng"/>
   </bean>
   -->
+  
+  
+   <!-- Uncomment to get draft metadata -->
+   <!--  
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+    -->
 
 </beans>

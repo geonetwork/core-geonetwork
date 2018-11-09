@@ -23,22 +23,26 @@
 
 package org.fao.geonet.services.reports;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
 
 import org.fao.geonet.Util;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Service to return the updated metadata during a period.
@@ -84,7 +88,7 @@ public class ReportInternalMetadata implements Service {
 
         // Retrieve metadata
         //final Sort sort = new Sort(Sort.Direction.DESC, SortUtils.createPath(Metadata_.dataInfo, MetadataDataInfo_.changeDate));
-        final List<? extends AbstractMetadata> records = context.getBean(MetadataRepository.class).getMetadataReports().
+        final List<? extends AbstractMetadata> records = context.getBean(IMetadataUtils.class).getMetadataReports().
             getInternalMetadata(beginDateIso, endDateIso, groupList, OperationAllowedSpecs.isPublic(ReservedOperation.view));
 
         // Process metadata results for the report
