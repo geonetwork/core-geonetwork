@@ -53,7 +53,7 @@
               data-ng-model="harvesterSelected.options.serviceTemplateUuid"
               data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates">
       </select>
-      <p class="help-block" data-translate="">ogcwxs-serviceTemplateUuidHelp</p>
+      <p class="help-block" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-serviceTemplateUuidHelp</p>
     </div>
 
     <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
@@ -67,21 +67,21 @@
         <input type="checkbox"
                data-ng-disabled="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS2)') == null"
                data-ng-model="harvesterSelected.options.useLayer"/>
-        <span data-translate="">ogcwxs-createMetadataForEachLayer</span>
+        <span data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayer</span>
       </label>
-      <p class="help-block" data-translate="">ogcwxs-createMetadataForEachLayerHelp</p>
+      <p class="help-block" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">
+        ogcwxs-createMetadataForEachLayerHelp</span>
     </div>
 
     <div class="row"
          data-ng-show="harvesterSelected.options.useLayer">
       <div class="col-md-offset-1">
-
         <div>
           <label class="control-label">
             <input type="checkbox" data-ng-model="harvesterSelected.options.useLayerMd"/>
-            <span data-translate="">ogcwxs-createMetadataForEachLayerUsingMetadataURL</span>
+            <span data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}">ogcwxs-createMetadataForEachLayerUsingMetadataURL</span>
           </label>
-          <p class="help-block" data-translate=""
+          <p class="help-block" data-translate="" translate-values="{metadataTemplateType: metadataTemplateType}"
           >ogcwxs-createMetadataForEachLayerUsingMetadataURLHelp</p>
         </div>
 
@@ -90,9 +90,15 @@
           <label class="control-label">
             <span data-translate="">ogcwxs-datasetTemplateUuid</span>
           </label>
-          <select class="form-control"
+          <select data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS)') != null"
+                  class="form-control"
                   data-ng-model="harvesterSelected.options.datasetTemplateUuid"
-                  data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsDatasetTemplates">
+                  data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsDatasetTemplates">ff
+          </select>
+          <select data-ng-show="harvesterSelected.site.ogctype.match('^(WPS2)') != null"
+                  class="form-control"
+                  data-ng-model="harvesterSelected.options.serviceTemplateUuid"
+                  data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates">ww
           </select>
           <p class="help-block" data-translate="">ogcwxs-datasetTemplateUuidHelp</p>
         </div>
