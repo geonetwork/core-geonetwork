@@ -198,13 +198,6 @@
 
       $scope.updatingHarvester = function() {
         $scope.harvesterUpdated = true;
-        if ($scope.harvesterSelected.site.ogctype.match('^(WPS2)') != null){
-          $scope.metadataTemplateType = 'process';
-          console.log('process');
-        } else {
-          $scope.metadataTemplateType = 'layer';
-          console.log('layer');
-        }
       };
       $scope.addHarvester = function(type) {
         $scope.harvesterNew = true;
