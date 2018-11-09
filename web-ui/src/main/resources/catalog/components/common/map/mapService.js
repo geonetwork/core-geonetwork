@@ -1205,6 +1205,7 @@
               layer.set('errors', errors);
               layer.set('featureTooltip', true);
               layer.set('url', url);
+              layer.set('wfs', url);
               ngeoDecorateLayer(layer);
               layer.displayInLayerManager = true;
               layer.set('label', getCapLayer.title ||
