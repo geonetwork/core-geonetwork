@@ -49,7 +49,7 @@ public class AttachementAddedEvent extends AbstractHistoryEvent {
 
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new AttachementAddedEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
     }
 
 }

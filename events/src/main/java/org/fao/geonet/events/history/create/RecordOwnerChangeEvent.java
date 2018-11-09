@@ -73,7 +73,7 @@ public class RecordOwnerChangeEvent extends AbstractHistoryEvent {
 
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new RecordOwnerChangeEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
     }
 
     public void setNewOwner(Integer newOwner) {

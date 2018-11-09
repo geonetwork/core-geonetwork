@@ -49,7 +49,7 @@ public class RecordProcessingChangeEvent extends AbstractHistoryEvent {
 
     @Override
     public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(new RecordProcessingChangeEvent(getMdId(), getUserId()));
+        appContext.publishEvent(this);
     }
 
 }
