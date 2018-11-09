@@ -28,7 +28,7 @@
               </li>
 
               <!-- TODO ? No style selector for WFS-->
-              <li role="menuitem" data-ng-if="::wfs">
+              <li role="menuitem" data-ng-if="::!layer.get('wfs') && layer.get('style').length > 0">
                 <label data-translate="">selectStyle</label>
                 <div data-gn-layer-styles="layer.get('style')"
                      data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
