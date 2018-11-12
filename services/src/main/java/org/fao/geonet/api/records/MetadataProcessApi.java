@@ -270,7 +270,6 @@ public class MetadataProcessApi {
 
         DataManager dataMan = context.getBean(DataManager.class);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-        Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), forEditing, withValidationErrors, keepXlinkAttributes);
         Element processedMetadata;
         try {
             final String siteURL = sm.getSiteURL(context);
@@ -283,11 +282,6 @@ public class MetadataProcessApi {
                     + report.getNumberOfRecordNotFound() +
                     ", Not owner:" + report.getNumberOfRecordsNotEditable() +
                     ", No process found:" + report.getNoProcessFoundCount() + ".");
-            } else {
-                XMLOutputter outp = new XMLOutputter();
-                String xmlAfter = outp.outputString(processedMetadata);
-                String xmlBefore = outp.outputString(beforeMetadata);
-                new RecordProcessingChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
             }
         } catch (Exception e) {
             throw e;
