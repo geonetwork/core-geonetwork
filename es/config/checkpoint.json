@@ -1,0 +1,173 @@
+{
+    "mappings": {
+      "records": {
+        "properties": {
+          "docType": {
+            "type": "keyword"
+          },
+          "cptName": {
+            "type": "keyword"
+          },
+          "challenges": {
+            "type": "keyword"
+          },
+          "dataDeliveryMechanism": {
+            "type": "keyword"
+          },
+          "east": {
+            "type": "keyword"
+          },
+          "environmentalMatrix": {
+            "type": "keyword"
+          },
+          "inspireTheme": {
+            "type": "keyword"
+          },
+          "north": {
+            "type": "keyword"
+          },
+          "p01": {
+            "type": "keyword"
+          },
+          "p01other": {
+            "type": "keyword"
+          },
+          "p02": {
+            "type": "keyword"
+          },
+          "p03": {
+            "type": "keyword"
+          },
+          "usabilityScore": {
+            "type": "keyword"
+          },
+          "policyVisibility": {
+            "type": "keyword"
+          },
+          "processingLevelOfChar": {
+            "type": "keyword"
+          },
+          "readyness": {
+            "type": "keyword"
+          },
+          "serviceExtent": {
+            "type": "keyword"
+          },
+          "south": {
+            "type": "keyword"
+          },
+          "spatialRepresentationType": {
+            "type": "keyword"
+          },
+          "standardName": {
+            "type": "keyword"
+          },
+          "productName": {
+            "type": "keyword"
+          },
+          "noData": {
+            "type": "keyword"
+          },
+          "noDataAvailable": {
+            "type": "keyword"
+          },
+          "noDataExist": {
+            "type": "keyword"
+          },
+          "timeBeginPosition": {
+            "type": "keyword"
+          },
+          "timeEndPosition": {
+            "type": "keyword"
+          },
+          "title": {
+            "type": "keyword"
+          },
+          "uuid": {
+            "type": "keyword"
+          },
+          "validation": {
+            "type": "keyword"
+          },
+          "visibility": {
+            "type": "keyword"
+          },
+          "west": {
+            "type": "keyword"
+          },
+          "expertScore": {
+            "type": "keyword"
+          },
+          "productScore": {
+            "type": "keyword"
+          },
+          "productScoreLabel": {
+            "type": "keyword"
+          },
+          "productExpertOpinion": {
+            "type": "text"
+          },
+          "measureValue": {
+            "type": "double"
+          },
+          "errorValue": {
+            "type": "double"
+          },
+          "indicatorValue": {
+            "type": "double"
+          },
+          "identifier": {
+            "type": "keyword"
+          },
+          "dqUuid": {
+            "type": "keyword"
+          },
+          "dqSimpleId": {
+            "type": "keyword"
+          },
+          "measureName": {
+            "type": "keyword"
+          },
+          "measureId": {
+            "type": "keyword"
+          },
+          "dpsHorizontalSpatialCoverage": {
+            "type": "double"
+          },
+          "tdpHorizontalSpatialCoverage": {
+            "type": "double"
+          },
+          "dpsVerticalSpatialCoverage": {
+            "type": "double"
+          },
+          "tdpVerticalSpatialCoverage": {
+            "type": "double"
+          },
+          "dpsTemporalCoverage": {
+            "type": "double"
+          },
+          "tdpTemporalCoverage": {
+            "type": "double"
+          },
+          "dpsHorizontalResolution": {
+            "type": "double"
+          },
+          "tdpHorizontalResolution": {
+            "type": "double"
+          },
+          "dpsVerticalResolution": {
+            "type": "double"
+          },
+          "tdpVerticalResolution": {
+            "type": "double"
+          },
+          "dpsTemporalResolution": {
+            "type": "double"
+          },
+          "tdpTemporalResolution": {
+            "type": "double"
+          }
+        }
+      }
+    }
+}
