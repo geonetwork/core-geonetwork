@@ -1207,6 +1207,7 @@
     <module>oaipmh</module>
     <module>events</module>
     <module>core</module>
+    <module>listeners</module>
     <module>schemas</module>
     <module>csw-server</module>
     <module>harvesters</module>
