@@ -21,69 +21,41 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
+import net.sf.json.JSONObject;
 
-    private static final long serialVersionUID = -3732476621109415191L;
+public class RecordCategoryChangeEvent extends AbstractHistoryEvent {
 
-    private Integer oldOwner, newOwner;
+    private static final long serialVersionUID = 5156408130233797362L;
 
-    private RecordGroupOwnerChangeEvent(Integer mdId, Integer userId) {
+    private JSONObject categoryArrayBeforeJSON, categoryArrayAfterJSON;
+
+    public RecordCategoryChangeEvent(Integer mdId, Integer userId, JSONObject categoryArrayBeforeJSON, JSONObject categoryArrayAfterJSON) {
         super(mdId, userId);
+        this.categoryArrayBeforeJSON = categoryArrayBeforeJSON;
+        this.categoryArrayAfterJSON = categoryArrayAfterJSON;
     }
 
-    public RecordGroupOwnerChangeEvent(Integer mdId, Integer userId, Integer oldOwner, Integer newOwner) {
+    public RecordCategoryChangeEvent(Long mdId, Integer userId) {
         super(mdId, userId);
-        setOldOwner(oldOwner);
-        setNewOwner(newOwner);
-    }
-
-    private RecordGroupOwnerChangeEvent(Long mdId, Integer userId) {
-        super(mdId, userId);
-    }
-
-    public RecordGroupOwnerChangeEvent(Long mdId, Integer userId, Integer oldOwner, Integer newOwner) {
-        super(mdId, userId);
-        setOldOwner(oldOwner);
-        setNewOwner(newOwner);
     }
 
     @Override
     public String getCurrentState() {
-        return getNewOwner().toString();
-    }
-
-    public Integer getNewOwner() {
-        return newOwner;
-
-    }
-
-    public Integer getOldOwner() {
-        return oldOwner;
-
+        return categoryArrayAfterJSON.toString();
     }
 
     @Override
     public String getPreviousState() {
-        return getOldOwner().toString();
+        return categoryArrayBeforeJSON.toString();
     }
 
     @Override
     public void publish(ApplicationContext appContext) {
         appContext.publishEvent(this);
-    }
-
-    public void setNewOwner(Integer newOwner) {
-        this.newOwner = newOwner;
-
-    }
-
-    public void setOldOwner(Integer oldOwner) {
-        this.oldOwner = oldOwner;
-
     }
 
 }

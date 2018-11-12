@@ -21,30 +21,28 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class RecordUpdatedEvent extends AbstractHistoryEvent {
+public class RecordDeletedEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = 1110999025730522535L;
 
-    public RecordUpdatedEvent(Integer mdId, Integer userId) {
+    private String xmlRecord;
+
+    public RecordDeletedEvent(Integer mdId, Integer userId, String xmlRecord) {
         super(mdId, userId);
+        this.xmlRecord = xmlRecord;
     }
 
-    public RecordUpdatedEvent(Long mdId, Integer userId) {
+    public RecordDeletedEvent(Long mdId, Integer userId) {
         super(mdId, userId);
-    }
-
-    @Override
-    public String getCurrentState() {
-        return null;
     }
 
     @Override
     public String getPreviousState() {
-        return null;
+        return xmlRecord;
     }
 
     @Override

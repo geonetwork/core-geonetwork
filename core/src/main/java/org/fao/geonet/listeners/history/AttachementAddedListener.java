@@ -23,12 +23,12 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.AttachementAddedEvent;
+import org.fao.geonet.events.history.AttachementAddedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AttachementAddedListener extends GenericMetadataEventListner implements ApplicationListener<AttachementAddedEvent> {
+public class AttachementAddedListener extends GenericMetadataEventListener implements ApplicationListener<AttachementAddedEvent> {
 
     private String changeMessage = "Test";
     private String eventType = StatusValue.Events.ATTACHEMENTADDED;

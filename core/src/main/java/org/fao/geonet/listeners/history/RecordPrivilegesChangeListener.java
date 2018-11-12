@@ -23,12 +23,12 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.RecordPrivilegesChangeEvent;
+import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecordPrivilegesChangeListener extends GenericMetadataEventListner
+public class RecordPrivilegesChangeListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordPrivilegesChangeEvent> {
 
     private String changeMessage = "Test";

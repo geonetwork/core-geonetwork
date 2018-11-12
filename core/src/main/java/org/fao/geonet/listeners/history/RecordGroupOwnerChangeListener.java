@@ -23,12 +23,12 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.RecordGroupOwnerChangeEvent;
+import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecordGroupOwnerChangeListener extends GenericMetadataEventListner
+public class RecordGroupOwnerChangeListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordGroupOwnerChangeEvent> {
 
     private String changeMessage = "Test";

@@ -23,12 +23,12 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.AttachementDeletedEvent;
+import org.fao.geonet.events.history.AttachementDeletedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AttachementDeletedListener extends GenericMetadataEventListner implements ApplicationListener<AttachementDeletedEvent> {
+public class AttachementDeletedListener extends GenericMetadataEventListener implements ApplicationListener<AttachementDeletedEvent> {
 
     private String changeMessage = "Test";
     private String eventType = StatusValue.Events.ATTACHEMENTDELETED;

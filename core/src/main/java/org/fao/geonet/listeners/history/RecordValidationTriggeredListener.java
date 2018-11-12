@@ -23,12 +23,12 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.RecordValidationTriggeredEvent;
+import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecordValidationTriggeredListener extends GenericMetadataEventListner
+public class RecordValidationTriggeredListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordValidationTriggeredEvent> {
 
     private String changeMessage = "Test";

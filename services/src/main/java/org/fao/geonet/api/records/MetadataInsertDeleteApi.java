@@ -71,8 +71,8 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.utils.ObjectJSONConverter;
-import org.fao.geonet.events.history.create.RecordCreateEvent;
-import org.fao.geonet.events.history.create.RecordDeletedEvent;
+import org.fao.geonet.events.history.RecordCreateEvent;
+import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -198,10 +198,6 @@ public class MetadataInsertDeleteApi {
                 String.valueOf(metadata.getId())));
 
         dataManager.deleteMetadata(context, metadataUuid);
-        UserSession userSession =  ApiUtils.getUserSession(request.getSession());
-        new RecordDeletedEvent(metadata.getId(),
-                               userSession.getUserIdAsInt()
-                             ).publish(ApplicationContextHolder.get());
 
         searchManager.forceIndexChanges();
     }
@@ -274,10 +270,6 @@ public class MetadataInsertDeleteApi {
                         String.valueOf(metadata.getId())));
 
                 dataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
-                UserSession userSession =  ApiUtils.getUserSession(request.getSession());
-                new RecordDeletedEvent(metadata.getId(),
-                                       userSession.getUserIdAsInt()
-                                       ).publish(ApplicationContextHolder.get());
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());
@@ -1212,8 +1204,8 @@ public class MetadataInsertDeleteApi {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordCreateEvent(metadata.getId(),
                               userSession.getUserIdAsInt(),
-                              metadata.getData(),
-                              ObjectJSONConverter.convertObjectToJsonString(userSession.getPrincipal())
+                              ObjectJSONConverter.convertObjectToJsonObject(userSession.getPrincipal()),
+                              metadata.getData()
                               ).publish(applicationContext);
     }
 
