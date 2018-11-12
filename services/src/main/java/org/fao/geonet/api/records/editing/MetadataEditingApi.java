@@ -40,6 +40,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -51,6 +52,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -272,6 +274,7 @@ public class MetadataEditingApi {
         StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
         StatusActions sa = saf.createStatusActions(context);
         sa.onEdit(iLocalId, minor);
+        Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
         if (StringUtils.isNotEmpty(data)) {
             Element md = Xml.loadString(data, false);
@@ -282,8 +285,19 @@ public class MetadataEditingApi {
             dataMan.updateMetadata(context, id, md,
                 withValidationErrors, ufo, index,
                 context.getLanguage(), changeDate, updateDateStamp);
+
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(beforeMetadata);
+            String xmlAfter = outp.outputString(md);
+            new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         } else {
             ajaxEditUtils.updateContent(params, false, true);
+
+            Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
+            XMLOutputter outp = new XMLOutputter();
+            String xmlBefore = outp.outputString(beforeMetadata);
+            String xmlAfter = outp.outputString(afterMetadata);
+            new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         }
 
         //-----------------------------------------------------------------------
