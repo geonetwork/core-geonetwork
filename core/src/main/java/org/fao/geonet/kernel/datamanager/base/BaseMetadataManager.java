@@ -171,7 +171,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	@Autowired
 	private UserSavedSelectionRepository userSavedSelectionRepository;
 
-	private static final int METADATA_BATCH_PAGE_SIZE = 100000;
+	private static final int METADATA_BATCH_PAGE_SIZE = 50000;
 	private String baseURL;
 
 	@Autowired
@@ -232,7 +232,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
 		Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
 		int currentPage = 0;
-		Page<Pair<Integer, ISODate>> results = metadataRepository.findAllIdsAndChangeDates(
+		Page<Pair<Integer, ISODate>> results = metadataUtils.findAllIdsAndChangeDates(
 				new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
 
 		// index all metadata in DBMS if needed
@@ -383,7 +383,6 @@ public class BaseMetadataManager implements IMetadataManager {
 	 */
 	@Override
 	public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
-		String uuid = metadataUtils.getMetadataUuid(metadataId);
 		AbstractMetadata findOne = metadataUtils.findOne(metadataId);
 		if (findOne != null) {
 			boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
@@ -392,7 +391,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
 			// Notifies the metadata change to metatada notifier service
 			if (isMetadata) {
-				context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, uuid, context);
+				context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, findOne.getUuid(), context);
 			}
 		}
 
