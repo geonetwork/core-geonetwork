@@ -65,6 +65,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -167,8 +168,28 @@ public class MetadataEditingApi {
 //                sb.append(request.getQueryString());
 //                response.sendRedirect(sb.toString());
                 
+            	StringBuilder sb = new StringBuilder("?");
+            	
+            	Enumeration<String> parameters = request.getParameterNames();
+            	
+            	//As this editor will redirect, make sure there is something to go 
+            	// back that makes sense and prevent a loop:
+            	boolean hasPreviousURL = false;
+            	
+            	while(parameters.hasMoreElements()) {
+            		String key = parameters.nextElement();
+            		sb.append(key + "=" + request.getParameter(key) + "%26");
+            		if(key.equalsIgnoreCase("redirectUrl")) {
+            			hasPreviousURL = true;
+            		}
+            	}
+            	
+            	if(!hasPreviousURL) {
+            		sb.append("redirectUrl=catalog.edit");
+            	}
+            	
                 Element el = new Element("script");
-                el.setText("window.location.hash = \"#/metadata/" + id2 + "\"");
+                el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
                 return el;
             }
         }
