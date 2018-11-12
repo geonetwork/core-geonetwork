@@ -23,12 +23,12 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.RecordProcessingChangeEvent;
+import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecordProcessingChangeListener extends GenericMetadataEventListner
+public class RecordProcessingChangeListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordProcessingChangeEvent> {
 
     private String changeMessage = "Test";

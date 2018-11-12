@@ -21,30 +21,39 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class AttachementAddedEvent extends AbstractHistoryEvent {
+import net.sf.json.JSONObject;
 
-    private static final long serialVersionUID = -8026442709546540103L;
+public class RecordCreateEvent extends AbstractHistoryEvent {
 
-    public AttachementAddedEvent(Integer mdId, Integer userId) {
+    private static final long serialVersionUID = 1110999025730522535L;
+
+    private JSONObject userObject;
+
+    private String xmlRecord;
+
+    public RecordCreateEvent(Integer mdId, Integer userId, JSONObject userObject, String xmlRecord) {
         super(mdId, userId);
+        this.userObject = userObject;
+        this.xmlRecord = xmlRecord;
     }
 
-    public AttachementAddedEvent(Long mdId, Integer userId) {
+    public RecordCreateEvent(Long mdId, Integer userId, JSONObject userObject, String xmlRecord) {
         super(mdId, userId);
+        this.userObject = userObject;
+        this.xmlRecord = xmlRecord;
     }
 
     @Override
     public String getCurrentState() {
-        return null;
-    }
+        JSONObject json = new JSONObject();
+        json.put("userObject", userObject);
+        json.put("xmlRecord", xmlRecord);
 
-    @Override
-    public String getPreviousState() {
-        return null;
+        return json.toString();
     }
 
     @Override

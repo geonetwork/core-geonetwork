@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -33,49 +33,71 @@ public abstract class AbstractHistoryEvent extends ApplicationEvent {
     private Long mdId;
     private Integer userId;
 
-    // Message related fields
-    private String userName, recordTitle;
-
-    public AbstractHistoryEvent(Integer mdId, Integer userId) {
+    /**
+     * Constructor used for the current type of mdId
+     *
+     * @param mdId
+     * @param userId
+     */
+    protected AbstractHistoryEvent(Integer mdId, Integer userId) {
         super(mdId);
         this.mdId = new Long(mdId);
         this.userId = userId;
     }
 
-    public AbstractHistoryEvent(Long mdId, Integer userId) {
+    /**
+     * Constructor for the long version of mdId
+     *
+     * @param mdId
+     * @param userId
+     */
+    protected AbstractHistoryEvent(Long mdId, Integer userId) {
         super(mdId);
         this.mdId = mdId;
         this.userId = userId;
     }
 
-    public abstract String getCurrentState();
+    /**
+     * A String represention of the state of the item after the changes Can be a primitive type, a JSON or an XML to String
+     *
+     * @return
+     */
+    public String getCurrentState() {
+        return null;
+    }
 
+    /**
+     * Numeric id identifier of the metadata
+     *
+     * @return
+     */
     public Long getMdId() {
         return mdId;
     }
 
-    public abstract String getPreviousState();
-
-    public String getRecordTitle() {
-        return recordTitle;
+    /**
+     * A String represention of the previous state of the item Can be a primitive type, a JSON or an XML to String
+     *
+     * @return
+     */
+    public String getPreviousState() {
+        return null;
     }
 
+    /**
+     * The user id of the author of this change
+     *
+     * @return
+     */
     public Integer getUserId() {
         return userId;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
+    /**
+     * Publish the specific event
+     *
+     * @param appContext
+     */
     public abstract void publish(ApplicationContext appContext);
-
-    public void setRecordTitle(String recordTitle) {
-        this.recordTitle = recordTitle;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
 }

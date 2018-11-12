@@ -21,30 +21,44 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class RecordProcessingChangeEvent extends AbstractHistoryEvent {
+import net.sf.json.JSONObject;
 
-    private static final long serialVersionUID = -1052505918706510478L;
+public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
 
-    public RecordProcessingChangeEvent(Integer mdId, Integer userId) {
+    private static final long serialVersionUID = -3732476621109415191L;
+
+    private JSONObject oldOwnerObjectJSON, newOwnerObjectJSON;
+
+    public RecordGroupOwnerChangeEvent(Integer mdId, Integer userId, JSONObject oldOwnerObjectJSON, JSONObject newOwnerObjectJSON) {
         super(mdId, userId);
+        this.oldOwnerObjectJSON = oldOwnerObjectJSON;
+        this.newOwnerObjectJSON = newOwnerObjectJSON;
     }
 
-    public RecordProcessingChangeEvent(Long mdId, Integer userId) {
+    public RecordGroupOwnerChangeEvent(Long mdId, Integer userId, JSONObject oldOwner, JSONObject newOwner) {
         super(mdId, userId);
+        oldOwnerObjectJSON = oldOwnerObjectJSON;
+        newOwnerObjectJSON = newOwnerObjectJSON;
     }
 
     @Override
     public String getCurrentState() {
-        return null;
+        JSONObject json = new JSONObject();
+        json.put("owner", newOwnerObjectJSON);
+
+        return json.toString();
     }
 
     @Override
     public String getPreviousState() {
-        return null;
+        JSONObject json = new JSONObject();
+        json.put("owner", oldOwnerObjectJSON);
+
+        return json.toString();
     }
 
     @Override

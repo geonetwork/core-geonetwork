@@ -27,17 +27,22 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.create.AbstractHistoryEvent;
+import org.fao.geonet.events.history.AbstractHistoryEvent;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.StatusValueRepository;
 
-public abstract class GenericMetadataEventListner {
+public abstract class GenericMetadataEventListener {
 
     public abstract String getChangeMessage();
 
     public abstract String getEventType();
 
-    public void handleEvent(AbstractHistoryEvent event) {
+    /**
+     * Event handler
+     *
+     * @param event
+     */
+    public final void handleEvent(AbstractHistoryEvent event) {
 
         MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
         StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
@@ -45,7 +50,14 @@ public abstract class GenericMetadataEventListner {
         storeContentHistoryEvent(event, statusRepository, statusValueRepository);
     }
 
-    public void storeContentHistoryEvent(AbstractHistoryEvent event, MetadataStatusRepository statusRepository,
+    /**
+     * Stores the event in the database
+     *
+     * @param event
+     * @param statusRepository
+     * @param statusValueRepository
+     */
+    public final void storeContentHistoryEvent(AbstractHistoryEvent event, MetadataStatusRepository statusRepository,
             StatusValueRepository statusValueRepository) {
 
         Integer metadataUuid = Math.toIntExact(event.getMdId());
