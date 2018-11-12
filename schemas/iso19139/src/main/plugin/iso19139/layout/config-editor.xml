@@ -2223,7 +2223,7 @@
 
 
       <tab id="sdn-contact" mode="flat">
-        <section name="sextantrespOrgaTitle">
+        <section>
 
           <field name="sdn-ResourceProviderTitle"
                  templateModeOnly="true"
