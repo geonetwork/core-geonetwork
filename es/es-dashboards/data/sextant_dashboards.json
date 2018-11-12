@@ -18,44 +18,6 @@
     }
   },
   {
-    "_id": "a50ae020-d2bf-11e8-ac50-6f65af96b664",
-    "_type": "dashboard",
-    "_source": {
-      "title": "[Checkpoint] List of components (products and components table)",
-      "hits": 0,
-      "description": "List all components by challenges with associated products and their scores",
-      "panelsJSON": "[{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":20,\"w\":18,\"h\":31,\"i\":\"4\"},\"id\":\"2d8eae70-be40-11e8-9127-0fc6b934c2f7\",\"panelIndex\":\"4\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":18,\"y\":35,\"w\":15,\"h\":16,\"i\":\"6\"},\"id\":\"af8f68a0-d05c-11e8-bb16-61fe7921a6ea\",\"panelIndex\":\"6\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":51,\"w\":48,\"h\":25,\"i\":\"7\"},\"id\":\"c93b5c50-d2be-11e8-ac50-6f65af96b664\",\"panelIndex\":\"7\",\"title\":\"List of products\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":76,\"w\":48,\"h\":46,\"i\":\"8\"},\"id\":\"e01dd340-d150-11e8-9e98-e75275c4844e\",\"panelIndex\":\"8\",\"title\":\"List of components by product\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":33,\"y\":35,\"w\":15,\"h\":16,\"i\":\"9\"},\"id\":\"25620630-c7d6-11e8-90bb-6540f76c8ed8\",\"panelIndex\":\"9\",\"title\":\"Product score\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{\"vis\":{\"colors\":{\"1\":\"#ff0000\",\"2\":\"#ffc000\",\"3\":\"#ffff00\",\"4\":\"#ccff66\",\"5\":\"#00cc00\"},\"legendOpen\":false}},\"gridData\":{\"x\":18,\"y\":0,\"w\":30,\"h\":16,\"i\":\"11\"},\"id\":\"f093e5f0-d2dd-11e8-ac50-6f65af96b664\",\"panelIndex\":\"11\",\"title\":\"Number of products by score by challenges\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":18,\"y\":16,\"w\":30,\"h\":19,\"i\":\"12\"},\"id\":\"580c0bf0-d2dd-11e8-ac50-6f65af96b664\",\"panelIndex\":\"12\",\"title\":\"Number of components covered or not by challenges\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":0,\"w\":18,\"h\":20,\"i\":\"13\"},\"id\":\"c4fd2170-db45-11e8-a35c-6dc1a6d56202\",\"panelIndex\":\"13\",\"type\":\"visualization\",\"version\":\"6.4.1\",\"title\":\"\"}]",
-      "optionsJSON": "{\"darkTheme\":false,\"hidePanelTitles\":false,\"useMargins\":true}",
-      "version": 1,
-      "timeRestore": false,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "503a8670-be3f-11e8-9127-0fc6b934c2f7",
-    "_type": "dashboard",
-    "_source": {
-      "title": "[Checkpoint] List of components",
-      "hits": 0,
-      "description": "List all components by challenges with associated products and their scores",
-      "panelsJSON": "[{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":53,\"w\":48,\"h\":35,\"i\":\"2\"},\"id\":\"207a6ed0-be3c-11e8-9127-0fc6b934c2f7\",\"panelIndex\":\"2\",\"title\":\"List of components\",\"type\":\"search\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":20,\"w\":18,\"h\":22,\"i\":\"4\"},\"id\":\"2d8eae70-be40-11e8-9127-0fc6b934c2f7\",\"panelIndex\":\"4\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":18,\"y\":38,\"w\":15,\"h\":15,\"i\":\"6\"},\"id\":\"af8f68a0-d05c-11e8-bb16-61fe7921a6ea\",\"panelIndex\":\"6\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"gridData\":{\"x\":33,\"y\":38,\"w\":15,\"h\":15,\"i\":\"7\"},\"version\":\"6.4.1\",\"panelIndex\":\"7\",\"type\":\"visualization\",\"id\":\"25620630-c7d6-11e8-90bb-6540f76c8ed8\",\"embeddableConfig\":{},\"title\":\"Product score\"},{\"gridData\":{\"x\":18,\"y\":16,\"w\":30,\"h\":22,\"i\":\"9\"},\"version\":\"6.4.1\",\"panelIndex\":\"9\",\"type\":\"visualization\",\"id\":\"580c0bf0-d2dd-11e8-ac50-6f65af96b664\",\"embeddableConfig\":{},\"title\":\"Number of components covered or not by challenges\"},{\"gridData\":{\"x\":18,\"y\":0,\"w\":30,\"h\":16,\"i\":\"10\"},\"version\":\"6.4.1\",\"panelIndex\":\"10\",\"type\":\"visualization\",\"id\":\"f093e5f0-d2dd-11e8-ac50-6f65af96b664\",\"embeddableConfig\":{\"vis\":{\"colors\":{\"1\":\"#ff0000\",\"2\":\"#ffc000\",\"3\":\"#ffff00\",\"4\":\"#ccff66\",\"5\":\"#00cc00\"},\"legendOpen\":false}},\"title\":\"Number of products by score by challenges\"},{\"gridData\":{\"x\":0,\"y\":0,\"w\":18,\"h\":20,\"i\":\"11\"},\"version\":\"6.4.1\",\"panelIndex\":\"11\",\"type\":\"visualization\",\"id\":\"c4fd2170-db45-11e8-a35c-6dc1a6d56202\",\"embeddableConfig\":{},\"title\":\"\"}]",
-      "optionsJSON": "{\"darkTheme\":false,\"hidePanelTitles\":false,\"useMargins\":true}",
-      "version": 1,
-      "timeRestore": false,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
     "_id": "db91dfb0-db5a-11e8-a35c-6dc1a6d56202",
     "_type": "dashboard",
     "_source": {
@@ -143,23 +105,6 @@
     }
   },
   {
-    "_id": "c4fd2170-db45-11e8-a35c-6dc1a6d56202",
-    "_type": "visualization",
-    "_source": {
-      "title": "[Checkpoint] List of components introduction",
-      "visState": "{\"title\":\"[Checkpoint] List of components introduction\",\"type\":\"markdown\",\"params\":{\"fontSize\":12,\"openLinksInNewTab\":false,\"markdown\":\"# Dashboard purpose\\n\\nTo help identifying which characteristics category have problems and what applications could be improved, this dashboard displays all products and components details. \\n\\nThe product score (from inadequate to excellent) is identified by a color code from red to green or a number going from 1 to 5. For each components, a quick overview of those not covered and why is presented.\\n\\n\\n# How to filter ?\\n\\nTo filter information, 2 options:\\n* Choose filters in the lists below\\n* Or click on the charts on the right\\n\\n\\nTODO Ifremer - Improve text\"},\"aggs\":[]}",
-      "uiStateJSON": "{}",
-      "description": "",
-      "version": 1,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
     "_id": "381eb1d0-c7d4-11e8-90bb-6540f76c8ed8",
     "_type": "visualization",
     "_source": {
@@ -229,23 +174,6 @@
   },
   {
     "_id": "528f9140-db4f-11e8-a2b1-231c8a937e95",
-    "_type": "visualization",
-    "_source": {
-      "title": "[Checkpoint] DQ type / Completeness omission",
-      "visState": "{\"title\":\"[Checkpoint] DQ type / Completeness omission\",\"type\":\"markdown\",\"params\":{\"fontSize\":12,\"openLinksInNewTab\":false,\"markdown\":\"# Completeness omission\"},\"aggs\":[]}",
-      "uiStateJSON": "{}",
-      "description": "",
-      "version": 1,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "52e97110-db4f-11e8-a2b1-231c8a937e95",
     "_type": "visualization",
     "_source": {
       "title": "[Checkpoint] DQ type / Completeness omission",
@@ -393,71 +321,6 @@
     }
   },
   {
-    "_id": "207a6ed0-be3c-11e8-9127-0fc6b934c2f7",
-    "_type": "search",
-    "_source": {
-      "title": "[Checkpoint] Components",
-      "description": "",
-      "hits": 0,
-      "columns": [
-        "Product name",
-        "Product Score",
-        "Component name",
-        "Component description",
-        "No data available nor exists?",
-        "Component usabilitiy Score",
-        "Characteristic category (P02) ",
-        "Characteristic (P01)",
-        "Realization (TDP) link",
-        "Specification (DPS) link"
-      ],
-      "sort": [
-        "_score",
-        "desc"
-      ],
-      "version": 1,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"checkpoint\",\"highlightAll\":true,\"version\":true,\"query\":{\"language\":\"kuery\",\"query\":\"docType :\\\"component\\\" \"},\"filter\":[]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "a0d657b0-be46-11e8-9127-0fc6b934c2f7",
-    "_type": "search",
-    "_source": {
-      "title": "[Checkpoint] Measures",
-      "description": "",
-      "hits": 0,
-      "columns": [
-        "dqSimpleId",
-        "resourceType",
-        "cptName",
-        "measureId",
-        "measureName",
-        "measureValue",
-        "identifier",
-        "p01",
-        "p02",
-        "indicatorValue",
-        "DOI"
-      ],
-      "sort": [
-        "p01",
-        "desc"
-      ],
-      "version": 1,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"checkpoint\",\"highlightAll\":true,\"version\":true,\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"checkpoint\",\"key\":\"docType\",\"negate\":false,\"params\":{\"query\":\"dqmeasures\",\"type\":\"phrase\"},\"type\":\"phrase\",\"value\":\"dqmeasures\"},\"query\":{\"match\":{\"docType\":{\"query\":\"dqmeasures\",\"type\":\"phrase\"}}}}]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
     "_id": "06df2270-d05e-11e8-bb16-61fe7921a6ea",
     "_type": "visualization",
     "_source": {
@@ -589,24 +452,6 @@
     "_source": {
       "title": "[Checkpoint] Components by product",
       "visState": "{\"title\":\"[Checkpoint] Components by product\",\"type\":\"table\",\"params\":{\"perPage\":5,\"showMetricsAtAllLevels\":false,\"showPartialRows\":false,\"showTotal\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"split\",\"params\":{\"field\":\"productName\",\"size\":55,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Product\",\"row\":true}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"cptName\",\"size\":55,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Component name\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"cptDesc.keyword\",\"size\":10,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Component description\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"noData\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"No data\"}},{\"id\":\"7\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"usabilityScore\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Component usability score\"}},{\"id\":\"8\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"p02\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Characteristic category (P02)\"}},{\"id\":\"9\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"p01\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Characteristic (P01)\"}}]}",
-      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
-      "description": "",
-      "savedSearchId": "207a6ed0-be3c-11e8-9127-0fc6b934c2f7",
-      "version": 1,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "c93b5c50-d2be-11e8-ac50-6f65af96b664",
-    "_type": "visualization",
-    "_source": {
-      "title": "[Checkpoint] Number of components by products",
-      "visState": "{\"title\":\"[Checkpoint] Number of components by products\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showMetricsAtAllLevels\":false,\"showPartialRows\":false,\"showTotal\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of components\"}},{\"id\":\"13\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"challenges\",\"size\":35,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Challenges\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"productName\",\"size\":55,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Product name\"}},{\"id\":\"12\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"productScore\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Product score\"}},{\"id\":\"10\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"Realization (TDP) link\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Realisatoin (TDP) link\"}},{\"id\":\"11\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"Specification (DPS) link\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Specification (DPS) link\"}}]}",
       "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
       "description": "",
       "savedSearchId": "207a6ed0-be3c-11e8-9127-0fc6b934c2f7",
@@ -1149,18 +994,6 @@
     }
   },
   {
-    "_id": "checkpoint",
-    "_type": "index-pattern",
-    "_source": {
-      "title": "checkpoint*",
-      "fields": "[{\"name\":\"_id\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_index\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_score\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_source\",\"type\":\"_source\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_type\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"challenges\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"coveredOrNot\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"coveredOrNot.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"cptCovered\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"cptCovered.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"cptDesc\",\"type\":\"string\",\"count\":3,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"cptDesc.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"cptName\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dataDeliveryMechanism\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"docType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsHorizontalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsHorizontalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsNumberOfCharacteristics\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsNumberOfCharacteristics.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsNumberOfItems\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsNumberOfItems.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTemporalCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTemporalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTemporalValidity\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsTemporalValidity.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsThematicAccuracy\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsThematicAccuracy.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTitle\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsTitle.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsUsability\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsUsability.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsUuid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsVerticalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsVerticalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dqSimpleId\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dqType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dqType.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dqUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"east\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"environmentalMatrix\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"errorValue\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"expertScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"identifier\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"indicatorValue\",\"type\":\"number\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"inputCharacteristics\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"inputCharacteristics.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"inspireTheme\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"lineage\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"lineage.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"linkToSextant\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"linkToSextant.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"matrix\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"matrix.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureId\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureName\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureStatement\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"measureStatement.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureValue\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"metadataUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"metadataUuid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"nbOfLineage\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"nbOfLineage.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"noData\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"noDataAvailable\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"noDataExist\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"north\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"notCoveredExplanation\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"notCoveredExplanation.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"notCoveredStatement\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"notCoveredStatement.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p01\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p01other\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p02\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p03\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"policyVisibility\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"processingLevelOfChar\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"productExpertOpinion\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"productName\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"productScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"productScoreLabel\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"readyness\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"reportType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"reportType.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"resourceType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"resourceType.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"serviceExtent\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"south\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"spatialRepresentationType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"standardName\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpHorizontalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpHorizontalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpNumberOfCharacteristics\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpNumberOfCharacteristics.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpNumberOfItems\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpNumberOfItems.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpScore.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTemporalCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTemporalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTemporalValidity\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpTemporalValidity.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpThematicAccuracy\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpThematicAccuracy.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTitle\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpTitle.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpUsability\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpUsability.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpUuid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpVerticalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpVerticalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"timeBeginPosition\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"timeEndPosition\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"title\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"uniqueid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"uniqueid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"usabilityScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"uuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"validation\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"visibility\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"west\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"Product Score\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\"doc['productScore'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Usabilitiy Score\",\"type\":\"number\",\"count\":2,\"scripted\":true,\"script\":\"doc['usabilityScore'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"RecordLink\",\"type\":\"string\",\"count\":3,\"scripted\":true,\"script\":\"doc['metadataUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Specification (DPS) link\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['tdpUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Realization (TDP) link\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['tdpUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Component usabilitiy Score\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\"doc['usabilityScore'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"DOI\",\"type\":\"string\",\"count\":3,\"scripted\":true,\"script\":\"doc['metadataUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Product name\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\" doc['productName'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Component name\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['cptName'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Component description\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['cptDesc.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Characteristic category (P02) \",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['p02'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Characteristic (P01)\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['p01'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"No data available nor exists?\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\" doc['noData'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}]",
-      "fieldFormatMap": "{\"Product Score\":{\"id\":\"color\",\"params\":{\"fieldType\":\"number\",\"colors\":[{\"range\":\"1:1\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ff0000\"},{\"range\":\"2:2\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffc000\"},{\"range\":\"3:3\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffff00\"},{\"range\":\"4:4\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ccff66\"},{\"range\":\"5:5\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#00cc00\"}]}},\"Usabilitiy Score\":{\"id\":\"color\",\"params\":{\"fieldType\":\"number\",\"colors\":[{\"range\":\"1:1\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ff0000\"},{\"range\":\"2:2\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffc000\"},{\"range\":\"3:3\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffff00\"},{\"range\":\"4:4\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ccff66\"},{\"range\":\"5:5\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#00cc00\"}]}},\"RecordLink\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://www.emodnet-atlantic.eu/Checkpoint-service/Browser#/metadata/{{rawValue}}\",\"labelTemplate\":\"Record link\"}},\"Specification (DPS) link\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://www.emodnet-atlantic.eu/Checkpoint-service/Browser#/metadata/{{rawValue}}\"}},\"Realization (TDP) link\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://www.emodnet-atlantic.eu/Checkpoint-service/Browser#/metadata/{{rawValue}}\"}},\"Component usabilitiy Score\":{\"id\":\"color\",\"params\":{\"fieldType\":\"number\",\"colors\":[{\"range\":\"1:1\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ff0000\"},{\"range\":\"2:2\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffc000\"},{\"range\":\"3:3\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffff00\"},{\"range\":\"4:4\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ccff66\"},{\"range\":\"5:5\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#00cc00\"}]}},\"DOI\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://dx.doi.org/10.12770/{{rawValue}}\",\"labelTemplate\":\"DOI\"}}}"
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
     "_id": "e078a110-c716-11e8-90bb-6540f76c8ed8",
     "_type": "dashboard",
     "_source": {
@@ -1173,24 +1006,6 @@
       "timeRestore": false,
       "kibanaSavedObjectMeta": {
         "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"controlledBy\":\"1537610571463\",\"disabled\":false,\"index\":\"checkpoint\",\"key\":\"resourceType.keyword\",\"negate\":false,\"params\":[\"DPS\",\"TDP\"],\"type\":\"phrases\",\"value\":\"DPS, TDP\"},\"query\":{\"bool\":{\"minimum_should_match\":1,\"should\":[{\"match_phrase\":{\"resourceType.keyword\":\"DPS\"}},{\"match_phrase\":{\"resourceType.keyword\":\"TDP\"}}]}}}]}"
-      }
-    },
-    "_meta": {
-      "savedObjectVersion": 2
-    }
-  },
-  {
-    "_id": "63811a80-d2e1-11e8-ac50-6f65af96b664",
-    "_type": "visualization",
-    "_source": {
-      "title": "[Checkpoint] Number of quality measures by indicator by challenges",
-      "visState": "{\"title\":\"[Checkpoint] Number of quality measures by indicator by challenges\",\"type\":\"histogram\",\"params\":{\"addLegend\":true,\"addTimeMarker\":false,\"addTooltip\":true,\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"labels\":{\"show\":true,\"truncate\":100},\"position\":\"bottom\",\"scale\":{\"type\":\"linear\"},\"show\":true,\"style\":{},\"title\":{},\"type\":\"category\"}],\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"legendPosition\":\"top\",\"seriesParams\":[{\"data\":{\"id\":\"1\",\"label\":\"Number of quality measures\"},\"drawLinesBetweenPoints\":true,\"mode\":\"stacked\",\"show\":\"true\",\"showCircles\":true,\"type\":\"histogram\",\"valueAxis\":\"ValueAxis-1\"}],\"times\":[],\"type\":\"histogram\",\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"labels\":{\"filter\":false,\"rotate\":0,\"show\":true,\"truncate\":100},\"name\":\"LeftAxis-1\",\"position\":\"left\",\"scale\":{\"mode\":\"normal\",\"type\":\"linear\"},\"show\":true,\"style\":{},\"title\":{\"text\":\"Number of quality measures\"},\"type\":\"value\"}]},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of quality measures\"}},{\"id\":\"4\",\"enabled\":false,\"type\":\"terms\",\"schema\":\"split\",\"params\":{\"field\":\"measureName\",\"size\":15,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"row\":true}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"measureName\",\"size\":50,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Challenge\"}},{\"id\":\"5\",\"enabled\":false,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"measureName\",\"size\":50,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}},{\"id\":\"3\",\"enabled\":false,\"type\":\"range\",\"schema\":\"group\",\"params\":{\"field\":\"indicatorValue\",\"ranges\":[{\"from\":null,\"to\":-10},{\"from\":-10,\"to\":null}],\"customLabel\":\"Indicator value\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"filters\",\"schema\":\"group\",\"params\":{\"filters\":[{\"input\":{\"query\":\"+indicatorValue:[* TO -10]\"},\"label\":\"Not compliant with specification\"},{\"input\":{\"query\":\"+indicatorValue:[-10 TO *]\"},\"label\":\"Compliant with specification\"}]}}]}",
-      "uiStateJSON": "{\"vis\":{\"colors\":{\"-10 to +∞\":\"#508642\",\"-∞ to -10\":\"#BF1B00\",\"Compliant with specification\":\"#508642\",\"Not compliant with specification\":\"#BF1B00\"}}}",
-      "description": "",
-      "savedSearchId": "a0d657b0-be46-11e8-9127-0fc6b934c2f7",
-      "version": 1,
-      "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[]}"
       }
     },
     "_meta": {
@@ -2685,6 +2500,80 @@
     }
   },
   {
+    "_id": "63811a80-d2e1-11e8-ac50-6f65af96b664",
+    "_type": "visualization",
+    "_source": {
+      "title": "[Checkpoint] Number of quality measures by indicator by challenges",
+      "visState": "{\"title\":\"[Checkpoint] Number of quality measures by indicator by challenges\",\"type\":\"histogram\",\"params\":{\"addLegend\":true,\"addTimeMarker\":false,\"addTooltip\":true,\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"labels\":{\"show\":true,\"truncate\":100},\"position\":\"bottom\",\"scale\":{\"type\":\"linear\"},\"show\":true,\"style\":{},\"title\":{},\"type\":\"category\"}],\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"legendPosition\":\"top\",\"seriesParams\":[{\"data\":{\"id\":\"1\",\"label\":\"Number of quality measures\"},\"drawLinesBetweenPoints\":true,\"mode\":\"stacked\",\"show\":\"true\",\"showCircles\":true,\"type\":\"histogram\",\"valueAxis\":\"ValueAxis-1\"}],\"times\":[],\"type\":\"histogram\",\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"labels\":{\"filter\":false,\"rotate\":0,\"show\":true,\"truncate\":100},\"name\":\"LeftAxis-1\",\"position\":\"left\",\"scale\":{\"mode\":\"normal\",\"type\":\"linear\"},\"show\":true,\"style\":{},\"title\":{\"text\":\"Number of quality measures\"},\"type\":\"value\"}]},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of quality measures\"}},{\"id\":\"4\",\"enabled\":false,\"type\":\"terms\",\"schema\":\"split\",\"params\":{\"field\":\"measureName\",\"size\":15,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"row\":true}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"measureName\",\"size\":50,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"exclude\":\".*fitness.*\",\"customLabel\":\"Challenge\"}},{\"id\":\"5\",\"enabled\":false,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"measureName\",\"size\":50,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}},{\"id\":\"3\",\"enabled\":false,\"type\":\"range\",\"schema\":\"group\",\"params\":{\"field\":\"indicatorValue\",\"ranges\":[{\"from\":null,\"to\":-10},{\"from\":-10,\"to\":null}],\"customLabel\":\"Indicator value\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"filters\",\"schema\":\"group\",\"params\":{\"filters\":[{\"input\":{\"query\":\"+indicatorValue:[* TO -10]\"},\"label\":\"Not compliant with specification\"},{\"input\":{\"query\":\"+indicatorValue:[-10 TO *]\"},\"label\":\"Compliant with specification\"}]}}]}",
+      "uiStateJSON": "{\"vis\":{\"colors\":{\"-10 to +∞\":\"#508642\",\"-∞ to -10\":\"#BF1B00\",\"Compliant with specification\":\"#508642\",\"Not compliant with specification\":\"#BF1B00\"}}}",
+      "description": "",
+      "savedSearchId": "a0d657b0-be46-11e8-9127-0fc6b934c2f7",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "a50ae020-d2bf-11e8-ac50-6f65af96b664",
+    "_type": "dashboard",
+    "_source": {
+      "title": "[Checkpoint] List of components (products and components table)",
+      "hits": 0,
+      "description": "List all components by challenges with associated products and their scores",
+      "panelsJSON": "[{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":20,\"w\":18,\"h\":31,\"i\":\"4\"},\"id\":\"2d8eae70-be40-11e8-9127-0fc6b934c2f7\",\"panelIndex\":\"4\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":18,\"y\":16,\"w\":15,\"h\":16,\"i\":\"6\"},\"id\":\"af8f68a0-d05c-11e8-bb16-61fe7921a6ea\",\"panelIndex\":\"6\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":51,\"w\":48,\"h\":25,\"i\":\"7\"},\"id\":\"c93b5c50-d2be-11e8-ac50-6f65af96b664\",\"panelIndex\":\"7\",\"title\":\"List of products\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":76,\"w\":48,\"h\":46,\"i\":\"8\"},\"id\":\"e01dd340-d150-11e8-9e98-e75275c4844e\",\"panelIndex\":\"8\",\"title\":\"List of components by product\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":33,\"y\":16,\"w\":15,\"h\":16,\"i\":\"9\"},\"id\":\"25620630-c7d6-11e8-90bb-6540f76c8ed8\",\"panelIndex\":\"9\",\"title\":\"Product score\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{\"vis\":{\"colors\":{\"1\":\"#ff0000\",\"2\":\"#ffc000\",\"3\":\"#ffff00\",\"4\":\"#ccff66\",\"5\":\"#00cc00\"},\"legendOpen\":false}},\"gridData\":{\"x\":18,\"y\":0,\"w\":30,\"h\":16,\"i\":\"11\"},\"id\":\"f093e5f0-d2dd-11e8-ac50-6f65af96b664\",\"panelIndex\":\"11\",\"title\":\"Number of products by score by challenges\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":18,\"y\":32,\"w\":30,\"h\":19,\"i\":\"12\"},\"id\":\"580c0bf0-d2dd-11e8-ac50-6f65af96b664\",\"panelIndex\":\"12\",\"title\":\"Number of components covered or not by challenges\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":0,\"w\":18,\"h\":20,\"i\":\"13\"},\"id\":\"c4fd2170-db45-11e8-a35c-6dc1a6d56202\",\"panelIndex\":\"13\",\"type\":\"visualization\",\"version\":\"6.4.1\",\"title\":\"\"}]",
+      "optionsJSON": "{\"darkTheme\":false,\"hidePanelTitles\":false,\"useMargins\":true}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "503a8670-be3f-11e8-9127-0fc6b934c2f7",
+    "_type": "dashboard",
+    "_source": {
+      "title": "[Checkpoint] List of components",
+      "hits": 0,
+      "description": "List all components by challenges with associated products and their scores",
+      "panelsJSON": "[{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":53,\"w\":48,\"h\":35,\"i\":\"2\"},\"id\":\"207a6ed0-be3c-11e8-9127-0fc6b934c2f7\",\"panelIndex\":\"2\",\"title\":\"List of components\",\"type\":\"search\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":0,\"y\":20,\"w\":18,\"h\":22,\"i\":\"4\"},\"id\":\"2d8eae70-be40-11e8-9127-0fc6b934c2f7\",\"panelIndex\":\"4\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"embeddableConfig\":{},\"gridData\":{\"x\":18,\"y\":16,\"w\":15,\"h\":15,\"i\":\"6\"},\"id\":\"af8f68a0-d05c-11e8-bb16-61fe7921a6ea\",\"panelIndex\":\"6\",\"title\":\"\",\"type\":\"visualization\",\"version\":\"6.4.1\"},{\"gridData\":{\"x\":33,\"y\":16,\"w\":15,\"h\":15,\"i\":\"7\"},\"version\":\"6.4.1\",\"panelIndex\":\"7\",\"type\":\"visualization\",\"id\":\"25620630-c7d6-11e8-90bb-6540f76c8ed8\",\"embeddableConfig\":{},\"title\":\"Product score\"},{\"gridData\":{\"x\":18,\"y\":31,\"w\":30,\"h\":22,\"i\":\"9\"},\"version\":\"6.4.1\",\"panelIndex\":\"9\",\"type\":\"visualization\",\"id\":\"580c0bf0-d2dd-11e8-ac50-6f65af96b664\",\"embeddableConfig\":{},\"title\":\"Number of components covered or not by challenges\"},{\"gridData\":{\"x\":18,\"y\":0,\"w\":30,\"h\":16,\"i\":\"10\"},\"version\":\"6.4.1\",\"panelIndex\":\"10\",\"type\":\"visualization\",\"id\":\"f093e5f0-d2dd-11e8-ac50-6f65af96b664\",\"embeddableConfig\":{\"vis\":{\"colors\":{\"1\":\"#ff0000\",\"2\":\"#ffc000\",\"3\":\"#ffff00\",\"4\":\"#ccff66\",\"5\":\"#00cc00\"},\"legendOpen\":false}},\"title\":\"Number of products by score by challenges\"},{\"gridData\":{\"x\":0,\"y\":0,\"w\":18,\"h\":20,\"i\":\"11\"},\"version\":\"6.4.1\",\"panelIndex\":\"11\",\"type\":\"visualization\",\"id\":\"c4fd2170-db45-11e8-a35c-6dc1a6d56202\",\"embeddableConfig\":{},\"title\":\"\"}]",
+      "optionsJSON": "{\"darkTheme\":false,\"hidePanelTitles\":false,\"useMargins\":true}",
+      "version": 1,
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "c93b5c50-d2be-11e8-ac50-6f65af96b664",
+    "_type": "visualization",
+    "_source": {
+      "title": "[Checkpoint] Number of components by products",
+      "visState": "{\"title\":\"[Checkpoint] Number of components by products\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showMetricsAtAllLevels\":false,\"showPartialRows\":false,\"showTotal\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Number of components\"}},{\"id\":\"13\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"challenges\",\"size\":35,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Challenges\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"productName\",\"size\":55,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Product name\"}},{\"id\":\"12\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"productScore\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Product score\"}},{\"id\":\"14\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"DOI\",\"size\":5,\"order\":\"asc\",\"orderBy\":\"_key\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}},{\"id\":\"10\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"Realization (TDP) link\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Realisation (TDP) link\"}},{\"id\":\"11\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"Specification (DPS) link\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Specification (DPS) link\"}}]}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "savedSearchId": "207a6ed0-be3c-11e8-9127-0fc6b934c2f7",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
     "_id": "bc3781a0-e277-11e8-9f77-9f378e4b9290",
     "_type": "dashboard",
     "_source": {
@@ -2698,6 +2587,117 @@
       "kibanaSavedObjectMeta": {
         "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[{\"meta\":{\"index\":\"records\",\"controlledBy\":\"1534750445040\",\"type\":\"phrase\",\"key\":\"groupPublished\",\"value\":\"TAAF\",\"params\":{\"query\":\"TAAF\",\"type\":\"phrase\"},\"disabled\":false,\"negate\":false,\"alias\":null},\"query\":{\"match\":{\"groupPublished\":{\"query\":\"TAAF\",\"type\":\"phrase\"}}},\"$state\":{\"store\":\"appState\"}}]}"
       }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "207a6ed0-be3c-11e8-9127-0fc6b934c2f7",
+    "_type": "search",
+    "_source": {
+      "title": "[Checkpoint] Components",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "Product name",
+        "Product Score",
+        "Component name",
+        "Component description",
+        "No data available nor exists?",
+        "Component usabilitiy Score",
+        "Characteristic category (P02) ",
+        "Characteristic (P01)",
+        "DOI",
+        "Realization (TDP) link",
+        "Specification (DPS) link"
+      ],
+      "sort": [
+        "_score",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"checkpoint\",\"highlightAll\":true,\"version\":true,\"query\":{\"language\":\"kuery\",\"query\":\"docType :\\\"component\\\" \"},\"filter\":[]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "c4fd2170-db45-11e8-a35c-6dc1a6d56202",
+    "_type": "visualization",
+    "_source": {
+      "title": "[Checkpoint] List of components introduction",
+      "visState": "{\"title\":\"[Checkpoint] List of components introduction\",\"type\":\"markdown\",\"params\":{\"fontSize\":12,\"openLinksInNewTab\":false,\"markdown\":\"# Dashboard purpose\\n\\nTo help identify characteristics categories having problems and applications that could be improved, This dashboard dynamically extracts from the metadata catalogue and displays all products and components details. \\nThe component scores are based on quantitative assessments while the product scores integrate experts' opinions.\\nThe product score (from inadequate to excellent) is identified by a color code from red to green or a number going from 1 to 5. For each component, a quick overview of those not covered and why is presented.\\n\\n\\n# How to filter ?\\n\\nTo filter information, 2 options:\\n* Choose filters in the lists below\\n* Or click on the charts on the right\"},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"language\":\"lucene\",\"query\":\"\"},\"filter\":[]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "52e97110-db4f-11e8-a2b1-231c8a937e95",
+    "_type": "visualization",
+    "_source": {
+      "title": "[Checkpoint] DQ type / Completeness omission",
+      "visState": "{\"title\":\"[Checkpoint] DQ type / Completeness omission\",\"type\":\"markdown\",\"params\":{\"fontSize\":12,\"openLinksInNewTab\":false,\"markdown\":\"# Completeness\"},\"aggs\":[]}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "a0d657b0-be46-11e8-9127-0fc6b934c2f7",
+    "_type": "search",
+    "_source": {
+      "title": "[Checkpoint] Measures",
+      "description": "",
+      "hits": 0,
+      "columns": [
+        "Component ID",
+        "Component name",
+        "Measure",
+        "Value",
+        "identifier",
+        "Measure desc.",
+        "p01",
+        "p02",
+        "Indicator",
+        "DOI"
+      ],
+      "sort": [
+        "p01",
+        "desc"
+      ],
+      "version": 1,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"checkpoint\",\"highlightAll\":true,\"version\":true,\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[{\"$state\":{\"store\":\"appState\"},\"meta\":{\"alias\":null,\"disabled\":false,\"index\":\"checkpoint\",\"key\":\"docType\",\"negate\":false,\"params\":{\"query\":\"dqmeasures\",\"type\":\"phrase\"},\"type\":\"phrase\",\"value\":\"dqmeasures\"},\"query\":{\"match\":{\"docType\":{\"query\":\"dqmeasures\",\"type\":\"phrase\"}}}}]}"
+      }
+    },
+    "_meta": {
+      "savedObjectVersion": 2
+    }
+  },
+  {
+    "_id": "checkpoint",
+    "_type": "index-pattern",
+    "_source": {
+      "title": "checkpoint*",
+      "fields": "[{\"name\":\"_id\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_index\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_score\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_source\",\"type\":\"_source\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_type\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"challenges\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"coveredOrNot\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"coveredOrNot.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"cptCovered\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"cptCovered.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"cptDesc\",\"type\":\"string\",\"count\":3,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"cptDesc.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"cptName\",\"type\":\"string\",\"count\":2,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dataDeliveryMechanism\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"docType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsHorizontalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsHorizontalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsNumberOfCharacteristics\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsNumberOfCharacteristics.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsNumberOfItems\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsNumberOfItems.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTemporalCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTemporalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTemporalValidity\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsTemporalValidity.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsThematicAccuracy\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsThematicAccuracy.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsTitle\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsTitle.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsUsability\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsUsability.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dpsUuid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsVerticalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dpsVerticalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dqSimpleId\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dqType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"dqType.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"dqUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"east\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"environmentalMatrix\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"errorValue\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"expertScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"identifier\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"indicatorValue\",\"type\":\"number\",\"count\":2,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"inputCharacteristics\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"inputCharacteristics.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"inspireTheme\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"lineage\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"lineage.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"linkToSextant\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"linkToSextant.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"matrix\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"matrix.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureId\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureName\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureStatement\",\"type\":\"string\",\"count\":2,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"measureStatement.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"measureValue\",\"type\":\"number\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"metadataUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"metadataUuid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"nbOfLineage\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"nbOfLineage.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"noData\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"noDataAvailable\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"noDataExist\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"north\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"notCoveredExplanation\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"notCoveredExplanation.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"notCoveredStatement\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"notCoveredStatement.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p01\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p01other\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p02\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"p03\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"policyVisibility\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"processingLevelOfChar\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"productExpertOpinion\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"productName\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"productScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"productScoreLabel\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"readyness\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"reportType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"reportType.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"resourceType\",\"type\":\"string\",\"count\":1,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"resourceType.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"serviceExtent\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"south\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"spatialRepresentationType\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"standardName\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpHorizontalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpHorizontalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpNumberOfCharacteristics\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpNumberOfCharacteristics.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpNumberOfItems\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpNumberOfItems.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpScore.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTemporalCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTemporalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTemporalValidity\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpTemporalValidity.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpThematicAccuracy\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpThematicAccuracy.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpTitle\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpTitle.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpUsability\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpUsability.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpUuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"tdpUuid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpVerticalResolution\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"tdpVerticalSpatialCoverage\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"timeBeginPosition\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"timeEndPosition\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"title\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"uniqueid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"uniqueid.keyword\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"usabilityScore\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"uuid\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"validation\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"visibility\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"west\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"Product Score\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\"doc['productScore'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Usabilitiy Score\",\"type\":\"number\",\"count\":2,\"scripted\":true,\"script\":\"doc['usabilityScore'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"RecordLink\",\"type\":\"string\",\"count\":3,\"scripted\":true,\"script\":\"doc['metadataUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Specification (DPS) link\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['tdpUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Realization (TDP) link\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['tdpUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Component usabilitiy Score\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\"doc['usabilityScore'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"DOI\",\"type\":\"string\",\"count\":3,\"scripted\":true,\"script\":\"doc['metadataUuid.keyword'].value != null ? doc['metadataUuid.keyword'].value : \\t\\ndoc['tdpUuid.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Product name\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\" doc['productName'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Component name\",\"type\":\"string\",\"count\":2,\"scripted\":true,\"script\":\"doc['cptName'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Component description\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['cptDesc.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Characteristic category (P02) \",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['p02'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Characteristic (P01)\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['p01'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"No data available nor exists?\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\" doc['noData'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Unit\",\"type\":\"string\",\"count\":0,\"scripted\":true,\"script\":\"doc['identifier'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Component ID\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['dqSimpleId'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Measure\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['measureName'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Value\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\"doc['measureValue'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Indicator\",\"type\":\"number\",\"count\":1,\"scripted\":true,\"script\":\" doc['indicatorValue'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"Measure desc.\",\"type\":\"string\",\"count\":1,\"scripted\":true,\"script\":\"doc['measureStatement.keyword'].value\",\"lang\":\"painless\",\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}]",
+      "fieldFormatMap": "{\"Product Score\":{\"id\":\"color\",\"params\":{\"fieldType\":\"number\",\"colors\":[{\"range\":\"1:1\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ff0000\"},{\"range\":\"2:2\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffc000\"},{\"range\":\"3:3\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffff00\"},{\"range\":\"4:4\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ccff66\"},{\"range\":\"5:5\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#00cc00\"}]}},\"Usabilitiy Score\":{\"id\":\"color\",\"params\":{\"fieldType\":\"number\",\"colors\":[{\"range\":\"1:1\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ff0000\"},{\"range\":\"2:2\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffc000\"},{\"range\":\"3:3\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffff00\"},{\"range\":\"4:4\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ccff66\"},{\"range\":\"5:5\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#00cc00\"}]}},\"RecordLink\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://www.emodnet-atlantic.eu/Checkpoint-service/Browser#/metadata/{{rawValue}}\",\"labelTemplate\":\"Record link\"}},\"Specification (DPS) link\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://www.emodnet-atlantic.eu/Checkpoint-service/Browser#/metadata/{{rawValue}}\"}},\"Realization (TDP) link\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://www.emodnet-atlantic.eu/Checkpoint-service/Browser#/metadata/{{rawValue}}\"}},\"Component usabilitiy Score\":{\"id\":\"color\",\"params\":{\"fieldType\":\"number\",\"colors\":[{\"range\":\"1:1\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ff0000\"},{\"range\":\"2:2\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffc000\"},{\"range\":\"3:3\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ffff00\"},{\"range\":\"4:4\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#ccff66\"},{\"range\":\"5:5\",\"regex\":\"<insert regex>\",\"text\":\"#000000\",\"background\":\"#00cc00\"}]}},\"DOI\":{\"id\":\"url\",\"params\":{\"urlTemplate\":\"http://dx.doi.org/10.12770/{{rawValue}}\",\"labelTemplate\":\"DOI\"}},\"Value\":{}}"
     },
     "_meta": {
       "savedObjectVersion": 2
