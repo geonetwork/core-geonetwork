@@ -101,8 +101,8 @@
             var bPos = undefined;
             if (b.groupPosition !== undefined) bPos = b.groupPosition;
             else if (b.get && b.get('owc_position') !== undefined) bPos = b.get('owc_position');
-            var aName = a.get('label') || a.name;
-            var bName = b.get('label') || b.name;
+            var aName = a.name || a.get('label');
+            var bName = b.name || b.get('label');
 
             // comparing using positions (for groups or layers)
             // if one is positioned and not the other, put it first
