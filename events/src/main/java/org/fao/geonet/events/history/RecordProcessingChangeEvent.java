@@ -21,30 +21,36 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class RecordCategoryChangeEvent extends AbstractHistoryEvent {
+public class RecordProcessingChangeEvent extends AbstractHistoryEvent {
 
-    private static final long serialVersionUID = 5156408130233797362L;
+    private static final long serialVersionUID = -1052505918706510478L;
 
-    public RecordCategoryChangeEvent(Integer mdId, Integer userId) {
+    private String xmlRecordBefore, xmlRecordAfter;
+
+    public RecordProcessingChangeEvent(Integer mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter) {
         super(mdId, userId);
+        this.xmlRecordBefore = xmlRecordBefore;
+        this.xmlRecordAfter = xmlRecordAfter;
     }
 
-    public RecordCategoryChangeEvent(Long mdId, Integer userId) {
+    public RecordProcessingChangeEvent(Long mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter) {
         super(mdId, userId);
+        this.xmlRecordBefore = xmlRecordBefore;
+        this.xmlRecordAfter = xmlRecordAfter;
     }
 
     @Override
     public String getCurrentState() {
-        return null;
+        return xmlRecordAfter;
     }
 
     @Override
     public String getPreviousState() {
-        return null;
+        return xmlRecordBefore;
     }
 
     @Override

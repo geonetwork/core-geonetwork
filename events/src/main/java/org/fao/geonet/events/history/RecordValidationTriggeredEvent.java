@@ -21,69 +21,39 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class RecordOwnerChangeEvent extends AbstractHistoryEvent {
+import net.sf.json.JSONObject;
 
-    private static final long serialVersionUID = -1969470377634645341L;
+public class RecordValidationTriggeredEvent extends AbstractHistoryEvent {
 
-    private Integer oldOwner, newOwner;
+    private static final long serialVersionUID = 5541971988637706317L;
 
-    private RecordOwnerChangeEvent(Integer mdId, Integer userId) {
+    private JSONObject validationObjectJSON;
+
+    public RecordValidationTriggeredEvent(Integer mdId, Integer userId, JSONObject validationObjectJSON) {
         super(mdId, userId);
+        this.validationObjectJSON = validationObjectJSON;
     }
 
-    public RecordOwnerChangeEvent(Integer mdId, Integer userId, Integer oldOwner, Integer newOwner) {
+    public RecordValidationTriggeredEvent(Long mdId, Integer userId, JSONObject validationObjectJSON) {
         super(mdId, userId);
-        setOldOwner(oldOwner);
-        setNewOwner(newOwner);
-    }
-
-    private RecordOwnerChangeEvent(Long mdId, Integer userId) {
-        super(mdId, userId);
-    }
-
-    public RecordOwnerChangeEvent(Long mdId, Integer userId, Integer oldOwner, Integer newOwner) {
-        super(mdId, userId);
-        setOldOwner(oldOwner);
-        setNewOwner(newOwner);
+        this.validationObjectJSON = validationObjectJSON;
     }
 
     @Override
     public String getCurrentState() {
-        return getNewOwner().toString();
-    }
+        JSONObject json = new JSONObject();
+        json.put("validation", validationObjectJSON);
 
-    public Integer getNewOwner() {
-        return newOwner;
-
-    }
-
-    public Integer getOldOwner() {
-        return oldOwner;
-
-    }
-
-    @Override
-    public String getPreviousState() {
-        return getOldOwner().toString();
+        return json.toString();
     }
 
     @Override
     public void publish(ApplicationContext appContext) {
         appContext.publishEvent(this);
-    }
-
-    public void setNewOwner(Integer newOwner) {
-        this.newOwner = newOwner;
-
-    }
-
-    public void setOldOwner(Integer oldOwner) {
-        this.oldOwner = oldOwner;
-
     }
 
 }

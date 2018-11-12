@@ -21,69 +21,25 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class RecordPrivilegesChangeEvent extends AbstractHistoryEvent {
+public class AttachementDeletedEvent extends AbstractHistoryEvent {
 
-    private static final long serialVersionUID = -5643646655572813975L;
+    private static final long serialVersionUID = -7114160491764342413L;
 
-    private String shareOld, shareNew;
-
-    private RecordPrivilegesChangeEvent(Integer mdId, Integer userId) {
+    public AttachementDeletedEvent(Integer mdId, Integer userId) {
         super(mdId, userId);
     }
 
-    public RecordPrivilegesChangeEvent(Integer mdId, Integer userId, String shareOld, String shareNew) {
+    public AttachementDeletedEvent(Long mdId, Integer userId) {
         super(mdId, userId);
-        setShareOld(shareOld);
-        setShareNew(shareNew);
-    }
-
-    private RecordPrivilegesChangeEvent(Long mdId, Integer userId) {
-        super(mdId, userId);
-    }
-
-    public RecordPrivilegesChangeEvent(Long mdId, Integer userId, String shareOld, String shareNew) {
-        super(mdId, userId);
-        setShareOld(shareOld);
-        setShareNew(shareNew);
-    }
-
-    @Override
-    public String getCurrentState() {
-        return null;
-    }
-
-    @Override
-    public String getPreviousState() {
-        return null;
-    }
-
-    public String getShareNew() {
-        return shareNew;
-
-    }
-
-    public String getShareOld() {
-        return shareOld;
-
     }
 
     @Override
     public void publish(ApplicationContext appContext) {
         appContext.publishEvent(this);
-    }
-
-    public void setShareNew(String shareNew) {
-        this.shareNew = shareNew;
-
-    }
-
-    public void setShareOld(String shareOld) {
-        this.shareOld = shareOld;
-
     }
 
 }

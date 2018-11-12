@@ -21,70 +21,51 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.history.create;
+package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class RecordCreateEvent extends AbstractHistoryEvent {
+import net.sf.json.JSONObject;
 
-    private static final long serialVersionUID = 1110999025730522535L;
+public class RecordPrivilegesChangeEvent extends AbstractHistoryEvent {
 
-    // Status related fields
-    private String userObject, record;
+    private static final long serialVersionUID = -5643646655572813975L;
 
-    private RecordCreateEvent(Integer mdId, Integer userId) {
+    private JSONObject oldShareParameterObjectJson, newShareParameterObjectJson;
+
+    public RecordPrivilegesChangeEvent(Integer mdId, Integer userId, JSONObject oldShareParameterObjectJson,
+            JSONObject newShareParameterObjectJson) {
         super(mdId, userId);
+        this.oldShareParameterObjectJson = oldShareParameterObjectJson;
+        this.newShareParameterObjectJson = newShareParameterObjectJson;
     }
 
-    public RecordCreateEvent(Integer mdId, Integer userId, String userObject, String record) {
+    public RecordPrivilegesChangeEvent(Long mdId, Integer userId, JSONObject oldShareParameterObjectJson,
+            JSONObject newShareParameterObjectJson) {
         super(mdId, userId);
-        setUserObject(userObject);
-        setRecord(record);
-    }
-
-    private RecordCreateEvent(Long mdId, Integer userId) {
-        super(mdId, userId);
-    }
-
-    public RecordCreateEvent(Long mdId, Integer userId, String userObject, String record) {
-        super(mdId, userId);
-        setUserObject(userObject);
-        setRecord(record);
+        this.oldShareParameterObjectJson = oldShareParameterObjectJson;
+        this.newShareParameterObjectJson = newShareParameterObjectJson;
     }
 
     @Override
     public String getCurrentState() {
-        return null;
+        JSONObject json = new JSONObject();
+        json.put("sharing", newShareParameterObjectJson);
+
+        return json.toString();
     }
 
     @Override
     public String getPreviousState() {
-        return null;
-    }
+        JSONObject json = new JSONObject();
+        json.put("sharing", oldShareParameterObjectJson);
 
-    public String getRecord() {
-        return record;
-
-    }
-
-    public String getUserObject() {
-        return userObject;
-
+        return json.toString();
     }
 
     @Override
     public void publish(ApplicationContext appContext) {
         appContext.publishEvent(this);
-    }
-
-    public void setRecord(String record) {
-        this.record = record;
-
-    }
-
-    public void setUserObject(String userObject) {
-        this.userObject = userObject;
-
     }
 
 }

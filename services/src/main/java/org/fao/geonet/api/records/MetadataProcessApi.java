@@ -49,14 +49,16 @@ import org.fao.geonet.api.records.model.suggestion.SuggestionType;
 import org.fao.geonet.api.records.model.suggestion.SuggestionsType;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.events.history.create.RecordCreateEvent;
-import org.fao.geonet.events.history.create.RecordProcessingChangeEvent;
+import org.fao.geonet.domain.utils.ObjectJSONConverter;
+import org.fao.geonet.events.history.RecordCreateEvent;
+import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -265,6 +267,10 @@ public class MetadataProcessApi {
     private Element process(ApplicationContext applicationContext, String process, HttpServletRequest request,
             AbstractMetadata metadata, boolean save, ServiceContext context,
             SettingManager sm, XsltMetadataProcessingReport report) throws Exception {
+
+        DataManager dataMan = context.getBean(DataManager.class);
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
+        Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), forEditing, withValidationErrors, keepXlinkAttributes);
         Element processedMetadata;
         try {
             final String siteURL = sm.getSiteURL(context);
@@ -278,7 +284,10 @@ public class MetadataProcessApi {
                     ", Not owner:" + report.getNumberOfRecordsNotEditable() +
                     ", No process found:" + report.getNoProcessFoundCount() + ".");
             } else {
-                new RecordProcessingChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt()).publish(applicationContext);
+                XMLOutputter outp = new XMLOutputter();
+                String xmlAfter = outp.outputString(processedMetadata);
+                String xmlBefore = outp.outputString(beforeMetadata);
+                new RecordProcessingChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
             }
         } catch (Exception e) {
             throw e;
