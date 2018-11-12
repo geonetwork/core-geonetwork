@@ -106,10 +106,6 @@
     <xsl:message><xsl:value-of select="$uuid"/> No DQ section, statement not updated.</xsl:message>
   </xsl:template>
 
-  <xsl:template match="gmd:dataQualityInfo/*[not(gmd:lineage)]">
-    <xsl:message><xsl:value-of select="$uuid"/> No lineage in DQ section, statement not updated.</xsl:message>
-  </xsl:template>
-
 
   <!-- Remove empty scale denominator -->
   <xsl:template match="gmd:spatialResolution[*/gmd:equivalentScale/*/gmd:denominator/gco:Integer = '']"/>
@@ -117,7 +113,9 @@
 
 
   <!-- Add metadata contact -->
-  <xsl:template match="gmd:MD_Metadata/gmd:contact[name(following-sibling::*[1]) != 'gmd:contact']">
+  <xsl:variable name="hasFredKaanAlready"
+                select="count(.//gmd:MD_Metadata/gmd:contact[*/gmd:individualName/gco:CharacterString = 'Fred Kaan']) > 0"/>
+  <xsl:template match="gmd:MD_Metadata/gmd:contact[not($hasFredKaanAlready) and name(following-sibling::*[1]) != 'gmd:contact']">
     <xsl:copy-of select="."/>
     <gmd:contact>
       <gmd:CI_ResponsibleParty>
