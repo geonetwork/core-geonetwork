@@ -67,9 +67,7 @@
                    */
                   scope.setRelation = function(rel) {
                     scope.searchObj.params.relation = rel;
-                    if (!!angular.copy(scope.searchObj.params).geometry) {
-                      scope.triggerSearch();
-                    }
+                    scope.triggerSearch();
                   };
                 }
               };
@@ -174,9 +172,7 @@
               scope.$watch('interaction.active', function(v, o) {
                 if (!v && o) {
                   resetSpatialFilter();
-                  if (!!angular.copy(scope.searchObj.params).geometry) {
-                    scope.triggerSearch();
-                  }
+                  scope.triggerSearch();
                 }
               });
 
