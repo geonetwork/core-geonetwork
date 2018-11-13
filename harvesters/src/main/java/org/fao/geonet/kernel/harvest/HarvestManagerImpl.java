@@ -133,7 +133,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                         hmHarvestLookup.put(ah.getParams().getUuid(), ah);
                     } catch (OperationAbortedEx oae) {
                         Log.error(Geonet.HARVEST_MAN, "Cannot create harvester " + id + " of type \""
-                            + type + "\"");
+                            + type + "\"", oae);
                     }
 
                 }
