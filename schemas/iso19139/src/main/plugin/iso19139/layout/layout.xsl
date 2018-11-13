@@ -335,7 +335,7 @@
                       select="if ($config and $config/@use != '')
                               then $config/@use
                               else gn-fn-metadata:getFieldType($editorConfig, name(),
-        name($theElement))"/>
+        name($theElement), $xpath)"/>
       <xsl:with-param name="directiveAttributes">
         <xsl:choose>
           <xsl:when test="$config and $config/@use != ''">
@@ -367,13 +367,15 @@
    as read only. The associated resource panel is used to edit
     those values. -->
   <xsl:template mode="mode-iso19139" match="@uuidref" priority="2000">
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="gn-fn-metadata:getLabel($schema, name(..), $labels)"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="''"/>
       <xsl:with-param name="editInfo" select="../gn:element"/>
       <xsl:with-param name="parentEditInfo" select="../gn:element"/>
@@ -384,13 +386,16 @@
 
 
   <xsl:template mode="mode-iso19139" match="gco:ScopedName|gco:LocalName">
+
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="gn-fn-metadata:getLabel($schema, name(.), $labels)"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="parentEditInfo" select="../gn:element"/>
@@ -525,12 +530,14 @@
 
     <xsl:variable name="added" select="parent::node()/parent::node()/@gn:addedObj"/>
 
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo"
                       select="gn:element"/>

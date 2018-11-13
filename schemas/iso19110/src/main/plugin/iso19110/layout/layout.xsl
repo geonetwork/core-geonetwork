@@ -176,7 +176,7 @@
       <xsl:with-param name="forceDisplayAttributes" select="true()" />
       <xsl:with-param name="type"
                       select="gn-fn-iso19110:getFieldType(name(),
-            name(gmx:Anchor))"/>
+            name(gmx:Anchor), $xpath)"/>
       <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
@@ -245,7 +245,7 @@
                       select="gn-fn-iso19110:getFieldType(name(),
             name(gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
                 gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-                gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL))"/>
+                gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL), $xpath)"/>
       <xsl:with-param name="name" select="if ($isEditing) then */gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
