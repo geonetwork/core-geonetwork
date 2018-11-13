@@ -36,6 +36,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestInfoProvider;
@@ -123,12 +124,18 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                 for (Object o : entries.getChildren()) {
                     Element node = transform((Element) o);
                     String type = node.getAttributeValue("type");
+                    String id = node.getAttributeValue("id");
 
-                    AbstractHarvester ah = AbstractHarvester.create(type, context);
-                    ah.init(node, context);
+                    try {
+                        AbstractHarvester ah = AbstractHarvester.create(type, context);
+                        ah.init(node, context);
+                        hmHarvesters.put(ah.getID(), ah);
+                        hmHarvestLookup.put(ah.getParams().getUuid(), ah);
+                    } catch (OperationAbortedEx oae) {
+                        Log.error(Geonet.HARVEST_MAN, "Cannot create harvester " + id + " of type \""
+                            + type + "\"");
+                    }
 
-                    hmHarvesters.put(ah.getID(), ah);
-                    hmHarvestLookup.put(ah.getParams().getUuid(), ah);
                 }
             }
         }
