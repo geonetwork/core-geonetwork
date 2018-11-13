@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import io.swagger.annotations.*;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -34,6 +35,8 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
+import org.fao.geonet.events.history.AttachementAddedEvent;
+import org.fao.geonet.events.history.AttachementDeletedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -204,6 +207,13 @@ public class AttachmentsApi {
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         store.delResource(context, metadataUuid);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if(metadataIdString!=null) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachementDeletedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+        }
     }
 
     @ApiOperation(
@@ -237,7 +247,16 @@ public class AttachmentsApi {
             HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.putResource(context, metadataUuid, file, visibility);
+        MetadataResource resource = store.putResource(context, metadataUuid, file, visibility);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if(metadataIdString!=null) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachementAddedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+        }
+
+        return resource;
     }
 
     @ApiOperation(
@@ -270,7 +289,16 @@ public class AttachmentsApi {
             HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.putResource(context, metadataUuid, url, visibility);
+        MetadataResource resource = store.putResource(context, metadataUuid, url, visibility);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if(metadataIdString!=null) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachementAddedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+        }
+
+        return resource;
     }
 
     @ApiOperation(
@@ -373,5 +401,12 @@ public class AttachmentsApi {
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         store.delResource(context, metadataUuid, resourceId);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if(metadataIdString!=null) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachementDeletedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+        }
     }
 }
