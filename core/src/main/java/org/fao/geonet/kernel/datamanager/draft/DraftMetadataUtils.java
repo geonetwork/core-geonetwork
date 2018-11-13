@@ -45,6 +45,7 @@ import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.geotools.coverage.processing.Operations;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -491,15 +492,22 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 		try {
 			Integer finalId = metadataManager.insertMetadata(context, newMetadata, xml, false, true, true,
 					UpdateDatestamp.YES, false, true).getId();
+			
+			//Remove all default privileges:
+			metadataOperations.deleteMetadataOper(context, String.valueOf(finalId), false);
 
 			// Copy privileges from original metadata
 			for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) { 
 				
-				//except for reserved groups
-				Group g = groupRepository.findOne(op.getId().getGroupId());
-				if (!g.isReserved()) {
-					metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
-							op.getId().getOperationId());
+				//Only interested in editing and reviewing privileges
+				//No one else should be able to see it
+				if(op.getId().getOperationId() == ReservedOperation.editing.getId()) {
+					//except for reserved groups
+					Group g = groupRepository.findOne(op.getId().getGroupId());
+					if (!g.isReserved()) {
+						metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
+								op.getId().getOperationId());
+					}
 				}
 			}
 
