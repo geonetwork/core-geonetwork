@@ -70,7 +70,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.utils.ObjectJSONConverter;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -1204,7 +1204,7 @@ public class MetadataInsertDeleteApi {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordCreateEvent(metadata.getId(),
                               userSession.getUserIdAsInt(),
-                              ObjectJSONConverter.convertObjectToJsonObject(userSession.getPrincipal()),
+                              ObjectJSONUtils.wrapObjectWithJsonObject(userSession.getPrincipal(), RecordCreateEvent.FIELD),
                               metadata.getData()
                               ).publish(applicationContext);
     }

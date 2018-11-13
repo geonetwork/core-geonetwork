@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class RecordPrivilegesChangeListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordPrivilegesChangeEvent> {
 
-    private String changeMessage = "Test";
+    private String changeMessage = "";
     private String eventType = StatusValue.Events.RECORDPRIVILEGESCHANGE;
 
     @Override

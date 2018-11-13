@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class RecordValidationTriggeredListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordValidationTriggeredEvent> {
 
-    private String changeMessage = "Test";
+    private String changeMessage = "";
     private String eventType = StatusValue.Events.RECORDVALIDATIONTRIGGERED;
 
     @Override

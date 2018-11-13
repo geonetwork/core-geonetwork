@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class RecordProcessingChangeListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordProcessingChangeEvent> {
 
-    private String changeMessage = "Test";
+    private String changeMessage = "";
     private String eventType = StatusValue.Events.RECORDPROCESSINGCHANGE;
 
     @Override

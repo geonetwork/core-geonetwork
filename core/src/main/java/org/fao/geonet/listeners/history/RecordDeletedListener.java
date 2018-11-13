@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RecordDeletedListener extends GenericMetadataEventListener implements ApplicationListener<RecordDeletedEvent> {
 
-    private String changeMessage = "Test";
+    private String changeMessage = "";
     private String eventType = StatusValue.Events.RECORDDELETED;
 
     @Override

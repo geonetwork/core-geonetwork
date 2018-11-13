@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RecordUpdatedListener extends GenericMetadataEventListener implements ApplicationListener<RecordUpdatedEvent> {
 
-    private String changeMessage = "Test";
+    private String changeMessage = "";
     private String eventType = StatusValue.Events.RECORDUPDATED;
 
     @Override

@@ -32,6 +32,8 @@ public class RecordCategoryChangeEvent extends AbstractHistoryEvent {
     private static final long serialVersionUID = 5156408130233797362L;
 
     private JSONObject categoryArrayBeforeJSON, categoryArrayAfterJSON;
+    
+    public static final String FIELD = "category";
 
     public RecordCategoryChangeEvent(Integer mdId, Integer userId, JSONObject categoryArrayBeforeJSON, JSONObject categoryArrayAfterJSON) {
         super(mdId, userId);
