@@ -11,6 +11,11 @@
   <ul class="nav nav-pills nav-stacked"
       data-ng-class="isEnabled ? '' : 'hidden'"
       role="menu">
+    <button class="close"
+      data-ng-click="toggle()"
+      title="{{'toggleScrollSpy' | translate}}">
+      <span aria-hidden="true">&times;</span>
+    </button>
     <li data-ng-repeat="s in spyElems"
         data-ng-class="s.active ? 'active' : ''"
         role="menuitem">
