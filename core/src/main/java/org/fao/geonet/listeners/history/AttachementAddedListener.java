@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AttachementAddedListener extends GenericMetadataEventListener implements ApplicationListener<AttachementAddedEvent> {
 
-    private String changeMessage = "Test";
+    private String changeMessage = "";
     private String eventType = StatusValue.Events.ATTACHEMENTADDED;
 
     @Override

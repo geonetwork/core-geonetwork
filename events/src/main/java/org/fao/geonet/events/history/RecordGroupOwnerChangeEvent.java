@@ -32,6 +32,8 @@ public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
     private static final long serialVersionUID = -3732476621109415191L;
 
     private JSONObject oldOwnerObjectJSON, newOwnerObjectJSON;
+    
+    public static final String FIELD = "owner";
 
     public RecordGroupOwnerChangeEvent(Integer mdId, Integer userId, JSONObject oldOwnerObjectJSON, JSONObject newOwnerObjectJSON) {
         super(mdId, userId);
