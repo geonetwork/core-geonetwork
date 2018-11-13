@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -406,19 +407,26 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
                 Log.debug(Geonet.HARVEST_MAN, "Removing harvesting with id : " + id);
             }
-            AbstractHarvester ah = hmHarvesters.get(id);
-
-            if (ah == null) {
+            if (!NumberUtils.isDigits(id)) {
                 return OperResult.NOT_FOUND;
             }
-            ah.destroy();
-            settingMan.remove("harvesting/id:" + id);
+            AbstractHarvester ah = hmHarvesters.get(id);
+            String harvesterSetting = settingMan.getValue("harvesting/id:" + id);
+            String uuid = settingMan.getValue("harvesting/id:" + id + "/site/uuid");
+            if (StringUtils.isNotBlank(harvesterSetting)) {
+                settingMan.remove("harvesting/id:" + id);
 
-            final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
-            // set deleted status in harvest history table to 'y'
-            historyRepository.markAllAsDeleted(ah.getParams().getUuid());
-            hmHarvesters.remove(id);
-            return OperResult.OK;
+                final HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
+                // set deleted status in harvest history table to 'y'
+                historyRepository.markAllAsDeleted(uuid);
+                hmHarvesters.remove(id);
+                if (ah != null) {
+                    ah.destroy();
+                }
+                return OperResult.OK;
+            } else {
+                return OperResult.NOT_FOUND;
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
