@@ -34,8 +34,9 @@
       docIdField: 'featureTypeId',
       idDoc: function(config) {
         this.params = config;
-        return config.wfsUrl + '#' +
-            config.featureTypeName.replace(':', '\\:');
+        return encodeURIComponent(config.wfsUrl + '#' + config.featureTypeName);
+        // return config.wfsUrl + '#' +
+        //     config.featureTypeName.replace(':', '\\:');
       },
       facets: true,
       stats: true,
