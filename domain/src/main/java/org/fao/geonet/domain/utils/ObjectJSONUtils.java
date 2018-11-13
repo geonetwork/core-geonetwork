@@ -20,19 +20,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
-public class ObjectJSONConverter {
+public class ObjectJSONUtils {
 
-    public static JSONObject convertObjectToJsonObject(Object o) throws JsonProcessingException {
+    public static JSONObject wrapObjectWithJsonObject(Object o, String field) throws JsonProcessingException {
 
         // The conversion to String is useful to spot conversion issues
         // not raised with the direct usage of JSONSerializer on the object
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String jsonString = ow.writeValueAsString(o);
 
-        return (JSONObject) JSONSerializer.toJSON(jsonString);
+        JSON json = JSONSerializer.toJSON(jsonString);
+
+        JSONObject container = new JSONObject();
+        container.put(field, json);
+
+        return container;
     }
 
 }

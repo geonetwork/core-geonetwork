@@ -49,7 +49,7 @@ import org.fao.geonet.api.records.model.suggestion.SuggestionType;
 import org.fao.geonet.api.records.model.suggestion.SuggestionsType;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.utils.ObjectJSONConverter;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.exceptions.BadParameterEx;

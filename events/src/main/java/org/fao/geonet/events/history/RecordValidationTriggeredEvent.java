@@ -32,6 +32,8 @@ public class RecordValidationTriggeredEvent extends AbstractHistoryEvent {
     private static final long serialVersionUID = 5541971988637706317L;
 
     private JSONObject validationObjectJSON;
+    
+    public static final String FIELD = "validation";
 
     public RecordValidationTriggeredEvent(Integer mdId, Integer userId, JSONObject validationObjectJSON) {
         super(mdId, userId);

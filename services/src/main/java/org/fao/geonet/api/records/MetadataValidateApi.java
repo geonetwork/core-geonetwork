@@ -54,7 +54,7 @@ import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.domain.Schematron;
-import org.fao.geonet.domain.utils.ObjectJSONConverter;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
@@ -175,7 +175,7 @@ public class MetadataValidateApi {
                     setNumFailures(0);
             this.metadataValidationRepository.save(metadataValidation);
             dataManager.indexMetadata(("" + metadata.getId()), true, null);
-            new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONConverter.convertObjectToJsonObject(metadataValidation)).publish(appContext);
+            new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(metadataValidation, RecordValidationTriggeredEvent.FIELD)).publish(appContext);
             return new Reports();
         }
 
