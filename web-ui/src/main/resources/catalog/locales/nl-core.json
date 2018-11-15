@@ -380,5 +380,6 @@
     "resolveCaptcha": "Captcha oplossen",
     "resolutions": "Resolutie",
     "loginTitle": "Inloggen",
-    "loginText": "Login met uw gebruikersnaam en wachtwoord om aan de catalogus bij te dragen."
+    "loginText": "Login met uw gebruikersnaam en wachtwoord om aan de catalogus bij te dragen.",
+    "unselected": "gedeselecteerd"
 }
