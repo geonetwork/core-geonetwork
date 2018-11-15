@@ -1,173 +1,452 @@
 {
-    "mappings": {
-      "records": {
-        "properties": {
-          "docType": {
-            "type": "keyword"
-          },
-          "cptName": {
-            "type": "keyword"
-          },
-          "challenges": {
-            "type": "keyword"
-          },
-          "dataDeliveryMechanism": {
-            "type": "keyword"
-          },
-          "east": {
-            "type": "keyword"
-          },
-          "environmentalMatrix": {
-            "type": "keyword"
-          },
-          "inspireTheme": {
-            "type": "keyword"
-          },
-          "north": {
-            "type": "keyword"
-          },
-          "p01": {
-            "type": "keyword"
-          },
-          "p01other": {
-            "type": "keyword"
-          },
-          "p02": {
-            "type": "keyword"
-          },
-          "p03": {
-            "type": "keyword"
-          },
-          "usabilityScore": {
-            "type": "keyword"
-          },
-          "policyVisibility": {
-            "type": "keyword"
-          },
-          "processingLevelOfChar": {
-            "type": "keyword"
-          },
-          "readyness": {
-            "type": "keyword"
-          },
-          "serviceExtent": {
-            "type": "keyword"
-          },
-          "south": {
-            "type": "keyword"
-          },
-          "spatialRepresentationType": {
-            "type": "keyword"
-          },
-          "standardName": {
-            "type": "keyword"
-          },
-          "productName": {
-            "type": "keyword"
-          },
-          "noData": {
-            "type": "keyword"
-          },
-          "noDataAvailable": {
-            "type": "keyword"
-          },
-          "noDataExist": {
-            "type": "keyword"
-          },
-          "timeBeginPosition": {
-            "type": "keyword"
-          },
-          "timeEndPosition": {
-            "type": "keyword"
-          },
-          "title": {
-            "type": "keyword"
-          },
-          "uuid": {
-            "type": "keyword"
-          },
-          "validation": {
-            "type": "keyword"
-          },
-          "visibility": {
-            "type": "keyword"
-          },
-          "west": {
-            "type": "keyword"
-          },
-          "expertScore": {
-            "type": "keyword"
-          },
-          "productScore": {
-            "type": "keyword"
-          },
-          "productScoreLabel": {
-            "type": "keyword"
-          },
-          "productExpertOpinion": {
-            "type": "text"
-          },
-          "measureValue": {
-            "type": "double"
-          },
-          "errorValue": {
-            "type": "double"
-          },
-          "indicatorValue": {
-            "type": "double"
-          },
-          "identifier": {
-            "type": "keyword"
-          },
-          "dqUuid": {
-            "type": "keyword"
-          },
-          "dqSimpleId": {
-            "type": "keyword"
-          },
-          "measureName": {
-            "type": "keyword"
-          },
-          "measureId": {
-            "type": "keyword"
-          },
-          "dpsHorizontalSpatialCoverage": {
-            "type": "double"
-          },
-          "tdpHorizontalSpatialCoverage": {
-            "type": "double"
-          },
-          "dpsVerticalSpatialCoverage": {
-            "type": "double"
-          },
-          "tdpVerticalSpatialCoverage": {
-            "type": "double"
-          },
-          "dpsTemporalCoverage": {
-            "type": "double"
-          },
-          "tdpTemporalCoverage": {
-            "type": "double"
-          },
-          "dpsHorizontalResolution": {
-            "type": "double"
-          },
-          "tdpHorizontalResolution": {
-            "type": "double"
-          },
-          "dpsVerticalResolution": {
-            "type": "double"
-          },
-          "tdpVerticalResolution": {
-            "type": "double"
-          },
-          "dpsTemporalResolution": {
-            "type": "double"
-          },
-          "tdpTemporalResolution": {
-            "type": "double"
+  "mappings": {
+    "_default_": {
+      "properties": {
+        "challenges": {
+          "type": "keyword"
+        },
+        "coveredOrNot": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
           }
+        },
+        "cptCovered": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "cptDesc": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "cptName": {
+          "type": "keyword"
+        },
+        "dataDeliveryMechanism": {
+          "type": "keyword"
+        },
+        "docType": {
+          "type": "keyword"
+        },
+        "dpsHorizontalResolution": {
+          "type": "double"
+        },
+        "dpsHorizontalSpatialCoverage": {
+          "type": "double"
+        },
+        "dpsNumberOfCharacteristics": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dpsNumberOfItems": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dpsTemporalCoverage": {
+          "type": "double"
+        },
+        "dpsTemporalResolution": {
+          "type": "double"
+        },
+        "dpsTemporalValidity": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dpsThematicAccuracy": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dpsTitle": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dpsUsability": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dpsUuid": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dpsVerticalResolution": {
+          "type": "double"
+        },
+        "dpsVerticalSpatialCoverage": {
+          "type": "double"
+        },
+        "dqSimpleId": {
+          "type": "keyword"
+        },
+        "dqType": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dqUuid": {
+          "type": "keyword"
+        },
+        "east": {
+          "type": "keyword"
+        },
+        "environmentalMatrix": {
+          "type": "keyword"
+        },
+        "errorValue": {
+          "type": "double"
+        },
+        "expertScore": {
+          "type": "keyword"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "indicatorValue": {
+          "type": "double"
+        },
+        "inputCharacteristics": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "inspireTheme": {
+          "type": "keyword"
+        },
+        "lineage": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "linkToSextant": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "matrix": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "measureId": {
+          "type": "keyword"
+        },
+        "measureName": {
+          "type": "keyword"
+        },
+        "measureStatement": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "measureValue": {
+          "type": "double"
+        },
+        "metadataUuid": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "nbOfLineage": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "noData": {
+          "type": "keyword"
+        },
+        "noDataAvailable": {
+          "type": "keyword"
+        },
+        "noDataExist": {
+          "type": "keyword"
+        },
+        "north": {
+          "type": "keyword"
+        },
+        "notCoveredExplanation": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "notCoveredStatement": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "p01": {
+          "type": "keyword"
+        },
+        "p01other": {
+          "type": "keyword"
+        },
+        "p02": {
+          "type": "keyword"
+        },
+        "p03": {
+          "type": "keyword"
+        },
+        "policyVisibility": {
+          "type": "keyword"
+        },
+        "processingLevelOfChar": {
+          "type": "keyword"
+        },
+        "productExpertOpinion": {
+          "type": "text"
+        },
+        "productName": {
+          "type": "keyword"
+        },
+        "productScore": {
+          "type": "keyword"
+        },
+        "productScoreLabel": {
+          "type": "keyword"
+        },
+        "readyness": {
+          "type": "keyword"
+        },
+        "reportType": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "resourceType": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "serviceExtent": {
+          "type": "keyword"
+        },
+        "south": {
+          "type": "keyword"
+        },
+        "spatialRepresentationType": {
+          "type": "keyword"
+        },
+        "standardName": {
+          "type": "keyword"
+        },
+        "tdpHorizontalResolution": {
+          "type": "double"
+        },
+        "tdpHorizontalSpatialCoverage": {
+          "type": "double"
+        },
+        "tdpNumberOfCharacteristics": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpNumberOfItems": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpScore": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpTemporalCoverage": {
+          "type": "double"
+        },
+        "tdpTemporalResolution": {
+          "type": "double"
+        },
+        "tdpTemporalValidity": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpThematicAccuracy": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpTitle": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpUsability": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpUuid": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "tdpVerticalResolution": {
+          "type": "double"
+        },
+        "tdpVerticalSpatialCoverage": {
+          "type": "double"
+        },
+        "timeBeginPosition": {
+          "type": "keyword"
+        },
+        "timeEndPosition": {
+          "type": "keyword"
+        },
+        "title": {
+          "type": "keyword"
+        },
+        "uniqueid": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "usabilityScore": {
+          "type": "keyword"
+        },
+        "uuid": {
+          "type": "keyword"
+        },
+        "validation": {
+          "type": "keyword"
+        },
+        "visibility": {
+          "type": "keyword"
+        },
+        "west": {
+          "type": "keyword"
         }
       }
     }
+  }
 }

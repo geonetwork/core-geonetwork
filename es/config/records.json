@@ -987,8 +987,8 @@
               "/milieu physique/géologie sédimentologie/géomorphologie => /milieu physique/géologie sédimentologie/géomorphologie",
               "/biological environment/key habitats/maerl => /milieu biologique/habitats remarquables/maërl",
               "/milieu biologique/habitats remarquables/maërl => /milieu biologique/habitats remarquables/maërl",
-              "/biological environment/species/rare, protected species, and species in danger of extinction => /milieu biologique/espèces/espèces rares, protégées ou en voie de disparition",
-              "/milieu biologique/espèces/espèces rares, protégées ou en voie de disparition => /milieu biologique/espèces/espèces rares, protégées ou en voie de disparition",
+              "/biological environment/species/rare protected species and species in danger of extinction => /milieu biologique/espèces/espèces rares, protégées ou en voie de disparition",
+              "/milieu biologique/espèces/espèces rares protégées ou en voie de disparition => /milieu biologique/espèces/espèces rares protégées ou en voie de disparition",
               "/regulation and management/military zones => /réglementation et gestion/zones militaires",
               "/réglementation et gestion/zones militaires => /réglementation et gestion/zones militaires",
               "/biological environment/species/undesirable proliferating species => /milieu biologique/espèces/espèces proliférantes indésirables",
@@ -1053,8 +1053,8 @@
               "/milieu physique/bathymétrie/sonde => /milieu physique/bathymétrie/sonde",
               "/physical environment/climatology => /milieu physique/climatologie",
               "/milieu physique/climatologie => /milieu physique/climatologie",
-              "/human activities/economic equipment and on-land techniques/communication networks (road, train, electricity) => /activités humaines/equipements économiques et techniques à terre/réseaux de communication terrestres (réseaux routiers, ferrés, edf)",
-              "/activités humaines/equipements économiques et techniques à terre/réseaux de communication terrestres (réseaux routiers, ferrés, edf) => /activités humaines/equipements économiques et techniques à terre/réseaux de communication terrestres (réseaux routiers, ferrés, edf)",
+              "/human activities/economic equipment and on-land techniques/communication networks (road train electricity) => /activités humaines/equipements économiques et techniques à terre/réseaux de communication terrestres (réseaux routiers, ferrés, edf)",
+              "/activités humaines/equipements économiques et techniques à terre/réseaux de communication terrestres (réseaux routiers ferrés edf) => /activités humaines/equipements économiques et techniques à terre/réseaux de communication terrestres (réseaux routiers, ferrés, edf)",
               "/physical environment/physical habitats => /milieu physique/habitats physiques",
               "/milieu physique/habitats physiques => /milieu physique/habitats physiques",
               "/biological environment/species/fauna => /milieu biologique/espèces/faune",
@@ -1270,9 +1270,7 @@
             }
           }
         }
-      ]
-    },
-    "records": {
+      ],
       "properties": {
         "accessConstraints": {
           "type": "text",
