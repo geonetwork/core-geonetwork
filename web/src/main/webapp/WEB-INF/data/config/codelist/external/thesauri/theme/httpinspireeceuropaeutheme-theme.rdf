@@ -2,8 +2,8 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <skos:ConceptScheme xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/theme">
     <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/">GEMET - INSPIRE themes, version 1.0</dc:title>
-    <dcterms:issued xmlns:dcterms="http://purl.org/dc/terms/">2018-07-27T14:42:13</dcterms:issued>
-    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/">2018-07-27T14:42:13</dcterms:modified>
+    <dcterms:issued xmlns:dcterms="http://purl.org/dc/terms/">2008-06-01</dcterms:issued>
+    <dcterms:modified xmlns:dcterms="http://purl.org/dc/terms/">2008-06-01</dcterms:modified>
   </skos:ConceptScheme>
   <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/theme/ad">
     <skos:prefLabel xml:lang="en">Addresses</skos:prefLabel>
@@ -214,7 +214,7 @@
     <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/theme" />
   </skos:Concept>
   <skos:Concept xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://inspire.ec.europa.eu/theme/pd">
-    <skos:prefLabel xml:lang="en">Population distribution - demography</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Population distribution — demography</skos:prefLabel>
     <skos:scopeNote xml:lang="en">Geographical distribution of people, including population characteristics and activity levels, aggregated by grid, region, administrative unit or other analytical unit.</skos:scopeNote>
     <skos:prefLabel xml:lang="fr">Répartition de la population — démographie</skos:prefLabel>
     <skos:scopeNote xml:lang="fr">Répartition géographique des personnes, avec les caractéristiques de population et les niveaux d'activité, regroupées par grille, région, unité administrative ou autre unité analytique.</skos:scopeNote>
