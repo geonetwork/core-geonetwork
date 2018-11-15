@@ -431,6 +431,10 @@
 
   <servlet>
     <servlet-name>jolokia-agent</servlet-name>
+    <init-param>
+      <param-name>policyLocation</param-name>
+      <param-value>classpath:/jolokia-access.xml</param-value>
+    </init-param>
     <servlet-class>org.jolokia.http.AgentServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
