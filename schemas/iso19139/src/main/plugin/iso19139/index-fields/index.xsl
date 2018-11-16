@@ -475,7 +475,7 @@
 
               <xsl:if test="$thesaurusField = 'thesaurus_geonetworkthesauruslocalthemesextanttheme'">
                 <xsl:variable name="theme"
-                              select="index:analyzeField('synSextantThemes', normalize-space(current-grouping-key()))"/>
+                              select="index:analyzeField('synSextantThemes', normalize-space(replace(current-grouping-key(), ',', '')))"/>
 
                 <xsl:if test="$theme != ''">
                   <sextantTheme><xsl:value-of select="$theme"/></sextantTheme>
