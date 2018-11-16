@@ -35,7 +35,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 import io.searchbox.client.JestResultHandler;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
@@ -45,10 +44,7 @@ import org.apache.camel.Exchange;
 import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.geotools.data.DataStore;
 import org.geotools.data.Query;
-import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
@@ -98,6 +94,9 @@ public class EsWFSFeatureIndexer {
     @Value("${es.index.features}")
     private String index = "features";
 
+    @Value("${es.index.features.type}")
+    private String indexType = "features";
+
 
     @Value("${es.index.features.featureCommitInterval:300}")
     private int featureCommitInterval;
@@ -139,6 +138,10 @@ public class EsWFSFeatureIndexer {
 
     public void setIndex(String index) {
         this.index = index;
+    }
+
+    public void setIndexType(String indexType) {
+        this.indexType = indexType;
     }
 
     private ObjectMapper jacksonMapper = new ObjectMapper();
@@ -194,15 +197,15 @@ public class EsWFSFeatureIndexer {
     }
 
     public void deleteFeatures(String url, String typeName, EsClient client) {
-        LOGGER.info("Deleting features previously index from service '{}' and feature type '{}' in '{}'",
-                new Object[]{url, typeName, index});
+        LOGGER.info("Deleting features previously index from service '{}' and feature type '{}' in index '{}/{}'",
+                new Object[]{url, typeName, index, indexType});
         try {
             long begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+featureTypeId:\\\"%s#%s\\\"", url, typeName));
+            client.deleteByQuery(index, indexType, String.format("+featureTypeId:\\\"%s#%s\\\"", url, typeName));
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+id:\\\"%s\\\"",
+            client.deleteByQuery(index, indexType, String.format("+id:\\\"%s\\\"",
                 getIdentifier(url, typeName)));
             LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
 
@@ -437,7 +440,7 @@ public class EsWFSFeatureIndexer {
         public boolean saveHarvesterReport() {
             Index search = new Index.Builder(report)
                     .index(index)
-                    .type(index)
+                    .type(indexType)
                     .id(report.get("id").toString()).build();
             try {
                 DocumentResult response = client.getClient().execute(search);
@@ -484,7 +487,7 @@ public class EsWFSFeatureIndexer {
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
-            this.bulk = new Bulk.Builder().defaultIndex(index).defaultType(index);
+            this.bulk = new Bulk.Builder().defaultIndex(index).defaultType(indexType);
             this.bulkSize = 0;
             LOGGER.debug("  {} - from {}, {} features to index, preparing bulk.", typeName, firstFeatureIndex, featureCommitInterval);
         }

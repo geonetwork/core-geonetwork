@@ -80,8 +80,15 @@ public class EsSearchManager implements ISearchManager {
     @Value("${es.index.records}")
     private String index = "records";
 
+    @Value("${es.index.records.type}")
+    private String indexType = "records";
+
     public String getIndex() {
         return index;
+    }
+
+    public String getIndexType() {
+        return indexType;
     }
 
     @Autowired
@@ -228,7 +235,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() throws IOException {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
-                client.bulkRequest(index, listOfDocumentsToIndex);
+                client.bulkRequest(index, indexType, listOfDocumentsToIndex);
                 listOfDocumentsToIndex.clear();
             }
         }
@@ -422,7 +429,7 @@ public class EsSearchManager implements ISearchManager {
 
     public void clearIndex() throws Exception {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        client.deleteByQuery(index,
+        client.deleteByQuery(index, indexType,
             "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
     }
 
@@ -449,7 +456,7 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
         String query = "{\"query\": {\"filtered\": {\"query_string\": \"*:*\"}}}";
-        Search search = new Search.Builder(query).addIndex(index).addType(index).build();
+        Search search = new Search.Builder(query).addIndex(index).addType(indexType).build();
         // TODO: limit to needed field
 //        params.setFields(ID, Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
         SearchResult searchResult = client.getClient().execute(search);
@@ -523,7 +530,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void delete(String txt) throws Exception {
-        client.deleteByQuery(index, txt);
+        client.deleteByQuery(index, indexType, txt);
 //        client.commit();
     }
 
@@ -548,7 +555,7 @@ public class EsSearchManager implements ISearchManager {
             query = "*:*";
         }
         String searchQuery = "{\"query\": {\"filtered\": {\"query_string\": \"" + query + "\"}}}";
-        Search search = new Search.Builder(searchQuery).addIndex(index).addType(index).build();
+        Search search = new Search.Builder(searchQuery).addIndex(index).addType(indexType).build();
         SearchResult searchResult = client.getClient().execute(search);
         return searchResult.getTotal();
     }

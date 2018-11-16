@@ -160,14 +160,14 @@ public class EsClient implements InitializingBean {
         return this;
     }
 
-    public boolean bulkRequest(String index, Map<String, String> docs) throws IOException {
+    public boolean bulkRequest(String index, String indexType, Map<String, String> docs) throws IOException {
         if (!activated) {
             return false;
         }
         boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
             .defaultIndex(index)
-            .defaultType(index);
+            .defaultType(indexType);
 
         Iterator iterator = docs.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -200,7 +200,7 @@ public class EsClient implements InitializingBean {
         return client.execute(bulk.build());
     }
 
-    public String deleteByQuery(String index, String query) throws Exception {
+    public String deleteByQuery(String index, String indexType, String query) throws Exception {
         if (!activated) {
             return "";
         }
@@ -211,7 +211,7 @@ public class EsClient implements InitializingBean {
 
         DeleteByQuery deleteAll = new DeleteByQuery.Builder(searchQuery)
             .addIndex(index)
-            .addType(index)
+            .addType(indexType)
             .build();
         final JestResult result = client.execute(deleteAll);
         if (result.isSucceeded()) {
