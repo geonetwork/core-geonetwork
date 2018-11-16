@@ -201,7 +201,7 @@ public class EsWFSFeatureIndexer {
                 new Object[]{url, typeName, index, indexType});
         try {
             long begin = System.currentTimeMillis();
-            client.deleteByQuery(index, indexType, String.format("+featureTypeId:\\\"%s#%s\\\"", url, typeName));
+            client.deleteByQuery(index, indexType, String.format("+featureTypeId:\\\"%s\\\"", getIdentifier(url, typeName)));
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
