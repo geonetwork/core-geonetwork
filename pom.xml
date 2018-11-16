@@ -1365,7 +1365,7 @@
     <es.username>admin</es.username>
     <es.password>admin</es.password>
 
-    <es.url>https://${es.host}:${es.port}</es.url>
+    <es.url>http://${es.host}:${es.port}</es.url>
     <es.index.features>geo-features</es.index.features>
     <es.index.features.type>features</es.index.features.type>
     <es.index.features.commitInterval>1000</es.index.features.commitInterval>
