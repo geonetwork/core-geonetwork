@@ -60,7 +60,7 @@ public class IndexHealthCheck implements HealthCheckFactory {
                             return Result.unhealthy(
                                 "Index storing records is not available currently. " +
                                     "This component is only required if you use WFS features indexing " +
-                                    "and dashboards.");
+                                    "and dashboards. Error reported is: " + result.getErrorMessage());
                         }
                     } catch (Throwable e) {
                         return Result.unhealthy(e);
