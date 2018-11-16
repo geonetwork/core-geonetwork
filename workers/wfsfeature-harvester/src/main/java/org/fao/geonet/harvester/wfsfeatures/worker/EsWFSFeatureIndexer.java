@@ -82,6 +82,9 @@ import java.util.concurrent.TimeoutException;
 
 
 public class EsWFSFeatureIndexer {
+    public static final String CDATA_START = "<![CDATA[";
+    public static final String CDATA_START_REGEX = "<!\\[CDATA\\[";
+    public static final String CDATA_END = "]]>";
     private static Logger LOGGER =  LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     static {
         try {
@@ -307,7 +310,13 @@ public class EsWFSFeatureIndexer {
                                 report.setPointOnlyForGeomsFalse();
                             }
                         } else {
-                            rootNode.put(getDocumentFieldName(attributeName), attributeValue.toString());
+                            String value = attributeValue.toString();
+                            rootNode.put(getDocumentFieldName(attributeName),
+                                value.startsWith(CDATA_START) ?
+                                    value.replaceFirst(CDATA_START_REGEX, "").substring(0, value.length() - CDATA_END.length() - CDATA_START.length()) :
+                                    value
+
+                            );
                         }
                     }
 
