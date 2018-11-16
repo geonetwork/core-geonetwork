@@ -99,7 +99,9 @@
 
   <!-- Add lineage -->
   <xsl:template match="gmd:lineage/*/gmd:statement">
-    <gco:CharacterString>not available</gco:CharacterString>
+    <xsl:copy>
+      <gco:CharacterString>not available</gco:CharacterString>
+    </xsl:copy>
   </xsl:template>
 
   <xsl:template match="gmd:MD_Metadata[not(gmd:dataQualityInfo)]">
