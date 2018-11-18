@@ -4390,6 +4390,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="FILE:RASTER">Fichier SIG RASTER</option>
       <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
       <option value="WWW:LINK-1.0-http--link" default="">Adresse Internet (URL)</option>
+      <option value="DOI">Digital Object Identifier (DOI)</option>
       <option value="WWW:LINK-1.0-http--partners">Site partenaire (URL)</option>
       <option value="WWW:LINK-1.0-http--related">Site associé (URL)</option>
       <option value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</option>
