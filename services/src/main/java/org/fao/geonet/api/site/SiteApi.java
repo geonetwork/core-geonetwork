@@ -54,6 +54,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
@@ -154,6 +155,8 @@ public class SiteApi {
             e.printStackTrace();
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
+        DoiManager doiManager = gc.getBean(DoiManager.class);
+        doiManager.loadConfig();
     }
 
     @ApiOperation(
