@@ -346,6 +346,7 @@
       <name>gmd:maximumValue</name>
       <name>gmd:densityUnits</name>
       <name>gmd:descriptor</name>
+      <name>gmd:dimensionSize</name>
       <name>gmd:denominator</name>
       <name>gmd:classificationSystem</name>
       <name>gmd:checkPointDescription</name>
@@ -957,6 +958,7 @@
 
       <flatModeExceptions>
         <for name="gmd:keyword"/>
+        <for name="gmd:resolution"/>
       </flatModeExceptions>
     </view>
     <view name="default" disabled="true">
@@ -1280,7 +1282,6 @@
                           gmd:extent/*/gmd:description"/>
 
         </section>
-
       </tab>
 
 
