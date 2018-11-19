@@ -1981,8 +1981,7 @@
          * appear in the layer manager
          */
         selected: function(layer) {
-          return layer.displayInLayerManager && !layer.get('fromWps') &&
-              (!layer.get('errors') || !layer.get('errors').length);
+          return layer.displayInLayerManager && !layer.get('fromWps');
         },
         visible: function(layer) {
           return layer.displayInLayerManager && layer.visible;
