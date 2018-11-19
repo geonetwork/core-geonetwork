@@ -395,5 +395,5 @@
     </constructor-arg>
   </bean>
 
-  <bean id="adminUserFilter" class="org.fao.geonet.security.AdminUserFilter"/>
+  <bean id="adminUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
 </beans>
