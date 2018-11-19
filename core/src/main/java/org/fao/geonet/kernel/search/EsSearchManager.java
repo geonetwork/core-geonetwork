@@ -80,7 +80,7 @@ public class EsSearchManager implements ISearchManager {
     @Value("${es.index.records}")
     private String index = "records";
 
-    @Value("${es.index.records.type}")
+    @Value("${es.index.records.type:records}")
     private String indexType = "records";
 
     public String getIndex() {
@@ -89,6 +89,9 @@ public class EsSearchManager implements ISearchManager {
 
     public String getIndexType() {
         return indexType;
+    }
+    public String setIndexType(String indexType) {
+        this.indexType = indexType;
     }
 
     @Autowired
