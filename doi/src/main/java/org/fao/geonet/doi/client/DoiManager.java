@@ -236,7 +236,6 @@ public class DoiManager {
         // picking a DOI name,
 
         // The identifier in the DataCite XML metadata file can be left empty, as the value from the PUT URL will be used.
-        // $ curl -H "Content-Type: application/xml;charset=UTF-8" -X POST -i --user username:password -d @10.5072/JQX3-61AT.xml https://mds.test.datacite.org/metadata
         // curl -H "Content-Type: application/xml;charset=UTF-8" -X POST -i --user username:password -d @/tmp/GN.xml https://mds.test.datacite.org/metadata/10.5072/GN
 
         // ** Convert to DataCite format
@@ -273,6 +272,7 @@ public class DoiManager {
      */
     private void checkDoiCreation(AbstractMetadata metadata, String doi) {
         // Check it is available on DataCite Metadata Store
+        // curl -X GET --user INIST.IFREMER https://mds.test.datacite.org/metadata/10.5072/GN2
         // Check it is in the record
     }
 
