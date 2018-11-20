@@ -90,7 +90,7 @@ public class EsSearchManager implements ISearchManager {
     public String getIndexType() {
         return indexType;
     }
-    public String setIndexType(String indexType) {
+    public void setIndexType(String indexType) {
         this.indexType = indexType;
     }
 
