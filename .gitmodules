@@ -9,7 +9,7 @@
 	url = https://github.com/FortAwesome/Font-Awesome.git
 [submodule "schemas/iso19115-3"]
 	path = schemas/iso19115-3
-	url = https://gitlab.ifremer.fr/sextant/geonetwork-iso19115-3.git
+	url = https://gitlab.ifremer.fr/sextant-public/geonetwork-iso19115-3.git
 [submodule "web-ui/src/main/resources/catalog/lib/bootstrap-table"]
 	path = web-ui/src/main/resources/catalog/lib/bootstrap-table
 	url = https://github.com/wenzhixin/bootstrap-table.git
