@@ -90,6 +90,7 @@ public class DoiApi {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
+    @ResponseBody
     ResponseEntity<Map<String, Boolean>> checkDoiStatus(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
@@ -151,47 +152,48 @@ public class DoiApi {
         return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
     }
 
-//    Do not provide support for DOI removal for now.
-//    At some point we may add support for DOI States management
+//    Do not provide support for DOI removal ?
+    @ApiOperation(
+        value = "Remove a DOI (this is not recommended, DOI are supposed to be persistent once created. This is mainly here for testing).",
+        nickname = "deleteDoi")
+    @RequestMapping(value = "/{metadataUuid}/doi",
+        method = RequestMethod.DELETE,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
+    @PreAuthorize("hasRole('Administrator')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "DOI unregistered."),
+        @ApiResponse(code = 404, message = "Metadata or DOI not found."),
+        @ApiResponse(code = 500, message = "Service unavailable."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+    })
+    public
+    ResponseEntity deleteDoi(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(hidden = true)
+        @ApiIgnore
+            HttpServletRequest request,
+        @ApiParam(hidden = true)
+        @ApiIgnore
+            HttpSession session
+    ) throws Exception {
+
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        final DoiManager doiManager = appContext.getBean(DoiManager.class);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
+        doiManager.unregisterDoi(metadata, serviceContext);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+//    TODO: At some point we may add support for DOI States management
 //    https://support.datacite.org/docs/mds-api-guide#section-doi-states
-//    
-//    @ApiOperation(
-//        value = "Remove a DOI (this is not recommended, DOI are supposed to be persistent).",
-//        nickname = "deleteDoi")
-//    @RequestMapping(value = "/{metadataUuid}/doi",
-//        method = RequestMethod.DELETE,
-//        produces = {
-//            MediaType.APPLICATION_JSON_VALUE
-//        }
-//    )
-//    @PreAuthorize("hasRole('Administrator')")
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 204, message = "DOI unregistered."),
-//        @ApiResponse(code = 404, message = "Metadata or DOI not found."),
-//        @ApiResponse(code = 500, message = "Service unavailable."),
-//        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
-//    })
-//    public
-//    ResponseEntity deleteDoi(
-//        @ApiParam(
-//            value = API_PARAM_RECORD_UUID,
-//            required = true)
-//        @PathVariable
-//            String metadataUuid,
-//        @ApiParam(hidden = true)
-//        @ApiIgnore
-//            HttpServletRequest request,
-//        @ApiParam(hidden = true)
-//        @ApiIgnore
-//            HttpSession session
-//    ) throws Exception {
-//
-//        ApplicationContext appContext = ApplicationContextHolder.get();
-//        final DoiManager doiManager = appContext.getBean(DoiManager.class);
-//        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
-//        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-//
-//        doiManager.unregisterDoi(metadata, serviceContext);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
 }
