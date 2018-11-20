@@ -337,6 +337,8 @@
       <name>gmd:domainValue</name>
       <name>gmd:minimumValue</name>
       <name>gmd:maximumValue</name>
+      <name>gmd:dimensionSize</name>
+      <name>gmd:numberOfDimensions</name>
       <name>gmd:densityUnits</name>
       <name>gmd:descriptor</name>
       <name>gmd:denominator</name>
