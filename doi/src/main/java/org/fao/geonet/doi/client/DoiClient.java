@@ -350,7 +350,7 @@ public class DoiClient {
     }
 
     /**
-     * Builds service url with server url and testMode parameter if applies.
+     * Builds service url with server url.
      *
      * @param service
      * @return
@@ -358,7 +358,6 @@ public class DoiClient {
     private String createUrl(String service) {
         return this.serverUrl +
             (this.serverUrl.endsWith("/") ? "" : "/") +
-            service +
-            (this.testMode ? "?testMode=true" : "");
+            service;
     }
 }

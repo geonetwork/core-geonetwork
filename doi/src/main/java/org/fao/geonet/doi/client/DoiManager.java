@@ -209,14 +209,14 @@ public class DoiManager {
             String currentDoi = schema.queryString(DOI_GET_SAVED_QUERY, xml);
             if (StringUtils.isNotEmpty(currentDoi)) {
                 // Current doi does not match the one going to be inserted. This is odd
-                if (!currentDoi.equals(doi)) {
+                if (!currentDoi.equals(HTTPS_DOI_ORG + doi)) {
                     throw new DoiClientException(String.format(
-                        "Record '%s' already contains a DOI '%' which is not equal " +
+                        "Record '%s' already contains a DOI '%s' which is not equal " +
                             "to the DOI about to be created (ie. '%s'). " +
                             "Maybe current DOI does not correspond to that record? " +
                             "This may happen when creating a copy of a record having " +
                             "an existing DOI.",
-                        metadata.getUuid(), currentDoi, doi));
+                        metadata.getUuid(), currentDoi, HTTPS_DOI_ORG + doi));
                 }
 
                 throw new DoiClientException(String.format(
@@ -316,6 +316,8 @@ public class DoiManager {
 
         dm.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true, true,
             context.getLanguage(), new ISODate().toString(), true);
+
+        doiInfo.put("doiUrl", HTTPS_DOI_ORG + doiInfo.get("doi"));
 
     }
 
