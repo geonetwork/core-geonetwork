@@ -209,10 +209,16 @@
                 gnMap.createLayerFromProperties(layerInfo, map)
                   .then(function(layer) {
                     if (layer) {
-                      layer.displayInLayerManager = false;
-                      layer.set("group", "Background layers");
                       layer.set("fromGNSettings", true);
-                      gnViewerSettings.bgLayers.push(layer);
+                      
+                      if(layer.get("group") == "Background layers") {
+                        layer.displayInLayerManager = false;
+                        gnViewerSettings.bgLayers.push(layer);
+                      } else {
+                        layer.displayInLayerManager = true;
+                        map.addLayer(layer);
+                      }
+                      
                     }
                   });
               });

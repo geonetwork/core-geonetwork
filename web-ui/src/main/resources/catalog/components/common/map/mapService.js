@@ -185,7 +185,9 @@
               case 'osm':
                 defer.resolve(new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: layerInfo.title || 'OpenStreetMap'
+                  title: layerInfo.title || 'OpenStreetMap',
+                  label: layerInfo.title || 'OpenStreetMap',
+                  group: layerInfo.group
                 }));
                 break;
 
@@ -207,7 +209,9 @@
                 
                 defer.resolve(new ol.layer.Tile({
                   source: new ol.source.XYZ(prop),
-                  title: layerInfo.title || 'TMS Layer'
+                  title: layerInfo.title || 'TMS Layer',
+                  label: layerInfo.title || 'TMS Layer',
+                  group: layerInfo.group
                 }));
                 break;
 
@@ -218,7 +222,9 @@
                     key: layerInfo.key,
                     imagerySet: 'Aerial'
                   }),
-                  title: layerInfo.title || 'Bing Aerial'
+                  title: layerInfo.title || 'Bing Aerial',
+                  label: layerInfo.title || 'Bing Aerial',
+                  group: layerInfo.group
                 }));
                 break;
 
@@ -231,7 +237,9 @@
                 source.set('type', type);
                 defer.resolve(new ol.layer.Tile({
                   source: source,
-                  title: layerInfo.title || 'Stamen'
+                  title: layerInfo.title || 'Stamen',
+                  label: layerInfo.title || 'Stamen',
+                  group: layerInfo.group
                 }));
                 break;
 
@@ -249,12 +257,13 @@
                       if (layerInfo.title) {
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
+                        layer.set('group', layerInfo.group);
                       }
                       
                       if(layerInfo.attribution) {
                         layer.getSource().setAttributions(layerInfo.attribution);
                       }
-                      
+
                       defer.resolve(layer);
                     });
                 break;
@@ -272,12 +281,13 @@
                       if (layerInfo.title) {
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
+                        layer.set('group', layerInfo.group);
                       }
                       
                       if(layerInfo.attribution) {
                         layer.getSource().setAttributions(layerInfo.attribution);
                       }
-                      
+
                       defer.resolve(layer);
                     });
                 break;
@@ -1782,7 +1792,8 @@
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: title ||  'OpenStreetMap'
+                  title: title ||  'OpenStreetMap',
+                  label: title ||  'OpenStreetMap'
                 });
               //ALEJO: tms support
               case 'tms':
@@ -1790,7 +1801,8 @@
                   source: new ol.source.XYZ({
                         url: opt.url
                   }),
-                  title: title ||  'TMS Layer'
+                  title: title ||  'TMS Layer',
+                  label: title ||  'TMS Layer'
                 });
               case 'bing_aerial':
                 return new ol.layer.Tile({
@@ -1799,7 +1811,8 @@
                     key: gnViewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
-                  title: title ||  'Bing Aerial'
+                  title: title ||  'Bing Aerial',
+                  label: title ||  'Bing Aerial'
                 });
               case 'stamen':
                 //We make watercolor the default layer
@@ -1810,7 +1823,8 @@
                 source.set('type', type);
                 return new ol.layer.Tile({
                   source: source,
-                  title: title ||  'Stamen'
+                  title: title ||  'Stamen',
+                  label: title ||  'Stamen'
                 });
 
               case 'wmts':
