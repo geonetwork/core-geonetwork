@@ -730,7 +730,7 @@
     "system/publication/doi/doienabled": "Allow creation of Digital Object Identifier (DOI)",
     "system/publication/doi/doienabled-help": "A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely identify an object. It is tied to a metadata description of the object as well as to a digital location, such as a URL, where all the details about the object are accessible. More information available on <a href='https://www.datacite.org/dois.html'>DataCite website</a>.",
     "system/publication/doi/doiurl": "The DataCite API endpoint",
-    "system/publication/doi/doiurl-help": "Usually https://mds.datacite.org/doi or https://mds.test.datacite.org/doi for testing.",
+    "system/publication/doi/doiurl-help": "Usually https://mds.datacite.org or https://mds.test.datacite.org for testing.",
     "system/publication/doi/doiusername": "Your DataCite username",
     "system/publication/doi/doipassword": "Your DataCite password",
     "system/publication/doi/doipassword-help": "All requests to the MDS API require authentication. For this reason, only traffic via a secure connection (HTTPS) is supported. The DataCite Metadata Store (MDS) uses HTTP Basic authentication. You can obtain an account <a href='https://support.datacite.org/docs/obtain-test-account'>here</a>.",

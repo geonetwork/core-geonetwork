@@ -27,7 +27,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
@@ -36,9 +35,10 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +49,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import java.util.Map;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
@@ -68,25 +70,65 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 @ReadWriteController
 public class DoiApi {
 
+
+    @ApiOperation(
+        value = "Check that a record can be submitted to DataCite for DOI creation. " +
+            "DataCite requires some fields to be populated.",
+        nickname = "checkDoiStatus")
+    @RequestMapping(value = "/{metadataUuid}/doi/checkPreConditions",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Record can be proposed to DataCite."),
+        @ApiResponse(code = 404, message = "Metadata not found."),
+        @ApiResponse(code = 400, message = "Record does not meet preconditions. Check error message."),
+        @ApiResponse(code = 500, message = "Service unavailable."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    public
+    ResponseEntity<Map<String, Boolean>> checkDoiStatus(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(hidden = true)
+        @ApiIgnore
+            HttpServletRequest request
+    ) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        final DoiManager doiManager = appContext.getBean(DoiManager.class);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+
+        final Map<String, Boolean> reportStatus = doiManager.check(serviceContext, metadata, null);
+        return new ResponseEntity<>(reportStatus, HttpStatus.OK);
+    }
+
+
     @ApiOperation(
         value = "Submit a record to the Datacite metadata store in order to create a DOI.",
         nickname = "createDoi")
     @RequestMapping(value = "/{metadataUuid}/doi",
         method = RequestMethod.PUT,
         produces = {
-            MediaType.TEXT_PLAIN_VALUE
+            MediaType.APPLICATION_JSON_VALUE
         }
     )
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Check status of the report."),
-        @ApiResponse(code = 404, message = "Metdata not found."),
+        @ApiResponse(code = 404, message = "Metadata not found."),
         @ApiResponse(code = 500, message = "Service unavailable."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
-    String createDoi(
+    ResponseEntity<Map<String, String>> createDoi(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -105,8 +147,51 @@ public class DoiApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-        doiManager.register(serviceContext, metadata);
-        return "ok";
+        Map<String, String> doiInfo = doiManager.register(serviceContext, metadata);
+        return new ResponseEntity<>(doiInfo, HttpStatus.CREATED);
     }
 
+//    Do not provide support for DOI removal for now.
+//    At some point we may add support for DOI States management
+//    https://support.datacite.org/docs/mds-api-guide#section-doi-states
+//    
+//    @ApiOperation(
+//        value = "Remove a DOI (this is not recommended, DOI are supposed to be persistent).",
+//        nickname = "deleteDoi")
+//    @RequestMapping(value = "/{metadataUuid}/doi",
+//        method = RequestMethod.DELETE,
+//        produces = {
+//            MediaType.APPLICATION_JSON_VALUE
+//        }
+//    )
+//    @PreAuthorize("hasRole('Administrator')")
+//    @ApiResponses(value = {
+//        @ApiResponse(code = 204, message = "DOI unregistered."),
+//        @ApiResponse(code = 404, message = "Metadata or DOI not found."),
+//        @ApiResponse(code = 500, message = "Service unavailable."),
+//        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+//    })
+//    public
+//    ResponseEntity deleteDoi(
+//        @ApiParam(
+//            value = API_PARAM_RECORD_UUID,
+//            required = true)
+//        @PathVariable
+//            String metadataUuid,
+//        @ApiParam(hidden = true)
+//        @ApiIgnore
+//            HttpServletRequest request,
+//        @ApiParam(hidden = true)
+//        @ApiIgnore
+//            HttpSession session
+//    ) throws Exception {
+//
+//        ApplicationContext appContext = ApplicationContextHolder.get();
+//        final DoiManager doiManager = appContext.getBean(DoiManager.class);
+//        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+//        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+//
+//        doiManager.unregisterDoi(metadata, serviceContext);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 }
