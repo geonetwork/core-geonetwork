@@ -26,6 +26,7 @@ package org.fao.geonet.api;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.ArrayUtils;
 import org.fao.geonet.api.exception.*;
+import org.fao.geonet.doi.client.DoiClientException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -191,7 +192,8 @@ public class GlobalExceptionController {
         UnsatisfiedServletRequestParameterException.class,
         IllegalArgumentException.class,
         XSDValidationErrorEx.class,
-        MultipartException.class
+        MultipartException.class,
+        DoiClientException.class
     })
     public ApiError unsatisfiedParameterHandler(final Exception exception) {
         return new ApiError("unsatisfied_request_parameter", exception.getClass().getSimpleName(),

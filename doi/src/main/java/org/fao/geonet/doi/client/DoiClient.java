@@ -24,12 +24,15 @@ package org.fao.geonet.doi.client;
 
 import com.google.common.io.CharStreams;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.apache.commons.httpclient.HttpStatus;
@@ -59,7 +62,6 @@ public class DoiClient {
 
     private boolean testMode;
 
-    @Autowired
     protected GeonetHttpRequestFactory requestFactory;
 
     public DoiClient(String serverUrl, String username, String password) {
@@ -71,10 +73,14 @@ public class DoiClient {
         this.username = username;
         this.password = password;
         this.testMode = testMode;
+
+        requestFactory =
+            ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class);
     }
 
     /**
-     * POST will mint new DOI if specified DOI doesn't exist. This method will attempt to update URL if you specify existing DOI.
+     * POST will mint new DOI if specified DOI doesn't exist.
+     * This method will attempt to update URL if you specify existing DOI.
      * Standard domains and quota restrictions check will be performed.
      * Datacentre's doiQuotaUsed will be increased by 1. A new record in Datasets will be created.
      *
@@ -98,7 +104,10 @@ public class DoiClient {
      * This request returns an URL associated with a given DOI.
      *
      * @param doi
-     * @return If response status is 200: URL representing a dataset; empty for 204; otherwise short explanation for non-200 status.
+     * @return If response status is 200: URL representing a dataset;
+     *          empty for 204;
+     *          null for not found;
+     *          otherwise short explanation for non-200 status.
      * @throws DoiClientException
      */
     public String retrieveDoi(String doi)
@@ -108,7 +117,8 @@ public class DoiClient {
     }
 
     /**
-     * This request returns a list of all DOIs for the requesting datacentre. There is no guaranteed order.
+     * This request returns a list of all DOIs for the requesting datacentre.
+     * There is no guaranteed order.
      *
      * @param doi
      * @return If response status is 200: list of DOIs, one DOI per line; empty for 204.
@@ -121,7 +131,8 @@ public class DoiClient {
     }
 
     /**
-     * This request stores new version of metadata. The request body must contain valid XML.
+     * This request stores new version of metadata.
+     * The request body must contain valid XML.
      *
      *
      * @param doi eg. 10.5072/JQX3-61AT
@@ -131,7 +142,8 @@ public class DoiClient {
     public void createDoiMetadata(String doi, String doiMetadata)
             throws DoiClientException {
 
-        create(createUrl("metadata/" + doi),
+//        create(createUrl("metadata/" + doi),
+        create(createUrl("metadata"),
             doiMetadata,
             "application/xml", DOI_METADATA_ENTITY);
     }
@@ -151,7 +163,8 @@ public class DoiClient {
 
 
     /**
-     * This request marks a dataset as 'inactive'. To activate it again, POST new metadata or set the isActive-flag in the user interface.
+     * This request marks a dataset as 'inactive'.
+     * To activate it again, POST new metadata or set the isActive-flag in the user interface.
      *
      * @param doi
      * @throws DoiClientException
@@ -167,7 +180,9 @@ public class DoiClient {
 
             deleteMethod = new HttpDelete(createUrl("metadata/" + doi));
 
-            httpResponse = requestFactory.execute(deleteMethod);
+            httpResponse = requestFactory.execute(
+                deleteMethod,
+                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
@@ -183,9 +198,46 @@ public class DoiClient {
 
         } catch (Exception ex) {
             Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            Log.info(LOGGER_NAME, "Delete Map Service Configuration end");
+            throw new DoiClientException(ex.getMessage());
 
-            ex.printStackTrace();
+        } finally {
+            if (deleteMethod != null) {
+                deleteMethod.releaseConnection();
+            }
+            // Release the connection.
+            IOUtils.closeQuietly(httpResponse);
+        }
+    }
+
+    public void deleteDoi(String doi)
+        throws DoiClientException {
+
+        ClientHttpResponse httpResponse = null;
+        HttpDelete deleteMethod = null;
+
+        try {
+            Log.debug(LOGGER_NAME, "   -- URL: " + this.serverUrl + "/metadata");
+
+            deleteMethod = new HttpDelete(createUrl("doi/" + doi));
+
+            httpResponse = requestFactory.execute(
+                deleteMethod,
+                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+            int status = httpResponse.getRawStatusCode();
+
+            Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
+
+            // Ignore NOT FOUND (trying to delete a non existing doi metadata)
+            if ((status != HttpStatus.SC_NOT_FOUND) && (status != HttpStatus.SC_OK)) {
+                Log.info(LOGGER_NAME, "Delete DOI end -- Error: " + httpResponse.getStatusText());
+
+                throw new DoiClientException( httpResponse.getStatusText() );
+            } else {
+                Log.info(LOGGER_NAME, "DeleteDOI end");
+            }
+
+        } catch (Exception ex) {
+            Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
             throw new DoiClientException(ex.getMessage());
 
         } finally {
@@ -221,29 +273,27 @@ public class DoiClient {
 
             postMethod.setEntity(requestEntity);
 
-            httpResponse = requestFactory.execute(postMethod);
+            httpResponse = requestFactory.execute(
+                postMethod,
+                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 
             if (status != HttpStatus.SC_CREATED) {
-                Log.info(LOGGER_NAME, String.format(
-                    "Failed to create '%s' with '%s'. Status is %d. Error is %s.", url, body, status,
-                    httpResponse.getStatusText()));
+                String message = String.format(
+                    "Failed to create '%s' with '%s'. Status is %d. Error is %s.",
+                    url, body, status,
+                    httpResponse.getStatusText());
 
-                throw new DoiClientException( httpResponse.getStatusText() +
-                    CharStreams.toString(new InputStreamReader(httpResponse.getBody())));
+                Log.info(LOGGER_NAME, message);
+                throw new DoiClientException(message);
             } else {
                 Log.info(LOGGER_NAME, String.format(
-                    "Created %s", url));
+                    "DOI metadata created at %s.", url));
             }
-
-
         } catch (Exception ex) {
             Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            Log.info(LOGGER_NAME, "Create " + entity + " end");
-
-            ex.printStackTrace();
             throw new DoiClientException(ex.getMessage());
 
         } finally {
@@ -267,14 +317,18 @@ public class DoiClient {
             getMethod = new HttpGet(url);
 
 
-            httpResponse = requestFactory.execute(getMethod);
+            httpResponse = requestFactory.execute(getMethod,
+                new UsernamePasswordCredentials(username, password), AuthScope.ANY);
             int status = httpResponse.getRawStatusCode();
 
             Log.debug(LOGGER_NAME, "   -- Request status code: " + status);
 
             if (status == HttpStatus.SC_OK) {
-                Log.info(LOGGER_NAME, "Retrieve " + entity + " end");
                 return CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
+            } else if (status == HttpStatus.SC_NO_CONTENT) {
+                return null; // Not found
+            } else if (status == HttpStatus.SC_NOT_FOUND) {
+                return null; // Not found
             } else {
                 Log.info(LOGGER_NAME, "Retrieve DOI metadata end -- Error: " + httpResponse.getStatusText());
 
@@ -284,9 +338,6 @@ public class DoiClient {
 
         } catch (Exception ex) {
             Log.error(LOGGER_NAME, "   -- Error (exception): " + ex.getMessage());
-            Log.info(LOGGER_NAME, "Retrieve " + entity + " end");
-
-            ex.printStackTrace();
             throw new DoiClientException(ex.getMessage());
 
         } finally {
@@ -305,7 +356,9 @@ public class DoiClient {
      * @return
      */
     private String createUrl(String service) {
-        return this.serverUrl + "/" + service +
+        return this.serverUrl +
+            (this.serverUrl.endsWith("/") ? "" : "/") +
+            service +
             (this.testMode ? "?testMode=true" : "");
     }
 }
