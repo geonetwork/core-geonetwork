@@ -1036,9 +1036,7 @@
             }
           }
         }
-      ]
-    },
-    "records": {
+      ],
       "properties": {
         "accessConstraints": {
           "type": "text",

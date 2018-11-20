@@ -35,7 +35,6 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 import io.searchbox.client.JestResultHandler;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
@@ -45,10 +44,7 @@ import org.apache.camel.Exchange;
 import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.geotools.data.DataStore;
 import org.geotools.data.Query;
-import org.geotools.data.simple.SimpleFeatureCollection;
-import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
@@ -82,12 +78,14 @@ import java.util.concurrent.TimeoutException;
 
 
 public class EsWFSFeatureIndexer {
+    public static final String CDATA_START = "<![CDATA[";
+    public static final String CDATA_START_REGEX = "<!\\[CDATA\\[";
+    public static final String CDATA_END = "]]>";
     private static Logger LOGGER =  LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     static {
         try {
             Logging.ALL.setLoggerFactory("org.geotools.util.logging.Log4JLoggerFactory");
         } catch (ClassNotFoundException e) {
-            // it should not happen, and if it does, and it will happens once at startup 
             e.printStackTrace();
         }
     }
@@ -95,6 +93,9 @@ public class EsWFSFeatureIndexer {
 
     @Value("${es.index.features}")
     private String index = "features";
+
+    @Value("${es.index.features.type}")
+    private String indexType = "features";
 
 
     @Value("${es.index.features.featureCommitInterval:300}")
@@ -139,6 +140,10 @@ public class EsWFSFeatureIndexer {
         this.index = index;
     }
 
+    public void setIndexType(String indexType) {
+        this.indexType = indexType;
+    }
+
     private ObjectMapper jacksonMapper = new ObjectMapper();
 
     private int nbOfFeatures;
@@ -160,10 +165,10 @@ public class EsWFSFeatureIndexer {
         }
 
         LOGGER.info("Initializing harvester configuration for uuid '{}', url '{}', feature type '{}'. Exchange id is '{}'.", new Object[] {
-                        configuration.getMetadataUuid(),
-                        configuration.getUrl(),
-                        configuration.getTypeName(),
-                        exchange.getExchangeId()});
+            configuration.getMetadataUuid(),
+            configuration.getUrl(),
+            configuration.getTypeName(),
+            exchange.getExchangeId()});
 
         WFSHarvesterExchangeState config = new WFSHarvesterExchangeState(configuration);
         if (connect) {
@@ -192,15 +197,15 @@ public class EsWFSFeatureIndexer {
     }
 
     public void deleteFeatures(String url, String typeName, EsClient client) {
-        LOGGER.info("Deleting features previously index from service '{}' and feature type '{}' in '{}'",
-                new Object[]{url, typeName, index});
+        LOGGER.info("Deleting features previously index from service '{}' and feature type '{}' in index '{}/{}'",
+            new Object[]{url, typeName, index, indexType});
         try {
             long begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+featureTypeId:\\\"%s#%s\\\"", url, typeName));
+            client.deleteByQuery(index, indexType, String.format("+featureTypeId:\\\"%s\\\"", getIdentifier(url, typeName)));
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+id:\\\"%s\\\"",
+            client.deleteByQuery(index, indexType, String.format("+id:\\\"%s\\\"",
                 getIdentifier(url, typeName)));
             LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
 
@@ -308,7 +313,13 @@ public class EsWFSFeatureIndexer {
                                 report.setPointOnlyForGeomsFalse();
                             }
                         } else {
-                            rootNode.put(getDocumentFieldName(attributeName), attributeValue.toString());
+                            String value = attributeValue.toString();
+                            rootNode.put(getDocumentFieldName(attributeName),
+                                value.startsWith(CDATA_START) ?
+                                    value.replaceFirst(CDATA_START_REGEX, "").substring(0, value.length() - CDATA_END.length() - CDATA_START.length()) :
+                                    value
+
+                            );
                         }
                     }
 
@@ -317,7 +328,7 @@ public class EsWFSFeatureIndexer {
 
                 } catch (Exception ex) {
                     LOGGER.warn("Error while creating document for {} feature {}. Exception is: {}", new Object[] {
-                            typeName, nbOfFeatures, ex.getMessage()});
+                        typeName, nbOfFeatures, ex.getMessage()});
                     report.put("error_ss", String.format(
                         "Error while creating document for %s feature %d. Exception is: %s",
                         typeName, nbOfFeatures, ex.getMessage()
@@ -344,7 +355,7 @@ public class EsWFSFeatureIndexer {
             LOGGER.info("Total number of {} features indexed is {} in {} ms.", new Object[]{
                 typeName, nbOfFeatures,
                 System.currentTimeMillis() - begin});
-                report.success(nbOfFeatures);
+            report.success(nbOfFeatures);
         } catch (Exception e) {
             report.put("status_s", "error");
             report.put("error_ss", e.getMessage());
@@ -364,7 +375,7 @@ public class EsWFSFeatureIndexer {
                 @Override
                 public void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature) {
                     objectNode.put("resourceTitle",
-                            WFSFeatureUtils.buildFeatureTitle(simpleFeature, state.getFields(), titleExpression));
+                        WFSFeatureUtils.buildFeatureTitle(simpleFeature, state.getFields(), titleExpression));
                 }
             };
         } else if (defaultTitleAttribute !=null) {
@@ -420,17 +431,17 @@ public class EsWFSFeatureIndexer {
             report.put("totalRecords_i", nbOfFeatures);
             DateTime dateTime = new DateTime(DateTimeZone.UTC);
             report.put("endDate_dt", String.format("%sT%s",
-                    ISODateTimeFormat.yearMonthDay().print(dateTime),
-                    ISODateTimeFormat.timeNoMillis().print(dateTime).replace("Z","")));
+                ISODateTimeFormat.yearMonthDay().print(dateTime),
+                ISODateTimeFormat.timeNoMillis().print(dateTime).replace("Z","")));
             report.put("isPointOnly", pointOnlyForGeoms);
 
         }
 
         public boolean saveHarvesterReport() {
             Index search = new Index.Builder(report)
-                    .index(index)
-                    .type(index)
-                    .id(report.get("id").toString()).build();
+                .index(index)
+                .type(indexType)
+                .id(report.get("id").toString()).build();
             try {
                 DocumentResult response = client.getClient().execute(search);
                 if (response.getErrorMessage() != null) {
@@ -476,7 +487,7 @@ public class EsWFSFeatureIndexer {
             this.url = url;
             this.firstFeatureIndex = firstFeatureIndex;
             this.report = report;
-            this.bulk = new Bulk.Builder().defaultIndex(index).defaultType(index);
+            this.bulk = new Bulk.Builder().defaultIndex(index).defaultType(indexType);
             this.bulkSize = 0;
             LOGGER.debug("  {} - from {}, {} features to index, preparing bulk.", typeName, firstFeatureIndex, featureCommitInterval);
         }
@@ -484,18 +495,18 @@ public class EsWFSFeatureIndexer {
         @Override
         public void completed(BulkResult bulkResult) {
             LOGGER.debug("  {} - from {}, {}/{} features, indexed in {} ms.", new Object[]{
-                    typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin});
+                typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin});
             phaser.arriveAndDeregister();
         }
 
         @Override
         public void failed(Exception e) {
             this.report.put("error_ss", String.format(
-                    "Error while indexing %s block of documents [%d-%d]. Exception is: %s",
-                    typeName, firstFeatureIndex, firstFeatureIndex + featureCommitInterval, e.getMessage()
+                "Error while indexing %s block of documents [%d-%d]. Exception is: %s",
+                typeName, firstFeatureIndex, firstFeatureIndex + featureCommitInterval, e.getMessage()
             ));
             LOGGER.error("  {} - from {}, {}/{} features, NOT indexed in {} ms. ({}).", new Object[]{
-                    typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin, e.getMessage()});
+                typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin, e.getMessage()});
             phaser.arriveAndDeregister();
         }
 
@@ -519,7 +530,7 @@ public class EsWFSFeatureIndexer {
             phaser.register();
             this.begin = System.currentTimeMillis();
             LOGGER.debug("  {} - from {}, {}/{} features, launching bulk.", new Object[]{
-                    typeName, firstFeatureIndex, bulkSize, featureCommitInterval,});
+                typeName, firstFeatureIndex, bulkSize, featureCommitInterval,});
         }
         abstract public void launchBulk(EsClient client);
     }
@@ -565,13 +576,13 @@ public class EsWFSFeatureIndexer {
     private static final String FEATURE_FIELD_PREFIX = "ft_";
     private static final Map<String, String> XSDTYPES_TO_FIELD_NAME_SUFFIX;
     static { XSDTYPES_TO_FIELD_NAME_SUFFIX = ImmutableMap.<String, String>builder()
-            .put("integer", "_ti")
-            .put("string", DEFAULT_FIELDSUFFIX)
-            .put("double", "_d")
-            .put("boolean", "_b")
-            .put("date", "_dt")
-            .put("dateTime", "_dt")
-            .build();
+        .put("integer", "_ti")
+        .put("string", DEFAULT_FIELDSUFFIX)
+        .put("double", "_d")
+        .put("boolean", "_b")
+        .put("date", "_dt")
+        .put("dateTime", "_dt")
+        .build();
     }
 
     private Map<String, String> featureAttributeToDocumentFieldNames = new LinkedHashMap<String, String>();
@@ -584,12 +595,12 @@ public class EsWFSFeatureIndexer {
             } else {
                 boolean isTree = treeFields != null ? treeFields.contains(attributeName) : false;
                 featureAttributeToDocumentFieldNames.put(
+                    attributeName,
+                    String.join("",
+                        FEATURE_FIELD_PREFIX,
                         attributeName,
-                        String.join("",
-                                FEATURE_FIELD_PREFIX,
-                                attributeName,
-                                XSDTYPES_TO_FIELD_NAME_SUFFIX.get(attributeType),
-                                (isTree ? TREE_FIELD_SUFFIX : ""))
+                        XSDTYPES_TO_FIELD_NAME_SUFFIX.get(attributeType),
+                        (isTree ? TREE_FIELD_SUFFIX : ""))
                 );
             }
         }

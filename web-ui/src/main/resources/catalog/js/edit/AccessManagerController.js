@@ -139,7 +139,7 @@
             '  }' +
             '}';
 
-        $http.post('../../index/records/_search', query, {
+        $http.post('../../index/records?_=_search', query, {
           headers: {'Content-type': 'application/json'}
         }).
         then(function(r) {

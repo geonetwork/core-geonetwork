@@ -29,7 +29,7 @@
   module.factory('gnIndexWfsFilterConfig', ['gnHttp', function(gnHttp) {
 
     return {
-      url: gnHttp.getService('indexproxy'),
+      url: gnHttp.getService('featureindexproxy'),
       docTypeIdField: 'id',
       docIdField: 'featureTypeId',
       idDoc: function(config) {

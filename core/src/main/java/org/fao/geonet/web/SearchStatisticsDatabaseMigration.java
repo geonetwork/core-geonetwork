@@ -108,7 +108,7 @@ public class SearchStatisticsDatabaseMigration implements DatabaseMigrationTask 
                 queryRequest.setSpatialFilter(resultSet.getString(8));
                 queryRequest.isSimpleQuery();
 
-                if (!queryRequest.storeToEs(searcherLogger.getIndex())) {
+                if (!queryRequest.storeToEs(searcherLogger.getIndex(), searcherLogger.getIndexType())) {
                     Log.warning(Geonet.SEARCH_LOGGER, "unable to log query into database...");
                 } else {
                     if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
