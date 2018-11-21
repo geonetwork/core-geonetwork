@@ -188,6 +188,7 @@
              element.is('input') ||
              element.is('textarea') ||
              element.is('select');
+             var isDiv = element.is('div');
              var tooltipTarget = element;
              var iconMode = gnCurrentEdit.displayTooltipsMode === 'icon';
              var isDatePicker = 'gnDatePicker' in attrs;
@@ -269,6 +270,8 @@
                  } else {
                    element.after(tooltipIconCompiled);
                  }
+               } else if (isDiv) {
+                 element.closest(".gn-field").find("div.gn-control").append(tooltipIconCompiled);
                }
 
                // close tooltips on click in editor container
