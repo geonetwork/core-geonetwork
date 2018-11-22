@@ -717,7 +717,7 @@ public final class XslUtil {
         if (context != null) baseUrl = context.getBaseUrl();
 
         SettingInfo si = new SettingInfo();
-        return si.getSiteUrl() + "/" + baseUrl;
+        return si.getSiteUrl() + (!baseUrl.startsWith("/")?"/":"") + baseUrl;
     }
 
     public static String getLanguage() {
