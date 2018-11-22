@@ -23,6 +23,7 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
@@ -30,6 +31,7 @@ import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.history.AbstractHistoryEvent;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.utils.Log;
 
 public abstract class GenericMetadataEventListener {
 
@@ -66,13 +68,19 @@ public abstract class GenericMetadataEventListener {
 
         StatusValue status = statusValueRepository.findOneById(Integer.parseInt(getEventType()));
 
-        MetadataStatus metadataStatus = new MetadataStatus();
-        metadataStatus.setId(metadataStatusId);
-        metadataStatus.setStatusValue(status);
-        metadataStatus.setOwner(event.getUserId());
-        metadataStatus.setChangeMessage(getChangeMessage());
+        if (status != null) {
+            MetadataStatus metadataStatus = new MetadataStatus();
+            metadataStatus.setId(metadataStatusId);
+            metadataStatus.setStatusValue(status);
+            metadataStatus.setOwner(event.getUserId());
+            metadataStatus.setChangeMessage(getChangeMessage());
 
-        statusRepository.save(metadataStatus);
+            statusRepository.save(metadataStatus);
+        } else {
+            Log.warning(Geonet.DATA_MANAGER, String.format(
+                "Status with id '%s' not found in database. Check database migration SQL file to add default status if you want to log record history.",
+                getEventType()));
+        }
     }
 
 }
