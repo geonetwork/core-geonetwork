@@ -25,16 +25,13 @@ package org.fao.geonet.schema.iso19139;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.Text;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
@@ -436,7 +433,9 @@ public class ISO19139SchemaPlugin
                     el, attributeRef, attributeValue));
         }
 
-        if (parsedAttributeName.equals("xlink:href")) {
+        boolean elementToProcess = isElementToProcess(el);
+
+        if (elementToProcess && parsedAttributeName.equals("xlink:href")) {
             boolean isEmptyLink = StringUtils.isEmpty(attributeValue);
             boolean isMultilingualElement = el.getName().equals("LocalisedCharacterString");
 
@@ -458,7 +457,7 @@ public class ISO19139SchemaPlugin
                 el.setAttribute("href", "", XLINK);
                 return el;
             }
-        } else if (StringUtils.isNotEmpty(parsedAttributeName) &&
+        } else if (elementToProcess && StringUtils.isNotEmpty(parsedAttributeName) &&
             parsedAttributeName.startsWith(":")) {
             // eg. :codeSpace
             el.setAttribute(parsedAttributeName.substring(1), attributeValue);
@@ -467,5 +466,18 @@ public class ISO19139SchemaPlugin
             return super.processElement(el, attributeRef, parsedAttributeName, attributeValue);
         }
 
+    }
+
+    /**
+     * Checks if an element requires processing in {@link #processElement(Element, String, String, String)}.
+     *
+     * @param el Element to check.
+     *
+     * @return boolean indicating if the element requires processing or not.
+     */
+    protected boolean isElementToProcess(Element el) {
+        if (el == null) return false;
+
+        return elementsToProcess.contains(el.getQualifiedName());
     }
 }
