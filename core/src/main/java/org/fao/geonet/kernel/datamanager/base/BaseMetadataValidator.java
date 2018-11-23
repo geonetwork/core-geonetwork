@@ -22,6 +22,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlErrorHandler;
 import org.jdom.Attribute;
@@ -203,11 +204,17 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     @Override
     public void validate(String schema, Element md) throws Exception {
-        XmlErrorHandler eh = new XmlErrorHandler();
-        Element xsdErrors = validateInfo(schema, md, eh);
-        if (xsdErrors != null) {
-            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors), xsdErrors);
-        }
+    	
+    	if(Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+    		Log.trace(Geonet.DATA_MANAGER, "Validating record ");
+    		Log.trace(Geonet.DATA_MANAGER, (new org.jdom.output.XMLOutputter()).outputString(md));
+    	}
+
+		XmlErrorHandler eh = new XmlErrorHandler();
+		Element xsdErrors = validateInfo(schema, md, eh);
+		if (xsdErrors != null) {
+		    throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors), xsdErrors);
+		}
     }
 
     private Element validateInfo(String schema, Element md, XmlErrorHandler eh) throws Exception {

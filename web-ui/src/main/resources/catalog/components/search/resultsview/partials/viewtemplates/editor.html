@@ -15,7 +15,7 @@
         <div class="col-lg-8 col-md-8">
           <a href=""
              data-ng-show="md.isTemplate != 's'"
-             data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
+             data-ng-href="catalog.search#/{{(md.draft == 'y')?'metadraf':'metadata'}}/{{md.getUuid()}}"
              title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
           <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>
           <br/>
@@ -37,7 +37,7 @@
           <div class="btn-group pull-right1">
             <a class="btn btn-default"
                data-ng-href=""
-               data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
+               data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
                data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
                title="{{'privileges' | translate}}">
               <i class="fa text-muted"

@@ -42,6 +42,7 @@
       this.SEARCHPAGES = /\/search|\/board/;
       this.MAP = '/map';
       this.METADATA = '/metadata/';
+      this.DRAFT = '/metadraf/';
       this.HOME = '/home';
 
       var state = {};
@@ -65,7 +66,8 @@
 
       this.isMdView = function(path) {
         var p = path || $location.path();
-        return p.indexOf(this.METADATA) == 0;
+        return p.indexOf(this.METADATA) == 0
+            || p.indexOf(this.DRAFT) == 0;
       };
 
       this.isMap = function() {
@@ -82,7 +84,11 @@
       };
 
       this.setUuid = function(uuid) {
-        $location.path(this.METADATA + uuid);
+        if($location.path().indexOf(this.DRAFT) == 0) {
+          $location.path(this.DRAFT + uuid);
+        } else {
+          $location.path(this.METADATA + uuid);
+        }
         this.removeParams();
       };
 

@@ -233,6 +233,43 @@ ul.gn-resultview {
     .gn-status-obsolete {
       color: darken(@brand-danger, 20%);
     }
+    
+    // Same as before but with workflow statuses
+    .gn-workflow-status {
+      border: 2px solid darken(@brand-info, 5%);
+      position: absolute;
+      top: 95px;
+      left: 115px;
+      border-radius: 6px;
+      padding: 2px;
+      -ms-transform: rotate(30deg);
+      -webkit-transform: rotate(30deg);
+      transform: rotate(30deg);
+      color: @brand-info;
+      font-weight: bold;
+      font-size: 80%;
+      background-color: rgba(255, 255, 255 , 0.7);
+      border-color: darken(@brand-success, 5%);
+      color: @brand-success;
+    }
+    .gn-workflow-status-mdview {
+      position: relative;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      font-size: 100%;
+      border-radius: 20px;
+      padding: 8px 12px;
+      font-weight: normal;
+      font-size: 80%;
+      transform: none;
+    }
+    /* Decide here which status should be displayed
+    or not and with which colors */
+    .gn-workflow-status-1 {
+      border-color: darken(@brand-danger, 5%);
+      color: @brand-danger;
+    }
     .gn-md-abstract {
       p {
         font-size: 1em;

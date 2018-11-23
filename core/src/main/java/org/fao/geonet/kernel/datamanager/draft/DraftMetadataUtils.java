@@ -1,8 +1,9 @@
 package org.fao.geonet.kernel.datamanager.draft;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
-import static org.springframework.data.jpa.domain.Specifications.where;
 
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,8 +13,11 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
@@ -25,16 +29,17 @@ import org.fao.geonet.domain.MetadataHarvestInfo;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
+import org.fao.geonet.kernel.metadata.StatusActions;
+import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.GroupRepository;
@@ -42,11 +47,10 @@ import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SimpleMetadata;
 import org.fao.geonet.repository.Updater;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.coverage.processing.Operations;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,8 +58,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 
 import jeeves.server.context.ServiceContext;
 
@@ -98,7 +100,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 			super.setTemplateExt(id, metadataType);
 		}
 	}
-
 
 	/**
 	 * Set metadata type to subtemplate and set the title. Only subtemplates need to
@@ -226,7 +227,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 	public boolean existsMetadataUuid(String uuid) throws Exception {
 		return super.existsMetadataUuid(uuid) || !findAllIdsBy(hasMetadataUuid(uuid)).isEmpty();
 	}
-	
+
 	/**
 	 * If the user has permission to see the draft, draft goes first
 	 */
@@ -368,7 +369,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 		}
 		return map;
 	}
-	
+
 	@Override
 	public List<Integer> findAllIdsBy(Specification<? extends AbstractMetadata> specs) {
 		List<Integer> res = new LinkedList<Integer>();
@@ -378,16 +379,15 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 		} catch (ClassCastException t) {
 			// Maybe it is not a Specification<Metadata>
 		}
-		
+
 		try {
 			res.addAll(metadataDraftRepository.findAllIdsBy((Specification<MetadataDraft>) specs));
 		} catch (ClassCastException t) {
 			// Maybe it is not a Specification<MetadataDraft>
 		}
-		
+
 		return res;
 	}
-	
 
 	/**
 	 * Start an editing session. This will record the original metadata record in
@@ -405,53 +405,95 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 	public Integer startEditingSession(ServiceContext context, String id) throws Exception {
 		// Check id
 		AbstractMetadata md = findOne(Integer.valueOf(id));
-		
-		if(md == null) {
+
+		if (md == null) {
 			throw new EntityNotFoundException("We couldn't find the metadata to edit");
 		}
 
 		// Do we have a metadata draft already?
-		 if (metadataDraftRepository.findOneByUuid(md.getUuid()) != null) {
+		if (metadataDraftRepository.findOneByUuid(md.getUuid()) != null) {
 			id = Integer.toString(metadataDraftRepository.findOneByUuid(md.getUuid()).getId());
 		} else {
-			// We have to create the draft using the metadata information
-			String parentUuid = "";
-			String schemaIdentifier = metadataSchemaUtils.getMetadataSchema(id);
-			SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
-			AssociatedResourcesSchemaPlugin schemaPlugin = null;
-			if (instance instanceof AssociatedResourcesSchemaPlugin) {
-				schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
-			}
-			if (schemaPlugin != null) {
-				Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md.getXmlData(false));
-				if (listOfUUIDs.size() > 0) {
-					// FIXME more than one parent? Is it even possible?
-					parentUuid = listOfUUIDs.iterator().next();
-				}
-			}
-
-			String groupOwner = null;
-			String source = null;
-			Integer owner = 1;
-
-			if (md.getSourceInfo() != null) {
-				if (md.getSourceInfo().getSourceId() != null) {
-					source = md.getSourceInfo().getSourceId().toString();
-				}
-				if (md.getSourceInfo().getGroupOwner() != null) {
-					groupOwner = md.getSourceInfo().getGroupOwner().toString();
-				}
-				owner = md.getSourceInfo().getOwner();
-			}
-
-			id = createDraft(context, id, groupOwner, source, owner, parentUuid,
-					md.getDataInfo().getType().codeString, md.getUuid());		
+			
+			String originalId = id;
+			id = createDraft(context, id, md);
+			
+			reindex(id, originalId);
 		}
 
 		return super.startEditingSession(context, id);
 	}
 
-	private String createDraft(ServiceContext context, String templateId, String groupOwner, String source, int owner,
+	@Transactional(value=TxType.REQUIRES_NEW)
+	private String createDraft(ServiceContext context, String id, AbstractMetadata md)
+			throws Exception, IOException, JDOMException {
+		// We have to create the draft using the metadata information
+		String parentUuid = "";
+		String schemaIdentifier = metadataSchemaUtils.getMetadataSchema(id);
+		SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
+		AssociatedResourcesSchemaPlugin schemaPlugin = null;
+		if (instance instanceof AssociatedResourcesSchemaPlugin) {
+			schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
+		}
+		if (schemaPlugin != null) {
+			Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md.getXmlData(false));
+			if (listOfUUIDs.size() > 0) {
+				// FIXME more than one parent? Is it even possible?
+				parentUuid = listOfUUIDs.iterator().next();
+			}
+		}
+
+		String groupOwner = null;
+		String source = null;
+		Integer owner = 1;
+
+		if (md.getSourceInfo() != null) {
+			if (md.getSourceInfo().getSourceId() != null) {
+				source = md.getSourceInfo().getSourceId().toString();
+			}
+			if (md.getSourceInfo().getGroupOwner() != null) {
+				groupOwner = md.getSourceInfo().getGroupOwner().toString();
+			}
+			owner = md.getSourceInfo().getOwner();
+		}
+
+		id = createDraft(context, id, groupOwner, source, owner, parentUuid, md.getDataInfo().getType().codeString,
+				md.getUuid());
+		return id;
+	}
+
+	/**
+	 * Uses a new transaction to make sure changes are committed before the reindex.
+	 * 
+	 * @param id
+	 * @param originalId
+	 * @throws Exception
+	 */
+	@Transactional(value=TxType.REQUIRES_NEW)
+	private void reindex(String id, String originalId) throws Exception {
+		// We have to index both draft and approved metadata to get relation on the
+		// index
+		metadataIndexer.indexMetadata(id, true, null);
+
+		metadataIndexer.indexMetadata(originalId, true, null);
+	}
+
+	/**
+	 * Uses a new transaction to make sure changes are committed before the reindex. 
+	 * 
+	 * @param context
+	 * @param templateId
+	 * @param groupOwner
+	 * @param source
+	 * @param owner
+	 * @param parentUuid
+	 * @param isTemplate
+	 * @param uuid
+	 * @return
+	 * @throws Exception
+	 */
+	@Transactional(value=TxType.REQUIRES_NEW)
+	protected String createDraft(ServiceContext context, String templateId, String groupOwner, String source, int owner,
 			String parentUuid, String isTemplate, String uuid) throws Exception {
 		Metadata templateMetadata = getMetadataRepository().findOne(templateId);
 		if (templateMetadata == null) {
@@ -490,19 +532,20 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 		}
 
 		try {
-			Integer finalId = metadataManager.insertMetadata(context, newMetadata, xml, false, true, true,
-					UpdateDatestamp.YES, false, true).getId();
-			
-			//Remove all default privileges:
+			Integer finalId = metadataManager
+					.insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES, false, true)
+					.getId();
+
+			// Remove all default privileges:
 			metadataOperations.deleteMetadataOper(context, String.valueOf(finalId), false);
 
 			// Copy privileges from original metadata
-			for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) { 
-				
-				//Only interested in editing and reviewing privileges
-				//No one else should be able to see it
-				if(op.getId().getOperationId() == ReservedOperation.editing.getId()) {
-					//except for reserved groups
+			for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) {
+
+				// Only interested in editing and reviewing privileges
+				// No one else should be able to see it
+				if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
+					// except for reserved groups
 					Group g = groupRepository.findOne(op.getId().getGroupId());
 					if (!g.isReserved()) {
 						metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
@@ -511,14 +554,24 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 				}
 			}
 
-			//We have to index both draft and approved metadata to get relation on the index
-			metadataIndexer.indexMetadata(String.valueOf(finalId), true, null);
+			// Enable workflow on both.
+			ISODate changeDate = new ISODate();
 
-			metadataIndexer.indexMetadata(String.valueOf(templateId), true, null);
+			StatusActions sa = context.getBean(StatusActionsFactory.class).createStatusActions(context);
+
+			Set<Integer> metadataIds = new HashSet<Integer>();
+			metadataIds.add(finalId);
+
+			if (context.getBean(IMetadataStatus.class)
+					.getCurrentStatus(Integer.valueOf(templateId)) == Params.Status.UNKNOWN) {
+				metadataIds.add(Integer.valueOf(templateId));
+			}
+
+			sa.statusChange(String.valueOf(Params.Status.DRAFT), metadataIds, changeDate, "Enable Workflow");
 
 			return String.valueOf(finalId);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			Log.error(Geonet.DATA_MANAGER, "Draft creation failed", t);
 		}
 		return templateId;
 	}
