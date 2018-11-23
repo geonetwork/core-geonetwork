@@ -58,7 +58,7 @@
     <div class="row gn-md-title"
          data-ng-click="openRecord($index, md, searchResults.records)">
       <h3>
-        <a data-ng-href="#/metadata/{{md.getUuid()}}"
+        <a data-ng-href="#/{{(md.draft == 'y')?'metadraf':'metadata'}}/{{md.getUuid()}}"
            title="{{md.title || md.defaultTitle}}">
 
           <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
@@ -82,7 +82,15 @@
              title="{{md.status_text[0]}}"
              class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}
         </div>
+        
+        <!-- Display the workflow status, if draft -->
+        <div data-ng-if="md.mdStatus == 1"
+             title="{{('status-' + md.mdStatus) | translate}}"
+             class="gn-workflow-status gn-workflow-status-{{md.mdStatus}}">
+                {{('status-' + md.mdStatus) | translate}}
+        </div>
       </div>
+      
 
       <div style="float:left; display:block; width: calc(100% - 162px)">
 

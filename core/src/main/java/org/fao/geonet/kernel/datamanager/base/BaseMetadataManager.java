@@ -81,6 +81,7 @@ import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -756,6 +757,8 @@ import org.fao.geonet.domain.MetadataDraft;
 	public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId,
 			final Element md, final boolean validate, final boolean ufo, final boolean index, final String lang,
 			final String changeDate, final boolean updateDateStamp) throws Exception {
+		Log.trace(Geonet.DATA_MANAGER, "Update record with id " + metadataId);
+		
 		Element metadataXml = md;
 
 		// when invoked from harvesters, session is null?
@@ -825,6 +828,8 @@ import org.fao.geonet.domain.MetadataDraft;
 				list.add(id);
 			}
 		}
+		
+		Log.trace(Geonet.DATA_MANAGER, "Finishing update of record with id " + metadataId);
 		// Return an up to date metadata record
 		return metadataUtils.findOne(metadataId);
 	}

@@ -36,8 +36,8 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
@@ -53,7 +53,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryCustom;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -243,6 +242,26 @@ public class AccessManager {
     }
 
     /**
+     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
+     * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over the metadata</li> </ul>
+     *
+     * @param id The metadata internal identifier
+     */
+    public boolean canReview(final ServiceContext context, final String id) throws Exception {
+        return isOwner(context, id) || hasReviewPermission(context, id);
+    }
+    
+    /**
+     * Returns true if, and only if, at least one of these conditions is satisfied: <ul> <li>the
+     * user is owner (@see #isOwner)</li> <li>the user has reviewing rights over owning group of the metadata</li> </ul>
+     *
+     * @param id The metadata internal identifier
+     */
+    public boolean canChangeStatus(final ServiceContext context, final String id) throws Exception {
+        return hasOnwershipReviewPermission(context, id) || hasReviewPermission(context, id);
+    }
+    
+    /**
      * Return true if the current user is: <ul> <li>administrator</li> <li>the metadata owner (the
      * user who created the record)</li> <li>reviewer in the group the metadata was created</li>
      * </ul>
@@ -428,6 +447,62 @@ public class AccessManager {
         for (OperationAllowed opAllowed : allOpAlloweds) {
             opAlloweds.add(opAllowed.getId().getGroupId());
         }
+        spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
+
+        return (!userGroupRepository.findAll(spec).isEmpty());
+    }
+    
+    /**
+     * Check if current user can review the metadata according to the groups where the metadata is
+     * editable.
+     *
+     * @param id The metadata internal identifier
+     */
+    public boolean hasReviewPermission(final ServiceContext context, final String id) throws Exception {
+        UserSession us = context.getUserSession();
+        if (us == null || !us.isAuthenticated())
+            return false;
+
+
+        OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+        List<OperationAllowed> allOpAlloweds = opAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
+            .editing)));
+        if (allOpAlloweds.isEmpty()) {
+            return false;
+        }
+
+        Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+
+        List<Integer> opAlloweds = new ArrayList<Integer>();
+        for (OperationAllowed opAllowed : allOpAlloweds) {
+            opAlloweds.add(opAllowed.getId().getGroupId());
+        }
+        spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
+
+        return (!userGroupRepository.findAll(spec).isEmpty());
+    } 
+    
+    /**
+     * Check if current user is reviewer of the owner group for this metadata
+     *
+     * @param id The metadata internal identifier
+     */
+    public boolean hasOnwershipReviewPermission(final ServiceContext context, final String id) throws Exception {
+        UserSession us = context.getUserSession();
+        if (us == null || !us.isAuthenticated())
+            return false;
+
+
+        OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
+        IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        
+        Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+
+        List<Integer> opAlloweds = new ArrayList<Integer>();
+        opAlloweds.add(metadataUtils.findOne(id).getSourceInfo().getGroupOwner());
+        
         spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
 
         return (!userGroupRepository.findAll(spec).isEmpty());

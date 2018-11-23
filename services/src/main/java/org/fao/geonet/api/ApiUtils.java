@@ -235,6 +235,34 @@ public class ApiUtils {
     }
 
     /**
+     * Check if the current user can reivew this record.
+     */
+    static public AbstractMetadata canReviewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        AbstractMetadata metadata = getRecord(metadataUuid);
+        AccessManager accessManager = appContext.getBean(AccessManager.class);
+        if (!accessManager.canReview(createServiceContext(request), String.valueOf(metadata.getId()))) {
+            throw new SecurityException(String.format(
+                "You can't edit record with UUID %s", metadataUuid));
+        }
+        return metadata;
+    }
+    
+    /**
+     * Check if the current user can reivew this record.
+     */
+    static public AbstractMetadata canChangeStatusRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        AbstractMetadata metadata = getRecord(metadataUuid);
+        AccessManager accessManager = appContext.getBean(AccessManager.class);
+        if (!accessManager.canChangeStatus(createServiceContext(request), String.valueOf(metadata.getId()))) {
+            throw new SecurityException(String.format(
+                "You can't edit record with UUID %s", metadataUuid));
+        }
+        return metadata;
+    }
+
+    /**
      * Check if the current user can view this record.
      */
     public static AbstractMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {

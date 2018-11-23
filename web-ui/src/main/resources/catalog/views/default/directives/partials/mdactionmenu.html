@@ -14,7 +14,7 @@
     <ul class="dropdown-menu" role="menu">
       <li role="menuitem">
         <a data-ng-href=""
-             data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
+             data-ng-if="user.canEditRecord(md) && user.isEditorOrMore() && md.draft != 'y'"
              data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
           <i class="fa fa-fw fa-key"></i>&nbsp;
           <span data-translate="">privileges</span>

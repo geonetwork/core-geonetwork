@@ -24,4 +24,10 @@
 		class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager" />
 	<bean primary="true"
 		class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils" />
+		
+  <bean name="statusActionFactory"
+        class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
+    <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
+  </bean>
+		
 </beans>

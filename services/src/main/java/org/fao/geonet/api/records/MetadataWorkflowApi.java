@@ -64,6 +64,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -112,7 +113,7 @@ public class MetadataWorkflowApi {
 
     @Autowired
     LanguageUtils languageUtils;
-
+    
 
     @ApiOperation(
         value = "Get record status history",
@@ -306,13 +307,13 @@ public class MetadataWorkflowApi {
 
 
 
-        AccessManager am = appContext.getBean(AccessManager.class);
+//        AccessManager am = appContext.getBean(AccessManager.class);
         //--- only allow the owner of the record to set its status
-        if (!am.isOwner(context, String.valueOf(metadata.getId()))) {
-            throw new SecurityException(String.format(
-                "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata."
-            ));
-        }
+//        if (!am.isOwner(context, String.valueOf(metadata.getId()))) {
+//            throw new SecurityException(String.format(
+//                "Only the owner of the metadata can set the status. User is not the owner of the metadata"
+//            ));
+//        }
 
         //--- use StatusActionsFactory and StatusActions class to
         //--- change status and carry out behaviours for status changes
@@ -327,7 +328,7 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange);
 
         //--- reindex metadata
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataIndexer dataManager = appContext.getBean(IMetadataIndexer.class);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
