@@ -58,6 +58,8 @@
         'codelists/gmd%3ADS_AssociationTypeCode');
     $LOCALES.push('/../api/0.1/standards/iso19139/' +
         'codelists/gmd%3ADS_InitiativeTypeCode');
+    $LOCALES.push('/../api/0.1/tools/i18n/db?' +
+        'type=StatusValue&type=Operation&type=Group');
   }]);
 
 })();

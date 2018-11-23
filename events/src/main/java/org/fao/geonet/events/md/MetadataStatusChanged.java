@@ -21,58 +21,36 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.events.md.sharing;
+package org.fao.geonet.events.md;
 
-import org.fao.geonet.domain.OperationAllowed;
-import org.springframework.context.ApplicationEvent;
+import org.fao.geonet.domain.AbstractMetadata;
 
 /**
- * Event launched when a metadata sharing/privileges is modified
+ * Event launched when a record changes its status
  *
  * @author delawen
  */
-public class MetadataShare extends ApplicationEvent {
+public class MetadataStatusChanged extends MetadataEvent {
 
-    private static final long serialVersionUID = -748471747316454884L;
+	private static final long serialVersionUID = 324534556246220509L;
+	private String status;
+	private String message;
 
-    public enum Type {
-        ADD, UPDATE, REMOVE
-    }
-
-    private OperationAllowed op;
-    private Type type;
-    private Integer record;
-
-
-    public MetadataShare(OperationAllowed op, Type type) {
-        super(op);
-        this.setOp(op);
-        this.setType(type);
-        this.setRecord(op.getId().getMetadataId());
-    }
-
-    public OperationAllowed getOp() {
-        return op;
-    }
-
-    private void setOp(OperationAllowed op) {
-        this.op = op;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    private void setType(Type type) {
-        this.type = type;
-    }
-    
-    private void setRecord(Integer record) {
-		this.record = record;
+	public MetadataStatusChanged(AbstractMetadata abstractMetadata, String status, String message) {
+		super(abstractMetadata);
+		if (status == null) {
+			throw new IllegalArgumentException("Status can't be null");
+		}
+		this.status = status.toUpperCase();
+		this.message = message;
 	}
-    
-    public Integer getRecord() {
-		return record;
+
+	public String getStatus() {
+		return status;
+	}
+	
+	public String getMessage() {
+		return message;
 	}
 
 }

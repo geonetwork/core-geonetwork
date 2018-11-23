@@ -111,7 +111,15 @@
 
         <div class="lead1 gn-margin-bottom"
             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
-
+        
+        <!-- Display the workflow status if draft exists -->
+        <a data-ng-if="mdView.current.record.draft == 'y' || mdView.current.record.draft == 'e'"
+            title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
+            data-ng-href="#/{{(mdView.current.record.draft == 'e')?'metadraf':'metadata'}}/{{md.getUuid()}}"
+            class="gn-workflow-status gn-workflow-status-mdview gn-workflow-status-{{mdView.current.record.mdStatus}}">
+           {{('status-' + mdView.current.record.mdStatus) | translate}}
+        </a>
+        
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="mdView.current.record.status_text.length > 0"
             title="{{mdView.current.record.status_text[0]}}"

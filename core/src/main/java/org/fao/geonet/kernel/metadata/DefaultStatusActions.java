@@ -27,10 +27,13 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedOperation;
@@ -39,6 +42,8 @@ import org.fao.geonet.domain.StatusValueNotificationLevel;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.events.md.MetadataStatusChanged;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -49,7 +54,10 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -70,6 +78,9 @@ public class DefaultStatusActions implements StatusActions {
     protected ServiceContext context;
     protected String language;
     protected DataManager dm;
+    
+    @Autowired
+    protected IMetadataUtils metadataUtils;
     protected String siteUrl;
     protected String siteName;
     protected UserSession session;
@@ -92,6 +103,7 @@ public class DefaultStatusActions implements StatusActions {
         this.context = context;
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         this._statusValueRepository = applicationContext.getBean(StatusValueRepository.class);
+        this.metadataUtils = applicationContext.getBean(IMetadataUtils.class);
         this.language = context.getLanguage();
 
         SettingManager sm = applicationContext.getBean(SettingManager.class);
@@ -178,8 +190,20 @@ public class DefaultStatusActions implements StatusActions {
                     "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
                     status.getId().getMetadataId(), status.getId().getStatusId(), e.getMessage()));
             }
-        }
+            
+            //Throw events
+    		Log.trace(Geonet.DATA_MANAGER, "Throw workflow events.");
+            for(Integer mid : listOfId) {
+            	if(!unchanged.contains(mid)) {
+            		Log.debug(Geonet.DATA_MANAGER, "  > Status changed for record (" + mid + ") to status " + status);
+            		context.getApplicationContext().publishEvent(new MetadataStatusChanged(
+    	                    metadataUtils.findOne(Integer.valueOf(mid)), 
+    	                    status.getCurrentState(), status.getChangeMessage()));
+            	}
+            }
 
+        }
+        
         return unchanged;
     }
 
@@ -197,7 +221,13 @@ public class DefaultStatusActions implements StatusActions {
     private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
         String statusId = status.getId().getStatusId() + "";
         if (statusId.equals(StatusValue.Status.APPROVED)) {
-            // setAllOperations(mid);
+        	// setAllOperations(mid); - this is a short cut that could be enabled
+            AccessManager accessManager = context.getBean(AccessManager.class);
+            if (!accessManager.canReview(context, String.valueOf(status.getId().getMetadataId()))) {
+                throw new SecurityException(String.format(
+                    "You can't edit record with ID %s", 
+                    	String.valueOf(status.getId().getMetadataId())));
+            }
         } else if (statusId.equals(StatusValue.Status.DRAFT) ||
             statusId.equals(StatusValue.Status.REJECTED)) {
             unsetAllOperations(status.getId().getMetadataId());

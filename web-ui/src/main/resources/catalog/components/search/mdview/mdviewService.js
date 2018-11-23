@@ -126,21 +126,55 @@
        */
       this.initMdView = function() {
         var that = this;
-        var loadMdView = function() {
+        var loadMdView = function(event, newUrl, oldUrl) {
           gnMdViewObj.loadDetailsFinished = false;
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
+            //Check we are not switching between draft and approved or viceversa
+            var changeToOrFromDraft = 
+              newUrl && oldUrl && 
+              ((newUrl.indexOf("metadraf") > 0 
+                  && oldUrl.indexOf("metadraf") == -1) ||
+              (oldUrl.indexOf("metadraf") > 0 
+                  && newUrl.indexOf("metadraf") == -1));
             if (!gnMdViewObj.current.record ||
-                gnMdViewObj.current.record.getUuid() !== uuid) {
+                gnMdViewObj.current.record.getUuid() !== uuid ||
+                changeToOrFromDraft) {
 
               // Check if the md is in current search
               if (angular.isArray(gnMdViewObj.records)) {
+
+                var j = -1;
+                
                 for (var i = 0; i < gnMdViewObj.records.length; i++) {
                   var md = gnMdViewObj.records[i];
-                  if (md.getUuid() === uuid) {
-                    that.feedMd(i, md, gnMdViewObj.records);
-                    return;
+                  
+                  if(!md.getUuid) {
+                    md = new Metadata(md);
+                    gnMdViewObj.records[i] = md;
                   }
+                  
+                  if (md.getUuid() === uuid) {
+                    j = i;
+                    
+                    //are looking for the draft?
+                    if(window.location.hash.indexOf("metadraf") > 0
+                        && md.draft == 'y') {
+                      break;
+                    } else if(window.location.hash.indexOf("metadata") > 0
+                        && md.draft != 'y'){
+                      break;
+                    }
+                    // continue looping on the rest of combinations, like
+                    // maybe we are on "draft" view but there is no draft
+                    // failback to show the approved version 
+                  }
+                }
+                
+                if(j >= 0) {
+                  var md = gnMdViewObj.records[j];
+                  that.feedMd(j, md, gnMdViewObj.records);
+                  return;
                 }
               }
 
@@ -152,9 +186,19 @@
                 fast: 'index',
                 _content_type: 'json'
               }).then(function(data) {
-                if (data.metadata.length == 1) {
-                  data.metadata[0] = new Metadata(data.metadata[0]);
-                  that.feedMd(0, undefined, data.metadata);
+                if (data.metadata.length > 0) {
+                  
+                  //If returned more than one, maybe we are looking for the draft
+                  var i = 0;
+                  data.metadata.forEach(function (md, index) {
+                    if(window.location.hash.indexOf("metadraf") > 0
+                        && md.draft == 'y') {
+                      i = index;
+                    }
+                  });
+                  
+                  data.metadata[i] = new Metadata(data.metadata[i]);
+                  that.feedMd(i, undefined, data.metadata);
                 } else {
                   gnMdViewObj.loadDetailsFinished = true;
                 }
