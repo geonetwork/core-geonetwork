@@ -86,27 +86,15 @@
     <!-- Set of rules processed : -->
     <xsl:variable name="rules">
       <!--Invalid content was found starting with element 'gmd:dateType'. One of '{"http://www.isotc211.org/2005/gmd":date}' is expected. (Element: gmd:dateType with parent element: gmd:CI_Date)-->
-      <rule errorType="complex-type.2.4.a">Invalid content was found starting with element
-        '([a-z]{3}):(.*)'\. One of '\{"(.*)\}' is expected\. \(Element: (.*) with parent element:
-        (.*)\)
-      </rule>
+      <rule errorType="complex-type.2.4.a">Invalid content was found starting with element '([a-z]{3}):(.*)'\. One of '\{"(.*)\}' is expected\. \(Element: (.*) with parent element: (.*)\)</rule>
       <!--cvc-complex-type.2.4.b: The content of element 'gmd:EX_BoundingPolygon' is not complete. One of '{"http://www.isotc211.org/2005/gmd":extentTypeCode, "http://www.isotc211.org/2005/gmd":polygon}' is expected. (Element: gmd:EX_BoundingPolygon with parent element: gmd:geographicElement)-->
-      <rule errorType="complex-type.2.4.b">The content of element '(.*)' is not complete. One of
-        '\{"(.*)\}' is expected\. \(Element: (.*) with parent element: (.*)\)
-      </rule>
+      <rule errorType="complex-type.2.4.b">The content of element '(.*)' is not complete. One of '\{"(.*)\}' is expected\. \(Element: (.*) with parent element: (.*)\)</rule>
       <!--cvc-datatype-valid.1.2.1: '' is not a valid value for 'dateTime'. (Element: gco:DateTime with parent element: gmd:date)-->
       <!--cvc-datatype-valid.1.2.1: 'DUMMY_DENOMINATOR' is not a valid value for 'integer'. (Element: gco:Integer with parent element: gmd:denominator)-->
-      <rule errorType="datatype-valid.1.2.1">'(.*)' is not a valid value for '(.*)'\. \(Element:
-        ([a-z]{3}):(.*) with parent element: (.*)\)
-      </rule>
+      <rule errorType="datatype-valid.1.2.1">'(.*)' is not a valid value for '(.*)'\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
       <!--cvc-type.3.1.3: The value 'DUMMY_DENOMINATOR' of element 'gco:Integer' is not valid. (Element: gco:Integer with parent element: gmd:denominator)-->
-      <rule errorType="type.3.1.3">The value '(.*)' of element '(.*)' is not valid\. \(Element:
-        ([a-z]{3}):(.*) with parent element: (.*)\)
-      </rule>
-      <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to
-        enumeration '\[(.*)\]'\. It must be a value from the enumeration\. \(Element:
-        ([a-z]{3}):(.*) with parent element: (.*)\)
-      </rule>
+      <rule errorType="type.3.1.3">The value '(.*)' of element '(.*)' is not valid\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
+      <rule errorType="enumeration-valid">Value '(.*)' is not facet-valid with respect to enumeration '\[(.*)\]'\. It must be a value from the enumeration\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
     </xsl:variable>
 
     <xsl:variable name="regexp" select="$rules/rule[@errorType=$errorType]"/>
