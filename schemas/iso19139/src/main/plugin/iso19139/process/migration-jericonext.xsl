@@ -108,6 +108,9 @@
     <xsl:message><xsl:value-of select="$uuid"/> No DQ section, statement not updated.</xsl:message>
   </xsl:template>
 
+  <xsl:template match="gmd:dataQualityInfo[*/gmd:report/*/gmd:result/
+    */gmd:specification/*/gmd:title/gco:CharacterString = 'Inspire specifications']" priority="22"/>
+
 
   <!-- Remove empty scale denominator -->
   <xsl:template match="gmd:spatialResolution[*/gmd:equivalentScale/*/gmd:denominator/gco:Integer = '']"/>
@@ -117,7 +120,11 @@
   <!-- Add metadata contact -->
   <xsl:variable name="hasFredKaanAlready"
                 select="count(.//gmd:MD_Metadata/gmd:contact[*/gmd:individualName/gco:CharacterString = 'Fred Kaan']) > 0"/>
-  <xsl:template match="gmd:MD_Metadata/gmd:contact[not($hasFredKaanAlready) and name(following-sibling::*[1]) != 'gmd:contact']">
+
+  <xsl:variable name="hasContact"
+                select="count(.//gmd:MD_Metadata/gmd:contact) > 0"/>
+
+  <xsl:template match="gmd:MD_Metadata/gmd:contact[not($hasFredKaanAlready) and $hasContact and name(following-sibling::*[1]) != 'gmd:contact']">
     <xsl:copy-of select="."/>
     <gmd:contact>
       <gmd:CI_ResponsibleParty>
@@ -146,6 +153,39 @@
       </gmd:CI_ResponsibleParty>
     </gmd:contact>
   </xsl:template>
+
+
+  <xsl:template match="gmd:hierarchyLevel[not($hasContact) and not($hasFredKaanAlready)]">
+    <xsl:copy-of select="."/>
+    <xsl:copy-of select="gmd:hierarchyLevelName"/>
+    <gmd:contact>
+      <gmd:CI_ResponsibleParty>
+        <gmd:individualName>
+          <gco:CharacterString>Fred Kaan</gco:CharacterString>
+        </gmd:individualName>
+        <gmd:organisationName>
+          <gco:CharacterString>MARIS</gco:CharacterString>
+        </gmd:organisationName>
+        <gmd:contactInfo>
+          <gmd:CI_Contact> 
+            <gmd:address>      
+              <gmd:CI_Address>           
+                <gmd:electronicMailAddress>           
+                  <gco:CharacterString>info@maris.nl</gco:CharacterString>
+                </gmd:electronicMailAddress>
+              </gmd:CI_Address>
+            </gmd:address>
+          </gmd:CI_Contact>
+        </gmd:contactInfo>
+        <gmd:role>
+          <gmd:CI_RoleCode
+            codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+            codeListValue="pointOfContact"/>
+        </gmd:role>
+      </gmd:CI_ResponsibleParty>
+    </gmd:contact>
+  </xsl:template>
+
 
   <!-- Replace resource constraints bloc -->
   <xsl:template match="gmd:resourceConstraints" priority="2">
