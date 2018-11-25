@@ -281,8 +281,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     }
 
     /**
-     * Valid the metadata record against its schema. For each error found, an xsderror attribute is added to the corresponding element
-     * trying to find the element based on the xpath return by the ErrorHandler.
+     * Valid the metadata record against its schema. For each error found,
+     * one or more validation reports are added to the corresponding element
+     * trying to find the element based on the xpath returned by the ErrorHandler.
      */
     private synchronized Element getXSDXmlReport(String schema, Element md) {
         // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
@@ -307,8 +308,8 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             List<Element> list = xsdErrors.getChildren();
             for (Element elError : list) {
                 String xpath = elError.getChildText("xpath", Edit.NAMESPACE);
+                String errorCode = elError.getChildText("typeOfError", Edit.NAMESPACE);
                 String message = elError.getChildText("message", Edit.NAMESPACE);
-                message = "\\n" + message;
 
                 // -- get the element from the xpath and add the error message to it
                 Element elem = null;
@@ -319,17 +320,24 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                     Log.error(Geonet.DATA_MANAGER, "Attach xsderror message to xpath " + xpath + " failed: " + je.getMessage());
                 }
                 if (elem != null) {
-                    String existing = elem.getAttributeValue("xsderror", Edit.NAMESPACE);
-                    if (existing != null)
-                        message = existing + message;
-                    elem.setAttribute("xsderror", message, Edit.NAMESPACE);
+                    elem.addContent(buildErrorReport("XSD", errorCode, message, xpath));
                 } else {
                     Log.warning(Geonet.DATA_MANAGER, "WARNING: evaluating XPath " + xpath
                             + " against metadata failed - XSD validation message: " + message + " will NOT be shown by the editor");
+                    // TODO: Attach to the root element ?
                 }
             }
         }
         return xsdErrors;
+    }
+
+    private Element buildErrorReport(String type, String errorCode, String message, String xpath) {
+        Element report = new Element(Edit.ValidationReport.VALIDATIONREPORT, Edit.NAMESPACE);
+        report.setAttribute(Edit.ValidationReport.TYPE, type, Edit.NAMESPACE);
+        report.setAttribute(Edit.ValidationReport.XPATH, xpath, Edit.NAMESPACE);
+        report.setAttribute(Edit.ValidationReport.ERRORCODE, errorCode, Edit.NAMESPACE);
+        report.setAttribute(Edit.ValidationReport.MESSAGE, message, Edit.NAMESPACE);
+        return report;
     }
 
     /**

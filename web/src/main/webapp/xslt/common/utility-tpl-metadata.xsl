@@ -117,10 +117,11 @@
 
   <!--
     2 types of errors are added to a record on validation:
-    * XSD
-    <gmd:dateStamp geonet:xsderror="\ncvc-complex-type.2.4.a: Invalid conte
+    * XSD errors are added in the document as validation reports
+    <gmd:dateStamp>
+     <geonet:validationReport message="\ncvc-complex-type.2.4.a: Invalid conte
 
-    * Schematron
+    * Schematron complete report is appended to the document
     <geonet:schematronerrors>
       <geonet:report geonet:rule="schematron-rules-iso">
       ...
@@ -128,6 +129,12 @@
         <svrl:failed-assert ref="#_391" test="$count > 0
           ....
           <svrl:text
+
+    This template collect XSD and schematron errors and return the list
+    of errors related to this element.
+
+    TODO:
+    * Translate XSD errors
     -->
   <xsl:template name="get-errors">
     <xsl:param name="theElement" required="no"/>
@@ -135,63 +142,24 @@
     <xsl:variable name="ref" select="concat('#_', gn:element/@ref)"/>
 
     <xsl:variable name="listOfErrors">
-      <xsl:if
-        test="@gn:xsderror
-        or */@gn:xsderror
-        or $metadata//svrl:failed-assert[@ref=$ref]">
+      <errors>
+        <xsl:for-each select="gn:validationReport|*/gn:validationReport">
+          <error>
+            <xsl:value-of select="@gn:message"/>
+            <!--<xsl:copy-of select="concat($root/root/gui/strings/xsdError, ': ',
+                  geonet:parse-xsd-error(., $schema, $labels))"/>-->
+          </error>
+        </xsl:for-each>
 
-        <errors>
-          <xsl:choose>
-            <!-- xsd validation -->
-            <xsl:when test="@gn:xsderror">
-              <xsl:choose>
-                <xsl:when test="contains(@gn:xsderror, '\n')">
-                  <xsl:variable name="root" select="/"/>
-                  <!-- DataManager#getXSDXmlReport concat errors in attribute -->
-                  <xsl:for-each select="tokenize(@gn:xsderror, '\\n')">
-                    <xsl:if test=". != ''">
-                      <error>
-                        <xsl:value-of select="."/>
-                        <!--<xsl:copy-of select="concat($root/root/gui/strings/xsdError, ': ',
-                              geonet:parse-xsd-error(., $schema, $labels))"/>-->
-                      </error>
-                    </xsl:if>
-                  </xsl:for-each>
-                </xsl:when>
-                <xsl:otherwise>
-                  <error>
-                    <!-- <xsl:copy-of select="concat(/root/gui/strings/xsdError, ': ',
-                          geonet:parse-xsd-error(@geonet:xsderror, $schema, $labels))"/>-->
-                    <xsl:value-of select="@gn:xsderror"/>
-                  </error>
-                </xsl:otherwise>
-              </xsl:choose>
-
-            </xsl:when>
-            <!-- some simple elements hide lower elements to remove some
-                        complexity from the display (eg. gco: in iso19139)
-                        so check if they have a schematron/xsderror and move it up
-                        if they do -->
-            <xsl:when test="*/@gn:xsderror">
-              <error>
-                <!--<xsl:copy-of select="concat(/root/gui/strings/xsdError, ': ',
-                      geonet:parse-xsd-error(*/@geonet:xsderror, $schema, $labels))"/>-->
-                <xsl:value-of select="*/@gn:xsderror"></xsl:value-of>
-              </error>
-            </xsl:when>
-            <!-- schematrons -->
-            <xsl:when test="$metadata//svrl:failed-assert[@ref=$ref]">
-              <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
-                <error>
-                  <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
-                  <xsl:copy-of select="svrl:text/*"/>
-                </error>
-              </xsl:for-each>
-            </xsl:when>
-          </xsl:choose>
-        </errors>
-      </xsl:if>
+        <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
+          <error>
+            <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+            <xsl:copy-of select="svrl:text/*"/>
+          </error>
+        </xsl:for-each>
+      </errors>
     </xsl:variable>
+
     <xsl:copy-of select="if (count($listOfErrors//error) > 0) then $listOfErrors else ''"/>
   </xsl:template>
 </xsl:stylesheet>

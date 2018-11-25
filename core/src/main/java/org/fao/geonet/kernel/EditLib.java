@@ -1134,7 +1134,10 @@ public class EditLib {
      * Given an unexpanded tree, creates container elements and their children.
      */
     public void expandElements(String schema, Element md) throws Exception {
-
+        // Do not process GeoNetwork element eg. validation report
+        if (md.getNamespace() == Edit.NAMESPACE) {
+            return;
+        }
         //--- create containers and fill them with elements using a depth first
         //--- search
 

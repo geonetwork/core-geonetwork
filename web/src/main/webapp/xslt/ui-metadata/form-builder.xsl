@@ -1448,9 +1448,9 @@
 
 
   <xsl:template mode="render-for-field-for-attribute"
-                match="@gn:xsderror" priority="2">
+                match="@gn:validationReport" priority="2">
     <div class="alert alert-danger">
-      Error: <xsl:value-of select="."/>
+      <xsl:value-of select="@message"/>
     </div>
   </xsl:template>
 
