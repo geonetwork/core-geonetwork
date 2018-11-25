@@ -77,7 +77,7 @@ USA.
 
 -->
 
-    <sch:title xmlns="http://www.w3.org/2001/XMLSchema">INSPIRE metadata implementing rule validation</sch:title>
+    <sch:title xmlns="http://www.w3.org/2001/XMLSchema">INSPIRE rules</sch:title>
     <sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
     <sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
     <sch:ns prefix="gmx" uri="http://www.isotc211.org/2005/gmx"/>

@@ -23,7 +23,7 @@
   -->
 
 <strings>
-  <schematron.title>ISO Validation Rules</schematron.title>
+  <schematron.title>Règles ISO</schematron.title>
   <M6>Une chaîne de caractère ne doit pas être vide ou son parent doit avoir un attribut nilReason
   </M6>
   <M7>Contraintes sur les attributs CRS</M7>
