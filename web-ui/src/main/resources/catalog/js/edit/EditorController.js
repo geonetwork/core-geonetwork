@@ -189,6 +189,7 @@
 
               // Get the schema configuration for the current record
               gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
+              gnCurrentEdit.schema = $scope.mdSchema;
               $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {
@@ -482,7 +483,9 @@
         return $scope.save(refreshForm);
       };
 
-      $scope.save = function(refreshForm) {
+      $scope.save = function(refreshForm, validate) {
+        $('#showvalidationerrors')[0].value = gnCurrentEdit.showValidationErrors =
+          (validate == true);
         $scope.saveError = false;
         var promise = gnEditor.save(refreshForm)
             .then(function(form) {
@@ -631,11 +634,6 @@
           insertRef, position, attribute) {
             $scope.add(ref, name, insertRef, position, attribute);
           });
-
-      $scope.validate = function() {
-        $('#showvalidationerrors')[0].value = 'true';
-        return $scope.save(true);
-      };
 
       init();
 

@@ -251,7 +251,6 @@ public class MetadataEditingApi {
 
         String id = String.valueOf(metadata.getId());
         String isTemplate = allRequestParams.get(Params.TEMPLATE);
-
 //        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 //        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
 //        boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");

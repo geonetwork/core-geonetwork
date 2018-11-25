@@ -1443,8 +1443,16 @@
   to a node (only for gn:attribute, see next template).
   -->
   <xsl:template mode="render-for-field-for-attribute"
-                match="@gn:xsderror|@gn:addedObj|@xsi:type|
+                match="@gn:addedObj|@xsi:type|
           @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
+
+
+  <xsl:template mode="render-for-field-for-attribute"
+                match="@gn:xsderror" priority="2">
+    <div class="alert alert-danger">
+      Error: <xsl:value-of select="."/>
+    </div>
+  </xsl:template>
 
 
   <!--
