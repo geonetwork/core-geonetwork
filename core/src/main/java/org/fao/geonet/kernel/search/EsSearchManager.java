@@ -401,12 +401,12 @@ public class EsSearchManager implements ISearchManager {
                 for (Iterator<String> iter = sm.getSelection(bucket).iterator();
                      iter.hasNext(); ) {
                     String uuid = (String) iter.next();
-//                    String id = dataMan.getMetadataId(uuid);
-                    AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
-                    if (metadata != null) {
+                    for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
                         listOfIdsToIndex.add(metadata.getId() + "");
-                    } else {
-                        System.out.println(String.format(
+                    } 
+                    
+                    if(!metadataRepository.existsMetadataUuid(uuid)) {
+                        Log.warning(Geonet.INDEX_ENGINE, String.format(
                             "Selection contains uuid '%s' not found in database", uuid));
                     }
                 }

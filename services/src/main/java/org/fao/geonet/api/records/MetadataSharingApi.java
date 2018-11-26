@@ -53,8 +53,8 @@ import org.fao.geonet.api.records.model.GroupPrivilege;
 import org.fao.geonet.api.records.model.SharingParameter;
 import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -252,7 +252,7 @@ public class MetadataSharingApi {
             final ApplicationContext appContext = ApplicationContextHolder.get();
             final DataManager dataMan = appContext.getBean(DataManager.class);
             final AccessManager accessMan = appContext.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
 
             UserSession us = ApiUtils.getUserSession(session);
             boolean isAdmin = Profile.Administrator == us.getProfile();
@@ -669,7 +669,7 @@ public class MetadataSharingApi {
             final DataManager dataManager = context.getBean(DataManager.class);
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
@@ -745,7 +745,7 @@ public class MetadataSharingApi {
             final ApplicationContext context = ApplicationContextHolder.get();
             final DataManager dataManager = context.getBean(DataManager.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
             List<String> listOfUpdatedRecords = new ArrayList<>();
@@ -770,7 +770,7 @@ public class MetadataSharingApi {
                                  MetadataProcessingReport report,
                                  DataManager dataManager,
                                  AccessManager accessMan,
-                                 IMetadataUtils metadataRepository,
+                                 MetadataRepository metadataRepository,
                                  ServiceContext serviceContext,
                                  List<String> listOfUpdatedRecords, String uuid, 
                                  HttpSession session) throws Exception {

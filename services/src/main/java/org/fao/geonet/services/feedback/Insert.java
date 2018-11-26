@@ -32,18 +32,14 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.jdom.Element;
-
-import javax.naming.OperationNotSupportedException;
-import java.nio.file.Path;
 
 /**
  * Stores the feedback from a user into the database and sends an e-mail
@@ -85,7 +81,7 @@ public class Insert implements Service {
         if (metadataEmail != null) {
             //Check metadata email belongs to metadata
             //security!!
-            AbstractMetadata md = gc.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+            AbstractMetadata md = gc.getBean(MetadataRepository.class).findOneByUuid(uuid);
             if(md.getData().indexOf(metadataEmail) > 0) {
                 toAddress.add(metadataEmail);
             }

@@ -95,30 +95,33 @@ public class BatchDelete extends BackupFileService {
                 context.debug("Deleting metadata with uuid:" + uuid);
             }
 
-            AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
-            if (info == null) {
+            if (!metadataRepository.existsMetadataUuid(uuid)) {
                 notFound.add(uuid);
-            } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
-                notOwner.add(uuid);
-            } else {
-                String idString = String.valueOf(info.getId());
-
-                //--- backup metadata in 'removed' folder
-                if (backupFile &&
-                    info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
-                    info.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-                    backupFile(context, idString, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false, false));
-                }
-
-                //--- remove the metadata directory
-                Path pb = Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), idString);
-                IO.deleteFileOrDirectory(pb);
-
-                //--- delete metadata and return status
-                dataMan.deleteMetadata(context, idString);
-                if (context.isDebugEnabled())
-                    context.debug("  Metadata with id " + idString + " deleted.");
-                metadata.add(uuid);
+            }
+            
+            for(AbstractMetadata info : metadataRepository.findAllByUuid(uuid)) {
+            	if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
+	                notOwner.add(uuid);
+	            } else {
+	                String idString = String.valueOf(info.getId());
+	
+	                //--- backup metadata in 'removed' folder
+	                if (backupFile &&
+	                    info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
+	                    info.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+	                    backupFile(context, idString, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false, false));
+	                }
+	
+	                //--- remove the metadata directory
+	                Path pb = Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), idString);
+	                IO.deleteFileOrDirectory(pb);
+	
+	                //--- delete metadata and return status
+	                dataMan.deleteMetadata(context, idString);
+	                if (context.isDebugEnabled())
+	                    context.debug("  Metadata with id " + idString + " deleted.");
+	                metadata.add(uuid);
+	            }
             }
         }
 

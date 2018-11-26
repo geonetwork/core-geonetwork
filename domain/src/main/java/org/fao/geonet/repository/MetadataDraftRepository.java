@@ -50,6 +50,15 @@ public interface MetadataDraftRepository
      */
     @Nullable
     MetadataDraft findOneByUuid(@Nonnull String uuid);
+    
+    /**
+     * Find all metadata by the metadata's uuid.
+     *
+     * @param uuid the uuid of the metadata to find
+     * @return one metadata or null.
+     */
+    @Nullable
+    List<MetadataDraft> findAllByUuid(@Nonnull String uuid);
 
     /**
      * Find all metadata harvested by the identified harvester.

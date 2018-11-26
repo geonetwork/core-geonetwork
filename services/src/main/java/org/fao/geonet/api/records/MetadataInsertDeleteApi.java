@@ -88,6 +88,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -197,7 +198,7 @@ public class MetadataInsertDeleteApi {
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
-        final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+        final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         for (String uuid : records) {
             AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);

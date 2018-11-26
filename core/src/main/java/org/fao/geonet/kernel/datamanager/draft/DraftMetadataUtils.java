@@ -36,7 +36,6 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -44,7 +43,6 @@ import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SimpleMetadata;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Log;
@@ -61,14 +59,12 @@ import com.google.common.base.Optional;
 
 import jeeves.server.context.ServiceContext;
 
-public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUtils {
+public class DraftMetadataUtils extends BaseMetadataUtils {
 
 	@Autowired
 	private MetadataDraftRepository metadataDraftRepository;
 	@Autowired
 	private IMetadataOperations metadataOperations;
-	@Autowired
-	private OperationAllowedRepository operationAllowedRepository;
 	@Autowired
 	private GroupRepository groupRepository;
 	@Autowired
@@ -79,7 +75,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 	public void init(ServiceContext context, Boolean force) throws Exception {
 		this.metadataDraftRepository = context.getBean(MetadataDraftRepository.class);
 		this.metadataOperations = context.getBean(IMetadataOperations.class);
-		this.operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 		this.groupRepository = context.getBean(GroupRepository.class);
 		this.am = context.getBean(AccessManager.class);
 		this.context = context;
@@ -248,6 +243,17 @@ public class DraftMetadataUtils extends BaseMetadataUtils implements IMetadataUt
 			Log.error(Geonet.DATA_MANAGER, e);
 		}
 		return md;
+	}
+	
+	/**
+	 * Return all records, including drafts.
+	 */
+	@Override
+	public List<? extends AbstractMetadata> findAllByUuid(String uuid) {
+		List<AbstractMetadata> res = new LinkedList<AbstractMetadata>();
+		res.addAll(super.findAllByUuid(uuid));
+		res.addAll(metadataDraftRepository.findAllByUuid(uuid));
+		return res;
 	}
 
 	@Override

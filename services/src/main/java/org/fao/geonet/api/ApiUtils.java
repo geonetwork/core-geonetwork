@@ -129,6 +129,7 @@ public class ApiUtils {
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;
+                
         try {
             metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
         } catch (IncorrectResultSizeDataAccessException e){
