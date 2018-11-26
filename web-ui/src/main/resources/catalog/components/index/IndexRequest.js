@@ -50,7 +50,7 @@
 
   geonetwork.gnIndexRequest = function(config, $injector) {
 
-    this.ES_URL = config.url + '/_search';
+    this.ES_URL = config.url + '?_=_search';
 
     this.$http = $injector.get('$http');
     this.$q = $injector.get('$q');
@@ -251,7 +251,7 @@
     else {
       return this.search(
           qParams,
-          angular.extend({}, this.initialParams.facets, aggs));
+          angular.merge({}, this.initialParams.facets, aggs));
     }
   };
 
@@ -293,7 +293,7 @@
       any: this.requestParams.any,
       params: this.requestParams.qParams,
       geometry: this.requestParams.geometry
-    }, aggs);
+    }, aggs, false, true);
   };
 
   geonetwork.gnIndexRequest.prototype.searchQuiet =
@@ -325,11 +325,11 @@
    * @return {string} the updated url
    */
   geonetwork.gnIndexRequest.prototype.search_ =
-      function(qParams, aggs, quiet) {
+      function(qParams, aggs, quiet, doNotSaveParams) {
 
     var params = this.buildESParams(qParams, aggs);
 
-    this.reqParams = params;
+    if (!doNotSaveParams) this.reqParams = params;
 
     return this.$http.post(this.ES_URL, params).then(angular.bind(this,
         function(r) {
@@ -955,7 +955,7 @@
     // TODO move this in createFacetData_ ? query param
     angular.forEach(qParams.params, function(field, fieldName) {
       var valuesQ = [];
-      if (field.type == 'date') {
+      if (field.type == 'date' || field.type == 'rangeDate') {
         return;
       }
       for (var p in field.values) {
@@ -987,7 +987,7 @@
 
     angular.forEach(qParams.qParams, function(field, fieldName) {
       var valuesQ = [];
-      if (field.type == 'date') {
+      if (field.type == 'date' || field.type == 'rangeDate') {
         return;
       }
       for (var p in field.values) {

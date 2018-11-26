@@ -337,10 +337,10 @@ public class QueryRequest {
     @Autowired
     private EsClient client;
 
-    public boolean storeToEs(String index) {
+    public boolean storeToEs(String index, String indexType) {
         if (client == null) {
-          Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
-          return false;
+            Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
+            return false;
         }
 
         Map<String, String> listOfDocumentsToIndex = new HashMap<>();
@@ -396,7 +396,7 @@ public class QueryRequest {
             listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
 
             client = ApplicationContextHolder.get().getBean(EsClient.class);
-            client.bulkRequest(index, listOfDocumentsToIndex);
+            client.bulkRequest(index, indexType, listOfDocumentsToIndex);
         } catch (JsonProcessingException e) {
             Log.debug(Geonet.SEARCH_LOGGER, String.format(
                 "Error occured while building JSON for search requests: %s", e.getMessage()

@@ -120,7 +120,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
         from("direct:index-wfs")
                 .id("harvest-wfs-features")
                 .log(LoggingLevel.INFO, "Indexing features from ${property.url}#${property.typeName} ...")
-                .beanRef("WFSFeatureIndexer", "indexFeatures")
+                .beanRef("WFSFeatureIndexer", "indexFeatures", false)
                 .log(LoggingLevel.INFO, "All features from ${property.url}#${property.typeName} indexed.");
     }
 }

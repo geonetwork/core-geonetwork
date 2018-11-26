@@ -23,6 +23,7 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -32,55 +33,120 @@ import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
+import io.searchbox.client.JestResultHandler;
+import io.searchbox.core.Bulk;
+import io.searchbox.core.BulkResult;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import org.apache.camel.Exchange;
 import org.apache.jcs.access.exception.InvalidArgumentException;
-import org.apache.log4j.Logger;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
-import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
-import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.geotools.util.logging.Logging;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.metadata.extent.Extent;
-import org.opengis.metadata.extent.GeographicBoundingBox;
-import org.opengis.metadata.extent.GeographicExtent;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Phaser;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-//import org.elasticsearch.common.xcontent.XContentBuilder;
+// TODO: GeoServer WFS 1.0.0 in some case return
+// Feb 18, 2016 12:04:22 PM org.geotools.data.wfs.v1_0_0.NonStrictWFSStrategy createFeatureReaderGET
+// WARNING: java.io.IOException: org.xml.sax.SAXException: cannot merge two target namespaces. http://www.openplans.org/topp http://www.openplans.org/spearfish
 
-//import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 public class EsWFSFeatureIndexer {
-    public static final String MULTIVALUED_SUFFIX = "s";
-    public static final String TREE_FIELD_SUFFIX = "_tree";
-    public static final String FEATURE_FIELD_PREFIX = "ft_";
+    public static final String CDATA_START = "<![CDATA[";
+    public static final String CDATA_START_REGEX = "<!\\[CDATA\\[";
+    public static final String CDATA_END = "]]>";
+    private static Logger LOGGER =  LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
+    static {
+        try {
+            Logging.ALL.setLoggerFactory("org.geotools.util.logging.Log4JLoggerFactory");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Value("${es.index.features}")
     private String index = "features";
 
+    @Value("${es.index.features.type}")
+    private String indexType = "features";
+
+
+    @Value("${es.index.features.featureCommitInterval:300}")
+    private int featureCommitInterval;
+
+    public int getFeatureCommitInterval() {
+        return featureCommitInterval;
+    }
+
+    public void setFeatureCommitInterval(int featureCommitInterval) {
+        this.featureCommitInterval = featureCommitInterval;
+    }
+
+
+    @Value("${es.index.features.applyPrecisionModel:false}")
+    private boolean applyPrecisionModel;
+
+    public boolean isApplyPrecisionModel() {
+        return applyPrecisionModel;
+    }
+
+    public void setApplyPrecisionModel(boolean applyPrecisionModel) {
+        this.applyPrecisionModel = applyPrecisionModel;
+    }
+
+
+    @Value("${es.index.features.numberOfDecimals:7}")
+    private int numberOfDecimals;
+
+    public int getNumberOfDecimals() {
+        return numberOfDecimals;
+    }
+
+    public void setNumberOfDecimals(int numberOfDecimals) {
+        this.numberOfDecimals = numberOfDecimals;
+    }
+
     @Autowired
     private EsClient client;
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public void setIndexType(String indexType) {
+        this.indexType = indexType;
+    }
+
+    private ObjectMapper jacksonMapper = new ObjectMapper();
+
+    private int nbOfFeatures;
 
     /**
      * Create exchange states for this feature type.
@@ -92,34 +158,25 @@ public class EsWFSFeatureIndexer {
      * @param exchange
      * @param connect   Init datastore ie. connect to WFS, retrieve schema
      */
-    public void initialize(
-            Exchange exchange,
-            boolean connect) throws InvalidArgumentException {
-        WFSHarvesterParameter configuration =
-                (WFSHarvesterParameter) exchange.getProperty("configuration");
+    public void initialize(Exchange exchange, boolean connect) throws InvalidArgumentException {
+        WFSHarvesterParameter configuration = (WFSHarvesterParameter) exchange.getProperty("configuration");
         if (configuration == null) {
             throw new InvalidArgumentException("Missing WFS harvester configuration.");
         }
 
-        logger.info(
-                String.format(
-                        "Initializing harvester configuration for uuid '%s', url '%s', feature type '%s'. Exchange id is '%s'.",
-                        configuration.getMetadataUuid(),
-                        configuration.getUrl(),
-                        configuration.getTypeName(),
-                        exchange.getExchangeId()
-                ));
+        LOGGER.info("Initializing harvester configuration for uuid '{}', url '{}', feature type '{}'. Exchange id is '{}'.", new Object[] {
+            configuration.getMetadataUuid(),
+            configuration.getUrl(),
+            configuration.getTypeName(),
+            exchange.getExchangeId()});
 
         WFSHarvesterExchangeState config = new WFSHarvesterExchangeState(configuration);
         if (connect) {
             try {
                 config.initDataStore();
             } catch (Exception e) {
-                String errorMsg = String.format(
-                        "Failed to connect to server '%s'. Error is %s",
-                        configuration.getUrl(),
-                        e.getMessage());
-                logger.error(errorMsg);
+                String errorMsg = String.format("Failed to connect to server '%s'. Error is %s", configuration.getUrl(), e.getMessage());
+                LOGGER.error(errorMsg);
                 throw new RuntimeException(errorMsg);
             }
         }
@@ -127,44 +184,7 @@ public class EsWFSFeatureIndexer {
     }
 
     /**
-     * Define for each attribute type the index field suffix.
-     */
-    private static Map<String, String> XSDTYPES_TO_FIELDSUFFIX;
-
-
-    Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
-    // TODO: Move attributeType / dynamic index field suffix to config
-    // maybe make a bean taking care of this which could also do more
-    // complex mapping like based on feature type column name defined suffix
-    public static final String DEFAULT_FIELDSUFFIX = "_s";
-
-    static {
-        XSDTYPES_TO_FIELDSUFFIX = ImmutableMap.<String, String>builder()
-                .put("integer", "_ti")
-                .put("string", DEFAULT_FIELDSUFFIX)
-                .put("double", "_d")
-                .put("boolean", "_b")
-                .put("date", "_dt")
-                .put("dateTime", "_dt")
-                .build();
-    }
-
-
-
-    private int featureCommitInterval = 100;
-
-    public int getFeatureCommitInterval() {
-        return featureCommitInterval;
-    }
-
-    public void setFeatureCommitInterval(int featureCommitInterval) {
-        this.featureCommitInterval = featureCommitInterval;
-    }
-
-
-    /**
-     * Delete all documents matching a WFS server and a specific
-     * typename.
+     * Delete all documents matching a WFS server and a specific typename.
      *
      * @param exchange
      */
@@ -173,346 +193,422 @@ public class EsWFSFeatureIndexer {
         final String url = state.getParameters().getUrl();
         final String typeName = state.getParameters().getTypeName();
 
-        deleteFeatures(url, typeName, logger, client);
+        deleteFeatures(url, typeName, client);
     }
 
-    public void deleteFeatures(String url, String typeName, Logger logger,
-                                      EsClient client) {
-        logger.info(String.format(
-                "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
-                url, typeName, index));
-
+    public void deleteFeatures(String url, String typeName, EsClient client) {
+        LOGGER.info("Deleting features previously index from service '{}' and feature type '{}' in index '{}/{}'",
+            new Object[]{url, typeName, index, indexType});
         try {
-            ZonedDateTime startTime = ZonedDateTime.now();
-            String msg = client.deleteByQuery(
-                index,
-                String.format(
-                    "+featureTypeId:\\\"%s#%s\\\"", url, typeName)
-            );
-            logger.info(String.format(
-                    "  Features deleted in %sms.",
-                    Duration.between(startTime, ZonedDateTime.now()).toMillis()));
+            long begin = System.currentTimeMillis();
+            client.deleteByQuery(index, indexType, String.format("+featureTypeId:\\\"%s\\\"", getIdentifier(url, typeName)));
+            LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
-            startTime = ZonedDateTime.now();
-            msg = client.deleteByQuery(
-                index,
-                String.format(
-                    "+id:\\\"%s#%s\\\"", url, typeName)
-            );
-            logger.info(String.format(
-                    "  Report deleted in %sms.",
-                    Duration.between(startTime, ZonedDateTime.now()).toMillis()));
+            begin = System.currentTimeMillis();
+            client.deleteByQuery(index, indexType, String.format("+id:\\\"%s\\\"",
+                getIdentifier(url, typeName)));
+            LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
+
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(String.format(
-                    "Error connecting to ES at '%s'. Error is %s.",
-                    index, e.getMessage()));
+            LOGGER.error( "Error connecting to ES at '{}'. Error is {}.", index, e.getMessage());
         }
     }
 
-    private void saveHarvesterReport(WFSHarvesterExchangeState state) {
-        Map<String, Object> report = state.getHarvesterReport();
-        Index search = new Index.Builder(report)
-            .index(index)
-            .type(index)
-            .id(report.get("id").toString()).build();
-        try {
-            DocumentResult response = client.getClient().execute(search);
-            logger.info(String.format(
-                    "Report saved for %s. Error is '%s'.",
-                    state.getParameters().getTypeName(),
-                    response.getErrorMessage()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    interface TitleResolver {
+        void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature);
     }
 
-
-    /**
-     * Index all features found in a WFS server
-     *
-     * @param exchange
-     */
     public void indexFeatures(Exchange exchange) throws Exception {
         WFSHarvesterExchangeState state = (WFSHarvesterExchangeState) exchange.getProperty("featureTypeConfig");
 
-        final String url = state.getParameters().getUrl();
-        final String typeName = state.getParameters().getTypeName();
-        logger.info(String.format(
-                "Indexing WFS features from service '%s' and feature type '%s'",
-                url, typeName));
+        String url                              = state.getParameters().getUrl();
+        String typeName                         = state.getParameters().getTypeName();
+        Map<String, String> tokenizedFields     = state.getParameters().getTokenizedFields();
+        WFSDataStore wfs                        = state.getWfsDatastore();
+        Map<String, String> featureAttributes   = state.getFields();
+        TitleResolver titleResolver = getTitleResolver(state);
 
-        WFSDataStore wfs = state.getWfsDatastore();
-        // Feature attribute name and type
-        Map<String, String> featureAttributes = state.getFields();
-        // Feature attribute name and document field name
-        Map<String, String> documentFields = new LinkedHashMap<String, String>();
-
-        state.getHarvesterReport().put("id", url + "#" + typeName);
-        state.getHarvesterReport().put("docType", "harvesterReport");
-
-        final Map<String, String> tokenizedFields = state.getParameters().getTokenizedFields();
-        final List<String> treeFields = state.getParameters().getTreeFields();
-        final boolean hasTokenizedFields = tokenizedFields != null;
-
-        for (String attributeName : featureAttributes.keySet()) {
-            String attributeType = featureAttributes.get(attributeName);
-            String separator = null;
-            if (hasTokenizedFields) {
-                separator = tokenizedFields.get(attributeName);
-            }
-            if (attributeType.equals("geometry")) {
-                documentFields.put(attributeName, "geom");
-            } else {
-                boolean isTree = treeFields != null ? treeFields.contains(attributeName) : false;
-                documentFields.put(attributeName, FEATURE_FIELD_PREFIX +
-                               attributeName +
-                               XSDTYPES_TO_FIELDSUFFIX.get(attributeType) +
-                               (isTree ? TREE_FIELD_SUFFIX : "")
-                );
-            }
-        }
-        state.getHarvesterReport().put("ftColumns_s", Joiner.on("|").join(featureAttributes.keySet()));
-        state.getHarvesterReport().put("docColumns_s", Joiner.on("|").join(documentFields.values()));
+        LOGGER.info("Indexing WFS features from service '{}' and feature type '{}'. Precision model applied: '{}', number of decimals: '{}'", url, typeName, applyPrecisionModel, numberOfDecimals);
+        Report report= new Report(url, typeName);
+        ObjectNode protoNode = createProtoNode(url, typeName);
         if (state.getParameters().getMetadataUuid() != null) {
-            state.getHarvesterReport().put("parent", state.getParameters().getMetadataUuid());
+            report.put("parent", state.getParameters().getMetadataUuid());
+            protoNode.put("parent", state.getParameters().getMetadataUuid());
+        }
+        initFeatureAttributeToDocumentFieldNamesMapping(featureAttributes, state.getParameters().getTreeFields(), report);
+        boolean initializeESReportSucceeded = report.saveHarvesterReport();
+        if (!initializeESReportSucceeded) {
+            LOGGER.error("couldn't initialize es report, don't even try to go further querying wfs.");
+            throw new RuntimeException("couldn't initialize es report, don't even try to go further querying wfs.");
         }
 
-        // In WFS1.0.0, coordinates is lat/lon whatever the longitudeFirst is.
+        Query query = new Query();
         CoordinateReferenceSystem wgs84;
-
-        if (state.getParameters().getVersion().equals("1.0.0")) {
+        if (wfs.getInfo().getVersion().equals("1.0.0")) {
             wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("EPSG:4326");
-//            Hints hints = new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
-//            CRSAuthorityFactory factory = ReferencingFactoryFinder.getCRSAuthorityFactory("EPSG", hints);
-//            wgs84 = factory.createCoordinateReferenceSystem("4326");
         } else {
-            wgs84 = CRS.getAuthorityFactory(true)
-                .createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
+            wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
         }
+        query.setCoordinateSystemReproject(wgs84);
 
         try {
-            FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(typeName);
-            Extent crsExtent = wgs84.getDomainOfValidity();
-            ReferencedEnvelope wgs84bbox = null;
-            for (GeographicExtent element : crsExtent.getGeographicElements()) {
-                if (element instanceof GeographicBoundingBox) {
-                    GeographicBoundingBox bounds = (GeographicBoundingBox) element;
-                    wgs84bbox = new ReferencedEnvelope(
-                            bounds.getSouthBoundLatitude(),
-                            bounds.getNorthBoundLatitude(),
-                            bounds.getWestBoundLongitude(),
-                            bounds.getEastBoundLongitude(),
-                            wgs84
-                    );
-                }
-            }
+            nbOfFeatures = 0;
 
+            final Phaser phaser = new Phaser();
+            BulkResutHandler brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
 
-            // TODO: GeoServer WFS 1.0.0 in some case return
-//            Feb 18, 2016 12:04:22 PM org.geotools.data.wfs.v1_0_0.NonStrictWFSStrategy createFeatureReaderGET
-//            WARNING: java.io.IOException: org.xml.sax.SAXException: cannot merge two target namespaces. http://www.openplans.org/topp http://www.openplans.org/spearfish
-            // Retrieve features in WGS 84
-            Query query = new Query();
-            query.setCoordinateSystemReproject(wgs84);
-            FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection =
-                source.getFeatures(query);
-
-            final FeatureIterator<SimpleFeature> features = featuresCollection.features();
-            int numInBatch = 0, nbOfFeatures = 0;
-            Map<String, String> docCollection = new HashMap<>();
-
-            saveHarvesterReport(state);
-
-            String titleExpression = state.getParameters().getTitleExpression();
-            String defaultTitleAttribute = titleExpression == null ?
-                WFSFeatureUtils.guessFeatureTitleAttribute(featureAttributes) : null;
-
-            ZonedDateTime startIndexingTime = ZonedDateTime.now();
-            ZonedDateTime startCommitTime = null;
-
-            StringBuffer bulkRequest = new StringBuffer();
-            ObjectMapper mapper = new ObjectMapper();
-            boolean isPointOnly = true;
-
+            long begin = System.currentTimeMillis();
+            FeatureIterator<SimpleFeature> features = wfs.getFeatureSource(typeName).getFeatures(query).features();
             while (features.hasNext()) {
-                ObjectNode rootNode = mapper.createObjectNode();
-//                XContentBuilder builder = jsonBuilder()
-//                    .startObject();
 
                 try {
                     SimpleFeature feature = features.next();
-                    nbOfFeatures ++;
-
-                    String id = url + "#" + typeName + "#" + feature.getID();
-//                    builder.field("docType", "feature");
-//                    builder.field("resourceType", "feature");
-//                    builder.field("featureTypeId", url + "#" + typeName);
-                    rootNode.put("docType", "feature");
-                    rootNode.put("resourceType", "feature");
-                    rootNode.put("featureTypeId", url + "#" + typeName);
-
-
-                    if (titleExpression != null) {
-//                        builder.field("resourceTitle",
-//                            WFSFeatureUtils.buildFeatureTitle(feature, featureAttributes, titleExpression));
-                        rootNode.put("resourceTitle",
-                            WFSFeatureUtils.buildFeatureTitle(feature, featureAttributes, titleExpression));
-                    }
-
-                    if (state.getParameters().getMetadataUuid() != null) {
-//                        builder.field("parent", state.getParameters().getMetadataUuid());
-                        rootNode.put("parent", state.getParameters().getMetadataUuid());
-                    }
+                    ObjectNode rootNode = protoNode.deepCopy();
+                    titleResolver.setTitle(rootNode, feature);
 
                     for (String attributeName : featureAttributes.keySet()) {
-                        String attributeType = featureAttributes.get(attributeName);
                         Object attributeValue = feature.getAttribute(attributeName);
+                        if (attributeValue == null) {
 
-                        if (attributeValue != null) {
-                            // Check if field has to be tokenized
-                            String separator = null;
-                            if (hasTokenizedFields) {
-                                separator = tokenizedFields.get(attributeName);
+                        } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
+                            String separator = tokenizedFields.get(attributeName);
+                            String[] tokens = ((String) attributeValue).split(separator);
+                            ArrayNode arrayNode = jacksonMapper.createArrayNode();
+                            for (String token : tokens) {
+                                arrayNode.add(token.trim());
                             }
-                            boolean isTokenized = separator != null;
-                            if (isTokenized){
-                                String[] tokens = ((String) attributeValue).split(separator);
-                                ArrayNode arrayNode = mapper.createArrayNode();
-                                for (String token : tokens) {
-                                    arrayNode.add(token.trim());
-                                }
-                                rootNode.putPOJO(documentFields.get(attributeName), arrayNode);
-//                                builder.endArray();
+                            rootNode.putPOJO(getDocumentFieldName(attributeName), arrayNode);
+                        } else if (getDocumentFieldName(attributeName).equals("geom")) {
+                            Geometry geom = (Geometry) feature.getDefaultGeometry();
+
+                            if (applyPrecisionModel) {
+                                PrecisionModel precisionModel = new PrecisionModel(Math.pow(10, numberOfDecimals - 1));
+                                geom = GeometryPrecisionReducer.reduce(geom, precisionModel);
+                                // numberOfDecimals is equal to
+                                // precisionModel.getMaximumSignificantDigits()
+                            }
+
+                            // An issue here is that GeometryJSON conversion may over simplify
+                            // the geometry by truncating coordinates based on numberOfDecimals
+                            // which on default constructor is set to 4. This may lead to
+                            // invalid geometry and Elasticsearch will fail parsing the GeoJSON
+                            // with the following type of error:
+                            // Caused by: org.locationtech.spatial4j.exception.InvalidShapeException:
+                            // Provided shape has duplicate
+                            // consecutive coordinates at: (-3.9997, 48.7463, NaN)
+                            //
+                            // To avoid this, it may be relevant to apply the reduction model
+                            // preserving topology.
+                            String gjson = new GeometryJSON(numberOfDecimals).toString(geom);
+
+                            JsonNode jsonNode = jacksonMapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
+                            rootNode.put(getDocumentFieldName(attributeName), jsonNode);
+
+                            boolean isPoint = geom instanceof Point;
+                            if (isPoint) {
+                                Coordinate point = geom.getCoordinate();
+                                rootNode.put("location", String.format("%s,%s", point.y , point.x));
                             } else {
-                                if (documentFields.get(attributeName).equals("geom")) {
-                                    Geometry geom = (Geometry) feature.getDefaultGeometry();
-                                    // Convert to JSON
-                                    String gjson = new GeometryJSON().toString(
-                                        geom
-                                    );
-                                    JsonNode obj = mapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
-//                                    builder.rawField(
-                                    rootNode.put(
-                                        documentFields.get(attributeName),
-                                        obj
-                                    );
-
-                                    // Index point geometry in location field
-                                    // of type geo_point
-                                    boolean isPoint = geom instanceof Point;
-                                    if (isPoint) {
-                                        Coordinate point = geom.getCoordinate();
-                                        // Strin with format lat,lon
-                                        rootNode.put(
-                                            "location",
-                                            point.y + "," + point.x
-                                        );
-                                    } else {
-                                        isPointOnly = false;
-                                    }
-                                } else {
-//                                    builder.field(
-                                    rootNode.put(
-                                        documentFields.get(attributeName),
-                                        attributeValue.toString());
-                                }
+                                report.setPointOnlyForGeomsFalse();
                             }
+                        } else {
+                            String value = attributeValue.toString();
+                            rootNode.put(getDocumentFieldName(attributeName),
+                                value.startsWith(CDATA_START) ?
+                                    value.replaceFirst(CDATA_START_REGEX, "").substring(0, value.length() - CDATA_END.length() - CDATA_START.length()) :
+                                    value
 
-
-                            if (defaultTitleAttribute != null &&
-                                defaultTitleAttribute.equals(attributeName)) {
-//                                builder.field("resourceTitle", attributeValue);
-                                rootNode.put("resourceTitle", attributeValue.toString());
-                            }
+                            );
                         }
                     }
-//                    builder.endObject();
 
-//                    docCollection.put(id, builder.string());
-                    docCollection.put(id, mapper.writeValueAsString(rootNode));
+                    nbOfFeatures ++;
+                    brh.addAction(rootNode, feature);
+
                 } catch (Exception ex) {
-                    state.getHarvesterReport().put("error_ss", String.format(
+                    LOGGER.warn("Error while creating document for {} feature {}. Exception is: {}", new Object[] {
+                        typeName, nbOfFeatures, ex.getMessage()});
+                    report.put("error_ss", String.format(
                         "Error while creating document for %s feature %d. Exception is: %s",
                         typeName, nbOfFeatures, ex.getMessage()
                     ));
-                    continue;
                 }
 
+                if (brh.getBulkSize() >= featureCommitInterval) {
+                    brh.launchBulk(client);
+                    brh = new AsyncBulkResutHandler(phaser, typeName, url, nbOfFeatures, report);
+                }
+            }
 
-                numInBatch++;
-                if (numInBatch >= featureCommitInterval) {
-                    startCommitTime = ZonedDateTime.now();
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format(
-                                "  %s - %d features to index.",
-                                typeName, nbOfFeatures));
-                    }
-                    try {
-                        client.bulkRequest(index,
-                            docCollection);
-                    } catch (Exception ex) {
-                        state.getHarvesterReport().put("error_ss", String.format(
-                            "Error while indexing %s block of documents [%d-%d]. Exception is: %s",
-                            typeName, nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
-                        ));
-                    }
-                    docCollection.clear();
-                    numInBatch = 0;
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format(
-                            "  %s - %d features indexed in %dms.",
-                            typeName, nbOfFeatures,
-                                Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
-                        ));
-                    }
-                }
+            if (brh.getBulkSize() > 0) {
+                brh.launchBulk(client);
             }
-            if (docCollection.size() > 0) {
-                startCommitTime = ZonedDateTime.now();
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format(
-                        "  %s - %d features to index.",
-                        typeName, nbOfFeatures));
+
+            try {
+                if (nbOfFeatures > 0) {
+                    phaser.awaitAdvanceInterruptibly(0, 3, TimeUnit.HOURS);
                 }
-                try {
-                    client.bulkRequest(index,
-                        docCollection);
-                } catch (Exception ex) {
-                    state.getHarvesterReport().put("error_ss", String.format(
-                        "Error while indexing %s block of documents [%d-%d]. Exception is: %s",
-                        typeName, nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
-                    ));
-                }
-                logger.debug(String.format(
-                    "  %s - %d features indexed in %dms.",
-                    typeName, nbOfFeatures,
-                    Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
-                ));
+            } catch (TimeoutException e) {
+                throw new Exception("Timeout when awaiting all bulks to be processed.");
             }
-            logger.info(String.format(
-                "Total number of %s features indexed is %d in %dms.",
+            LOGGER.info("Total number of {} features indexed is {} in {} ms.", new Object[]{
                 typeName, nbOfFeatures,
-                Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
-            ));
-            state.getHarvesterReport().put("isPointOnly", isPointOnly);
-            state.getHarvesterReport().put("status_s", "success");
-            state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
-            final DateTime dateTime = new DateTime(DateTimeZone.UTC);
-            state.getHarvesterReport().put("endDate_dt",
-                    ISODateTimeFormat.yearMonthDay().print(dateTime) + 'T' +
-                        ISODateTimeFormat.timeNoMillis().print(dateTime).replace("Z", ""));
+                System.currentTimeMillis() - begin});
+            report.success(nbOfFeatures);
         } catch (Exception e) {
-            state.getHarvesterReport().put("status_s", "error");
-            state.getHarvesterReport().put("error_ss", e.getMessage());
-            logger.error(e.getMessage());
+            report.put("status_s", "error");
+            report.put("error_ss", e.getMessage());
+            LOGGER.error(e.getMessage());
             throw e;
         } finally {
-            saveHarvesterReport(state);
+            report.saveHarvesterReport();
         }
     }
 
-    public void setIndex(String index) {
-        this.index = index;
+    private TitleResolver getTitleResolver(WFSHarvesterExchangeState state) {
+        TitleResolver titleResolver;
+        String titleExpression = state.getParameters().getTitleExpression();
+        String defaultTitleAttribute = titleExpression == null ? WFSFeatureUtils.guessFeatureTitleAttribute(state.getFields()) : null;
+        if (titleExpression != null) {
+            titleResolver = new TitleResolver() {
+                @Override
+                public void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature) {
+                    objectNode.put("resourceTitle",
+                        WFSFeatureUtils.buildFeatureTitle(simpleFeature, state.getFields(), titleExpression));
+                }
+            };
+        } else if (defaultTitleAttribute !=null) {
+            titleResolver = new TitleResolver() {
+                @Override
+                public void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature) {
+                    objectNode.put("resourceTitle", state.getFields().get(defaultTitleAttribute).toString());
+                }
+            };
+        } else {
+            titleResolver = new TitleResolver() {
+                @Override
+                public void setTitle(ObjectNode objectNode, SimpleFeature simpleFeature) {
+
+                }
+            };
+        }
+        return titleResolver;
+    }
+
+    private ObjectNode createProtoNode(String url, String typeName) {
+        ObjectNode protoNode = jacksonMapper.createObjectNode();
+        protoNode.put("docType", "feature");
+        protoNode.put("resourceType", "feature");
+        protoNode.put("featureTypeId", getIdentifier(url, typeName));
+        return protoNode;
+    }
+
+    class Report {
+        private Map<String, Object> report = new HashMap<>();
+        private String url;
+        private String typeName;
+        private boolean pointOnlyForGeoms;
+
+        public Report(String url, String typeName) throws UnsupportedEncodingException {
+            this.typeName = typeName;
+            this.url = url;
+            pointOnlyForGeoms = true;
+            report.put("id", getIdentifier(url, typeName));
+            report.put("docType", "harvesterReport");
+        }
+
+        public void put(String key, Object value) {
+            report.put(key, value);
+        }
+
+        public void setPointOnlyForGeomsFalse() {
+            this.pointOnlyForGeoms = false;
+        }
+
+        public void success(int nbOfFeatures) {
+            report.put("status_s","success");
+            report.put("totalRecords_i", nbOfFeatures);
+            DateTime dateTime = new DateTime(DateTimeZone.UTC);
+            report.put("endDate_dt", String.format("%sT%s",
+                ISODateTimeFormat.yearMonthDay().print(dateTime),
+                ISODateTimeFormat.timeNoMillis().print(dateTime).replace("Z","")));
+            report.put("isPointOnly", pointOnlyForGeoms);
+
+        }
+
+        public boolean saveHarvesterReport() {
+            Index search = new Index.Builder(report)
+                .index(index)
+                .type(indexType)
+                .id(report.get("id").toString()).build();
+            try {
+                DocumentResult response = client.getClient().execute(search);
+                if (response.getErrorMessage() != null) {
+                    LOGGER.info("Failed to save report for {}. Error message when saving report was '{}'.",
+                        typeName,
+                        response.getErrorMessage());
+                } else {
+                    LOGGER.info("Report saved for service {} and typename {}. Report id is {}",
+                        url, typeName, report.get("id"));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private String getIdentifier(String url, String typeName) {
+        try {
+            return URLEncoder.encode(url + "#" + typeName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error("  Can not build an URL encoded identifier from {}#{}. Exception is {}.",
+                url, typeName, e.getMessage());
+            return null;
+        }
+    }
+
+    abstract class BulkResutHandler implements JestResultHandler<BulkResult> {
+
+        protected Phaser phaser;
+        protected String typeName;
+        private String url;
+        protected int firstFeatureIndex;
+        private Report report;
+        protected long begin;
+        protected Bulk.Builder bulk;
+        protected int bulkSize;
+
+        public BulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report) {
+            this.phaser = phaser;
+            this.typeName = typeName;
+            this.url = url;
+            this.firstFeatureIndex = firstFeatureIndex;
+            this.report = report;
+            this.bulk = new Bulk.Builder().defaultIndex(index).defaultType(indexType);
+            this.bulkSize = 0;
+            LOGGER.debug("  {} - from {}, {} features to index, preparing bulk.", typeName, firstFeatureIndex, featureCommitInterval);
+        }
+
+        @Override
+        public void completed(BulkResult bulkResult) {
+            LOGGER.debug("  {} - from {}, {}/{} features, indexed in {} ms.", new Object[]{
+                typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin});
+            phaser.arriveAndDeregister();
+        }
+
+        @Override
+        public void failed(Exception e) {
+            this.report.put("error_ss", String.format(
+                "Error while indexing %s block of documents [%d-%d]. Exception is: %s",
+                typeName, firstFeatureIndex, firstFeatureIndex + featureCommitInterval, e.getMessage()
+            ));
+            LOGGER.error("  {} - from {}, {}/{} features, NOT indexed in {} ms. ({}).", new Object[]{
+                typeName, firstFeatureIndex, bulkSize, featureCommitInterval, System.currentTimeMillis() - begin, e.getMessage()});
+            phaser.arriveAndDeregister();
+        }
+
+        public int getBulkSize() {
+            return bulkSize;
+        }
+
+        public void addAction(ObjectNode rootNode, SimpleFeature feature) throws JsonProcessingException {
+            // generate a unique feature id when geotools gives us a placeholder one
+            String featureId = feature.getID();
+            if (featureId.toLowerCase().indexOf("placeholder") > -1) {
+                featureId = "fid-" + nbOfFeatures;
+            }
+
+            String id = String.format("%s#%s#%s", url, typeName, featureId);
+            bulk.addAction(new Index.Builder(jacksonMapper.writeValueAsString(rootNode)).id(id).build());
+            bulkSize++;
+        }
+
+        protected void prepareLaunch() {
+            phaser.register();
+            this.begin = System.currentTimeMillis();
+            LOGGER.debug("  {} - from {}, {}/{} features, launching bulk.", new Object[]{
+                typeName, firstFeatureIndex, bulkSize, featureCommitInterval,});
+        }
+        abstract public void launchBulk(EsClient client);
+    }
+
+    // depending on situation, one can expect going up to 1.5 faster using an async result handler (e.g. hudge collection of points)
+    class AsyncBulkResutHandler extends BulkResutHandler {
+        public AsyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report) {
+            super(phaser, typeName, url, firstFeatureIndex, report);
+        }
+
+        public void launchBulk(EsClient client) {
+            prepareLaunch();
+            client.bulkRequestAsync(this.bulk, this);
+        }
+    }
+
+    class SyncBulkResutHandler extends BulkResutHandler {
+        public SyncBulkResutHandler(Phaser phaser, String typeName, String url, int firstFeatureIndex, Report report) {
+            super(phaser, typeName, url, firstFeatureIndex, report);
+        }
+
+        public void launchBulk(EsClient client) {
+            try {
+                prepareLaunch();
+                BulkResult result = client.bulkRequestSync(this.bulk);
+                if (result.isSucceeded()) {
+                    this.completed(result);
+                } else {
+                    this.failed(new Exception(result.getErrorMessage()));
+                }
+            } catch (IOException e) {
+                this.failed(e);
+            }
+        }
+    }
+
+    // TODO: Move attributeType / dynamic index field suffix to config
+    // maybe make a bean taking care of this which could also do more
+    // complex mapping like based on feature type column name defined suffix
+
+    private static final String DEFAULT_FIELDSUFFIX = "_s";
+    private static final String TREE_FIELD_SUFFIX = "_tree";
+    private static final String FEATURE_FIELD_PREFIX = "ft_";
+    private static final Map<String, String> XSDTYPES_TO_FIELD_NAME_SUFFIX;
+    static { XSDTYPES_TO_FIELD_NAME_SUFFIX = ImmutableMap.<String, String>builder()
+        .put("integer", "_ti")
+        .put("string", DEFAULT_FIELDSUFFIX)
+        .put("double", "_d")
+        .put("boolean", "_b")
+        .put("date", "_dt")
+        .put("dateTime", "_dt")
+        .build();
+    }
+
+    private Map<String, String> featureAttributeToDocumentFieldNames = new LinkedHashMap<String, String>();
+
+    private void initFeatureAttributeToDocumentFieldNamesMapping(Map<String, String> featureAttributes, List<String> treeFields, Report report) {
+        for (String attributeName : featureAttributes.keySet()) {
+            String attributeType = featureAttributes.get(attributeName);
+            if (attributeType.equals("geometry")) {
+                featureAttributeToDocumentFieldNames.put(attributeName, "geom");
+            } else {
+                boolean isTree = treeFields != null ? treeFields.contains(attributeName) : false;
+                featureAttributeToDocumentFieldNames.put(
+                    attributeName,
+                    String.join("",
+                        FEATURE_FIELD_PREFIX,
+                        attributeName,
+                        XSDTYPES_TO_FIELD_NAME_SUFFIX.get(attributeType),
+                        (isTree ? TREE_FIELD_SUFFIX : ""))
+                );
+            }
+        }
+        report.put("ftColumns_s", Joiner.on("|").join(featureAttributes.keySet()));
+        report.put("docColumns_s", Joiner.on("|").join(featureAttributeToDocumentFieldNames.values()));
+    }
+
+    private String getDocumentFieldName(String attributeName) {
+        return featureAttributeToDocumentFieldNames.get(attributeName);
     }
 }

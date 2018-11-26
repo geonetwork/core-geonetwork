@@ -45,14 +45,6 @@ public class WFSHarvesterExchangeState {
 
     private WFSHarvesterParameter parameters;
 
-    public static Map<String, Object> getHarvesterReport() {
-        return harvesterReport;
-    }
-
-    public static void setHarvesterReport(Map<String, Object> harvesterReport) {
-        WFSHarvesterExchangeState.harvesterReport = harvesterReport;
-    }
-
     public WFSHarvesterParameter getParameters() {
         return parameters;
     }
@@ -86,12 +78,6 @@ public class WFSHarvesterExchangeState {
         checkTaskParameters();
     }
 
-    /**
-     * A list of properties to be saved in the index
-     */
-    private static Map<String, Object> harvesterReport = new HashMap<>();
-
-
     private void checkTaskParameters() {
         logger.info("Checking parameters ...");
         if (StringUtils.isEmpty(parameters.getUrl())) {
@@ -124,9 +110,12 @@ public class WFSHarvesterExchangeState {
 
             m.put(WFSDataStoreFactory.URL.key, getCapUrl);
             m.put(WFSDataStoreFactory.TIMEOUT.key, parameters.getTimeOut());
-            m.put(WFSDataStoreFactory.TRY_GZIP, true);
-            m.put(WFSDataStoreFactory.ENCODING, parameters.getEncoding());
-            m.put(WFSDataStoreFactory.USEDEFAULTSRS, false);
+            m.put(WFSDataStoreFactory.TRY_GZIP.key, true);
+            m.put(WFSDataStoreFactory.ENCODING.key, parameters.getEncoding());
+            m.put(WFSDataStoreFactory.USEDEFAULTSRS.key, false);
+            m.put(WFSDataStoreFactory.OUTPUTFORMAT.key, "GML3"); // seems to be mandatory with wfs 1.1.0 sources
+            m.put(WFSDataStoreFactory.LENIENT.key, true);
+
             if (parameters.getMaxFeatures() != -1) {
                 m.put(WFSDataStoreFactory.MAXFEATURES.key, parameters.getMaxFeatures());
             }
@@ -152,7 +141,7 @@ public class WFSHarvesterExchangeState {
             throw e;
         } catch (Exception e) {
             String errorMsg = String.format(
-                    "Failed to GetCatpabilities from service using URL '%s'. Error is %s.",
+                    "Failed to GetCapabilities from service using URL '%s'. Error is %s.",
                     parameters.getUrl(), e.getMessage());
             logger.error(errorMsg);
             throw e;
