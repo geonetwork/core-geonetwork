@@ -52,9 +52,9 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.userfeedback.RatingCriteria;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.userfeedback.RatingCriteriaRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
@@ -589,7 +589,7 @@ public class UserFeedbackAPI {
     ) throws IOException {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingManager sm = applicationContext.getBean(SettingManager.class);
-        IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
+        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
 
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());

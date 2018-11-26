@@ -23,12 +23,12 @@
 package org.fao.geonet.kernel.datamanager;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
@@ -163,10 +163,9 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 	@After
 	public void cleanup() {
 		
-		AbstractMetadata metadata = metadataUtils.findOneByUuid(UUID);
-		while(metadata != null) {
-			metadataManager.delete(metadata.getId());
-			metadata = metadataUtils.findOneByUuid(UUID);
+		List<? extends AbstractMetadata> metadata = metadataUtils.findAllByUuid(UUID);
+		for(AbstractMetadata md : metadata) {
+			metadataManager.delete(md.getId());
 		}
 		
 		userRepository.delete(user.getId());

@@ -40,8 +40,8 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -101,7 +101,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
                 // --- check access
 
-                final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+                final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
                 final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
                 AbstractMetadata info = metadataRepository.findOne(id);
                 if (info == null) {

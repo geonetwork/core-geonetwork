@@ -51,6 +51,16 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
      */
     @Nullable
     Metadata findOneByUuid(@Nonnull String uuid);
+    
+    
+    /**
+     * Find all metadata by the metadata's uuid.
+    *
+    * @param uuid the uuid of the metadata to find
+    * @return a list of metadata.
+    */
+   @Nullable
+   List<Metadata> findAllByUuid(@Nonnull String uuid);
 
     /**
      * Find all metadata harvested by the identified harvester.

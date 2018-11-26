@@ -351,11 +351,10 @@ public class UserSelectionsApi {
         }
 
         UserSavedSelectionRepository umsRepository =  appContext.getBean(UserSavedSelectionRepository.class);
-        IMetadataUtils mdRepository = appContext.getBean(IMetadataUtils.class);
+        IMetadataUtils metadataUtils = appContext.getBean(IMetadataUtils.class);
         for (String u : uuid) {
             // Check record exist
-            AbstractMetadata md = mdRepository.findOneByUuid(u);
-            if (md != null) {
+            if (metadataUtils.existsMetadataUuid(u)) {
                 UserSavedSelection e = new UserSavedSelection(selection, user, u);
                 try {
                     umsRepository.save(e);

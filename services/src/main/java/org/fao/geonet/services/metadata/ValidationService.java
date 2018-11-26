@@ -36,7 +36,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
-import org.jdom.Document;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
@@ -88,7 +87,6 @@ public class ValidationService implements ApplicationContextAware {
         this.report = new HashMap<>();
         this.report.put("records", new HashSet<Integer>());
         this.report.put("validRecords", new HashSet<Integer>());
-        this.report.put("notFoundRecords", new HashSet<Integer>());
         this.report.put("notOwnerRecords", new HashSet<Integer>());
 
         final Set<String> setOfUuidsToValidate;
@@ -121,23 +119,22 @@ public class ValidationService implements ApplicationContextAware {
                                  Set<String> setOfUuidsToValidate) throws Exception {
 
 
-        DataManager dataMan = context.getBean(DataManager.class);
         IMetadataValidator validator = context.getBean(IMetadataValidator.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
 
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         for (String uuid : setOfUuidsToValidate) {
-            AbstractMetadata record = metadataRepository.findOneByUuid(uuid);
-            if (record == null) {
-                this.report.get("notFoundRecords").add(record.getId());
-            } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
-                this.report.get("notOwnerRecords").add(record.getId());
-            } else {
-                boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
-                if (isValid) {
-                    this.report.get("validRecords").add(record.getId());
-                }
-                this.report.get("records").add(record.getId());
+            for(AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
+	            if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
+	                this.report.get("notOwnerRecords").add(record.getId());
+	            } else {
+	                boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
+	                if (isValid) {
+	                    this.report.get("validRecords").add(record.getId());
+	                }
+	                this.report.get("records").add(record.getId());
+	
+	            }
             }
         }
     }

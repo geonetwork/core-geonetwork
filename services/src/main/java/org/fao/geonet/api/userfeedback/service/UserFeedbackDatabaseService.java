@@ -36,6 +36,7 @@ import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.userfeedback.RatingRepository;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
@@ -217,7 +218,7 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         final UserFeedbackRepository userFeedbackRepository = appContext
                 .getBean(UserFeedbackRepository.class);
 
-        final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+        final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
 
         final UserRepository userRepository = appContext.getBean(UserRepository.class);
 
