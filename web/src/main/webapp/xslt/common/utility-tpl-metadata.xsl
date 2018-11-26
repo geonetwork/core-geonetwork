@@ -27,6 +27,7 @@
                 version="2.0"
 >
 
+  <xsl:include href="../services/metadata/validate-fn.xsl"/>
 
   <!-- Copy all elements and attributes excluding GeoNetwork elements.
 
@@ -145,9 +146,7 @@
       <errors>
         <xsl:for-each select="gn:validationReport|*/gn:validationReport">
           <error>
-            <xsl:value-of select="@gn:message"/>
-            <!--<xsl:copy-of select="concat($root/root/gui/strings/xsdError, ': ',
-                  geonet:parse-xsd-error(., $schema, $labels))"/>-->
+            <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $strings)"/>
           </error>
         </xsl:for-each>
 
