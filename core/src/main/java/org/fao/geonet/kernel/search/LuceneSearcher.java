@@ -80,6 +80,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -96,15 +97,22 @@ import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -1386,7 +1394,24 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     owner = userSession.getUserId();
                 }
                 if (owner != null) {
+                	LOGGER.trace("Search using user \"" + owner + "\".");
                     request.addContent(new Element(SearchParameter.OWNER).addContent(owner));
+                    
+                    //If the user is editor or more, fill the editorGroup
+                    Specification<UserGroup> hasUserIdAndProfile = 
+                    		where(
+                    				where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                    					.or(UserGroupSpecs.hasProfile(Profile.Editor))
+                    					.or(UserGroupSpecs.hasProfile(Profile.UserAdmin)))
+                            .and(UserGroupSpecs.hasUserId(userSession.getUserIdAsInt()));
+
+                    List<Integer> editableGroups = srvContext.getBean(UserGroupRepository.class).findGroupIds(hasUserIdAndProfile);
+
+                    LOGGER.trace(" > User has " + editableGroups.size() + " groups with editing privileges.");
+					for (Integer group : editableGroups) {
+						LOGGER.trace("   > Group: " + group);
+                        request.addContent(new Element(SearchParameter.GROUPEDIT).addContent("" + group));
+                    }
                 }
                 //--- in case of an admin show all results
                 if (userSession != null) {
