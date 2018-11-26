@@ -361,10 +361,19 @@ public interface IMetadataUtils {
     /**
      * Find the record with the UUID uuid
      * 
-     * @param firstMetadataId
+     * @param uuid
      * @return
      */
-    public AbstractMetadata findOneByUuid(String firstMetadataId);
+    public AbstractMetadata findOneByUuid(String uuid);
+
+
+    /**
+     * Find all records with the UUID uuid
+     * 
+     * @param uuid
+     * @return
+     */
+    public List<? extends AbstractMetadata> findAllByUuid(String uuid);
 
     /**
      * Find the record that fits the specification

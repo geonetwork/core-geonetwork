@@ -301,7 +301,7 @@ public class MetadataTagApi {
             final DataManager dataMan = context.getBean(DataManager.class);
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
             final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
@@ -401,7 +401,7 @@ public class MetadataTagApi {
             final DataManager dataMan = context.getBean(DataManager.class);
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
             final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();

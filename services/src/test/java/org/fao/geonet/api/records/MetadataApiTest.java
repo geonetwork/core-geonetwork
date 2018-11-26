@@ -72,9 +72,9 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -113,7 +113,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     @PersistenceContext
     private EntityManager _entityManager;
 
-    @Autowired private IMetadataUtils metadataRepository;
+    @Autowired private MetadataRepository metadataRepository;
     
     private String uuid;
     private int id;

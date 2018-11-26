@@ -98,7 +98,6 @@ public class BaseMetadataUtils implements IMetadataUtils {
 		this.metadataManager = metadataManager;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void init(ServiceContext context, Boolean force) throws Exception {
 		metadataRepository = context.getBean(MetadataRepository.class);
 		metadataNotifierManager = context.getBean(MetadataNotifierManager.class);
@@ -851,6 +850,11 @@ public class BaseMetadataUtils implements IMetadataUtils {
 	@Override
 	public AbstractMetadata findOneByUuid(String uuid) {
 		return metadataRepository.findOneByUuid(uuid);
+	}
+
+	@Override
+	public List<? extends AbstractMetadata> findAllByUuid(String uuid) {
+		return metadataRepository.findAllByUuid(uuid);
 	}
 
 	@Override
