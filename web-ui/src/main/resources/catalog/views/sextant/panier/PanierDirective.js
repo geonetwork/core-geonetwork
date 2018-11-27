@@ -261,6 +261,11 @@
 
               scope.isVisible = function() {
                 return gnSearchLocation.path() === '/panier';
+              };
+
+              // open the wps modal with which we share a parent
+              scope.openWpsModal = function($event) {
+                $($event.currentTarget.parentElement.querySelector('.modal')).modal('show');
               }
             },
             post: function preLink(scope, iElement, iAttrs, controller) {
