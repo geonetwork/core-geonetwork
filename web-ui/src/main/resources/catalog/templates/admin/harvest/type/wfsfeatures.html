@@ -1,107 +1,97 @@
 <form data-ng-keypress="updatingHarvester()">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
-    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
-
-    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>
   </div>
 
-
-  <fieldset>
-    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+  <fieldset id="gn-harvest-settings-wfs-basic-row">
+    <legend id="gn-harvest-settings-wfs-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
-    <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">serviceUrl</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+
+    <div id="gn-harvest-settings-wfs-basic-service-row" data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-wfs-basic-service-label" class="control-label" data-translate="">serviceUrl</label>
+      <input id="gn-harvest-settings-wfs-basic-service-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
       <p class="help-block" data-translate="">serviceUrlHelp</p>
     </div>
 
-
-    <div>
-      <label class="control-label" data-translate="">wfsfeatures-query</label>
-      <textarea class="form-control" data-ng-model="harvesterSelected.options.query"/>
+    <div id="gn-harvest-settings-wfs-basic-query-row">
+      <label id="gn-harvest-settings-wfs-basic-query-label" class="control-label" data-translate="">wfsfeatures-query</label>
+      <textarea id="gn-harvest-settings-wfs-basic-query-textarea" class="form-control" data-ng-model="harvesterSelected.options.query"/>
     </div>
   </fieldset>
 
-
-  <fieldset>
-    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+  <fieldset id="gn-harvest-settings-wfs-advanced-row">
+    <legend id="gn-harvest-settings-wfs-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-
-    <div data-gn-harvester-account="harvesterSelected"/>
-
+    <div id="gn-harvest-settings-wfs-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
     <!-- TODO: Could be nicer to have a list of languages -->
-    <div>
-      <label class="control-label" data-translate="">wfsfeatures-metadataLanguage</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
+    <div id="gn-harvest-settings-wfs-advanced-lang-row">
+      <label id="gn-harvest-settings-wfs-advanced-lang-label" class="control-label" data-translate="">wfsfeatures-metadataLanguage</label>
+      <input id="gn-harvest-settings-wfs-advanced-lang-input" type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
     </div>
 
-    <div>
-      <label class="control-label" data-translate="">wfsfeatures-outputSchema</label>
-      <input type="text" class="form-control"
+    <div id="gn-harvest-settings-wfs-advanced-schema-row">
+      <label id="gn-harvest-settings-wfs-advanced-schema-label" class="control-label" data-translate="">wfsfeatures-outputSchema</label>
+      <input id="gn-harvest-settings-wfs-advanced-schema-input" type="text" class="form-control"
              data-ng-model="harvesterSelected.options.outputSchema"/>
     </div>
 
-    <div>
+    <div id="gn-harvest-settings-wfs-advanced-stream-row">
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.streamFeatures"/>
-        <span data-translate="">wfsfeatures-streamFeatures</span>
+        <input id="gn-harvest-settings-wfs-advanced-stream-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.streamFeatures"/>
+        <span id="gn-harvest-settings-wfs-advanced-stream-label" data-translate="">wfsfeatures-streamFeatures</span>
       </label>
       <p class="help-block" data-translate="">wfsfeatures-streamFeaturesHelp</p>
     </div>
 
-    <div>
-      <label class="control-label">
+    <div id="gn-harvest-settings-wfs-advanced-style-row">
+      <label id="gn-harvest-settings-wfs-advanced-style-label" class="control-label">
         <span data-translate="">wfsfeatures-stylesheet</span>
       </label>
-      <select class="form-control" data-ng-model="harvesterSelected.options.stylesheet"
+      <select id="gn-harvest-settings-wfs-advanced-style-list" class="form-control" data-ng-model="harvesterSelected.options.stylesheet"
               data-ng-options="s.id as (s.name + ' (' + s.schema + ')') for s in harvesterGetFeatureXSLT"> </select>
       <p class="help-block" data-translate="">wfsfeatures-stylesheetHelp</p>
     </div>
 
-
-    <div data-gn-category="harvesterSelected.options.recordsCategory" data-lang="{{lang}}"
+    <div id="gn-harvest-settings-wfs-advanced-category-row" data-gn-category="harvesterSelected.options.recordsCategory" data-lang="{{lang}}"
          data-label="wfsfeature-recordsCategory"/>
 
-
-    <div>
+    <div id="gn-harvest-settings-wfs-advanced-sub-row">
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.createSubtemplates"/>
-        <span data-translate="">wfsfeatures-createSubtemplates</span>
+        <input id="gn-harvest-settings-wfs-advanced-sub-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.createSubtemplates"/>
+        <span id="gn-harvest-settings-wfs-advanced-sub-label" data-translate="">wfsfeatures-createSubtemplates</span>
       </label>
       <p class="help-block" data-translate="">wfsfeatures-createSubtemplatesHelp</p>
     </div>
 
-    <div>
-      <label class="control-label">
+    <div id="gn-harvest-settings-wfs-advanced-template-row">
+      <label id="gn-harvest-settings-wfs-advanced-template-label" class="control-label">
         <span data-translate="">wfsfeatures-templateId</span>
       </label>
-      <select class="form-control" data-ng-model="harvesterSelected.options.templateId"
+      <select id="gn-harvest-settings-wfs-advanced-template-list" class="form-control" data-ng-model="harvesterSelected.options.templateId"
               data-ng-options="t['@id'] as (t.schema + ' > ' + t.title) for t in harvesterTemplates"> </select>
       <p class="help-block" data-translate="">wfsfeatures-templateIdHelp</p>
     </div>
 
-
-    <div>
-      <label class="control-label" data-translate="">wfsfeature-subtemplateCategory</label>
-
-      <div data-gn-category="harvesterSelected.categories[0]['@id']" lang="{{lang}}"/>
+    <div id="gn-harvest-settings-wfs-advanced-subtemplate-row">
+      <label id="gn-harvest-settings-wfs-advanced-subtemplate-label" class="control-label" data-translate="">wfsfeature-subtemplateCategory</label>
+      <div id="gn-harvest-settings-wfs-advanced-subtemplate-list" data-gn-category="harvesterSelected.categories[0]['@id']" lang="{{lang}}"/>
     </div>
-    <div>
-      <label class="control-label">
+    
+    <div id="gn-harvest-settings-wfs-advanced-validate-row">
+      <label id="gn-harvest-settings-wfs-advanced-validate-label" class="control-label">
         <span data-translate="">harvesterValidate</span>
       </label>
-      <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <div id="gn-harvest-settings-wfs-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
       <p class="help-block" data-translate="">harvesterValidateHelp</p>
     </div>
   </fieldset>
 
-
-  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div id="gn-harvest-settings-wfs-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>
