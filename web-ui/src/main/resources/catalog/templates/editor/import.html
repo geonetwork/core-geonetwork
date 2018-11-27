@@ -10,32 +10,33 @@
         <div class="panel-body">
 
           <!--Radio button to chose mode of import-->
-          <div class="radio">
-            <label>
-              <input type="radio" data-ng-model="importMode" value="uploadFile"/>
-              <span data-translate="">uploadFile</span>
-            </label>
+          <div id="gn-import-mode-row">
+            <div id="gn-import-mode-uploadfile-row" class="radio">
+              <label>
+                <input id="gn-import-mode-uploadfile-radio" type="radio" data-ng-model="importMode" value="uploadFile"/>
+                <span id="gn-import-mode-uploadfile-label" data-translate="">uploadFile</span>
+              </label>
+            </div>
+            <div id="gn-import-mode-uploadurl-row" class="radio">
+              <label>
+                <input id="gn-import-mode-uploadurl-radio" type="radio" data-ng-model="importMode" value="uploadFileByUrl"/>
+                <span id="gn-import-mode-uploadurl-label" data-translate="">uploadFileByUrl</span>
+              </label>
+            </div>
+            <div id="gn-import-mode-copypaste-row" class="radio">
+              <label>
+                <input id="gn-import-mode-copypaste-radio" type="radio" data-ng-model="importMode" value="copyPaste"
+                      name="insert_mode" value="0"/>
+                <span id="gn-import-mode-copypaste-label" data-translate="">copyPaste</span>
+              </label>
+            </div>
+            <div id="gn-import-mode-folder-row" class="radio">
+              <label>
+                <input id="gn-import-mode-folder-radio" type="radio" data-ng-model="importMode" value="importFromDir"/>
+                <span id="gn-import-mode-folder-label" data-translate="">importFromDir</span>
+              </label>
+            </div>
           </div>
-          <div class="radio">
-            <label>
-              <input type="radio" data-ng-model="importMode" value="uploadFileByUrl"/>
-              <span data-translate="">uploadFileByUrl</span>
-            </label>
-          </div>
-          <div class="radio">
-            <label>
-              <input type="radio" data-ng-model="importMode" value="copyPaste"
-                     name="insert_mode" value="0"/>
-              <span data-translate="">copyPaste</span>
-            </label>
-          </div>
-          <div class="radio">
-            <label>
-              <input type="radio" data-ng-model="importMode" value="importFromDir"/>
-              <span data-translate="">importFromDir</span>
-            </label>
-          </div>
-
 
           <form id="gn-import" class="form-horizontal" role="form"
                 method="POST" enctype="{{enctype}}" action="{{action}}"
@@ -43,20 +44,22 @@
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
             <!-- Folder Path and subfolder options -->
-            <div class="form-group" data-ng-if="importMode === 'importFromDir'">
-              <label for="gn-io-directory"
+            <div id="gn-import-folder-row" class="form-group" data-ng-if="importMode === 'importFromDir'">
+              <label id="gn-import-folder-label"
+                     for="gn-import-folder-input"
                      class="col-sm-5 control-label"
                      data-translate="">directory</label>
               <div class="col-sm-7">
                 <input type="text"
                        class="form-control"
-                       id="gn-io-directory"
+                       id="gn-import-folder-input"
                        name="serverFolder"
                        data-ng-model="params.serverFolder"
                        placeholder="/tmp/metadata/to/import">
-                <div class="checkbox">
+                <div id="gn-import-subfolder-row" class="checkbox">
                   <label>
-                    <input type="checkbox"
+                    <input id="gn-import-subfolder-checkbox"
+                           type="checkbox"
                            name="recursiveSearch"
                            data-ng-model="params.recursiveSearch"/>
                     <span data-translate="">recursive</span>
@@ -66,24 +69,25 @@
             </div>
 
             <!-- Upload panel -->
-            <div class="form-group" data-ng-show="importMode === 'uploadFile'">
-              <label for="md-import-upload"
+            <div id="gn-import-uploadfile-row" class="form-group" data-ng-show="importMode === 'uploadFile'">
+              <label id="gn-import-uploadfile-label"
+                     for="md-import-upload"
                      class="col-sm-5 control-label"></label>
-              <div class="col-sm-7" id="md-import-upload">
+              <div id="gn-import-uploadfile-panel" class="col-sm-7">
 
                 <div class="panel panel-default">
                   <div class="panel-body">
 
-                <span class="btn btn-success btn-block fileinput-button">
-                  <i class="fa fa-plus fa-white"/>
-                  <span data-translate="">chooseOnlinesrc</span>
-                  <input type="file"
-                         multiple="true"
-                         id="md-import-file"
-                         name="file"/>
-                </span>
+                    <span class="btn btn-success btn-block fileinput-button">
+                      <i class="fa fa-plus fa-white"/>
+                      <span data-translate="">chooseOnlinesrc</span>
+                      <input type="file"
+                            multiple="true"
+                            id="md-import-file"
+                            name="file"/>
+                    </span>
 
-                    <ul>
+                    <ul id="gn-import-uploadfile-list">
                       <li data-ng-repeat="file in queue">
                         <div class="preview" data-file-upload-preview="file"></div>
                         {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
@@ -91,7 +95,8 @@
                       </li>
                     </ul>
 
-                    <div class="alert alert-warning"
+                    <div id="gn-import-uploadfile-alert"
+                         class="alert alert-warning"
                          data-ng-show="unsupportedFile"
                          data-translate="">unsupportedFileExtension
                     </div>
@@ -101,24 +106,30 @@
             </div>
 
             <!--copypaste metadata content-->
-            <div class="form-group" data-ng-if="importMode === 'copyPaste'">
-              <label for="gn-md-content"
+            <div id="gn-import-copypaste-row" class="form-group" data-ng-if="importMode === 'copyPaste'">
+              <label id="gn-import-copypaste-label"
+                     for="gn-import-copypaste-textarea"
                      class="col-sm-5 control-label"
                      data-translate="">metadataContent</label>
               <div class="col-sm-7">
-                <textarea class="form-control" rows="8" id="gn-md-content"
+                <textarea id="gn-import-copypaste-textarea"
+                          class="form-control"
+                          rows="8"
                           placeholder="<xml..."
                           data-ng-model="params.xml">
                 </textarea>
               </div>
             </div>
 
-            <div class="form-group" data-ng-if="importMode === 'uploadFileByUrl'">
-              <label for="gn-md-content"
+            <!-- upload by url -->
+            <div id="gn-import-uploadurl-row" class="form-group" data-ng-if="importMode === 'uploadFileByUrl'">
+              <label id="gn-import-uploadurl-label"
+                     for="gn-import-uploadurl-input"
                      class="col-sm-5 control-label"
                      data-translate="">metadataContent</label>
               <div class="col-sm-7">
-                <input class="form-control" type="text"
+                <input id="gn-import-uploadurl-input"
+                       class="form-control" type="text"
                        placeholder="http://"
                        name="url"
                        data-ng-model="params.url">
@@ -126,14 +137,14 @@
               </div>
             </div>
 
-
             <!--Type of record-->
-            <div class="form-group">
-              <label for="gn-typeOfRecord"
+            <div id="gn-import-type-row" class="form-group">
+              <label id="gn-import-type-label"
+                     for="gn-import-type-list"
                      class="col-sm-5 control-label"
                      data-translate="">typeOfRecord</label>
               <div class="col-sm-7">
-                <div id="gn-typeOfRecord"
+                <div id="gn-import-type-list"
                      gn-recordtypes-combo="params.metadataType"></div>
 
                 <input type="text" class="hidden"
@@ -142,30 +153,34 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="batchAction"
+            <div id="gn-import-action-row" class="form-group">
+              <label id="gn-import-action-label"
+                     for="gn-import-action-list"
                      class="col-sm-5 control-label"
                      data-translate="">uuidAction</label>
-              <div class="col-sm-7" id="batchAction">
-                <div class="radio">
+              <div id="gn-import-action-list" class="col-sm-7">
+                <div id="gn-import-action-list-none-row" class="radio">
                   <label>
-                    <input type="radio" name="uuidProcessing"
+                    <input id="gn-import-action-list-none-radio"
+                           type="radio" name="uuidProcessing"
                            data-ng-model="params.uuidProcessing"
                            value="NOTHING"/>
                     <span data-translate="">none</span>
                   </label>
                 </div>
-                <div class="radio">
+                <div id="gn-import-action-list-overwrite-row" class="radio">
                   <label>
-                    <input type="radio" name="uuidProcessing"
+                    <input id="gn-import-action-list-overwrite-radio"
+                           type="radio" name="uuidProcessing"
                            data-ng-model="params.uuidProcessing"
                            value="OVERWRITE"/>
                     <span data-translate="">overwrite</span>
                   </label>
                 </div>
-                <div class="radio">
+                <div id="gn-import-action-list-generate-row" class="radio">
                   <label>
-                    <input type="radio" name="uuidProcessing"
+                    <input id="gn-import-action-list-generate-radio"
+                           type="radio" name="uuidProcessing"
                            data-ng-model="params.uuidProcessing"
                            value="GENERATEUUID"/>
                     <span data-translate="">generateUUID</span>
@@ -174,95 +189,113 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="gn-io-directory"
+            <div id="gn-import-xslt-row" class="form-group">
+              <label id="gn-import-xslt-label"
+                     for="gn-import-xslt-input"
                      class="col-sm-5 control-label"
                      data-translate="">xsltToApply</label>
               <div class="col-sm-7">
                 <div data-gn-import-xsl="params.transformWith"/>
-                <input type="text"
+                <input id="gn-import-xslt-input"
+                       type="text"
                        data-ng-model="params.transformWith"
                        name="transformWith"
                        class="form-control hidden"/>
               </div>
             </div>
 
-            <div class="form-group">
+            <div id="gn-import-validate-row" class="form-group">
               <div class="col-sm-offset-5 col-sm-7">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox"
+                    <input id="gn-import-validate-checkbox"
+                           type="checkbox"
                            name="rejectIfInvalid"
                            data-ng-model="params.rejectIfInvalid"/>
-                    <span data-translate="">validate</span>
+                    <span id="gn-import-validate-label" data-translate="">validate</span>
                   </label>
                 </div>
               </div>
             </div>
 
-            <div class="form-group">
+            <div id="gn-import-publish-row" class="form-group">
               <div class="col-sm-offset-5 col-sm-7">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox"
+                    <input id="gn-import-publish-checkbox"
+                           type="checkbox"
                            name="publishToAll"
                            data-ng-disabled="!user.isReviewerOrMore() || file_type === 'mef'"
                            data-ng-model="params.publishToAll"/>
-                    <span data-translate="">publish</span>
+                    <span id="gn-import-publish-label" data-translate="">publish</span>
                   </label>
                 </div>
               </div>
             </div>
 
-            <div class="form-group">
+            <div id="gn-import-assigncatalog-row" class="form-group">
               <div class="col-sm-offset-5 col-sm-7">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox"
+                    <input id="gn-import-assigncatalog-checkbox"
+                           type="checkbox"
                            name="assignToCatalog"
                            data-ng-disabled="file_type !== 'mef'"
                            data-ng-model="params.assignToCatalog"/>
-                    <span data-translate="">assignToCatalog</span>
+                    <span id="gn-import-assigncatalog-label" data-translate="">assignToCatalog</span>
                   </label>
                 </div>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="col-sm-5 control-label" for="md-import-group"
+            <div id="gn-import-assigngroup-row" class="form-group">
+              <label id="gn-import-assigngroup-label"
+                     class="col-sm-5 control-label"
+                     for="gn-import-assigngroup-input"
                      data-translate="">assignToGroup</label>
               <div class="col-sm-7">
-                <div data-groups-combo=""
+                <div id="gn-import-assigngroup-list"
+                     data-groups-combo=""
                      data-owner-group="params.group"
                      lang="lang"
                      data-groups="groups" data-exclude-special-groups="true"/>
-                <input type="text"
+                <input id="gn-import-assigngroup-input"
+                       type="text"
                        data-ng-model="params.group"
-                       name="group" id="md-import-group"
+                       name="group"
                        class="form-control hidden"/>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="col-sm-5 control-label" for="md-import-cat"
+            <div id="gn-import-assigncategory-row" class="form-group">
+              <label id="gn-import-assigncategory-label"
+                     class="col-sm-5 control-label"
+                     for="gn-import-assigncategory-input"
                      data-translate="">assignToCategory</label>
               <div class="col-sm-7">
-                <div data-gn-category="params.category"
+                <div id="gn-import-assigncategory-list"
+                     data-gn-category="params.category"
                      data-lang="{{lang}}"/>
-                <input type="text"
-                       data-ng-model="params.category" id="md-import-cat"
+                <input id="gn-import-assigncategory-input"
+                       type="text"
+                       data-ng-model="params.category"
                        name="category"
                        class="form-control hidden"/>
               </div>
             </div>
 
-            <div class="pull-right">
-              <button type="button" class="btn btn-primary"
+            <div id="gn-import-buttons-row" class="pull-right">
+              <button id="gn-import-buttons-import"
+                      type="button"
+                      class="btn btn-primary"
                       data-ng-click="importRecords('#gn-import')"
                       title="{{'import' | translate}}">
-                <i class="fa fa-plus"/>&nbsp;<span data-translate="">importRecords</span>
+                <i class="fa fa-plus"/>&nbsp;
+                <span data-translate="">importRecords</span>
               </button>
-              <a href="#/board" class="btn btn-default">
+              <a id="gn-import-buttons-cancel"
+                 href="#/board"
+                 class="btn btn-default">
                 <i class="fa fa-close"/>&nbsp;
                 <span data-translate="">cancel</span>
               </a>
@@ -272,41 +305,43 @@
       </div>
     </div>
     <div class="col-sm-5">
-      <div class="progress progress-striped active"
+      <div id="gn-import-progress-row"
+           class="progress progress-striped active"
            data-ng-show="importing === true">
         <div class="progress-bar" style="width: 100%"/>
       </div>
 
+      <div id="gn-import-reports-row">
+        <div data-ng-repeat="report in reports track by $index">
+          <div class="panel panel-default"
+              data-ng-show="report.message || report.infos"
+              data-ng-class="report.code || (report.errors && report.errors.length > 0) ?
+                            'panel-danger' : 'panel-success'">
+            <div class="panel-heading" data-translate="">importReport</div>
+            <div class="panel-body">
 
-      <div data-ng-repeat="report in reports track by $index">
-        <div class="panel panel-default"
-             data-ng-show="report.message || report.infos"
-             data-ng-class="report.code || (report.errors && report.errors.length > 0) ?
-                          'panel-danger' : 'panel-success'">
-          <div class="panel-heading" data-translate="">importReport</div>
-          <div class="panel-body">
-
-            <p data-ng-show="report.message" translate="">
-              {{report.message}}
-            </p>
-            <p>
-              <div data-ng-repeat="(key, value) in report.infos">
-                <span>{{value.message}}</span>
-              </div>
-              <!--id and uuid from single import-->
-              <div data-ng-repeat="(key, value) in report.metadataInfos">
-                <span>{{value[0].message}}</span>
-                <a href='#/metadata/{{key}}?redirectUrl=catalog.edit'
-                   title="{{'edit' | translate}}">
-                  <i class='fa fa-pencil'></i>
-                </a>
-              </div>
-              <div data-ng-repeat="(key, value) in report.errors">
-                <span>{{value.message}}</span>
-              </div>
-              <!--Only one exception from single import-->
-              <span ng-show="report.code">{{report.description}}</span>
-            </p>
+              <p data-ng-show="report.message" translate="">
+                {{report.message}}
+              </p>
+              <p>
+                <div data-ng-repeat="(key, value) in report.infos">
+                  <span>{{value.message}}</span>
+                </div>
+                <!--id and uuid from single import-->
+                <div data-ng-repeat="(key, value) in report.metadataInfos">
+                  <span>{{value[0].message}}</span>
+                  <a href='#/metadata/{{key}}?redirectUrl=catalog.edit'
+                    title="{{'edit' | translate}}">
+                    <i class='fa fa-pencil'></i>
+                  </a>
+                </div>
+                <div data-ng-repeat="(key, value) in report.errors">
+                  <span>{{value.message}}</span>
+                </div>
+                <!--Only one exception from single import-->
+                <span ng-show="report.code">{{report.description}}</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -2,145 +2,156 @@
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
-    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
-
-    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>
   </div>
 
-  <fieldset>
-    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+  <fieldset id="gn-harvest-settings-gn-basic-row">
+    <legend id="gn-harvest-settings-gn-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
     <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">geonetwork-host</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.host"/>
-      <p class="help-block" data-translate="">geonetwork-hostHelp</p>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.node"/>
-      <p class="help-block" data-translate="">geonetwork-nodeHelp</p>
+      <div id="gn-harvest-settings-gn-basic-host-row">
+        <label id="gn-harvest-settings-gn-basic-host-label" class="control-label" data-translate="">geonetwork-host</label>
+        <input id="gn-harvest-settings-gn-basic-host-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.host"/>
+        <p class="help-block" data-translate="">geonetwork-hostHelp</p>
+      </div>
+      <div id="gn-harvest-settings-gn-basic-srv-row">
+        <input id="gn-harvest-settings-gn-basic-srv-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.node"/>
+        <p class="help-block" data-translate="">geonetwork-nodeHelp</p>
+      </div>
     </div>
 
-    <fieldset class="form-horizontal">
-      <legend data-translate="">harvesterFilter</legend>
+    <fieldset id="gn-harvest-settings-gn-basic-filter-row" class="form-horizontal">
+      <legend id="gn-harvest-settings-gn-basic-filter-title" data-translate="">harvesterFilter</legend>
 
-      <div>
-        <label class="control-label col-lg-4" data-translate="">any</label>
+      <div id="gn-harvest-settings-gn-basic-filter-any-row">
+        <label id="gn-harvest-settings-gn-basic-filter-any-label" class="control-label col-lg-4" data-translate="">any</label>
         <div class="col-lg-8">
-          <input type="text" class="form-control"
+          <input id="gn-harvest-settings-gn-basic-filter-any-input"
+                 type="text"
+                 class="form-control"
                  data-ng-model="harvesterSelected.searches[0].freeText"/>
         </div>
       </div>
 
-      <div>
-        <label class="control-label col-lg-4" data-translate="">title</label>
+      <div id="gn-harvest-settings-gn-basic-filter-title-row">
+        <label id="gn-harvest-settings-gn-basic-filter-title-label" class="control-label col-lg-4" data-translate="">title</label>
         <div class="col-lg-8">
-          <input type="text" class="form-control"
+          <input id="gn-harvest-settings-gn-basic-filter-title-input"
+                 type="text"
+                 class="form-control"
                  data-ng-model="harvesterSelected.searches[0].title"/>
         </div>
       </div>
 
-      <div>
-        <label class="control-label col-lg-4" data-translate="">abstract</label>
+      <div id="gn-harvest-settings-gn-basic-filter-abstract-row">
+        <label id="gn-harvest-settings-gn-basic-filter-abstract-label" class="control-label col-lg-4" data-translate="">abstract</label>
         <div class="col-lg-8">
-          <input type="text" class="form-control"
+          <input id="gn-harvest-settings-gn-basic-filter-abstract-input"
+                 type="text"
+                 class="form-control"
                  data-ng-model="harvesterSelected.searches[0].abstract"/>
         </div>
       </div>
 
-      <div>
-        <label class="control-label col-lg-4" data-translate="">keyword</label>
+      <div id="gn-harvest-settings-gn-basic-filter-keyword-row">
+        <label id="gn-harvest-settings-gn-basic-filter-keyword-label"class="control-label col-lg-4" data-translate="">keyword</label>
         <div class="col-lg-8">
-          <input type="text" class="form-control"
+          <input id="gn-harvest-settings-gn-basic-filter-keyword-input"
+                 type="text"
+                 class="form-control"
                  data-ng-model="harvesterSelected.searches[0].keywords"/>
         </div>
       </div>
 
-
-      <h4 data-translate="">geonetwork-customCriteria</h4>
-      <div class="row">
-        <label class="control-label col-lg-4">
-          <input type="text" class="form-control" placeholder="criteria"
-                 data-ng-model="harvesterSelected.searches[0].anyField"/>
-        </label>
-        <div class="col-lg-8">
-          <input type="text" class="form-control" placeholder="value"
-                 data-ng-model="harvesterSelected.searches[0].anyValue"/>
+      <div id="gn-harvest-settings-gn-basic-criteria-row">
+        <h4 id="gn-harvest-settings-gn-basic-criteria-title" data-translate="">geonetwork-customCriteria</h4>
+        <div class="row">
+          <label class="col-lg-4 gn-nopadding-left gn-nopadding-right">
+            <input type="text" class="form-control" placeholder="criteria"
+                  data-ng-model="harvesterSelected.searches[0].anyField"/>
+          </label>
+          <div class="col-lg-8">
+            <input type="text" class="form-control" placeholder="value"
+                  data-ng-model="harvesterSelected.searches[0].anyValue"/>
+          </div>
         </div>
+        <p class="help-block" data-translate="">geonetwork-customCriteriaHelp</p>
       </div>
-      <p class="help-block" data-translate="">geonetwork-customCriteriaHelp</p>
 
-      <div>
-        <label class="control-label" data-translate="">source</label>
-
+      <div id="gn-harvest-settings-gn-basic-source-row">
+        <label id="gn-harvest-settings-gn-basic-source-label" class="control-label" data-translate="">source</label>
         <div class="input-group">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default"
-                                data-ng-click="geonetworkGetSources(harvesterSelected.site.host)"
-                                title="{{'geonetwork-retrieveSources' | translate}}"><i
-                          class="fa fa-refresh"></i>&nbsp;</button>
-                    </span>
-          <select class="form-control"
+          <span class="input-group-btn">
+            <button id="gn-harvest-settings-gn-basic-source-button"
+                    type="button" class="btn btn-default"
+                    data-ng-click="geonetworkGetSources(harvesterSelected.site.host)"
+                    title="{{'geonetwork-retrieveSources' | translate}}">
+              <i class="fa fa-refresh"></i>&nbsp;</button>
+          </span>
+          <select id="gn-harvest-settings-gn-basic-source-list"
+                  class="form-control"
                   data-ng-options="s.uuid as s.name for s in geonetworkSources"
                   data-ng-model="harvesterSelected.searches[0].source.uuid">
             <option value=""/>
           </select>
         </div>
-
-
       </div>
     </fieldset>
 
   </fieldset>
 
 
-  <fieldset>
-    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+  <fieldset id="gn-harvest-settings-gn-advanced-row">
+    <legend id="gn-harvest-settings-gn-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-    <div data-gn-harvester-account="harvesterSelected"/>
+    <div id="gn-harvest-settings-gn-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
-    <div>
+    <div id="gn-harvest-settings-gn-advanced-mef-row">
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.site.mefFormatFull"/>
-        <span data-translate="">geonetwork-mefFormatFull</span>
+        <input id="gn-harvest-settings-gn-advanced-mef-checkbox" type="checkbox" data-ng-model="harvesterSelected.site.mefFormatFull"/>
+        <span id="gn-harvest-settings-gn-advanced-mef-label" data-translate="">geonetwork-mefFormatFull</span>
       </label>
       <p class="help-block" data-translate="">geonetwork-mefFormatFullHelp</p>
     </div>
 
-    <div>
+    <div id="gn-harvest-settings-gn-advanced-date-row">
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.site.useChangeDateForUpdate"/>
-        <span data-translate="">geonetwork-useChangeDateForUpdate</span>
+        <input id="gn-harvest-settings-gn-advanced-date-checkbox" type="checkbox" data-ng-model="harvesterSelected.site.useChangeDateForUpdate"/>
+        <span id="gn-harvest-settings-gn-advanced-date-label" data-translate="">geonetwork-useChangeDateForUpdate</span>
       </label>
       <p class="help-block" data-translate="">geonetwork-useChangeDateForUpdateHelp</p>
     </div>
 
-    <div>
+    <div id="gn-harvest-settings-gn-advanced-category-row">
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.site.createRemoteCategory"/>
-        <span data-translate="">geonetwork-createRemoteCategory</span>
+        <input id="gn-harvest-settings-gn-advanced-category-checkbox" type="checkbox" data-ng-model="harvesterSelected.site.createRemoteCategory"/>
+        <span id="gn-harvest-settings-gn-advanced-category-label" data-translate="">geonetwork-createRemoteCategory</span>
       </label>
       <p class="help-block" data-translate="">geonetwork-createRemoteCategoryHelp</p>
     </div>
 
-    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+    <div id="gn-harvest-settings-gn-advanced-categories-row"
+         data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
          data-label="csw-category"/>
-    <div>
-      <label class="control-label" data-translate="">geonetwork-xslfilter</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.xslfilter"/>
+
+    <div id="gn-harvest-settings-gn-advanced-xsl-row">
+      <label id="gn-harvest-settings-gn-advanced-xsl-label" class="control-label" data-translate="">geonetwork-xslfilter</label>
+      <input id="gn-harvest-settings-gn-advanced-xsl-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.xslfilter"/>
       <p class="help-block" data-translate="">geonetwork-xslfilterHelp</p>
     </div>
 
-
-    <div>
-      <label class="control-label">
+    <div id="gn-harvest-settings-gn-advanced-validate-row">
+      <label id="gn-harvest-settings-gn-advanced-validate-label" class="control-label">
         <span data-translate="">harvesterValidate</span>
       </label>
-      <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <div id="gn-harvest-settings-gn-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
       <p class="help-block" data-translate="">harvesterValidateHelp</p>
     </div>
   </fieldset>
 
-
-  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div id="gn-harvest-settings-gn-priviliges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

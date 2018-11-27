@@ -1,49 +1,52 @@
 <form data-ng-keypress="updatingHarvester()">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
-    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
-
-    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>
   </div>
 
-  <fieldset>
-    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+  <fieldset id="gn-harvest-settings-oai-basic-row">
+    <legend id="gn-harvest-settings-oai-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
-    <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">oaipmh-url</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+    <div id="gn-harvest-settings-oai-basic-url-row" data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-oai-basic-url-label" class="control-label" data-translate="">oaipmh-url</label>
+      <input id="gn-harvest-settings-oai-basic-url-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
       <p class="help-block" data-translate="">oaipmh-urlHelp</p>
 
       <div class="alert alert-danger" data-ng-show="oaipmhInfo !== null"> {{oaipmhInfo}}
       </div>
     </div>
 
-    <fieldset class="form-horizontal">
-      <legend data-translate="">harvesterFilter</legend>
-
-
-      <div>
-        <label class="control-label col-lg-4" data-translate="">from</label>
+    <fieldset id="gn-harvest-settings-oai-basic-filter-row" class="form-horizontal">
+      <legend id="gn-harvest-settings-oai-basic-filter-title" data-translate="">harvesterFilter</legend>
+      
+      <div id="gn-harvest-settings-oai-basic-filter-from-row">
+        <label id="gn-harvest-settings-oai-basic-filter-from-label" class="control-label col-lg-4" data-translate="">from</label>
         <div class="col-lg-8">
-          <input type="date" class="form-control"
+          <input id="gn-harvest-settings-oai-basic-filter-from-date"
+                 type="date"
+                 class="form-control"
                  data-ng-model="harvesterSelected.searches[0].from"/>
         </div>
       </div>
 
-      <div>
-        <label class="control-label col-lg-4" data-translate="">until</label>
+      <div id="gn-harvest-settings-oai-basic-filter-until-row">
+        <label id="gn-harvest-settings-oai-basic-filter-until-label" class="control-label col-lg-4" data-translate="">until</label>
         <div class="col-lg-8">
-          <input type="date" class="form-control"
+          <input id="gn-harvest-settings-oai-basic-filter-until-date"
+                 type="date"
+                 class="form-control"
                  data-ng-model="harvesterSelected.searches[0].until"/>
         </div>
       </div>
 
-      <div>
-        <label class="control-label col-lg-4" data-translate="">set</label>
+      <div id="gn-harvest-settings-oai-basic-filter-set-row">
+        <label id="gn-harvest-settings-oai-basic-filter-set-label" class="control-label col-lg-4" data-translate="">set</label>
         <div class="col-lg-8">
-          <select class="form-control"
+          <select id="gn-harvest-settings-oai-basic-filter-set-list"
+                  class="form-control"
                   data-ng-model="harvesterSelected.searches[0].set"
                   data-ng-options="s.name as (s.label + '(' + s.name + ')') for s in oaipmhSets">
             <option value=""></option>
@@ -51,10 +54,11 @@
         </div>
       </div>
 
-      <div>
-        <label class="control-label col-lg-4" data-translate="">prefix</label>
+      <div id="gn-harvest-settings-oai-basic-filter-prefix-row">
+        <label id="gn-harvest-settings-oai-basic-filter-prefix-label" class="control-label col-lg-4" data-translate="">prefix</label>
         <div class="col-lg-8">
-          <select class="form-control"
+          <select id="gn-harvest-settings-oai-basic-filter-prefix-list"
+                  class="form-control"
                   data-ng-model="harvesterSelected.searches[0].prefix"
                   data-ng-options="p for p in oaipmhPrefix"> </select>
         </div>
@@ -64,25 +68,24 @@
 
   </fieldset>
 
-
-  <fieldset>
+  <fieldset id="gn-harvest-settings-oai-advanced-row">
     <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-    <div data-gn-harvester-account="harvesterSelected"/>
+    <div id="gn-harvest-settings-oai-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
-    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+    <div id="gn-harvest-settings-oai-advanced-categories-row"
+         data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
          data-label="category"/>
 
-    <div>
-      <label class="control-label" data-translate="">applyXSLToRecord</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.xslfilter"/>
+    <div id="gn-harvest-settings-oai-advanced-xsl-row">
+      <label id="gn-harvest-settings-oai-advanced-xsl-label" class="control-label" data-translate="">applyXSLToRecord</label>
+      <input id="gn-harvest-settings-oai-advanced-xsl-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.xslfilter"/>
       <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
     </div>
 
   </fieldset>
 
-
-  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div id="gn-harvest-settings-oai-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>
