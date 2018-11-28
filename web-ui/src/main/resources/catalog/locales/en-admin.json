@@ -1312,5 +1312,12 @@
     "ui-definition-help": "Definition for Proj4 library. This is a mandatory field if the projection is not defined already on GeoNetwork. Without a definition, the map can't work.",
     "ui-mod-recordview": "Record View",
     "ui-isSocialbarEnabled": "Show Socialbar",
-    "ui-isSocialbarEnabled-help": "Show the button bar with all the social buttons (facebook, twitter, etc.)"
+    "ui-isSocialbarEnabled-help": "Show the button bar with all the social buttons (facebook, twitter, etc.)",
+    "ui-isLogoInHeader": "Show the logo in header",
+    "ui-isLogoInHeader-help": "Show the logo in the header, above the navigation bar. The logo in the navigation bar will be removed",
+    "ui-logoInHeaderPosition": "Position of logo",
+    "ui-logoInHeaderPosition-help": "Position of the logo in the header",
+    "left": "Left",
+    "center": "Center",
+    "right": "Right"
 }

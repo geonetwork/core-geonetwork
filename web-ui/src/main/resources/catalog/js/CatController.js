@@ -76,7 +76,9 @@
             'rus': 'ru',
             'chi': 'zh',
             'slo': 'sk'
-          }
+          },
+          'isLogoInHeader': true,
+          'logoInHeaderPosition': 'left'
         },
         'home': {
           'enabled': true,
