@@ -138,7 +138,8 @@
               uri: attrs['uri'] || wpsLink.url,
 
               // specific sextant
-              wfsLink: scope.wfsLink
+              wfsLink: scope.wfsLink,
+              resetForm: wpsLink.resetForm
             };
           }, function(newLink, oldLink) {
             // the WPS link is incomplete: leave & clear form
@@ -463,6 +464,8 @@
                   if (attrs['executeCallback']) {
                       scope.submit();
                   }
+                  // reset this variable so the form can be resetted again from elsewhere
+                  delete scope.wpsLink.resetForm;
                   // END SEXTANT SPECIFIC
                 },
                 function(response) {
