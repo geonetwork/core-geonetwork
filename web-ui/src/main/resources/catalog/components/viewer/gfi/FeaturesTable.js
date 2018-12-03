@@ -26,8 +26,8 @@
 
   var module = angular.module('gn_featurestable_directive', []);
 
-  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL',
-    function($http, gfiTemplateURL) {
+  module.directive('gnFeaturesTable', ['$http', 'gfiTemplateURL', 'gnLangs',
+    function($http, gfiTemplateURL, gnLangs) {
 
       return {
         restrict: 'E',
@@ -46,7 +46,7 @@
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
             'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
-          ctrls.ctrl.initTable(element.find('table'), scope);
+          ctrls.ctrl.initTable(element.find('table'), scope, gnLangs);
         }
       };
     }]);
@@ -55,7 +55,22 @@
     this.promise = this.loader.loadAll();
   };
 
-  GnFeaturesTableController.prototype.initTable = function(element, scope) {
+  GnFeaturesTableController.prototype.initTable = function(element, scope, gnLangs) {
+
+    // this returns a valid xx_XX language code based on available locales in bootstrap-table
+    // if none found, return 'en'
+    function getBsTableLang() {
+      var iso2 = gnLangs.getIso2Lang(gnLangs.getCurrent());
+      var locales = Object.keys($.fn.bootstrapTable.locales);
+      var lang = 'en';
+      locales.forEach(function (locale) {
+        if (locale.startsWith(iso2)) {
+          lang = locale;
+          return true;
+        }
+      });
+      return lang;
+    }
 
     this.loader.getBsTableConfig().then(function(bstConfig) {
       var once = true;
@@ -116,13 +131,17 @@
             }.bind(this),
             showExport: true,
             exportTypes: ['csv'],
-            exportDataType: 'all'
+            exportDataType: 'all',
+            locale: getBsTableLang()
           },bstConfig)
       );
       scope.$watch('ctrl.active', function() {
         element.bootstrapTable('resetWidth');
         element.bootstrapTable('resetView');
       });
+
+      // trigger an async digest loop to make the table appear
+      setTimeout(function() { scope.$apply(); });
     }.bind(this));
   };
 
