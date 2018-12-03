@@ -313,6 +313,7 @@
     "_status": "Status",
     "_schema": "Standard",
     "checkCapabilityUrl": "URL {{url}} returned status '{{status}}'. You should check the URL or check that the service is running.",
+    "checkCapabilityUrlUnauthorized": "URL {{url}} returned status '{{status}}'. That means that this service require authentication. Try to connect to it first.",
     "failedToParseCapabilities": "Failed to parse GetCapabilities operation response. Try again later or contact service provider.",
     "layerIsAlreadyInMap": "Layer '{{layer}}' from service '{{url}}' is already loaded in current map. Click <a href=\"#map?extent={{extent}}&activate={{layer}}\">here to zoom to it</a>.",
     "layerStylesAvailable": " layer styles available:",
