@@ -92,8 +92,9 @@
                 if(esObject) {
                   var esConfig = esObject.getState();
                   var g = esConfig.geometry;
+                  var params = wfsFilterService.toReadableObject(esObject);
                   panierItem.filter = {
-                    params: wfsFilterService.toReadableObject(esObject),
+                    params: Object.keys(params).length > 0 ? params : null,
                     any: esConfig.any
                   };
                   if(g) {
@@ -107,7 +108,7 @@
                 // only add processes once (with desc as label in the form)
                 if (processes && !panierItem.processes) {
                   processes = processes.map(function (process) {
-                    process.label = process.desc
+                    process.label = process.desc;
                     return process;
                   });
                   panierItem.processes = processes;
