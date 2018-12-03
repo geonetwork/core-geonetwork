@@ -1387,11 +1387,12 @@
                   feedMdPromise.then(finishCreation);
                 }
 
-              }, function() {
+              }, function(error) {
                 var o = {
                   url: url,
                   name: name,
-                  msg: $translate.instant('getCapFailure')
+                  msg: $translate.instant('getCapFailure') +
+                    (error  ? ', ' + error : '')
                 };
                 gnWmsQueue.error(o);
                 defer.reject(o);
