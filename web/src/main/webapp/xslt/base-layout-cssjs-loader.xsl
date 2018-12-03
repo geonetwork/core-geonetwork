@@ -161,6 +161,7 @@
         <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js"></script>
         <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
         <!--</xsl:if>-->
 
         <script src="{$uiResourcesPath}lib/underscore/underscore-min.js"></script>
