@@ -314,9 +314,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                 Element elem = null;
                 try {
                     elem = Xml.selectElement(md, xpath, schemaNamespaces);
-                } catch (JDOMException je) {
-                    je.printStackTrace();
-                    LOGGER.error("Attach xsderror message to xpath {} failed: {}" ,xpath, je.getMessage());
+                } catch (JDOMException e) {
+                    LOGGER.error("Attach xsderror message to xpath {} failed." ,xpath);
+                    LOGGER.error("Attach xsderror message to xpath failed, exception", e);
                 }
                 if (elem != null) {
                     elem.addContent(buildErrorReport("XSD", errorCode, message, xpath));
@@ -389,14 +389,13 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                         }
                     }
                 } catch (Exception e) {
-                    LOGGER.error("WARNING: schematron xslt {} failed", schemaTronXmlXslt);
+                    LOGGER.error("schematron xslt {} failed", schemaTronXmlXslt);
 
                     // If an error occurs that prevents to verify schematron rules, add to show in report
                     Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
                     errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
                     report.addContent(errorReport);
-
-                    e.printStackTrace();
+                    LOGGER.error("schematron xslt failed, exception", e);
                 }
 
                 // -- append report to main XML report.
@@ -464,8 +463,8 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                 valid = valid && errors == null;
                 metadataManager.getEditLib().removeEditingInfo(md);
             } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.error("Could not run schematron validation on metadata {}: {}", metadataId, e.getMessage());
+                LOGGER.error("Could not run schematron validation on metadata {}.", metadataId);
+                LOGGER.error("Could not run schematron validation on metadata, exception", e);
                 valid = false;
             }
         }
@@ -474,8 +473,8 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         try {
             saveValidationStatus(intMetadataId, validations);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.error("Could not save validation status on metadata {}: {}", metadataId, e.getMessage());
+            LOGGER.error("Could not save validation status on metadata {}.", metadataId);
+            LOGGER.error("Could not save validation status on metadata, exception.", e);
         }
 
         return valid;
@@ -554,8 +553,8 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                 metadataManager.getEditLib().removeEditingInfo(md);
 
             } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.error("Could not run schematron validation on metadata {}: {}", metadataId, e.getMessage());
+                LOGGER.error("Could not run schematron validation on metadata {}.", metadataId);
+                LOGGER.error("Could not run schematron validation on metadata, exception.", e);
             }
         }
 
