@@ -898,12 +898,7 @@ public final class Xml {
     public static Element validateInfo(Path schemaPath, Element xml) throws Exception {
         ErrorHandler eh = new ErrorHandler();
         Schema schema = getSchemaFromPath(schemaPath);
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
+        return validateRealGuts(schema, xml, eh);
     }
 
     //---------------------------------------------------------------------------
@@ -912,12 +907,7 @@ public final class Xml {
      */
     public static Element validateInfo(Element xml, ErrorHandler eh) throws Exception {
         Schema schema = factory().newSchema();
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
+        return validateRealGuts(schema, xml, eh);
     }
 
 
@@ -928,12 +918,7 @@ public final class Xml {
      */
     public static Element validateInfo(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
         Schema schema = getSchemaFromPath(schemaPath);
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
+        return validateRealGuts(schema, xml, eh);
     }
 
     //---------------------------------------------------------------------------
@@ -954,7 +939,7 @@ public final class Xml {
     /**
      * Called by all validation methods to do the real guts of the validation job.
      */
-    private static void validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
+    private static Element validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
         Resolver resolver = ResolverWrapper.getInstance();
 
         ValidatorHandler vh = schema.newValidatorHandler();
@@ -965,6 +950,13 @@ public final class Xml {
         eh.setSo(so);
 
         so.output(xml);
+
+        if (eh.errors()) {
+            return eh.getXPaths();
+        } else {
+            return null;
+        }
+
     }
 
     //---------------------------------------------------------------------------
