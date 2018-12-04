@@ -94,8 +94,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
         // --- Now do the schematron validation on this file - if there are errors
         // --- then we say what they are!
-        // --- Note we have to use uuid here instead of id because we don't have
-        // --- an id...
+        // --- Note we have to use uuid here instead of id because we don't have an id...
 
         Element schemaTronReport = doSchemaTronForEditor(schema, xml, context.getLanguage());
         xml.detach();
@@ -277,7 +276,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * one or more validation reports are added to the corresponding element
      * trying to find the element based on the xpath returned by the ErrorHandler.
      */
-    private synchronized Element getXSDXmlReport(String schema, Element md) {
+    private synchronized Element getXSDXmlReport(String schema, Element md, boolean forEditing) {
         // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
         ErrorHandler errorHandler = new ErrorHandler();
         errorHandler.setNs(Edit.NAMESPACE);
@@ -290,7 +289,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             return xsdErrors;
         }
 
-        if (xsdErrors != null) {
+        if (forEditing && xsdErrors != null) {
             MetadataSchema mds = metadataSchemaUtils.getSchema(schema);
             List<Namespace> schemaNamespaces = mds.getSchemaNS();
 
@@ -430,7 +429,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             LOGGER.debug("Validating against XSD {}", schema);
             // do XSD validation
             Element md = doc.getRootElement();
-            Element xsdErrors = getXSDXmlReport(schema, md);
+            Element xsdErrors = getXSDXmlReport(schema, md, false);
 
             int xsdErrorCount = 0;
             if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
@@ -489,7 +488,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
         // -- get an XSD validation report and add results to the metadata
         // -- as geonet:xsderror attributes on the affected elements
-        Element xsdErrors = getXSDXmlReport(schema, md);
+        Element xsdErrors = getXSDXmlReport(schema, md, forEditing);
         int xsdErrorCount = 0;
         if (xsdErrors != null) {
             xsdErrorCount = xsdErrors.getContent().size();
@@ -509,7 +508,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         }
 
         // ...then schematrons
-        // edit mode
         Element error = null;
         if (forEditing) {
             LOGGER.debug("  - Schematron in editing mode.");
@@ -517,16 +515,13 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             metadataManager.getEditLib().expandElements(schema, md);
             version = metadataManager.getEditLib().getVersionForEditing(schema, metadataId, md);
 
-            // Apply custom schematron rules
-            error = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), md, lang, validations);
+            error = applyCustomSchematronRules(schema, intMetadataId, md, lang, validations);
         } else {
             try {
-                // enumerate the metadata xml so that we can report any problems found
-                // by the schematron_xml script to the geonetwork editor
+                // enumerate the metadata xml so that we can report any problems found by the schematron_xml script to the geonetwork editor
                 metadataManager.getEditLib().enumerateTree(md);
 
-                // Apply custom schematron rules
-                error = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), md, lang, validations);
+                error = applyCustomSchematronRules(schema, intMetadataId, md, lang, validations);
 
                 // remove editing info added by enumerateTree
                 metadataManager.getEditLib().removeEditingInfo(md);
