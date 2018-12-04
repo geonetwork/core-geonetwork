@@ -206,7 +206,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     @Override
     public void validate(String schema, Element md) throws Exception {
-        if (getSettingManager().getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
+        if (settingManager.getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
             md.removeAttribute("schemaLocation", Namespaces.XSI);
         }
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
@@ -230,7 +230,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
     @Override
     public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
-        if (getSettingManager().getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
+        if (settingManager.getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
             md.removeAttribute("schemaLocation", Namespaces.XSI);
         }
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
@@ -637,8 +637,4 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             return false;
         }
     };
-
-    public SettingManager getSettingManager() {
-        return settingManager;
-    }
 }
