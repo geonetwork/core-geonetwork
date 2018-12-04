@@ -159,10 +159,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
     }
 
-    /**
-     *
-     * @param md
-     */
     @Override
     public void setNamespacePrefix(final Element md) {
         // --- if the metadata has no namespace or already has a namespace then
@@ -177,11 +173,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         }
     }
 
-    /**
-     *
-     * @param md
-     * @param ns
-     */
     @Override
     public void setNamespacePrefix(final Element md, final Namespace ns) {
         if (md.getNamespaceURI().equals(ns.getURI())) {
@@ -479,12 +470,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
         return valid;
     }
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Metadata Delete API
-    // ---
-    // --------------------------------------------------------------------------
 
     /**
      * Used by the validate embedded service. The validation report is stored in the session.
