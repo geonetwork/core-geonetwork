@@ -224,8 +224,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         }
     }
 
-    @Override
-    public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
+    private Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
         if (settingManager.getValueAsBool(SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
             md.removeAttribute("schemaLocation", Namespaces.XSI);
         }

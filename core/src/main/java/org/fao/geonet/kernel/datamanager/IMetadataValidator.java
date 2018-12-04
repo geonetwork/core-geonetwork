@@ -54,17 +54,6 @@ public interface IMetadataValidator {
     void validate(String schema, Element md) throws Exception;
 
     /**
-     * Validates an xml document with respect to an xml schema described by .xsd file path using supplied error handler.
-     *
-     * @param schema
-     * @param md
-     * @param eh
-     * @return
-     * @throws Exception
-     */
-    Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception;
-
-    /**
      * Creates XML schematron report.
      */
     Element doSchemaTronForEditor(String schema, Element md, String lang) throws Exception;

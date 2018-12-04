@@ -236,11 +236,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
-        return metadataValidator.validateInfo(schema, md, eh);
-    }
-
-    @Deprecated
     public Element doSchemaTronForEditor(String schema, Element md, String lang) throws Exception {
         return metadataValidator.doSchemaTronForEditor(schema, md, lang);
     }
