@@ -84,13 +84,14 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     @Override
     public void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception {
         setNamespacePrefix(xml);
-        try {
-            validate(schema, xml);
-        } catch (XSDValidationErrorEx e) {
+
+        ErrorHandler eh = new ErrorHandler();
+        Element xsdErrors = validateInfo(schema, xml, eh);
+        if (xsdErrors != null) {
             if (!fileName.equals(" ")) {
-                throw new XSDValidationErrorEx(e.getMessage() + "(in " + fileName + "): ", e.getObject());
+                throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors) + "(in " + fileName + "): ", xsdErrors);
             } else {
-                throw new XSDValidationErrorEx(e.getMessage(), e.getObject());
+                throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors), xsdErrors);
             }
         }
 
@@ -210,10 +211,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     @Override
     public void validate(String schema, Element md) throws Exception {
         ErrorHandler eh = new ErrorHandler();
-        validateInfo(schema, md, eh);
-        if (eh.errors()) {
-            Element xsdXPaths = eh.getXPaths();
-            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdXPaths), xsdXPaths);
+        Element xsdErrors = validateInfo(schema, md, eh);
+        if (xsdErrors != null) {
+            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors), xsdErrors);
         }
     }
 

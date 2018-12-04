@@ -932,7 +932,7 @@ public final class Xml {
     /**
      * Called by all validation methods to do the real guts of the validation job.
      */
-    private static Element validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
+    private static Element validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws JDOMException {
         Resolver resolver = ResolverWrapper.getInstance();
 
         ValidatorHandler vh = schema.newValidatorHandler();
