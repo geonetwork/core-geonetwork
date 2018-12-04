@@ -885,20 +885,10 @@ public final class Xml {
      * Validates an xml document with respect to an xml schema described by .xsd file path.
      */
     public static void validate(Path schemaPath, Element xml) throws Exception {
-        Element xsdXPaths = validateInfo(schemaPath, xml);
+        ErrorHandler eh = new ErrorHandler();
+        Element xsdXPaths = validateInfo(schemaPath, xml, eh);
         if (xsdXPaths != null && xsdXPaths.getContent().size() > 0)
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdXPaths), xsdXPaths);
-    }
-
-    //---------------------------------------------------------------------------
-
-    /**
-     * Validates an xml document with respect to an xml schema described by .xsd file path.
-     */
-    public static Element validateInfo(Path schemaPath, Element xml) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
-        Schema schema = getSchemaFromPath(schemaPath);
-        return validateRealGuts(schema, xml, eh);
     }
 
     //---------------------------------------------------------------------------
