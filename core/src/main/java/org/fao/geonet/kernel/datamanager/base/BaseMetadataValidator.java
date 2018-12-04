@@ -209,18 +209,11 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     @Override
     public void validate(String schema, Element md) throws Exception {
-        if (settingManager.getValueAsBool(SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
-            md.removeAttribute("schemaLocation", Namespaces.XSI);
-        }
-        String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
-        LOGGER.debug("Extracted schemaLocation of {}", schemaLoc);
-        boolean noChoiceButToUseSchemaLocation = schema == null;
-        boolean isSchemaLocationDefinedInMd = schemaLoc != null && schemaLoc != "";
-
-        if (noChoiceButToUseSchemaLocation || isSchemaLocationDefinedInMd) {
-            Xml.validate(md);
-        } else {
-            Xml.validate(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md);
+        ErrorHandler eh = new ErrorHandler();
+        validateInfo(schema, md, eh);
+        if (eh.errors()) {
+            Element xsdXPaths = eh.getXPaths();
+            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdXPaths), xsdXPaths);
         }
     }
 
