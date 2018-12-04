@@ -893,22 +893,6 @@ public final class Xml {
     //---------------------------------------------------------------------------
 
     /**
-     * Validates an xml document with respect to schemaLocation hints.
-     */
-    public static Element validateInfo(Element xml) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
-        Schema schema = factory().newSchema();
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
-    }
-
-    //---------------------------------------------------------------------------
-
-    /**
      * Validates an xml document with respect to schemaLocation hints using supplied error handler.
      */
     public static Element validateInfo(Element xml, ErrorHandler eh) throws Exception {
