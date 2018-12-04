@@ -49,16 +49,18 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     @Autowired
     private IMetadataSchemaUtils metadataSchemaUtils;
 
-    private Path thesaurusDir;
     @Autowired
     private SchematronValidator schematronValidator;
+
     @Autowired
     private MetadataValidationRepository validationRepository;
 
-    private IMetadataManager metadataManager;
     @Autowired
     @Lazy
     private SettingManager settingManager;
+
+    private IMetadataManager metadataManager;
+    private Path thesaurusDir;
 
     @Override
     public void setMetadataManager(IMetadataManager metadataManager) {
@@ -334,14 +336,12 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     private Element getSchemaTronXmlReport(String schema, Element md, String lang, Map<String, Integer[]> valTypeAndStatus)
             throws Exception {
-        // NOTE: this method assumes that you've run enumerateTree on the
-        // metadata
+        // NOTE: this method assumes that you've run enumerateTree on the metadata
 
         MetadataSchema metadataSchema = metadataSchemaUtils.getSchema(schema);
         String[] rules = metadataSchema.getSchematronRules();
 
-        // Schematron report is composed of one or more report(s)
-        // for each set of rules.
+        // Schematron report is composed of one or more report(s) for each set of rules.
         Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
         if (rules != null) {
             for (String rule : rules) {
@@ -460,13 +460,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             }
         }
 
-        // now save the validation status
-        try {
-            saveValidationStatus(intMetadataId, validations);
-        } catch (Exception e) {
-            LOGGER.error("Could not save validation status on metadata {}.", metadataId);
-            LOGGER.error("Could not save validation status on metadata, exception.", e);
-        }
+        saveValidationStatus(intMetadataId, validations);
 
         return valid;
     }
@@ -547,13 +541,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             errorReport.addContent(error);
         }
 
-        // Save report in session (invalidate by next update) and db
-        try {
-            saveValidationStatus(intMetadataId, validations);
-        } catch (Exception e) {
-            LOGGER.error("Could not save validation status on metadata {}.", metadataId);
-            LOGGER.error("Could not save validation status on metadata, exception: ", e);
-        }
+        saveValidationStatus(intMetadataId, validations);
 
         return Pair.read(errorReport, version);
     }
@@ -576,9 +564,15 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param id the metadata record internal identifier
      * @param validations the validation reports for each type of validation and schematron validation
      */
-    private void saveValidationStatus(int id, List<MetadataValidation> validations) throws Exception {
-        validationRepository.deleteAllById_MetadataId(id);
-        validationRepository.save(validations);
+    private void saveValidationStatus(int id, List<MetadataValidation> validations) {
+        try {
+            validationRepository.deleteAllById_MetadataId(id);
+            validationRepository.save(validations);
+        } catch (Exception e) {
+            LOGGER.error("Could not save validation status on metadata {}.", id);
+            LOGGER.error("Could not save validation status on metadata, exception: ", e);
+        }
+
     }
 
     /**
