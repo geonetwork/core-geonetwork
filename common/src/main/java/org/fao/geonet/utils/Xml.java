@@ -872,10 +872,9 @@ public final class Xml {
     public synchronized static void validate(Element xml) throws Exception {
         ErrorHandler eh = new ErrorHandler();
         Schema schema = factory().newSchema();
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            Element xsdXPaths = eh.getXPaths();
-            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdXPaths), xsdXPaths);
+        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        if (xsdErrors != null) {
+            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
     }
 
@@ -887,10 +886,9 @@ public final class Xml {
     public static void validate(Path schemaPath, Element xml) throws Exception {
         ErrorHandler eh = new ErrorHandler();
         Schema schema = getSchemaFromPath(schemaPath);
-        validateRealGuts(schema, xml, eh);
-        if (eh.errors()) {
-            Element xsdXPaths = eh.getXPaths();
-            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdXPaths), xsdXPaths);
+        Element xsdErrors = validateRealGuts(schema, xml, eh);
+        if (xsdErrors != null) {
+            throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdErrors), xsdErrors);
         }
     }
 
