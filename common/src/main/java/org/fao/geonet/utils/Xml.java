@@ -893,6 +893,21 @@ public final class Xml {
     //---------------------------------------------------------------------------
 
     /**
+     * Validates an xml document with respect to an xml schema described by .xsd file path.
+     */
+    public static Element validateInfo(Path schemaPath, Element xml) throws Exception {
+        ErrorHandler eh = new ErrorHandler();
+        Schema schema = getSchemaFromPath(schemaPath);
+        validateRealGuts(schema, xml, eh);
+        if (eh.errors()) {
+            return eh.getXPaths();
+        } else {
+            return null;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    /**
      * Validates an xml document with respect to schemaLocation hints using supplied error handler.
      */
     public static Element validateInfo(Element xml, ErrorHandler eh) throws Exception {
@@ -905,30 +920,15 @@ public final class Xml {
         }
     }
 
-    //---------------------------------------------------------------------------
-
-    /**
-     * Validates an xml document with respect to an xml schema described by .xsd file path.
-     */
-    public static Element validateInfo(Path schemaPath, Element xml) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
-        validateGuts(schemaPath, xml, eh);
-        if (eh.errors()) {
-            return eh.getXPaths();
-        } else {
-            return null;
-        }
-    }
 
     //---------------------------------------------------------------------------
-
     /**
      * Validates an xml document with respect to an xml schema described by .xsd file path using
      * supplied error handler.
      */
-    public static Element validateInfo(Path schemaPath, Element xml, ErrorHandler eh)
-        throws Exception {
-        validateGuts(schemaPath, xml, eh);
+    public static Element validateInfo(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
+        Schema schema = getSchemaFromPath(schemaPath);
+        validateRealGuts(schema, xml, eh);
         if (eh.errors()) {
             return eh.getXPaths();
         } else {
@@ -938,10 +938,7 @@ public final class Xml {
 
     //---------------------------------------------------------------------------
 
-    /**
-     * Called by validation methods that supply an xml schema described by .xsd file path.
-     */
-    private static void validateGuts(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
+    private static Schema getSchemaFromPath(Path schemaPath) throws SAXException {
         PathStreamSource schemaFile = new PathStreamSource(schemaPath);
         schemaFile.setSystemId(schemaPath.toUri().toASCIIString());
 
@@ -949,8 +946,7 @@ public final class Xml {
         NioPathHolder.setBase(schemaPath);
         Resolver resolver = ResolverWrapper.getInstance();
         factory.setResourceResolver(resolver.getXmlResolver());
-        Schema schema = factory.newSchema(schemaFile);
-        validateRealGuts(schema, xml, eh);
+        return factory.newSchema(schemaFile);
     }
 
     //---------------------------------------------------------------------------
