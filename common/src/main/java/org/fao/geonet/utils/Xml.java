@@ -870,8 +870,8 @@ public final class Xml {
      * Validates an XML document using the hints in the schemaLocation attribute.
      */
     public synchronized static void validate(Element xml) throws Exception {
-        Schema schema = factory().newSchema();
         ErrorHandler eh = new ErrorHandler();
+        Schema schema = factory().newSchema();
         validateRealGuts(schema, xml, eh);
         if (eh.errors()) {
             Element xsdXPaths = eh.getXPaths();
@@ -886,9 +886,12 @@ public final class Xml {
      */
     public static void validate(Path schemaPath, Element xml) throws Exception {
         ErrorHandler eh = new ErrorHandler();
-        Element xsdXPaths = validateInfo(schemaPath, xml, eh);
-        if (xsdXPaths != null && xsdXPaths.getContent().size() > 0)
+        Schema schema = getSchemaFromPath(schemaPath);
+        validateRealGuts(schema, xml, eh);
+        if (eh.errors()) {
+            Element xsdXPaths = eh.getXPaths();
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + getString(xsdXPaths), xsdXPaths);
+        }
     }
 
     //---------------------------------------------------------------------------
