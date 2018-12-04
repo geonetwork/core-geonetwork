@@ -43,6 +43,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION;
+
 public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.IMetadataValidator {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
@@ -207,49 +209,35 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     @Override
     public void validate(String schema, Element md) throws Exception {
-        if (settingManager.getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
+        if (settingManager.getValueAsBool(SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
             md.removeAttribute("schemaLocation", Namespaces.XSI);
         }
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         LOGGER.debug("Extracted schemaLocation of {}", schemaLoc);
-        if (schemaLoc == null)
-            schemaLoc = "";
+        boolean noChoiceButToUseSchemaLocation = schema == null;
+        boolean isSchemaLocationDefinedInMd = schemaLoc != null && schemaLoc != "";
 
-        if (schema == null) {
-            // must use schemaLocation
+        if (noChoiceButToUseSchemaLocation || isSchemaLocationDefinedInMd) {
             Xml.validate(md);
         } else {
-            // if schemaLocation use that
-            if (!schemaLoc.equals("")) {
-                Xml.validate(md);
-                // otherwise use supplied schema name
-            } else {
-                Xml.validate(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md);
-            }
+            Xml.validate(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md);
         }
     }
 
     @Override
     public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
-        if (settingManager.getValueAsBool(Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
+        if (settingManager.getValueAsBool(SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
             md.removeAttribute("schemaLocation", Namespaces.XSI);
         }
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         LOGGER.debug("Extracted schemaLocation of {}", schemaLoc);
-        if (schemaLoc == null)
-            schemaLoc = "";
+        boolean noChoiceButToUseSchemaLocation = schema == null;
+        boolean isSchemaLocationDefinedInMd = schemaLoc != null && schemaLoc != "";
 
-        if (schema == null) {
-            // must use schemaLocation
+        if (noChoiceButToUseSchemaLocation || isSchemaLocationDefinedInMd) {
             return Xml.validateInfo(md, eh);
         } else {
-            // if schemaLocation use that
-            if (!schemaLoc.equals("")) {
-                return Xml.validateInfo(md, eh);
-                // otherwise use supplied schema name
-            } else {
-                return Xml.validateInfo(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md, eh);
-            }
+            return Xml.validateInfo(metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md, eh);
         }
     }
 

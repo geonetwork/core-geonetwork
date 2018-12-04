@@ -912,7 +912,12 @@ public final class Xml {
      */
     public static Element validateInfo(Path schemaPath, Element xml) throws Exception {
         ErrorHandler eh = new ErrorHandler();
-        return Xml.validateInfo(schemaPath, xml, eh);
+        validateGuts(schemaPath, xml, eh);
+        if (eh.errors()) {
+            return eh.getXPaths();
+        } else {
+            return null;
+        }
     }
 
     //---------------------------------------------------------------------------
