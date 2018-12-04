@@ -20,10 +20,9 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.Xml.ErrorHandler;
+import org.fao.geonet.utils.XmlErrorHandler;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -85,7 +84,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     public void validateMetadata(String schema, Element xml, ServiceContext context, String fileName) throws Exception {
         setNamespacePrefix(xml);
 
-        ErrorHandler eh = new ErrorHandler();
+        XmlErrorHandler eh = new XmlErrorHandler();
         Element xsdErrors = validateInfo(schema, xml, eh);
         if (xsdErrors != null) {
             if (!fileName.equals(" ")) {
@@ -210,14 +209,14 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     @Override
     public void validate(String schema, Element md) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
+        XmlErrorHandler eh = new XmlErrorHandler();
         Element xsdErrors = validateInfo(schema, md, eh);
         if (xsdErrors != null) {
             throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors), xsdErrors);
         }
     }
 
-    private Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
+    private Element validateInfo(String schema, Element md, XmlErrorHandler eh) throws Exception {
         if (settingManager.getValueAsBool(SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION, false)) {
             md.removeAttribute("schemaLocation", Namespaces.XSI);
         }
@@ -258,7 +257,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     private synchronized Element getXSDXmlReport(String schema, Element md, boolean forEditing) {
         // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
-        ErrorHandler errorHandler = new ErrorHandler();
+        XmlErrorHandler errorHandler = new XmlErrorHandler();
         errorHandler.setNs(Edit.NAMESPACE);
         Element xsdErrors;
 

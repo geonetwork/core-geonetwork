@@ -58,7 +58,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.slf4j.Logger;

@@ -54,8 +54,6 @@ import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -66,7 +64,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -94,7 +91,6 @@ import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -870,7 +866,7 @@ public final class Xml {
      * Validates an XML document using the hints in the schemaLocation attribute.
      */
     public synchronized static void validate(Element xml) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
+        XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = factory().newSchema();
         Element xsdErrors = validateRealGuts(schema, xml, eh);
         if (xsdErrors != null) {
@@ -884,7 +880,7 @@ public final class Xml {
      * Validates an xml document with respect to an xml schema described by .xsd file path.
      */
     public static void validate(Path schemaPath, Element xml) throws Exception {
-        ErrorHandler eh = new ErrorHandler();
+        XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = getSchemaFromPath(schemaPath);
         Element xsdErrors = validateRealGuts(schema, xml, eh);
         if (xsdErrors != null) {
@@ -896,7 +892,7 @@ public final class Xml {
     /**
      * Validates an xml document with respect to schemaLocation hints using supplied error handler.
      */
-    public static Element validateInfo(Element xml, ErrorHandler eh) throws Exception {
+    public static Element validateInfo(Element xml, XmlErrorHandler eh) throws Exception {
         Schema schema = factory().newSchema();
         return validateRealGuts(schema, xml, eh);
     }
@@ -907,7 +903,7 @@ public final class Xml {
      * Validates an xml document with respect to an xml schema described by .xsd file path using
      * supplied error handler.
      */
-    public static Element validateInfo(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
+    public static Element validateInfo(Path schemaPath, Element xml, XmlErrorHandler eh) throws Exception {
         Schema schema = getSchemaFromPath(schemaPath);
         return validateRealGuts(schema, xml, eh);
     }
@@ -930,7 +926,7 @@ public final class Xml {
     /**
      * Called by all validation methods to do the real guts of the validation job.
      */
-    private static Element validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws JDOMException {
+    private static Element validateRealGuts(Schema schema, Element xml, XmlErrorHandler eh) throws JDOMException {
         Resolver resolver = ResolverWrapper.getInstance();
 
         ValidatorHandler vh = schema.newValidatorHandler();
@@ -1146,99 +1142,6 @@ public final class Xml {
                 Log.debug(Log.XML_RESOLVER, "Resolved as " + s.getSystemId());
             }
             return s;
-        }
-    }
-
-    /**
-     * Error handler that collects up validation errors.
-     */
-    public static class ErrorHandler extends DefaultHandler {
-
-        private int errorCount = 0;
-        private Element xpaths;
-        private Namespace ns = Namespace.NO_NAMESPACE;
-        private SAXOutputter so;
-
-        public void setSo(SAXOutputter so) {
-            this.so = so;
-        }
-
-        public boolean errors() {
-            return errorCount > 0;
-        }
-
-        public Element getXPaths() {
-            return xpaths;
-        }
-
-        public void addMessage(SAXParseException exception, String typeOfError) {
-            if (errorCount == 0) xpaths = new Element("xsderrors", ns);
-            errorCount++;
-
-            Element elem = (Element) so.getLocator().getNode();
-            Element x = new Element("xpath", ns);
-            try {
-                String xpath = org.fao.geonet.utils.XPath.getXPath(elem);
-                //-- remove the first element to ensure XPath fits XML passed with
-                //-- root element
-                if (xpath.startsWith("/")) {
-                    int ind = xpath.indexOf('/', 1);
-                    if (ind != -1) {
-                        xpath = xpath.substring(ind + 1);
-                    } else {
-                        xpath = "."; // error to be placed on the root element
-                    }
-                }
-                x.setText(xpath);
-            } catch (JDOMException e) {
-                e.printStackTrace();
-                x.setText("nopath");
-            }
-            String message = exception.getMessage() + " (Element: " + elem.getQualifiedName();
-            String parentName;
-            if (!elem.isRootElement()) {
-                Element parent = (Element) elem.getParent();
-                if (parent != null)
-                    parentName = parent.getQualifiedName();
-                else
-                    parentName = "Unknown";
-            } else {
-                parentName = "/";
-            }
-            message += " with parent element: " + parentName + ")";
-
-            Element m = new Element("message", ns).setText(message);
-            Element errorType = new Element("typeOfError", ns).setText(typeOfError);
-            Element errorNumber = new Element("errorNumber", ns).setText(String.valueOf(errorCount));
-            Element e = new Element("error", ns);
-            e.addContent(errorType);
-            e.addContent(errorNumber);
-            e.addContent(m);
-            e.addContent(x);
-            xpaths.addContent(e);
-        }
-
-        public void error(SAXParseException parseException) throws SAXException {
-            addMessage(parseException, "ERROR");
-        }
-
-        public void fatalError(SAXParseException parseException) throws SAXException {
-            addMessage(parseException, "FATAL ERROR");
-        }
-
-        public void warning(SAXParseException parseException) throws SAXException {
-            addMessage(parseException, "WARNING");
-        }
-
-        public Namespace getNs() {
-            return ns;
-        }
-
-        /**
-         * Set namespace to use for report elements
-         */
-        public void setNs(Namespace ns) {
-            this.ns = ns;
         }
     }
 }

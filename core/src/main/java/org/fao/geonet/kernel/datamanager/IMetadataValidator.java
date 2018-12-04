@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
