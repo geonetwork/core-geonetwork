@@ -567,7 +567,8 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         try {
             saveValidationStatus(intMetadataId, validations);
         } catch (Exception e) {
-            LOGGER.error("Could not save validation status on metadata {}: {}", metadataId, e.getMessage(), e);
+            LOGGER.error("Could not save validation status on metadata {}.", metadataId);
+            LOGGER.error("Could not save validation status on metadata, exception: ", e);
         }
 
         return Pair.read(errorReport, version);
@@ -611,7 +612,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         // XSD validation error(s)
         catch (Exception x) {
             // do not print stacktrace as this is 'normal' program flow
-            LOGGER.debug("invalid metadata: {}", x.getMessage(), x);
+            LOGGER.debug("invalid metadata", x);
             return false;
         }
     }
