@@ -1,5 +1,10 @@
 <li data-ng-repeat="page in pagesList">
-  <a data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageIdentity.linkText}}?page={{page.pageIdentity.linkText}}" title="{{page.pageIdentity.linkText}}" data-ng-click="changePage($event)">
-    <span>{{page.pageIdentity.linkText}}</span>
+  <a data-ng-show="{{page.format=='LINK'}}" title="{{page.linkText}}" href="{{page.link}}" target="_blank" >
+    <i class="fa fa-fw hidden-sm"></i>
+    <span>{{page.linkText}}</span>
+  </a>
+  <a data-ng-show="{{page.format!='LINK'}}" data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.linkText}}?page={{page.linkText}}" title="{{page.linkText}}" data-ng-click="changePage($event)">
+    <i class="fa fa-fw hidden-sm"></i>
+    <span>{{page.linkText}}</span>
   </a>
 </li>

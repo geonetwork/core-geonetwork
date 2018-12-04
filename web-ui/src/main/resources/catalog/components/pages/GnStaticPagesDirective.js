@@ -42,7 +42,7 @@
 
               $http({
                 method: 'GET',
-                url: '../api/pages/' + $scope.language + '/' + page + '/data'
+                url: '../api/pages/' + $scope.language + '/' + page + '/content'
               }).then(function mySuccess(response) {
                 $scope.content = response.data;
               }, function myError(response) {

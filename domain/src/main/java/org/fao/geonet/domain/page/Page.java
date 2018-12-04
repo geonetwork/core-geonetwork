@@ -51,6 +51,7 @@ public class Page extends GeonetEntity implements Serializable {
 
     private PageIdentity pageIdentity;
     private byte[] data;
+    private String link;
     private PageFormat format;
     private List<PageSection> sections;
     private PageStatus status;
@@ -59,39 +60,27 @@ public class Page extends GeonetEntity implements Serializable {
 
     }
 
-    public Page(PageIdentity pageIdentity, byte[] data, PageFormat format, List<PageSection> sections, PageStatus status) {
+    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status) {
         super();
         this.pageIdentity = pageIdentity;
         this.data = data;
+        this.link = link;
         this.format = format;
         this.sections = sections;
         this.status = status;
     }
 
     public enum PageStatus {
-        PUBLIC,
-        PRIVATE,
-        HIDDEN;
+        PUBLIC, PUBLIC_ONLY, PRIVATE, HIDDEN;
     }
 
     public enum PageFormat {
-        HTML,
-        TEXT,
-        MARKDOWN,
-        WIKI;
+        LINK, HTML, TEXT, MARKDOWN, WIKI;
     }
 
     // These are the sections where is shown the link to the Page object
     public enum PageSection {
-        ALL,
-        TOP,
-        FOOTER,
-        MENU,
-        SUBMENU,
-        CUSTOM_MENU1,
-        CUSTOM_MENU2,
-        CUSTOM_MENU3,
-        DRAFT;
+        ALL, TOP, FOOTER, MENU, SUBMENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3, DRAFT;
     }
 
     @EmbeddedId
@@ -107,16 +96,23 @@ public class Page extends GeonetEntity implements Serializable {
         return data;
     }
 
+    @Column
+    @Nullable
+    @Basic(fetch = FetchType.LAZY)
+    public String getLink() {
+        return link;
+    }
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     public PageFormat getFormat() {
         return format;
     }
 
-    @ElementCollection(targetClass=PageSection.class)
+    @ElementCollection(targetClass = PageSection.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name="SPG_Sections")
-    @Column(name="section")
+    @CollectionTable(name = "SPG_Sections")
+    @Column(name = "section")
     public List<PageSection> getSections() {
         return sections;
     }
@@ -135,20 +131,21 @@ public class Page extends GeonetEntity implements Serializable {
         this.data = data;
     }
 
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     public void setFormat(PageFormat format) {
         this.format = format;
     }
-
 
     public void setSections(List<PageSection> sections) {
         this.sections = sections;
     }
 
-
     public void setStatus(PageStatus status) {
         this.status = status;
     }
-
 
     @Override
     public String toString() {
@@ -156,5 +153,3 @@ public class Page extends GeonetEntity implements Serializable {
     }
 
 }
-
-

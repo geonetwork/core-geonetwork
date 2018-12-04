@@ -29,20 +29,23 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class PageIdentity implements Serializable {
 
+    /**
+        *
+        */
+
+    private static final long serialVersionUID = 1L;
     private String language;
-    private String linkText; 
-    
+    private String linkText;
+
     public PageIdentity() {
-    
+
     }
-    
+
     public PageIdentity(String language, String linkText) {
         super();
         this.language = language;
         this.linkText = linkText;
     }
-
-
 
     public String getLanguage() {
         return language;
@@ -59,15 +62,21 @@ public class PageIdentity implements Serializable {
     public void setLinkText(String linkText) {
         this.linkText = linkText;
     }
-    
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         PageIdentity that = (PageIdentity) o;
 
-        if (!language.equals(that.language)) return false;
+        if (!language.equals(that.language)) {
+            return false;
+        }
         return linkText.equals(that.linkText);
     }
 
@@ -78,5 +87,4 @@ public class PageIdentity implements Serializable {
         return result;
     }
 
-}  
-
+}
