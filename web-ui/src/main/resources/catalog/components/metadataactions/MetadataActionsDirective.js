@@ -153,6 +153,10 @@
             scope.updateCategoriesAllowed();
           });
 
+          scope.$watch('currentCategories', function(newvalue, oldvalue) {
+              init();
+          });
+
           var init = function() {
             return $http.get('../api/tags', {cache: true}).
                 success(function(data) {
