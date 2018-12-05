@@ -117,7 +117,7 @@
         }, true);
 
         element.on('change', function(eventObject) {
-          scope.$apply(function () {
+          scope.$apply(function() {
             var newValue = element.val();
             try {
               angular.merge(scope.value, JSON.parse(newValue));
