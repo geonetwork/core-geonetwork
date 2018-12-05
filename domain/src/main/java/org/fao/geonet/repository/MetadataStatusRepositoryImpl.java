@@ -23,15 +23,9 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.OperationAllowed_;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.StatusValue_;
@@ -45,9 +39,11 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Data Access object for accessing {@link org.fao.geonet.domain.MetadataValidation} entities.
@@ -113,4 +109,60 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         return _entityManager.createQuery(query).getResultList();
     }
 
+    // ISODate dateFrom, ISODate dateTo,
+    public List<MetadataStatus> searchStatus(List<StatusValueType> types,
+                                             List<Integer> ownerIds) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<MetadataStatus> cbQuery = cb.createQuery(MetadataStatus.class);
+        final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
+        final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
+
+
+        final Path<Integer> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId);
+        final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
+
+        Predicate typeFilter = null;
+        Predicate ownerPredicate = null;
+        if (types != null) {
+            final Path<StatusValueType> statusTypePath = statusValueRoot.get(StatusValue_.type);
+            Predicate statusIdJoin = cb.equal(statusIdInMetadataPath, statusIdPath);
+            Predicate typePredicate = statusTypePath.in(types);
+            typeFilter = cb.and(statusIdJoin, typePredicate);
+        }
+        if (ownerIds != null) {
+            final Path<Integer> ownerIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
+            ownerPredicate = ownerIdPath.in(ownerIds);
+        }
+
+        // Date filter
+//        final Path<ISODate> changeDate = metadataStatusRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
+//        Predicate datePredicate = cb.and(cb.lessThanOrEqualTo(changeDate, dateTo), cb.greaterThanOrEqualTo(changeDate, dateFrom));
+
+//        // Groups query
+//        if (!groups.isEmpty()) {
+//            Predicate inGroups = statusIdPath.in(groups);
+//
+//            cbQuery.select(metadataStatusRoot)
+//                .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
+//
+//        } else {
+//
+        Predicate whereClause;
+        if (typeFilter != null && ownerPredicate != null ) {
+            whereClause = cb.and(typeFilter, ownerPredicate);
+        } else if (typeFilter != null) {
+            whereClause = cb.and(typeFilter);
+        } else if (ownerPredicate != null) {
+            whereClause = cb.and(ownerPredicate);
+        } else {
+            whereClause = cb.and();
+        }
+        cbQuery.select(metadataStatusRoot)
+            .where(whereClause);
+
+
+//        cbQuery.orderBy(cb.asc(changeDate));
+
+        return _entityManager.createQuery(cbQuery).getResultList();
+    }
 }

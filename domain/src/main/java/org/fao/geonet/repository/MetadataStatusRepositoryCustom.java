@@ -29,6 +29,7 @@ import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Custom repository methods for the MetadataValidationRepository User: Jesse Date: 9/5/13 Time:
@@ -61,4 +62,10 @@ public interface MetadataStatusRepositoryCustom {
      */
     @Nonnull
     List<MetadataStatus> findAllByIdAndByType(int metadataId, StatusValueType type, Sort sort);
+
+    /**
+     * Find all the MetadataStatus objects corresponding to a search
+     */
+    @Nonnull
+    List<MetadataStatus> searchStatus(List<StatusValueType> types, List<Integer> ownerIds);
 }
