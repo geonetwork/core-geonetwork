@@ -98,7 +98,9 @@
               scope.lang = scope.$parent.lang;
               scope.user = scope.$parent.user;
               scope.history = [];
-              scope.userFilter = null;
+              scope.ownerFilter = null;
+              scope.authorFilter = null;
+              scope.recordFilter = null;
 
               scope.response = {
                 doiCreationTask: {}
@@ -133,8 +135,14 @@
                     filters.push('type=' + k);
                   }
                 });
-                if (scope.userFilter && scope.userFilter.id) {
-                  filters.push('owner=' + scope.userFilter.id)
+                if (scope.authorFilter && scope.authorFilter.id) {
+                  filters.push('author=' + scope.authorFilter.id)
+                }
+                if (scope.ownerFilter && scope.ownerFilter.id) {
+                  filters.push('owner=' + scope.ownerFilter.id)
+                }
+                if (scope.recordFilter && scope.recordFilter) {
+                  filters.push('record=' + scope.recordFilter)
                 }
                 return filters.length > 0 ? '?' + filters.join('&') : '';
               }
@@ -146,16 +154,15 @@
                 });
               };
 
-              scope.$watchCollection('types', function (n, o) {
+              var trigger = function (n, o) {
                 if (n !== o) {
                   loadHistory();
                 }
-              });
-              scope.$watchCollection('userFilter', function (n, o) {
-                if (n !== o) {
-                  loadHistory();
-                }
-              });
+              };
+              scope.$watchCollection('types', trigger);
+              scope.$watchCollection('authorFilter', trigger);
+              scope.$watchCollection('ownerFilter', trigger);
+              scope.$watchCollection('recordFilter', trigger);
 
               loadHistory();
             }

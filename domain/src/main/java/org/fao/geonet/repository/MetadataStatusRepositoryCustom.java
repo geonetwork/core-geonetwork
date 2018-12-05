@@ -67,5 +67,9 @@ public interface MetadataStatusRepositoryCustom {
      * Find all the MetadataStatus objects corresponding to a search
      */
     @Nonnull
-    List<MetadataStatus> searchStatus(List<StatusValueType> types, List<Integer> ownerIds);
+    List<MetadataStatus> searchStatus(List<StatusValueType> types,
+                                      List<Integer> authorIds,
+                                      List<Integer> ownerIds,
+                                      List<Integer> recordIds
+                                      );
 }

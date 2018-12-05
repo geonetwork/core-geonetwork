@@ -32,6 +32,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.springframework.http.HttpStatus;
@@ -45,8 +46,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping(value = {
     "/api/status",
@@ -84,7 +88,7 @@ public class StatusApi {
         path = "/search")
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<MetadataStatus> getStatusByType(
+    public List<MetadataStatusDTO> getStatusByType(
         @ApiParam(
             value = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
             required = false)
@@ -93,32 +97,63 @@ public class StatusApi {
         )
             StatusValueType[] type,
         @ApiParam(
-            value = "One or more event owners. Default is all.",
+            value = "One or more event author. Default is all.",
             required = false)
         @RequestParam(
             required = false
         )
-        Integer[] owner,
-        // TODO: Add parameters
-        // search by type, statusType, uuid, dates, users, profile
+        Integer[] author,
+        @ApiParam(
+        value = "One or more event owners. Default is all.",
+        required = false)
+        @RequestParam(
+            required = false
+        )
+            Integer[] owner,
+        @ApiParam(
+        value = "One or more record identifier. Default is all.",
+        required = false)
+        @RequestParam(
+            required = false
+        )
+            Integer[] record,
+        // TODO: Add parameters for dates
         HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         MetadataStatusRepository statusRepository = context.getBean(MetadataStatusRepository.class);
 
         List<MetadataStatus> metadataStatuses;
         if ((type != null && type.length > 0) ||
-            (owner != null && owner.length > 0)) {
+            (author != null && author.length > 0) ||
+            (owner != null && owner.length > 0) ||
+            (record != null && record.length > 0)) {
             metadataStatuses = statusRepository.searchStatus(
                 type != null && type.length > 0 ? Arrays.asList(type) : null,
-                owner != null && owner.length > 0 ? Arrays.asList(owner) : null);
+                author != null && author.length > 0 ? Arrays.asList(author) : null,
+                owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
+                record != null && record.length > 0 ? Arrays.asList(record) : null
+            );
         } else {
              metadataStatuses = statusRepository.findAll();
-         }
+        }
 
+        Map<Integer, String> titles = new HashMap<>();
+        List<MetadataStatusDTO> response = new ArrayList<>(metadataStatuses.size());
         metadataStatuses.forEach(e -> {
-            // TODO: How to collect metadata titles. For now we use Lucene
+            String title = titles.get(e.getId().getMetadataId());
+            if (title == null) {
+                try {
+                    // Collect metadata titles. For now we use Lucene
+                    title = LuceneSearcher.getMetadataFromIndexById(
+                        context.getLanguage(), e.getId().getMetadataId() + "",
+                        "title");
+                    titles.put(e.getId().getMetadataId(), title);
+                } catch (Exception e1) {
+                }
+            }
+            response.add(new MetadataStatusDTO(e, title));
         });
-        return metadataStatuses;
+        return response;
     }
 
     @ApiOperation(

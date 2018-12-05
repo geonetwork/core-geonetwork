@@ -109,9 +109,23 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         return _entityManager.createQuery(query).getResultList();
     }
 
-    // ISODate dateFrom, ISODate dateTo,
+
+    /**
+     * Search status.
+     *
+     * TODO: add paging.
+     *
+     * @param types
+     * @param ownerIds
+     * @param authorIds
+     * @param recordIds
+     * @return
+     */
     public List<MetadataStatus> searchStatus(List<StatusValueType> types,
-                                             List<Integer> ownerIds) {
+                                             List<Integer> ownerIds,
+                                             List<Integer> authorIds,
+                                             List<Integer> recordIds
+                                             ) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<MetadataStatus> cbQuery = cb.createQuery(MetadataStatus.class);
         final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
@@ -122,16 +136,26 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
 
         Predicate typeFilter = null;
+        Predicate authorPredicate = null;
         Predicate ownerPredicate = null;
+        Predicate recordPredicate = null;
         if (types != null) {
             final Path<StatusValueType> statusTypePath = statusValueRoot.get(StatusValue_.type);
             Predicate statusIdJoin = cb.equal(statusIdInMetadataPath, statusIdPath);
             Predicate typePredicate = statusTypePath.in(types);
             typeFilter = cb.and(statusIdJoin, typePredicate);
         }
+        if (authorIds != null) {
+            final Path<Integer> authorIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
+            authorPredicate = authorIdPath.in(authorIds);
+        }
         if (ownerIds != null) {
-            final Path<Integer> ownerIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
+            final Path<Integer> ownerIdPath = metadataStatusRoot.get(MetadataStatus_.owner);
             ownerPredicate = ownerIdPath.in(ownerIds);
+        }
+        if (recordIds != null) {
+            final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
+            recordPredicate = recordIdPath.in(recordIds);
         }
 
         // Date filter
@@ -147,16 +171,20 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 //
 //        } else {
 //
-        Predicate whereClause;
-        if (typeFilter != null && ownerPredicate != null ) {
-            whereClause = cb.and(typeFilter, ownerPredicate);
-        } else if (typeFilter != null) {
-            whereClause = cb.and(typeFilter);
-        } else if (ownerPredicate != null) {
-            whereClause = cb.and(ownerPredicate);
-        } else {
-            whereClause = cb.and();
+        Predicate whereClause  = cb.and();
+        if (typeFilter != null) {
+            whereClause.getExpressions().add(typeFilter);
         }
+        if (authorPredicate != null) {
+            whereClause.getExpressions().add(authorPredicate);
+        }
+        if (ownerPredicate != null) {
+            whereClause.getExpressions().add(ownerPredicate);
+        }
+        if (recordPredicate != null) {
+            whereClause.getExpressions().add(recordPredicate);
+        }
+
         cbQuery.select(metadataStatusRoot)
             .where(whereClause);
 
