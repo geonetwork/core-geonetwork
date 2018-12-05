@@ -109,9 +109,16 @@
       },
       link: function(scope, element, attrs) {
         element.val(JSON.stringify(scope.value));
-        element.on('change', function() {
+
+        scope.$watch('value', function(newValue, oldValue, s) {
+          if (newValue !== oldValue) {
+            element.val(JSON.stringify(newValue));
+          }
+        }, true);
+
+        element.on('change', function(eventObject) {
           scope.$apply(function () {
-            var newValue = $(this).val();
+            var newValue = element.val();
             try {
               angular.merge(scope.value, JSON.parse(newValue));
             } catch (e) {
