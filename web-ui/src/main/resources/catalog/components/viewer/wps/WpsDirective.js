@@ -173,6 +173,33 @@
                     scope.applicationProfile);
               }
             }
+            // Specific SEXTANT EMODNET
+            // Gets the labels // names of usable layers (checked and visible)
+            scope.applyMapLayersToInput = function () {
+              if (!scope.applicationProfile) return;
+              var availableLayers = scope.map.getLayers()
+                .getArray()
+                .filter(function(l) {
+                  return (l.getVisible() && !l.background); // remove background layers
+                })
+                .map(function(ll) {
+                  return ll.get('label') || ll.get('name');
+                });
+              scope.applicationProfile.inputs.forEach(function(input) {
+                if (input.bindLayerTreeToWPS) {
+                  scope.removeAllInputValuesByName(input.identifier);
+                  availableLayers.forEach(function(layerName) {
+                    scope.addInputValueByName(input.identifier, layerName);
+                  });
+                }
+              });
+            }
+
+            // call on layerChange
+            scope.map.getLayers().on('onlayerchange', scope.applyMapLayersToInput)
+            // call on init
+            scope.applyMapLayersToInput()
+            // END specific SEXTANT EMODNET
 
             // get values from wfs filters
             var wfsFilterValues = null;
@@ -221,24 +248,21 @@
                     angular.forEach(scope.processDescription.dataInputs.input,
                     function(input) {
                       var inputName = input.identifier.value;
-                      var value;
                       var defaultValue;
                       var wfsFilterValue;
-
                       // look for input info in app profile
                       if (scope.applicationProfile &&
                       scope.applicationProfile.inputs) {
                         scope.applicationProfile.inputs.forEach(
-                        function(input) {
-                          if (input.identifier == inputName) {
-                            defaultValue = input.defaultValue;
-
+                        function(apInput) {
+                          if (apInput.identifier == inputName) {
+                            defaultValue = apInput.defaultValue;
                             // check if there is a wfs filter active
                             // & apply value
-                            var wfsFilter = input.linkedWfsFilter || '';
-                            var isTokenized = !!input.tokenizeWfsFilterValues;
+                            var wfsFilter = apInput.linkedWfsFilter || '';
+                            var isTokenized = !!apInput.tokenizeWfsFilterValues;
                             var delimiter = isTokenized &&
-                              (input.wfsFilterValuesDelimiter || ',')
+                              (apInput.wfsFilterValuesDelimiter || ',')
 
                             // handle the case where the link points to "from"
                             // or "to" dates of a filter
