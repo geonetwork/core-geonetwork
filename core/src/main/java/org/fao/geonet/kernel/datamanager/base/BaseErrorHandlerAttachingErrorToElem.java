@@ -13,11 +13,6 @@ public class BaseErrorHandlerAttachingErrorToElem extends XmlErrorHandler {
     private ElementDecorator elementDecorator;
     private Map<Element, Element> reportsAttach= new HashMap();
 
-
-    public ElementDecorator getElementDecorator() {
-        return elementDecorator;
-    }
-
     public void setElementDecorator(ElementDecorator elementDecorator) {
         this.elementDecorator = elementDecorator;
     }
@@ -28,18 +23,6 @@ public class BaseErrorHandlerAttachingErrorToElem extends XmlErrorHandler {
         Element elem = (Element) so.getLocator().getNode();
         reportsAttach.put(elementDecorator.buildErrorReport("XSD", typeOfError, exception.getMessage(), xPath), elem);
         return xPath;
-    }
-
-    public void error(SAXParseException parseException) throws SAXException {
-        addMessage(parseException, "ERROR");
-    }
-
-    public void fatalError(SAXParseException parseException) throws SAXException {
-        addMessage(parseException, "FATAL ERROR");
-    }
-
-    public void warning(SAXParseException parseException) throws SAXException {
-        addMessage(parseException, "WARNING");
     }
 
     public interface ElementDecorator {

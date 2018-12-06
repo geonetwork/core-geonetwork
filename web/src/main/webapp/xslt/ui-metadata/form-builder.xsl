@@ -1463,15 +1463,6 @@
                 match="@gn:addedObj|@xsi:type|
           @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
 
-
-  <xsl:template mode="render-for-field-for-attribute"
-                match="@gn:validationReport" priority="2">
-    <div class="alert alert-danger">
-      <xsl:value-of select="@message"/>
-    </div>
-  </xsl:template>
-
-
   <!--
     Add attribute control
   <geonet:attribute
