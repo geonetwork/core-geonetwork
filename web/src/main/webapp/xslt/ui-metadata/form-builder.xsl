@@ -280,22 +280,8 @@
               </div>
             </xsl:if>
 
+            <xsl:call-template name="get-errors"/>
 
-            <xsl:variable name="errors">
-              <xsl:call-template name="get-errors"/>
-            </xsl:variable>
-
-            <xsl:if test="$errors">
-              <div class="gn-validation-report">
-                <ul class="list-group">
-                  <xsl:for-each select="$errors/errors/error">
-                    <li class="list-group-item text-danger">
-                      <xsl:value-of select="."/>
-                    </li>
-                  </xsl:for-each>
-                </ul>
-              </div>
-            </xsl:if>
           </div>
           <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -406,21 +392,7 @@
         </div>
       </xsl:if>
 
-      <xsl:variable name="errors">
-        <xsl:call-template name="get-errors"/>
-      </xsl:variable>
-
-      <xsl:if test="$errors">
-        <div class="gn-validation-report">
-          <ul class="list-group">
-            <xsl:for-each select="$errors/errors/error">
-              <li class="list-group-item text-danger">
-                <xsl:value-of select="."/>
-              </li>
-            </xsl:for-each>
-          </ul>
-        </div>
-      </xsl:if>
+      <xsl:call-template name="get-errors"/>
 
       <xsl:if test="$subTreeSnippet">
         <xsl:copy-of select="$subTreeSnippet"/>

@@ -159,8 +159,17 @@
           </xsl:for-each>
         </errors>
       </xsl:variable>
-
-      <xsl:copy-of select="if (count($listOfErrors//error) > 0) then $listOfErrors else ''"/>
+      <xsl:if test="count($listOfErrors//error) > 0">
+        <div class="gn-validation-report">
+          <ul class="list-group">
+            <xsl:for-each select="$listOfErrors/errors/error">
+              <li class="list-group-item text-danger">
+                <xsl:value-of select="."/>
+              </li>
+            </xsl:for-each>
+          </ul>
+        </div>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
