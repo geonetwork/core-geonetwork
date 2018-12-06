@@ -696,9 +696,9 @@ public class BaseMetadataManager implements IMetadataManager {
 
 			if (withEditorValidationErrors) {
                 final Pair<Element, String> versionAndReport = metadataValidator.doValidate(srvContext.getUserSession(), schema, id, metadataXml,
-                    srvContext.getLanguage(), forEditing);
+                    srvContext.getLanguage(), true);
                 version = versionAndReport.two();
-
+				editLib.expandElements(schema, metadataXml);
                 // Add the validation report to the record
                 // under a geonet:report element. The report
                 // contains both XSD and schematron errors.

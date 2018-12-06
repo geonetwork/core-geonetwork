@@ -44,7 +44,7 @@ import java.util.Map;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATA_VALIDATION_REMOVESCHEMALOCATION;
 
-public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.IMetadataValidator {
+public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.IMetadataValidator, BaseErrorHandlerAttachingErrorToElem.ElementDecorator {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
     @Autowired
@@ -257,50 +257,26 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      */
     private synchronized Element getXSDXmlReport(String schema, Element md, boolean forEditing) {
         // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
-        XmlErrorHandler errorHandler = new XmlErrorHandler();
+        XmlErrorHandler errorHandler;
+        if (forEditing) {
+            errorHandler = new BaseErrorHandlerAttachingErrorToElem();
+            ((BaseErrorHandlerAttachingErrorToElem) errorHandler).setElementDecorator(this);
+        } else {
+            errorHandler = new XmlErrorHandler();
+        }
         errorHandler.setNs(Edit.NAMESPACE);
-        Element xsdErrors;
-
         try {
-            xsdErrors = validateInfo(schema, md, errorHandler);
-        } catch (Exception e) {
-            xsdErrors = JeevesException.toElement(e);
-            return xsdErrors;
-        }
-
-        if (forEditing && xsdErrors != null) {
-            MetadataSchema mds = metadataSchemaUtils.getSchema(schema);
-            List<Namespace> schemaNamespaces = mds.getSchemaNS();
-
-            // -- now get each xpath and evaluate it
-            // -- xsderrors/xsderror/{message,xpath}
-            @SuppressWarnings("unchecked")
-            List<Element> list = xsdErrors.getChildren();
-            for (Element elError : list) {
-                String xpath = elError.getChildText("xpath", Edit.NAMESPACE);
-                String errorCode = elError.getChildText("typeOfError", Edit.NAMESPACE);
-                String message = elError.getChildText("message", Edit.NAMESPACE);
-
-                // -- get the element from the xpath and add the error message to it
-                Element elem = null;
-                try {
-                    elem = Xml.selectElement(md, xpath, schemaNamespaces);
-                } catch (JDOMException e) {
-                    LOGGER.error("Attach xsderror message to xpath {} failed." ,xpath);
-                    LOGGER.error("Attach xsderror message to xpath failed, exception", e);
-                }
-                if (elem != null) {
-                    elem.addContent(buildErrorReport("XSD", errorCode, message, xpath));
-                } else {
-                    LOGGER.warn("WARNING: evaluating XPath {} against metadata failed - XSD validation message: {} will NOT be shown by the editor", xpath, message);
-                    // TODO: Attach to the root element ?
-                }
+            Element xsdErrors = validateInfo(schema, md, errorHandler);
+            if (forEditing) {
+                ((BaseErrorHandlerAttachingErrorToElem) errorHandler).attachReports();
             }
+            return xsdErrors;
+        } catch (Exception e) {
+            return JeevesException.toElement(e);
         }
-        return xsdErrors;
     }
 
-    private Element buildErrorReport(String type, String errorCode, String message, String xpath) {
+    public Element buildErrorReport(String type, String errorCode, String message, String xpath) {
         Element report = new Element(Edit.ValidationReport.VALIDATIONREPORT, Edit.NAMESPACE);
         report.setAttribute(Edit.ValidationReport.TYPE, type, Edit.NAMESPACE);
         report.setAttribute(Edit.ValidationReport.XPATH, xpath, Edit.NAMESPACE);
@@ -427,14 +403,16 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             }
             try {
                 metadataManager.getEditLib().enumerateTree(md);
+
                 // Apply custom schematron rules
                 Element errors = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), doc.getRootElement(), lang, validations);
                 valid = valid && errors == null;
-                metadataManager.getEditLib().removeEditingInfo(md);
             } catch (Exception e) {
                 LOGGER.error("Could not run schematron validation on metadata {}.", metadataId);
                 LOGGER.error("Could not run schematron validation on metadata, exception", e);
                 valid = false;
+            } finally {
+                metadataManager.getEditLib().removeEditingInfo(md);
             }
         }
 
@@ -496,18 +474,16 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
             error = applyCustomSchematronRules(schema, intMetadataId, md, lang, validations);
         } else {
+            // enumerate the metadata xml so that we can report any problems found by the schematron_xml script to the geonetwork editor
+            metadataManager.getEditLib().enumerateTree(md);
             try {
-                // enumerate the metadata xml so that we can report any problems found by the schematron_xml script to the geonetwork editor
-                metadataManager.getEditLib().enumerateTree(md);
-
                 error = applyCustomSchematronRules(schema, intMetadataId, md, lang, validations);
-
-                // remove editing info added by enumerateTree
-                metadataManager.getEditLib().removeEditingInfo(md);
-
             } catch (Exception e) {
                 LOGGER.error("Could not run schematron validation on metadata {}.", metadataId);
                 LOGGER.error("Could not run schematron validation on metadata, exception.", e);
+            } finally {
+                // remove editing info added by enumerateTree
+                metadataManager.getEditLib().removeEditingInfo(md);
             }
         }
 
