@@ -74,12 +74,14 @@ public abstract class GenericMetadataEventListener {
             metadataStatus.setStatusValue(status);
             metadataStatus.setOwner(event.getUserId());
             metadataStatus.setChangeMessage(getChangeMessage());
+            metadataStatus.setCurrentState(event.getCurrentState());
+            metadataStatus.setPreviousState(event.getPreviousState());
 
             statusRepository.save(metadataStatus);
         } else {
             Log.warning(Geonet.DATA_MANAGER, String.format(
-                "Status with id '%s' not found in database. Check database migration SQL file to add default status if you want to log record history.",
-                getEventType()));
+                    "Status with id '%s' not found in database. Check database migration SQL file to add default status if you want to log record history.",
+                    getEventType()));
         }
     }
 

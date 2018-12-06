@@ -73,6 +73,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.history.RecordImportedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -443,7 +444,7 @@ public class MetadataInsertDeleteApi {
                 "Metadata imported from XML with UUID '%s'", pair.two())
             );
 
-            triggerCreationEvent(request, pair.two());
+            triggerImportEvent(request, pair.two());
 
             report.incrementProcessedRecords();
         }
@@ -463,7 +464,7 @@ public class MetadataInsertDeleteApi {
                         "Metadata imported from URL with UUID '%s'", pair.two())
                     );
 
-                    triggerCreationEvent(request, pair.two());
+                    triggerImportEvent(request, pair.two());
 
                 }
 
@@ -943,7 +944,7 @@ public class MetadataInsertDeleteApi {
                         "Metadata imported with UUID '%s'", pair.two())
                     );
 
-                    triggerCreationEvent(request, pair.two());
+                    triggerImportEvent(request, pair.two());
 
                     report.incrementProcessedRecords();
                 }
@@ -1205,6 +1206,25 @@ public class MetadataInsertDeleteApi {
         new RecordCreateEvent(metadata.getId(),
                               userSession.getUserIdAsInt(),
                               ObjectJSONUtils.wrapObjectWithJsonObject(userSession.getPrincipal(), RecordCreateEvent.FIELD),
+                              metadata.getData()
+                              ).publish(applicationContext);
+    }
+
+    /**
+     *  This triggers a metadata created event (after save)
+        * @param request
+        * @param uuid or id of metadata
+        * @throws Exception
+        * @throws JsonProcessingException
+     */
+    private void triggerImportEvent(HttpServletRequest request, String uuid)
+            throws Exception, JsonProcessingException {
+        AbstractMetadata metadata = ApiUtils.getRecord(uuid);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new RecordImportedEvent(metadata.getId(),
+                              userSession.getUserIdAsInt(),
+                              ObjectJSONUtils.wrapObjectWithJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
                               metadata.getData()
                               ).publish(applicationContext);
     }

@@ -45,6 +45,7 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.editing.AjaxEditUtils;
+import org.fao.geonet.api.records.model.validation.Report;
 import org.fao.geonet.api.records.model.validation.Reports;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -175,7 +176,7 @@ public class MetadataValidateApi {
                     setNumFailures(0);
             this.metadataValidationRepository.save(metadataValidation);
             dataManager.indexMetadata(("" + metadata.getId()), true, null);
-            new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(metadataValidation, RecordValidationTriggeredEvent.FIELD)).publish(appContext);
+            new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), metadataValidation.getStatus().getCode()).publish(appContext);
             return new Reports();
         }
 
@@ -247,6 +248,17 @@ public class MetadataValidateApi {
 
         Reports response = (Reports) Xml.unmarshall(transform, Reports.class);
 
+        List<Report> reports = response.getReport();
+
+        if(reports!=null) {
+            int value = 1;
+            for (Report report : reports) {
+                if(!report.getSuccess().equals(report.getTotal())) {
+                    value = 0;
+                }
+            }
+            new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), Integer.toString(value)).publish(appContext);
+        }
         return response;
     }
 

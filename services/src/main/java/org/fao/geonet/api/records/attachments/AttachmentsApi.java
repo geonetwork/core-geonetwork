@@ -212,7 +212,7 @@ public class AttachmentsApi {
         if(metadataIdString!=null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachementDeletedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+            new AttachementDeletedEvent(metadataId, userSession.getUserIdAsInt(), "All attachments").publish(ApplicationContextHolder.get());
         }
     }
 
@@ -250,10 +250,10 @@ public class AttachmentsApi {
         MetadataResource resource = store.putResource(context, metadataUuid, file, visibility);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid);
-        if(metadataIdString!=null) {
+        if(metadataIdString!=null && file!=null && !file.isEmpty()) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachementAddedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+            new AttachementAddedEvent(metadataId, userSession.getUserIdAsInt(), file.getName()).publish(ApplicationContextHolder.get());
         }
 
         return resource;
@@ -292,10 +292,10 @@ public class AttachmentsApi {
         MetadataResource resource = store.putResource(context, metadataUuid, url, visibility);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid);
-        if(metadataIdString!=null) {
+        if(metadataIdString!=null && url!=null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachementAddedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+            new AttachementAddedEvent(metadataId, userSession.getUserIdAsInt(), url.toString()).publish(ApplicationContextHolder.get());
         }
 
         return resource;
@@ -406,7 +406,7 @@ public class AttachmentsApi {
         if(metadataIdString!=null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachementDeletedEvent(metadataId, userSession.getUserIdAsInt()).publish(ApplicationContextHolder.get());
+            new AttachementDeletedEvent(metadataId, userSession.getUserIdAsInt(), resourceId).publish(ApplicationContextHolder.get());
         }
     }
 }

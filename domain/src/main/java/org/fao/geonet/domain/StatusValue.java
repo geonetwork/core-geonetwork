@@ -238,5 +238,6 @@ public class StatusValue extends Localized {
         public static final String RECORDSTATUSCHANGE = "59";
         public static final String RECORDPROCESSINGCHANGE = "60";
         public static final String RECORDDELETED = "61";
+        public static final String RECORDIMPORTED = "62";
     }
 }

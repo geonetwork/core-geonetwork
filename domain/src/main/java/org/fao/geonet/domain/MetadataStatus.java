@@ -75,6 +75,8 @@ public class MetadataStatus extends GeonetEntity {
     private int _owner;
     private ISODate _duedate;
     private ISODate _closedate;
+    private String previousState;
+    private String currentState;
 
     /**
      * Get the id object of this metadata status object.
@@ -211,6 +213,27 @@ public class MetadataStatus extends GeonetEntity {
     public void setStatusValue(StatusValue statusValue) {
         this.statusValue = statusValue;
         this.getId().setStatusId(statusValue.getId());
+    }
+
+
+    @Column
+    @Lob
+    public String getPreviousState() {
+        return previousState;
+    }
+
+    public void setPreviousState(String previousState) {
+        this.previousState = previousState;
+    }
+
+    @Column
+    @Lob
+    public String getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(String currentState) {
+        this.currentState = currentState;
     }
 
     @Transient

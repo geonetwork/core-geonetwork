@@ -27,9 +27,9 @@ import org.springframework.context.ApplicationContext;
 
 import net.sf.json.JSONObject;
 
-public class RecordCreateEvent extends AbstractHistoryEvent {
+public class RecordImportedEvent extends AbstractHistoryEvent {
 
-    public static final String FIELD = "userObject";
+    public static final String FIELD = "user";
 
     private static final long serialVersionUID = 1110999025730522535L;
 
@@ -37,13 +37,13 @@ public class RecordCreateEvent extends AbstractHistoryEvent {
 
     private String xmlRecord;
 
-    public RecordCreateEvent(Integer mdId, Integer userId, JSONObject userObject, String xmlRecord) {
+    public RecordImportedEvent(Integer mdId, Integer userId, JSONObject userObject, String xmlRecord) {
         super(mdId, userId);
         this.userObject = userObject;
         this.xmlRecord = xmlRecord;
     }
 
-    public RecordCreateEvent(Long mdId, Integer userId, JSONObject userObject, String xmlRecord) {
+    public RecordImportedEvent(Long mdId, Integer userId, JSONObject userObject, String xmlRecord) {
         super(mdId, userId);
         this.userObject = userObject;
         this.xmlRecord = xmlRecord;

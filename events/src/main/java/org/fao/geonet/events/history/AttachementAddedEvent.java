@@ -29,12 +29,21 @@ public class AttachementAddedEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = -8026442709546540103L;
 
-    public AttachementAddedEvent(Integer mdId, Integer userId) {
+    private String attachmentName;
+
+    public AttachementAddedEvent(Integer mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
+        this.attachmentName = attachmentName;
     }
 
-    public AttachementAddedEvent(Long mdId, Integer userId) {
+    public AttachementAddedEvent(Long mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
+        this.attachmentName = attachmentName;
+    }
+
+    @Override
+    public String getCurrentState() {
+        return attachmentName;
     }
 
     @Override

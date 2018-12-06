@@ -29,12 +29,21 @@ public class AttachementDeletedEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = -7114160491764342413L;
 
-    public AttachementDeletedEvent(Integer mdId, Integer userId) {
+    private String attachmentName;
+
+    public AttachementDeletedEvent(Integer mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
+        this.attachmentName = attachmentName;
     }
 
-    public AttachementDeletedEvent(Long mdId, Integer userId) {
+    public AttachementDeletedEvent(Long mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
+        this.attachmentName = attachmentName;
+    }
+
+    @Override
+    public String getPreviousState() {
+        return attachmentName;
     }
 
     @Override

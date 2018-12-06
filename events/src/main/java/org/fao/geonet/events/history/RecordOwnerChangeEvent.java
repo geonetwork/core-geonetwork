@@ -29,11 +29,11 @@ import net.sf.json.JSONObject;
 
 public class RecordOwnerChangeEvent extends AbstractHistoryEvent {
 
+    public static final String FIELD = "owner";
+
     private static final long serialVersionUID = -1969470377634645341L;
 
     private JSONObject oldOwnerObjectJSON, newOwnerObjectJSON;
-    
-    public static final String FIELD = "owner";
 
     public RecordOwnerChangeEvent(Integer mdId, Integer userId, JSONObject oldOwnerObjectJSON, JSONObject newOwnerObjectJSON) {
         super(mdId, userId);

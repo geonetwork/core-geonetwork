@@ -49,8 +49,6 @@ import org.fao.geonet.api.records.model.suggestion.SuggestionType;
 import org.fao.geonet.api.records.model.suggestion.SuggestionsType;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.utils.ObjectJSONUtils;
-import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
@@ -77,6 +75,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
@@ -271,6 +270,7 @@ public class MetadataProcessApi {
         DataManager dataMan = context.getBean(DataManager.class);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element processedMetadata;
+        Element beforeMetadata = dataMan.getMetadata(context, metadata.getUuid(), false, false, false);
         try {
             final String siteURL = sm.getSiteURL(context);
             processedMetadata = XslProcessUtils.process(
@@ -282,6 +282,14 @@ public class MetadataProcessApi {
                     + report.getNumberOfRecordNotFound() +
                     ", Not owner:" + report.getNumberOfRecordsNotEditable() +
                     ", No process found:" + report.getNoProcessFoundCount() + ".");
+            } else {
+                UserSession userSession = context.getUserSession();
+                if(userSession != null) {
+                    XMLOutputter outp = new XMLOutputter();
+                    String xmlAfter = outp.outputString(processedMetadata);
+                    String xmlBefore = outp.outputString(beforeMetadata);
+                    new RecordProcessingChangeEvent(metadata.getId(), Integer.parseInt(userSession.getUserId()), xmlBefore, xmlAfter).publish(ApplicationContextHolder.get());
+                }
             }
         } catch (Exception e) {
             throw e;
