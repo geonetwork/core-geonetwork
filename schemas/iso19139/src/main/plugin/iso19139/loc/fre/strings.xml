@@ -65,12 +65,12 @@
 
   <keywordFrom>Mots clés - </keywordFrom>
   <!-- XSD error translation -->
-  <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
-  <onElementOf>Un des éléments suivants </onElementOf>
+  <invalidElement>Contenu invalide à l'élément </invalidElement>
+  <onElementOf>Un des éléments suivants : </onElementOf>
   <isExpected> est attendu.</isExpected>
-  <isNotComplete> est incomplet.</isNotComplete>
+  <isNotComplete>.</isNotComplete>
   <elementLocated> L'élément parent est </elementLocated>
-  <missingElement>Élément manquant. Le contenu de l'élément </missingElement>
+  <missingElement>Élément manquant dans </missingElement>
   <invalidValue>Valeur manquante ou invalide. </invalidValue>
   <notValidFor> n'est pas une valeur valide pour </notValidFor>
   <xsdErrorIs>L'erreur est : </xsdErrorIs>

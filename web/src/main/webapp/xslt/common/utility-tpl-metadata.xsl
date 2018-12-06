@@ -133,9 +133,6 @@
 
     This template collect XSD and schematron errors and return the list
     of errors related to this element.
-
-    TODO:
-    * Translate XSD errors
     -->
   <xsl:template name="get-errors">
     <xsl:param name="theElement" required="no"/>
@@ -146,13 +143,13 @@
       <xsl:variable name="listOfErrors">
         <errors>
           <xsl:for-each select="gn:validationReport|*/gn:validationReport">
-            <error>
+            <error type="xsd">
               <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $strings)"/>
             </error>
           </xsl:for-each>
 
           <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
-            <error>
+            <error type="{ancestor::svrl:schematron-output/@title}">
               <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
               <xsl:copy-of select="svrl:text/*"/>
             </error>
@@ -164,7 +161,18 @@
           <ul class="list-group">
             <xsl:for-each select="$listOfErrors/errors/error">
               <li class="list-group-item text-danger">
-                <xsl:value-of select="."/>
+
+                <div class="row">
+                  <div class="col-xs-10">
+                    <xsl:value-of select="."/>
+                  </div>
+                  <div class="col-xs-2">
+                    <span class="pull-right label label-danger">
+                      <xsl:value-of select="@type"/>
+                    </span>
+                  </div>
+                </div>
+
               </li>
             </xsl:for-each>
           </ul>

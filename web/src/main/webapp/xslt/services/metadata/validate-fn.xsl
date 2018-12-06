@@ -85,7 +85,8 @@
     <!-- Set of rules processed : -->
     <xsl:variable name="rules">
       <!--Invalid content was found starting with element 'gmd:dateType'. One of '{"http://www.isotc211.org/2005/gmd":date}' is expected. (Element: gmd:dateType with parent element: gmd:CI_Date)-->
-      <rule errorType="complex-type.2.4.a">Invalid content was found starting with element '([a-z]{3}):(.*)'\. One of '\{"(.*)\}' is expected\. \(Element: (.*) with parent element: (.*)\)</rule>
+      <rule errorType="complex-type.2.4.awithparent">Invalid content was found starting with element '([a-z]{3}):(.*)'\. One of '\{"(.*)\}' is expected\. \(Element: (.*) with parent element: (.*)\)</rule>
+      <rule errorType="complex-type.2.4.a">Invalid content was found starting with element '([a-z]{3}):(.*)'\. One of '\{"(.*)\}' is expected\.</rule>
       <!--cvc-complex-type.2.4.b: The content of element 'gmd:EX_BoundingPolygon' is not complete. One of '{"http://www.isotc211.org/2005/gmd":extentTypeCode, "http://www.isotc211.org/2005/gmd":polygon}' is expected. (Element: gmd:EX_BoundingPolygon with parent element: gmd:geographicElement)-->
       <rule errorType="complex-type.2.4.bwithparent">The content of element '(.*)' is not complete. One of '\{"(.*)\}' is expected\. \(Element: (.*) with parent element: (.*)\)</rule>
       <rule errorType="complex-type.2.4.b">The content of element '(.*)' is not complete. One of '\{"(.*)\}' is expected\.</rule>
@@ -102,6 +103,9 @@
         <xsl:when test="$errorType = 'cvc-complex-type.2.4.b' and contains($error, 'with parent element')">
           <xsl:value-of select="$rules/rule[@errorType = 'complex-type.2.4.bwithparent']"/>
         </xsl:when>
+        <xsl:when test="$errorType = 'cvc-complex-type.2.4.a' and contains($error, 'with parent element')">
+          <xsl:value-of select="$rules/rule[@errorType = 'complex-type.2.4.awithparent']"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="$rules/rule[@errorType = $errorType]"/>
         </xsl:otherwise>
@@ -116,7 +120,7 @@
             <xsl:variable name="response">
 
               <xsl:choose>
-                <xsl:when test="$errorType = 'complex-type.2.4.a'">
+                <xsl:when test="$errorType = 'complex-type.2.4.a' and contains($error, 'with parent element')">
                   <xsl:value-of select="$strings/invalidElement"/>
                   <xsl:value-of
                     select="geonet:getTitleWithoutContext($schema, concat(regex-group(1), ':', regex-group(2)), $labels)"
@@ -129,6 +133,16 @@
                   <xsl:value-of
                     select="geonet:getTitleWithoutContext($schema, regex-group(5), $labels)"/>
                   (<xsl:value-of select="regex-group(5)"/>).
+                </xsl:when>
+                <xsl:when test="$errorType = 'complex-type.2.4.a'">
+                  <xsl:value-of select="$strings/invalidElement"/>
+                  <xsl:value-of
+                    select="geonet:getTitleWithoutContext($schema, concat(regex-group(1), ':', regex-group(2)), $labels)"
+                  /> (<xsl:value-of select="concat(regex-group(1), ':', regex-group(2))"/>).
+                  <xsl:value-of select="$strings/onElementOf"/>
+                  <xsl:value-of
+                    select="geonet:parse-xsd-elements(regex-group(3), $schema, $labels)"/>
+                  <xsl:value-of select="$strings/isExpected"/>
                 </xsl:when>
                 <xsl:when test="$errorType = 'complex-type.2.4.b' and contains($error, 'with parent element')">
                   <xsl:value-of select="$strings/missingElement"/>

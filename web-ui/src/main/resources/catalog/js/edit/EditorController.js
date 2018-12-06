@@ -484,8 +484,10 @@
       };
 
       $scope.save = function(refreshForm, validate) {
-        $('#showvalidationerrors')[0].value = gnCurrentEdit.showValidationErrors =
-          (validate == true);
+        if (angular.isDefined(validate)) {
+          $('#showvalidationerrors')[0].value =
+            gnCurrentEdit.showValidationErrors = validate;
+        }
         $scope.saveError = false;
         var promise = gnEditor.save(refreshForm)
             .then(function(form) {
