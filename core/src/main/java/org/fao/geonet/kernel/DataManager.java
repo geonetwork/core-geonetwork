@@ -458,12 +458,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public Pair<Element, String> doValidate(UserSession session, String schema, String metadataId, Element md, String lang,
-            boolean forEditing) throws Exception {
-        return metadataValidator.doValidate(session, schema, metadataId, md, lang, forEditing);
-    }
-
-    @Deprecated
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md, String lang,
             List<MetadataValidation> validations) {
         return metadataValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
