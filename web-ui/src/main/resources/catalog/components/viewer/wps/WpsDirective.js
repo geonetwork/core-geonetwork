@@ -254,15 +254,15 @@
                       if (scope.applicationProfile &&
                       scope.applicationProfile.inputs) {
                         scope.applicationProfile.inputs.forEach(
-                        function(apInput) {
-                          if (apInput.identifier == inputName) {
-                            defaultValue = apInput.defaultValue;
+                        function(input) {
+                          if (input.identifier == inputName) {
+                            defaultValue = input.defaultValue;
                             // check if there is a wfs filter active
                             // & apply value
-                            var wfsFilter = apInput.linkedWfsFilter || '';
-                            var isTokenized = !!apInput.tokenizeWfsFilterValues;
+                            var wfsFilter = input.linkedWfsFilter || '';
+                            var isTokenized = !!input.tokenizeWfsFilterValues;
                             var delimiter = isTokenized &&
-                              (apInput.wfsFilterValuesDelimiter || ',')
+                              (input.wfsFilterValuesDelimiter || ',')
 
                             // handle the case where the link points to "from"
                             // or "to" dates of a filter
@@ -727,10 +727,10 @@
           };
 
           // add or remove an input value
-          scope.addInputValueByName = function(name) {
+          scope.addInputValueByName = function(name, value) {
             scope.wpsLink.inputs.push({
               name: name,
-              value: undefined
+              value: value
             });
           };
           scope.removeInputValueByName = function(name, indexToRemove) {
