@@ -140,25 +140,27 @@
   <xsl:template name="get-errors">
     <xsl:param name="theElement" required="no"/>
 
-    <xsl:variable name="ref" select="concat('#_', gn:element/@ref)"/>
+    <xsl:if test="$showValidationErrors">
+      <xsl:variable name="ref" select="concat('#_', gn:element/@ref)"/>
 
-    <xsl:variable name="listOfErrors">
-      <errors>
-        <xsl:for-each select="gn:validationReport|*/gn:validationReport">
-          <error>
-            <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $strings)"/>
-          </error>
-        </xsl:for-each>
+      <xsl:variable name="listOfErrors">
+        <errors>
+          <xsl:for-each select="gn:validationReport|*/gn:validationReport">
+            <error>
+              <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $strings)"/>
+            </error>
+          </xsl:for-each>
 
-        <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
-          <error>
-            <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
-            <xsl:copy-of select="svrl:text/*"/>
-          </error>
-        </xsl:for-each>
-      </errors>
-    </xsl:variable>
+          <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
+            <error>
+              <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+              <xsl:copy-of select="svrl:text/*"/>
+            </error>
+          </xsl:for-each>
+        </errors>
+      </xsl:variable>
 
-    <xsl:copy-of select="if (count($listOfErrors//error) > 0) then $listOfErrors else ''"/>
+      <xsl:copy-of select="if (count($listOfErrors//error) > 0) then $listOfErrors else ''"/>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>

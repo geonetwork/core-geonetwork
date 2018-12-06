@@ -280,12 +280,21 @@
               </div>
             </xsl:if>
 
+
+            <xsl:variable name="errors">
+              <xsl:call-template name="get-errors"/>
+            </xsl:variable>
+
             <xsl:if test="$errors">
-              <xsl:for-each select="$errors/errors/error">
-                <span class="help-block text-danger">
-                  <xsl:value-of select="."/>
-                </span>
-              </xsl:for-each>
+              <div class="gn-validation-report">
+                <ul class="list-group">
+                  <xsl:for-each select="$errors/errors/error">
+                    <li class="list-group-item text-danger">
+                      <xsl:value-of select="."/>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+              </div>
             </xsl:if>
           </div>
           <div class="col-sm-1 gn-control">
@@ -397,12 +406,20 @@
         </div>
       </xsl:if>
 
-      <xsl:if test="normalize-space($errors) != ''">
-        <xsl:for-each select="$errors/errors/error">
-          <div class="alert alert-danger">
-            <xsl:value-of select="."/>
-          </div>
-        </xsl:for-each>
+      <xsl:variable name="errors">
+        <xsl:call-template name="get-errors"/>
+      </xsl:variable>
+
+      <xsl:if test="$errors">
+        <div class="gn-validation-report">
+          <ul class="list-group">
+            <xsl:for-each select="$errors/errors/error">
+              <li class="list-group-item text-danger">
+                <xsl:value-of select="."/>
+              </li>
+            </xsl:for-each>
+          </ul>
+        </div>
       </xsl:if>
 
       <xsl:if test="$subTreeSnippet">

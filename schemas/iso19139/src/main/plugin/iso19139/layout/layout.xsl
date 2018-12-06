@@ -148,16 +148,10 @@
       </xsl:apply-templates>
     </xsl:variable>
 
-    <xsl:variable name="errors">
-      <xsl:if test="$showValidationErrors">
-        <xsl:call-template name="get-errors"/>
-      </xsl:if>
-    </xsl:variable>
     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label" select="$label/label"/>
       <xsl:with-param name="editInfo" select="if ($refToDelete) then $refToDelete else gn:element"/>
-      <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
@@ -246,14 +240,6 @@
       </xsl:apply-templates>
     </xsl:variable>
 
-    <xsl:variable name="errors">
-      <xsl:if test="$showValidationErrors">
-        <xsl:call-template name="get-errors">
-          <xsl:with-param name="theElement" select="$theElement"/>
-        </xsl:call-template>
-      </xsl:if>
-    </xsl:variable>
-
 
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
@@ -325,7 +311,6 @@
       <xsl:with-param name="label"
                       select="$labelConfig/*"/>
       <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
-      <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
         <xsl:with-param name="widgetParams"/>-->
