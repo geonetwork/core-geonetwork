@@ -1,0 +1,17 @@
+<div class="panel panel-default" title="{{getTaskInfo()}}">
+  <div class="panel-body alert-{{getStatusClass()}}">
+    <p>
+      <span class="fa {{getStatusIcon()}}"></span>&nbsp;
+      <span translate translate-values="{ total: taskInfo.total, errors: taskInfo.errors }">
+        {{getStatusLabel()}}
+      </span>
+    </p>
+    <div class="progress" ng-if="taskInfo">
+      <div class="progress-bar progress-bar-striped progress-bar-{{getStatusClass()}}"
+           ng-class="{'active': taskInfo.total > taskInfo.processed}"
+           role="progressbar" style="width: {{getProcessRatio() * 100}}%">
+        {{taskInfo.processed}} / {{taskInfo.total}}
+      </div>
+    </div>
+  </div>
+</div>

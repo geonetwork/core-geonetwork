@@ -39,7 +39,7 @@
     function(gnIndexRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
              $http, $q, $translate) {
 
-      var indexProxyUrl = gnHttp.getService('indexproxy');
+      var indexProxyUrl = gnHttp.getService('featureindexproxy');
 
       var indexObject = gnIndexRequestManager.register('WfsFilter', 'facets');
 

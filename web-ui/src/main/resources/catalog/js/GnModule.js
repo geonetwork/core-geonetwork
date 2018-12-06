@@ -31,6 +31,7 @@
   goog.require('gn_cat_controller');
   goog.require('gn_cors_interceptor');
   goog.require('gn_formfields');
+  goog.require('gn_indexingtask');
   goog.require('gn_language_switcher');
   goog.require('gn_locale');
   goog.require('gn_map');
@@ -64,7 +65,8 @@
     'gn_needhelp',
     'gn_alert',
     'gn_admin_menu',
-    'gn_cors_interceptor'
+    'gn_cors_interceptor',
+    'gn_indexingtask'
   ]);
 
 })();

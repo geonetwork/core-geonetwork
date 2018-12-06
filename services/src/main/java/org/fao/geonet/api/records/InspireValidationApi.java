@@ -132,6 +132,8 @@ public class InspireValidationApi {
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
+        new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), null).publish(appContext);
+
         if(metadata==null) {
             response.setStatus(HttpStatus.SC_NOT_FOUND);
             return "";

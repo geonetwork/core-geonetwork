@@ -77,11 +77,21 @@ public class EsSearchManager implements ISearchManager {
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
 
-    @Value("${es.index.records}")
+    @Value("${es.index.records:gn-records}")
     private String index = "records";
+
+    @Value("${es.index.records.type:records}")
+    private String indexType = "records";
 
     public String getIndex() {
         return index;
+    }
+
+    public String getIndexType() {
+        return indexType;
+    }
+    public void setIndexType(String indexType) {
+        this.indexType = indexType;
     }
 
     @Autowired
@@ -228,7 +238,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() throws IOException {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
-                client.bulkRequest(index, listOfDocumentsToIndex);
+                client.bulkRequest(index, indexType, listOfDocumentsToIndex);
                 listOfDocumentsToIndex.clear();
             }
         }
@@ -241,7 +251,11 @@ public class EsSearchManager implements ISearchManager {
             .add("hasxlinks")
             .add("hasInspireTheme")
             .add("hasOverview")
+            .add(IndexFields.HAS_ATOM)
+            .add(Geonet.IndexFieldNames.HASXLINKS)
             .add("isHarvested")
+            .add("isPublishedToAll")
+            .add("isTemplate")
             .add("isValid")
             .add("isSchemaValid")
             .add("isAboveThreshold")
@@ -262,11 +276,6 @@ public class EsSearchManager implements ISearchManager {
 
         List<Element> records = xml.getChildren("doc");
         Map<String, ObjectNode> listOfXcb = new HashMap<>();
-        Set<String> booleanFields = new HashSet();
-        booleanFields.add(IndexFields.HAS_ATOM);
-        booleanFields.add(Geonet.IndexFieldNames.HASXLINKS);
-        booleanFields.add("hasxlinks");
-        booleanFields.add("isHarvested");
 
         // Loop on docs
         for (int i = 0; i < records.size(); i++) {
@@ -332,7 +341,7 @@ public class EsSearchManager implements ISearchManager {
                                 }
                             } else if (name.equals("geojson")) {
                                 doc.put("geom", node.getTextNormalize());
-                            // Skip some fields causing errors / TODO
+                                // Skip some fields causing errors / TODO
                             } else if (!name.startsWith("conformTo_")) {
                                 if (isObject) {
                                     try {
@@ -423,7 +432,7 @@ public class EsSearchManager implements ISearchManager {
 
     public void clearIndex() throws Exception {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        client.deleteByQuery(index,
+        client.deleteByQuery(index, indexType,
             "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
     }
 
@@ -450,7 +459,7 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
         String query = "{\"query\": {\"filtered\": {\"query_string\": \"*:*\"}}}";
-        Search search = new Search.Builder(query).addIndex(index).addType(index).build();
+        Search search = new Search.Builder(query).addIndex(index).addType(indexType).build();
         // TODO: limit to needed field
 //        params.setFields(ID, Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
         SearchResult searchResult = client.getClient().execute(search);
@@ -524,7 +533,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void delete(String txt) throws Exception {
-        client.deleteByQuery(index, txt);
+        client.deleteByQuery(index, indexType, txt);
 //        client.commit();
     }
 
@@ -549,7 +558,7 @@ public class EsSearchManager implements ISearchManager {
             query = "*:*";
         }
         String searchQuery = "{\"query\": {\"filtered\": {\"query_string\": \"" + query + "\"}}}";
-        Search search = new Search.Builder(searchQuery).addIndex(index).addType(index).build();
+        Search search = new Search.Builder(searchQuery).addIndex(index).addType(indexType).build();
         SearchResult searchResult = client.getClient().execute(search);
         return searchResult.getTotal();
     }
@@ -646,8 +655,8 @@ public class EsSearchManager implements ISearchManager {
                                       String fieldValue) {
 
         return EsClient.analyzeField(
-                            ApplicationContextHolder.get().getBean(EsSearchManager.class).getIndex(),
-                            analyzer,
-                            fieldValue);
+            ApplicationContextHolder.get().getBean(EsSearchManager.class).getIndex(),
+            analyzer,
+            fieldValue);
     }
 }

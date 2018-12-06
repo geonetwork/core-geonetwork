@@ -28,10 +28,6 @@ import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.OperationAllowed_;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.StatusValue_;
@@ -45,12 +41,15 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Data Access object for accessing {@link org.fao.geonet.domain.MetadataValidation} entities.
+ * Data Access object for accessing
+ * {@link org.fao.geonet.domain.MetadataValidation} entities.
  *
  * @author Jesse
  */
@@ -64,7 +63,8 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
     public int deleteAllById_MetadataId(final int metadataId) {
         String entityType = MetadataStatus.class.getSimpleName();
         String metadataIdPropName = MetadataStatusId_.metadataId.getName();
-        Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
+        Query query = _entityManager
+                .createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
         final int deleted = query.executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
@@ -75,7 +75,8 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
     public int deleteAllById_UserId(final int userId) {
         String entityType = MetadataStatus.class.getSimpleName();
         String userIdPropName = MetadataStatusId_.userId.getName();
-        Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + userIdPropName + " = " + userId);
+        Query query = _entityManager
+                .createQuery("DELETE FROM " + entityType + " WHERE " + userIdPropName + " = " + userId);
         final int deleted = query.executeUpdate();
         return deleted;
     }
@@ -90,18 +91,13 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 
         query.select(metadataStatusRoot);
 
-        Predicate metadataIdEqualsPredicate = cb.equal(
-            metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId),
-            metadataId);
+        Predicate metadataIdEqualsPredicate = cb
+                .equal(metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId), metadataId);
 
-        Predicate mdIdEquals = cb.equal(
-            metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId),
-            statusValueRoot.get(StatusValue_.id));
+        Predicate mdIdEquals = cb.equal(metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId),
+                statusValueRoot.get(StatusValue_.id));
 
-        Predicate statusTypePredicate = cb.equal(
-            statusValueRoot.get(StatusValue_.type),
-            type
-        );
+        Predicate statusTypePredicate = cb.equal(statusValueRoot.get(StatusValue_.type), type);
 
         query.where(mdIdEquals, metadataIdEqualsPredicate, statusTypePredicate);
 
@@ -113,4 +109,85 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         return _entityManager.createQuery(query).getResultList();
     }
 
+    /**
+     * Search status.
+     *
+     * TODO: add paging.
+     *
+     * @param types
+     * @param ownerIds
+     * @param authorIds
+     * @param recordIds
+     * @return
+     */
+    public List<MetadataStatus> searchStatus(List<StatusValueType> types, List<Integer> ownerIds,
+            List<Integer> authorIds, List<Integer> recordIds) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<MetadataStatus> cbQuery = cb.createQuery(MetadataStatus.class);
+        final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
+        final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
+
+        final Path<Integer> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.id)
+                .get(MetadataStatusId_.statusId);
+        final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
+
+        Predicate typeFilter = null;
+        Predicate authorPredicate = null;
+        Predicate ownerPredicate = null;
+        Predicate recordPredicate = null;
+        if (types != null) {
+            final Path<StatusValueType> statusTypePath = statusValueRoot.get(StatusValue_.type);
+            Predicate statusIdJoin = cb.equal(statusIdInMetadataPath, statusIdPath);
+            Predicate typePredicate = statusTypePath.in(types);
+            typeFilter = cb.and(statusIdJoin, typePredicate);
+        }
+        if (authorIds != null) {
+            final Path<Integer> authorIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
+            authorPredicate = authorIdPath.in(authorIds);
+        }
+        if (ownerIds != null) {
+            final Path<Integer> ownerIdPath = metadataStatusRoot.get(MetadataStatus_.owner);
+            ownerPredicate = ownerIdPath.in(ownerIds);
+        }
+        if (recordIds != null) {
+            final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.id)
+                    .get(MetadataStatusId_.metadataId);
+            recordPredicate = recordIdPath.in(recordIds);
+        }
+
+        // Date filter
+        // final Path<ISODate> changeDate =
+        // metadataStatusRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
+        // Predicate datePredicate = cb.and(cb.lessThanOrEqualTo(changeDate, dateTo),
+        // cb.greaterThanOrEqualTo(changeDate, dateFrom));
+
+        // // Groups query
+        // if (!groups.isEmpty()) {
+        // Predicate inGroups = statusIdPath.in(groups);
+        //
+        // cbQuery.select(metadataStatusRoot)
+        // .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
+        //
+        // } else {
+        //
+        Predicate whereClause = cb.and();
+        if (typeFilter != null) {
+            whereClause.getExpressions().add(typeFilter);
+        }
+        if (authorPredicate != null) {
+            whereClause.getExpressions().add(authorPredicate);
+        }
+        if (ownerPredicate != null) {
+            whereClause.getExpressions().add(ownerPredicate);
+        }
+        if (recordPredicate != null) {
+            whereClause.getExpressions().add(recordPredicate);
+        }
+
+        cbQuery.select(metadataStatusRoot).where(whereClause);
+
+        // cbQuery.orderBy(cb.asc(changeDate));
+
+        return _entityManager.createQuery(cbQuery).getResultList();
+    }
 }

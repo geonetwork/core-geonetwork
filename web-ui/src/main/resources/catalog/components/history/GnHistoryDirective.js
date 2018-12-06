@@ -27,7 +27,7 @@
   var module = angular.module('gn_history_directive', []);
 
   /**
-   * Send email to metadata contact or catalog administrator.
+   * Display list of events, tasks and workflow status for a record.
    */
   module
     .directive(
@@ -47,29 +47,21 @@
             scope.lang = scope.$parent.lang;
             scope.user = scope.$parent.user;
             scope.history = [];
-
-            // Wait for metatada to be available
-            scope.$watch('md', function(n, o) {
-              if (n !== o && n !== null && angular.isDefined(n)) {
-                loadHistory();
-              }
-             });
-
             // History step removal is only allowed to admin
             // BTW allowRemoval attribute could control if remove button
             // is displayed or not.
-            scope.allowRemoval = false;
-            if(scope.user) {
-              scope.allowRemoval =
-                angular.isDefined(attrs.allowRemoval) ?
+            scope.allowRemoval =
+              angular.isDefined(attrs.allowRemoval) ?
                 attrs.allowRemoval == 'true' && scope.user.isAdministrator() :
                 scope.user.isAdministrator();
-            }
+
             function loadHistory() {
-              $http.get('../api/records/' + scope.md.getUuid() + '/status').
-              then(function(r) {
-                scope.history = r.data;
-              });
+              if (scope.md ) {
+                $http.get('../api/records/' + scope.md.getUuid() + '/status').
+                then(function(r) {
+                  scope.history = r.data;
+                });
+              }
             };
 
             scope.removeStep = function(s){
@@ -80,7 +72,100 @@
               });
             };
 
+            loadHistory();
           }
         };
       }]);
+
+
+  /**
+   * Manager
+   */
+  module
+    .directive(
+      'gnHistory', [
+        '$http', 'gnConfig', '$translate',
+        function($http, gnConfig, $translate) {
+          return {
+            restrict: 'A',
+            replace: true,
+            scope: {
+            },
+            templateUrl:
+              '../../catalog/components/history/partials/history.html',
+            link: function postLink(scope, element, attrs) {
+              scope.types = {'workflow': true, 'task': true, 'event': true};
+              scope.lang = scope.$parent.lang;
+              scope.user = scope.$parent.user;
+              scope.history = [];
+              scope.ownerFilter = null;
+              scope.authorFilter = null;
+              scope.recordFilter = null;
+
+              scope.response = {
+                doiCreationTask: {}
+              };
+              scope.doiCreationTask = {
+                check: function (recordId, statusId) {
+                  var key = recordId+ '-' + statusId;
+                  scope.response.doiCreationTask[key] = {};
+                  scope.response.doiCreationTask[key]['check'] = null;
+                  $http.get('../api/records/' + recordId + '/doi/checkPreConditions').
+                  then(function(r) {
+                    scope.response.doiCreationTask[key]['check'] = r;
+                  }, function(r) {
+                    scope.response.doiCreationTask[key]['check'] = r;
+                  });
+                },
+                create: function (recordId) {
+                  scope.response.doiCreationTask[key]['create'] = null;
+                  $http.put('../api/records/' + recordId + '/doi').
+                  then(function(r) {
+                    scope.response.doiCreationTask[key]['create'] = r;
+                  }, function(r) {
+                    scope.response.doiCreationTask[key]['create'] = r;
+                  });
+                }
+              };
+
+              function buildFilter() {
+                var filters = [];
+                angular.forEach(scope.types, function (v, k) {
+                  if (v) {
+                    filters.push('type=' + k);
+                  }
+                });
+                if (scope.authorFilter && scope.authorFilter.id) {
+                  filters.push('author=' + scope.authorFilter.id)
+                }
+                if (scope.ownerFilter && scope.ownerFilter.id) {
+                  filters.push('owner=' + scope.ownerFilter.id)
+                }
+                if (scope.recordFilter && scope.recordFilter) {
+                  filters.push('record=' + scope.recordFilter)
+                }
+                return filters.length > 0 ? '?' + filters.join('&') : '';
+              }
+
+              function loadHistory() {
+                $http.get('../api/status/search' + buildFilter()).
+                then(function(r) {
+                  scope.history = r.data;
+                });
+              };
+
+              var trigger = function (n, o) {
+                if (n !== o) {
+                  loadHistory();
+                }
+              };
+              scope.$watchCollection('types', trigger);
+              scope.$watchCollection('authorFilter', trigger);
+              scope.$watchCollection('ownerFilter', trigger);
+              scope.$watchCollection('recordFilter', trigger);
+
+              loadHistory();
+            }
+          };
+        }]);
 })();

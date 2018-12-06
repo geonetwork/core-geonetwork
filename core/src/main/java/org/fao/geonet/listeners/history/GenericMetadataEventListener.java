@@ -46,8 +46,10 @@ public abstract class GenericMetadataEventListener {
      */
     public final void handleEvent(AbstractHistoryEvent event) {
 
-        MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
-        StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
+        MetadataStatusRepository statusRepository = ApplicationContextHolder.get()
+                .getBean(MetadataStatusRepository.class);
+        StatusValueRepository statusValueRepository = ApplicationContextHolder.get()
+                .getBean(StatusValueRepository.class);
 
         storeContentHistoryEvent(event, statusRepository, statusValueRepository);
     }
@@ -63,8 +65,9 @@ public abstract class GenericMetadataEventListener {
             StatusValueRepository statusValueRepository) {
 
         Integer metadataUuid = Math.toIntExact(event.getMdId());
-        MetadataStatusId metadataStatusId = new MetadataStatusId().setMetadataId(metadataUuid).setStatusId(Integer.parseInt(getEventType()))
-                .setUserId(event.getUserId()).setChangeDate(new ISODate(System.currentTimeMillis()));
+        MetadataStatusId metadataStatusId = new MetadataStatusId().setMetadataId(metadataUuid)
+                .setStatusId(Integer.parseInt(getEventType())).setUserId(event.getUserId())
+                .setChangeDate(new ISODate(System.currentTimeMillis()));
 
         StatusValue status = statusValueRepository.findOneById(Integer.parseInt(getEventType()));
 

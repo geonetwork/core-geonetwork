@@ -393,7 +393,46 @@
   </servlet-mapping>
 
 
-  <!--Direct proxy to ES server-->
+  <!--Direct proxy to ES server.
+  One specific proxy for features and records
+  which are requested by client apps. Redirect
+  to the proper index which may not have the default name.
+  -->
+  <servlet>
+    <servlet-name>ESFeaturesProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${es.url}/${es.index.features}/{_}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ESFeaturesProxy</servlet-name>
+    <url-pattern>/index/features</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ESRecordsProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${es.url}/${es.index.records}/{_}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ESRecordsProxy</servlet-name>
+    <url-pattern>/index/records</url-pattern>
+  </servlet-mapping>
+
+<!--
   <servlet>
     <servlet-name>ESProxy</servlet-name>
     <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
@@ -408,8 +447,11 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>ESProxy</servlet-name>
-    <url-pattern>/index/*</url-pattern>
+    <url-pattern>/index/all</url-pattern>
   </servlet-mapping>
+-->
+
+
 
   <servlet>
     <servlet-name>HttpDashboardProxy</servlet-name>
@@ -426,6 +468,22 @@
   <servlet-mapping>
     <servlet-name>HttpDashboardProxy</servlet-name>
     <url-pattern>/dashboards/*</url-pattern>
+  </servlet-mapping>
+
+
+  <servlet>
+    <servlet-name>jolokia-agent</servlet-name>
+    <init-param>
+      <param-name>policyLocation</param-name>
+      <param-value>classpath:/jolokia-access.xml</param-value>
+    </init-param>
+    <servlet-class>org.jolokia.http.AgentServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>jolokia-agent</servlet-name>
+    <url-pattern>/jolokia/*</url-pattern>
   </servlet-mapping>
 
 

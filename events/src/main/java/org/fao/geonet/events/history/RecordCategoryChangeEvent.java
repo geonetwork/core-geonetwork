@@ -35,7 +35,8 @@ public class RecordCategoryChangeEvent extends AbstractHistoryEvent {
 
     private JSONObject categoryArrayBeforeJSON, categoryArrayAfterJSON;
 
-    public RecordCategoryChangeEvent(Integer mdId, Integer userId, JSONObject categoryArrayBeforeJSON, JSONObject categoryArrayAfterJSON) {
+    public RecordCategoryChangeEvent(Integer mdId, Integer userId, JSONObject categoryArrayBeforeJSON,
+            JSONObject categoryArrayAfterJSON) {
         super(mdId, userId);
         this.categoryArrayBeforeJSON = categoryArrayBeforeJSON;
         this.categoryArrayAfterJSON = categoryArrayAfterJSON;

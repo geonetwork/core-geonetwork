@@ -57,6 +57,41 @@
 
   /**
    * @ngdoc directive
+   * @name gn_fields.directive:gnFieldWithPrefixOrSuffix
+   * @function
+   *
+   * @description
+   * A field which can hide a prefix or suffix
+   * added automatically to an existing value.
+   * The field type can also be constrained using fieldType attribute.
+   */
+  module.directive('gnFieldWithPrefixOrSuffix',
+    function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          // Using Jquery to parse attribute to preserve
+          // leading/trailing space which may have sense
+          scope.prefix = element.attr('data-prefix') || '';
+          scope.suffix = element.attr('data-suffix') || '';
+          var fieldType = attrs['fieldType'] || 'text';
+
+          // Create an input
+          var input = $('<input class="form-control" type="' + fieldType + '">');
+          // Copy the value without prefix/suffix
+          input.val(element.val()
+            .replace(scope.prefix, '')
+            .replace(scope.suffix, '')).change(function() {
+            element.val(scope.prefix + input.val() + scope.suffix);
+          });
+          element.after(input);
+          element.hide();
+        }
+      };
+    });
+
+  /**
+   * @ngdoc directive
    * @name gn_fields.directive:gnMeasure
    * @function
    *

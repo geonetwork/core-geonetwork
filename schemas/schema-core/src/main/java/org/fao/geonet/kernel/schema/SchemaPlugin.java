@@ -91,6 +91,11 @@ public abstract class SchemaPlugin implements CSWPlugin {
         return xpathTitle;
     }
 
+    protected List<String> elementsToProcess = new ArrayList<>();
+
+    public void setElementsToProcess(List<String> elementsToProcess) {
+        this.elementsToProcess = elementsToProcess;
+    }
 
     /**
      * Processes the passed element. This base class just return the same element without modifications

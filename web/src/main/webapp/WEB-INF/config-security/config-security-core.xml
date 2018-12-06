@@ -45,6 +45,8 @@
         <sec:filter-chain pattern="/index/**" filters=""/>
 
         <sec:filter-chain pattern="/dashboards/**" filters=""/>
+        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, adminUserFilter"/>
+
 
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <!-- wroAPI is protected for admin only
@@ -392,4 +394,6 @@
       </set>
     </constructor-arg>
   </bean>
+
+  <bean id="adminUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
 </beans>

@@ -13,7 +13,7 @@
            data-ng-class="{
             'fa-code-fork': h.statusValue.type === 'workflow',
             'fa-tasks': h.statusValue.type === 'task',
-            'fa-calendar-empty': h.statusValue.type === 'event'}"
+            'fa-edit': h.statusValue.type === 'event'}"
            title="{{(h.statusValue.type + 'Type') | translate}}"></i>
       </div>
       <div class="timeline-panel">
@@ -28,9 +28,6 @@
                ng-src="http://gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
           {{h.authorName}}<br/>
           <strong>{{h.statusValue.label[lang] || h.statusValue.name}}</strong>
-          <span data-translate="{{ 'recordHistoryEvent' + h.statusValue.name}}"
-               data-translate-values="{mdTitle: '{{h.changeMessage.mdTitle}}', item1: '{{h.changeMessage.item1}}', item2: '{{h.changeMessage.item2}}'}">
-          </span>
           <span class="text-muted"
                 data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}"
                 data-from-now=""></span>

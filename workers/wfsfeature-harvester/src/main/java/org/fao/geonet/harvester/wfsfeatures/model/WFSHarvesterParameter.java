@@ -41,7 +41,7 @@ public class WFSHarvesterParameter implements Serializable {
 
     private String version = "1.1.0";
 
-    private int timeOut = 60000;
+    private int timeOut = 300000;
 
     private int maxFeatures = -1;
 

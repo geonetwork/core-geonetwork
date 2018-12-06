@@ -32,6 +32,41 @@
     'ngeo'
   ]);
 
+  var configProjections = function(projectionConfig) {
+    $.each(projectionConfig, function(i, p) {
+      if (!ol.proj.get(p.code)) {
+        if (p.def && p.code) {
+          // Define an OL3 projection based on the included Proj4js projection
+          // definition and set it's extent.
+          proj4.defs(p.code, p.def);
+        } else {
+          console.error("Trying to use unknown projection '" + p.code +
+              "'. Please update definitions on Admin > Settings.");
+        }
+      }
+
+      var projection = ol.proj.get(p.code);
+      if (p.extent && p.extent.length && p.extent.length === 4 &&
+          !isNaN(p.extent[0]) && p.extent[0] != null &&
+          !isNaN(p.extent[1]) && p.extent[1] != null &&
+          !isNaN(p.extent[2]) && p.extent[2] != null &&
+          !isNaN(p.extent[3]) && p.extent[3] != null) {
+        projection.setExtent(p.extent);
+      }
+      if (p.worldExtent && p.worldExtent.length && p.worldExtent.length === 4 &&
+          !isNaN(p.worldExtent[0]) && p.worldExtent[0] != null &&
+          !isNaN(p.worldExtent[1]) && p.worldExtent[1] != null &&
+          !isNaN(p.worldExtent[2]) && p.worldExtent[2] != null &&
+          !isNaN(p.worldExtent[3]) && p.worldExtent[3] != null) {
+        projection.setWorldExtent(p.worldExtent);
+      }
+    });
+  };
+
+  module.config(['gnViewerSettings', function(gnViewerSettings) {
+    configProjections(gnViewerSettings.mapConfig.switcherProjectionList);
+  }]);
+
   /**
    * @ngdoc service
    * @kind function
@@ -53,7 +88,7 @@
              $location, gnSearchLocation) {
 
       var mapParams = {};
-      if(gnSearchLocation.isMap()) {
+      if (gnSearchLocation.isMap()) {
         mapParams = $location.search();
       }
 
@@ -79,36 +114,7 @@
          * @param {array} list of projection definitions (p.code,p.def,p.extent,p.worldExtent):
         **/
 
-        initProjections: function(projectionConfig){
-          $.each(projectionConfig, function(i, p) {
-            if(!ol.proj.get(p.code)) {
-              if(p.def&&p.code) {
-                // Define an OL3 projection based on the included Proj4js projection
-                // definition and set it's extent.
-                proj4.defs(p.code,p.def);
-              } else {
-                console.error("Trying to use unknown projection '" + p.code
-                      + "'. Please update definitions on admin>settings.");
-              }
-            }
-
-            var projection = ol.proj.get(p.code);
-            if(p.extent && p.extent.length && p.extent.length == 4
-                && !isNaN(p.extent[0]) && p.extent[0] != null
-                && !isNaN(p.extent[1]) && p.extent[1] != null
-                && !isNaN(p.extent[2]) && p.extent[2] != null
-                && !isNaN(p.extent[3]) && p.extent[3] != null) {
-              projection.setExtent(p.extent);
-            }
-            if(p.worldExtent && p.worldExtent.length && p.worldExtent.length == 4
-                && !isNaN(p.worldExtent[0]) && p.worldExtent[0] != null
-                && !isNaN(p.worldExtent[1]) && p.worldExtent[1] != null
-                && !isNaN(p.worldExtent[2]) && p.worldExtent[2] != null
-                && !isNaN(p.worldExtent[3]) && p.worldExtent[3] != null) {
-              projection.setWorldExtent(p.worldExtent);
-            }
-          })
-        },
+        initProjections: configProjections,
 
         /**
          * @ngdoc method
@@ -148,9 +154,9 @@
             }),
             // show zoom control in editor maps only
             controls: type !== this.EDITOR_MAP ? [new ol.control.Attribution()] : [
-                new ol.control.Zoom(),
-                new ol.control.Attribution()
-              ]
+              new ol.control.Zoom(),
+              new ol.control.Attribution()
+            ]
           });
 
           var defer = $q.defer();
@@ -166,8 +172,8 @@
 
           var unWatchFn = $rootScope.$watch(function() {
             return map.getTargetElement() && Math.min(
-              map.getTargetElement().offsetWidth,
-              map.getTargetElement().offsetHeight
+                map.getTargetElement().offsetWidth,
+                map.getTargetElement().offsetHeight
             );
           }, function(size) {
             if (size > 0) {
@@ -189,30 +195,30 @@
           // (this is done through a promise anyway)
           var mapReady;
           var urlContext;
-          if (type == this.VIEWER_MAP) {
+          if (type === this.VIEWER_MAP) {
 
             $rootScope.$on('$locationChangeSuccess', function() {
-              if(gnSearchLocation.isMap()) {
+              if (gnSearchLocation.isMap()) {
                 var params = $location.search();
                 var newContext = params.owscontext || params.map;
-                if(newContext && newContext != urlContext) {
+                if (newContext && newContext !== urlContext) {
                   urlContext = newContext;
                   gnOwsContextService.loadContextFromUrl(
-                    urlContext, map)
+                      urlContext, map);
                 }
               }
             }.bind(this));
 
             urlContext = mapParams.owscontext || mapParams.map;
-            if(urlContext) {
+            if (urlContext) {
               mapReady = gnOwsContextService.loadContextFromUrl(
-                urlContext, map);
+                  urlContext, map);
             } else {
               var storage = gnMap.getMapConfig().storage;
               if (storage) {
                 storage = window[storage];
                 var key = 'owsContext_' +
-                  window.location.host + window.location.pathname;
+                    window.location.host + window.location.pathname;
                 var context = storage.getItem(key);
                 if (context) {
                   gnOwsContextService.loadContext(context, map);
@@ -221,22 +227,22 @@
               }
             }
           }
-          if(!mapReady) {
+          if (!mapReady) {
             if (config.context) {
               mapReady = gnOwsContextService.loadContextFromUrl(
-                config.context, map);
+                  config.context, map);
             }
           }
           var creationPromise = $q.when(mapReady).then(function() {
 
             // extent
             if (config.extent && ol.extent.getWidth(config.extent) &&
-              ol.extent.getHeight(config.extent)) {
-              if(type != this.SEARCH_MAP) {
+                ol.extent.getHeight(config.extent)) {
+              if (type !== this.SEARCH_MAP) {
                 // Because search map is fit by result md bbox
                 map.get('sizePromise').then(function() {
                   map.getView().fit(config.extent, map.getSize(), { nearest: true });
-                })
+                });
               }
             }
 
@@ -244,22 +250,22 @@
             if (config.layers && config.layers.length) {
               config.layers.forEach(function(layerInfo) {
                 gnMap.createLayerFromProperties(layerInfo, map)
-                  .then(function(layer) {
-                    if (layer) {
-                      map.addLayer(layer);
-                    }
-                  });
+                    .then(function(layer) {
+                      if (layer) {
+                        map.addLayer(layer);
+                      }
+                    });
               });
             }
-            if(type == this.VIEWER_MAP) {
+            if (type === this.VIEWER_MAP) {
               if (mapParams.wmsurl && mapParams.layername) {
                 gnMap.addWmsFromScratch(map, mapParams.wmsurl,
-                  mapParams.layername, true).
+                    mapParams.layername, true).
 
-                then(function(layer) {
-                  layer.set('group', mapParams.layergroup);
-                  map.addLayer(layer);
-                });
+                    then(function(layer) {
+                      layer.set('group', mapParams.layergroup);
+                      map.addLayer(layer);
+                    });
               }
             }
           }.bind(this));

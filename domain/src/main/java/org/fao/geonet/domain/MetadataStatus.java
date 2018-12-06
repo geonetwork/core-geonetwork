@@ -33,10 +33,9 @@ import javax.persistence.*;
  *
  * @link StatusValue
  *
- * <p/>
- * This tracks the history as well
- * since the Id consists of the User, date, metadata and
- * statusvalue of the metadata status change.
+ *       <p/>
+ *       This tracks the history as well since the Id consists of the User,
+ *       date, metadata and statusvalue of the metadata status change.
  *
  * @author Jesse
  */
@@ -98,8 +97,8 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     /**
-     * Get the change message, the message that describes the change in status.
-     * It is application specific.
+     * Get the change message, the message that describes the change in status. It
+     * is application specific.
      *
      * @return the change message
      */
@@ -109,8 +108,8 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     /**
-     * Set the change message, the message that describes the change in status. It is application
-     * specific.
+     * Set the change message, the message that describes the change in status. It
+     * is application specific.
      *
      * @param changeMessage the change message
      */
@@ -118,16 +117,15 @@ public class MetadataStatus extends GeonetEntity {
         this.changeMessage = changeMessage;
     }
 
-
     /**
      * Return the owner of the metadata status.
      * <p/>
      *
-     * This may be null for {@link StatusValueType#workflow} type
-     * as usually a list of user is notified when the status change.
+     * This may be null for {@link StatusValueType#workflow} type as usually a list
+     * of user is notified when the status change.
      *
-     * This is defined when a task is delegated to someone in particular
-     * and the type is {@link StatusValueType#task}.
+     * This is defined when a task is delegated to someone in particular and the
+     * type is {@link StatusValueType#task}.
      *
      *
      * Note the author of the status is set in {@link #setId(MetadataStatusId)}.
@@ -135,9 +133,9 @@ public class MetadataStatus extends GeonetEntity {
      * @return the user responsible for this task.
      */
     // TODO: set FK to user table
-//    @MapsId("ownerId")
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "ownerId", referencedColumnName = "id")
+    // @MapsId("ownerId")
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "ownerId", referencedColumnName = "id")
     public Integer getOwner() {
         return _owner;
     }
@@ -156,14 +154,11 @@ public class MetadataStatus extends GeonetEntity {
     /**
      * Get the due date of the status in string form.
      * <p/>
-     * This date is set when the action needs to be addressed
-     * before a certain time.
+     * This date is set when the action needs to be addressed before a certain time.
      *
      * @return the due date of the status change in string form.
      */
-    @AttributeOverride(
-        name = "dateAndTime",
-        column = @Column(name = "dueDate", nullable = true, length = 30))
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "dueDate", nullable = true, length = 30))
     public ISODate getDueDate() {
         return _duedate;
     }
@@ -185,9 +180,7 @@ public class MetadataStatus extends GeonetEntity {
      *
      * @return the close date of the status change in string form.
      */
-    @AttributeOverride(
-        name = "dateAndTime",
-        column = @Column(name = "closeDate", nullable = true, length = 30))
+    @AttributeOverride(name = "dateAndTime", column = @Column(name = "closeDate", nullable = true, length = 30))
     public ISODate getCloseDate() {
         return _closedate;
     }
@@ -202,7 +195,6 @@ public class MetadataStatus extends GeonetEntity {
         return this;
     }
 
-
     @ManyToOne
     @JoinColumn(name = "statusId", nullable = false, insertable = false, updatable = false)
     @MapsId("statusId")
@@ -214,7 +206,6 @@ public class MetadataStatus extends GeonetEntity {
         this.statusValue = statusValue;
         this.getId().setStatusId(statusValue.getId());
     }
-
 
     @Column
     @Lob
@@ -239,11 +230,11 @@ public class MetadataStatus extends GeonetEntity {
     @Transient
     public Element getAsXml() {
         return new Element(EL_METADATA_STATUS)
-            .addContent(new Element(EL_STATUS_ID).setText(String.valueOf(getId().getStatusId())))
-            .addContent(new Element(EL_USER_ID).setText(String.valueOf(getId().getUserId())))
-            .addContent(new Element(EL_CHANGE_DATE).setText(getId().getChangeDate().getDateAndTime()))
-            .addContent(new Element(EL_CHANGE_MESSAGE).setText(getChangeMessage()))
-            .addContent(new Element(EL_NAME).setText(getStatusValue().getName()));
+                .addContent(new Element(EL_STATUS_ID).setText(String.valueOf(getId().getStatusId())))
+                .addContent(new Element(EL_USER_ID).setText(String.valueOf(getId().getUserId())))
+                .addContent(new Element(EL_CHANGE_DATE).setText(getId().getChangeDate().getDateAndTime()))
+                .addContent(new Element(EL_CHANGE_MESSAGE).setText(getChangeMessage()))
+                .addContent(new Element(EL_NAME).setText(getStatusValue().getName()));
     }
 
     public static class EntityListener extends AbstractEntityListenerManager<MetadataStatus> {

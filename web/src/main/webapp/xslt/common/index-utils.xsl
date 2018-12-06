@@ -174,5 +174,18 @@
     <xsl:copy-of select="$field"/>
   </xsl:function>
 
-
+  <xsl:function name="gn-fn-index:json-escape" as="xs:string?">
+    <xsl:param name="v" as="xs:string?"/>
+    <xsl:choose>
+      <xsl:when test="normalize-space($v) = ''"></xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="replace(replace(replace(replace(replace($v,
+                  '\\','\\\\'),
+                  $doubleQuote, $escapedDoubleQuote),
+                  '&#09;', '\\t'),
+                  '&#10;', '\\n'),
+                  '&#13;', '\\r')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
 </xsl:stylesheet>

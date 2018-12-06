@@ -29,8 +29,11 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,30 +41,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@RequestMapping(value = {
-    "/api/status",
-    "/api/" + API.VERSION_0_1 +
-        "/status"
-})
-@Api(value = "status",
-    tags = "status",
-    description = "Workflow status operations")
+@RequestMapping(value = { "/api/status", "/api/" + API.VERSION_0_1 + "/status" })
+@Api(value = "status", tags = "status", description = "Workflow status operations")
 @Controller("status")
 public class StatusApi {
 
-    @ApiOperation(
-        value = "Get status",
-        notes = "",
-        nickname = "getStatus")
-    @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
+    @ApiOperation(value = "Get status", notes = "", nickname = "getStatus")
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<StatusValue> getStatus(HttpServletRequest request) throws Exception {
@@ -69,22 +66,57 @@ public class StatusApi {
         return context.getBean(StatusValueRepository.class).findAll();
     }
 
-    @ApiOperation(
-        value = "Get status by type",
-        notes = "",
-        nickname = "getStatusByType")
-    @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET,
-        path = "/{type}")
+    @ApiOperation(value = "Search status", notes = "", nickname = "searchStatusByType")
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/search")
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<MetadataStatusDTO> getStatusByType(
+            @ApiParam(value = "One or more types to retrieve (ie. worflow, event, task). Default is all.", required = false) @RequestParam(required = false) StatusValueType[] type,
+            @ApiParam(value = "One or more event author. Default is all.", required = false) @RequestParam(required = false) Integer[] author,
+            @ApiParam(value = "One or more event owners. Default is all.", required = false) @RequestParam(required = false) Integer[] owner,
+            @ApiParam(value = "One or more record identifier. Default is all.", required = false) @RequestParam(required = false) Integer[] record,
+            // TODO: Add parameters for dates
+            HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        MetadataStatusRepository statusRepository = context.getBean(MetadataStatusRepository.class);
+
+        List<MetadataStatus> metadataStatuses;
+        if ((type != null && type.length > 0) || (author != null && author.length > 0)
+                || (owner != null && owner.length > 0) || (record != null && record.length > 0)) {
+            metadataStatuses = statusRepository.searchStatus(
+                    type != null && type.length > 0 ? Arrays.asList(type) : null,
+                    author != null && author.length > 0 ? Arrays.asList(author) : null,
+                    owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
+                    record != null && record.length > 0 ? Arrays.asList(record) : null);
+        } else {
+            metadataStatuses = statusRepository.findAll();
+        }
+
+        Map<Integer, String> titles = new HashMap<>();
+        List<MetadataStatusDTO> response = new ArrayList<>(metadataStatuses.size());
+        metadataStatuses.forEach(e -> {
+            String title = titles.get(e.getId().getMetadataId());
+            if (title == null) {
+                try {
+                    // Collect metadata titles. For now we use Lucene
+                    title = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(),
+                            e.getId().getMetadataId() + "", "title");
+                    titles.put(e.getId().getMetadataId(), title);
+                } catch (Exception e1) {
+                }
+            }
+            response.add(new MetadataStatusDTO(e, title));
+        });
+        return response;
+    }
+
+    @ApiOperation(value = "Get status by type", notes = "", nickname = "getStatusByType")
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/{type}")
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<StatusValue> getStatusByType(
-        @ApiParam(value = "Type",
-            required = true)
-        @PathVariable
-            StatusValueType type,
-        HttpServletRequest request) throws Exception {
+            @ApiParam(value = "Type", required = true) @PathVariable StatusValueType type, HttpServletRequest request)
+            throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         return context.getBean(StatusValueRepository.class).findAllByType(type);
     }
