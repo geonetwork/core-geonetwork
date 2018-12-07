@@ -133,13 +133,9 @@ public class SchematronValidator {
             List<SchematronCriteria> criteriaList = criteriaGroup.getCriteria();
             boolean apply = false;
             for (SchematronCriteria criteria : criteriaList) {
-                boolean tmpApply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
-
-                if (!tmpApply) {
-                    apply = false;
+                apply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
+                if (!apply) {
                     break;
-                } else {
-                    apply = true;
                 }
             }
 
