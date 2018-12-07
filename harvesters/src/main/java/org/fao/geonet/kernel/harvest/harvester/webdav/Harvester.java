@@ -364,16 +364,6 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         return null;
     }
 
-    private boolean validates(String schema, Element md) {
-        try {
-            dataMan.validate(schema, md);
-            return true;
-        } catch (Exception e) {
-            log.info("Validation failed. Error: "+e.getMessage());
-            return false;
-        }
-    }
-
     /**
      * Updates the record on the database. The force parameter allows you to force an update even
      * if the date is not more updated, to make sure transformation and attributes assigned by the
