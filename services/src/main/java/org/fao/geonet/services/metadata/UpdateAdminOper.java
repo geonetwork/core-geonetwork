@@ -199,7 +199,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		if (!hasValidation) {
 			AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
-			validator.doValidate(metadata.getDataInfo().getSchemaId(), mdId + "",
+			validator.doValidate(metadata.getDataInfo().getSchemaId(), mdId,
 					new Document(metadata.getXmlData(false)), context.getLanguage());
 			dm.indexMetadata(mdId + "", true, null);
 		}

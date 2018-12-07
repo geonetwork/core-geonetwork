@@ -175,7 +175,7 @@ public class Publish {
                     if (!hasValidation) {
                         AbstractMetadata metadata = metadataRepository.findOne(mdId);
 
-                        validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+                        validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId(),
                                 new Document(metadata.getXmlData(false)), serviceContext.getLanguage());
                         dataManager.indexMetadata(nextId, true, null);
                     }

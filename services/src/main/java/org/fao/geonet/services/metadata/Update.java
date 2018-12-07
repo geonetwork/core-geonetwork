@@ -160,7 +160,7 @@ public class Update extends NotInReadOnlyModeService {
 				final IMetadataUtils metadataRepository = gc.getBean(IMetadataUtils.class);
 				AbstractMetadata metadata = metadataRepository.findOne(id);
 
-				validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+				validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId(),
 						new Document(metadata.getXmlData(false)), context.getLanguage());
 				reindex = true;
 			}

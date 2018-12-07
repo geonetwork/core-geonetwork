@@ -375,7 +375,7 @@ public class MetadataSharingApi {
             (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
 
         if (!hasValidation) {
-            validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+            validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId(),
                 new Document(metadata.getXmlData(false)), context.getLanguage());
             dm.indexMetadata(metadata.getId() + "", true, null);
         }

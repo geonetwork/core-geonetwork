@@ -65,7 +65,7 @@ public interface IMetadataValidator {
      * @param doc metadata document as JDOM Document not JDOM Element
      * @param lang Language from context
      */
-    boolean doValidate(String schema, String metadataId, Document doc, String lang);
+    boolean doValidate(String schema, int metadataId, Document doc, String lang);
 
     /**
      * Used by the validate embedded service. The validation report is stored in the session.

@@ -139,9 +139,8 @@ public class ValidateApi {
                 } else if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
                     report.addNotEditableMetadataId(record.getId());
                 } else {
-                    String idString = String.valueOf(record.getId());
                     boolean isValid = validator.doValidate(record.getDataInfo().getSchemaId(),
-                        idString,
+                        record.getId(),
                         new Document(record.getXmlData(false)),
                         serviceContext.getLanguage());
                     if (isValid) {
