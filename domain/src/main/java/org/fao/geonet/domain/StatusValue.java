@@ -228,8 +228,8 @@ public class StatusValue extends Localized {
     public static final class Events {
         public static final String RECORDCREATED = "50";
         public static final String RECORDUPDATED = "51";
-        public static final String ATTACHEMENTADDED = "52";
-        public static final String ATTACHEMENTDELETED = "53";
+        public static final String ATTACHMENTADDED = "52";
+        public static final String ATTACHMENTDELETED = "53";
         public static final String RECORDOWNERCHANGE = "54";
         public static final String RECORDGROUPOWNERCHANGE = "55";
         public static final String RECORDPRIVILEGESCHANGE = "56";

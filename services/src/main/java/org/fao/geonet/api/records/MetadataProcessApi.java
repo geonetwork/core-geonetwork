@@ -198,7 +198,7 @@ public class MetadataProcessApi {
         DataManager dataMan = context.getBean(DataManager.class);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
         Element processedMetadata;
-        Element beforeMetadata = dataMan.getMetadata(context, metadata.getUuid(), false, false, false);
+        Element beforeMetadata = dataMan.getMetadata(context, Integer.toString(metadata.getId()), false, false, false);
         try {
             final String siteURL = sm.getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, String.valueOf(metadata.getId()), process, save, true,

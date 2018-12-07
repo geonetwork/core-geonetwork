@@ -35,8 +35,7 @@ public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
 
     private JSONObject oldOwnerObjectJSON, newOwnerObjectJSON;
 
-    public RecordGroupOwnerChangeEvent(Integer mdId, Integer userId, JSONObject oldOwnerObjectJSON,
-            JSONObject newOwnerObjectJSON) {
+    public RecordGroupOwnerChangeEvent(Integer mdId, Integer userId, JSONObject oldOwnerObjectJSON, JSONObject newOwnerObjectJSON) {
         super(mdId, userId);
         this.oldOwnerObjectJSON = oldOwnerObjectJSON;
         this.newOwnerObjectJSON = newOwnerObjectJSON;
@@ -50,18 +49,12 @@ public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
 
     @Override
     public String getCurrentState() {
-        JSONObject json = new JSONObject();
-        json.put("owner", newOwnerObjectJSON);
-
-        return json.toString();
+        return newOwnerObjectJSON.toString();
     }
 
     @Override
     public String getPreviousState() {
-        JSONObject json = new JSONObject();
-        json.put("owner", oldOwnerObjectJSON);
-
-        return json.toString();
+        return oldOwnerObjectJSON.toString();
     }
 
     @Override

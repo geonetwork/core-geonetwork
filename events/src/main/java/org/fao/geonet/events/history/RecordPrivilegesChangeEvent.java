@@ -51,18 +51,12 @@ public class RecordPrivilegesChangeEvent extends AbstractHistoryEvent {
 
     @Override
     public String getCurrentState() {
-        JSONObject json = new JSONObject();
-        json.put("sharing", newShareParameterObjectJson);
-
-        return json.toString();
+        return newShareParameterObjectJson.toString();
     }
 
     @Override
     public String getPreviousState() {
-        JSONObject json = new JSONObject();
-        json.put("sharing", oldShareParameterObjectJson);
-
-        return json.toString();
+        return oldShareParameterObjectJson.toString();
     }
 
     @Override

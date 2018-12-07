@@ -25,18 +25,18 @@ package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class AttachementAddedEvent extends AbstractHistoryEvent {
+public class AttachmentAddedEvent extends AbstractHistoryEvent {
 
     private static final long serialVersionUID = -8026442709546540103L;
 
     private String attachmentName;
 
-    public AttachementAddedEvent(Integer mdId, Integer userId, String attachmentName) {
+    public AttachmentAddedEvent(Integer mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
         this.attachmentName = attachmentName;
     }
 
-    public AttachementAddedEvent(Long mdId, Integer userId, String attachmentName) {
+    public AttachmentAddedEvent(Long mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
         this.attachmentName = attachmentName;
     }
