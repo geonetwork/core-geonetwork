@@ -365,7 +365,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         boolean valid = true;
 
         LOGGER.debug("Validating against XSD {}", schema);
-        // do XSD validation
+        // do XSD validation, but in this case just counting errors number should be sufficient
         Element xsdErrors = getXSDXmlReport(schema, md, false);
 
         int xsdErrorCount = 0;
