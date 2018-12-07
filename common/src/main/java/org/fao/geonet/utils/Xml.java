@@ -840,15 +840,10 @@ public final class Xml {
     }
 
     /**
-     * Validates an XML document using the hints in the DocType (DTD validation) or schemaLocation
+     * Validates an XML document using schemaLocation
      * attribute hint.
      */
     public synchronized static void validate(Document doc) throws Exception {
-        if (doc.getDocType() != null) { // assume DTD validation
-            SAXBuilder builder = getSAXBuilder(true, null);
-            builder.build(new StringReader(getString(doc)));
-        }
-
         Element xml = doc.getRootElement();
         if (xml != null) {  // try XSD validation
             String schemaLoc = xml.getAttributeValue("schemaLocation", xsiNS);
