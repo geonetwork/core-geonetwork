@@ -839,28 +839,16 @@ public final class Xml {
         return values;
     }
 
-    /**
-     * Validates an XML document using schemaLocation
-     * attribute hint.
-     */
-    public synchronized static void validate(Document doc) throws Exception {
-        Element xml = doc.getRootElement();
-        if (xml != null) {  // try XSD validation
-            String schemaLoc = xml.getAttributeValue("schemaLocation", xsiNS);
-            if (schemaLoc == null || schemaLoc.equals("")) {
-                throw new IllegalArgumentException("XML document missing/blank schemaLocation hints or DocType dtd - cannot validate");
-            }
-            validate(xml);
-        } else {
-            throw new IllegalArgumentException("XML document is missing root element - cannot validate");
-        }
-    }
     //---------------------------------------------------------------------------
 
     /**
      * Validates an XML document using the hints in the schemaLocation attribute.
      */
     public synchronized static void validate(Element xml) throws Exception {
+        String schemaLoc = xml.getAttributeValue("schemaLocation", xsiNS);
+        if (schemaLoc == null || schemaLoc.equals("")) {
+            throw new IllegalArgumentException("XML document missing/blank schemaLocation hints - cannot validate");
+        }
         XmlErrorHandler eh = new XmlErrorHandler();
         Schema schema = factory().newSchema();
         Element xsdErrors = validateRealGuts(schema, xml, eh);
