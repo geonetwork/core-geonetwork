@@ -354,9 +354,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     public boolean doValidate(AbstractMetadata metadata, String lang) {
         String schema = metadata.getDataInfo().getSchemaId();
         int metadataId = metadata.getId();
-        Document doc;
+        Element md;
         try {
-            doc = new Document(metadata.getXmlData(false));
+            md = metadata.getXmlData(false);
         } catch (IOException | JDOMException e) {
             return false;
         }
@@ -364,56 +364,37 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         List<MetadataValidation> validations = new ArrayList<>();
         boolean valid = true;
 
-        if (doc.getDocType() != null) {
-            LOGGER.debug("Validating against dtd {}", doc.getDocType());
+        LOGGER.debug("Validating against XSD {}", schema);
+        // do XSD validation
+        Element xsdErrors = getXSDXmlReport(schema, md, false);
 
-            // if document has a doctype then validate using that (assuming that the
-            // dtd is either mapped locally or will be cached after first validate)
-            try {
-                Xml.validate(doc);
-                validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "dtd"))
-                        .setStatus(MetadataValidationStatus.VALID).setRequired(true).setNumTests(1).setNumFailures(0));
-                LOGGER.debug("Valid.");
-            } catch (Exception e) {
-                validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "dtd"))
-                        .setStatus(MetadataValidationStatus.INVALID).setRequired(true).setNumTests(1).setNumFailures(1));
-                LOGGER.debug( "Invalid.", e);
-                valid = false;
-            }
+        int xsdErrorCount = 0;
+        if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
+            xsdErrorCount = xsdErrors.getContent().size();
+        }
+        if (xsdErrorCount > 0) {
+            validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "xsd"))
+                    .setStatus(MetadataValidationStatus.INVALID).setRequired(true).setNumTests(xsdErrorCount)
+                    .setNumFailures(xsdErrorCount));
+            LOGGER.debug("Invalid.");
+            valid = false;
         } else {
-            LOGGER.debug("Validating against XSD {}", schema);
-            // do XSD validation
-            Element md = doc.getRootElement();
-            Element xsdErrors = getXSDXmlReport(schema, md, false);
+            validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "xsd"))
+                    .setStatus(MetadataValidationStatus.VALID).setRequired(true).setNumTests(1).setNumFailures(0));
+            LOGGER.debug("Valid.");
+        }
+        try {
+            metadataManager.getEditLib().enumerateTree(md);
 
-            int xsdErrorCount = 0;
-            if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
-                xsdErrorCount = xsdErrors.getContent().size();
-            }
-            if (xsdErrorCount > 0) {
-                validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "xsd"))
-                        .setStatus(MetadataValidationStatus.INVALID).setRequired(true).setNumTests(xsdErrorCount)
-                        .setNumFailures(xsdErrorCount));
-                LOGGER.debug("Invalid.");
-                valid = false;
-            } else {
-                validations.add(new MetadataValidation().setId(new MetadataValidationId(metadataId, "xsd"))
-                        .setStatus(MetadataValidationStatus.VALID).setRequired(true).setNumTests(1).setNumFailures(0));
-                LOGGER.debug("Valid.");
-            }
-            try {
-                metadataManager.getEditLib().enumerateTree(md);
-
-                // Apply custom schematron rules
-                Element errors = applyCustomSchematronRules(schema, metadataId, doc.getRootElement(), lang, validations);
-                valid = valid && errors == null;
-            } catch (Exception e) {
-                LOGGER.error("Could not run schematron validation on metadata {}.", metadataId);
-                LOGGER.error("Could not run schematron validation on metadata, exception", e);
-                valid = false;
-            } finally {
-                metadataManager.getEditLib().removeEditingInfo(md);
-            }
+            // Apply custom schematron rules
+            Element errors = applyCustomSchematronRules(schema, metadataId, md, lang, validations);
+            valid = valid && errors == null;
+        } catch (Exception e) {
+            LOGGER.error("Could not run schematron validation on metadata {}.", metadataId);
+            LOGGER.error("Could not run schematron validation on metadata, exception", e);
+            valid = false;
+        } finally {
+            metadataManager.getEditLib().removeEditingInfo(md);
         }
 
         saveValidationStatus(metadataId, validations);
