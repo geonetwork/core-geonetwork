@@ -24,8 +24,8 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -184,19 +184,12 @@ public class SchematronValidator {
             if (xmlReport != null) {
                 report.addContent(xmlReport);
                 // add results to persistent validation information
-                int firedRules = 0;
                 @SuppressWarnings("unchecked")
                 Iterator<Element> i = xmlReport.getDescendants(new ElementFilter("fired-rule", Geonet.Namespaces.SVRL));
-                while (i.hasNext()) {
-                    i.next();
-                    firedRules++;
-                }
-                int invalidRules = 0;
+                int firedRules = Iterators.size(i);
+
                 i = xmlReport.getDescendants(new ElementFilter("failed-assert", Geonet.Namespaces.SVRL));
-                while (i.hasNext()) {
-                    i.next();
-                    invalidRules++;
-                }
+                int invalidRules = Iterators.size(i);
 
                 if (validations != null) {
                     validations.add(new MetadataValidation().
