@@ -325,8 +325,7 @@ public class MetadataEditingApi {
 
             // Save validation if the forceValidationOnMdSave is enabled
             if (forceValidationOnMdSave) {
-                validator.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId(),
-                    new Document(metadata.getXmlData(false)), context.getLanguage());
+                validator.doValidate(metadata, context.getLanguage());
                 reindex = true;
             }
 

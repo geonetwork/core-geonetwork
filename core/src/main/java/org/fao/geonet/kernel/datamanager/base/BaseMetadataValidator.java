@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.MetadataValidationId;
 import org.fao.geonet.domain.MetadataValidationStatus;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -353,13 +355,20 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     /**
      * Used by harvesters that need to validate metadata.
      *
-     * @param schema name of the schema to validate against
-     * @param metadataId metadata id - used to record validation status
-     * @param doc metadata document as JDOM Document not JDOM Element
+     * @param metadata metadata
      * @param lang Language from context
      */
     @Override
-    public boolean doValidate(String schema, int metadataId, Document doc, String lang) {
+    public boolean doValidate(AbstractMetadata metadata, String lang) {
+        String schema = metadata.getDataInfo().getSchemaId();
+        int metadataId = metadata.getId();
+        Document doc;
+        try {
+            doc = new Document(metadata.getXmlData(false));
+        } catch (IOException | JDOMException e) {
+            return false;
+        }
+
         List<MetadataValidation> validations = new ArrayList<>();
         boolean valid = true;
 

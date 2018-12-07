@@ -139,10 +139,7 @@ public class ValidateApi {
                 } else if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
                     report.addNotEditableMetadataId(record.getId());
                 } else {
-                    boolean isValid = validator.doValidate(record.getDataInfo().getSchemaId(),
-                        record.getId(),
-                        new Document(record.getXmlData(false)),
-                        serviceContext.getLanguage());
+                    boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
                     if (isValid) {
                         report.addMetadataInfos(record.getId(), "Is valid");
                         new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);

@@ -133,10 +133,7 @@ public class ValidationService implements ApplicationContextAware {
             } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {
                 this.report.get("notOwnerRecords").add(record.getId());
             } else {
-                boolean isValid = validator.doValidate(record.getDataInfo().getSchemaId(),
-                    record.getId(),
-                    new Document(record.getXmlData(false)),
-                    serviceContext.getLanguage());
+                boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
                 if (isValid) {
                     this.report.get("validRecords").add(record.getId());
                 }

@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.datamanager;
 
 import java.util.List;
 
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Pair;
 import org.jdom.Document;
@@ -60,12 +61,10 @@ public interface IMetadataValidator {
     /**
      * Used by harvesters that need to validate metadata.
      *
-     * @param schema name of the schema to validate against
-     * @param metadataId metadata id - used to record validation status
-     * @param doc metadata document as JDOM Document not JDOM Element
+     * @param metadata metadata
      * @param lang Language from context
      */
-    boolean doValidate(String schema, int metadataId, Document doc, String lang);
+    boolean doValidate(AbstractMetadata metadata, String lang);
 
     /**
      * Used by the validate embedded service. The validation report is stored in the session.
