@@ -166,10 +166,8 @@ public class SchematronValidator {
         final String ruleId = schematron.getRuleName();
 
         Element report = new Element("report", Edit.NAMESPACE);
-        report.setAttribute("rule", ruleId,
-            Edit.NAMESPACE);
-        report.setAttribute("displayPriority", "" + schematron.getDisplayPriority(),
-            Edit.NAMESPACE);
+        report.setAttribute("rule", ruleId, Edit.NAMESPACE);
+        report.setAttribute("displayPriority", "" + schematron.getDisplayPriority(), Edit.NAMESPACE);
         report.setAttribute("dbident", String.valueOf(schematron.getId()), Edit.NAMESPACE);
         report.setAttribute("required", requirement.toString(), Edit.NAMESPACE);
 
