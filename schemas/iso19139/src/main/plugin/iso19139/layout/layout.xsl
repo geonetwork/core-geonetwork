@@ -105,6 +105,15 @@
     <xsl:param name="refToDelete" required="no"/>
     <xsl:param name="overrideLabel" required="no"/>
 
+
+
+    <!-- In flat mode, block level may contains
+    validation report. Display them when traversing the tree. -->
+    <xsl:if test="$isFlatMode">
+      <xsl:call-template name="get-errors"/>
+    </xsl:if>
+
+
     <xsl:apply-templates mode="mode-iso19139" select="*|@*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
@@ -167,6 +176,8 @@
     </xsl:call-template>
 
   </xsl:template>
+
+
 
 
   <!-- Render simple element which usually match a form field -->
