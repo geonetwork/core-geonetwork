@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.jdom.Document;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -121,6 +122,7 @@ public class ValidationService implements ApplicationContextAware {
 
 
         DataManager dataMan = context.getBean(DataManager.class);
+        IMetadataValidator validator = context.getBean(IMetadataValidator.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
 
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
@@ -132,7 +134,7 @@ public class ValidationService implements ApplicationContextAware {
                 this.report.get("notOwnerRecords").add(record.getId());
             } else {
                 String idString = String.valueOf(record.getId());
-                boolean isValid = dataMan.doValidate(record.getDataInfo().getSchemaId(),
+                boolean isValid = validator.doValidate(record.getDataInfo().getSchemaId(),
                     idString,
                     new Document(record.getXmlData(false)),
                     serviceContext.getLanguage());

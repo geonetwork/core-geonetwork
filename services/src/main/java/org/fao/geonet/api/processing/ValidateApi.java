@@ -43,6 +43,7 @@ import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.jdom.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +127,7 @@ public class ValidateApi {
             DataManager dataMan = applicationContext.getBean(DataManager.class);
             AccessManager accessMan = applicationContext.getBean(AccessManager.class);
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+            IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
@@ -138,7 +140,7 @@ public class ValidateApi {
                     report.addNotEditableMetadataId(record.getId());
                 } else {
                     String idString = String.valueOf(record.getId());
-                    boolean isValid = dataMan.doValidate(record.getDataInfo().getSchemaId(),
+                    boolean isValid = validator.doValidate(record.getDataInfo().getSchemaId(),
                         idString,
                         new Document(record.getXmlData(false)),
                         serviceContext.getLanguage());

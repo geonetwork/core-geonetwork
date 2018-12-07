@@ -453,11 +453,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public boolean doValidate(String schema, String metadataId, Document doc, String lang) {
-        return metadataValidator.doValidate(schema, metadataId, doc, lang);
-    }
-
-    @Deprecated
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md, String lang,
             List<MetadataValidation> validations) {
         return metadataValidator.applyCustomSchematronRules(schema, metadataId, md, lang, validations);
