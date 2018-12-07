@@ -44,11 +44,6 @@ public interface IMetadataValidator {
     void setNamespacePrefix(Element md);
 
     /**
-     * Use this validate method for XML documents with dtd.
-     */
-    void validate(String schema, Document doc) throws Exception;
-
-    /**
      * Use this validate method for XML documents with xsd validation.
      */
     void validate(String schema, Element md) throws Exception;

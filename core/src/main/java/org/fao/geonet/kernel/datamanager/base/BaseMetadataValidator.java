@@ -199,14 +199,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     }
 
     /**
-     * Use this validate method for XML documents with dtd.
-     */
-    @Override
-    public void validate(String schema, Document doc) throws Exception {
-        Xml.validate(doc);
-    }
-
-    /**
      * Use this validate method for XML documents with xsd validation.
      */
     @Override

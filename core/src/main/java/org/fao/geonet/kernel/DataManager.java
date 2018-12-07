@@ -225,11 +225,6 @@ public class DataManager {
     }
 
     @Deprecated
-    public void validate(String schema, Document doc) throws Exception {
-        metadataValidator.validate(schema, doc);
-    }
-
-    @Deprecated
     public void validate(String schema, Element md) throws Exception {
         metadataValidator.validate(schema, md);
     }
