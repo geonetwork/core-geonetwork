@@ -81,6 +81,7 @@
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
+      $scope.groupusers = null;
 
       // Scope for user
       // List of catalog users
@@ -168,7 +169,19 @@
         });
       }
 
-
+      /**
+       * Loads the users for a group.
+       *
+       * @param groupId
+       */
+      function loadGroupUsers(groupId) {
+        $http.get('../api/groups/' + groupId + '/users').
+        success(function(data) {
+          $scope.groupusers = data;
+        }).error(function(data) {
+          $scope.groupusers = [];
+        });
+      }
 
       /**
        * Add an new user based on the default
@@ -676,6 +689,9 @@
           group: g.id,
           sortBy: 'title'
         });
+
+        loadGroupUsers($scope.groupSelected.id);
+
         $scope.groupUpdated = false;
 
         $timeout(function() {

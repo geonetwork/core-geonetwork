@@ -1011,6 +1011,9 @@
         replace: false,
         compile: function compile(tElement, tAttrs) {
           var cacheId = tAttrs.cache ? tAttrs.cache + '.paginator' : '';
+          var getItemsFunctionName = tAttrs.getItemsFunctionName ? tAttrs.getItemsFunctionName: 'pageItems';
+          var firstPageFunctionName = tAttrs.firstPageFunctionName ? tAttrs.firstPageFunctionName: 'firstPage';
+
           return {
             pre: function preLink(scope) {
               scope.pageSizeList = [10, 20, 50, 100];
@@ -1065,12 +1068,12 @@
 
               // ---- Functions available in parent scope -----
 
-              scope.$parent.firstPage = function() {
+              scope.$parent[firstPageFunctionName] = function() {
                 scope.firstPage();
               };
               // Function that returns the reduced items list,
               // to use in ng-repeat
-              scope.$parent.pageItems = function() {
+              scope.$parent[getItemsFunctionName] = function() {
                 if (angular.isArray(scope.items())) {
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
