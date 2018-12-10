@@ -50,7 +50,7 @@
 
             // Wait for metatada to be available
             scope.$watch('md', function(n, o) {
-              if (n !== o && n !== null && angular.isDefined(n)) {
+              if (angular.isDefined(n)) {
                 loadHistory();
               }
              });

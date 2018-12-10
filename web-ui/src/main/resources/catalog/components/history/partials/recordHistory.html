@@ -27,9 +27,10 @@
           <img class="img-circle"
                ng-src="http://gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
           {{h.authorName}}<br/>
-          <!-- <strong data-translate="">{{h.statusValue.label[lang] || h.statusValue.name}}</strong>  -->
-          <strong data-translate="{{ 'recordHistoryEvent' + h.statusValue.name}}"
-               data-translate-values="{item1: '{{h.item1}}', item2: '{{h.item2}}'}">
+          <strong>
+            {{h.statusValue.type == 'workflow' ?
+             ('recordHistory-workflow' | translate:{text: (h.statusValue.label | gnLocalized)}):
+             (h.statusValue.label | gnLocalized | translate:{h: h}) }}
           </strong>&nbsp;
           <span class="text-muted"
                 data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}"

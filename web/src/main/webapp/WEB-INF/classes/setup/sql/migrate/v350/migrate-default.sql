@@ -13,6 +13,10 @@ UPDATE StatusValues SET notificationLevel = 'recordUserAuthor' WHERE name = 'ret
 UPDATE StatusValues SET notificationLevel = 'recordProfileReviewer' WHERE name = 'submitted';
 UPDATE StatusValues SET notificationLevel = 'recordUserAuthor' WHERE name = 'rejected';
 
+
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (100,'doiCreationTask','n', 100, 'task', 'statusUserOwner');
+
+
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (50,'recordcreated','y', 50, 'event', null);
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (51,'recordupdated','y', 51, 'event', null);
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (52,'attachmentadded','y', 52, 'event', null);
