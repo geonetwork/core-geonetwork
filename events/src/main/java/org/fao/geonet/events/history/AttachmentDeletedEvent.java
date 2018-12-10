@@ -20,31 +20,35 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.listeners.history;
 
-import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.AttachementAddedEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
+package org.fao.geonet.events.history;
 
-@Component
-public class AttachementAddedListener extends GenericMetadataEventListener implements ApplicationListener<AttachementAddedEvent> {
+import org.springframework.context.ApplicationContext;
 
-    private String changeMessage = "";
-    private String eventType = StatusValue.Events.ATTACHEMENTADDED;
+public class AttachmentDeletedEvent extends AbstractHistoryEvent {
 
-    @Override
-    public String getChangeMessage() {
-        return changeMessage;
+    private static final long serialVersionUID = -7114160491764342413L;
+
+    private String attachmentName;
+
+    public AttachmentDeletedEvent(Integer mdId, Integer userId, String attachmentName) {
+        super(mdId, userId);
+        this.attachmentName = attachmentName;
+    }
+
+    public AttachmentDeletedEvent(Long mdId, Integer userId, String attachmentName) {
+        super(mdId, userId);
+        this.attachmentName = attachmentName;
     }
 
     @Override
-    public String getEventType() {
-        return eventType;
+    public String getPreviousState() {
+        return attachmentName;
     }
 
     @Override
-    public void onApplicationEvent(AttachementAddedEvent event) {
-        handleEvent(event);
+    public void publish(ApplicationContext appContext) {
+        appContext.publishEvent(this);
     }
+
 }

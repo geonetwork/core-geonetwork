@@ -20,37 +20,31 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.listeners.history;
 
-package org.fao.geonet.events.history;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.events.history.AttachmentDeletedEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-import org.springframework.context.ApplicationContext;
+@Component
+public class AttachmentDeletedListener extends GenericMetadataEventListener implements ApplicationListener<AttachmentDeletedEvent> {
 
-public class RecordValidationTriggeredEvent extends AbstractHistoryEvent {
+    private String changeMessage = "";
+    private String eventType = StatusValue.Events.ATTACHMENTDELETED;
 
-    public static final String FIELD = "validation";
-
-    private static final long serialVersionUID = 5541971988637706317L;
-
-    private String validationResult;
-
-    public RecordValidationTriggeredEvent(Integer mdId, Integer userId, String validationResult) {
-        super(mdId, userId);
-        this.validationResult = validationResult;
-    }
-
-    public RecordValidationTriggeredEvent(Long mdId, Integer userId, String validationResult) {
-        super(mdId, userId);
-        this.validationResult = validationResult;
+    @Override
+    public String getChangeMessage() {
+        return changeMessage;
     }
 
     @Override
-    public String getCurrentState() {
-        return validationResult;
+    public String getEventType() {
+        return eventType;
     }
 
     @Override
-    public void publish(ApplicationContext appContext) {
-        appContext.publishEvent(this);
+    public void onApplicationEvent(AttachmentDeletedEvent event) {
+        handleEvent(event);
     }
-
 }

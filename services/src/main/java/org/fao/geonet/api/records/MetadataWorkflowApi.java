@@ -23,51 +23,9 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.*;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
-import org.fao.geonet.api.ApiParams;
-import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.records.model.MetadataStatusParameter;
-import org.fao.geonet.api.records.model.MetadataStatusResponse;
-import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.MetadataStatusId_;
-import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.domain.StatusValueType;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.User_;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataStatus;
-import org.fao.geonet.kernel.metadata.StatusActions;
-import org.fao.geonet.kernel.metadata.StatusActionsFactory;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataStatusRepositoryCustom;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.StatusValueRepository;
-import org.fao.geonet.repository.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,17 +37,63 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.records.model.MetadataStatusParameter;
+import org.fao.geonet.api.records.model.MetadataStatusResponse;
+import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueType;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.metadata.StatusActions;
+import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataStatusRepositoryCustom;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.sun.istack.NotNull;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
     "/api/records",
@@ -447,9 +451,52 @@ public class MetadataWorkflowApi {
                     status.setOwnerEmail(owner.getEmail());
                 }
             }
+
+            if(s.getStatusValue().getType().equals(StatusValueType.event)) {
+                status.setItem1(extractItem1(s));
+                status.setItem2(extractItem2(s));
+            }
+
             response.add(status);
         }
         return response;
+    }
+
+
+    private String extractItem1(MetadataStatus s) {
+        switch(Integer.toString(s.getStatusValue().getId())) {
+        case StatusValue.Events.ATTACHMENTADDED:
+            return s.getCurrentState();
+        case StatusValue.Events.ATTACHMENTDELETED:
+            return s.getPreviousState();
+        case StatusValue.Events.RECORDOWNERCHANGE:
+            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
+        case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
+        case StatusValue.Events.RECORDCATEGORYCHANGE:
+            List<String> categories = ObjectJSONUtils.returnListOfFieldsFromArrayofObjects(s.getCurrentState(), "category", "name");
+            StringBuffer categoriesAsString = new StringBuffer("[");
+            for (String categoryName : categories) {
+                categoriesAsString.append(categoryName + " ");
+            }
+            categoriesAsString.append(" ]");
+            return categoriesAsString.toString();
+        case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
+            return s.getCurrentState().equals("1")? "OK" : "KO";
+        default:
+            return "";
+        }
+    }
+
+    private String extractItem2(MetadataStatus s) {
+        switch(Integer.toString(s.getStatusValue().getId())) {
+        case StatusValue.Events.RECORDOWNERCHANGE:
+            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
+        case StatusValue.Events.RECORDGROUPOWNERCHANGE:
+            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
+        default:
+            return "";
+        }
     }
 
 }

@@ -47,13 +47,24 @@
             scope.lang = scope.$parent.lang;
             scope.user = scope.$parent.user;
             scope.history = [];
+
+            // Wait for metatada to be available
+            scope.$watch('md', function(n, o) {
+              if (n !== o && n !== null && angular.isDefined(n)) {
+                loadHistory();
+              }
+             });
+
             // History step removal is only allowed to admin
             // BTW allowRemoval attribute could control if remove button
             // is displayed or not.
-            scope.allowRemoval =
-              angular.isDefined(attrs.allowRemoval) ?
+            scope.allowRemoval = false;
+            if(scope.user) {
+              scope.allowRemoval =
+                angular.isDefined(attrs.allowRemoval) ?
                 attrs.allowRemoval == 'true' && scope.user.isAdministrator() :
                 scope.user.isAdministrator();
+            }
 
             function loadHistory() {
               if (scope.md ) {
@@ -71,8 +82,6 @@
                 loadHistory();
               });
             };
-
-            loadHistory();
           }
         };
       }]);

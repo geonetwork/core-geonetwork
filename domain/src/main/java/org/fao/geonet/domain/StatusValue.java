@@ -34,13 +34,14 @@ import java.util.Map;
  *
  * By default a metadata has no status ie. UNKNOWN.
  *
- * The first step of the workflow (ie. DRAFT) can be automatically
- * assigned for record created on a group ( {@link  org.fao.geonet.kernel.datamanager.IMetadataStatus#activateWorkflowIfConfigured}
+ * The first step of the workflow (ie. DRAFT) can be automatically assigned for
+ * record created on a group (
+ * {@link org.fao.geonet.kernel.datamanager.IMetadataStatus#activateWorkflowIfConfigured}
  *
  * There is 2 types of status value:
  * <ul>
- *     <li>One is part of the general workflow (by default)</li>
- *     <li>One is independent task that may be triggered on demand</li>
+ * <li>One is part of the general workflow (by default)</li>
+ * <li>One is independent task that may be triggered on demand</li>
  * </ul>
  *
  *
@@ -62,9 +63,9 @@ public class StatusValue extends Localized {
     private int displayOrder;
 
     /**
-     * Get the id of the StatusValue object. This is a generated value and as such new instances
-     * should not have this set as it will simply be ignored and could result in reduced
-     * performance.
+     * Get the id of the StatusValue object. This is a generated value and as such
+     * new instances should not have this set as it will simply be ignored and could
+     * result in reduced performance.
      *
      * @return the id of the StatusValue object
      */
@@ -75,9 +76,9 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Set the id of the StatusValue object. This is a generated value and as such new instances
-     * should not have this set as it will simply be ignored and could result in reduced
-     * performance.
+     * Set the id of the StatusValue object. This is a generated value and as such
+     * new instances should not have this set as it will simply be ignored and could
+     * result in reduced performance.
      *
      * @param id the id of the StatusValue object
      */
@@ -105,9 +106,9 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * For backwards compatibility we need the reserved column to be either 'n' or 'y'. This is a
-     * workaround to allow this until future versions of JPA that allow different ways of
-     * controlling how types are mapped to the database.
+     * For backwards compatibility we need the reserved column to be either 'n' or
+     * 'y'. This is a workaround to allow this until future versions of JPA that
+     * allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "reserved", nullable = false, length = 1)
     protected char getReserved_JpaWorkaround() {
@@ -117,7 +118,8 @@ public class StatusValue extends Localized {
     /**
      * Set the column value.
      *
-     * @param reserved Constants.YN_ENABLED for true or Constants.YN_DISABLED for false.
+     * @param reserved Constants.YN_ENABLED for true or Constants.YN_DISABLED for
+     *                 false.
      */
     protected char setReserved_JpaWorkaround(final char reserved) {
         return _reserved = reserved;
@@ -152,8 +154,9 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Get the order to display this value in the UI. This is just a hint to the ui that provides an
-     * priority/importance of the status value compared to the others.
+     * Get the order to display this value in the UI. This is just a hint to the ui
+     * that provides an priority/importance of the status value compared to the
+     * others.
      *
      * @return the order to display this value in the UI.
      */
@@ -163,15 +166,15 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Set the order to display this value in the UI. This is just a hint to the ui that provides an
-     * priority/importance of the status value compared to the others.
+     * Set the order to display this value in the UI. This is just a hint to the ui
+     * that provides an priority/importance of the status value compared to the
+     * others.
      *
      * @param displayOrder the order to display this value in the UI
      */
     public void setDisplayOrder(int displayOrder) {
         this.displayOrder = displayOrder;
     }
-
 
     /**
      * @return the type
@@ -188,7 +191,6 @@ public class StatusValue extends Localized {
     public void setType(StatusValueType type) {
         this.type = type;
     }
-
 
     /**
      * @return the type
@@ -207,9 +209,8 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * List of predefined status part of the workflow.
-     * Those values are the default one for GeoNetwork
-     * and may be modified in the database.
+     * List of predefined status part of the workflow. Those values are the default
+     * one for GeoNetwork and may be modified in the database.
      */
     public static final class Status {
         public static final String UNKNOWN = "0";
@@ -221,15 +222,14 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * List of predefined status part of the events.
-     * Those values are the default one for GeoNetwork
-     * and may be modified in the database.
+     * List of predefined status part of the events. Those values are the default
+     * one for GeoNetwork and may be modified in the database.
      */
     public static final class Events {
         public static final String RECORDCREATED = "50";
         public static final String RECORDUPDATED = "51";
-        public static final String ATTACHEMENTADDED = "52";
-        public static final String ATTACHEMENTDELETED = "53";
+        public static final String ATTACHMENTADDED = "52";
+        public static final String ATTACHMENTDELETED = "53";
         public static final String RECORDOWNERCHANGE = "54";
         public static final String RECORDGROUPOWNERCHANGE = "55";
         public static final String RECORDPRIVILEGESCHANGE = "56";
@@ -238,5 +238,6 @@ public class StatusValue extends Localized {
         public static final String RECORDSTATUSCHANGE = "59";
         public static final String RECORDPROCESSINGCHANGE = "60";
         public static final String RECORDDELETED = "61";
+        public static final String RECORDIMPORTED = "62";
     }
 }

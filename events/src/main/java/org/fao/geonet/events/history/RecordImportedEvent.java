@@ -25,16 +25,37 @@ package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-public class AttachementAddedEvent extends AbstractHistoryEvent {
+import net.sf.json.JSONObject;
 
-    private static final long serialVersionUID = -8026442709546540103L;
+public class RecordImportedEvent extends AbstractHistoryEvent {
 
-    public AttachementAddedEvent(Integer mdId, Integer userId) {
+    public static final String FIELD = "user";
+
+    private static final long serialVersionUID = 1110999025730522535L;
+
+    private JSONObject userObject;
+
+    private String xmlRecord;
+
+    public RecordImportedEvent(Integer mdId, Integer userId, JSONObject userObject, String xmlRecord) {
         super(mdId, userId);
+        this.userObject = userObject;
+        this.xmlRecord = xmlRecord;
     }
 
-    public AttachementAddedEvent(Long mdId, Integer userId) {
+    public RecordImportedEvent(Long mdId, Integer userId, JSONObject userObject, String xmlRecord) {
         super(mdId, userId);
+        this.userObject = userObject;
+        this.xmlRecord = xmlRecord;
+    }
+
+    @Override
+    public String getCurrentState() {
+        JSONObject json = new JSONObject();
+        json.put("userObject", userObject);
+        json.put("xmlRecord", xmlRecord);
+
+        return json.toString();
     }
 
     @Override

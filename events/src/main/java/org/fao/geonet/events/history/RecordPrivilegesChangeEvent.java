@@ -29,11 +29,11 @@ import net.sf.json.JSONObject;
 
 public class RecordPrivilegesChangeEvent extends AbstractHistoryEvent {
 
+    public static final String FIELD = "sharing";
+
     private static final long serialVersionUID = -5643646655572813975L;
 
     private JSONObject oldShareParameterObjectJson, newShareParameterObjectJson;
-    
-    public static final String FIELD = "sharing"; 
 
     public RecordPrivilegesChangeEvent(Integer mdId, Integer userId, JSONObject oldShareParameterObjectJson,
             JSONObject newShareParameterObjectJson) {
@@ -51,18 +51,12 @@ public class RecordPrivilegesChangeEvent extends AbstractHistoryEvent {
 
     @Override
     public String getCurrentState() {
-        JSONObject json = new JSONObject();
-        json.put("sharing", newShareParameterObjectJson);
-
-        return json.toString();
+        return newShareParameterObjectJson.toString();
     }
 
     @Override
     public String getPreviousState() {
-        JSONObject json = new JSONObject();
-        json.put("sharing", oldShareParameterObjectJson);
-
-        return json.toString();
+        return oldShareParameterObjectJson.toString();
     }
 
     @Override

@@ -29,11 +29,11 @@ import net.sf.json.JSONObject;
 
 public class RecordCreateEvent extends AbstractHistoryEvent {
 
+    public static final String FIELD = "userObject";
+
     private static final long serialVersionUID = 1110999025730522535L;
 
     private JSONObject userObject;
-    
-    public static final String FIELD = "user";
 
     private String xmlRecord;
 

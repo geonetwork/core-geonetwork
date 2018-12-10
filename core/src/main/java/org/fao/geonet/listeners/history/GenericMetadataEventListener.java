@@ -46,8 +46,10 @@ public abstract class GenericMetadataEventListener {
      */
     public final void handleEvent(AbstractHistoryEvent event) {
 
-        MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
-        StatusValueRepository statusValueRepository = ApplicationContextHolder.get().getBean(StatusValueRepository.class);
+        MetadataStatusRepository statusRepository = ApplicationContextHolder.get()
+                .getBean(MetadataStatusRepository.class);
+        StatusValueRepository statusValueRepository = ApplicationContextHolder.get()
+                .getBean(StatusValueRepository.class);
 
         storeContentHistoryEvent(event, statusRepository, statusValueRepository);
     }
@@ -63,8 +65,9 @@ public abstract class GenericMetadataEventListener {
             StatusValueRepository statusValueRepository) {
 
         Integer metadataUuid = Math.toIntExact(event.getMdId());
-        MetadataStatusId metadataStatusId = new MetadataStatusId().setMetadataId(metadataUuid).setStatusId(Integer.parseInt(getEventType()))
-                .setUserId(event.getUserId()).setChangeDate(new ISODate(System.currentTimeMillis()));
+        MetadataStatusId metadataStatusId = new MetadataStatusId().setMetadataId(metadataUuid)
+                .setStatusId(Integer.parseInt(getEventType())).setUserId(event.getUserId())
+                .setChangeDate(new ISODate(System.currentTimeMillis()));
 
         StatusValue status = statusValueRepository.findOneById(Integer.parseInt(getEventType()));
 
@@ -74,12 +77,14 @@ public abstract class GenericMetadataEventListener {
             metadataStatus.setStatusValue(status);
             metadataStatus.setOwner(event.getUserId());
             metadataStatus.setChangeMessage(getChangeMessage());
+            metadataStatus.setCurrentState(event.getCurrentState());
+            metadataStatus.setPreviousState(event.getPreviousState());
 
             statusRepository.save(metadataStatus);
         } else {
             Log.warning(Geonet.DATA_MANAGER, String.format(
-                "Status with id '%s' not found in database. Check database migration SQL file to add default status if you want to log record history.",
-                getEventType()));
+                    "Status with id '%s' not found in database. Check database migration SQL file to add default status if you want to log record history.",
+                    getEventType()));
         }
     }
 

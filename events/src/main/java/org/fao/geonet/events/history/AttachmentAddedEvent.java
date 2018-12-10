@@ -25,36 +25,25 @@ package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
-import net.sf.json.JSONObject;
+public class AttachmentAddedEvent extends AbstractHistoryEvent {
 
-public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
+    private static final long serialVersionUID = -8026442709546540103L;
 
-    public static final String FIELD = "owner";
+    private String attachmentName;
 
-    private static final long serialVersionUID = -3732476621109415191L;
-
-    private JSONObject oldOwnerObjectJSON, newOwnerObjectJSON;
-
-    public RecordGroupOwnerChangeEvent(Integer mdId, Integer userId, JSONObject oldOwnerObjectJSON, JSONObject newOwnerObjectJSON) {
+    public AttachmentAddedEvent(Integer mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
-        this.oldOwnerObjectJSON = oldOwnerObjectJSON;
-        this.newOwnerObjectJSON = newOwnerObjectJSON;
+        this.attachmentName = attachmentName;
     }
 
-    public RecordGroupOwnerChangeEvent(Long mdId, Integer userId, JSONObject oldOwner, JSONObject newOwner) {
+    public AttachmentAddedEvent(Long mdId, Integer userId, String attachmentName) {
         super(mdId, userId);
-        oldOwnerObjectJSON = oldOwnerObjectJSON;
-        newOwnerObjectJSON = newOwnerObjectJSON;
+        this.attachmentName = attachmentName;
     }
 
     @Override
     public String getCurrentState() {
-        return newOwnerObjectJSON.toString();
-    }
-
-    @Override
-    public String getPreviousState() {
-        return oldOwnerObjectJSON.toString();
+        return attachmentName;
     }
 
     @Override

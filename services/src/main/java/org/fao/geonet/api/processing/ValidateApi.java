@@ -39,6 +39,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -143,8 +144,10 @@ public class ValidateApi {
                         serviceContext.getLanguage());
                     if (isValid) {
                         report.addMetadataInfos(record.getId(), "Is valid");
+                        new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
                     } else {
                         report.addMetadataInfos(record.getId(), "Is invalid");
+                        new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
                     }
                     report.addMetadataId(record.getId());
                     report.incrementProcessedRecords();

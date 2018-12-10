@@ -23,15 +23,15 @@
 package org.fao.geonet.listeners.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.AttachementDeletedEvent;
+import org.fao.geonet.events.history.RecordImportedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AttachementDeletedListener extends GenericMetadataEventListener implements ApplicationListener<AttachementDeletedEvent> {
+public class RecordImportedListener extends GenericMetadataEventListener implements ApplicationListener<RecordImportedEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.ATTACHEMENTDELETED;
+    private String eventType = StatusValue.Events.RECORDIMPORTED;
 
     @Override
     public String getChangeMessage() {
@@ -44,7 +44,8 @@ public class AttachementDeletedListener extends GenericMetadataEventListener imp
     }
 
     @Override
-    public void onApplicationEvent(AttachementDeletedEvent event) {
+    public void onApplicationEvent(RecordImportedEvent event) {
         handleEvent(event);
     }
+
 }

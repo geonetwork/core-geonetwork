@@ -23,6 +23,8 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
@@ -46,7 +48,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Data Access object for accessing {@link org.fao.geonet.domain.MetadataValidation} entities.
+ * Data Access object for accessing
+ * {@link org.fao.geonet.domain.MetadataValidation} entities.
  *
  * @author Jesse
  */
@@ -60,7 +63,8 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
     public int deleteAllById_MetadataId(final int metadataId) {
         String entityType = MetadataStatus.class.getSimpleName();
         String metadataIdPropName = MetadataStatusId_.metadataId.getName();
-        Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
+        Query query = _entityManager
+                .createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
         final int deleted = query.executeUpdate();
         _entityManager.flush();
         _entityManager.clear();
@@ -71,7 +75,8 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
     public int deleteAllById_UserId(final int userId) {
         String entityType = MetadataStatus.class.getSimpleName();
         String userIdPropName = MetadataStatusId_.userId.getName();
-        Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + userIdPropName + " = " + userId);
+        Query query = _entityManager
+                .createQuery("DELETE FROM " + entityType + " WHERE " + userIdPropName + " = " + userId);
         final int deleted = query.executeUpdate();
         return deleted;
     }
@@ -86,18 +91,13 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 
         query.select(metadataStatusRoot);
 
-        Predicate metadataIdEqualsPredicate = cb.equal(
-            metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId),
-            metadataId);
+        Predicate metadataIdEqualsPredicate = cb
+                .equal(metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId), metadataId);
 
-        Predicate mdIdEquals = cb.equal(
-            metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId),
-            statusValueRoot.get(StatusValue_.id));
+        Predicate mdIdEquals = cb.equal(metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId),
+                statusValueRoot.get(StatusValue_.id));
 
-        Predicate statusTypePredicate = cb.equal(
-            statusValueRoot.get(StatusValue_.type),
-            type
-        );
+        Predicate statusTypePredicate = cb.equal(statusValueRoot.get(StatusValue_.type), type);
 
         query.where(mdIdEquals, metadataIdEqualsPredicate, statusTypePredicate);
 
@@ -108,7 +108,6 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 
         return _entityManager.createQuery(query).getResultList();
     }
-
 
     /**
      * Search status.
@@ -121,18 +120,15 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
      * @param recordIds
      * @return
      */
-    public List<MetadataStatus> searchStatus(List<StatusValueType> types,
-                                             List<Integer> ownerIds,
-                                             List<Integer> authorIds,
-                                             List<Integer> recordIds
-                                             ) {
+    public List<MetadataStatus> searchStatus(List<StatusValueType> types, List<Integer> ownerIds,
+            List<Integer> authorIds, List<Integer> recordIds) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<MetadataStatus> cbQuery = cb.createQuery(MetadataStatus.class);
         final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
         final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
 
-
-        final Path<Integer> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.statusId);
+        final Path<Integer> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.id)
+                .get(MetadataStatusId_.statusId);
         final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
 
         Predicate typeFilter = null;
@@ -154,24 +150,27 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
             ownerPredicate = ownerIdPath.in(ownerIds);
         }
         if (recordIds != null) {
-            final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.metadataId);
+            final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.id)
+                    .get(MetadataStatusId_.metadataId);
             recordPredicate = recordIdPath.in(recordIds);
         }
 
         // Date filter
-//        final Path<ISODate> changeDate = metadataStatusRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
-//        Predicate datePredicate = cb.and(cb.lessThanOrEqualTo(changeDate, dateTo), cb.greaterThanOrEqualTo(changeDate, dateFrom));
+        // final Path<ISODate> changeDate =
+        // metadataStatusRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
+        // Predicate datePredicate = cb.and(cb.lessThanOrEqualTo(changeDate, dateTo),
+        // cb.greaterThanOrEqualTo(changeDate, dateFrom));
 
-//        // Groups query
-//        if (!groups.isEmpty()) {
-//            Predicate inGroups = statusIdPath.in(groups);
-//
-//            cbQuery.select(metadataStatusRoot)
-//                .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
-//
-//        } else {
-//
-        Predicate whereClause  = cb.and();
+        // // Groups query
+        // if (!groups.isEmpty()) {
+        // Predicate inGroups = statusIdPath.in(groups);
+        //
+        // cbQuery.select(metadataStatusRoot)
+        // .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
+        //
+        // } else {
+        //
+        Predicate whereClause = cb.and();
         if (typeFilter != null) {
             whereClause.getExpressions().add(typeFilter);
         }
@@ -185,11 +184,9 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
             whereClause.getExpressions().add(recordPredicate);
         }
 
-        cbQuery.select(metadataStatusRoot)
-            .where(whereClause);
+        cbQuery.select(metadataStatusRoot).where(whereClause);
 
-
-//        cbQuery.orderBy(cb.asc(changeDate));
+        // cbQuery.orderBy(cb.asc(changeDate));
 
         return _entityManager.createQuery(cbQuery).getResultList();
     }

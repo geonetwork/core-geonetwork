@@ -29,11 +29,11 @@ import net.sf.json.JSONObject;
 
 public class RecordCategoryChangeEvent extends AbstractHistoryEvent {
 
+    public static final String FIELD = "category";
+
     private static final long serialVersionUID = 5156408130233797362L;
 
     private JSONObject categoryArrayBeforeJSON, categoryArrayAfterJSON;
-    
-    public static final String FIELD = "category";
 
     public RecordCategoryChangeEvent(Integer mdId, Integer userId, JSONObject categoryArrayBeforeJSON, JSONObject categoryArrayAfterJSON) {
         super(mdId, userId);
