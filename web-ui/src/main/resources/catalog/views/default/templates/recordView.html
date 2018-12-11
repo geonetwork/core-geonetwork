@@ -111,15 +111,7 @@
 
         <div class="lead1 gn-margin-bottom"
             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>
-        
-        <!-- Display the workflow status if draft exists -->
-        <a data-ng-if="mdView.current.record.draft == 'y' || mdView.current.record.draft == 'e'"
-            title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-            data-ng-href="#/{{(mdView.current.record.draft == 'e')?'metadraf':'metadata'}}/{{md.getUuid()}}"
-            class="gn-workflow-status gn-workflow-status-mdview gn-workflow-status-{{mdView.current.record.mdStatus}}">
-           {{('status-' + mdView.current.record.mdStatus) | translate}}
-        </a>
-        
+
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="mdView.current.record.status_text.length > 0"
             title="{{mdView.current.record.status_text[0]}}"
@@ -154,6 +146,23 @@
               data-title="{{'siblings' | translate}}">
           </div>
         </div>
+                
+        <!-- If draft exists, show a link -->
+        <a data-ng-if="mdView.current.record.draft == 'e'"
+            title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
+            data-ng-href="#/metadraf/{{md.getUuid()}}"
+            data-ng-show="user.canEditRecord(mdView.current.record)">
+           {{'seeDraft' | translate}}
+        </a>
+        
+        <!-- If approved exists, show a link -->
+        <a data-ng-if="mdView.current.record.draft == 'y'"
+            title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
+            data-ng-href="#/metadata/{{md.getUuid()}}"
+            data-ng-show="user.canEditRecord(mdView.current.record)">
+           {{'seeNoDraft' | translate}}
+        </a>
+        
 
         <h2 data-translate="">aboutThisResource</h2>
         <table class="table table-striped">

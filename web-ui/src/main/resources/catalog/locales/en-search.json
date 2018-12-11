@@ -486,5 +486,7 @@
   "userSearchUpdateUrl": "Update",
   "userSearchFeaturedDisplayInHomePage": "Home page",
   "userSearchUpdated": "User search saved",
-  "userSearchUpdatedError": "Error saving user search"
+  "userSearchUpdatedError": "Error saving user search",
+  "seeDraft": "This record has a draft version. Click here to see it.",
+  "seeNoDraft": "This record has a non drafted version. Click here to see it."
 }
