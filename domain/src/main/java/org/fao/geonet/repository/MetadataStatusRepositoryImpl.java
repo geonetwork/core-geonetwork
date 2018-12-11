@@ -23,21 +23,24 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.StatusValue_;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
@@ -45,7 +48,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Data Access object for accessing
@@ -118,10 +120,18 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
      * @param ownerIds
      * @param authorIds
      * @param recordIds
+     * @param dateFrom
+     * @param dateTo
+     * @param from
+     * @param size
      * @return
      */
-    public List<MetadataStatus> searchStatus(List<StatusValueType> types, List<Integer> ownerIds,
-            List<Integer> authorIds, List<Integer> recordIds) {
+    public List<MetadataStatus> searchStatus(List<StatusValueType> types,
+                                             List<Integer> ownerIds,
+                                             List<Integer> authorIds,
+                                             List<Integer> recordIds,
+                                             String dateFrom, String dateTo,
+                                             @Nullable Pageable pageable) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<MetadataStatus> cbQuery = cb.createQuery(MetadataStatus.class);
         final Root<MetadataStatus> metadataStatusRoot = cbQuery.from(MetadataStatus.class);
@@ -129,6 +139,8 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 
         final Path<Integer> statusIdInMetadataPath = metadataStatusRoot.get(MetadataStatus_.id)
                 .get(MetadataStatusId_.statusId);
+        final Path<ISODate> statusIdDatePath = metadataStatusRoot.get(MetadataStatus_.id)
+                .get(MetadataStatusId_.changeDate);
         final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
 
         Predicate typeFilter = null;
@@ -141,6 +153,7 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
             Predicate typePredicate = statusTypePath.in(types);
             typeFilter = cb.and(statusIdJoin, typePredicate);
         }
+
         if (authorIds != null) {
             final Path<Integer> authorIdPath = metadataStatusRoot.get(MetadataStatus_.id).get(MetadataStatusId_.userId);
             authorPredicate = authorIdPath.in(authorIds);
@@ -149,27 +162,13 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
             final Path<Integer> ownerIdPath = metadataStatusRoot.get(MetadataStatus_.owner);
             ownerPredicate = ownerIdPath.in(ownerIds);
         }
+
         if (recordIds != null) {
             final Path<Integer> recordIdPath = metadataStatusRoot.get(MetadataStatus_.id)
                     .get(MetadataStatusId_.metadataId);
             recordPredicate = recordIdPath.in(recordIds);
         }
 
-        // Date filter
-        // final Path<ISODate> changeDate =
-        // metadataStatusRoot.get(Metadata_.dataInfo).get(MetadataDataInfo_.changeDate);
-        // Predicate datePredicate = cb.and(cb.lessThanOrEqualTo(changeDate, dateTo),
-        // cb.greaterThanOrEqualTo(changeDate, dateFrom));
-
-        // // Groups query
-        // if (!groups.isEmpty()) {
-        // Predicate inGroups = statusIdPath.in(groups);
-        //
-        // cbQuery.select(metadataStatusRoot)
-        // .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
-        //
-        // } else {
-        //
         Predicate whereClause = cb.and();
         if (typeFilter != null) {
             whereClause.getExpressions().add(typeFilter);
@@ -184,10 +183,28 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
             whereClause.getExpressions().add(recordPredicate);
         }
 
+
+        if (dateFrom != null) {
+            whereClause.getExpressions().add(cb.greaterThanOrEqualTo(statusIdDatePath, new ISODate(dateFrom)));
+        }
+        if (dateTo != null) {
+            whereClause.getExpressions().add(cb.lessThanOrEqualTo(statusIdDatePath, new ISODate(dateTo)));
+        }
+
         cbQuery.select(metadataStatusRoot).where(whereClause);
 
-        // cbQuery.orderBy(cb.asc(changeDate));
+        if (pageable != null && pageable.getSort() != null) {
+            final Sort sort = pageable.getSort();
+            List<Order> orders = SortUtils.sortToJpaOrders(cb, sort, metadataStatusRoot);
+            cbQuery.orderBy(orders);
+        }
 
-        return _entityManager.createQuery(cbQuery).getResultList();
+        TypedQuery<MetadataStatus> query = _entityManager.createQuery(cbQuery);
+        if (pageable != null) {
+            query.setFirstResult(pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+        }
+
+        return query.getResultList();
     }
 }

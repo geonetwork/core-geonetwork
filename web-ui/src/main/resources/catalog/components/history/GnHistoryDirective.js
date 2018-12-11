@@ -93,8 +93,9 @@
   module
     .directive(
       'gnHistory', [
-        '$http', 'gnConfig', '$translate',
-        function($http, gnConfig, $translate) {
+        '$http', '$filter', 'gnConfig', '$translate',
+        'gnSearchManagerService',
+        function($http, $filter, gnConfig, $translate, gnSearchManagerService) {
           return {
             restrict: 'A',
             replace: true,
@@ -110,6 +111,22 @@
               scope.ownerFilter = null;
               scope.authorFilter = null;
               scope.recordFilter = null;
+              scope.dateFromFilter = null;
+              scope.dateToFilter = null;
+              var recordByPage = 20;
+              scope.from = 0;
+              scope.size = recordByPage;
+              scope.hasMoreRecords = true;
+
+              scope.getSuggestions = function(val) {
+                return gnSearchManagerService.search('q?fast=index&_content_type=json&_isTemplate=y or n&title=' + (val || '*')).then(function(res) {
+                  var listOfTitles = [];
+                  angular.forEach(res.metadata, function(value, key) {
+                    listOfTitles.push({id: value['geonet:info'].id, title: value.title});
+                  });
+                  return listOfTitles;
+                });
+              };
 
               scope.response = {
                 doiCreationTask: {}
@@ -145,25 +162,42 @@
                   }
                 });
                 if (scope.authorFilter && scope.authorFilter.id) {
-                  filters.push('author=' + scope.authorFilter.id)
+                  filters.push('author=' + scope.authorFilter.id);
                 }
                 if (scope.ownerFilter && scope.ownerFilter.id) {
-                  filters.push('owner=' + scope.ownerFilter.id)
+                  filters.push('owner=' + scope.ownerFilter.id);
                 }
-                if (scope.recordFilter && scope.recordFilter) {
-                  filters.push('record=' + scope.recordFilter)
+                if (scope.recordFilter) {
+                  filters.push('record=' + scope.recordFilter);
                 }
+                if (scope.dateFromFilter) {
+                  filters.push('dateFrom=' + $filter('date')(scope.dateFromFilter, 'yyyy-MM-dd'));
+                }
+                if (scope.dateToFilter) {
+                  filters.push('dateTo=' + $filter('date')(scope.dateToFilter, 'yyyy-MM-dd'));
+                }
+
+                filters.push('from=' + scope.from);
+                filters.push('size=' + scope.size);
+
                 return filters.length > 0 ? '?' + filters.join('&') : '';
               }
+
+              scope.more = function() {
+                scope.size = scope.size + recordByPage;
+                loadHistory();
+              };
 
               function loadHistory() {
                 $http.get('../api/status/search' + buildFilter()).
                 then(function(r) {
                   scope.history = r.data;
+
+                  scope.hasMoreRecords = r.data.length >= scope.size;
                 });
               };
 
-              var trigger = function (n, o) {
+              var trigger = function(n, o) {
                 if (n !== o) {
                   loadHistory();
                 }
@@ -172,6 +206,8 @@
               scope.$watchCollection('authorFilter', trigger);
               scope.$watchCollection('ownerFilter', trigger);
               scope.$watchCollection('recordFilter', trigger);
+              scope.$watchCollection('dateFromFilter', trigger);
+              scope.$watchCollection('dateToFilter', trigger);
 
               loadHistory();
             }

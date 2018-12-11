@@ -29,12 +29,18 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -71,14 +77,46 @@ public class StatusApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<MetadataStatusDTO> getStatusByType(
-            @ApiParam(value = "One or more types to retrieve (ie. worflow, event, task). Default is all.", required = false) @RequestParam(required = false) StatusValueType[] type,
-            @ApiParam(value = "One or more event author. Default is all.", required = false) @RequestParam(required = false) Integer[] author,
-            @ApiParam(value = "One or more event owners. Default is all.", required = false) @RequestParam(required = false) Integer[] owner,
-            @ApiParam(value = "One or more record identifier. Default is all.", required = false) @RequestParam(required = false) Integer[] record,
-            // TODO: Add parameters for dates
+            @ApiParam(value = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            StatusValueType[] type,
+            @ApiParam(value = "One or more event author. Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            Integer[] author,
+            @ApiParam(value = "One or more event owners. Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            Integer[] owner,
+            @ApiParam(value = "One or more record identifier. Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            Integer[] record,
+            @ApiParam(value = "Start date",
+                required = false)
+            @RequestParam(required = false)
+            String dateFrom,
+            @ApiParam(value = "End date",
+                required = false)
+            @RequestParam(required = false)
+            String dateTo,
+            @ApiParam(value = "From page",
+                required = false)
+            @RequestParam(required = false, defaultValue = "0")
+            Integer from,
+            @ApiParam(value = "Number of records to return",
+                required = false)
+            @RequestParam(required = false, defaultValue = "100")
+            Integer size,
             HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         MetadataStatusRepository statusRepository = context.getBean(MetadataStatusRepository.class);
+
+
+        Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC,
+            MetadataStatus_.id, MetadataStatusId_.changeDate);
+        final PageRequest pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
 
         List<MetadataStatus> metadataStatuses;
         if ((type != null && type.length > 0) || (author != null && author.length > 0)
@@ -87,9 +125,12 @@ public class StatusApi {
                     type != null && type.length > 0 ? Arrays.asList(type) : null,
                     author != null && author.length > 0 ? Arrays.asList(author) : null,
                     owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
-                    record != null && record.length > 0 ? Arrays.asList(record) : null);
+                    record != null && record.length > 0 ? Arrays.asList(record) : null,
+                    dateFrom, dateTo,
+                    pageRequest
+                );
         } else {
-            metadataStatuses = statusRepository.findAll();
+            metadataStatuses = statusRepository.findAll(pageRequest).getContent();
         }
 
         Map<Integer, String> titles = new HashMap<>();

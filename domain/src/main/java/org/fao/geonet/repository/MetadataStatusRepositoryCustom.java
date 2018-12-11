@@ -25,11 +25,12 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValueType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Custom repository methods for the MetadataValidationRepository User: Jesse
@@ -68,6 +69,9 @@ public interface MetadataStatusRepositoryCustom {
      * Find all the MetadataStatus objects corresponding to a search
      */
     @Nonnull
-    List<MetadataStatus> searchStatus(List<StatusValueType> types, List<Integer> authorIds, List<Integer> ownerIds,
-            List<Integer> recordIds);
+    List<MetadataStatus> searchStatus(List<StatusValueType> types,
+                                      List<Integer> authorIds, List<Integer> ownerIds,
+                                      List<Integer> recordIds,
+                                      String dateFrom, String dateTo,
+                                      @Nullable Pageable pageable);
 }
