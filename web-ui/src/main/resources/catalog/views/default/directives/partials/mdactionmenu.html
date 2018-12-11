@@ -28,7 +28,7 @@
           <span data-translate="">transferOwnership</span>
         </a></li>
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+          data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore() && md.draft != 'y'"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&
