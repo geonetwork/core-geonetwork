@@ -307,10 +307,19 @@
        * @return {*}
        */
       this.publish = function(md, bucket, flag, scope) {
-        scope.$broadcast('operationOnSelectionStart');
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
+        } 
+
+        //Warn about possible workflow changes on batch changes 
+        // or when record is not approved 
+        if((!md || md.mdStatus != 2) && flag === 'on') {
+          if(!confirm($translate.instant('warnPublishDraft'))){
+            return;
+          }
         }
+        
+        scope.$broadcast('operationOnSelectionStart');
         var onOrOff = flag === 'on';
 
         return gnShareService.publish(

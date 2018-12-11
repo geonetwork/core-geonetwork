@@ -435,5 +435,6 @@
     "indexingTaskRunning": "Indexing {{total}} records...",
     "indexingTaskFinished": "Indexing finished, {{total}} records processed",
     "indexingTaskFinishedWithErrors": "Indexing finished, {{total}} records processed with {{errors}} errors",
-    "indexingTaskCanceled": "Indexing canceled"
+    "indexingTaskCanceled": "Indexing canceled",
+    "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?"
 }
