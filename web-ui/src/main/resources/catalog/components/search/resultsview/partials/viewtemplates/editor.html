@@ -70,18 +70,6 @@
                title="{{'duplicate' | translate}}">
               <i class="fa fa-copy text-muted"></i>
             </a>
-            <div class="btn-group" data-ng-show="tasks.length > 0">
-              <button type="button" class="btn btn-default dropdown-toggle"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-gears"></i>&nbsp;<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li data-ng-repeat="t in tasks"
-                    data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
-                  <a data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">{{t.name}}</a>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>

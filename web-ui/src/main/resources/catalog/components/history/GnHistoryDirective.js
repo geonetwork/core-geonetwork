@@ -132,26 +132,41 @@
                 doiCreationTask: {}
               };
               scope.doiCreationTask = {
-                check: function (recordId, statusId) {
-                  var key = recordId+ '-' + statusId;
+                check: function (status) {
+                  var key = status.id.metadataId + '-' + status.id.statusId;
                   scope.response.doiCreationTask[key] = {};
                   scope.response.doiCreationTask[key]['check'] = null;
-                  $http.get('../api/records/' + recordId + '/doi/checkPreConditions').
+                  $http.get('../api/records/' + status.id.metadataId + '/doi/checkPreConditions').
                   then(function(r) {
                     scope.response.doiCreationTask[key]['check'] = r;
                   }, function(r) {
                     scope.response.doiCreationTask[key]['check'] = r;
                   });
                 },
-                create: function (recordId) {
+                create: function (status) {
+                  var key = status.id.metadataId + '-' + status.id.statusId;
                   scope.response.doiCreationTask[key]['create'] = null;
-                  $http.put('../api/records/' + recordId + '/doi').
+                  $http.put('../api/records/' + status.id.metadataId + '/doi').
                   then(function(r) {
                     scope.response.doiCreationTask[key]['create'] = r;
+                    scope.closeTask(status);
+                    then(function(r) {
+                      loadHistory();
+                    });
                   }, function(r) {
                     scope.response.doiCreationTask[key]['create'] = r;
                   });
                 }
+              };
+
+              scope.closeTask = function(status) {
+                // Close the related task
+                $http.put('../api/records/' + status.id.metadataId + '/status/' +
+                  status.id.statusId + '.' + status.id.userId + '.' +
+                  status.id.changeDate.dateAndTime +
+                  '/close?closeDate=' + moment().format('YYYY-MM-DDTHH:mm:ss')).then(function() {
+                  loadHistory();
+                });
               };
 
               function buildFilter() {

@@ -323,6 +323,70 @@ public class MetadataWorkflowApi {
     }
 
 
+
+
+    @ApiOperation(
+        value = "Close a record task",
+        notes = "",
+        nickname = "closeTask")
+    @RequestMapping(
+        value = "/{metadataUuid}/status/{statusId:[0-9]+}.{userId:[0-9]+}.{changeDate}/close",
+        method = RequestMethod.PUT
+    )
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Task closed."),
+        @ApiResponse(code = 404, message = "Status not found."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void closeTask(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(
+            value = "Status identifier",
+            required = true)
+        @PathVariable
+            int statusId,
+        @ApiParam(
+            value = "User identifier",
+            required = true)
+        @PathVariable
+            int userId,
+        @ApiParam(
+            value = "Change date",
+            required = true)
+        @PathVariable
+            String changeDate,
+        @ApiParam(
+            value = "Close date",
+            required = true)
+        @RequestParam
+            String closeDate,
+        HttpServletRequest request
+    )
+        throws Exception {
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+
+        MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
+        MetadataStatus metadataStatus = statusRepository.findOne(new MetadataStatusId()
+            .setMetadataId(metadata.getId())
+            .setStatusId(statusId)
+            .setUserId(userId)
+            .setChangeDate(new ISODate(changeDate)));
+        if (metadataStatus != null) {
+            statusRepository.update(metadataStatus.getId(),
+                entity -> entity.setCloseDate(new ISODate(closeDate)));
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Can't find metadata status for record '%d', user '%s' at date '%s'",
+                metadataUuid, userId, changeDate));
+        }
+    }
+
     @ApiOperation(
         value = "Delete a record status",
         notes = "",
@@ -333,7 +397,7 @@ public class MetadataWorkflowApi {
     @PreAuthorize("hasRole('Administrator')")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Status removed."),
-        @ApiResponse(code = 404, message = "Status not foundcd."),
+        @ApiResponse(code = 404, message = "Status not found."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)

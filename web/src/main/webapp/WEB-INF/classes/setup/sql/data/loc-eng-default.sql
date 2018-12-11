@@ -535,7 +535,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'eng','Status cha
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'eng','Record updated by process {{h.item1}}.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'eng','Record deleted.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'eng','Record imported.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'eng','DOI creation requested.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'eng','DOI creation request');
 
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'eng','Preferred records');

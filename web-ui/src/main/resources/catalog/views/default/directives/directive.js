@@ -86,8 +86,8 @@
     }
   ]);
 
-  module.directive('gnMdActionsMenu', ['gnMetadataActions',
-    function(gnMetadataActions) {
+  module.directive('gnMdActionsMenu', ['gnMetadataActions', '$http',
+    function(gnMetadataActions, $http) {
       return {
         restrict: 'A',
         replace: true,
@@ -96,7 +96,30 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
-          
+
+          scope.tasks = [];
+
+          function loadTasks() {
+            return $http.get('../api/status/task', {cache: true}).
+            success(function(data) {
+              scope.tasks = data;
+            });
+          };
+
+          scope.taskConfiguration = {
+            doiCreationTask: {
+              isApplicable: function(md) {
+                // TODO: Would be good to return why a task is not applicable as tooltip
+                // TODO: Add has DOI already
+                return md && md.isPublished()
+                  && md.isTemplate === 'n'
+                  && md.isHarvested === 'n';
+              }
+            }
+          };
+
+          loadTasks();
+
           scope.$watch(attrs.gnMdActionsMenu, function(a) {
             scope.md = a;
           });

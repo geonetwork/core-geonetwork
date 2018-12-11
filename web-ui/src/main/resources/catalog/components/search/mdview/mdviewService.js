@@ -147,7 +147,7 @@
               // get a new search to pick the md
               gnMdViewObj.current.record = null;
               gnSearchManagerService.gnSearch({
-                uuid: uuid,
+                _uuid_OR__id: uuid,
                 _isTemplate: 'y or n',
                 fast: 'index',
                 _content_type: 'json'

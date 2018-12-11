@@ -95,28 +95,6 @@
       });
 
 
-      $scope.tasks = [];
-
-      function loadTasks() {
-        return $http.get('../api/status/task').
-        success(function(data) {
-          $scope.tasks = data;
-        });
-      };
-
-      $scope.taskConfiguration = {
-        doiCreationTask: {
-          isApplicable: function(md) {
-            // Would be good to return why a task is not applicable as tooltip
-            // TODO: Add has DOI already
-            return md.isPublished()
-              && md.isTemplate === 'n'
-              && md.isHarvested === 'n';
-          }
-        }
-      };
-
-      loadTasks();
 
       // Transfert the scope to the popup
       $scope.getScope = function(currentMd) {
