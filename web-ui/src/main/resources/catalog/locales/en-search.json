@@ -464,5 +464,7 @@
   "clickToSelect": "Click to select or unselect",
   "filterDataDescription": "Select a layer on the map to begin filtering associated WFS features (if any). Features must first have been indexed by an administrator.",
   "WPSDescription": "Enter a WPS endpoint URL to begin using the process through a dynamic form. Recently used WPS processes are shown in the second tab.",
-  "noLayersFound": "No layers found"
+  "noLayersFound": "No layers found",
+  "seeDraft": "This record has a draft version. Click here to see it.",
+  "seeNoDraft": "This record has a non drafted version. Click here to see it."
 }
