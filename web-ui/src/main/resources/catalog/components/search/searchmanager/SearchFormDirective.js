@@ -436,7 +436,7 @@
                   gnSearchLocation.getParams());
             }
 
-            if (attrs.waitForUser === true) {
+            if (attrs.waitForUser === "true") {
               var userUnwatch = scope.$watch('user.id', function(userNewVal) {
                 // Don't trigger the search until the user id has been loaded
                 // Unregister the watch once we have the user id.
