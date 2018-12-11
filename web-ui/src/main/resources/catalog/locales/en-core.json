@@ -171,7 +171,6 @@
     "orgName": "Contact for the resource",
     "orgNames": "Contact for the resource",
     "orgNamesTree": "Contact for the resource",
-    "off": "Off",
     "topicCat" : "Topic",
     "topicCats" : "Topics",
     "organisation": "Organisation",
@@ -321,7 +320,6 @@
     "no": "No",
     "publishedForGroup": "Visible by",
     "_op0": "Visible by",
-    "status": "Status",
     "mdStatus": "Workflow progress",
     "_status": "Status",
     "_schema": "Standard",
@@ -440,5 +438,6 @@
     "metadataPublishedError": "Error occurred while publishing metadata.",
     "metadataUnpublished": "Metadata un-published.",
     "metadataUnpublishedError": "Error occurred while un-publishing metadata.",
-    "categoriesUpdated": "Categories updated."
+    "categoriesUpdated": "Categories updated.",
+    "warnPublishDraft": "When publishing records with workflow enabled, the status will change to 'Approve'. Are you sure you want to continue?"
 }
