@@ -2277,6 +2277,7 @@
       <option value="FILE:RASTER">GIS RASTER file</option>
       <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
       <option value="WWW:LINK-1.0-http--link" default="">Web address (URL)</option>
+      <option value="DOI">Digital Object Identifier (DOI)</option>
       <option value="WWW:LINK-1.0-http--partners">Partner web address (URL)</option>
       <option value="WWW:LINK-1.0-http--related">Related link (URL)</option>
       <option value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</option>

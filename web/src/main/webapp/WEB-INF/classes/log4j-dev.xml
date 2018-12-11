@@ -196,6 +196,10 @@
     <appender-ref ref="fileAppender"/>
   </logger>
 
+  <logger name="net.refractions.xml.sax" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="fileAppender"/>
+  </logger>
 
   <!-- Turn off logging except when explicitly declared below -->
   <root>

@@ -44,8 +44,11 @@
     <property name="startsFromXMLConfigurationFile" value="false"/>
   </bean>
   <bean id="WFSFeatureIndexer"
-        class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer">
-    <property name="featureCommitInterval" value="100"/>
+        class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer"
+        scope="prototype">
+    <property name="featureCommitInterval" value="${es.index.features.featureCommitInterval}"/>
+    <property name="applyPrecisionModel" value="${es.index.features.applyPrecisionModel}"/>
+    <property name="numberOfDecimals" value="${es.index.features.numberOfDecimals}"/>
   </bean>
 
   <bean id="esClient"

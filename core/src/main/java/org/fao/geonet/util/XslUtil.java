@@ -58,6 +58,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
@@ -722,7 +723,7 @@ public final class XslUtil {
         if (context != null) baseUrl = context.getBaseUrl();
 
         SettingInfo si = new SettingInfo();
-        return si.getSiteUrl() + "/" + baseUrl;
+        return si.getSiteUrl() + (!baseUrl.startsWith("/")?"/":"") + baseUrl;
     }
 
     public static String getLanguage() {
@@ -835,5 +836,27 @@ public final class XslUtil {
                 }
             }
         });
+    }
+
+
+    /**
+     * Utility method to retrieve the thesaurus dir from xsl processes.
+     *
+     * Usage:
+     *
+     *    <xsl:stylesheet
+     *      xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+     *      ...
+     *      xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     *
+     *     <xsl:variable name="thesauriDir" select="java:getThesaurusDir()"/>
+     *
+     * @return Thesaurus directory
+     */
+    public static String getThesaurusDir() {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
+
+        return thesaurusManager.getThesauriDirectory().toString();
     }
 }

@@ -233,10 +233,17 @@ div.gn-scroll-spy {
   overflow: auto;
   background-color: @panel-bg;
   border-left: 1px solid @panel-default-border;
+  .close {
+    position: absolute;
+    z-index: 100;
+    right: 15px;
+    font-size: 24px;
+  }
   .btn-toolbar {
     position: fixed;
     bottom: 10px;
     right: 10px;
+    z-index: 100;
     button {
       .pull-right();
       &:hover {
@@ -872,6 +879,13 @@ input.ng-invalid {
         }
       }
     }
+  }
+}
+
+// indexing task status
+gn-indexing-task-status {
+  .progress {
+    margin: 0px;
   }
 }
 

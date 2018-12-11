@@ -15,15 +15,6 @@
   <!-- /.panel-heading -->
   <div class="panel-body">
     <div class="btn-toolbar" role="toolbar">
-      <button type="button" class="btn btn-default btn-xs"
-              data-ng-click="load();$event.stopPropagation();"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="{{'runValidation' | translate}}">
-        <i data-ng-hide="loading" class="fa fa-fw fa-refresh"></i>
-        <i data-ng-show="loading" class="fa fa-fw fa-spinner fa-spin"></i>
-        <span data-translate="">runValidation</span>
-      </button>
 
       <div class="pull-right">
         <div class="btn-group ">
@@ -49,13 +40,14 @@
     </div>
     <!-- /.btn-toolbar -->
     <div class="gn-validation-report gn-margin-top" data-ng-show="ruleTypes.length !== 0">
-      <div data-ng-repeat="type in ruleTypes"
+      <div class="panel panel-default"
+           data-ng-repeat="type in ruleTypes"
            data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
-        <div class="row">
+        <div data-gn-slide-toggle="" class="panel-heading clearfix">
           <div class="col-md-9">
             <h2 class="gn-schematron-title">{{(type.label || type.id) | translate}}</h2>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3 gn-nopadding-right">
             <span class="label pull-right"
                   data-ng-class="labelImportanceClass(type)"
                   data-ng-if="type.total === '?'">
@@ -70,16 +62,19 @@
                   data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>
           </div>
         </div>
-        <ul class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
-          <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
-              title="{{rule.details}}"
-              data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
-              data-ng-class="rule.type !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
-            <strong>{{pattern.title}}</strong>
-            <p>{{rule.msg}}</p>
-          </li>
-        </ul>
+        <div class="panel-body">
+          <ul class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
+            <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
+                title="{{rule.details}}"
+                data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
+                data-ng-class="rule.type !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
+              <p data-ng-class="rule.msg ? 'text-bold' : ''">{{pattern.title}}</p>
+              <p data-ng-show="rule.msg">{{rule.msg}}</p>
+            </li>
+          </ul>
+        </div>
       </div>
+
     </div>
   </div>
   <!-- /.panel-body -->

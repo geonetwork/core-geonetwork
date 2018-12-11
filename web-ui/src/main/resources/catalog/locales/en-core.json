@@ -313,6 +313,7 @@
     "_status": "Status",
     "_schema": "Standard",
     "checkCapabilityUrl": "URL {{url}} returned status '{{status}}'. You should check the URL or check that the service is running.",
+    "checkCapabilityUrlUnauthorized": "URL {{url}} returned status '{{status}}'. That means that this service require authentication. Try to connect to it first.",
     "failedToParseCapabilities": "Failed to parse GetCapabilities operation response. Try again later or contact service provider.",
     "layerIsAlreadyInMap": "Layer '{{layer}}' from service '{{url}}' is already loaded in current map. Click <a href=\"#map?extent={{extent}}&activate={{layer}}\">here to zoom to it</a>.",
     "layerStylesAvailable": " layer styles available:",
@@ -408,5 +409,11 @@
     "listTypeBlocks": "Switch to Blocked list",
     "listTypeLarge": "Switch to Large list",
     "listTypeSmall": "Switch to Small list",
-    "layersWithWhiteSpaces": "Some layers on this map contains white spaces on their name. Layers with white spaces may not be properly printed."
+    "layersWithWhiteSpaces": "Some layers on this map contains white spaces on their name. Layers with white spaces may not be properly printed.",
+    "unselected": "unselected",
+    "indexingTaskUndefined": "Unknow indexing task (abnormal state)",
+    "indexingTaskRunning": "Indexing {{total}} records...",
+    "indexingTaskFinished": "Indexing finished, {{total}} records processed",
+    "indexingTaskFinishedWithErrors": "Indexing finished, {{total}} records processed with {{errors}} errors",
+    "indexingTaskCanceled": "Indexing canceled"
 }

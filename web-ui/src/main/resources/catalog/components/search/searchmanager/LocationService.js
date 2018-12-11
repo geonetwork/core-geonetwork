@@ -39,6 +39,7 @@
       gnExternalViewer) {
 
       this.SEARCH = '/search';
+      this.SEARCHPAGES = /\/search|\/board/;
       this.MAP = '/map';
       this.METADATA = '/metadata/';
       this.HOME = '/home';
@@ -58,8 +59,8 @@
       };
       /** ---- **/
 
-      this.isSearch = function() {
-        return $location.path() == this.SEARCH;
+      this.isSearch = function(path) {
+        return (path || $location.path()).match(this.SEARCHPAGES) !== null;
       };
 
       this.isMdView = function(path) {
@@ -100,7 +101,7 @@
       };
 
       this.setSearch = function(params) {
-        $location.path(this.SEARCH);
+        $location.path(state.current.path);
         if (params) {
           $location.search(params);
         }
@@ -158,8 +159,8 @@
           }
           $rootScope.$broadcast('locationBackToSearch');
         }
-        if (state.old.path == that.SEARCH &&
-            state.current.path != that.SEARCH) {
+        if (that.isSearch(state.old.path) &&
+            !that.isSearch(state.current.path)) {
           state.lastSearchParams = state.old.params;
           that.lastSearchUrl = oldUrl;
         }

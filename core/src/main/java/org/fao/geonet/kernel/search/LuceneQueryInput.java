@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +42,7 @@ public class LuceneQueryInput extends UserQueryInput {
 
     private String owner;
     private Set<String> groups;
+    private Set<String> editableGroups;
     private Set<String> groupOwners;
     private boolean isReviewer;
     private boolean isUserAdmin;
@@ -67,7 +69,18 @@ public class LuceneQueryInput extends UserQueryInput {
                 groups.add(groupE.getText());
             }
             setGroups(groups);
+        }     
+        
+        @SuppressWarnings("unchecked")
+        List<Element> groupsEd = (List<Element>)jdom.getChildren(SearchParameter.GROUPEDIT);
+        Set<String> groups = new HashSet<String>();
+        if(groupsEd != null) {
+            for(Element groupEd : groupsEd) {
+                groups.add(((Element)groupEd).getText());
+            }
         }
+        setEditableGroups(groups);
+        
         @SuppressWarnings("unchecked")
         List<Element> groupOwnersE = (List<Element>) jdom.getChildren(SearchParameter.GROUPOWNER);
         Set<String> groupOwners = new LinkedHashSet<String>();
@@ -133,6 +146,18 @@ public class LuceneQueryInput extends UserQueryInput {
             this.groups = new LinkedHashSet<String>();
         }
         this.groups = groups;
+    }
+
+
+    public Set<String> getEditableGroups() {
+        if(this.editableGroups == null) {
+            this.editableGroups = new HashSet<String>();
+        }
+        return editableGroups;
+    }
+
+    public void setEditableGroups(Set<String> editableGroups) {
+        this.editableGroups = editableGroups;
     }
 
     public boolean getReviewer() {

@@ -124,6 +124,10 @@
       <artifactId>spring-web</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jolokia</groupId>
+      <artifactId>jolokia-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
@@ -375,6 +379,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>inspire-atom</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>doi</artifactId>
       <version>${project.version}</version>
     </dependency>
 

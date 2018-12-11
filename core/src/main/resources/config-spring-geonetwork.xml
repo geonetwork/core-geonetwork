@@ -172,4 +172,6 @@
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory"/>
 
+  <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false"/>
+
 </beans>

@@ -29,13 +29,13 @@
   module.factory('gnIndexWfsFilterConfig', ['gnHttp', function(gnHttp) {
 
     return {
-      url: gnHttp.getService('indexproxy'),
+      url: gnHttp.getService('featureindexproxy'),
       docTypeIdField: 'id',
       docIdField: 'featureTypeId',
       idDoc: function(config) {
         this.params = config;
-        return config.wfsUrl + '#' +
-            config.featureTypeName.replace(':', '\\:');
+        return encodeURIComponent(config.wfsUrl + '#' + config.featureTypeName);
+            // config.featureTypeName.replace(':', '\\:');
       },
       facets: true,
       stats: true,

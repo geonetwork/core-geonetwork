@@ -135,8 +135,9 @@
                   select="starts-with($type, 'data-') and ends-with($type, '-div')"/>
     <xsl:choose>
       <xsl:when test="$isDivLevelDirective">
-        <div class="form-group" id="gn-el-{$editInfo/@ref}">
-          <div class="col-lg-10">
+        <div class="form-group gn-field" id="gn-el-{$editInfo/@ref}">
+          <!-- The DIV directive MUST populate the 11 slot of space available-->
+          <span>
             <xsl:choose>
               <xsl:when test="$isMultilingual">
                 <xsl:attribute name="{$type}">
@@ -157,8 +158,8 @@
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
-          </div>
-          <div class="col-lg-2 gn-control">
+          </span>
+          <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>

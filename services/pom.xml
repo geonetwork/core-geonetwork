@@ -63,7 +63,11 @@
       <artifactId>domain</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>doi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -110,7 +114,6 @@
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
-
 
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -174,7 +177,16 @@
       <version>0.6.0</version>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!-- Apache commons csv -->
     <dependency>
       <groupId>org.apache.commons</groupId>

@@ -36,6 +36,7 @@
   goog.require('WFS_1_0_0');
   goog.require('WFS_1_1_0');
   goog.require('WFS_2_0');
+  goog.require('WCS_1_1');
   goog.require('XLink_1_0');
 
   var module = angular.module('gn_ows_service', [
@@ -54,16 +55,17 @@
       }
       );
   var context110 = new Jsonix.Context(
-      [XLink_1_0, OWS_1_0_0,
+      [XLink_1_0, OWS_1_1_0, OWS_1_0_0,
        Filter_1_1_0,
        GML_3_1_1,
        SMIL_2_0, SMIL_2_0_Language,
-       WFS_1_1_0],
+       WFS_1_1_0, WCS_1_1],
       {
         namespacePrefixes: {
           'http://www.w3.org/1999/xlink': 'xlink',
           'http://www.opengis.net/ows/1.1': 'ows',
-          'http://www.opengis.net/wfs': 'wfs'
+          'http://www.opengis.net/wfs': 'wfs',
+          'http://www.opengis.net/wcs': 'wcs'
         }
       }
       );
@@ -142,6 +144,18 @@
           //result.contents.Layer = result.contents.layers;
           result.Contents.operationsMetadata = result.OperationsMetadata;
           return result.Contents;
+        };
+
+        var parseWCSCapabilities = function(data) {
+          var version = '1.1.1';
+
+          try {
+            var xml = $.parseXML(data);
+            var xfsCap = unmarshaller110.unmarshalDocument(xml).value;
+            return xfsCap;
+          } catch (e){
+            console.warn(e);
+          }
         };
 
         var parseWFSCapabilities = function(data) {
@@ -257,7 +271,8 @@
                     })
                     .error(function(data, status) {
                       defer.reject(
-                      $translate.instant('checkCapabilityUrl',
+                      $translate.instant(
+                        status === 401 ? 'checkCapabilityUrlUnauthorized' : 'checkCapabilityUrl',
                       {url: url, status: status}));
                     });
               }
@@ -327,6 +342,40 @@
                     })
                     .error(function(data, status, headers, config) {
                       defer.reject($translate.instant('wfsGetCapabilitiesFailed'));
+                    });
+              }
+            }
+            return defer.promise;
+          },
+
+          getWCSCapabilities: function(url, version) {
+            var defer = $q.defer();
+            if (url) {
+              defaultVersion = '1.1.0';
+              version = version || defaultVersion;
+              url = mergeDefaultParams(url, {
+                REQUEST: 'GetCapabilities',
+                service: 'WCS',
+                version: version
+              });
+
+              if (gnUrlUtils.isValid(url)) {
+                $http.get(url, {
+                  cache: true
+                })
+                    .success(function(data, status, headers, config) {
+                      var xfsCap = parseWCSCapabilities(data);
+
+                      if (!xfsCap || xfsCap.exception != undefined) {
+                        defer.reject({msg: 'wcsGetCapabilitiesFailed',
+                          owsExceptionReport: xfsCap});
+                      } else {
+                        defer.resolve(xfsCap);
+                      }
+
+                    })
+                    .error(function(data, status, headers, config) {
+                      defer.reject(status);
                     });
               }
             }

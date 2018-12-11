@@ -92,17 +92,19 @@
              return defer.promise;
            },
 
-           getCodelist: function(config) {
+           getCodelist: function(config, displayIf) {
              var defer = $q.defer();
-             var fromCache = infoCache.get(config);
+             var cacheKey = config + (displayIf || '');
+             var fromCache = infoCache.get(cacheKey);
              if (fromCache) {
                defer.resolve(fromCache);
              } else {
                var info = config.split('|');
-               $http.get('../api/standards/' + info[0] +
-               '/codelists/' + info[1] + '/details')
+               var url = '../api/standards/' + info[0] +
+                 '/codelists/' + info[1] + '/details';
+               $http.get(url + (displayIf ? '?displayIf=' + encodeURIComponent(displayIf) : ''))
                .success(function(data) {
-                 infoCache.put(config, data);
+                 infoCache.put(cacheKey, data);
                  defer.resolve(data);
                });
              }

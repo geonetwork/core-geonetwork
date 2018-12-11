@@ -316,8 +316,8 @@
     facetConfig: 'search/facet/config',
     selectionLayers: 'selection.layers',
 
-    // wfs indexing
-    indexproxy: '../../index'
+    featureindexproxy: '../../index/features',
+    indexproxy: '../../index/records'
   });
 
 

@@ -75,7 +75,7 @@
           "stringPathType": {
             "match": "ft_*_s_tree",
             "mapping": {
-              "type":     "string",
+              "type":     "keyword",
               "fielddata": true,
               "analyzer": "pathAnalyzer",
               "search_analyzer": "keyword"

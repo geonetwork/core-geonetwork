@@ -1187,8 +1187,8 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#EU/EEA39"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/CZE">
-    <skos:prefLabel xml:lang="en">Czech Republic</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Czech Republic</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Czechia</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Czechia</skos:prefLabel>
     <skos:altLabel>CZE</skos:altLabel>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">

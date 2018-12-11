@@ -413,8 +413,10 @@
         scope: {
           collection: '='
         },
-        template: "<ul class='list-group'><gn-cap-tree-elt " +
-            "ng-repeat='member in collection' member='member'>" +
+        template: "<ul class='list-group'><li data-ng-show='collection.length > 10' >" +
+            "<input class='form-control' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/>" +
+            "</li>" +
+            "<gn-cap-tree-elt ng-repeat='member in collection | filter:layerSearchText' member='member'>" +
             '</gn-cap-tree-elt></ul>'
       };
     }]);
@@ -453,7 +455,7 @@
           };
 
           scope.addLayer = function(c) {
-            controller.addLayer(scope.member, c ? c.Name : null);
+            controller.addLayer(scope.member, c ? c : null);
           };
 
           scope.isParentNode = angular.isDefined(scope.member.Layer);

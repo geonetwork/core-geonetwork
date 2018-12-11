@@ -179,14 +179,21 @@
             <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
           </xsl:for-each>
 
-          <!-- Publication year -->
-          <xsl:variable name="publicationDate"
-                        select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
+          <!-- Publication year: use last publication date -->
+          <xsl:variable  name="publicationDate">
+            <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[
                                     gmd:dateType/*/@codeListValue = 'publication']/
-                                      gmd:date/gco:*"/>
+                                      gmd:date/gco:*">
+              <xsl:sort select="." order="descending" />
 
-          <xsl:if test="$publicationDate != ''">
-            (<xsl:value-of select="substring($publicationDate, 1, 4)"/>)
+              <xsl:if test="position() = 1">
+                <xsl:value-of select="." />
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <xsl:if test="normalize-space($publicationDate) != ''">
+            (<xsl:value-of select="substring(normalize-space($publicationDate), 1, 4)"/>)
           </xsl:if>
 
           <xsl:text>. </xsl:text>
@@ -217,7 +224,6 @@
       </tr>
     </table>
   </xsl:template>
-
 
 
 
@@ -798,6 +804,24 @@
     <xsl:if test="@uom">
       &#160;<xsl:value-of select="@uom"/>
     </xsl:if>
+  </xsl:template>
+
+  <!-- filename -->
+  <xsl:template mode="render-value"
+                match="gmx:FileName[@src != '']">
+    <xsl:variable name="href" select="@src"/>
+    <xsl:variable name="label" select="."/>
+
+    <xsl:choose>
+      <xsl:when test="matches($href, $imageExtensionsRegex, 'i')">
+        <img src="{$href}" title="{$label}" alt="{$label}"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <a href="{$href}">
+          <xsl:value-of select="$label"/>&#160;
+        </a>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- ... URL -->

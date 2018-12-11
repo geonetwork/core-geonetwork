@@ -79,7 +79,8 @@
         <form id="gn-editor-{$metadataId}"
               name="gnEditor" accept-charset="UTF-8" method="POST"
               novalidate="" class="form-horizontal gn-editor gn-tab-{$tab}" role="form"
-              data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy">
+              data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy"
+              autocomplete="off">
 
           <input type="hidden" id="schema" value="{$schema}"/>
           <input type="hidden" id="template" name="template" value="{$isTemplate}"/>

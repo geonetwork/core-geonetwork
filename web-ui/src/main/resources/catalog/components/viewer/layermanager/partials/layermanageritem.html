@@ -27,7 +27,8 @@
                 </a>
               </li>
 
-              <li role="menuitem">
+              <!-- TODO ? No style selector for WFS-->
+              <li role="menuitem" data-ng-if="::!layer.get('wfs') && layer.get('style').length > 0">
                 <label data-translate="">selectStyle</label>
                 <div data-gn-layer-styles="layer.get('style')"
                      data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
@@ -89,7 +90,7 @@
                   data-ng-show="layer.get('errors').length > 0"
                   role="menuitem">
                 <p data-ng-repeat="e in layer.get('errors')"
-                  data-ng-bind-html="e"></p>
+                   data-ng-bind-html="e"></p>
               </li>
 
             </ul>
@@ -104,19 +105,23 @@
       <div class="width-100 flex-grow">
         <span class="gn-layer-ordering btn-group pull-right">
           <a href="" class="btn btn-default btn-sm fa fa-arrow-up"
-            ng-disabled="$first"
-            ng-click="moveLayer(layer, 1)"
-            title="{{'layerMoveUp'|translate}}"></a>
+             ng-disabled="$first"
+             ng-click="moveLayer(layer, 1)"
+             title="{{'layerMoveUp'|translate}}"></a>
           <a href="" class="btn btn-default btn-sm fa fa-arrow-down"
-            ng-disabled="$last"
-            ng-click="moveLayer(layer, -1)"
-            title="{{'layerMoveDown'|translate}}"></a>
+             ng-disabled="$last"
+             ng-click="moveLayer(layer, -1)"
+             title="{{'layerMoveDown'|translate}}"></a>
+           <a href=""
+              class="btn btn-default btn-sm fa fa-times"
+              data-ng-click="removeLayer(layer, map)"
+             title="{{'layerDelete'|translate}}"></a>
         </span>
         <label for="layer-{{$index}}">
           <span data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''">
             {{layer.get('label')}}
             <small><em>
-              {{layer.get('currentStyle') ? '(' + layer.get('currentStyle').Title || layer.get('currentStyle').Name + ')' : ''}}
+              {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title || layer.get('currentStyle').Name) + ')' : ''}}
             </em></small>
           </span>
         </label>

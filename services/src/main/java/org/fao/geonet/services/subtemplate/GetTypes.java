@@ -73,7 +73,7 @@ public class GetTypes implements Service {
                 try {
                     String schema = record.getChildText("schemaid");
                     String name = StandardsUtils.findNamespace(record.getChildText("type"), scm, (schema == null ? "iso19139" : schema));
-                    Element info = StandardsUtils.getHelp(scm, "labels.xml", schema, name, "", "", "", context);
+                    Element info = StandardsUtils.getHelp(scm, "labels.xml", schema, name, "", "", "", null, context);
                     if (info != null) {
                         for (String childName : elementNames) {
                             Element child = info.getChild(childName);

@@ -813,16 +813,27 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.10</version>
+        <version>4.12</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
-        <version>1.9.5</version>
+        <version>1.10.19</version>
         <scope>test</scope>
       </dependency>
-
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-mockito</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
       <dependency>
         <groupId>org.xmlunit</groupId>
         <artifactId>xmlunit-core</artifactId>
@@ -955,6 +966,16 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-aspects</artifactId>
         <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jmx</artifactId>
+        <version>2.0.8</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jolokia</groupId>
+        <artifactId>jolokia-core</artifactId>
+        <version>${jolokia.version}</version>
       </dependency>
       <!-- http://springfox.github.io/springfox/docs/current/ -->
       <dependency>
@@ -1193,6 +1214,7 @@
     <module>services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
+    <module>doi</module>
     <module>es</module>
     <module>release</module>
     <module>workers</module>
@@ -1274,14 +1296,17 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>6.4.0</es.version>
-    <es.version.sha512>6f465378a51c487f1f6a84a0843ac1038db60170ee8a5d96874a759f6dbbf2de9f7bcbbf55616f49f28f1098c82f2e585c917267d02b8b1f43627a1984b3da66</es.version.sha512>
+    <es.version>6.4.2</es.version>
+    <es.version.sha512>23c610a8cd33d4229e8b79b0dc5e1f106e5f186d45c83e9994bb15708d2ce4e763fcb7c9be0f652ebdf12905be7f4ced14e1d8e18f6240dfe5ccb4a064239f86</es.version.sha512>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>
-    <es.index.features>features</es.index.features>
-    <es.index.records>records</es.index.records>
-    <es.index.searchlogs>searchlogs</es.index.searchlogs>
+    <es.index.features>gn-features</es.index.features>
+    <es.index.features.type>features</es.index.features.type>
+    <es.index.records>gn-records</es.index.records>
+    <es.index.records.type>records</es.index.records.type>
+    <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
+    <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
 
     <!-- to load spring configurations related to es and camel,
     you should use maven "es" profile (defined in web).
@@ -1292,7 +1317,7 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.sha512>ae0f6ede637bf373e44eb5711b5a07ce726bb72009d792c8e9a16d7eb32b2361cdda556a19c3f5fd50207320e86950217cf5e9a1a06607004d4b7f30d3dbb344</kb.version.sha512>
+    <kb.version.sha512>b3b422c3bd157e363f528a27f5243f2ee13eba3e3bb22e1a7a9f24ea33f75b864643e297047379dfbef040a0eaa05ed6d998dd2cfe798b9d058f5b3d346f4d1d</kb.version.sha512>
     <kb.port>5601</kb.port>
     <kb.url>http://localhost:${kb.port}</kb.url>
 
@@ -1328,8 +1353,7 @@
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
-
-    <wro.version>1.7.7</wro.version>
+    <wro.version>1.7.9</wro.version>
     <wro.debug>false</wro.debug>
 
     <node.version>v8.11.1</node.version>
@@ -1342,6 +1366,7 @@
     <log4j2.version>2.7</log4j2.version>
     <slf4j.version>1.7.7</slf4j.version>
     <xbean.version>3.18</xbean.version>
+    <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
     <gn.schemas.version>3.5</gn.schemas.version>
   </properties>
