@@ -278,6 +278,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             _logger.info("         - Java migration class:" + className);
 
             DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
+            task.setContext(_applicationContext);
             task.update(conn);
             return false;
         } catch (SQLException e) {
