@@ -226,15 +226,14 @@ public class EsClient implements InitializingBean {
     /**
      * Analyze a field and a value against the index
      * or query phase and return the first value generated
-     * by the specified filterClass.
-     * <p>
-     * If an exception occured, the field value is returned.
+     * by the specified analyzer. For now mainly used for
+     * synonyms analysis.
      *
-     * TODO: Logger.
-     * </p>
+     * See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-analyze.html
+     *
      * @param fieldValue    The field value to analyze
      *
-     * @return The analyzed string value if found or the field value if not found.
+     * @return The analyzed string value if found or empty text if not found or if an exception occured.
      */
     public static String analyzeField(String collection,
                                       String analyzer,
@@ -245,7 +244,7 @@ public class EsClient implements InitializingBean {
             // Replace , as it is meaningful in synonym map format
             .text(fieldValue.replaceAll(",", ""))
             .build();
-
+        String analyzedValue = "";
         try {
             JestResult result = EsClient.get().getClient().execute(analyze);
 
@@ -255,7 +254,7 @@ public class EsClient implements InitializingBean {
                     JsonObject token = tokens.get(0).getAsJsonObject();
                     String type = token.get("type").getAsString();
                     if ("SYNONYM".equals(type) || "word".equals(type)) {
-                        return token.get("token").getAsString();
+                        analyzedValue = token.get("token").getAsString();
                     }
                 }
                 return "";

@@ -183,23 +183,29 @@
               isWfsAvailable: undefined,
               isFeaturesIndexed: false,
               status: null,
+              // FIXME: On page reload the md is undefined and the filter does not work
               md: scope.layer.get('md'),
               mdUrl: scope.layer.get('url'),
-              url: scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs')
+              url: gnGlobalSettings.getNonProxifiedUrl(
+                scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs'))
             });
 
             uuid = scope.md && scope.md.getUuid();
-            ftName = scope.featureTypeName ||
-                scope.layer.getSource().getParams().LAYERS;
+            // FIXME ? This comes from Sextant probably and
+            // does not work here when current layer change
+            // the previous featureTypeName is still used.
+            // ftName = scope.featureTypeName ||             ftName = scope.featureTypeName ||
+;
+            ftName = scope.layer.getSource().getParams().LAYERS;
             scope.featureTypeName = ftName;
 
             appProfile = null;
             appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
                 ftName,
-                scope.wfsUrl ? scope.url : scope.mdUrl,
+                gnGlobalSettings.getNonProxifiedUrl(scope.wfsUrl ? scope.url : scope.mdUrl),
                 // A WFS URL is in the metadata or we're guessing WFS has
                 // same URL as WMS
-                scope.wfsUrl ? 'WFS' : 'WMS').then(
+                scope.wfsUrl ? 'WFS' : 'WFS').then(
                 function(response) {
                   if (response.status == 200) {
                     appProfile = angular.fromJson(response.data['0']);
@@ -221,8 +227,7 @@
            * @return {HttpPromise} promise
            */
           scope.checkWFSServerUrl = function() {
-            return $http.get(gnGlobalSettings.proxyUrl +
-                encodeURIComponent(scope.url))
+            return $http.get(scope.url)
                 .then(function() {
                   scope.isWfsAvailable = true;
                 }, function() {

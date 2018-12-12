@@ -322,6 +322,11 @@ Element to match for creating the table.
                 </xs:documentation>
               </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="label" type="xs:string" use="optional">
+              <xs:annotation>
+                <xs:documentation>Table header label (from strings.xml), if not defined is used the value of attribute 'for' use the related element label from labels.xml</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
             <xs:sequence>
               <xs:element maxOccurs="1" ref="header"/>
               <xs:element maxOccurs="1" ref="row"/>
@@ -479,6 +484,7 @@ relevant to have parent defined to have more control over the list.
       </xs:attribute>
       <xs:attribute ref="use"/>
       <xs:attribute ref="addDirective"/>
+      <xs:attribute name="xpath" type="xs:string" use="optional"/>
     </xs:complexType>
   </xs:element>
 

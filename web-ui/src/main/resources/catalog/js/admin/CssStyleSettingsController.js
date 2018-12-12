@@ -48,29 +48,49 @@
 
       $scope.saveCssStyleSettings = function(formId) {
 
-    	  $http.post('../api/customstyle',
-    			  formId)
-    			  .success(function(data) {
-    				  $http({
-    					  method: 'GET',
-    					  url: '../../static/wroAPI/reloadModel',
-    					  headers: {'Content-Type': 'text/plain'}
-    				  }).then(function(data) {
-    					  $http({
-    						  method: 'GET',
-    						  url: '../../static/wroAPI/reloadCache',
-    						  headers: {'Content-Type': 'text/plain'}
-    					  }).then(function(data) {
-    						  $window.location.reload(); });
-    				  });
-            })
-            .error(function(data) {
+        $http.post('../api/customstyle',
+            formId)
+            .then(function(data) {
+              $http({
+                method: 'GET',
+                url: '../../static/wroAPI/reloadModel',
+                headers: {'Content-Type': 'text/plain'}
+              }).then(function(data) {
+                $http({
+                  method: 'GET',
+                  url: '../../static/wroAPI/reloadCache',
+                  headers: {'Content-Type': 'text/plain'}
+                }).then(function(data) {
+                  $window.location.reload(); });
+              });
+            }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('settingsUpdateError'),
-                error: data,
+                msg: error.message || error,
                 timeout: 0,
                 type: 'danger'});
             });
+
+      };
+
+      $scope.uploadCssStyleSettings = function(cssJsonContent){
+
+        if(cssJsonContent) {
+          $scope.saveCssStyleSettings(cssJsonContent);
+        } else {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate.instant('settingsUpdateError'),
+            msg: 'No data',
+            timeout: 0,
+            type: 'danger'});
+        }
+      };
+
+      $scope.restoreDefaultCssStyleSettings = function(formId){
+        angular.forEach(formId, function(value, key) {
+          $scope.gnCssStyle[key] = '';
+        });
+        $scope.saveCssStyleSettings(formId);
       };
 
     }]);

@@ -91,7 +91,7 @@ goog.require('gn_share');
         var myListener = $rootScope.$on(eventName,
             function(e, o) {
               $timeout(function() {
-                popup.close();
+                popup.modal('hide');
               }, 0);
               myListener();
             });

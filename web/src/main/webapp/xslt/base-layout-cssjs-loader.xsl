@@ -69,7 +69,7 @@
 
 
     <xsl:if test="$isRecaptchaEnabled and $service = 'new.account'">
-      <script src='https://www.google.com/recaptcha/api.js'></script>
+      <script src="https://www.google.com/recaptcha/api.js"></script>
     </xsl:if>
 
     <xsl:choose>
@@ -163,7 +163,7 @@
         <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
         <!--</xsl:if>-->
 
         <script src="{$uiResourcesPath}lib/underscore/underscore-min.js?v={$buildNumber}"></script>

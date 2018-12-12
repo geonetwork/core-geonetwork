@@ -77,7 +77,7 @@ public class EsSearchManager implements ISearchManager {
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
 
-    @Value("${es.index.records}")
+    @Value("${es.index.records:gn-records}")
     private String index = "records";
 
     @Value("${es.index.records.type:records}")
@@ -341,7 +341,7 @@ public class EsSearchManager implements ISearchManager {
                                 }
                             } else if (name.equals("geojson")) {
                                 doc.put("geom", node.getTextNormalize());
-                            // Skip some fields causing errors / TODO
+                                // Skip some fields causing errors / TODO
                             } else if (!name.startsWith("conformTo_")) {
                                 if (isObject) {
                                     try {
@@ -655,8 +655,8 @@ public class EsSearchManager implements ISearchManager {
                                       String fieldValue) {
 
         return EsClient.analyzeField(
-                            ApplicationContextHolder.get().getBean(EsSearchManager.class).getIndex(),
-                            analyzer,
-                            fieldValue);
+            ApplicationContextHolder.get().getBean(EsSearchManager.class).getIndex(),
+            analyzer,
+            fieldValue);
     }
 }

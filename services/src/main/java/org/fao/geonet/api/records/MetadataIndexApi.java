@@ -148,7 +148,7 @@ public class MetadataIndexApi {
             }
         }
         index = ids.size();
-        new BatchOpsMetadataReindexer(dataManager, ids).process();
+        new BatchOpsMetadataReindexer(dataManager, ids).process(false);
 
         JSONObject res = new JSONObject();
         res.put("success", true);

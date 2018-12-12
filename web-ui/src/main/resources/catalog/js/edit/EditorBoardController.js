@@ -52,11 +52,18 @@
           gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.defaultSearchObj = {
-        permalink: false,
+        permalink: true,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'e101',
         params: {
+          sortBy: 'changeDate',
+          _isTemplate: 'y or n',
+          resultType: $scope.facetsSummaryType,
+          from: 1,
+          to: 20
+        },
+        defaultParams: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',
           resultType: $scope.facetsSummaryType,

@@ -37,12 +37,24 @@
         <value>gmd:identificationInfo/*/gmd:citation/*/gmd:title/*/gmd:textGroup/gmd:LocalisedCharacterString</value>
       </util:list>
     </property>
+    <property name="elementsToProcess">
+      <util:list value-type="java.lang.String">
+        <value>gco:CharacterString</value>
+        <value>gmx:Anchor</value>
+        <value>gmd:featureTypes</value>
+      </util:list>
+    </property>
     <property name="savedQueries">
       <list>
         <bean class="org.fao.geonet.kernel.schema.SavedQuery">
           <property name="id" value="wfs-indexing-config"/>
           <property name="xpath"
-                    value="*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, '{{protocol}}') and gmd:name/gco:CharacterString = '{{name}}' and (gmd:linkage/gmd:URL = '{{url}}' or gmd:linkage/gmd:URL = translate('{{url}}', 'wfs', 'wms'))]/gmd:applicationProfile/gco:CharacterString/text()"/>
+                    value="*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, '{{protocol}}') and gmd:name/gco:CharacterString = '{{name}}' and (gmd:linkage/gmd:URL = '{{url}}' or gmd:linkage/gmd:URL = translate('{{url}}', 'wms', 'wfs'))]/gmd:applicationProfile/gco:CharacterString/text()"/>
+        </bean>
+        <bean class="org.fao.geonet.kernel.schema.SavedQuery">
+          <property name="id" value="doi-get"/>
+          <property name="xpath"
+                    value="*//gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString = 'DOI']/gmd:linkage/gmd:URL/text()"/>
         </bean>
       </list>
     </property>

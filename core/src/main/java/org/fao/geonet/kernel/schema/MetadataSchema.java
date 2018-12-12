@@ -34,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -49,6 +50,7 @@ import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
 import java.io.FileNotFoundException;
@@ -616,6 +618,32 @@ public class MetadataSchema {
             String filename = entry.getFileName().toString();
             return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX) && filename.endsWith(XSL_FILE_EXTENSION);
         }
+    }
+
+    /**
+     * Query XML document with one of the saved query
+     * to retrieve a simple string value.
+     *
+     * @param savedQuery {@link SavedQuery}
+     * @param xml
+     */
+    public String queryString(String savedQuery, Element xml) throws ResourceNotFoundException, JDOMException {
+        SavedQuery query = schemaPlugin.getSavedQuery(savedQuery);
+        if (query == null) {
+            throw new ResourceNotFoundException(String.format(
+                "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
+                savedQuery, getName(), schemaPlugin.getSavedQueries()));
+        }
+
+        String xpath = query.getXpath();
+        if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+            Log.error(Geonet.SCHEMA_MANAGER, String.format(
+                "Saved query XPath: %s", xpath));
+        }
+
+        return Xml.selectString(xml,
+            xpath,
+            getNamespaces());
     }
 }
 

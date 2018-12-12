@@ -274,7 +274,8 @@
                     })
                     .error(function(data, status) {
                       defer.reject(
-                      $translate.instant('checkCapabilityUrl',
+                      $translate.instant(
+                        status === 401 ? 'checkCapabilityUrlUnauthorized' : 'checkCapabilityUrl',
                       {url: url, status: status}));
                     });
               }

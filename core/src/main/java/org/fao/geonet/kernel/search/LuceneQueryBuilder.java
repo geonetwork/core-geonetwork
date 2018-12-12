@@ -960,26 +960,35 @@ public class LuceneQueryBuilder {
     private void addPrivilegeQuery(LuceneQueryInput luceneQueryInput, BooleanQuery query) {
         // Set user groups privileges
         Set<String> groups = luceneQueryInput.getGroups();
-        String editable$ = luceneQueryInput.getEditable();
-        boolean editable = BooleanUtils.toBoolean(editable$);
+        Set<String> editableGroups = luceneQueryInput.getEditableGroups();
         BooleanQuery groupsQuery = new BooleanQuery();
         boolean groupsQueryEmpty = true;
         BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-        if (!CollectionUtils.isEmpty(groups)) {
-            for (String group : groups) {
+
+        if (!CollectionUtils.isEmpty(editableGroups)) {
+        	Log.trace(Geonet.SEARCH_ENGINE, "We have editable groups to add");
+            for (String group : editableGroups) {
                 if (StringUtils.isNotBlank(group)) {
-                    if (!editable) {
-                        // add to view
-                        TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
-                        BooleanClause viewClause = new BooleanClause(viewQuery, groupOccur);
-                        groupsQueryEmpty = false;
-                        groupsQuery.add(viewClause);
-                    }
+                	Log.trace(Geonet.SEARCH_ENGINE, " > Group: " + group);
                     // add to edit
                     TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, group.trim()));
                     BooleanClause editClause = new BooleanClause(editQuery, groupOccur);
                     groupsQueryEmpty = false;
                     groupsQuery.add(editClause);
+                }
+            }
+        }
+        
+        if (!CollectionUtils.isEmpty(groups)) {
+        	Log.trace(Geonet.SEARCH_ENGINE, "We have viewable groups to add");
+            for (String group : groups) {
+                if (StringUtils.isNotBlank(group)) {
+                	Log.trace(Geonet.SEARCH_ENGINE, " > Group: " + group);
+                    // add to view
+                    TermQuery viewQuery = new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
+                    BooleanClause viewClause = new BooleanClause(viewQuery, groupOccur);
+                    groupsQueryEmpty = false;
+                    groupsQuery.add(viewClause);
                 }
             }
         }

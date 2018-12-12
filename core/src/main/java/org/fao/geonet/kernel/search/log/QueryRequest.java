@@ -339,8 +339,8 @@ public class QueryRequest {
 
     public boolean storeToEs(String index, String indexType) {
         if (client == null) {
-          Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
-          return false;
+            Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
+            return false;
         }
 
         Map<String, String> listOfDocumentsToIndex = new HashMap<>();

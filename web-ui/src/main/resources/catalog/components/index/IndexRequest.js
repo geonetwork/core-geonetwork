@@ -50,7 +50,7 @@
 
   geonetwork.gnIndexRequest = function(config, $injector) {
 
-    this.ES_URL = config.url + '/_search';
+    this.ES_URL = config.url + '?_=_search';
 
     this.$http = $injector.get('$http');
     this.$q = $injector.get('$q');

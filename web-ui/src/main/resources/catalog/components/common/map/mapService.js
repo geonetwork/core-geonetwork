@@ -1210,10 +1210,11 @@
               layer.set('errors', errors);
               layer.set('featureTooltip', true);
               layer.set('url', url);
+              layer.set('wfs', url);
               ngeoDecorateLayer(layer);
               layer.displayInLayerManager = true;
-              layer.set('label', getCapLayer.name.prefix + ':' +
-                  getCapLayer.name.localPart);
+              layer.set('label', getCapLayer.title ||
+                (getCapLayer.name.prefix + ':' + getCapLayer.name.localPart));
               return layer;
             }
 
@@ -1391,11 +1392,12 @@
                   feedMdPromise.then(finishCreation);
                 }
 
-              }, function() {
+              }, function(error) {
                 var o = {
                   url: url,
                   name: name,
-                  msg: $translate.instant('getCapFailure')
+                  msg: $translate.instant('getCapFailure') +
+                    (error  ? ', ' + error : '')
                 };
                 gnWmsQueue.error(o);
                 defer.reject(o);
@@ -1988,8 +1990,7 @@
          * appear in the layer manager
          */
         selected: function(layer) {
-          return layer.displayInLayerManager && !layer.get('fromWps') &&
-              (!layer.get('errors') || !layer.get('errors').length);
+          return layer.displayInLayerManager && !layer.get('fromWps');
         },
         visible: function(layer) {
           return layer.displayInLayerManager && layer.visible;
