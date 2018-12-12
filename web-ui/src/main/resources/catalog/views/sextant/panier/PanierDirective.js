@@ -24,7 +24,9 @@
             'partials/panier.html',
         controller: ['$scope', function($scope) {
           this.del = function(element) {
-            $scope.panier.splice($scope.panier.indexOf(element), 1);
+            var index = $scope.panier.indexOf(element);
+            $scope.clearWpsInputs(index);
+            $scope.panier.splice(index, 1);
           };
         }],
         link: function(scope, element, attrs, controller) {
@@ -76,6 +78,8 @@
                 scope.report = {
                   success: true
                 };
+
+                scope.clearWpsInputs();
                 scope.searchObj.panier = [];
                 scope.formObj.layers = [];
               } else {
@@ -98,7 +102,28 @@
             scope.resetReport();
           });
 
+          /**
+           * Will clear WPS form inputs for the given element; if no index specified, clears inputs of all processes
+           * and trigger a reset of the WPS form state.
+           * Please note: this will have side effects as processes are objects shared among several WPS form directives
+           * @param {number=} index Index of the element to clear the inputs of
+           */
+          scope.clearWpsInputs = function(index) {
+            if (!scope.panier || !Array.isArray(scope.panier)) {
+              return;
+            }
+            scope.panier.forEach(function(elt, i) {
+              if (index !== undefined && index !== i) { return; }
+              if (!elt.processes || !Array.isArray(elt.processes)) { return; }
+
+              elt.processes.forEach(function(process) {
+                process.inputs.length = 0;
+                process.resetForm = true;   // this is watched by WpsDirective
+              });
+            });
           }
+
+        }
       };
     }]);
 
@@ -261,6 +286,11 @@
 
               scope.isVisible = function() {
                 return gnSearchLocation.path() === '/panier';
+              };
+
+              // open the wps modal with which we share a parent
+              scope.openWpsModal = function($event) {
+                $($event.currentTarget.parentElement.querySelector('.modal')).modal('show');
               }
             },
             post: function preLink(scope, iElement, iAttrs, controller) {

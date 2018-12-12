@@ -138,7 +138,8 @@
               uri: attrs['uri'] || wpsLink.url,
 
               // specific sextant
-              wfsLink: scope.wfsLink
+              wfsLink: scope.wfsLink,
+              resetForm: wpsLink.resetForm
             };
           }, function(newLink, oldLink) {
             // the WPS link is incomplete: leave & clear form
@@ -173,6 +174,33 @@
                     scope.applicationProfile);
               }
             }
+            // Specific SEXTANT EMODNET
+            // Gets the labels // names of usable layers (checked and visible)
+            scope.applyMapLayersToInput = function () {
+              if (!scope.applicationProfile) return;
+              var availableLayers = scope.map.getLayers()
+                .getArray()
+                .filter(function(l) {
+                  return (l.getVisible() && !l.background); // remove background layers
+                })
+                .map(function(ll) {
+                  return ll.get('label') || ll.get('name');
+                });
+              scope.applicationProfile.inputs.forEach(function(input) {
+                if (input.bindLayerTreeToWPS) {
+                  scope.removeAllInputValuesByName(input.identifier);
+                  availableLayers.forEach(function(layerName) {
+                    scope.addInputValueByName(input.identifier, layerName);
+                  });
+                }
+              });
+            }
+
+            // call on layerChange
+            scope.map.getLayers().on('onlayerchange', scope.applyMapLayersToInput)
+            // call on init
+            scope.applyMapLayersToInput()
+            // END specific SEXTANT EMODNET
 
             // get values from wfs filters
             var wfsFilterValues = null;
@@ -221,10 +249,8 @@
                     angular.forEach(scope.processDescription.dataInputs.input,
                     function(input) {
                       var inputName = input.identifier.value;
-                      var value;
                       var defaultValue;
                       var wfsFilterValue;
-
                       // look for input info in app profile
                       if (scope.applicationProfile &&
                       scope.applicationProfile.inputs) {
@@ -232,7 +258,6 @@
                         function(input) {
                           if (input.identifier == inputName) {
                             defaultValue = input.defaultValue;
-
                             // check if there is a wfs filter active
                             // & apply value
                             var wfsFilter = input.linkedWfsFilter || '';
@@ -463,6 +488,8 @@
                   if (attrs['executeCallback']) {
                       scope.submit();
                   }
+                  // reset this variable so the form can be resetted again from elsewhere
+                  delete scope.wpsLink.resetForm;
                   // END SEXTANT SPECIFIC
                 },
                 function(response) {
@@ -703,10 +730,10 @@
           };
 
           // add or remove an input value
-          scope.addInputValueByName = function(name) {
+          scope.addInputValueByName = function(name, value) {
             scope.wpsLink.inputs.push({
               name: name,
-              value: undefined
+              value: value
             });
           };
           scope.removeInputValueByName = function(name, indexToRemove) {

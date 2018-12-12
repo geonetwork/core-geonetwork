@@ -57,11 +57,11 @@
             ng-class="p.included ? 'fa-check-square-o' : 'fa-square-o'"/>
           <span class="wps-label">{{ p.desc || p.name }}</span>
         </label>
-        <button type="button" data-ng-disabled="!p.included" class="btn btn-default" data-toggle="modal" data-target="#process{{$index}}">
+        <button type="button" data-ng-disabled="!p.included" class="btn btn-default" ng-click="openWpsModal($event)">
           <i class="fa fa-cogs"></i>&nbsp;
           <span translate="" class="ng-scope">{{ 'editWpsForm' | translate }}</span>
         </button>
-        <div class="modal fade" id="process{{$index}}" ng-if="isVisible()">
+        <div class="modal fade" ng-if="isVisible()">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
