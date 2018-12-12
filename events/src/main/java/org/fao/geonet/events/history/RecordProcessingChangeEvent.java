@@ -25,27 +25,39 @@ package org.fao.geonet.events.history;
 
 import org.springframework.context.ApplicationContext;
 
+import net.sf.json.JSONObject;
+
 public class RecordProcessingChangeEvent extends AbstractHistoryEvent {
+
+    public static final String FIELD = "process";
 
     private static final long serialVersionUID = -1052505918706510478L;
 
+    private String process;
+
     private String xmlRecordBefore, xmlRecordAfter;
 
-    public RecordProcessingChangeEvent(Integer mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter) {
+    public RecordProcessingChangeEvent(Integer mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter, String process) {
         super(mdId, userId);
         this.xmlRecordBefore = xmlRecordBefore;
         this.xmlRecordAfter = xmlRecordAfter;
+        this.process = process;
     }
 
-    public RecordProcessingChangeEvent(Long mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter) {
+    public RecordProcessingChangeEvent(Long mdId, Integer userId, String xmlRecordBefore, String xmlRecordAfter, String process) {
         super(mdId, userId);
         this.xmlRecordBefore = xmlRecordBefore;
         this.xmlRecordAfter = xmlRecordAfter;
+        this.process = process;
     }
 
     @Override
     public String getCurrentState() {
-        return xmlRecordAfter;
+        JSONObject json = new JSONObject();
+        json.put(RecordProcessingChangeEvent.FIELD, process);
+        json.put("xmlRecord", xmlRecordAfter);
+
+        return json.toString();
     }
 
     @Override

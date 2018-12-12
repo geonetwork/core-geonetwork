@@ -369,7 +369,7 @@ public class XslProcessApi {
                 XMLOutputter outp = new XMLOutputter();
                 String xmlAfter = outp.outputString(afterMetadata);
                 String xmlBefore = outp.outputString(beforeMetadata);
-                new RecordProcessingChangeEvent(Long.parseLong(id), this.userId, xmlBefore, xmlAfter).publish(appContext);
+                new RecordProcessingChangeEvent(Long.parseLong(id), this.userId, xmlBefore, xmlAfter, process).publish(appContext);
             }
         }
     }

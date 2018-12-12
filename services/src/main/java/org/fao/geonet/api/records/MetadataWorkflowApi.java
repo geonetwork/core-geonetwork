@@ -28,6 +28,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -65,6 +66,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataStatusRepositoryCustom;
 import org.fao.geonet.repository.SortUtils;
@@ -72,6 +74,7 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -127,6 +130,8 @@ public class MetadataWorkflowApi {
             required = true)
         @PathVariable
             String metadataUuid,
+        @RequestParam(required = false)
+            boolean details,
         @ApiParam(value = "Sort direction",
             required = false)
         @RequestParam(
@@ -144,7 +149,7 @@ public class MetadataWorkflowApi {
             metadata.getId(),
             new Sort(sortOrder, sortField));
 
-        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus);
+        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details);
 
         // TODO: Add paging
         return response;
@@ -171,6 +176,8 @@ public class MetadataWorkflowApi {
             required = true)
         @PathVariable
             StatusValueType type,
+        @RequestParam(required = false)
+            boolean details,
         @ApiParam(value = "Sort direction",
             required = false)
         @RequestParam(
@@ -189,7 +196,7 @@ public class MetadataWorkflowApi {
             type,
             new Sort(sortOrder, sortField));
 
-        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus);
+        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details);
 
         // TODO: Add paging
         return response;
@@ -443,6 +450,92 @@ public class MetadataWorkflowApi {
         }
     }
 
+    @ApiOperation(value = "Search status", notes = "", nickname = "searchStatusByType")
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/status/search")
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<MetadataStatusResponse> getStatusByType(
+            @ApiParam(value = "One or more types to retrieve (ie. worflow, event, task). Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            StatusValueType[] type,
+            @RequestParam(required = false)
+            boolean details,
+            @ApiParam(value = "One or more event author. Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            Integer[] author,
+            @ApiParam(value = "One or more event owners. Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            Integer[] owner,
+            @ApiParam(value = "One or more record identifier. Default is all.",
+                required = false)
+            @RequestParam(required = false)
+            Integer[] record,
+            @ApiParam(value = "Start date",
+                required = false)
+            @RequestParam(required = false)
+            String dateFrom,
+            @ApiParam(value = "End date",
+                required = false)
+            @RequestParam(required = false)
+            String dateTo,
+            @ApiParam(value = "From page",
+                required = false)
+            @RequestParam(required = false, defaultValue = "0")
+            Integer from,
+            @ApiParam(value = "Number of records to return",
+                required = false)
+            @RequestParam(required = false, defaultValue = "100")
+            Integer size,
+            HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        MetadataStatusRepository statusRepository = context.getBean(MetadataStatusRepository.class);
+
+
+        Sort sortByStatusChangeDate = SortUtils.createSort(Sort.Direction.DESC,
+            MetadataStatus_.id, MetadataStatusId_.changeDate);
+        final PageRequest pageRequest = new PageRequest(from, size, sortByStatusChangeDate);
+
+        List<MetadataStatus> metadataStatuses;
+        if ((type != null && type.length > 0) || (author != null && author.length > 0)
+                || (owner != null && owner.length > 0) || (record != null && record.length > 0)) {
+            metadataStatuses = statusRepository.searchStatus(
+                    type != null && type.length > 0 ? Arrays.asList(type) : null,
+                    author != null && author.length > 0 ? Arrays.asList(author) : null,
+                    owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
+                    record != null && record.length > 0 ? Arrays.asList(record) : null,
+                    dateFrom, dateTo,
+                    pageRequest
+                );
+        } else {
+            metadataStatuses = statusRepository.findAll(pageRequest).getContent();
+        }
+
+        Map<Integer, String> titles = new HashMap<>();
+        List<MetadataStatusResponse> response = new ArrayList<>(metadataStatuses.size());
+        metadataStatuses.forEach(e -> {
+            String title = titles.get(e.getId().getMetadataId());
+            if (title == null) {
+                try {
+                    // Collect metadata titles. For now we use Lucene
+                    title = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(),
+                            e.getId().getMetadataId() + "", "title");
+                    titles.put(e.getId().getMetadataId(), title);
+                } catch (Exception e1) {
+                }
+            }
+            MetadataStatusResponse mdResponse = new MetadataStatusResponse(e, details)
+                    .setTitle(title)
+                    .setCurrentStatus(extractCurrentStatus(e))
+                    .setPreviousStatus(extractPreviousStatus(e));
+
+            response.add(mdResponse);
+        });
+        return response;
+    }
+
     /**
      * Convert request parameter to a metadata status.
      */
@@ -483,7 +576,7 @@ public class MetadataWorkflowApi {
      *
      */
     @NotNull
-    private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus) {
+    private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus, boolean details) {
         List<MetadataStatusResponse> response = new ArrayList<>();
 
         // Add all user info in response
@@ -502,7 +595,7 @@ public class MetadataWorkflowApi {
 
         // Add all user info to response
         for(MetadataStatus s : listOfStatus) {
-            MetadataStatusResponse status = new MetadataStatusResponse(s);
+            MetadataStatusResponse status = new MetadataStatusResponse(s, details);
             User author = listOfUsers.get(status.getId().getUserId());
             if (author != null) {
                 status.setAuthorName(author.getName() + " " + author.getSurname());
@@ -517,8 +610,8 @@ public class MetadataWorkflowApi {
             }
 
             if(s.getStatusValue().getType().equals(StatusValueType.event)) {
-                status.setItem1(extractItem1(s));
-                status.setItem2(extractItem2(s));
+                status.setCurrentStatus(extractCurrentStatus(s));
+                status.setPreviousStatus(extractPreviousStatus(s));
             }
 
             response.add(status);
@@ -526,24 +619,23 @@ public class MetadataWorkflowApi {
         return response;
     }
 
-
-    private String extractItem1(MetadataStatus s) {
+    private String extractCurrentStatus(MetadataStatus s) {
         switch(Integer.toString(s.getStatusValue().getId())) {
         case StatusValue.Events.ATTACHMENTADDED:
             return s.getCurrentState();
-        case StatusValue.Events.ATTACHMENTDELETED:
-            return s.getPreviousState();
         case StatusValue.Events.RECORDOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
+            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
         case StatusValue.Events.RECORDGROUPOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
+            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
+        case StatusValue.Events.RECORDPROCESSINGCHANGE:
+            return ObjectJSONUtils.returnField(s.getCurrentState(), "process");
         case StatusValue.Events.RECORDCATEGORYCHANGE:
             List<String> categories = ObjectJSONUtils.returnListOfFieldsFromArrayofObjects(s.getCurrentState(), "category", "name");
-            StringBuffer categoriesAsString = new StringBuffer("[");
+            StringBuffer categoriesAsString = new StringBuffer("[ ");
             for (String categoryName : categories) {
                 categoriesAsString.append(categoryName + " ");
             }
-            categoriesAsString.append(" ]");
+            categoriesAsString.append("]");
             return categoriesAsString.toString();
         case StatusValue.Events.RECORDVALIDATIONTRIGGERED:
             return s.getCurrentState().equals("1")? "OK" : "KO";
@@ -552,12 +644,15 @@ public class MetadataWorkflowApi {
         }
     }
 
-    private String extractItem2(MetadataStatus s) {
+
+    private String extractPreviousStatus(MetadataStatus s) {
         switch(Integer.toString(s.getStatusValue().getId())) {
+        case StatusValue.Events.ATTACHMENTDELETED:
+            return s.getPreviousState();
         case StatusValue.Events.RECORDOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
+            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
         case StatusValue.Events.RECORDGROUPOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
+            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
         default:
             return "";
         }
