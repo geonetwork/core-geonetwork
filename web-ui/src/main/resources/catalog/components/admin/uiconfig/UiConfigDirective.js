@@ -110,10 +110,8 @@
       link: function(scope, element, attrs) {
         element.val(JSON.stringify(scope.value));
 
-        scope.$watch('value', function(newValue, oldValue, s) {
-          if (newValue !== oldValue) {
-            element.val(JSON.stringify(newValue));
-          }
+        scope.$watch('value', function(newValue, oldValue) {
+          element.val(JSON.stringify(newValue));
         }, true);
 
         element.on('change', function(eventObject) {
