@@ -95,6 +95,8 @@ public class TemplatesUriLocator implements UriLocator {
             sTemplate = sTemplate.replaceAll(">[ \\t\\r\\f]*<", "><"); 
             // Replace all successions of spaces, tabs ... by a single space
             sTemplate = sTemplate.replaceAll("\\s\\s+", " "); 
+            // The backslash (\) is an escape character in Javascript
+            sTemplate = sTemplate.replace("\\", "\\\\");
             // Escape quotes
             sTemplate = sTemplate.replace("'", "\\'");  
             javascript.append(
