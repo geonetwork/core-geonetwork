@@ -209,6 +209,7 @@ public class MetadataStatus extends GeonetEntity {
 
     @Column
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     public String getPreviousState() {
         return previousState;
     }
@@ -219,6 +220,7 @@ public class MetadataStatus extends GeonetEntity {
 
     @Column
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     public String getCurrentState() {
         return currentState;
     }

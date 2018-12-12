@@ -41,10 +41,10 @@ public class RecordGroupOwnerChangeEvent extends AbstractHistoryEvent {
         this.newOwnerObjectJSON = newOwnerObjectJSON;
     }
 
-    public RecordGroupOwnerChangeEvent(Long mdId, Integer userId, JSONObject oldOwner, JSONObject newOwner) {
+    public RecordGroupOwnerChangeEvent(Long mdId, Integer userId, JSONObject oldOwnerObjectJSON, JSONObject newOwnerObjectJSON) {
         super(mdId, userId);
-        oldOwnerObjectJSON = oldOwnerObjectJSON;
-        newOwnerObjectJSON = newOwnerObjectJSON;
+        this.oldOwnerObjectJSON = oldOwnerObjectJSON;
+        this.newOwnerObjectJSON = newOwnerObjectJSON;
     }
 
     @Override

@@ -215,7 +215,7 @@ public class MetadataProcessApi {
                     String xmlAfter = outp.outputString(processedMetadata);
                     String xmlBefore = outp.outputString(beforeMetadata);
                     new RecordProcessingChangeEvent(metadata.getId(), Integer.parseInt(userSession.getUserId()),
-                            xmlBefore, xmlAfter).publish(ApplicationContextHolder.get());
+                            xmlBefore, xmlAfter, process).publish(ApplicationContextHolder.get());
                 }
             }
         } catch (Exception e) {

@@ -239,7 +239,7 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
                         XMLOutputter outp = new XMLOutputter();
                         String xmlAfter = outp.outputString(processedMetadata);
                         String xmlBefore = outp.outputString(md);
-                        new RecordProcessingChangeEvent(Long.parseLong(id), Integer.parseInt(userSession.getUserId()), xmlBefore, xmlAfter).publish(ApplicationContextHolder.get());
+                        new RecordProcessingChangeEvent(Long.parseLong(id), Integer.parseInt(userSession.getUserId()), xmlBefore, xmlAfter, process).publish(ApplicationContextHolder.get());
                     }
                 }
             } catch (Exception e) {

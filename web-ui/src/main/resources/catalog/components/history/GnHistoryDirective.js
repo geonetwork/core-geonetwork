@@ -204,7 +204,7 @@
               };
 
               function loadHistory() {
-                $http.get('../api/status/search' + buildFilter()).
+                $http.get('../api/records/status/search' + buildFilter()).
                 then(function(r) {
                   scope.history = r.data;
 
