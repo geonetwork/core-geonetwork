@@ -40,7 +40,8 @@ import java.util.List;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "InspireAtomFeed")
+@Table(name = "InspireAtomFeed",
+    indexes = { @Index(name = "idx_inspireatomfeed_metadataid", columnList = "metadataid") })
 @SequenceGenerator(name = InspireAtomFeed.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class InspireAtomFeed extends GeonetEntity implements Serializable {
     static final String ID_SEQ_NAME = "inspire_atom_feed_id_seq";
