@@ -50,6 +50,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -279,6 +280,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
         ) throws Exception {
+
+		Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
@@ -289,12 +292,14 @@ public class MetadataEditingApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
         String id = String.valueOf(metadata.getId());
+		Log.trace(Geonet.DATA_MANAGER, " > ID of the record to edit: " + id);
         String isTemplate = allRequestParams.get(Params.TEMPLATE);
 //        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 //        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
 //        boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
 
         // TODO: Use map only to avoid this conversion
+        Log.trace(Geonet.DATA_MANAGER, " > Getting parameters from request");
         Element params = new Element ("request");
         Map<String, String> forwardedParams = new HashMap<>();
         for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
@@ -304,17 +309,24 @@ public class MetadataEditingApi {
             }
         }
 
+        if(Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+        	Log.trace(Geonet.DATA_MANAGER, " > Setting type of record " 
+        					+ MetadataType.lookup(isTemplate));
+        }
         int iLocalId = Integer.parseInt(id);
+    	Log.trace(Geonet.DATA_MANAGER, " > Id is " + iLocalId);
         dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
 
         //--- use StatusActionsFactory and StatusActions class to possibly
         //--- change status as a result of this edit (use onEdit method)
+    	Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
         StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
         StatusActions sa = saf.createStatusActions(context);
         sa.onEdit(iLocalId, minor);
         Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
         if (StringUtils.isNotEmpty(data)) {
+    		Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
             Element md = Xml.loadString(data, false);
             String changeDate = null;
             boolean updateDateStamp = !minor;
@@ -329,6 +341,7 @@ public class MetadataEditingApi {
             String xmlAfter = outp.outputString(md);
             new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         } else {
+    		Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
             ajaxEditUtils.updateContent(params, false, true);
 
             Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
@@ -355,6 +368,7 @@ public class MetadataEditingApi {
             return null;
         }
         if (terminate) {
+    		Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
             SettingManager sm = context.getBean(SettingManager.class);
 
             boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
@@ -395,6 +409,7 @@ public class MetadataEditingApi {
             }
 
             if (reindex) {
+        		Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
                 dataMan.indexMetadata(id, true, null);
             }
 

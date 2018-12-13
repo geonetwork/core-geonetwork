@@ -126,19 +126,15 @@ public class ApiUtils {
     }
     public static AbstractMetadata getRecord(String uuidOrInternalId)
         throws Exception {
+		Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ")");
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;
-                
-        try {
-            metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
-        } catch (IncorrectResultSizeDataAccessException e){
-            Log.warning(Geonet.GEONETWORK, String.format(
-                "More than one record found with UUID '%s'. Error is '%s'.",
-                uuidOrInternalId, e.getMessage()));
-        }
+               
+    	metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
 
         if (metadata == null) {
+    		Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
             try {
                 metadata = metadataRepository.findOne(uuidOrInternalId);
             } catch (InvalidDataAccessApiUsageException e) {
@@ -147,15 +143,16 @@ public class ApiUtils {
                     uuidOrInternalId));
             }
             if (metadata == null) {
+            	Log.trace(Geonet.DATA_MANAGER, "Record identified by " + uuidOrInternalId + " not found.");
                 throw new ResourceNotFoundException(String.format(
                     "Record with UUID '%s' not found in this catalog",
                     uuidOrInternalId));
-            } else {
-                return metadata;
             }
-        } else {
-            return metadata;
-        }
+        } 
+            
+		Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+        
+		return metadata;
     }
 
     /**

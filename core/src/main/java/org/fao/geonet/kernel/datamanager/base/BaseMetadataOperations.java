@@ -144,19 +144,21 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
         Optional<OperationAllowed> opAllowed = _getOperationAllowedToAdd(context, mdId, grpId, opId, false);
 
         if(opAllowed.isPresent()) {
+    		Log.trace(Geonet.DATA_MANAGER, "Operation is allowed");
 	        opAllowedRepo.save(opAllowed.get());
 	        svnManager.setHistory(mdId + "", context);
 	        
 	        //If it is published/unpublished, throw event
 	        if(opId == ReservedOperation.view.getId() 
 	                && grpId == ReservedGroup.all.getId()) {
+	    		Log.trace(Geonet.DATA_MANAGER, "This is a publish event");
 	            this.eventPublisher.publishEvent(new MetadataPublished(
 	                    metadataUtils.findOne(Integer.valueOf(mdId))));
 	        }
 	        
 	        return true;
         }
-        
+
         return false;
     }
 
@@ -176,15 +178,20 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
 
     private Optional<OperationAllowed> _getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
             final int opId, boolean shouldCheckPermission) {
+		Log.trace(Geonet.DATA_MANAGER, "_getOperationAllowedToAdd(" + mdId + ", " 
+				+ grpId + ", " + opId + ", " + shouldCheckPermission + ")");
         final OperationAllowed operationAllowed = opAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
         if (operationAllowed == null && shouldCheckPermission) {
+    		Log.trace(Geonet.DATA_MANAGER, "Checking if the operation is allowed, the operation is not yet present");
             checkOperationPermission(context, grpId, userGroupRepo);
         }
 
         if (operationAllowed == null) {
+    		Log.trace(Geonet.DATA_MANAGER, "Returning operation to add");
             return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId)));
         } else {
+    		Log.trace(Geonet.DATA_MANAGER, "Operation is already available");
             return Optional.absent();
         }
     }
