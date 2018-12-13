@@ -1,68 +1,61 @@
 <form data-ng-keypress="updatingHarvester()">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
-    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
-
-    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>
   </div>
 
-
-  <fieldset>
-    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+  <fieldset id="gn-harvest-settings-webdav-basic-row">
+    <legend id="gn-harvest-settings-webdav-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
 
-
-    <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">webdav-url</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+    <div id="gn-harvest-settings-webdav-basic-url-row" data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-webdav-basic-url-label" class="control-label" data-translate="">webdav-url</label>
+      <input id="gn-harvest-settings-webdav-basic-url-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
       <p class="help-block" data-translate="">webdav-urlHelp</p>
     </div>
 
-    <div data-ng-class="harvesterSelected.options.subtype == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">webdav-subtype</label>
-
-      <select class="form-control" data-ng-model="harvesterSelected.options.subtype">
+    <div id="gn-harvest-settings-webdav-basic-type-row" data-ng-class="harvesterSelected.options.subtype == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-webdav-basic-type-label" class="control-label" data-translate="">webdav-subtype</label>
+      <select id="gn-harvest-settings-webdav-basic-type-list" class="form-control" data-ng-model="harvesterSelected.options.subtype">
         <option data-ng-repeat="t in ['waf', 'webdav']" value="{{t}}"
                 data-ng-selected="t == harvesterSelected.options.subtype">{{t |
           translate}}
         </option>
       </select>
-
       <p class="help-block" data-translate="">webdav-subtypeHelp</p>
     </div>
   </fieldset>
 
-
-  <fieldset>
-    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+  <fieldset id="gn-harvest-settings-webdav-advanced-row">
+    <legend id="gn-harvest-settings-webdav-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-    <div>
+    <div id="gn-harvest-settings-webdav-advanced-subfolder-row">
       <label class="control-label">
-        <input type="checkbox" data-ng-model="harvesterSelected.options.recurse"/>
-        <span data-translate="">webdav-recurse</span>
+        <input id="gn-harvest-settings-webdav-advanced-subfolder-checkbox" type="checkbox" data-ng-model="harvesterSelected.options.recurse"/>
+        <span id="gn-harvest-settings-webdav-advanced-subfolder-label" data-translate="">webdav-recurse</span>
       </label>
       <p class="help-block" data-translate="">webdav-recurseHelp</p>
     </div>
 
-    <div data-gn-harvester-account="harvesterSelected"/>
+    <div id="gn-harvest-settings-webdav-advanced-remote-row" data-gn-harvester-account="harvesterSelected"/>
 
-    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+    <div id="gn-harvest-settings-webdav-advanced-category-row"
+         data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
          data-label="category"/>
 
-    <div>
-      <label class="control-label">
+    <div id="gn-harvest-settings-webdav-advanced-validate-row">
+      <label id="gn-harvest-settings-webdav-advanced-validate-label" class="control-label">
         <span data-translate="">harvesterValidate</span>
       </label>
-      <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <div id="gn-harvest-settings-webdav-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
       <p class="help-block" data-translate="">harvesterValidateHelp</p>
     </div>
   </fieldset>
 
-
-  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div id="gn-harvest-settings-webdav-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

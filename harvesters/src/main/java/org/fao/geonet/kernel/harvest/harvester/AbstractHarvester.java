@@ -172,7 +172,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             ah.setContext(context);
             return ah;
         } catch (Exception e) {
-            throw new OperationAbortedEx("Cannot instantiate harvester", e);
+            throw new OperationAbortedEx("Cannot instantiate harvester of type " + type, e);
         }
     }
 

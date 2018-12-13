@@ -1321,5 +1321,6 @@
     "center": "Center",
     "right": "Right",
     "gnHeaderCss": "Header",
-    "styleVariable-gnHeaderBackground": "Background"
+    "styleVariable-gnHeaderBackground": "Background",
+    "usersInGroup": "Users in group"
 }
