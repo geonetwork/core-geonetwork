@@ -111,7 +111,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 		// Only do something if we are moving to approved
 		if (event.getStatus().equalsIgnoreCase(Params.Status.APPROVED)) {
 			try {
-				AbstractMetadata md = updateWithDraft(event);
+				AbstractMetadata md = approveWithDraft(event);
 				validate(md);
 			} catch (Exception e) {
 				Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
@@ -146,7 +146,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 	 * @throws NumberFormatException
 	 */
 	@Transactional(value = TxType.REQUIRES_NEW)
-	private AbstractMetadata updateWithDraft(MetadataStatusChanged event) throws NumberFormatException, Exception {
+	private AbstractMetadata approveWithDraft(MetadataStatusChanged event) throws NumberFormatException, Exception {
 		Log.debug(Geonet.DATA_MANAGER, "Record '" + event.getMd().getUuid() + "' approved.");
 
 		ServiceContext context = ServiceContext.get();

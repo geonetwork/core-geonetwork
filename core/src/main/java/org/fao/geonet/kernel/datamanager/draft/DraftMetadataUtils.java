@@ -54,6 +54,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import com.google.common.base.Optional;
 
@@ -66,6 +67,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	@Autowired
 	private IMetadataOperations metadataOperations;
 	@Autowired
+	private IMetadataStatus metadataStatus;
+	@Autowired
 	private GroupRepository groupRepository;
 	@Autowired
 	private AccessManager am;
@@ -75,6 +78,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	public void init(ServiceContext context, Boolean force) throws Exception {
 		this.metadataDraftRepository = context.getBean(MetadataDraftRepository.class);
 		this.metadataOperations = context.getBean(IMetadataOperations.class);
+		this.metadataStatus = context.getBean(IMetadataStatus.class);
 		this.groupRepository = context.getBean(GroupRepository.class);
 		this.am = context.getBean(AccessManager.class);
 		this.context = context;
@@ -83,7 +87,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
 	@Override
 	public void setTemplateExt(final int id, final MetadataType metadataType) throws Exception {
-		try {
+		if (metadataDraftRepository.exists(id)) {
 			metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
 				@Override
 				public void apply(@Nonnull MetadataDraft metadata) {
@@ -91,7 +95,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 					dataInfo.setType(metadataType);
 				}
 			});
-		} catch (EntityNotFoundException e) {
+		} else {
 			super.setTemplateExt(id, metadataType);
 		}
 	}
@@ -108,9 +112,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	 */
 	@Override
 	public void setSubtemplateTypeAndTitleExt(final int id, String title) throws Exception {
-		try {
-			super.setSubtemplateTypeAndTitleExt(id, title);
-		} catch (EntityNotFoundException e) {
+		if (metadataDraftRepository.exists(id)) {
 			metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
 				@Override
 				public void apply(@Nonnull MetadataDraft metadata) {
@@ -121,15 +123,16 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 					}
 				}
 			});
+
+		} else {
+			super.setSubtemplateTypeAndTitleExt(id, title);
 		}
 	}
 
 	@Override
 	public void setHarvestedExt(final int id, final String harvestUuid, final Optional<String> harvestUri)
 			throws Exception {
-		try {
-			super.setHarvestedExt(id, harvestUuid, harvestUri);
-		} catch (EntityNotFoundException e) {
+		if (metadataDraftRepository.exists(id)) {
 			metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
 				@Override
 				public void apply(MetadataDraft metadata) {
@@ -139,6 +142,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 					harvestInfo.setUri(harvestUri.orNull());
 				}
 			});
+		} else {
+			super.setHarvestedExt(id, harvestUuid, harvestUri);
 		}
 	}
 
@@ -149,16 +154,17 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	 * @throws Exception
 	 */
 	@Override
-	public void updateDisplayOrder(final String id, final String displayOrder) throws Exception {
-		try {
-			super.updateDisplayOrder(id, displayOrder);
-		} catch (EntityNotFoundException e) {
-			metadataDraftRepository.update(Integer.valueOf(id), new Updater<MetadataDraft>() {
+	public void updateDisplayOrder(final String idString, final String displayOrder) throws Exception {
+		Integer id = Integer.valueOf(idString);
+		if (metadataDraftRepository.exists(id)) {
+			metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
 				@Override
 				public void apply(MetadataDraft entity) {
 					entity.getDataInfo().setDisplayOrder(Integer.parseInt(displayOrder));
 				}
 			});
+		} else {
+			super.updateDisplayOrder(idString, displayOrder);
 		}
 	}
 
@@ -175,15 +181,16 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	@Override
 	public int rateMetadata(final int metadataId, final String ipAddress, final int rating) throws Exception {
 		final int newRating = ratingByIpRepository.averageRating(metadataId);
-		try {
-			return super.rateMetadata(metadataId, ipAddress, rating);
-		} catch (EntityNotFoundException e) {
+
+		if (metadataDraftRepository.exists(metadataId)) {
 			metadataDraftRepository.update(metadataId, new Updater<MetadataDraft>() {
 				@Override
 				public void apply(MetadataDraft entity) {
 					entity.getDataInfo().setRating(newRating);
 				}
 			});
+		} else {
+			return super.rateMetadata(metadataId, ipAddress, rating);
 		}
 		return rating;
 	}
@@ -244,7 +251,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 		}
 		return md;
 	}
-	
+
 	/**
 	 * Return all records, including drafts.
 	 */
@@ -419,18 +426,25 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 		// Do we have a metadata draft already?
 		if (metadataDraftRepository.findOneByUuid(md.getUuid()) != null) {
 			id = Integer.toString(metadataDraftRepository.findOneByUuid(md.getUuid()).getId());
-		} else {
-			
+
+			Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
+		} else if (metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(Params.Status.APPROVED)) {
 			String originalId = id;
 			id = createDraft(context, id, md);
-			
+
 			reindex(id, originalId);
+
+			Log.trace(Geonet.DATA_MANAGER, "Creating draft with id " + id + " to edit.");
 		}
 
+		if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+			Log.trace(Geonet.DATA_MANAGER, "Editing record with id = " + id);
+			Log.trace(Geonet.DATA_MANAGER, "Status of record: " + metadataStatus.getCurrentStatus(Integer.valueOf(id)));
+		}
 		return super.startEditingSession(context, id);
 	}
 
-	@Transactional(value=TxType.REQUIRES_NEW)
+	@Transactional(value = TxType.REQUIRES_NEW)
 	private String createDraft(ServiceContext context, String id, AbstractMetadata md)
 			throws Exception, IOException, JDOMException {
 		// We have to create the draft using the metadata information
@@ -475,7 +489,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	 * @param originalId
 	 * @throws Exception
 	 */
-	@Transactional(value=TxType.REQUIRES_NEW)
+	@Transactional(value = TxType.REQUIRES_NEW)
 	private void reindex(String id, String originalId) throws Exception {
 		// We have to index both draft and approved metadata to get relation on the
 		// index
@@ -485,7 +499,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	}
 
 	/**
-	 * Uses a new transaction to make sure changes are committed before the reindex. 
+	 * Uses a new transaction to make sure changes are committed before the reindex.
 	 * 
 	 * @param context
 	 * @param templateId
@@ -498,7 +512,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	@Transactional(value=TxType.REQUIRES_NEW)
+	@Transactional(value = TxType.REQUIRES_NEW)
 	protected String createDraft(ServiceContext context, String templateId, String groupOwner, String source, int owner,
 			String parentUuid, String isTemplate, String uuid) throws Exception {
 		Metadata templateMetadata = getMetadataRepository().findOne(templateId);

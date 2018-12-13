@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
@@ -16,6 +17,7 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -46,7 +48,8 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 	@Override
 	public synchronized void updateMetadataOwner(final int id, final String owner, final String groupOwner)
 			throws Exception {
-		try {
+
+		if (metadataDraftRepository.exists(id)) {
 			metadataDraftRepository.update(id, new Updater<MetadataDraft>() {
 				@Override
 				public void apply(@Nonnull MetadataDraft entity) {
@@ -54,7 +57,7 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 					entity.getSourceInfo().setOwner(Integer.valueOf(owner));
 				}
 			});
-		} catch (EntityNotFoundException e) {
+		} else {
 			super.updateMetadataOwner(id, owner, groupOwner);
 		}
 	}
@@ -73,13 +76,18 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 	@Override
 	public AbstractMetadata update(int id, @Nonnull Updater<? extends AbstractMetadata> updater) {
 		AbstractMetadata md = null;
+		Log.trace(Geonet.DATA_MANAGER, "AbstractMetadata.update(" + id + ")");
 		try {
+			Log.trace(Geonet.DATA_MANAGER, "Updating metadata table.");
 			md = super.update(id, updater);
 		} catch (ClassCastException t) {
 			// That's fine, maybe we are on the draft side
+		} catch (Throwable e) {
+			Log.error(Geonet.DATA_MANAGER, e.getMessage(), e);
 		}
 		if (md == null) {
 			try {
+				Log.trace(Geonet.DATA_MANAGER, "Updating draft table.");
 				md = metadataDraftRepository.update(id, (Updater<MetadataDraft>) updater);
 			} catch (ClassCastException t) {
 				throw new ClassCastException("Unknown AbstractMetadata subtype: " + updater.getClass().getName());
@@ -125,7 +133,6 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 			throw new ClassCastException("Unknown AbstractMetadata subtype: " + servicesPath.getClass().getName());
 		}
 	}
-	
 
 	@Override
 	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs) {
@@ -140,9 +147,8 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
 		} catch (ClassCastException t) {
 			// That's fine, maybe we are on the metadata side
 		}
-		
+
 		return res;
 	}
-	
 
 }
