@@ -37,6 +37,7 @@ import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailSender;
+import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
 import org.springframework.context.ApplicationContext;
 
@@ -57,10 +58,7 @@ public class DefaultStatusActions implements StatusActions {
     protected String siteName;
     protected UserSession session;
     protected boolean emailNotes = true;
-    private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
-    private boolean useSSL;
-    private boolean useTLS;
-    private boolean ignoreSslCertificateErrors;
+    private String from, replyTo, replyToDescr;
     private StatusValueRepository _statusValueRepository;
     private IMetadataStatus metadataStatusManager;
 
@@ -83,24 +81,7 @@ public class DefaultStatusActions implements StatusActions {
         SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         siteName = sm.getSiteName();
-        host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
-        port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
         from = sm.getValue(SYSTEM_FEEDBACK_EMAIL);
-        username = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
-        password = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
-        useSSL = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL);
-        useTLS = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS);
-        ignoreSslCertificateErrors = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS);
-
-        if (host == null || host.length() == 0) {
-            context.error("Mail server host not configure");
-            emailNotes = false;
-        }
-
-        if (port == null || port.length() == 0) {
-            context.error("Mail server port not configured, email notifications won't be sent.");
-            emailNotes = false;
-        }
 
         if (from == null || from.length() == 0) {
             context.error("Mail feedback address not configured, email notifications won't be sent.");
@@ -174,7 +155,13 @@ public class DefaultStatusActions implements StatusActions {
             metadataStatusManager.setStatusExt(status);
 
             // --- inform content reviewers if the status is submitted
-            notify(getUserToNotify(status), status);
+            try {
+                notify(getUserToNotify(status), status);
+            } catch (Exception e) {
+                context.warning(String.format(
+                    "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
+                    status.getId().getMetadataId(), status.getId().getStatusId(), e.getMessage()));
+            }
         }
 
         return unchanged;
@@ -377,9 +364,11 @@ public class DefaultStatusActions implements StatusActions {
         if (!emailNotes) {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
-            MailSender sender = new MailSender(context);
-            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, useTLS,
-                ignoreSslCertificateErrors, from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            SettingManager sm = applicationContext.getBean(SettingManager.class);
+            List<String> to = new ArrayList<>();
+            to.add(sendTo);
+            MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);
         }
     }
 }
