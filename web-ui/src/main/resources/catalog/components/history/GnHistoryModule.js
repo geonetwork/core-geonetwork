@@ -25,8 +25,9 @@
   goog.provide('gn_history');
 
   goog.require('gn_history_directive');
+  goog.require('gn_history_service');
 
   var module = angular.module('gn_history',
-      ['gn_history_directive']);
+      ['gn_history_directive', 'gn_history_service']);
 
 })();

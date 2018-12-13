@@ -23,6 +23,7 @@
 
 (function() {
   goog.provide('gn_history_directive');
+  goog.require('gn_history_service');
 
   var module = angular.module('gn_history_directive', []);
 
@@ -32,8 +33,8 @@
   module
     .directive(
       'gnRecordHistory', [
-        '$http', 'gnConfig', '$translate',
-      function($http, gnConfig, $translate) {
+        '$http', 'gnRecordHistoryService',
+      function($http, gnRecordHistoryService) {
         return {
           restrict: 'A',
           replace: true,
@@ -43,10 +44,18 @@
           templateUrl:
           '../../catalog/components/history/partials/recordHistory.html',
           link: function postLink(scope, element, attrs) {
-            scope.types = [{'workflow': true}, {'task': true}, {'event': true}];
             scope.lang = scope.$parent.lang;
             scope.user = scope.$parent.user;
             scope.history = [];
+            scope.hasMoreRecords = false;
+            var recordByPage = 5;
+
+            scope.filter = {
+              types: {'workflow': true, 'task': true, 'event': true},
+              recordFilter: null,
+              from: 0,
+              size: recordByPage
+            };
 
             // Wait for metatada to be available
             scope.$watch('md', function(n, o) {
@@ -66,27 +75,51 @@
                 scope.user.isAdministrator();
             }
 
+            scope.more = function() {
+              scope.filter.size = scope.filter.size + recordByPage;
+              loadHistory();
+            };
+
             function loadHistory() {
               if (scope.md ) {
-                $http.get('../api/records/' + scope.md.getUuid() + '/status').
-                then(function(r) {
+                scope.filter.recordFilter = scope.md['geonet:info'].id;
+                gnRecordHistoryService.search(scope.filter).then(function(r) {
                   scope.history = r.data;
+                  scope.hasMoreRecords = r.data.length >= scope.filter.size;
                 });
               }
             };
 
             scope.removeStep = function(s){
-              $http.delete('../api/records/' + scope.md.getUuid() + '/status/' +
-              s.id.statusId + '.' + s.id.userId + '.' + s.id.changeDate.dateAndTime).
-              then(function(r) {
+              gnRecordHistoryService.delete(s).then(function(r) {
                 loadHistory();
               });
             };
+
+            scope.$watch('filter', function(n, o) {
+              if (n !== o) {
+                loadHistory();
+              }
+            }, true);
           }
         };
       }]);
 
-
+  module
+    .directive(
+      'gnRecordHistoryStep', [
+        function() {
+          return {
+            restrict: 'A',
+            replace: true,
+            scope: {
+              h: '=gnRecordHistoryStep',
+              noTitle: '@noTitle'
+            },
+            templateUrl:
+              '../../catalog/components/history/partials/historyStep.html'
+          }
+      }]);
   /**
    * Manager
    */
@@ -94,8 +127,9 @@
     .directive(
       'gnHistory', [
         '$http', '$filter', 'gnConfig', '$translate',
-        'gnSearchManagerService',
-        function($http, $filter, gnConfig, $translate, gnSearchManagerService) {
+        'gnSearchManagerService', 'gnRecordHistoryService', 'gnRecordTaskService',
+        function($http, $filter, gnConfig, $translate,
+                 gnSearchManagerService, gnRecordHistoryService, gnRecordTaskService) {
           return {
             restrict: 'A',
             replace: true,
@@ -104,19 +138,21 @@
             templateUrl:
               '../../catalog/components/history/partials/history.html',
             link: function postLink(scope, element, attrs) {
-              scope.types = {'workflow': true, 'task': true, 'event': true};
               scope.lang = scope.$parent.lang;
               scope.user = scope.$parent.user;
-              scope.history = [];
-              scope.ownerFilter = null;
-              scope.authorFilter = null;
-              scope.recordFilter = null;
-              scope.dateFromFilter = null;
-              scope.dateToFilter = null;
               var recordByPage = 20;
-              scope.from = 0;
-              scope.size = recordByPage;
-              scope.hasMoreRecords = true;
+              scope.history = [];
+              scope.filter = {
+                types: {'workflow': true, 'task': true, 'event': true},
+                ownerFilter: null,
+                authorFilter: null,
+                recordFilter: null,
+                dateFromFilter: null,
+                dateToFilter: null,
+                from: 0,
+                size: recordByPage
+              };
+              scope.hasMoreRecords = false;
 
               scope.getSuggestions = function(val) {
                 return gnSearchManagerService.search('q?fast=index&_content_type=json&_isTemplate=y or n&title=' + (val || '*')).then(function(res) {
@@ -132,22 +168,19 @@
                 doiCreationTask: {}
               };
               scope.doiCreationTask = {
-                check: function (status) {
+                check: function(status) {
                   var key = status.id.metadataId + '-' + status.id.statusId;
                   scope.response.doiCreationTask[key] = {};
                   scope.response.doiCreationTask[key]['check'] = null;
-                  $http.get('../api/records/' + status.id.metadataId + '/doi/checkPreConditions').
-                  then(function(r) {
+                  return gnRecordTaskService.doiCreationTask.check(status).then(function (r) {
                     scope.response.doiCreationTask[key]['check'] = r;
-                  }, function(r) {
+                  }, function (r) {
                     scope.response.doiCreationTask[key]['check'] = r;
                   });
                 },
-                create: function (status) {
+                create: function(status){
                   var key = status.id.metadataId + '-' + status.id.statusId;
-                  scope.response.doiCreationTask[key]['create'] = null;
-                  $http.put('../api/records/' + status.id.metadataId + '/doi').
-                  then(function(r) {
+                  return gnRecordTaskService.doiCreationTask.check(status).then(function(r) {
                     scope.response.doiCreationTask[key]['create'] = r;
                     scope.closeTask(status);
                     then(function(r) {
@@ -161,68 +194,28 @@
 
               scope.closeTask = function(status) {
                 // Close the related task
-                $http.put('../api/records/' + status.id.metadataId + '/status/' +
-                  status.id.statusId + '.' + status.id.userId + '.' +
-                  status.id.changeDate.dateAndTime +
-                  '/close?closeDate=' + moment().format('YYYY-MM-DDTHH:mm:ss')).then(function() {
+                gnRecordHistoryService.close(status).then(function() {
                   loadHistory();
                 });
               };
 
-              function buildFilter() {
-                var filters = [];
-                angular.forEach(scope.types, function (v, k) {
-                  if (v) {
-                    filters.push('type=' + k);
-                  }
-                });
-                if (scope.authorFilter && scope.authorFilter.id) {
-                  filters.push('author=' + scope.authorFilter.id);
-                }
-                if (scope.ownerFilter && scope.ownerFilter.id) {
-                  filters.push('owner=' + scope.ownerFilter.id);
-                }
-                if (scope.recordFilter) {
-                  filters.push('record=' + scope.recordFilter);
-                }
-                if (scope.dateFromFilter) {
-                  filters.push('dateFrom=' + $filter('date')(scope.dateFromFilter, 'yyyy-MM-dd'));
-                }
-                if (scope.dateToFilter) {
-                  filters.push('dateTo=' + $filter('date')(scope.dateToFilter, 'yyyy-MM-dd'));
-                }
-
-                filters.push('from=' + scope.from);
-                filters.push('size=' + scope.size);
-
-                return filters.length > 0 ? '?' + filters.join('&') : '';
-              }
-
               scope.more = function() {
-                scope.size = scope.size + recordByPage;
+                scope.filter.size = scope.filter.size + recordByPage;
                 loadHistory();
               };
 
               function loadHistory() {
-                $http.get('../api/records/status/search' + buildFilter()).
-                then(function(r) {
+                gnRecordHistoryService.search(scope.filter).then(function(r) {
                   scope.history = r.data;
-
-                  scope.hasMoreRecords = r.data.length >= scope.size;
+                  scope.hasMoreRecords = r.data.length >= scope.filter.size;
                 });
               };
 
-              var trigger = function(n, o) {
+              scope.$watch('filter', function(n, o) {
                 if (n !== o) {
                   loadHistory();
                 }
-              };
-              scope.$watchCollection('types', trigger);
-              scope.$watchCollection('authorFilter', trigger);
-              scope.$watchCollection('ownerFilter', trigger);
-              scope.$watchCollection('recordFilter', trigger);
-              scope.$watchCollection('dateFromFilter', trigger);
-              scope.$watchCollection('dateToFilter', trigger);
+              }, true);
 
               loadHistory();
             }

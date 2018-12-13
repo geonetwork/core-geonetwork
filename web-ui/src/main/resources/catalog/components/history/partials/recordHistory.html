@@ -1,44 +1,30 @@
 <section>
-  <h2><i class="fa fa-fw fa-chevron-left"/><span data-translate="">recordHistory</span></h2>
+  <h2><i class="fa fa-fw fa-chevron-left"/>
+    <span data-translate="">recordHistory</span>
 
-  <ul class="timeline timeline-1-col" >
+    <label data-ng-show="history.length > 0"
+           data-ng-repeat="(k, v) in filter.types"
+           title="{{k + 'Type' | translate}}">
+      <i class="fa fa-fw"
+         data-ng-class="{
+            'fa-code-fork': k === 'workflow',
+            'fa-tasks': k === 'task',
+            'fa-edit': k === 'event'}"></i>
+      <input type="checkbox" data-ng-model="filter.types[k]"/>
+    </label>
+  </h2>
+
+  <ul class="timeline timeline-1-col"
+      data-ng-show="history.length > 0">
     <li data-ng-repeat="h in history"
-        class="timeline-inverted">
-      <div class="timeline-badge timeline-badge-small"
-           data-ng-class="{
-            'success': h.statusValue.type === 'workflow',
-            'primary': h.statusValue.type === 'task',
-            'info': h.statusValue.type === 'event'}">
-        <i class="fa fa-fw"
-           data-ng-class="{
-            'fa-code-fork': h.statusValue.type === 'workflow',
-            'fa-tasks': h.statusValue.type === 'task',
-            'fa-edit': h.statusValue.type === 'event'}"
-           title="{{(h.statusValue.type + 'Type') | translate}}"></i>
-      </div>
-      <div class="timeline-panel">
-        <div class="timeline-heading">
-          <a class="btn btn-link pull-right"
-             data-ng-show="allowRemoval"
-             data-ng-click="removeStep(h)"
-             title="{{'removeHistoryStep' | translate}}">
-            <i class="fa fa-times text-danger"/>
-          </a>
-          <img class="img-circle"
-               ng-src="http://gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
-          {{h.authorName}}<br/>
-          <strong>
-            {{h.statusValue.type == 'workflow' ?
-             ('recordHistory-workflow' | translate:{text: (h.statusValue.label | gnLocalized)}):
-             (h.statusValue.label | gnLocalized | translate:{h: h}) }}
-          </strong>&nbsp;
-          <span class="text-muted"
-                data-gn-humanize-time="{{h.id.changeDate.dateAndTime}}"
-                data-from-now=""></span>
-        </div>
-        <div class="timeline-body">
-        </div>
-      </div>
+        data-gn-record-history-step="h"
+        data-no-title="true"/>
+    <li class="timeline-inverted"
+        data-ng-show="hasMoreRecords">
+      <a data-ng-click="more()">
+        <i class="fa fa-fw fa-plus"></i>
+        <span data-translate="">more</span>
+      </a>
     </li>
   </ul>
 </section>

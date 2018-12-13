@@ -139,6 +139,7 @@ public class MetadataWorkflowApi {
         )
             Sort.Direction sortOrder,
         HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         MetadataStatusRepositoryCustom metadataStatusRepository =
             ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
@@ -149,7 +150,7 @@ public class MetadataWorkflowApi {
             metadata.getId(),
             new Sort(sortOrder, sortField));
 
-        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details);
+        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details, context.getLanguage());
 
         // TODO: Add paging
         return response;
@@ -185,6 +186,7 @@ public class MetadataWorkflowApi {
         )
             Sort.Direction sortOrder,
         HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         MetadataStatusRepositoryCustom metadataStatusRepository =
             ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
@@ -196,7 +198,7 @@ public class MetadataWorkflowApi {
             type,
             new Sort(sortOrder, sortField));
 
-        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details);
+        List<MetadataStatusResponse> response = buildMetadataStatusResponses(listOfStatus, details, context.getLanguage());
 
         // TODO: Add paging
         return response;
@@ -459,6 +461,8 @@ public class MetadataWorkflowApi {
                 required = false)
             @RequestParam(required = false)
             StatusValueType[] type,
+            @ApiParam(value = "All event details including XML changes. Responses are bigger. Default is false",
+                required = false)
             @RequestParam(required = false)
             boolean details,
             @ApiParam(value = "One or more event author. Default is all.",
@@ -513,27 +517,7 @@ public class MetadataWorkflowApi {
             metadataStatuses = statusRepository.findAll(pageRequest).getContent();
         }
 
-        Map<Integer, String> titles = new HashMap<>();
-        List<MetadataStatusResponse> response = new ArrayList<>(metadataStatuses.size());
-        metadataStatuses.forEach(e -> {
-            String title = titles.get(e.getId().getMetadataId());
-            if (title == null) {
-                try {
-                    // Collect metadata titles. For now we use Lucene
-                    title = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(),
-                            e.getId().getMetadataId() + "", "title");
-                    titles.put(e.getId().getMetadataId(), title);
-                } catch (Exception e1) {
-                }
-            }
-            MetadataStatusResponse mdResponse = new MetadataStatusResponse(e, details)
-                    .setTitle(title)
-                    .setCurrentStatus(extractCurrentStatus(e))
-                    .setPreviousStatus(extractPreviousStatus(e));
-
-            response.add(mdResponse);
-        });
-        return response;
+        return buildMetadataStatusResponses(metadataStatuses, details, context.getLanguage());
     }
 
     /**
@@ -576,7 +560,7 @@ public class MetadataWorkflowApi {
      *
      */
     @NotNull
-    private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus, boolean details) {
+    private List<MetadataStatusResponse> buildMetadataStatusResponses(List<MetadataStatus> listOfStatus, boolean details, String language) {
         List<MetadataStatusResponse> response = new ArrayList<>();
 
         // Add all user info in response
@@ -593,9 +577,12 @@ public class MetadataWorkflowApi {
             }
         }
 
-        // Add all user info to response
+        Map<Integer, String> titles = new HashMap<>();
+
+        // Add all user info and record title to response
         for(MetadataStatus s : listOfStatus) {
             MetadataStatusResponse status = new MetadataStatusResponse(s, details);
+
             User author = listOfUsers.get(status.getId().getUserId());
             if (author != null) {
                 status.setAuthorName(author.getName() + " " + author.getSurname());
@@ -614,8 +601,21 @@ public class MetadataWorkflowApi {
                 status.setPreviousStatus(extractPreviousStatus(s));
             }
 
+            String title = titles.get(s.getId().getMetadataId());
+            if (title == null) {
+                try {
+                    // Collect metadata titles. For now we use Lucene
+                    title = LuceneSearcher.getMetadataFromIndexById(language,
+                        s.getId().getMetadataId() + "", "title");
+                    titles.put(s.getId().getMetadataId(), title);
+                } catch (Exception e1) {
+                }
+            }
+            status.setTitle(title);
+
             response.add(status);
         }
+
         return response;
     }
 
