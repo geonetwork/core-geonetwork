@@ -38,7 +38,8 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "MetadataStatus")
+@Table(name = "MetadataStatus",
+    indexes = { @Index(name = "idx_metadatastatus_metadataid", columnList = "metadataid") })
 @EntityListeners(MetadataStatus.EntityListener.class)
 public class MetadataStatus extends GeonetEntity {
     /**
