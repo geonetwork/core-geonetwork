@@ -149,6 +149,7 @@
                 
         <!-- If draft exists, show a link -->
         <a data-ng-if="mdView.current.record.draft == 'e'"
+            class="see-draft see-draft-not-approved"
             title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
             data-ng-href="#/metadraf/{{md.getUuid()}}"
             data-ng-show="user.canEditRecord(mdView.current.record)">
@@ -157,6 +158,7 @@
         
         <!-- If approved exists, show a link -->
         <a data-ng-if="mdView.current.record.draft == 'y'"
+            class="see-draft see-draft-approved"
             title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
             data-ng-href="#/metadata/{{md.getUuid()}}"
             data-ng-show="user.canEditRecord(mdView.current.record)">
