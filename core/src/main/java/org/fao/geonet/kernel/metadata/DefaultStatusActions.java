@@ -137,10 +137,15 @@ public class DefaultStatusActions implements StatusActions {
      * @param minorEdit If true then the edit was a minor edit.
      */
     public void onEdit(int id, boolean minorEdit) throws Exception {
+    	if(Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+    		Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.onEdit(" + id 
+						+ ", " + minorEdit + ") with status " + dm.getCurrentStatus(id));
+		}
         if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
             unsetAllOperations(id);
+            Log.trace(Geonet.DATA_MANAGER, "Set DRAFT to current record with id " + id);
             dm.setStatus(context, id, Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(), changeMessage);
         }
     }
@@ -355,12 +360,14 @@ public class DefaultStatusActions implements StatusActions {
      * @param mdId The metadata id to unset privileges on
      */
     private void unsetAllOperations(int mdId) throws Exception {
+    	Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.unsetAllOperations(" + mdId + ")");
+    
         int allGroup = 1;
         for (ReservedOperation op : ReservedOperation.values()) {
             dm.forceUnsetOperation(context, mdId, allGroup, op.getId());
         }
     }
-
+    
     /**
      * Substitute lucene index field values in message.
      * Lucene field are identified using {{index:fieldName}} tag.
