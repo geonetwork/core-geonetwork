@@ -34,8 +34,7 @@ import java.util.Map;
  * Update the ui/config langDetector, nodeDetector, serviceDetector and baseURLDetector properties.
  *
  */
-public class UrlComponentsDetectorsRegexMigration extends JsonDatabaseMigration
-    implements DatabaseMigrationTask {
+public class UrlComponentsDetectorsRegexMigration extends JsonDatabaseMigration {
 
     private final String settingName = "ui/config";
 

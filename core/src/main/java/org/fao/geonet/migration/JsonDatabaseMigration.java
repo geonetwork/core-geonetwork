@@ -45,7 +45,7 @@ import java.util.Map;
 /**
  * Helper class for handling JSON strings.
  */
-public abstract class JsonDatabaseMigration implements DatabaseMigrationTask {
+public abstract class JsonDatabaseMigration extends DatabaseMigrationTask {
 
     @Override
     public void update(Connection connection) throws SQLException {
