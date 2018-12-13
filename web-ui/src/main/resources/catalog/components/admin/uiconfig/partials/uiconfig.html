@@ -632,6 +632,50 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="isLogoInHeader">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+           {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+      <div data-ng-switch-when="logoInHeaderPosition">
+          <label class="control-label">{{('ui-' + key) | translate}}</label>
+  
+          <div class="checkbox">
+            <label>
+              <input type="radio" data-ng-model="mCfg[key]"
+                     value="left"/>
+              <i class="fa fa-fw fa-align-left"></i>&nbsp;
+              <span data-translate="">left</span>
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="radio" data-ng-model="mCfg[key]"
+                     value="center"/>
+              <i class="fa fa-fw fa-align-center"></i>&nbsp;
+              <span data-translate="">center</span>
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="radio" data-ng-model="mCfg[key]"
+                     value="right"/>
+              <i class="fa fa-fw fa-align-right"></i>&nbsp;
+              <span data-translate="">right</span>
+            </label>
+          </div>
+  
+          <p class="help-block"
+             data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+            {{('ui-' + key + '-help') | translate}} </p>
+        </div>
+
       <!-- map configs -->
       <div data-ng-switch-when="map-viewer">
         <h3>{{('ui-' + key) | translate}}</h3>
