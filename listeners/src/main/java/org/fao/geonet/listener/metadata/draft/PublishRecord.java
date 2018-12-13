@@ -53,15 +53,23 @@ public class PublishRecord implements ApplicationListener<MetadataPublished> {
 	@Autowired
 	private IMetadataStatus metadataStatus;
 
+	@Autowired
+	private DraftUtilities draftUtilities;
+
 	@Override
 	public void onApplicationEvent(MetadataPublished event) {
 
-		Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + event.getMd().getId() + " published.");
+		Log.debug(Geonet.DATA_MANAGER, "Metadata with id " + event.getMd().getId() + " published.");
 
 		try {
 			// Only do something if the workflow is enabled
 			if (metadataStatus.getStatus(event.getMd().getId()) != null) {
-				changeToApproved(event.getMd());
+				if (! Integer.valueOf(Params.Status.APPROVED)
+						.equals(metadataStatus.getStatus(event.getMd().getId()).getId().getStatusId())) {
+					changeToApproved(event.getMd());
+				} else {
+					draftUtilities.replaceMetadataWithDraft(event.getMd());
+				}
 			}
 		} catch (Exception e) {
 			Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow", e);
@@ -86,7 +94,6 @@ public class PublishRecord implements ApplicationListener<MetadataPublished> {
 				"Record published.");
 
 		Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + md.getId() + " automatically approved due to publishing.");
-
 	}
 
 }

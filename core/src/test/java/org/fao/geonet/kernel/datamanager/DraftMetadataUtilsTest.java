@@ -32,8 +32,10 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataType;
@@ -72,6 +74,9 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 	private IMetadataUtils metadataUtils;
 
 	@Autowired
+	private IMetadataStatus metadataStatus;
+
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -102,7 +107,7 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 		userGroup.setUser(user);
 		userGroup.setProfile(Profile.Reviewer);
 		userGroupRepository.save(userGroup);
-		
+
 		md = metadataManager.save(createMetadata());
 	}
 
@@ -114,36 +119,40 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
 	@Test
 	public void testEditing() throws Exception {
-		
+
 		ServiceContext context = createServiceContext();
 		loginAs(user);
-		
+
 		assertTrue(metadataUtils.findOne(md.getId()) instanceof Metadata);
-		
+
 		Integer id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
-		
+
 		assertNotNull(id);
+
+		metadataStatus.setStatus(context, id, Integer.valueOf(Params.Status.APPROVED), new ISODate(), "Approve record");
+		id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
+		
 		assertTrue(id != md.getId());
 		assertTrue(metadataUtils.findOne(id) instanceof MetadataDraft);
-		
+
 		metadataUtils.cancelEditingSession(context, id.toString());
 
 		Integer id2 = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
-		
+
 		assertNotNull(id2);
 		assertEquals(id, id2);
-		
+
 		metadataUtils.endEditingSession(id.toString(), context.getUserSession());
 
 		id2 = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
-		
+
 		assertNotNull(id2);
 		assertEquals(id, id2);
-		
+
 		metadataUtils.endEditingSession(id.toString(), context.getUserSession());
-		
+
 		assertTrue(metadataUtils.findOneByUuid(UUID) instanceof MetadataDraft);
-		
+
 	}
 
 	private Metadata createMetadata() throws IOException {
@@ -162,12 +171,12 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
 	@After
 	public void cleanup() {
-		
+
 		List<? extends AbstractMetadata> metadata = metadataUtils.findAllByUuid(UUID);
-		for(AbstractMetadata md : metadata) {
+		for (AbstractMetadata md : metadata) {
 			metadataManager.delete(md.getId());
 		}
-		
+
 		userRepository.delete(user.getId());
 		groupRepository.delete(group.getId());
 	}

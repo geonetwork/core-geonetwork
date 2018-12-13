@@ -35,23 +35,12 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.events.md.MetadataStatusChanged;
-import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.utils.Log;
-import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
@@ -60,9 +49,9 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * 
- * When a record gets approved, check if there is a draft associated to it. If
- * there is, modify its contents with the ones on the draft and remove the
- * draft.
+ * When a record gets a status change, check if there is a draft associated to
+ * it. If there is, act accordingly (replacing record with draft and/or removing
+ * draft).
  * 
  * @author delawen
  *
@@ -77,49 +66,62 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 	private MetadataRepository metadataRepository;
 
 	@Autowired
-	private SearchManager searchManager;
-
-	@Autowired
-	private XmlSerializer xmlSerializer;
-
-	@Autowired
-	private IMetadataManager metadataManager;
-
-	@Autowired
 	private IMetadataStatus metadataStatus;
 
 	@Autowired
 	private IMetadataIndexer metadataIndexer;
-
+	
 	@Autowired
-	private MetadataValidationRepository metadataValidationRepository;
-
-	@Autowired
-	private IMetadataOperations metadataOperations;
-
-	@Autowired
-	private MetadataFileUploadRepository metadataFileUploadRepository;
-
-	@Autowired
-	private MetadataStatusRepository metadataStatusRepository;
+	private DraftUtilities draftUtilities;
 
 	@Override
 	public void onApplicationEvent(MetadataStatusChanged event) {
 
 		Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
 
-		// Only do something if we are moving to approved
-		if (event.getStatus().equalsIgnoreCase(Params.Status.APPROVED)) {
+		// Handle draft accordingly to the status change
+		// If there is no draft involved, these operations do nothing
+		String status = event.getStatus();
+		switch (status) {
+		case Params.Status.DRAFT:
+		case Params.Status.SUBMITTED:
+			if (event.getMd() instanceof Metadata) {
+				Log.trace(Geonet.DATA_MANAGER,
+						"Replacing contents of record (ID=" + event.getMd().getId() + ") with draft, if exists.");
+				draftUtilities.replaceMetadataWithDraft(event.getMd());
+			}
+			break;
+		case Params.Status.RETIRED:
+		case Params.Status.REJECTED:
 			try {
+				Log.trace(Geonet.DATA_MANAGER,
+						"Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");
+
+				removeDraft(event.getMd());
+			} catch (Exception e) {
+				Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
+
+			}
+			break;
+		case Params.Status.APPROVED:
+			try {
+				Log.trace(Geonet.DATA_MANAGER, "Replacing contents of approved record (ID=" + event.getMd().getId()
+						+ ") with draft, if exists.");
 				AbstractMetadata md = approveWithDraft(event);
 				validate(md);
 			} catch (Exception e) {
 				Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
 
 			}
+			break;
 		}
 	}
 
+	@Transactional(value = TxType.REQUIRES_NEW)
+	private void removeDraft(AbstractMetadata md) throws Exception {
+		draftUtilities.removeDraft(md);
+	}
+	
 	/**
 	 * This needs to be done on a new separated transaction to make sure the
 	 * previous one is committed.
@@ -166,51 +168,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 		}
 
 		if (draft != null) {
-
-			Log.trace(Geonet.DATA_MANAGER, "Found approved record with id " + md.getId());
-			Log.trace(Geonet.DATA_MANAGER, "Found draft with id " + draft.getId());
-			// Reassign metadata validations
-			List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(draft.getId());
-			for (MetadataValidation mv : validations) {
-				mv.getId().setMetadataId(md.getId());
-				metadataValidationRepository.save(mv);
-			}
-
-			// Reassign file uploads
-			List<MetadataFileUpload> fileUploads = metadataFileUploadRepository
-					.findAll(MetadataFileUploadSpecs.hasId(draft.getId()));
-			for (MetadataFileUpload fu : fileUploads) {
-				fu.setMetadataId(md.getId());
-				metadataFileUploadRepository.save(fu);
-			}
-
-			try {
-				Element xmlData = draft.getXmlData(false);
-				String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
-
-				// Remove draft
-				metadataOperations.deleteMetadataOper(context, String.valueOf(draft.getId()), false);
-				metadataStatusRepository.deleteAllById_MetadataId(draft.getId());
-				xmlSerializer.delete(String.valueOf(draft.getId()), context);
-
-				Log.trace(Geonet.DATA_MANAGER, "Remove draft with id " + draft.getId());
-				searchManager.delete(draft.getId() + "");
-
-				if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-					Log.trace(Geonet.DATA_MANAGER, "Updating record " + md.getId() + " with ");
-					Log.trace(Geonet.DATA_MANAGER, (new org.jdom.output.XMLOutputter()).outputString(xmlData));
-				}
-
-				// Copy contents
-				Log.trace(Geonet.DATA_MANAGER, "Update approved record with id " + md.getId());
-				md = metadataManager.updateMetadata(context, String.valueOf(md.getId()), xmlData, true, true, true,
-						context.getLanguage(), changeDate, true);
-
-				Log.info(Geonet.DATA_MANAGER, "Record approved with draft contents: " + md.getId());
-
-			} catch (Exception e) {
-				Log.error(Geonet.DATA_MANAGER, "Error upgrading from draft record with id " + md.getId(), e);
-			}
+			md = draftUtilities.replaceMetadataWithDraft(md, draft);
 		}
 
 		return md;
