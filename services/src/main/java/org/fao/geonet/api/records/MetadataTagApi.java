@@ -183,7 +183,7 @@ public class MetadataTagApi {
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getMetadataCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.wrapObjectWithJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
 
     }
 
@@ -238,7 +238,7 @@ public class MetadataTagApi {
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getMetadataCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.wrapObjectWithJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
 
     }
 
@@ -339,7 +339,7 @@ public class MetadataTagApi {
                 info = metadataRepository.findOneByUuid(uuid);
                 Set<MetadataCategory> after = info.getMetadataCategories();
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
-                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.wrapObjectWithJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
 
             }
             dataMan.flush();
@@ -422,7 +422,7 @@ public class MetadataTagApi {
                 info = metadataRepository.findOneByUuid(uuid);
                 Set<MetadataCategory> after = info.getMetadataCategories();
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
-                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.wrapObjectWithJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
             }
             dataMan.flush();
             dataMan.indexMetadata(listOfUpdatedRecords);

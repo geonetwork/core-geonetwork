@@ -19,6 +19,9 @@ package org.fao.geonet.domain.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fao.geonet.Logger;
+import org.fao.geonet.utils.Log;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -30,24 +33,47 @@ import net.sf.json.JSONSerializer;
 
 public class ObjectJSONUtils {
 
-    public static String returnField(String jsonString, String field) {
+    /**
+     * Extract field from JSON string.
+     *
+     * @param jsonString the json string
+     * @param field the field to extract
+     * @return the string
+     */
+    public static String extractFieldFromJSONString(String jsonString, String field) {
         try {
-            return ObjectJSONUtils.returnJsonObjectFromString(jsonString).getString(field);
+            return ObjectJSONUtils.extractJSONObjectFromJSONString(jsonString).getString(field);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
     }
 
-    public static String returnField(String jsonString, String level1, String field) {
-        String[] levels = { level1 };
-        return ObjectJSONUtils.returnField(jsonString, levels, field);
+    /**
+     * Extract field from JSON string from a sub-object.
+     *
+     * @param jsonString the json string
+     * @param subObject the level 1
+     * @param field the field to extract
+     * @return the string
+     */
+    public static String extractFieldFromJSONString(String jsonString, String subObject, String field) {
+        String[] levels = { subObject };
+        return ObjectJSONUtils.extractFieldFromJSONString(jsonString, levels, field);
     }
 
-    public static String returnField(String jsonString, String[] levels, String field) {
+    /**
+     * Extract field from JSON string contained into a path of objects.
+     *
+     * @param jsonString the json string
+     * @param path the levels
+     * @param field the field to extract
+     * @return the string
+     */
+    public static String extractFieldFromJSONString(String jsonString, String[] path, String field) {
         try {
-            JSONObject current = ObjectJSONUtils.returnJsonObjectFromString(jsonString);
-            for (String level : levels) {
+            JSONObject current = ObjectJSONUtils.extractJSONObjectFromJSONString(jsonString);
+            for (String level : path) {
                 current = current.getJSONObject(level);
             }
             return current.getString(field);
@@ -57,10 +83,17 @@ public class ObjectJSONUtils {
         }
     }
 
-    public static JSONArray returnJSONArrayFromString(String jsonString, String[] levels) {
+    /**
+     * Extract JSON array from JSON string contained into a path of objects.
+     *
+     * @param jsonString the json string
+     * @param path the levels
+     * @return the JSON array
+     */
+    public static JSONArray extractJSONArrayFromJSONString(String jsonString, String[] path) {
         try {
-            JSONObject current = ObjectJSONUtils.returnJsonObjectFromString(jsonString);
-            for (String level : levels) {
+            JSONObject current = ObjectJSONUtils.extractJSONObjectFromJSONString(jsonString);
+            for (String level : path) {
                 if (current.get(level) instanceof JSONObject) {
                     current = current.getJSONObject(level);
                 } else if (current.get(level) instanceof JSONArray) {
@@ -74,18 +107,41 @@ public class ObjectJSONUtils {
         }
     }
 
-    public static JSONObject returnJsonObjectFromString(String jsonString) throws JsonProcessingException {
+    /**
+     * Extract JSON object from JSON string.
+     *
+     * @param jsonString the json string
+     * @return the JSON object
+     * @throws JsonProcessingException the json processing exception
+     */
+    public static JSONObject extractJSONObjectFromJSONString(String jsonString) throws JsonProcessingException {
         return JSONObject.fromObject(jsonString);
     }
 
-    public static List<String> returnListOfFieldsFromArrayofObjects(String jsonString, String level1, String field) {
-        String[] levels = { level1 };
-        return ObjectJSONUtils.returnListOfFieldsFromArrayofObjects(jsonString, levels, field);
+    /**
+     * Extract list of field from JSON string contained into a sub-object.
+     *
+     * @param jsonString the json string
+     * @param subObject the level 1
+     * @param field the field to extract
+     * @return the list
+     */
+    public static List<String> extractListOfFieldFromJSONString(String jsonString, String subObject, String field) {
+        String[] levels = { subObject };
+        return ObjectJSONUtils.extractListOfFieldFromJSONString(jsonString, levels, field);
     }
 
-    public static List<String> returnListOfFieldsFromArrayofObjects(String jsonString, String[] levels, String field) {
+    /**
+     * Extract list of field from JSON string contained into a path of objects.
+     *
+     * @param jsonString the json string
+     * @param path the levels
+     * @param field the field to extract
+     * @return the list
+     */
+    public static List<String> extractListOfFieldFromJSONString(String jsonString, String[] path, String field) {
         try {
-            JSONArray array = ObjectJSONUtils.returnJSONArrayFromString(jsonString, levels);
+            JSONArray array = ObjectJSONUtils.extractJSONArrayFromJSONString(jsonString, path);
             List<String> result = new ArrayList<>();
 
             for (int i = 0; i < array.size(); i++) {
@@ -99,17 +155,25 @@ public class ObjectJSONUtils {
         }
     }
 
-    public static JSONObject wrapObjectWithJsonObject(Object o, String field) throws JsonProcessingException {
+    /**
+     * Converts an object in JSONObject.
+     *
+     * @param object the Object
+     * @param objectName the object name
+     * @return the JSONObject
+     * @throws JsonProcessingException the json processing exception
+     */
+    public static JSONObject convertObjectInJsonObject(Object object, String objectName) throws JsonProcessingException {
 
-        // The conversion to String is useful to spot conversion issues
+        // The intermediate conversion to String is useful to spot conversion issues
         // not raised with the direct usage of JSONSerializer on the object
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String jsonString = ow.writeValueAsString(o);
+        String jsonString = ow.writeValueAsString(object);
 
         JSON json = JSONSerializer.toJSON(jsonString);
 
         JSONObject container = new JSONObject();
-        container.put(field, json);
+        container.put(objectName, json);
 
         return container;
     }
