@@ -35,7 +35,8 @@ import javax.persistence.*;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(name = "Validation")
+@Table(name = "Validation",
+    indexes = { @Index(name = "idx_validation_metadataid", columnList = "metadataid") })
 @EntityListeners(MetadataValidationEntityListenerManager.class)
 public class MetadataValidation extends GeonetEntity {
     private MetadataValidationId id;

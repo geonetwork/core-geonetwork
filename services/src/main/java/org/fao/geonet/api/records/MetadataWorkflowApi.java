@@ -116,8 +116,8 @@ public class MetadataWorkflowApi {
         throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
+        ServiceContext context = ApiUtils.createServiceContext(request, languageUtils.getIso3langCode(request.getLocales()));
+
 
 
         AccessManager am = appContext.getBean(AccessManager.class);
