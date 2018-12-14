@@ -187,7 +187,7 @@
                   return ll.get('label') || ll.get('name');
                 });
               scope.applicationProfile.inputs.forEach(function(input) {
-                if (input.bindLayerTreeToWPS) {
+                if (input.bindWmsNameToWPS) {
                   scope.removeAllInputValuesByName(input.identifier);
                   availableLayers.forEach(function(layerName) {
                     scope.addInputValueByName(input.identifier, layerName);
@@ -728,7 +728,6 @@
                 wfsValues[input.name][innerIndex] : input;
             });
           };
-
           // add or remove an input value
           scope.addInputValueByName = function(name, value) {
             scope.wpsLink.inputs.push({
