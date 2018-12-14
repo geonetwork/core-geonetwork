@@ -430,7 +430,21 @@
             insertRef, position);
       };
       $scope.remove = function(ref, parent, domRef) {
-        return gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef);
+        // remove element and save the form
+        // after remove is done. When removing an element
+        // the button to add the element again is not available
+    	// in case of elements with max cardinality of 1.
+    	// Saving the form will show the add button again.
+        return gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef).then(function(){
+          	gnEditor.save(true);
+        }, function(rejectedValue) {
+  			$rootScope.$broadcast('StatusUpdated', {
+  			  title: $translate.instant('runServiceError'),
+  			  error: rejectedValue,
+  			  timeout: 0,
+  			  type: 'danger'
+  			});
+        });
       };
       $scope.removeAttribute = function(ref) {
         return gnEditor.removeAttribute(gnCurrentEdit.id, ref);
