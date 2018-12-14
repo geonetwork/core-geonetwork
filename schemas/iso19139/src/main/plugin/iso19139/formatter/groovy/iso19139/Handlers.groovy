@@ -316,7 +316,7 @@ public class Handlers {
             def img = graphic.'gmd:fileName'.text()
             String thumbnailUrl;
             if (img.startsWith("http://") || img.startsWith("https://")) {
-                thumbnailUrl = img.replace("&fname", "&amp;fname");
+                thumbnailUrl = img.replace("&", "&amp;")
             } else if (!isSmallImage(img) || !hasLargeGraphic) {
                 thumbnailUrl = env.getLocalizedUrl() + "resources.get?fname=" + img + "&amp;access=public&amp;id=" + env.getMetadataId();
             }
