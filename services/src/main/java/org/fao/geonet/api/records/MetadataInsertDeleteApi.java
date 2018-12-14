@@ -717,7 +717,7 @@ public class MetadataInsertDeleteApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordCreateEvent(metadata.getId(), userSession.getUserIdAsInt(),
-                ObjectJSONUtils.wrapObjectWithJsonObject(userSession.getPrincipal(), RecordCreateEvent.FIELD),
+                ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordCreateEvent.FIELD),
                 metadata.getData()).publish(applicationContext);
     }
 
@@ -734,7 +734,7 @@ public class MetadataInsertDeleteApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordImportedEvent(metadata.getId(), userSession.getUserIdAsInt(),
-                ObjectJSONUtils.wrapObjectWithJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
+                ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
                 metadata.getData()).publish(applicationContext);
     }
 

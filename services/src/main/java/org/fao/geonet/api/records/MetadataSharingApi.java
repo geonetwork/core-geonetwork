@@ -352,7 +352,7 @@ public class MetadataSharingApi {
             }
 
             if(sharingChanges) {
-                new RecordPrivilegesChangeEvent(metadata.getId(), userId, ObjectJSONUtils.wrapObjectWithJsonObject(sharingBefore.getPrivileges(), RecordPrivilegesChangeEvent.FIELD), ObjectJSONUtils.wrapObjectWithJsonObject(privileges, RecordPrivilegesChangeEvent.FIELD)).publish(appContext);
+                new RecordPrivilegesChangeEvent(metadata.getId(), userId, ObjectJSONUtils.convertObjectInJsonObject(sharingBefore.getPrivileges(), RecordPrivilegesChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(privileges, RecordPrivilegesChangeEvent.FIELD)).publish(appContext);
             }
         }
     }
@@ -540,7 +540,7 @@ public class MetadataSharingApi {
         metadataManager.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
-        new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),ObjectJSONUtils.wrapObjectWithJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
+        new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
 
 
@@ -817,12 +817,12 @@ public class MetadataSharingApi {
             if(!Objects.equals(groupIdentifier, sourceGrp)) {
               Group newGroup = context.getBean(GroupRepository.class).findOne(groupIdentifier);
               Group oldGroup = context.getBean(GroupRepository.class).findOne(sourceGrp);
-              new RecordGroupOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.wrapObjectWithJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
+              new RecordGroupOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
             }
             if(!Objects.equals(userIdentifier, sourceUsr)) {
               User newOwner = context.getBean(UserRepository.class).findOne(userIdentifier);
               User oldOwner = context.getBean(UserRepository.class).findOne(sourceUsr);
-              new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.wrapObjectWithJsonObject(oldOwner, RecordOwnerChangeEvent.FIELD), ObjectJSONUtils.wrapObjectWithJsonObject(newOwner, RecordOwnerChangeEvent.FIELD)).publish(context);
+              new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldOwner, RecordOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newOwner, RecordOwnerChangeEvent.FIELD)).publish(context);
             }            
             // -- set the new owner into the metadata record
             dataManager.updateMetadataOwner(metadata.getId(),

@@ -154,7 +154,7 @@ public class MetadataSampleApi {
                         for (String mdId : importedMdIds) {
                             AbstractMetadata metadata = ApiUtils.getRecord(mdId);
                             new RecordImportedEvent(Integer.parseInt(mdId), userSession.getUserIdAsInt(),
-                                    ObjectJSONUtils.wrapObjectWithJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
+                                    ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
                                     metadata.getData()).publish(applicationContext);
                         }
                     }

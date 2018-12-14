@@ -624,13 +624,13 @@ public class MetadataWorkflowApi {
         case StatusValue.Events.ATTACHMENTADDED:
             return s.getCurrentState();
         case StatusValue.Events.RECORDOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
+            return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
         case StatusValue.Events.RECORDGROUPOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getCurrentState(), "owner", "name");
+            return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "owner", "name");
         case StatusValue.Events.RECORDPROCESSINGCHANGE:
-            return ObjectJSONUtils.returnField(s.getCurrentState(), "process");
+            return ObjectJSONUtils.extractFieldFromJSONString(s.getCurrentState(), "process");
         case StatusValue.Events.RECORDCATEGORYCHANGE:
-            List<String> categories = ObjectJSONUtils.returnListOfFieldsFromArrayofObjects(s.getCurrentState(), "category", "name");
+            List<String> categories = ObjectJSONUtils.extractListOfFieldFromJSONString(s.getCurrentState(), "category", "name");
             StringBuffer categoriesAsString = new StringBuffer("[ ");
             for (String categoryName : categories) {
                 categoriesAsString.append(categoryName + " ");
@@ -650,9 +650,9 @@ public class MetadataWorkflowApi {
         case StatusValue.Events.ATTACHMENTDELETED:
             return s.getPreviousState();
         case StatusValue.Events.RECORDOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
+            return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
         case StatusValue.Events.RECORDGROUPOWNERCHANGE:
-            return ObjectJSONUtils.returnField(s.getPreviousState(), "owner", "name");
+            return ObjectJSONUtils.extractFieldFromJSONString(s.getPreviousState(), "owner", "name");
         default:
             return "";
         }
