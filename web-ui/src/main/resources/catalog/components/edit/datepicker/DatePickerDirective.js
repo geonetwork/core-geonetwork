@@ -89,7 +89,7 @@
                scope.year = parseInt(scope.value);
                scope.mode = 'year';
              } else if (scope.value.length === 7) {
-               scope.month = moment(scope.value, 'yyyy-MM').toDate();
+               scope.month = moment(scope.value, 'YYYY-MM').toDate();
                scope.mode = 'month';
              } else {
                var isDateTime = scope.value.indexOf('T') !== -1;
