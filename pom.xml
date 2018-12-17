@@ -1346,6 +1346,7 @@
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
     <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
 
+    <application.name>geonetwork</application.name>
     <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
 
@@ -1456,5 +1457,10 @@
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
     <gn.schemas.version>3.5</gn.schemas.version>
+
+
+    <!-- Sextant property file
+     Check web/src/main/filters/deployment for available configurations. -->
+    <sxt.properties>ifr-exp</sxt.properties>
   </properties>
 </project>

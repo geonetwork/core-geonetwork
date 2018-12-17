@@ -30,8 +30,7 @@
 	     version="3.0"
          metadata-complete="true">
 
-
-  <display-name>${display.name}</display-name>
+  <display-name>${application.name}</display-name>
   <listener>
     <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
   </listener>
@@ -175,7 +174,7 @@
     -->
     <init-param>
       <param-name>jeeves.configuration.overrides.file</param-name>
-      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}</param-value>
     </init-param>
   </filter>
 
@@ -348,7 +347,7 @@
     -->
     <init-param>
       <param-name>jeeves.configuration.overrides.file</param-name>
-      <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+      <param-value>${system.specific.overrides},${web.xml.main.config.overrides},../web-client/src/main/resources/</param-value>
     </init-param>
 
     <!--
