@@ -122,6 +122,7 @@ public class Settings {
     public static final String METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP = "metadata/workflow/draftWhenInGroup";
     public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
+    public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
 
     public static class GNSetting {
