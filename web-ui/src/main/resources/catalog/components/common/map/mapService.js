@@ -1939,6 +1939,7 @@
               return gnSearchManagerService.gnSearch({
                 uuid: layer.get('metadataUuid'),
                 fast: 'index',
+                _draft: 'n or e',
                 _content_type: 'json'
               }).then(function(data) {
                 if (data.metadata.length == 1) {

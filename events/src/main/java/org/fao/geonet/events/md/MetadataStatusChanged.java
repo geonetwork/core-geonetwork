@@ -24,6 +24,7 @@
 package org.fao.geonet.events.md;
 
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.StatusValue;
 
 /**
  * Event launched when a record changes its status
@@ -33,19 +34,19 @@ import org.fao.geonet.domain.AbstractMetadata;
 public class MetadataStatusChanged extends MetadataEvent {
 
 	private static final long serialVersionUID = 324534556246220509L;
-	private String status;
+	private StatusValue status;
 	private String message;
 
-	public MetadataStatusChanged(AbstractMetadata abstractMetadata, String status, String message) {
+	public MetadataStatusChanged(AbstractMetadata abstractMetadata, StatusValue status, String message) {
 		super(abstractMetadata);
 		if (status == null) {
 			throw new IllegalArgumentException("Status can't be null");
 		}
-		this.status = status.toUpperCase();
+		this.status = status;
 		this.message = message;
 	}
 
-	public String getStatus() {
+	public StatusValue getStatus() {
 		return status;
 	}
 	
