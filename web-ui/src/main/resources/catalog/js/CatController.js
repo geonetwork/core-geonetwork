@@ -228,7 +228,7 @@
           'isFilterTagsDisplayed': false,
           'createPageTpl':
               '../../catalog/templates/editor/new-metadata-horizontal.html',
-          'editorIndentType': 'gn-indent-default'
+          'editorIndentType': ''
         },
         'admin': {
           'enabled': true,
