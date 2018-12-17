@@ -314,13 +314,13 @@
        * Function to set the editor indent type
        */
       var setEditorIndentType = function() {
-
-        // add indent type to editor
-        $scope.editorIndentType = gnGlobalSettings.gnCfg.mods.editor.editorIndentType;
-        // first remove old classes
-        $('form.gn-editor').removeClass('gn-indent-default gn-indent-colored');
-        //  add the class
-        $('form.gn-editor').addClass($scope.editorIndentType);
+        var f = $('form.gn-editor');
+        // If CSS class is defined in the view in config-editor.xml, don't do anything
+        if (!f.hasClass('gn-editor-config-css') &&
+          angular.isDefined(gnGlobalSettings.gnCfg.mods.editor.editorIndentType)) {
+          // add indent type to editor based on UI configuration
+          f.addClass(gnGlobalSettings.gnCfg.mods.editor.editorIndentType);
+        }
 
       };
 

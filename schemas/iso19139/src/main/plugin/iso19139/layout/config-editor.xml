@@ -3106,6 +3106,9 @@
 
     </view>
 
+    <!--
+    Customize the editor layout by adding a class attribute
+    <view name="default" class="gn-indent-bluescale gn-label-above-input">-->
     <view name="default">
       <sidePanel>
         <directive data-gn-onlinesrc-list=""/>
