@@ -39,6 +39,9 @@
   <logger name="geonetwork.database">
     <level value="WARN"/>
   </logger>
+  <logger name="geonetwork.datamanager">
+    <level value="WARN"/>
+  </logger>
   <logger name="geonetwork.cors">
     <level value="WARN"/>
   </logger>

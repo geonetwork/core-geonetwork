@@ -27,9 +27,9 @@ import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataPublished;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.utils.Log;
@@ -64,12 +64,11 @@ public class PublishRecord implements ApplicationListener<MetadataPublished> {
 		try {
 			// Only do something if the workflow is enabled
 			if (metadataStatus.getStatus(event.getMd().getId()) != null) {
-				if (! Integer.valueOf(Params.Status.APPROVED)
+				draftUtilities.replaceMetadataWithDraft(event.getMd());
+				if (!Integer.valueOf(StatusValue.Status.APPROVED)
 						.equals(metadataStatus.getStatus(event.getMd().getId()).getId().getStatusId())) {
 					changeToApproved(event.getMd());
-				} else {
-					draftUtilities.replaceMetadataWithDraft(event.getMd());
-				}
+				} 
 			}
 		} catch (Exception e) {
 			Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow", e);
@@ -90,7 +89,7 @@ public class PublishRecord implements ApplicationListener<MetadataPublished> {
 		ServiceContext context = ServiceContext.get();
 
 		// This status should be associated to original record, not draft
-		metadataStatus.setStatusExt(context, md.getId(), Integer.valueOf(Params.Status.APPROVED), new ISODate(),
+		metadataStatus.setStatusExt(context, md.getId(), Integer.valueOf(StatusValue.Status.APPROVED), new ISODate(),
 				"Record published.");
 
 		Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + md.getId() + " automatically approved due to publishing.");

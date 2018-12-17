@@ -130,81 +130,71 @@
           gnMdViewObj.loadDetailsFinished = false;
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
-            //Check we are not switching between draft and approved or viceversa
-            var changeToOrFromDraft = 
-              newUrl && oldUrl && 
-              ((newUrl.indexOf("metadraf") > 0 
-                  && oldUrl.indexOf("metadraf") == -1) ||
-              (oldUrl.indexOf("metadraf") > 0 
-                  && newUrl.indexOf("metadraf") == -1));
             if (!gnMdViewObj.current.record ||
                 gnMdViewObj.current.record.getUuid() !== uuid ||
-                changeToOrFromDraft) {
+                newUrl !== oldUrl) {
+
+              //Check if we want the draft version
+              var getDraft = window.location.hash.indexOf("/metadraf/") > 0;
+              var foundMd = false;
 
               // Check if the md is in current search
-              if (angular.isArray(gnMdViewObj.records)) {
-
-                var j = -1;
-                
+              if (angular.isArray(gnMdViewObj.records)
+                        && !getDraft) {
                 for (var i = 0; i < gnMdViewObj.records.length; i++) {
                   var md = gnMdViewObj.records[i];
-                  
-                  if(!md.getUuid) {
-                    md = new Metadata(md);
-                    gnMdViewObj.records[i] = md;
-                  }
-                  
                   if (md.getUuid() === uuid) {
-                    j = i;
-                    
-                    //are looking for the draft?
-                    if(window.location.hash.indexOf("metadraf") > 0
-                        && md.draft == 'y') {
-                      break;
-                    } else if(window.location.hash.indexOf("metadata") > 0
-                        && md.draft != 'y'){
-                      break;
-                    }
-                    // continue looping on the rest of combinations, like
-                    // maybe we are on "draft" view but there is no draft
-                    // failback to show the approved version 
+                    foundMd = true;
+                    that.feedMd(i, md, gnMdViewObj.records);
                   }
                 }
-                
-                if(j >= 0) {
-                  var md = gnMdViewObj.records[j];
-                  that.feedMd(j, md, gnMdViewObj.records);
-                  return;
-                }
-              }
+              } 
 
-              // get a new search to pick the md
-              gnMdViewObj.current.record = null;
-              gnSearchManagerService.gnSearch({
-                _uuid_OR__id: uuid,
-                _isTemplate: 'y or n',
-                fast: 'index',
-                _content_type: 'json'
-              }).then(function(data) {
-                if (data.metadata.length > 0) {
-                  
-                  //If returned more than one, maybe we are looking for the draft
-                  var i = 0;
-                  data.metadata.forEach(function (md, index) {
-                    if(window.location.hash.indexOf("metadraf") > 0
-                        && md.draft == 'y') {
-                      i = index;
+              if (!foundMd){
+                  // get a new search to pick the md
+                  gnMdViewObj.current.record = null;
+                  gnSearchManagerService.gnSearch({
+                    uuid: uuid,
+                    _isTemplate: 'y or n',
+                    _draft: 'y or n or e',
+                    fast: 'index',
+                    _content_type: 'json'
+                  }).then(function(data) {
+                    if (data.metadata.length > 0) {
+                      //If trying to show a draft that is not a draft, correct url:
+                      if(data.metadata.length == 1 && 
+                          window.location.hash.indexOf("/metadraf/") > 0) {
+                        window.location.hash = 
+                          window.location.hash.replace("/metadraf/", "/metadata/");
+                        //Now the location change event handles this
+                        return;
+                      }
+                      
+                      //If returned more than one, maybe we are looking for the draft
+                      var i = 0;
+                      data.metadata.forEach(function (md, index) {
+                        if(getDraft
+                            && md.draft == 'y') {
+                          //This will only happen if the draft exists
+                          //and the user can see it
+                          i = index;
+                        }
+                      });
+                      
+                      data.metadata[i] = new Metadata(data.metadata[i]);
+                      
+                      //Keep the search results (gnMdViewObj.records)
+                      //and the trace of where in the search result we are
+                      that.feedMd(gnMdViewObj.current.index, 
+                          data.metadata[i], gnMdViewObj.records);
+                    } else {
+                      gnMdViewObj.loadDetailsFinished = true;
                     }
+                  }, function(error) {
+                    gnMdViewObj.loadDetailsFinished = true;
                   });
-                  
-                  data.metadata[i] = new Metadata(data.metadata[i]);
-                  that.feedMd(i, undefined, data.metadata);
-                } else {
-                  gnMdViewObj.loadDetailsFinished = true;
-                }
-              }, function(error) {
-                gnMdViewObj.loadDetailsFinished = true;
-              });
+              }
+              
             } else {
               gnMdViewObj.loadDetailsFinished = true;
             }
@@ -214,7 +204,9 @@
             gnMdViewObj.current.record = null;
           }
         };
-        loadMdView(); // To manage uuid on page loading
+        
+        loadMdView(); 
+        // To manage uuid on page loading
         $rootScope.$on('$locationChangeSuccess', loadMdView);
       };
 

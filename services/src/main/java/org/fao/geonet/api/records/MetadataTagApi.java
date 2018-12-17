@@ -156,7 +156,7 @@ public class MetadataTagApi {
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        Set<MetadataCategory> before = metadata.getMetadataCategories();
+        Set<MetadataCategory> before = metadata.getCategories();
 
         if (clear) {
             appContext.getBean(IMetadataManager.class).update(
@@ -181,7 +181,7 @@ public class MetadataTagApi {
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        Set<MetadataCategory> after = metadata.getMetadataCategories();
+        Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
 
@@ -217,7 +217,7 @@ public class MetadataTagApi {
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        Set<MetadataCategory> before = metadata.getMetadataCategories();
+        Set<MetadataCategory> before = metadata.getCategories();
 
         if (id == null || id.length == 0) {
             appContext.getBean(IMetadataManager.class).update(
@@ -236,7 +236,7 @@ public class MetadataTagApi {
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
-        Set<MetadataCategory> after = metadata.getMetadataCategories();
+        Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
 
@@ -307,7 +307,7 @@ public class MetadataTagApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> before = info.getMetadataCategories();
+                Set<MetadataCategory> before = info.getCategories();
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -337,7 +337,7 @@ public class MetadataTagApi {
                 }
 
                 info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> after = info.getMetadataCategories();
+                Set<MetadataCategory> after = info.getCategories();
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
                 new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
 
@@ -407,7 +407,7 @@ public class MetadataTagApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> before = info.getMetadataCategories();
+                Set<MetadataCategory> before = info.getCategories();
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -420,7 +420,7 @@ public class MetadataTagApi {
                 }
 
                 info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> after = info.getMetadataCategories();
+                Set<MetadataCategory> after = info.getCategories();
                 UserSession userSession = ApiUtils.getUserSession(request.getSession());
                 new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
             }
