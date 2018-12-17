@@ -753,7 +753,7 @@
               </resources>
               <filters>
                 <filter>${basedir}/src/main/filters/${env}.properties</filter>
-                <filter>${basedir}/src/main/filters/deployment/config_${server}.properties</filter>
+                <filter>${basedir}/src/main/filters/deployment/config_${sxt.properties}.properties</filter>
               </filters>
               <overwrite>true</overwrite>
             </configuration>
@@ -877,7 +877,7 @@
           <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
-          <warName>${geonetwork.webapp.name}</warName>
+          <warName>${application.name}</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
         </configuration>
       </plugin>
@@ -951,7 +951,6 @@
       <properties>
         <env>prod</env>
         <server>default</server>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
       </properties>
     </profile>
     <profile>
@@ -965,7 +964,6 @@
       <properties>
         <env>dev</env>
         <server>default</server>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
         <wro.debug>true</wro.debug>
       </properties>
     </profile>
@@ -980,346 +978,6 @@
       <properties>
         <env>inspire</env>
         <server>default</server>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-
-    <!-- CLS myocean ro configuration profile -->
-    <profile>
-      <id>cls-myocean-ro</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>cls-myocean-ro</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork-myocean-ro</geonetwork.webapp.name>
-      </properties>
-    </profile>
-
-    <!-- Sextant configuration profile -->
-    <profile>
-      <id>ifr-visi-sxt</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-visi-sxt</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-visi-sxt-6.5</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-visi-sxt-6.5</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-visi-sextant-nse</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-visi-sextant-nse</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-exp</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-exp</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-sextant-myocean</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-sextant-myocean</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-myocean-ro</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-myocean-ro</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork-myocean-ro</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-myocean-ro-exp</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-myocean-ro-exp</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork-myocean-ro</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-myocean-ro-visi1-sextant5</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-myocean-ro-visi1-sextant5</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork-myocean-ro-visi1-sextant5</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-myocean-integration</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-myocean-integration</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-myocean-test-tomcat1</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-myocean-test-tomcat1</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-myocean-int-tomcat1</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-myocean-int-tomcat1</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>pc55</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>pc55</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>karukera</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <env>dev</env>
-        <server>karukera</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>fgravin_local</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <env>dev</env>
-        <server>fgravin_local</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>jacroute_local</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <env>dev</env>
-        <server>jacroute_local</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>aabt_local</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <env>dev</env>
-        <server>aabt_local</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>titellus</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>titellus</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>jeichar</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>jeichar</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>fgravin</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>fgravin</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <!-- Sextant configuration porfile / end -->
-    <profile>
-      <id>widgets</id>
-      <properties>
-        <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
-      </properties>
-    </profile>
-    <profile>
-      <id>widgets-tab</id>
-      <properties>
-        <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widgettab.xml</web.xml.widget.config.overrides>
-      </properties>
-    </profile>
-    <profile>
-      <id>html5ui</id>
-      <properties>
-        <web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
-      </properties>
-    </profile>
-    <profile>
-      <id>oguyot_local</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <env>dev</env>
-        <server>oguyot_local</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
       </properties>
     </profile>
 
@@ -1342,7 +1000,6 @@
     <minify.verbose>false</minify.verbose>
     <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
     <web.xml.main.config.overrides>/WEB-INF/config-overrides-${env}.xml</web.xml.main.config.overrides>
-    <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
     <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
     <wro4jOutput>${project.build.directory}/wro4j-output/</wro4jOutput>
