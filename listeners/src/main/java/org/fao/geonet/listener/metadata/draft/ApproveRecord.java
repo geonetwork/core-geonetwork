@@ -30,11 +30,11 @@ import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
@@ -81,18 +81,18 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 
 		// Handle draft accordingly to the status change
 		// If there is no draft involved, these operations do nothing
-		String status = event.getStatus();
-		switch (status) {
-		case Params.Status.DRAFT:
-		case Params.Status.SUBMITTED:
+		StatusValue status = event.getStatus();
+		switch (String.valueOf(status.getId())) {
+		case StatusValue.Status.DRAFT:
+		case StatusValue.Status.SUBMITTED:
 			if (event.getMd() instanceof Metadata) {
 				Log.trace(Geonet.DATA_MANAGER,
 						"Replacing contents of record (ID=" + event.getMd().getId() + ") with draft, if exists.");
 				draftUtilities.replaceMetadataWithDraft(event.getMd());
 			}
 			break;
-		case Params.Status.RETIRED:
-		case Params.Status.REJECTED:
+		case StatusValue.Status.RETIRED:
+		case StatusValue.Status.REJECTED:
 			try {
 				Log.trace(Geonet.DATA_MANAGER,
 						"Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");
@@ -103,7 +103,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 
 			}
 			break;
-		case Params.Status.APPROVED:
+		case StatusValue.Status.APPROVED:
 			try {
 				Log.trace(Geonet.DATA_MANAGER, "Replacing contents of approved record (ID=" + event.getMd().getId()
 						+ ") with draft, if exists.");
@@ -160,7 +160,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 			md = metadataRepository.findOneByUuid(draft.getUuid());
 
 			// This status should be associated to original record, not draft
-			metadataStatus.setStatusExt(context, md.getId(), Integer.valueOf(event.getStatus()), new ISODate(),
+			metadataStatus.setStatus(context, md.getId(), event.getStatus().getId(), new ISODate(),
 					event.getMessage());
 
 		} else if (md instanceof Metadata) {

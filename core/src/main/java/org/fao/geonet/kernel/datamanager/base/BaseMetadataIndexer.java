@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -593,7 +594,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 	 * @param moreFields
 	 */
     protected void addExtraFields(AbstractMetadata fullMd, Vector<Element> moreFields) {
-    	
+    	// If we are not using draft utils, mark all as "no draft"
+    	// needed to be compatible with UI searches that check draft existence
+    	if(!DraftMetadataIndexer.class.isInstance(this)) {
+    		moreFields.addElement(SearchManager.makeField(Geonet.IndexFieldNames.DRAFT, "n", true, true));
+    	}
     }
 
 	private XmlSerializer getXmlSerializer() {

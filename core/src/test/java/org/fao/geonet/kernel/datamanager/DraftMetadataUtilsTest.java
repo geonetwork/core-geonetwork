@@ -32,7 +32,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
@@ -40,6 +39,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.XmlSerializerIntegrationTest;
@@ -129,7 +129,7 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
 		assertNotNull(id);
 
-		metadataStatus.setStatus(context, id, Integer.valueOf(Params.Status.APPROVED), new ISODate(), "Approve record");
+		metadataStatus.setStatus(context, id, Integer.valueOf(StatusValue.Status.APPROVED), new ISODate(), "Approve record");
 		id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
 		
 		assertTrue(id != md.getId());

@@ -3,6 +3,7 @@ package org.fao.geonet.kernel.datamanager.draft;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -16,6 +17,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -27,10 +30,13 @@ import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataHarvestInfo;
 import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -44,6 +50,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.SimpleMetadata;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -54,7 +61,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 import com.google.common.base.Optional;
 
@@ -71,6 +77,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	@Autowired
 	private GroupRepository groupRepository;
 	@Autowired
+	private StatusValueRepository statusValueRepository;
+	@Autowired
 	private AccessManager am;
 
 	private ServiceContext context;
@@ -80,6 +88,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 		this.metadataOperations = context.getBean(IMetadataOperations.class);
 		this.metadataStatus = context.getBean(IMetadataStatus.class);
 		this.groupRepository = context.getBean(GroupRepository.class);
+		this.statusValueRepository = context.getBean(StatusValueRepository.class);
 		this.am = context.getBean(AccessManager.class);
 		this.context = context;
 		super.init(context, force);
@@ -428,7 +437,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 			id = Integer.toString(metadataDraftRepository.findOneByUuid(md.getUuid()).getId());
 
 			Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
-		} else if (metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(Params.Status.APPROVED)) {
+		} else if (metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
 			String originalId = id;
 			id = createDraft(context, id, md);
 
@@ -574,26 +583,47 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 				}
 			}
 
-			// Enable workflow on both.
-			ISODate changeDate = new ISODate();
-
-			StatusActions sa = context.getBean(StatusActionsFactory.class).createStatusActions(context);
-
+			// Enable workflow on draft and make sure original record has also the workflow enabled
 			Set<Integer> metadataIds = new HashSet<Integer>();
 			metadataIds.add(finalId);
 
 			if (context.getBean(IMetadataStatus.class)
-					.getCurrentStatus(Integer.valueOf(templateId)) == Params.Status.UNKNOWN) {
+					.getCurrentStatus(Integer.valueOf(templateId)) == StatusValue.Status.UNKNOWN) {
 				metadataIds.add(Integer.valueOf(templateId));
 			}
 
-			sa.statusChange(String.valueOf(Params.Status.DRAFT), metadataIds, changeDate, "Enable Workflow");
+	        //--- use StatusActionsFactory and StatusActions class to
+	        //--- change status and carry out behaviours for status changes
+	        StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
+	        StatusActions sa = saf.createStatusActions(context);
 
+	        int author = context.getUserSession().getUserIdAsInt();
+	        Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
+	        StatusValue statusValue = statusValueRepository.findOne(status);
+	        
+	        for(Integer mdId : metadataIds) {
+		        MetadataStatus metadataStatus = new MetadataStatus();
+	
+		        MetadataStatusId mdStatusId = new MetadataStatusId()
+		            .setStatusId(status)
+		            .setMetadataId(mdId)
+		            .setChangeDate(new ISODate())
+		            .setUserId(author);
+	
+		        metadataStatus.setId(mdStatusId);
+		        metadataStatus.setStatusValue(statusValue);
+		        metadataStatus.setChangeMessage("Editing instance created");
+		        
+		        List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
+		        listOfStatusChange.add(metadataStatus);
+		        sa.onStatusChange(listOfStatusChange);
+	        }
 			return String.valueOf(finalId);
 		} catch (Throwable t) {
-			Log.error(Geonet.DATA_MANAGER, "Draft creation failed", t);
+			Log.error(Geonet.DATA_MANAGER, "Editing instance creation failed", t);
 		}
 		return templateId;
 	}
+
 
 }
