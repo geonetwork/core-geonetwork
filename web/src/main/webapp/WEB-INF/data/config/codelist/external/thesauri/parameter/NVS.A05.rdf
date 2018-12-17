@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/">
 <skos:prefLabel>AtlantOS Essential Variables</skos:prefLabel>
 <dc:title>AtlantOS Essential Variables</dc:title>
@@ -16,12 +16,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_AIRHUM/">
 <dc:identifier>SDN:A05::EV_AIRHUM</dc:identifier>
 <dce:identifier>SDN:A05::EV_AIRHUM</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_AIRHUM</skos:notation>
 <skos:prefLabel xml:lang="en">Air humidity</skos:prefLabel>
 <skos:altLabel>Atmospheric humidity</skos:altLabel>
 <skos:definition xml:lang="en">The amount of water vapour (relative humidity, dew point temperature) in the atmosphere.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_AIRHUM/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CRELZZ01/"/>
@@ -37,18 +40,21 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_AIRTEMP/">
 <dc:identifier>SDN:A05::EV_AIRTEMP</dc:identifier>
 <dce:identifier>SDN:A05::EV_AIRTEMP</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_AIRTEMP</skos:notation>
 <skos:prefLabel xml:lang="en">Air temperature</skos:prefLabel>
 <skos:altLabel>Atmospheric temperature</skos:altLabel>
 <skos:definition xml:lang="en">The temperature of the atmosphere expressed against the International Temperature Scale 1990 (ITS-90) standard.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_AIRTEMP/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CTMPZZ01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0023/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPAA/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPKA/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPAA/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -56,17 +62,21 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_AIRPRESS/">
 <dc:identifier>SDN:A05::EV_AIRPRESS</dc:identifier>
 <dce:identifier>SDN:A05::EV_AIRPRESS</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_AIRPRESS</skos:notation>
 <skos:prefLabel xml:lang="en">Atmospheric pressure</skos:prefLabel>
 <skos:altLabel>Air pressure</skos:altLabel>
 <skos:definition xml:lang="en">The pressure exerted by the weight of the air in the Earth's atmosphere.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_AIRPRESS/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0015/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CAPHZZ01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CAPASS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CAPHZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0022/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0015/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/HPAX/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -75,12 +85,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_BATHY/">
 <dc:identifier>SDN:A05::EV_BATHY</dc:identifier>
 <dce:identifier>SDN:A05::EV_BATHY</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_BATHY</skos:notation>
 <skos:prefLabel xml:lang="en">Bottom depth</skos:prefLabel>
 <skos:altLabel>Bathymetry</skos:altLabel>
 <skos:definition xml:lang="en">The depth of the sea floor or bed relative to a reference datum.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_BATHY/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBANZZZZ/"/>
@@ -95,12 +108,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_13C/">
 <dc:identifier>SDN:A05::EV_13C</dc:identifier>
 <dce:identifier>SDN:A05::EV_13C</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_13C</skos:notation>
 <skos:prefLabel xml:lang="en">Carbon isotope 13C</skos:prefLabel>
 <skos:altLabel>Stable carbon isotopes</skos:altLabel>
 <skos:definition xml:lang="en">The amount of carbon stable isotope 13C in seawater using water column measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_13C/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/D13CMIXX/"/>
@@ -112,28 +128,35 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_CO2/">
 <dc:identifier>SDN:A05::EV_CO2</dc:identifier>
 <dce:identifier>SDN:A05::EV_CO2</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_CO2</skos:notation>
 <skos:prefLabel xml:lang="en">Carbonate system</skos:prefLabel>
 <skos:altLabel>CO2</skos:altLabel>
 <skos:definition xml:lang="en">The chemistry of carbon dioxide (DIC, TA, pCO2 and pH) in seawater where pH is expressed against Total, Seawater or Free scales. Includes water column and atmospheric measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_CO2/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHFRSXXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2XXXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ACO2XXXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP014/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0244/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CF14N56/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2MSXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHTLSX25/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHMASSXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHSWSXXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0243/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHFRSXXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHMASSXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHTLSX25/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2MSXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP014/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ACO2XXXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2XXXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0244/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHTLWCAL/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2KG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2WCAL/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CF14N55/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CF14N56/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0243/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2IG02/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUPH/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UATM/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -142,22 +165,25 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_CHLA/">
 <dc:identifier>SDN:A05::EV_CHLA</dc:identifier>
 <dce:identifier>SDN:A05::EV_CHLA</dce:identifier>
+<dc:date>2016-11-07 12:38:56.0</dc:date>
 <skos:notation>SDN:A05::EV_CHLA</skos:notation>
 <skos:prefLabel xml:lang="en">Chlorophyll-a and fluorescence</skos:prefLabel>
 <skos:altLabel>Chla</skos:altLabel>
 <skos:definition xml:lang="en">The amount of chlorophyll-a and chlorophyll fluorescence in seawater using water column measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-11-07 12:38:56.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_CHLA/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-11-07 12:38:56.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLPRKG/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CF14N7/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLZZXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLPR01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/ORZ7DVDT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLXXKG/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLPRKG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CF14N7/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/ORZ7DVDT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMMC/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -165,28 +191,31 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_CURR/">
 <dc:identifier>SDN:A05::EV_CURR</dc:identifier>
 <dce:identifier>SDN:A05::EV_CURR</dce:identifier>
+<dc:date>2017-01-13 17:13:18.0</dc:date>
 <skos:notation>SDN:A05::EV_CURR</skos:notation>
 <skos:prefLabel xml:lang="en">Currents</skos:prefLabel>
 <skos:altLabel>Sea currents</skos:altLabel>
 <skos:definition xml:lang="en">The velocity (Eulerian, upward and Stokes Drift) of sea water (includes scalar speeds and directions).</skos:definition>
 <owl:versionInfo>2</owl:versionInfo>
-<dc:date>2017-01-13 17:13:18.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_CURR/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2017-01-13 17:13:18.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0080/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0242/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0266/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LRZAZZZZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0727/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0334/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0650/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0494/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LCDAZZ01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LCSAZZ01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LCNSZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0266/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0242/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0494/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0334/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LRZAZZZZ/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LCEWZZ01/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UVBB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LCNSZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0080/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0727/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0650/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UABB/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UVBB/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -194,25 +223,30 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_DOM/">
 <dc:identifier>SDN:A05::EV_DOM</dc:identifier>
 <dce:identifier>SDN:A05::EV_DOM</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_DOM</skos:notation>
 <skos:prefLabel xml:lang="en">Dissolved organic matter</skos:prefLabel>
 <skos:altLabel>DOM</skos:altLabel>
 <skos:definition xml:lang="en">The amount of dissolved organic matter (DOC, DON and CDOM) in seawater using water column measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_DOM/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCOKGXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCOKG01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP008/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP015/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/6OP5LKSX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGZZKG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/QSCDOMXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCOKGD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAZZKG/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDOMZZ01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/QSCDOMXX/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPPB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/6OP5LKSX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCOKGTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGZZKG/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPPB/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -220,18 +254,22 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_N2O/">
 <dc:identifier>SDN:A05::EV_N2O</dc:identifier>
 <dce:identifier>SDN:A05::EV_N2O</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_N2O</skos:notation>
 <skos:prefLabel xml:lang="en">Nitrous oxide</skos:prefLabel>
 <skos:altLabel>N2O</skos:altLabel>
 <skos:definition xml:lang="en">The amount of nitrous oxide (N2O) in seawater using water column and atmospheric measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_N2O/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DN2OZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFV8N44/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AN2OZZ01/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGNM/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UBLV/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGNM/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -239,16 +277,17 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_NUTS/">
 <dc:identifier>SDN:A05::EV_NUTS</dc:identifier>
 <dce:identifier>SDN:A05::EV_NUTS</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_NUTS</skos:notation>
 <skos:prefLabel xml:lang="en">Nutrients</skos:prefLabel>
 <skos:altLabel>Inorganic nutrients</skos:altLabel>
 <skos:definition xml:lang="en">The amount of dissolved inorganic macro nutrients (NO3, PO4, Si and NO2) in seawater using water column measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_NUTS/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIKGD6/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMS01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMS01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP006/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP005/"/>
@@ -265,6 +304,15 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIKGD5/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSKGD5/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAKGD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLKGAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAKGD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSKGD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHKGAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIKGTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIKGD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAKGTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIKGD6/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAMS01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAMS02/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
@@ -275,17 +323,23 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_OXY/">
 <dc:identifier>SDN:A05::EV_OXY</dc:identifier>
 <dce:identifier>SDN:A05::EV_OXY</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_OXY</skos:notation>
 <skos:prefLabel xml:lang="en">Oxygen</skos:prefLabel>
 <skos:altLabel>Dissolved O2</skos:altLabel>
 <skos:definition xml:lang="en">The amount of dissolved oxygen in seawater using water column measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_OXY/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXMZZXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0517/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOKGWITX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYAAOP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYSCKG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYOP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0517/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -294,12 +348,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_RADFLX/">
 <dc:identifier>SDN:A05::EV_RADFLX</dc:identifier>
 <dce:identifier>SDN:A05::EV_RADFLX</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_RADFLX</skos:notation>
 <skos:prefLabel xml:lang="en">Radiative fluxes</skos:prefLabel>
 <skos:altLabel>Rad flux</skos:altLabel>
 <skos:definition xml:lang="en">The fluxes of radiation (downwelling and upwelling irradiance) in the atmosphere to and from the sea surface.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_RADFLX/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LWRDZZ01/"/>
@@ -318,12 +375,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_RAIN/">
 <dc:identifier>SDN:A05::EV_RAIN</dc:identifier>
 <dce:identifier>SDN:A05::EV_RAIN</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_RAIN</skos:notation>
 <skos:prefLabel xml:lang="en">Rainfall</skos:prefLabel>
 <skos:altLabel>Precipitation</skos:altLabel>
 <skos:definition xml:lang="en">The rate or amount of precipitation (liquid or solid) deposited from the atmosphere.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_RAIN/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0559/"/>
@@ -341,12 +401,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_SALIN/">
 <dc:identifier>SDN:A05::EV_SALIN</dc:identifier>
 <dce:identifier>SDN:A05::EV_SALIN</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_SALIN</skos:notation>
 <skos:prefLabel xml:lang="en">Salinity</skos:prefLabel>
 <skos:altLabel>Sea salinity</skos:altLabel>
 <skos:definition xml:lang="en">The salinity of seawater expressed against the Practical Salinity Scale 1978 (PSS-78) standard.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_SALIN/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALZZXX/"/>
@@ -354,13 +417,15 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALST02/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALBSTX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0376/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0331/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC04/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC05/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC06/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/IADIHDIJ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0376/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSLTZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC03/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUUU/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -369,12 +434,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_SEALVL/">
 <dc:identifier>SDN:A05::EV_SEALVL</dc:identifier>
 <dce:identifier>SDN:A05::EV_SEALVL</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_SEALVL</skos:notation>
 <skos:prefLabel xml:lang="en">Sea Level</skos:prefLabel>
 <skos:altLabel>Sea level</skos:altLabel>
 <skos:definition xml:lang="en">The displacement of the water column surface from a fixed, stable reference, expressed as metres or pressure.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_SEALVL/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -384,12 +452,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_POM/">
 <dc:identifier>SDN:A05::EV_POM</dc:identifier>
 <dce:identifier>SDN:A05::EV_POM</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_POM</skos:notation>
 <skos:prefLabel xml:lang="en">Suspended particulates</skos:prefLabel>
 <skos:altLabel>POM</skos:altLabel>
 <skos:definition xml:lang="en">The amount of particulate organic matter (turbidity) in seawater using water column measurements.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_POM/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/7B3X6L2J/"/>
@@ -402,12 +473,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_SEATEMP/">
 <dc:identifier>SDN:A05::EV_SEATEMP</dc:identifier>
 <dce:identifier>SDN:A05::EV_SEATEMP</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_SEATEMP</skos:notation>
 <skos:prefLabel xml:lang="en">Temperature</skos:prefLabel>
 <skos:altLabel>Sea temperature</skos:altLabel>
 <skos:definition xml:lang="en">The temperature of seawater expressed against the International Temperature Scale 1990 (ITS-90) standard.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_SEATEMP/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPPR01/"/>
@@ -430,8 +504,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC15/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0335/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0381/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPKA/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPAA/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPKA/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -439,25 +513,36 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_TTRACE/">
 <dc:identifier>SDN:A05::EV_TTRACE</dc:identifier>
 <dce:identifier>SDN:A05::EV_TTRACE</dce:identifier>
+<dc:date>2017-01-13 17:15:10.0</dc:date>
 <skos:notation>SDN:A05::EV_TTRACE</skos:notation>
 <skos:prefLabel xml:lang="en">Transient tracers</skos:prefLabel>
 <skos:altLabel>T tracers</skos:altLabel>
 <skos:definition xml:lang="en">The amount of transient tracers (CFC-12, CFC-11, SF6, tritium, 3He, 14C) in seawater using water column measurements.</skos:definition>
 <owl:versionInfo>2</owl:versionInfo>
-<dc:date>2017-01-13 17:15:10.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_TTRACE/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2017-01-13 17:15:10.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP002/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DHE3XX01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DSF6KGTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FR11GCKG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FR12GCKG/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MXTX3H1H/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DSF6KGXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MXTX3HER/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DHE3XX01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFV13A4/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/FMKG/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUTU/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPCT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP002/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/D14CMIER/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/D14CMIXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DHE3XXER/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/D3HEMXDG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP001/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPPT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGPM/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPCT/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/FMKG/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUTU/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -465,22 +550,60 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_WAVES/">
 <dc:identifier>SDN:A05::EV_WAVES</dc:identifier>
 <dce:identifier>SDN:A05::EV_WAVES</dce:identifier>
+<dc:date>2017-01-13 17:14:23.0</dc:date>
 <skos:notation>SDN:A05::EV_WAVES</skos:notation>
 <skos:prefLabel xml:lang="en">Waves</skos:prefLabel>
 <skos:altLabel>Sea waves</skos:altLabel>
 <skos:definition xml:lang="en">The properties (wave height, maximum wave height, significant wave height, wave period, wave direction, wave steepness and wave spectrum energy) of sea waves.</skos:definition>
 <owl:versionInfo>2</owl:versionInfo>
-<dc:date>2017-01-13 17:14:23.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_WAVES/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2017-01-13 17:14:23.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTDHZZ01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GWDRZZ01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZAZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZMZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZHZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZHTN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZAM2ZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/62Q37UQE/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZAM1WW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZAM1S2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZAM1S1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTPKZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTHMXX01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTAMZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GSD2SW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GSD1SW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GEPKZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GDPXXX01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GCMXZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GAVHZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GWDRWW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HMZESWFT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HMZESWSC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HMZEWW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HMZEZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LCEWST01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LCNSST01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/WVSTZZ01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0384/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0388/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0385/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UABB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GWDRZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZAZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTDHZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/GTZAM1ZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0390/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFV13N31/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFV8N74/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/WHOJ1OG4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/UPGWHKDY/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/SXTKCAH2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/OW7KJRXV/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/JNQS0CMX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFV8N75/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UTBB/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UABB/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/ULAA/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUUU/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/M2SX/"/>
@@ -491,16 +614,19 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_WDIR/">
 <dc:identifier>SDN:A05::EV_WDIR</dc:identifier>
 <dce:identifier>SDN:A05::EV_WDIR</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_WDIR</skos:notation>
 <skos:prefLabel xml:lang="en">Wind direction</skos:prefLabel>
 <skos:altLabel>Wdir</skos:altLabel>
 <skos:definition xml:lang="en">The direction of the air (absolute) in the atmosphere (from direction).</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_WDIR/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0036/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/EWDAZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0036/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UABB/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -509,12 +635,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/A05/current/EV_WSPD/">
 <dc:identifier>SDN:A05::EV_WSPD</dc:identifier>
 <dce:identifier>SDN:A05::EV_WSPD</dce:identifier>
+<dc:date>2016-06-23 15:58:53.0</dc:date>
 <skos:notation>SDN:A05::EV_WSPD</skos:notation>
 <skos:prefLabel xml:lang="en">Wind speed</skos:prefLabel>
 <skos:altLabel>Wspd</skos:altLabel>
 <skos:definition xml:lang="en">The speed of the air (absolute) in the atmosphere.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-06-23 15:58:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/A05/current/EV_WSPD/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-06-23 15:58:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/EWSBZZ01/"/>
