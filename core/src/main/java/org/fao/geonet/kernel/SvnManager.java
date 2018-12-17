@@ -88,6 +88,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.AfterCommitTransactionListener;
 import jeeves.transaction.BeforeRollbackTransactionListener;
 
+import static org.fao.geonet.kernel.setting.Settings.METADATA_VCS;
+
 public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
     private static String username = "geonetwork";
     private static String password = "geonetwork";
@@ -108,6 +110,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     public void init() throws Exception {
 
         SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (!_settingManager.getValueAsBool(METADATA_VCS)) {
+            Log.debug(Geonet.SVN_MANAGER, String.format(
+                "VCS is disabled. Change the %s setting and restart the application", METADATA_VCS
+            ));
+            return;
+        }
         DataSource _dataSource = ApplicationContextHolder.get().getBean(DataSource.class);
 
         this._enabled = true;
