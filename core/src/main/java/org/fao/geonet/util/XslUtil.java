@@ -147,6 +147,10 @@ public final class XslUtil {
         return result;
     }
 
+
+
+    // Not used anymore in Sextant 6.6 - Keep it until myocean migration is not finalized and ExtJS module not dropped
+    @Deprecated
     public static Object parseWikiText(NodeInfo node, String src, String markupLanguage) throws InstantiationException,
         IllegalAccessException, ClassNotFoundException, XPathException, UnsupportedEncodingException {
         NodeInfo info = (NodeInfo) node;
@@ -174,6 +178,7 @@ public final class XslUtil {
         }
     }
 
+    @Deprecated
     public static String parseMarkupToText(String src, MarkupParser markupParser) {
         String html;
         if (markupParser != null) {
@@ -194,6 +199,7 @@ public final class XslUtil {
         return "<span>" + cleanedHtml + "</span>";
     }
 
+    @Deprecated
     private static String extractFromFullHtml(String html) {
         int startIndex = html.indexOf("<body>");
         int endIndex = html.indexOf("</html");
@@ -201,10 +207,15 @@ public final class XslUtil {
         return html;
     }
 
+    @Deprecated
     public static String markupToolTip(String template, String name, String syntaxLink) {
         String link = "<a href=\"javascript:window.open('" + syntaxLink + "', '_markupHelp')\">" + syntaxLink + "</a>";
         return template.replace("@@markupName@@", name).replace("@@syntaxLink@@", link);
     }
+    // End of Not used anymore in Sextant 6.6 - Keep it until myocean migration is not finalized and ExtJS module not dropped
+
+
+
 
     /**
      * Returns 'true' if the pattern matches the src

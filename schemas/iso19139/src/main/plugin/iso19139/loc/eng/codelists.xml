@@ -237,6 +237,7 @@
     </entry>
   </codelist>
 
+
 	<!-- ==================================================== -->
 	<codelist name="gmd:CI_RoleCode" alias="roleCode">
 		<entry>
@@ -383,6 +384,37 @@
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
+
+  <codelist name="gmd:DS_AssociationTypeCode"
+            alias="associationType"
+            displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+    <entry>
+      <code>crossReference</code>
+      <label>Cross reference</label>
+      <description>Reference from one dataset to another</description>
+    </entry>
+  </codelist>
+
+  <codelist name="gmd:DS_InitiativeTypeCode"
+            alias="initiativeType"
+            displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+    <entry>
+      <code>upstream-validation</code>
+      <label>Upstream product (Validation)</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>upstream-production</code>
+      <label>Upstream product (Production)</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>document</code>
+      <label>Document</label>
+      <description></description>
+    </entry>
+  </codelist>
+
 	<!-- ==================================================== -->
 	<codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType">
 		<entry>

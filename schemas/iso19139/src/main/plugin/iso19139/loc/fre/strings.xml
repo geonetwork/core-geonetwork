@@ -526,5 +526,8 @@
   <cm-addCrsEPSG3412>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</cm-addCrsEPSG3412>
   <cm-addCrsEPSG6404>Spherical 3D CS (EPSG 6404)</cm-addCrsEPSG6404>
   <cm-addCrsSR-ORG29>WRF Lambert Conformal Conic (SR-ORG 29)</cm-addCrsSR-ORG29>
+  <cm-linkToUpstreamProduction>Link to upstream production</cm-linkToUpstreamProduction>
+  <cm-linkToUpstreamValidation>Link to upstream validation</cm-linkToUpstreamValidation>
+  <cm-linkToDocument>Link to document</cm-linkToDocument>
 
 </strings>

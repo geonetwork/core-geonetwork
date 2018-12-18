@@ -3171,10 +3171,26 @@
       </thesaurusList>
 
       <sidePanel>
+
+        <action type="associatedResource"
+                name="cm-linkToDocument"
+                process="sibling">
+          <directiveAttributes>{"associationType": "crossReference", "initiativeType": "document"}</directiveAttributes>
+        </action>
+        <action type="associatedResource"
+                name="cm-linkToUpstreamValidation"
+                process="sibling">
+          <directiveAttributes>{"associationType": "crossReference", "initiativeType": "upstream-validation"}</directiveAttributes>
+        </action>
+        <action type="associatedResource"
+                name="cm-linkToUpstreamProduction"
+                process="sibling">
+          <directiveAttributes>{"associationType": "crossReference", "initiativeType": "upstream-production"}</directiveAttributes>
+        </action>
+
         <directive data-gn-overview-manager=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated"/>
-
+                   data-types="onlinesrc|sibling"/>
         <directive data-gn-validation-report=""/>
       </sidePanel>
 
@@ -3194,6 +3210,7 @@
                  name="cm-updateDate"/><!-- TODO:CM label override -->
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:edition"
                  name="cm-version"/>
+
         </section>
         <section name="cm-quicklookAndKeywords">
           <!--
