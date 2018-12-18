@@ -81,6 +81,7 @@
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
+      $scope.groupusers = null;
 
       // Scope for user
       // List of catalog users
@@ -135,10 +136,10 @@
               // in the list and trigger selection.
               // TODO: change route path when selected (issue - controller is
               // reloaded)
-              if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+              if ($routeParams.userOrGroup) {
                 angular.forEach($scope.groups, function(u) {
                   if (u.name === $routeParams.userOrGroup ||
-                      $routeParams.userOrGroupId === u.id.toString()) {
+                      $routeParams.userOrGroup === u.id.toString()) {
                     $scope.selectGroup(u);
                   }
                 });
@@ -156,11 +157,11 @@
         }).then(function() {
           // Search if requested user in location is
           // in the list and trigger user selection.
-          if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+          if ($routeParams.userOrGroup) {
             angular.forEach($scope.users, function(u) {
 
               if (u.username === $routeParams.userOrGroup ||
-                  $routeParams.userOrGroupId === u.id.toString()) {
+                  $routeParams.userOrGroup === u.id.toString()) {
                 $scope.selectUser(u);
               }
             });
@@ -168,7 +169,19 @@
         });
       }
 
-
+      /**
+       * Loads the users for a group.
+       *
+       * @param groupId
+       */
+      function loadGroupUsers(groupId) {
+        $http.get('../api/groups/' + groupId + '/users').
+        success(function(data) {
+          $scope.groupusers = data;
+        }).error(function(data) {
+          $scope.groupusers = [];
+        });
+      }
 
       /**
        * Add an new user based on the default
@@ -676,6 +689,9 @@
           group: g.id,
           sortBy: 'title'
         });
+
+        loadGroupUsers($scope.groupSelected.id);
+
         $scope.groupUpdated = false;
 
         $timeout(function() {

@@ -115,13 +115,13 @@
     'gnEditor', 'gnSearchManagerService', 'gnSchemaManagerService',
     'gnConfigService', 'gnUtilityService', 'gnOnlinesrc',
     'gnCurrentEdit', 'gnConfig', 'gnMetadataActions', 'Metadata',
-    'gnValidation',
+    'gnValidation', 'gnGlobalSettings',
     function($q, $scope, $routeParams, $http, $rootScope,
         $translate, $compile, $timeout, $location,
         gnEditor, gnSearchManagerService, gnSchemaManagerService,
         gnConfigService, gnUtilityService, gnOnlinesrc,
         gnCurrentEdit, gnConfig, gnMetadataActions, Metadata,
-        gnValidation) {
+        gnValidation, gnGlobalSettings) {
       $scope.savedStatus = null;
       $scope.savedTime = null;
       $scope.formId = null;
@@ -237,7 +237,7 @@
                   compileScope: $scope,
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
-                  formLoadExtraFn: setViewMenuInTopToolbar,
+                  formLoadExtraFn: formLoadExtraFunctions,
                   working: false
                 });
 
@@ -294,11 +294,35 @@
         });
       };
 
+      /**
+       * Extra functions to load after the form is loaded
+       */
+      var formLoadExtraFunctions = function() {
+
+        setViewMenuInTopToolbar();
+        setEditorIndentType();
+
+      };
+
       $scope.$watch('gnCurrentEdit.isMinor', function() {
         if ($('#minor')[0]) {
           $('#minor')[0].value = $scope.gnCurrentEdit.isMinor;
         }
       });
+
+      /**
+       * Function to set the editor indent type
+       */
+      var setEditorIndentType = function() {
+        var f = $('form.gn-editor');
+        // If CSS class is defined in the view in config-editor.xml, don't do anything
+        if (!f.hasClass('gn-editor-config-css') &&
+          angular.isDefined(gnGlobalSettings.gnCfg.mods.editor.editorIndentType)) {
+          // add indent type to editor based on UI configuration
+          f.addClass(gnGlobalSettings.gnCfg.mods.editor.editorIndentType);
+        }
+
+      };
 
       /**
        * When the form is loaded, this function is called.
@@ -315,6 +339,7 @@
             });
           }
         });
+        
       };
 
       /**

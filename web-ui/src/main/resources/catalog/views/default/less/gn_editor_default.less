@@ -48,19 +48,361 @@
     }
   }
 
-  // side panels
+  form.gn-editor {
+    // tabs above editor
+    .nav {
+      min-height: 42px;
+    }
+    .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+      border-color: @panel-default-border;
+    }
+    div[data-gn-toggle] {
+      right: 15px;
+    }
+    .gn-required > label:after {
+      font-size: 1.8em;
+      margin: 0px 0 0 7px;
+    }
+    .control-label {
+      color: #333333;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    input[type=text], input[type=number], select, textarea.form-control, .form-control, .bootstrap-tagsinput {
+      border-color: #ddd;
+      box-shadow: none;
+      outline: 0;
+      border-radius: 0;
+      &:focus {
+        border-color: @brand-info;
+        outline: 0;
+        box-shadow: none;
+      }
+    }
+    .btn {
+      border-radius: 0;
+    }
+    .input-group-addon, .input-group-btn {
+      width: 0.1%;
+    }
+    select:not([multiple]) {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-position: right 50%;
+      background-repeat: no-repeat;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);
+      padding: .5em;
+      padding-right: 1.5em
+    }
+    fieldset {
+      padding: 0 0 5px 0;
+      border: 1px solid #eee;
+      margin-top: 10px;
+      background-color: #fff;
+      legend {
+        margin-left: -6px;
+        width: calc(~"100% + 6px");
+        font-size: 24px;
+        line-height: 34px;
+        & > div.gn-move {
+          position: relative;
+          float: right;
+        }
+      }
+      legend[data-gn-slide-toggle]:before {
+        content: "\f107";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        position: absolute;
+        margin-left: -17px;
+        font-size: 16px;
+        margin-top: 0px;
+      }
+      table {
+        .col-sm-2, .col-sm-9 {
+          padding-right: 0;
+          padding-left: 0;
+        }
+        .btn [data-gn-click-and-spin] {
+          margin-right: 3px;
+        }
+        fieldset {
+          margin: 0 0 10px 0;
+          padding: 0;
+          .col-sm-2, .col-sm-9 {
+            padding-right: 15px;
+            padding-left: 15px;
+          }
+        }
+        .gn-move {
+          display: none;
+        }
+      }
+      .table {
+        margin-bottom: 0px;
+      }
+      fieldset {
+        margin: 10px;
+        padding-bottom: 10px;
+        padding-left: 0;
+        legend {
+          padding-right: 11px;
+          font-size: 20px;
+          font-weight: 400;
+        }
+        @media (max-width: @screen-xs-max) {
+          margin: 10px;
+        }
+        .table {
+          margin-bottom: -10px;
+        }
+      }
+    }
+    // addintional info
+    .well.well-sm {
+      background: @state-info-bg;
+      border: 1px solid @state-info-border;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    legend + .well.well-sm {
+      margin-top: -10px;
+    }
+    // date and time
+    [data-gn-date-picker] {
+      .col-sm-9, .col-sm-12 {
+        padding-left: 2px;
+        padding-right: 0;
+      }
+      .input-group-btn {
+        float: left;
+      }
+    }
+    .gn-date-picker > input[type=date], .gn-date-picker > input[type=time] {
+      width: 40%;
+    }
+    // default switch
+    [data-ng-switch-default] {
+      .col-xs-8, .col-xs-4 {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+    // twitter typeahead
+    .twitter-typeahead {
+      .tt-menu {
+        margin-top: 1px;
+        margin-left: 0;
+        width: calc(100% + 0px);
+        z-index: 110 !important;
+      }
+      .tt-suggestion {
+        cursor: pointer;
+        &:hover {
+          background-color: @panel-default-heading-bg;
+        }
+      }
+    }
+    .gn-date {
+      .col-sm-3 {
+        width: 21%;
+        padding-right: 0;
+      }
+      .col-sm-6 {
+        padding-left: 0;
+      }
+    }
+    // special case
+    [data-gn-topiccategory-selector] {
+      width: 90%;
+      .col-sm-10 {
+        width: 100%;
+      }
+      .bootstrap-tagsinput {
+        .label {
+          padding: 7px;
+          white-space: normal;
+          font-size: 12px;
+          font-weight: normal;
+          margin-bottom: 3px;
+        }
+      }
+      .twitter-typeahead {
+        .tt-menu {
+          margin-left: -7px;
+          margin-top: 7px;
+          width: calc(~"100% + 14px");
+        }
+      }
+    }
+    .col-lg-2.gn-control {
+      width: 10%;
+    }
+    // field in field
+    .gn-field {
+      .gn-field {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+  // sidebar in the editor
   .gn-editor-tools-container {
     .panel {
-      .panel-body {
-        padding-bottom: 0;
-        .btn-toolbar {
-          padding: 10px;
-          margin: -15px -15px 0px -15px;
-          border-bottom: 1px solid #ddd;
-          background-color: rgba(244, 245, 244, 0.3);
+      border-radius: 2px;
+      [data-gn-slide-toggle] {
+        padding-left: 24px;
+        &:before {
+          content: "\f107";
+          font-family: FontAwesome;
+          font-style: normal;
+          font-weight: normal;
+          text-decoration: inherit;
+          position: absolute;
+          margin-left: -16px;
+          font-size: 16px;
+          margin-top: -2px;
         }
       }
     }
   }
+}
 
+// alternative style for the editor form
+// Class to put label above fields
+form.gn-editor.gn-label-above-input {
+  // override default bootstrap widths for the editor
+  .col-sm-2 {
+    width: 100%;
+    text-align: left;
+  }
+  .col-sm-9 {
+    width: 90%;
+    .col-sm-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  div.gn-extra-field > label {
+    display: none;
+  }
+}
+
+// Class to color indent
+form.gn-editor.gn-indent-colored {
+  fieldset {
+    border: 1px solid @panel-default-border;
+    border-left: 3px solid @brand-primary;
+    legend {
+      border: 1px solid @panel-default-border;
+      border-left: 3px solid @brand-primary;
+      background: @panel-default-heading-bg;
+      margin-left: -3px;
+      margin-right: -3px;
+      width: ~"calc(100% + 4px)";
+      font-size: 16px;
+      padding: 3px 23px;
+      line-height: 34px;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+    }
+    // No highlight on hover
+    .field-bg {
+      background: transparent;
+    }
+    fieldset {
+      margin: 10px 15px;
+      border-left-color: @brand-success;
+      legend {
+        padding-right: 11px;
+        font-size: 14px;
+        border-left-color: @brand-success;
+      }
+      fieldset {
+        border-left-color: @brand-danger;
+        legend {
+          border-left-color: @brand-danger;
+        }
+        fieldset {
+          border-left-color: @brand-info;
+          legend {
+            border-left-color: @brand-info;
+          }
+          fieldset {
+            border-left-color: @brand-warning;
+            legend {
+              border-left-color: @brand-warning;
+            }
+            fieldset {
+              border-left-color: #999;
+              legend {
+                border-left-color: #999;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Blue scale color indent
+form.gn-editor.gn-indent-bluescale {
+  @indent-color: @brand-primary;
+  @indent-color-r: red(@indent-color);
+  @indent-color-g: green(@indent-color);
+  @indent-color-b: blue(@indent-color);
+  fieldset {
+    border: 1px solid @panel-default-border;
+    border-left: 3px solid @indent-color;
+    legend {
+      border: 1px solid @panel-default-border;
+      border-left: 3px solid @indent-color;
+      background: @panel-default-heading-bg;
+      margin-left: -3px;
+      margin-right: -3px;
+      width: ~"calc(100% + 4px)";
+      font-size: 16px;
+      padding: 3px 23px;
+      line-height: 34px;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+    }
+
+    fieldset {
+      margin: 10px 15px;
+      border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .9)';
+      legend {
+        padding-right: 11px;
+        font-size: 14px;
+        border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .9)';
+      }
+      fieldset {
+        border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .7)';
+        legend {
+          border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .7)';
+        }
+        fieldset {
+          border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .5)';
+          legend {
+            border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .5)';
+          }
+          fieldset {
+            border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .3)';
+            legend {
+              border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .3)';
+            }
+            fieldset {
+              border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .1)';
+              legend {
+                border-left-color: ~'rgba(@{indent-color-r}, @{indent-color-g}, @{indent-color-b}, .1)';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

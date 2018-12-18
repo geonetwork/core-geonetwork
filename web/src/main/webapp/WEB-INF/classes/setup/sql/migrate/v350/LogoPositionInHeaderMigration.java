@@ -20,15 +20,36 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.utils;
+package v350;
 
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
+import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.migration.JsonDatabaseMigration;
 
-import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
-public class NoOpEntityResolver implements EntityResolver {
-    public InputSource resolveEntity(String publicId, String systemId) {
-        return new InputSource(new StringReader(""));
+/**
+ * Migration for adding the settings for the logo header position to ui/config setting.
+ */
+public class LogoPositionInHeaderMigration extends JsonDatabaseMigration
+    implements DatabaseMigrationTask {
+
+    private final String settingName = "ui/config";
+
+    @Override
+    protected Map<String, String> setUpNewSettingValues() {
+        Map<String, String> fieldsToUpdate = new HashMap<>(1);
+        fieldsToUpdate.put("/mods/header/isLogoInHeader",
+            "true");
+        fieldsToUpdate.put("/mods/header/logoInHeaderPosition",
+            "\"left\"");
+
+
+        return fieldsToUpdate;
+    }
+
+    @Override
+    protected String getSettingName() {
+        return settingName;
     }
 }

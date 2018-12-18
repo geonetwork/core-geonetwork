@@ -216,6 +216,7 @@
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v350/migrate-</value>
         <value>java:v350.UrlComponentsDetectorsRegexMigration</value>
+        <value>java:v350.LogoPositionInHeaderMigration</value>
       </list>
     </entry>
   </util:map>

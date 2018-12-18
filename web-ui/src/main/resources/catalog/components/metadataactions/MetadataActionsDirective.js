@@ -187,6 +187,10 @@
             scope.updateCategoriesAllowed();
           });
 
+          scope.$watch('currentCategories', function(newvalue, oldvalue) {
+              init();
+          });
+
           var init = function() {
             return $http.get('../api/tags', {cache: true}).
                 success(function(data) {
@@ -477,6 +481,7 @@
                 'userIdentifier=' + scope.selectedUserGroup.userId +
                 '&groupIdentifier=' + scope.selectedUserGroup.groupId)
                 .then(function(r) {
+                  $rootScope.$broadcast('search');
                   $rootScope.$broadcast('StatusUpdated', {
                     msg: $translate.instant('transfertPrivilegesFinished', {
                       metadata: r.data.numberOfRecordsProcessed

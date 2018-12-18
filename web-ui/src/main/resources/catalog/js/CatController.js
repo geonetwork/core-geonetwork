@@ -77,7 +77,9 @@
             'rus': 'ru',
             'chi': 'zh',
             'slo': 'sk'
-          }
+          },
+          'isLogoInHeader': true,
+          'logoInHeaderPosition': 'left'
         },
         'home': {
           'enabled': true,
@@ -226,7 +228,8 @@
           'isUserRecordsOnly': false,
           'isFilterTagsDisplayed': false,
           'createPageTpl':
-              '../../catalog/templates/editor/new-metadata-horizontal.html'
+              '../../catalog/templates/editor/new-metadata-horizontal.html',
+          'editorIndentType': ''
         },
         'admin': {
           'enabled': true,
