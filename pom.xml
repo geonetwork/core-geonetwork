@@ -1354,7 +1354,7 @@
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
     <wro.version>1.7.9</wro.version>
-    <wro.debug>false</wro.debug>
+    <wro.debug>true</wro.debug>
 
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
