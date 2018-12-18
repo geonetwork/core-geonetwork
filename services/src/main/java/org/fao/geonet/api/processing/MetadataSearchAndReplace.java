@@ -32,12 +32,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
@@ -46,7 +48,9 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 /**
@@ -229,6 +233,14 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
                         false, true, true,
                         context.getLanguage(),
                         new ISODate().toString(), true);
+
+                    UserSession userSession = context.getUserSession();
+                    if(userSession != null) {
+                        XMLOutputter outp = new XMLOutputter();
+                        String xmlAfter = outp.outputString(processedMetadata);
+                        String xmlBefore = outp.outputString(md);
+                        new RecordProcessingChangeEvent(Long.parseLong(id), Integer.parseInt(userSession.getUserId()), xmlBefore, xmlAfter, process).publish(ApplicationContextHolder.get());
+                    }
                 }
             } catch (Exception e) {
                 report.addMetadataError(iId, e);

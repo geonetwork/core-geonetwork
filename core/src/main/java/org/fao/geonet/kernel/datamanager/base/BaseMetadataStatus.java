@@ -5,13 +5,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -55,16 +56,31 @@ public class BaseMetadataStatus implements IMetadataStatus {
     }
 
     /**
-     * Return all status records for the metadata id - current status is the first child due to sort by DESC on changeDate
+     * Return last workflow status for the metadata id
      */
     @Override
     public MetadataStatus getStatus(int metadataId) throws Exception {
+        String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
+        List<MetadataStatus> status = metadataStatusRepository.findAllByIdAndByType(
+            metadataId, StatusValueType.workflow, new Sort(Sort.Direction.DESC, sortField));
+        if (status.isEmpty()) {
+            return null;
+        } else {
+            return status.get(0);
+        }
+    }
+
+    /**
+     * Return all status for the metadata id
+     */
+    @Override
+    public List<MetadataStatus> getAllStatus(int metadataId) throws Exception {
         String sortField = SortUtils.createPath(MetadataStatus_.id, MetadataStatusId_.changeDate);
         List<MetadataStatus> status = metadataStatusRepository.findAllById_MetadataId(metadataId, new Sort(Sort.Direction.DESC, sortField));
         if (status.isEmpty()) {
             return null;
         } else {
-            return status.get(0);
+            return status;
         }
     }
 
@@ -75,7 +91,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public String getCurrentStatus(int metadataId) throws Exception {
         MetadataStatus status = getStatus(metadataId);
         if (status == null) {
-            return Params.Status.UNKNOWN;
+            return StatusValue.Status.UNKNOWN;
         }
 
         return String.valueOf(status.getId().getStatusId());
@@ -93,10 +109,17 @@ public class BaseMetadataStatus implements IMetadataStatus {
      * @return the saved status entity object
      */
     @Override
+    @Deprecated
     public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
         metadataIndexer.indexMetadata(Integer.toString(id), true, null);
         return statusObject;
+    }
+    @Override
+    public MetadataStatus setStatusExt(MetadataStatus metatatStatus) throws Exception {
+        metadataStatusRepository.save(metatatStatus);
+        metadataIndexer.indexMetadata(metatatStatus.getId().getMetadataId() + "", true, null);
+        return metatatStatus;
     }
 
     /**
@@ -141,9 +164,9 @@ public class BaseMetadataStatus implements IMetadataStatus {
             final Pattern pattern = Pattern.compile(groupMatchingRegex);
             final Matcher matcher = pattern.matcher(groupName);
             if (matcher.find()) {
-                setStatus(context, Integer.valueOf(newId), Integer.valueOf(Params.Status.DRAFT), new ISODate(),
+                setStatus(context, Integer.valueOf(newId), Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(),
                         String.format("Workflow automatically enabled for record in group %s. Record status is set to %s.", groupName,
-                                Params.Status.DRAFT));
+                                StatusValue.Status.DRAFT));
             }
         }
     }

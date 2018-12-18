@@ -7,7 +7,7 @@
             data-toggle="dropdown"
             aria-label="{{'manageRecord' | translate}}"
             aria-expanded="false">
-      <i class="fa fa-fw fa-cog"/>
+      <i class="fa fa-fw fa-cog"></i>
       <span data-translate="" class="hidden-xs">manageRecord</span>
       <span class="caret"></span>
     </button>
@@ -16,7 +16,7 @@
         <a data-ng-href=""
              data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
              data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
-          <i class="fa fa-key"></i>&nbsp;
+          <i class="fa fa-fw fa-key"></i>&nbsp;
           <span data-translate="">privileges</span>
         </a>
       </li>
@@ -24,7 +24,7 @@
           data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
         <a data-ng-href=""
            data-ng-click="mdService.openTransferOwnership(md, null, getCatScope())">
-          <i class="fa fa-user"></i>&nbsp;
+          <i class="fa fa-fw fa-user"></i>&nbsp;
           <span data-translate="">transferOwnership</span>
         </a></li>
       <li role="menuitem"
@@ -37,7 +37,7 @@
             (!md.hasValidation() ? 'mdnovalidation':
             (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}">
         <a data-ng-click="mdService.publish(md, undefined, undefined, getCatScope())">
-          <i class="fa"
+          <i class="fa fa-fw"
              data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
           <span data-ng-if="md.isPublished()"
                 data-translate="">unpublish</span>
@@ -61,26 +61,40 @@
         <a data-ng-href=""
            data-ng-if="user.canEditRecord(md) &&
                                 md.isWorkflowEnabled()"
-           data-ng-click="mdService.openUpdateStatusPanel(getScope())">
-          <i class="fa fa-bell"></i>&nbsp;
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')">
+          <i class="fa fa-fw fa-code-fork"></i>&nbsp;
           <span data-translate="">updateStatus</span>
-        </a></li>
-      <li>
+        </a>
+      </li>
+      <li data-ng-if="user.canEditRecord(md) && !md.isWorkflowEnabled()">
         <a role="menuitem"
            data-ng-href=""
-           data-ng-if="user.canEditRecord(md) &&
-             !md.isWorkflowEnabled()"
            data-ng-click="mdService.startWorkflow(md, getCatScope())">
-          <i class="fa fa-bell"></i>&nbsp;
+          <i class="fa fa-code-fork"></i>&nbsp;
           <span data-translate="">enableWorkflow</span>
         </a>
       </li>
-      <li role="menuitem" class="divider" data-ng-if="user.isConnected()"></li>
+
+      <li role="menuitem" class="divider"
+          data-ng-if="user.isConnected()"></li>
+
+
+      <li data-ng-repeat="t in tasks"
+          data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
+        <a data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">
+          <i class="fa fa-fw"></i>&nbsp;
+          <span>{{t.label | gnLocalized}}</span>
+        </a>
+      </li>
+      <li role="menuitem" class="divider"
+          data-ng-if="user.isConnected() && tasks.length > 0">&nbsp;</li>
+
+
       <li role="menuitem">
         <a data-ng-href=""
            data-ng-if="user.isEditorOrMore()"
            data-ng-click="mdService.duplicate(md)">
-          <i class="fa fa-copy"></i>&nbsp;
+          <i class="fa fa-fw fa-copy"></i>&nbsp;
           <span data-translate="">duplicate</span>
         </a>
       </li>
@@ -88,7 +102,7 @@
         <a data-ng-href=""
            data-ng-if="user.isEditorOrMore()"
            data-ng-click="mdService.createChild(md)">
-          <i class="fa fa-sitemap"></i>&nbsp;
+          <i class="fa fa-fw fa-sitemap"></i>&nbsp;
           <span data-translate="">createChild</span>
         </a>
       </li>
@@ -101,7 +115,7 @@
             data-toggle="dropdown"
             aria-label="{{'download' | translate}}"
             aria-expanded="false">
-      <i class="fa fa-fw fa-download"/>
+      <i class="fa fa-fw fa-download"></i>
       <span data-translate="" class="hidden-xs">download</span>
       <span class="caret"></span>
     </button>
@@ -109,34 +123,34 @@
       <li>
         <a data-ng-href=""
            data-ng-click="mdService.getPermalink(md)">
-          <i class="fa fa-link"/>&nbsp;
+          <i class="fa fa-fw fa-link"></i>&nbsp;
           <span data-translate="">permalink</span>
         </a>
       </li>
       <li role="menuitem">
         <a data-ng-href=""
            data-ng-click="mdService.metadataMEF(md.getUuid())">
-          <i class="fa fa-file-zip-o"></i>&nbsp;
+          <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;
           <span data-translate="">exportMEF</span>
         </a>
       </li>
       <li role="menuitem">
         <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&output=pdf"
            target="_blank">
-          <i class="fa fa-file-pdf-o"></i>&nbsp;
+          <i class="fa fa-fw fa-file-pdf-o"></i>&nbsp;
           <span data-translate="">exportPDF</span>
         </a>
       </li>
       <li role="menuitem">
         <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true">
-          <i class="fa fa-file-code-o"></i>&nbsp;
+          <i class="fa fa-fw fa-file-code-o"></i>&nbsp;
           <span data-translate="">exportXML</span>
         </a>
       </li>
       <li role="menuitem">
         <a data-ng-href=""
            data-ng-click="mdService.metadataRDF(md.getUuid())">
-          <i class="fa fa-share-alt"></i>&nbsp;
+          <i class="fa fa-fw fa-share-alt"></i>&nbsp;
           <span data-translate="">exportRDF</span>
         </a>
       </li>

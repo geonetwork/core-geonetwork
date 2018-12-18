@@ -37,6 +37,7 @@ import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.DataManager;
@@ -48,6 +49,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -70,6 +72,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
@@ -163,6 +166,7 @@ public class BatchEditsApi implements ApplicationContextAware {
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         report.setTotalRecords(setOfUuidsToEdit.size());
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
         String changeDate = null;
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
@@ -200,12 +204,20 @@ public class BatchEditsApi implements ApplicationContextAware {
                         boolean validate = false;
                         boolean ufo = false;
                         boolean index = true;
+                        Element beforeMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);
+
                         dataMan.updateMetadata(
                             serviceContext, record.getId() + "", metadata,
                             validate, ufo, index,
                             "eng", // Not used when validate is false
                             changeDate, false);
                         report.addMetadataInfos(record.getId(), "Metadata updated.");
+
+                        Element afterMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);
+                        XMLOutputter outp = new XMLOutputter();
+                        String xmlBefore = outp.outputString(beforeMetadata);
+                        String xmlAfter = outp.outputString(afterMetadata);
+                        new RecordUpdatedEvent(record.getId(), userSession.getUserIdAsInt(), xmlBefore, xmlAfter).publish(appContext);
                     }
                 } catch (Exception e) {
                     report.addMetadataError(record.getId(), e);

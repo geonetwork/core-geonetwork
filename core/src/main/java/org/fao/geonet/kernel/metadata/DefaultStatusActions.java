@@ -23,29 +23,44 @@
 
 package org.fao.geonet.kernel.metadata;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueNotificationLevel;
+import org.fao.geonet.domain.StatusValueType;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.MailSender;
+import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
 import org.springframework.context.ApplicationContext;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -57,11 +72,9 @@ public class DefaultStatusActions implements StatusActions {
     protected String siteName;
     protected UserSession session;
     protected boolean emailNotes = true;
-    private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
-    private boolean useSSL;
-    private boolean useTLS;
-    private boolean ignoreSslCertificateErrors;
+    private String from, replyTo, replyToDescr;
     private StatusValueRepository _statusValueRepository;
+    private IMetadataStatus metadataStatusManager;
 
     /**
      * Constructor.
@@ -82,32 +95,12 @@ public class DefaultStatusActions implements StatusActions {
         SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         siteName = sm.getSiteName();
-        host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
-        port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
-        from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
-        username = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
-        password = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
-        useSSL = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL);
-        useTLS = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS);
-        ignoreSslCertificateErrors = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS);
-
-        if (host == null || host.length() == 0) {
-            context.error("Mail server host not configure");
-            emailNotes = false;
-        }
-
-        if (port == null || port.length() == 0) {
-            context.error("Mail server port not configured, email notifications won't be sent.");
-            emailNotes = false;
-        }
+        from = sm.getValue(SYSTEM_FEEDBACK_EMAIL);
 
         if (from == null || from.length() == 0) {
             context.error("Mail feedback address not configured, email notifications won't be sent.");
             emailNotes = false;
         }
-
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
-        fromDescr = siteName + messages.getString("status_email_title");
 
         session = context.getUserSession();
         replyTo = session.getEmailAddr();
@@ -115,10 +108,11 @@ public class DefaultStatusActions implements StatusActions {
             replyToDescr = session.getName() + " " + session.getSurname();
         } else {
             replyTo = from;
-            replyToDescr = fromDescr;
+            replyToDescr = siteName;
         }
 
         dm = applicationContext.getBean(DataManager.class);
+        metadataStatusManager = applicationContext.getBean(IMetadataStatus.class);
         siteUrl = sm.getSiteURL(context);
     }
 
@@ -129,60 +123,197 @@ public class DefaultStatusActions implements StatusActions {
      * @param minorEdit If true then the edit was a minor edit.
      */
     public void onEdit(int id, boolean minorEdit) throws Exception {
-        if (!minorEdit && dm.getCurrentStatus(id).equals(Params.Status.APPROVED)) {
+        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
             unsetAllOperations(id);
-            dm.setStatus(context, id, Integer.valueOf(Params.Status.DRAFT), new ISODate(), changeMessage);
+            dm.setStatus(context, id, Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(), changeMessage);
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Private methods
-    // -------------------------------------------------------------------------
-
     /**
-     * Called when need to set status on a set of metadata records.
+     * Called when a record status is added.
      *
-     * @param status        The status to set.
-     * @param metadataIds   The set of metadata ids to set status on.
-     * @param changeDate    The date the status was changed.
-     * @param changeMessage The message explaining why the status has changed.
+     * @param listOfStatus
+     * @return
+     * @throws Exception
      */
-    public Set<Integer> statusChange(String status, Set<Integer> metadataIds, ISODate changeDate, String changeMessage) throws Exception {
+    public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
 
         Set<Integer> unchanged = new HashSet<Integer>();
 
         // -- process the metadata records to set status
-        for (Integer mid : metadataIds) {
-            String currentStatus = dm.getCurrentStatus(mid);
+        for (MetadataStatus status : listOfStatus) {
+            String currentStatus = dm.getCurrentStatus(status.getId().getMetadataId());
+            String statusId = status.getId().getStatusId() + "";
+            Set<Integer> listOfId = new HashSet<>(1);
+            listOfId.add(status.getId().getMetadataId());
 
-            // --- if the status is already set to value of status then do nothing
-            if (status.equals(currentStatus)) {
+
+            // --- For the workflow, if the status is already set to value
+            // of status then do nothing. This does not apply to task and event.
+            if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
+               (statusId).equals(currentStatus)) {
                 if (context.isDebugEnabled())
-                    context.debug("Metadata " + mid + " already has status " + mid);
-                unchanged.add(mid);
+                    context.debug(String.format("Metadata %s already has status %s ",
+                        status.getId().getMetadataId(), status.getId().getStatusId()));
+                unchanged.add(status.getId().getMetadataId());
+                continue;
             }
 
-            if (status.equals(Params.Status.APPROVED)) {
-                // setAllOperations(mid); - this is a short cut that could be enabled
-            } else if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.REJECTED)) {
-                unsetAllOperations(mid);
-            }
+            // --- Apply changes based on status change
+            // TODO: Would be good to report what has been done ?
+            applyRulesForStatusChange(status);
 
             // --- set status, indexing is assumed to take place later
-            dm.setStatusExt(context, mid, Integer.valueOf(status), changeDate, changeMessage);
-        }
+            metadataStatusManager.setStatusExt(status);
 
-        // --- inform content reviewers if the status is submitted
-        if (status.equals(Params.Status.SUBMITTED)) {
-            informContentReviewers(metadataIds, changeDate.toString(), changeMessage);
-            // --- inform owners if status is approved
-        } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED)) {
-            informOwners(metadataIds, changeDate.toString(), changeMessage, status);
+            // --- inform content reviewers if the status is submitted
+            try {
+                notify(getUserToNotify(status), status);
+            } catch (Exception e) {
+                context.warning(String.format(
+                    "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
+                    status.getId().getMetadataId(), status.getId().getStatusId(), e.getMessage()));
+            }
         }
 
         return unchanged;
+    }
+
+
+    /**
+     * This apply specific rules depending on status change.
+     * The default rules are:
+     * <ul>
+     *     <li>DISABLED When approved, the record is automatically published.</li>
+     *     <li>When draft or rejected, unpublish the record.</li>
+     * </ul>
+     * @param status
+     * @throws Exception
+     */
+    private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
+        String statusId = status.getId().getStatusId() + "";
+        if (statusId.equals(StatusValue.Status.APPROVED)) {
+            // setAllOperations(mid);
+        } else if (statusId.equals(StatusValue.Status.DRAFT) ||
+            statusId.equals(StatusValue.Status.REJECTED)) {
+            unsetAllOperations(status.getId().getMetadataId());
+        }
+    }
+
+    /**
+     * Send email to a list of users. The list of users is defined based on
+     * the notification level of the status. See {@link StatusValueNotificationLevel}.
+     * @param userToNotify
+     * @param status
+     * @throws Exception
+     */
+    private void notify(List<User> userToNotify, MetadataStatus status) throws Exception {
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+
+        String translatedStatusName = getTranslatedStatusName(status.getId().getStatusId());
+        // TODO: Refactor to allow custom messages based on the type of status
+        String subjectTemplate = "";
+        try {
+            subjectTemplate = messages.getString(
+                "status_change_" + status.getStatusValue().getName() + "_email_subject");
+        } catch (MissingResourceException e) {
+            subjectTemplate = messages.getString("status_change_default_email_subject");
+        }
+        String subject = MessageFormat.format(subjectTemplate,
+            siteName,
+            translatedStatusName,
+            replyToDescr // Author of the change
+        );
+
+        Set<Integer> listOfId = new HashSet<>(1);
+        listOfId.add(status.getId().getMetadataId());
+
+        String textTemplate = "";
+        try {
+            textTemplate = messages.getString(
+                "status_change_" + status.getStatusValue().getName() + "_email_text");
+        } catch (MissingResourceException e) {
+            textTemplate = messages.getString("status_change_default_email_text");
+        }
+
+        UserRepository userRepository = context.getBean(UserRepository.class);
+        User owner = userRepository.findOne(status.getOwner());
+
+        String message = MessageFormat.format(textTemplate,
+            replyToDescr, // Author of the change
+            status.getChangeMessage(),
+            translatedStatusName,
+            status.getId().getChangeDate(),
+            status.getDueDate(),
+            status.getCloseDate(),
+            owner == null ? "" : owner.getName() + " " + owner.getSurname(),
+            siteUrl);
+
+        MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        Metadata metadata = metadataRepository.findOne(status.getId().getMetadataId());
+
+        subject = compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
+        message = compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
+        for (User user : userToNotify) {
+            sendEmail(user.getEmail(), subject, message);
+        }
+    }
+
+    /**
+     * Based on the status notification level defined in the database
+     * collect the list of users to notify.
+     *
+     * @param status
+     * @return
+     */
+    protected List<User> getUserToNotify(MetadataStatus status) {
+        StatusValueNotificationLevel notificationLevel = status.getStatusValue().getNotificationLevel();
+        UserRepository userRepository = context.getBean(UserRepository.class);
+        List<User> users = new ArrayList<>();
+
+        // TODO: Status does not provide batch update
+        // So taking care of one record at a time.
+        // Currently the code could notify a mix of reviewers
+        // if records are not in the same groups. To be improved.
+        Set<Integer> listOfId = new HashSet<>(1);
+        listOfId.add(status.getId().getMetadataId());
+
+        if (notificationLevel != null) {
+            if (notificationLevel == StatusValueNotificationLevel.statusUserOwner) {
+                User owner = userRepository.findOne(status.getOwner());
+                users.add(owner);
+            } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
+                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(
+                    listOfId,
+                    Profile.Reviewer,
+                    SortUtils.createSort(User_.name));
+                for (Pair<Integer, User> p : results) {
+                    users.add(p.two());
+                };
+            } else if (notificationLevel == StatusValueNotificationLevel.recordUserAuthor) {
+                Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAll(listOfId);
+                for (Metadata r : records) {
+                    users.add(userRepository.findOne(r.getSourceInfo().getOwner()));
+                };
+            } else if (notificationLevel.name().startsWith("catalogueProfile")) {
+                String profileId = notificationLevel.name().replace(
+                    "catalogueProfile", "");
+                Profile profile = Profile.findProfileIgnoreCase(profileId);
+                users = userRepository.findAllByProfile(profile);
+            } else if (notificationLevel == StatusValueNotificationLevel.catalogueAdministrator) {
+                SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+                String adminEmail = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
+                if (StringUtils.isNotEmpty(adminEmail)) {
+                    Set<String> emails = new HashSet<>(1);
+                    emails.add(adminEmail);
+                    User catalogueAdmin = new User().setEmailAddresses(emails);
+                    users.add(catalogueAdmin);
+                }
+            }
+        }
+        return users;
     }
 
     /**
@@ -196,72 +327,6 @@ public class DefaultStatusActions implements StatusActions {
         for (ReservedOperation op : ReservedOperation.values()) {
             dm.forceUnsetOperation(context, mdId, allGroup, op.getId());
         }
-    }
-
-    /**
-     * Inform content reviewers of metadata records in list that they need to review the record.
-     *
-     * @param metadata      The selected set of metadata records
-     * @param changeDate    The date that of the change in status
-     * @param changeMessage Message supplied by the user that set the status
-     */
-    protected void informContentReviewers(Set<Integer> metadata, String changeDate, String changeMessage) throws Exception {
-
-        // --- get content reviewers (sorted on content reviewer userid)
-        UserRepository userRepository = context.getBean(UserRepository.class);
-        List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(metadata,
-            Profile.Reviewer, SortUtils.createSort(User_.name));
-
-        List<User> users = Lists.transform(results, new Function<Pair<Integer, User>, User>() {
-            @Nullable
-            @Override
-            public User apply(@Nonnull Pair<Integer, User> input) {
-                return input.two();
-            }
-        });
-        String mdChanged = buildMetadataChangedMessage(metadata);
-        String translatedStatusName = getTranslatedStatusName(Params.Status.SUBMITTED);
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
-        String subject = String.format(messages.getString(
-            "status_email_change_title"),
-            siteName, translatedStatusName, replyToDescr, replyTo, changeDate
-        );
-        processList(users, subject, Params.Status.SUBMITTED,
-            changeDate, changeMessage, mdChanged);
-    }
-
-
-    private String buildMetadataChangedMessage(Set<Integer> metadata) {
-        String statusMetadataDetails = null;
-        String message = "";
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
-
-        try {
-            statusMetadataDetails = messages.getString("status_email_change_details");
-        } catch (Exception e) {
-        }
-        // Fallback on a default value if statusMetadataDetails not resolved
-        if (statusMetadataDetails == null) {
-            statusMetadataDetails = "* {{index:title}} ({{serverurl}}catalog.search#/metadata/{{index:_uuid}})";
-        }
-
-        ArrayList<String> fields = new ArrayList<String>();
-
-        Matcher m = metadataLuceneField.matcher(statusMetadataDetails);
-        Iterable<Metadata> mds = this.context.getBean(MetadataRepository.class).findAll(metadata);
-
-        while (m.find()) {
-            fields.add(m.group(1));
-        }
-
-        for (Metadata md : mds) {
-            String curMdDetails = statusMetadataDetails;
-            // First substitution for variables not stored in the index
-            curMdDetails = curMdDetails.replace("{{serverurl}}", siteUrl);
-            curMdDetails = compileMessageWithIndexFields(curMdDetails, md.getUuid(), this.language);
-            message = message.concat(curMdDetails + "\r\n");
-        }
-        return message;
     }
 
     /**
@@ -289,87 +354,35 @@ public class DefaultStatusActions implements StatusActions {
         return message;
     }
 
-    private String getTranslatedStatusName(String statusValueId) {
+    private String getTranslatedStatusName(int statusValueId) {
         String translatedStatusName = "";
-        StatusValue s = _statusValueRepository.findOneById(Integer.valueOf(statusValueId));
+        StatusValue s = _statusValueRepository.findOneById(statusValueId);
         if (s == null) {
-            translatedStatusName = statusValueId;
+            translatedStatusName = statusValueId + " (Status not found in database translation table. Check the content of the StatusValueDes table.)";
         } else {
             translatedStatusName = s.getLabel(this.language);
         }
         return translatedStatusName;
     }
 
-    /**
-     * Inform owners of metadata records that the records have approved or rejected.
-     *
-     * @param metadataIds   The selected set of metadata records
-     * @param changeDate    The date that of the change in status
-     * @param changeMessage Message supplied by the user that set the status
-     */
-    protected void informOwners(Set<Integer> metadataIds, String changeDate, String changeMessage, String status)
-        throws Exception {
-
-        String translatedStatusName = getTranslatedStatusName(status);
-        // --- get metadata owners (sorted on owner userid)
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
-        String subject = String.format(messages.getString(
-            "status_email_change_title"),
-            siteName, translatedStatusName, replyToDescr, replyTo, changeDate
-        );
-        String mdChanged = buildMetadataChangedMessage(metadataIds);
-
-        Iterable<Metadata> metadata = this.context.getBean(MetadataRepository.class).findAll(metadataIds);
-        List<User> owners = new ArrayList<User>();
-        UserRepository userRepo = this.context.getBean(UserRepository.class);
-
-        for (Metadata md : metadata) {
-            int ownerId = md.getSourceInfo().getOwner();
-            owners.add(userRepo.findOne(ownerId));
-        }
-
-        processList(owners, subject, status, changeDate, changeMessage, mdChanged);
-
-    }
-
-    /**
-     * Process the users and metadata records for emailing notices.
-     *
-     * @param users         The selected set of users
-     * @param subject       Subject to be used for email notices
-     * @param status        The status being set
-     * @param changeDate    Datestamp of status change
-     * @param changeMessage The message indicating why the status has changed
-     */
-    protected void processList(List<User> users, String subject, String status, String changeDate,
-                               String changeMessage, String mdChanged) throws Exception {
-
-        for (User user : users) {
-            sendEmail(user.getEmail(), subject, status, changeDate, changeMessage, mdChanged);
-        }
-    }
 
     /**
      * Send the email message about change of status on a group of metadata records.
      *
      * @param sendTo        The recipient email address
      * @param subject       Subject to be used for email notices
-     * @param status        The status being set on the records
-     * @param changeDate    Datestamp of status change
-     * @param changeMessage The message indicating why the status has changed
+     * @param message       Text of the mail
      */
-    protected void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage, String mdChanged) throws Exception {
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
-        String message = String.format(messages.getString(
-            "status_email_change_text"),
-            changeMessage, mdChanged, siteUrl, status, changeDate);
+    protected void sendEmail(String sendTo, String subject, String message) throws Exception {
 
         if (!emailNotes) {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
-            MailSender sender = new MailSender(context);
-            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, useTLS,
-                ignoreSslCertificateErrors, from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            SettingManager sm = applicationContext.getBean(SettingManager.class);
+            List<String> to = new ArrayList<>();
+            to.add(sendTo);
+            MailUtil.sendMail(to, subject, message, null, sm, replyTo, replyToDescr);
         }
     }
 }

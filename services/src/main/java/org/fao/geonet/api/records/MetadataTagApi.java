@@ -43,6 +43,8 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.events.history.RecordCategoryChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -66,6 +68,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -153,6 +156,7 @@ public class MetadataTagApi {
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
+        Set<MetadataCategory> before = metadata.getMetadataCategories();
 
         if (clear) {
             appContext.getBean(IMetadataManager.class).update(
@@ -175,6 +179,12 @@ public class MetadataTagApi {
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+
+        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        Set<MetadataCategory> after = metadata.getMetadataCategories();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+
     }
 
     @ApiOperation(
@@ -207,6 +217,7 @@ public class MetadataTagApi {
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
+        Set<MetadataCategory> before = metadata.getMetadataCategories();
 
         if (id == null || id.length == 0) {
             appContext.getBean(IMetadataManager.class).update(
@@ -223,6 +234,12 @@ public class MetadataTagApi {
         }
 
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+
+        metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        Set<MetadataCategory> after = metadata.getMetadataCategories();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);;
+
     }
 
 
@@ -290,6 +307,7 @@ public class MetadataTagApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> before = info.getMetadataCategories();
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -317,6 +335,12 @@ public class MetadataTagApi {
                         report.incrementProcessedRecords();
                     }
                 }
+
+                info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> after = info.getMetadataCategories();
+                UserSession userSession = ApiUtils.getUserSession(request.getSession());
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
+
             }
             dataMan.flush();
             dataMan.indexMetadata(listOfUpdatedRecords);
@@ -383,6 +407,7 @@ public class MetadataTagApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
                 AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> before = info.getMetadataCategories();
                 if (info == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -393,6 +418,11 @@ public class MetadataTagApi {
                     metadataManager.save(info);
                     report.incrementProcessedRecords();
                 }
+
+                info = metadataRepository.findOneByUuid(uuid);
+                Set<MetadataCategory> after = info.getMetadataCategories();
+                UserSession userSession = ApiUtils.getUserSession(request.getSession());
+                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);;
             }
             dataMan.flush();
             dataMan.indexMetadata(listOfUpdatedRecords);

@@ -23,48 +23,50 @@
 
 package org.fao.geonet.api.status;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jeeves.server.context.ServiceContext;
-
-import javax.servlet.http.HttpServletRequest;
-
-@RequestMapping(value = {
-    "/api/status",
-    "/api/" + API.VERSION_0_1 +
-        "/status"
-})
-@Api(value = "status",
-    tags = "status",
-    description = "Workflow status operations")
+@RequestMapping(value = { "/api/status", "/api/" + API.VERSION_0_1 + "/status" })
+@Api(value = "status", tags = "status", description = "Workflow status operations")
 @Controller("status")
 public class StatusApi {
 
-    @ApiOperation(
-        value = "Get status",
-        notes = "",
-        nickname = "getStatus")
-    @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
+    @ApiOperation(value = "Get status", notes = "", nickname = "getStatus")
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<StatusValue> getStatus(HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         return context.getBean(StatusValueRepository.class).findAll();
+    }
+
+
+    @ApiOperation(value = "Get status by type", notes = "", nickname = "getStatusByType")
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET, path = "/{type}")
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<StatusValue> getStatusByType(
+            @ApiParam(value = "Type", required = true) @PathVariable StatusValueType type, HttpServletRequest request)
+            throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        return context.getBean(StatusValueRepository.class).findAllByType(type);
     }
 }

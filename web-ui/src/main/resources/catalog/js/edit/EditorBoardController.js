@@ -40,10 +40,11 @@
     '$rootScope',
     '$translate',
     '$q',
+    '$http',
     'gnSearchSettings',
     'gnMetadataActions',
     'gnGlobalSettings',
-    function($scope, $location, $rootScope, $translate, $q,
+    function($scope, $location, $rootScope, $translate, $q, $http,
         gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
       $scope.onlyMyRecord = {
         is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
@@ -92,6 +93,14 @@
           setOwner();
         }
       });
+
+
+
+      // Transfert the scope to the popup
+      $scope.getScope = function(currentMd) {
+        $scope.md = currentMd;
+        return $scope;
+      };
 
       $scope.deleteRecord = function(md) {
         var deferred = $q.defer();

@@ -25,6 +25,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.StatusValueType;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -48,4 +49,6 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
      */
     @Nonnull
     List<MetadataStatus> findAllById_MetadataId(int metadataId, Sort sort);
+
+
 }
