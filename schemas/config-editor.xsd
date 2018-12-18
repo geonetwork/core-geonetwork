@@ -585,6 +585,20 @@ Hide the view from the menu if the attribute is defined. Allows to easily disabl
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="class" type="xs:string">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Define custom CSS class to be set on the form element. This is mainly used
+to set the type of indent:
+
+ * gn-label-above-input: to put label above form input
+ * gn-indent-colored: colored left border on each fieldset
+ * gn-indent-bluescale: blue scale colored left border on each fieldset
+
+See catalog/views/default/less/gn_editor_default.less to add your custom editor styles.
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="upAndDownControlHidden" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
