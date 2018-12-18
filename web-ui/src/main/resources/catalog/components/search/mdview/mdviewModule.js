@@ -127,7 +127,6 @@
               }
             }).then(
                 function(response,status) {
-                  console.log(response.status);
                   if (response.status!=200){
                     $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
                   } else {
