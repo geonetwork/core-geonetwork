@@ -8,7 +8,7 @@
                 xmlns:grg="http://www.isotc211.org/schemas/grg/"
                 xmlns:owl="http://www.w3.org/2002/07/owl#"
                 xmlns:void="http://rdfs.org/ns/void#"
-                version="2.0">
+                version="1.0">
   
   <xsl:template match="skos:prefLabel[. = 'SeaDataNet device categories']">
     <xsl:copy>Measuring devices</xsl:copy>
@@ -18,8 +18,7 @@
     <xsl:copy>Positioning devices</xsl:copy>
   </xsl:template>
   
-  <xsl:template match="skos:member[skos:Concept/
-                        not(starts-with(@rdf:about,
+  <xsl:template match="skos:member[not(starts-with(skos:Concept/@rdf:about,
                               'http://vocab.nerc.ac.uk/collection/L05/current/POS'))]"
                 priority="200"/>
 

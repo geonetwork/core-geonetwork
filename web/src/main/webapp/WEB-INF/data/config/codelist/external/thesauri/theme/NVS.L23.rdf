@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/">
 <skos:prefLabel>SeaDataNet metadata entities</skos:prefLabel>
 <dc:title>SeaDataNet metadata entities</dc:title>
@@ -16,12 +16,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/CDI/">
 <dc:identifier>SDN:L23::CDI</dc:identifier>
 <dce:identifier>SDN:L23::CDI</dce:identifier>
+<dc:date>2008-06-02 13:07:32.0</dc:date>
 <skos:notation>SDN:L23::CDI</skos:notation>
 <skos:prefLabel xml:lang="en">Common Data Index record</skos:prefLabel>
 <skos:altLabel>CDI</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record providing discovery and evaluation metadata for a SeaDataNet data object</skos:definition>
 <owl:versionInfo>2</owl:versionInfo>
-<dc:date>2008-06-02 13:07:32.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/CDI/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2008-06-02 13:07:32.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -31,12 +34,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/CPRD/">
 <dc:identifier>SDN:L23::CPRD</dc:identifier>
 <dce:identifier>SDN:L23::CPRD</dce:identifier>
+<dc:date>2012-01-17 10:03:53.0</dc:date>
 <skos:notation>SDN:L23::CPRD</skos:notation>
 <skos:prefLabel xml:lang="en">Composite Product Record</skos:prefLabel>
 <skos:altLabel>Composite Product</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record providing discovery metadata for a product such as a DTM which is provided by a data provider in place of their actual survey data as source for the project.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2012-01-17 10:03:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/CPRD/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2012-01-17 10:03:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -46,12 +52,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/CSR/">
 <dc:identifier>SDN:L23::CSR</dc:identifier>
 <dce:identifier>SDN:L23::CSR</dce:identifier>
+<dc:date>2011-01-21 11:09:35.0</dc:date>
 <skos:notation>SDN:L23::CSR</skos:notation>
 <skos:prefLabel xml:lang="en">Cruise Summary record</skos:prefLabel>
 <skos:altLabel>CSR</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a cruise that has already taken place</skos:definition>
 <owl:versionInfo>3</owl:versionInfo>
-<dc:date>2011-01-21 11:09:35.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/CSR/3/"/>
+<pav:version>3</pav:version>
+<pav:authoredOn>2011-01-21 11:09:35.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -61,12 +70,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/DATDOC/">
 <dc:identifier>SDN:L23::DATDOC</dc:identifier>
 <dce:identifier>SDN:L23::DATDOC</dce:identifier>
+<dc:date>2016-03-03 12:19:11.0</dc:date>
 <skos:notation>SDN:L23::DATDOC</skos:notation>
 <skos:prefLabel xml:lang="en">Data documentation</skos:prefLabel>
 <skos:altLabel>Data documentation</skos:altLabel>
 <skos:definition xml:lang="en">An XHTML document compiled and served by the data curator to describe the sampling, analytical and quality control procedures used in the generation and subsequent management of the data.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-03-03 12:19:11.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/DATDOC/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-03-03 12:19:11.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -76,12 +88,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/DTLCNC/">
 <dc:identifier>SDN:L23::DTLCNC</dc:identifier>
 <dce:identifier>SDN:L23::DTLCNC</dce:identifier>
+<dc:date>2016-03-03 12:17:57.0</dc:date>
 <skos:notation>SDN:L23::DTLCNC</skos:notation>
 <skos:prefLabel xml:lang="en">Data licence</skos:prefLabel>
 <skos:altLabel>Data licence</skos:altLabel>
 <skos:definition xml:lang="en">An XHTML document describing the terms under which the data are supplied for use and how they are to be acknowledged.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-03-03 12:17:57.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/DTLCNC/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-03-03 12:17:57.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -91,12 +106,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/DTPLCY/">
 <dc:identifier>SDN:L23::DTPLCY</dc:identifier>
 <dce:identifier>SDN:L23::DTPLCY</dce:identifier>
+<dc:date>2016-03-03 12:18:32.0</dc:date>
 <skos:notation>SDN:L23::DTPLCY</skos:notation>
 <skos:prefLabel xml:lang="en">Data policy</skos:prefLabel>
 <skos:altLabel>Data policy</skos:altLabel>
 <skos:definition xml:lang="en">An XHTML policy document describing the terms under which the data were collected and curated  for future use.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2016-03-03 12:18:32.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/DTPLCY/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2016-03-03 12:18:32.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -106,12 +124,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/EDIOSDS/">
 <dc:identifier>SDN:L23::EDIOSDS</dc:identifier>
 <dce:identifier>SDN:L23::EDIOSDS</dce:identifier>
+<dc:date>2007-09-14 14:40:13.0</dc:date>
 <skos:notation>SDN:L23::EDIOSDS</skos:notation>
 <skos:prefLabel xml:lang="en">EDIOS data series record</skos:prefLabel>
 <skos:altLabel>EDIOS_DS</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a data series from the European Directory of the Initial Ocean Observing System</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-09-14 14:40:13.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/EDIOSDS/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-09-14 14:40:13.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -121,12 +142,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/EDIOSOP/">
 <dc:identifier>SDN:L23::EDIOSOP</dc:identifier>
 <dce:identifier>SDN:L23::EDIOSOP</dce:identifier>
+<dc:date>2007-09-14 14:40:13.0</dc:date>
 <skos:notation>SDN:L23::EDIOSOP</skos:notation>
 <skos:prefLabel xml:lang="en">EDIOS observing programme record</skos:prefLabel>
 <skos:altLabel>EDIOS_OP</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing an observing programme from the European Directory of the Initial Ocean Observing System</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-09-14 14:40:13.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/EDIOSOP/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-09-14 14:40:13.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -136,12 +160,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/EDIOSPL/">
 <dc:identifier>SDN:L23::EDIOSPL</dc:identifier>
 <dce:identifier>SDN:L23::EDIOSPL</dce:identifier>
+<dc:date>2010-11-24 09:18:19.0</dc:date>
 <skos:notation>SDN:L23::EDIOSPL</skos:notation>
 <skos:prefLabel xml:lang="en">EDIOS platform record</skos:prefLabel>
 <skos:altLabel>EDIOS_PL</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a data collection platform from the European Directory of the Initial Ocean Observing System</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2010-11-24 09:18:19.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/EDIOSPL/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2010-11-24 09:18:19.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -151,12 +178,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/EDMED/">
 <dc:identifier>SDN:L23::EDMED</dc:identifier>
 <dce:identifier>SDN:L23::EDMED</dce:identifier>
+<dc:date>2007-09-14 14:40:13.0</dc:date>
 <skos:notation>SDN:L23::EDMED</skos:notation>
 <skos:prefLabel xml:lang="en">EDMED record</skos:prefLabel>
 <skos:altLabel>EDMED</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a dataset from the European Directory of Marine Environmental Datasets</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-09-14 14:40:13.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/EDMED/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-09-14 14:40:13.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -166,12 +196,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/EDMERP/">
 <dc:identifier>SDN:L23::EDMERP</dc:identifier>
 <dce:identifier>SDN:L23::EDMERP</dce:identifier>
+<dc:date>2007-09-14 14:40:13.0</dc:date>
 <skos:notation>SDN:L23::EDMERP</skos:notation>
 <skos:prefLabel xml:lang="en">EDMERP project record</skos:prefLabel>
 <skos:altLabel>EDMERP</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a project in the European Directory of Marine Environmental Research Projects</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-09-14 14:40:13.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/EDMERP/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-09-14 14:40:13.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -181,12 +214,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/ICESSTN/">
 <dc:identifier>SDN:L23::ICESSTN</dc:identifier>
 <dce:identifier>SDN:L23::ICESSTN</dce:identifier>
+<dc:date>2017-09-06 12:09:16.0</dc:date>
 <skos:notation>SDN:L23::ICESSTN</skos:notation>
 <skos:prefLabel xml:lang="en">ICES Station Dictionary Record</skos:prefLabel>
 <skos:altLabel>ICES station</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a monitoring station in the ICES Station Dictionary.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2017-09-06 12:09:16.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/ICESSTN/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2017-09-06 12:09:16.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -196,12 +232,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/IPRD/">
 <dc:identifier>SDN:L23::IPRD</dc:identifier>
 <dce:identifier>SDN:L23::IPRD</dce:identifier>
+<dc:date>2012-01-17 10:05:10.0</dc:date>
 <skos:notation>SDN:L23::IPRD</skos:notation>
 <skos:prefLabel xml:lang="en">Intermediate Product record</skos:prefLabel>
 <skos:altLabel>Intermediate product</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record providing discovery metadata for a product such as a DTM which is produced following the project methodology for the construction of a final product eg a DTM delivered by partners to a regional integrator.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2012-01-17 10:05:10.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/IPRD/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2012-01-17 10:05:10.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -211,12 +250,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/NVS2CON/">
 <dc:identifier>SDN:L23::NVS2CON</dc:identifier>
 <dce:identifier>SDN:L23::NVS2CON</dce:identifier>
+<dc:date>2014-05-27 12:17:53.0</dc:date>
 <skos:notation>SDN:L23::NVS2CON</skos:notation>
 <skos:prefLabel xml:lang="en">NERC Vocabulary Server V2 concept document</skos:prefLabel>
 <skos:altLabel>NVSV2 concept</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a single concept in the NERC Vocabulary Server in the format (SKOS RDF XML) generated by V2 of that server.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2014-05-27 12:17:53.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/NVS2CON/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2014-05-27 12:17:53.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -226,12 +268,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/PCR/">
 <dc:identifier>SDN:L23::PCR</dc:identifier>
 <dce:identifier>SDN:L23::PCR</dce:identifier>
+<dc:date>2011-01-21 11:08:27.0</dc:date>
 <skos:notation>SDN:L23::PCR</skos:notation>
 <skos:prefLabel xml:lang="en">Planned Cruise record</skos:prefLabel>
 <skos:altLabel>PCR</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record describing a cruise that is planned for the future</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2011-01-21 11:08:27.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/PCR/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2011-01-21 11:08:27.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -241,12 +286,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L23/current/PRODUCT/">
 <dc:identifier>SDN:L23::PRODUCT</dc:identifier>
 <dce:identifier>SDN:L23::PRODUCT</dce:identifier>
+<dc:date>2008-03-31 12:04:24.0</dc:date>
 <skos:notation>SDN:L23::PRODUCT</skos:notation>
 <skos:prefLabel xml:lang="en">Product record</skos:prefLabel>
 <skos:altLabel>Product</skos:altLabel>
 <skos:definition xml:lang="en">Metadata record providing discovery metadata for a data product</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2008-03-31 12:04:24.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L23/current/PRODUCT/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2008-03-31 12:04:24.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>

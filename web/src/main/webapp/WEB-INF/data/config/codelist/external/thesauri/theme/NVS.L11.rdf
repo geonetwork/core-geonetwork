@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#" xmlns:pav="http://purl.org/pav/">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/">
 <skos:prefLabel>SeaDataNet depth measurement reference planes</skos:prefLabel>
 <dc:title>SeaDataNet depth measurement reference planes</dc:title>
@@ -16,12 +16,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D33/">
 <dc:identifier>SDN:L11::D33</dc:identifier>
 <dce:identifier>SDN:L11::D33</dce:identifier>
+<dc:date>2017-05-22 15:41:48.0</dc:date>
 <skos:notation>SDN:L11::D33</skos:notation>
 <skos:prefLabel xml:lang="en">Baltic Sea Chart Datum 2000</skos:prefLabel>
 <skos:altLabel>BSCD2000</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour in the Baltic Sea as approved by the IHO Baltic Sea Hydrographic Commission as the common chart datum for the Baltic Sea. The datum refers to each Baltic country´s realization of the European Vertical Reference System (EVRS), which is connected to the Normaal Amsterdams Peil (NAP).</skos:definition>
 <owl:versionInfo>3</owl:versionInfo>
-<dc:date>2017-05-22 15:41:48.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D33/3/"/>
+<pav:version>3</pav:version>
+<pav:authoredOn>2017-05-22 15:41:48.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -31,12 +34,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D23/">
 <dc:identifier>SDN:L11::D23</dc:identifier>
 <dce:identifier>SDN:L11::D23</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D23</skos:notation>
 <skos:prefLabel xml:lang="en">Belfast Ordnance Datum</skos:prefLabel>
 <skos:altLabel>BOD</skos:altLabel>
 <skos:definition xml:lang="en">Mean sea level at Clarendon Loch, Belfast averaged between 1951 and 1956 used for the elevation of the zero metres contour on Ordnance Survey of Northern Ireland maps.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D23/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -46,12 +52,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D06/">
 <dc:identifier>SDN:L11::D06</dc:identifier>
 <dce:identifier>SDN:L11::D06</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D06</skos:notation>
 <skos:prefLabel xml:lang="en">Bulgarian Navy Hydrographic Service Chart Datum</skos:prefLabel>
 <skos:altLabel>Bulgarian_CD</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on the navigation charts produced by the Bulgarian Navy.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D06/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -61,12 +70,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D21/">
 <dc:identifier>SDN:L11::D21</dc:identifier>
 <dce:identifier>SDN:L11::D21</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D21</skos:notation>
 <skos:prefLabel xml:lang="en">Danish Vertical Reference 1990</skos:prefLabel>
 <skos:altLabel>DVR90</skos:altLabel>
 <skos:definition xml:lang="en">Danish mean sea level during 1990 introduced in 2001 and adopted as the level of the zero metre contour in Denmark in 2003.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D21/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -76,12 +88,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D07/">
 <dc:identifier>SDN:L11::D07</dc:identifier>
 <dce:identifier>SDN:L11::D07</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D07</skos:notation>
 <skos:prefLabel xml:lang="en">French Naval Chart Datum</skos:prefLabel>
 <skos:altLabel>French_CD</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on the navigation charts produced by the French Navy.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D07/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D30/"/>
@@ -92,12 +107,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D30/">
 <dc:identifier>SDN:L11::D30</dc:identifier>
 <dce:identifier>SDN:L11::D30</dce:identifier>
+<dc:date>2007-08-23 15:14:02.0</dc:date>
 <skos:notation>SDN:L11::D30</skos:notation>
 <skos:prefLabel xml:lang="en">French Naval Chart Datum for Lebanon</skos:prefLabel>
 <skos:altLabel>French_CD_Leb</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on the navigation charts produced by the French Navy for Lebanese coastal waters.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-08-23 15:14:02.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D30/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-08-23 15:14:02.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D07/"/>
@@ -108,12 +126,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D05/">
 <dc:identifier>SDN:L11::D05</dc:identifier>
 <dce:identifier>SDN:L11::D05</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D05</skos:notation>
 <skos:prefLabel xml:lang="en">Hellenic Navy Hydrographic Service Chart Datum</skos:prefLabel>
 <skos:altLabel>Hellenic_CD</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on the navigation charts produced by the Greek Navy.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D05/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -123,12 +144,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D27/">
 <dc:identifier>SDN:L11::D27</dc:identifier>
 <dce:identifier>SDN:L11::D27</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D27</skos:notation>
 <skos:prefLabel xml:lang="en">Helsinki Tide Gauge Datum</skos:prefLabel>
 <skos:altLabel>N60</skos:altLabel>
 <skos:definition xml:lang="en">Finnish national benchmark network mean sea level datum.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D27/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -138,12 +162,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D02/">
 <dc:identifier>SDN:L11::D02</dc:identifier>
 <dce:identifier>SDN:L11::D02</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D02</skos:notation>
 <skos:prefLabel xml:lang="en">Highest Astronomical Tide</skos:prefLabel>
 <skos:altLabel>HAT</skos:altLabel>
 <skos:definition xml:lang="en">The highest level expected to be reached by the sea surface after pertubations due to waves have been filtered out under average meteorological conditions and any combination of astronomical conditions.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D02/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -153,12 +180,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D01/">
 <dc:identifier>SDN:L11::D01</dc:identifier>
 <dce:identifier>SDN:L11::D01</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D01</skos:notation>
 <skos:prefLabel xml:lang="en">Lowest Astronomical Tide</skos:prefLabel>
 <skos:altLabel>LAT</skos:altLabel>
 <skos:definition xml:lang="en">The lowest level expected to be reached by the sea surface after pertubations due to waves have been filtered out under average meteorological conditions and any combination of astronomical conditions.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D01/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -168,12 +198,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D24/">
 <dc:identifier>SDN:L11::D24</dc:identifier>
 <dce:identifier>SDN:L11::D24</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D24</skos:notation>
 <skos:prefLabel xml:lang="en">Malin Ordnance Datum</skos:prefLabel>
 <skos:altLabel>MOD</skos:altLabel>
 <skos:definition xml:lang="en">Mean sea level at Portmoor Pier, Malin Head averaged between 1960 and 1969 used for the elevation of the zero metres contour on Ordnance Survey of Ireland maps since 1970.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D24/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -183,12 +216,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D19/">
 <dc:identifier>SDN:L11::D19</dc:identifier>
 <dce:identifier>SDN:L11::D19</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D19</skos:notation>
 <skos:prefLabel xml:lang="en">Normaal Amsterdams Peil</skos:prefLabel>
 <skos:altLabel>NAP</skos:altLabel>
 <skos:definition xml:lang="en">Elevation marked by a brass benchmark in Amsterdam approximating to mean sea level at the Dutch Coast. Sometimes referred to as Normalnull and used as the zero metre contour in much of Western Europe..</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D19/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -198,12 +234,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D20/">
 <dc:identifier>SDN:L11::D20</dc:identifier>
 <dce:identifier>SDN:L11::D20</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D20</skos:notation>
 <skos:prefLabel xml:lang="en">Ordnance Datum Newlyn</skos:prefLabel>
 <skos:altLabel>ODN</skos:altLabel>
 <skos:definition xml:lang="en">Mean sea level at Newlyn in Cornwall averaged between 1915 and 1921 used for the elevation of the zero metres contour on UK Ordnance Survey maps.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D20/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -213,12 +252,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D25/">
 <dc:identifier>SDN:L11::D25</dc:identifier>
 <dce:identifier>SDN:L11::D25</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D25</skos:notation>
 <skos:prefLabel xml:lang="en">Poolbeg Ordnance Datum</skos:prefLabel>
 <skos:altLabel>POD</skos:altLabel>
 <skos:definition xml:lang="en">Spring tide low water at Poolbeg Lighthouse, Dublin on 8 April 1837 used for the elevation of the zero metres contour on Ordnance Survey of Ireland maps before 1970.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D25/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -228,12 +270,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D32/">
 <dc:identifier>SDN:L11::D32</dc:identifier>
 <dce:identifier>SDN:L11::D32</dce:identifier>
+<dc:date>2012-12-12 15:16:55.0</dc:date>
 <skos:notation>SDN:L11::D32</skos:notation>
 <skos:prefLabel xml:lang="en">Portuguese Chart Datum</skos:prefLabel>
 <skos:altLabel>Portuguese_CD</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on Portuguese navigation charts for Portuguese coastal waters. It has been set near the theoretical level reached by the lowest astronomical tide (LAT) calculated from tide gauge data.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2012-12-12 15:16:55.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D32/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2012-12-12 15:16:55.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -243,12 +288,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D14/">
 <dc:identifier>SDN:L11::D14</dc:identifier>
 <dce:identifier>SDN:L11::D14</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D14</skos:notation>
 <skos:prefLabel xml:lang="en">Rijkswaterstaat mean sea level</skos:prefLabel>
 <skos:altLabel>RKW_MSL</skos:altLabel>
 <skos:definition xml:lang="en">The mean sea level for a period of minimal 2 days converted to a many-year average based on measurements taken at the specified location.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D14/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -258,12 +306,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D28/">
 <dc:identifier>SDN:L11::D28</dc:identifier>
 <dce:identifier>SDN:L11::D28</dce:identifier>
+<dc:date>2007-08-10 10:12:56.0</dc:date>
 <skos:notation>SDN:L11::D28</skos:notation>
 <skos:prefLabel xml:lang="en">Réseau Géodésique Français 80</skos:prefLabel>
 <skos:altLabel>RGF80</skos:altLabel>
 <skos:definition xml:lang="en">The vertical component of a French 3-D CRS computed in 1980 until superseded in 1993 approximating to mean sea level</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-08-10 10:12:56.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D28/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-08-10 10:12:56.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -273,12 +324,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D29/">
 <dc:identifier>SDN:L11::D29</dc:identifier>
 <dce:identifier>SDN:L11::D29</dce:identifier>
+<dc:date>2007-08-10 10:13:31.0</dc:date>
 <skos:notation>SDN:L11::D29</skos:notation>
 <skos:prefLabel xml:lang="en">Réseau Géodésique Français 93</skos:prefLabel>
 <skos:altLabel>RGF93</skos:altLabel>
 <skos:definition xml:lang="en">The vertical component of a French 3-D CRS computed in 1993 approximating to mean sea level</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-08-10 10:13:31.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D29/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-08-10 10:13:31.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -288,12 +342,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D31/">
 <dc:identifier>SDN:L11::D31</dc:identifier>
 <dce:identifier>SDN:L11::D31</dce:identifier>
+<dc:date>2009-04-28 10:38:24.0</dc:date>
 <skos:notation>SDN:L11::D31</skos:notation>
 <skos:prefLabel xml:lang="en">Spanish Chart Datum</skos:prefLabel>
 <skos:altLabel>Spanish_CD</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on the navigation charts produced by the Spanish Hydrographic Office for the Spanish coastal waters.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2009-04-28 10:38:24.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D31/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2009-04-28 10:38:24.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -303,12 +360,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D26/">
 <dc:identifier>SDN:L11::D26</dc:identifier>
 <dce:identifier>SDN:L11::D26</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D26</skos:notation>
 <skos:prefLabel xml:lang="en">Swedish national coordinate system</skos:prefLabel>
 <skos:altLabel>RH70</skos:altLabel>
 <skos:definition xml:lang="en">Swedish national benchmark network mean sea level datum.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D26/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -318,12 +378,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D04/">
 <dc:identifier>SDN:L11::D04</dc:identifier>
 <dce:identifier>SDN:L11::D04</dce:identifier>
+<dc:date>2008-11-25 15:43:03.0</dc:date>
 <skos:notation>SDN:L11::D04</skos:notation>
 <skos:prefLabel xml:lang="en">UK Admiralty Chart Datum</skos:prefLabel>
 <skos:altLabel>ACD</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on the navigation charts produced for commercial marine navigation by the UK Hydrographic Office.  It approximates to LAT.</skos:definition>
 <owl:versionInfo>2</owl:versionInfo>
-<dc:date>2008-11-25 15:43:03.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D04/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2008-11-25 15:43:03.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -333,12 +396,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D10/">
 <dc:identifier>SDN:L11::D10</dc:identifier>
 <dce:identifier>SDN:L11::D10</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D10</skos:notation>
 <skos:prefLabel xml:lang="en">ground level</skos:prefLabel>
 <skos:altLabel>ground</skos:altLabel>
 <skos:definition xml:lang="en">The level of the land surface at an unspecified location of interest.  Usually associated with meteorological instruments tethered to the ground.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D10/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -348,12 +414,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D99/">
 <dc:identifier>SDN:L11::D99</dc:identifier>
 <dce:identifier>SDN:L11::D99</dce:identifier>
+<dc:date>2011-08-26 10:27:52.0</dc:date>
 <skos:notation>SDN:L11::D99</skos:notation>
 <skos:prefLabel xml:lang="en">inapplicable</skos:prefLabel>
 <skos:altLabel>NA</skos:altLabel>
 <skos:definition xml:lang="en">There is no appropriate value. To be used in cases where metadata elements cannot be set null due to schema constraints e.g. when using a 3D CRS specification schema to describe 2D data.</skos:definition>
 <owl:versionInfo>2</owl:versionInfo>
-<dc:date>2011-08-26 10:27:52.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D99/2/"/>
+<pav:version>2</pav:version>
+<pav:authoredOn>2011-08-26 10:27:52.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -363,12 +432,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D22/">
 <dc:identifier>SDN:L11::D22</dc:identifier>
 <dce:identifier>SDN:L11::D22</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D22</skos:notation>
 <skos:prefLabel xml:lang="en">local reference plane</skos:prefLabel>
 <skos:altLabel>local</skos:altLabel>
 <skos:definition xml:lang="en">A local fixed elevation, usually labelled with a benchmark like a bolt, connected to a national datum through levelling.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D22/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -378,12 +450,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D13/">
 <dc:identifier>SDN:L11::D13</dc:identifier>
 <dce:identifier>SDN:L11::D13</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D13</skos:notation>
 <skos:prefLabel xml:lang="en">mean high water</skos:prefLabel>
 <skos:altLabel>MHW</skos:altLabel>
 <skos:definition xml:lang="en">The average of the highest elevation reached during at least two tidal cycles, but generally many more.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D13/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -393,12 +468,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D18/">
 <dc:identifier>SDN:L11::D18</dc:identifier>
 <dce:identifier>SDN:L11::D18</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D18</skos:notation>
 <skos:prefLabel xml:lang="en">mean high water neaps</skos:prefLabel>
 <skos:altLabel>MHWN</skos:altLabel>
 <skos:definition xml:lang="en">The average throughout the year (when the average maximium declination of the moon is 23.5 degrees) of two successive high waters during those periods of 24 hours when the range of the tide is at its least.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D18/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -408,12 +486,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D16/">
 <dc:identifier>SDN:L11::D16</dc:identifier>
 <dce:identifier>SDN:L11::D16</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D16</skos:notation>
 <skos:prefLabel xml:lang="en">mean high water springs</skos:prefLabel>
 <skos:altLabel>MHWS</skos:altLabel>
 <skos:definition xml:lang="en">The average throughout the year (when the average maximium declination of the moon is 23.5 degrees) of two successive high waters during those periods of 24 hours when the range of the tide is at its greatest.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D16/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -423,12 +504,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D12/">
 <dc:identifier>SDN:L11::D12</dc:identifier>
 <dce:identifier>SDN:L11::D12</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D12</skos:notation>
 <skos:prefLabel xml:lang="en">mean low water</skos:prefLabel>
 <skos:altLabel>MLW</skos:altLabel>
 <skos:definition xml:lang="en">The average of the lowest elevation reached during at least two tidal cycles, but generally many more.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D12/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -438,12 +522,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D17/">
 <dc:identifier>SDN:L11::D17</dc:identifier>
 <dce:identifier>SDN:L11::D17</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D17</skos:notation>
 <skos:prefLabel xml:lang="en">mean low water neaps</skos:prefLabel>
 <skos:altLabel>MLWN</skos:altLabel>
 <skos:definition xml:lang="en">The average throughout the year (when the average maximium declination of the moon is 23.5 degrees) of two successive low waters during those periods of 24 hours when the range of the tide is at its least.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D17/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -453,12 +540,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D15/">
 <dc:identifier>SDN:L11::D15</dc:identifier>
 <dce:identifier>SDN:L11::D15</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D15</skos:notation>
 <skos:prefLabel xml:lang="en">mean low water springs</skos:prefLabel>
 <skos:altLabel>MLWS</skos:altLabel>
 <skos:definition xml:lang="en">The average throughout the year (when the average maximium declination of the moon is 23.5 degrees) of two successive low waters during those periods of 24 hours when the range of the tide is at its greatest.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D15/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -468,12 +558,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D11/">
 <dc:identifier>SDN:L11::D11</dc:identifier>
 <dce:identifier>SDN:L11::D11</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D11</skos:notation>
 <skos:prefLabel xml:lang="en">mean sea level</skos:prefLabel>
 <skos:altLabel>MSL</skos:altLabel>
 <skos:definition xml:lang="en">The average elevation of the sea surface over an unspecified time period of at least a tidal cycle, but generally much longer.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D11/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -483,12 +576,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D09/">
 <dc:identifier>SDN:L11::D09</dc:identifier>
 <dce:identifier>SDN:L11::D09</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D09</skos:notation>
 <skos:prefLabel xml:lang="en">sea floor</skos:prefLabel>
 <skos:altLabel>sea_floor</skos:altLabel>
 <skos:definition xml:lang="en">The level of the sea floor at the location of interest.  Usually associated with vertical position co-ordinates of oceanographic instruments tethered to the sea floor.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D09/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -498,12 +594,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D08/">
 <dc:identifier>SDN:L11::D08</dc:identifier>
 <dce:identifier>SDN:L11::D08</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D08</skos:notation>
 <skos:prefLabel xml:lang="en">sea level</skos:prefLabel>
 <skos:altLabel>sea_level</skos:altLabel>
 <skos:definition xml:lang="en">The level of the sea surface at an unspecified time and location of interest.  Usually associated with water depth measurements by shipboard echo sounder.  May be anywhere between LAT and HAT.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D08/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -513,12 +612,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/UKN/">
 <dc:identifier>SDN:L11::UKN</dc:identifier>
 <dce:identifier>SDN:L11::UKN</dce:identifier>
+<dc:date>2009-01-12 10:49:19.0</dc:date>
 <skos:notation>SDN:L11::UKN</skos:notation>
 <skos:prefLabel xml:lang="en">unknown</skos:prefLabel>
 <skos:altLabel>unknown</skos:altLabel>
 <skos:definition xml:lang="en">The correct value is not known to, and not computable by, the creator of this information. However, a correct value probably exists.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2009-01-12 10:49:19.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/UKN/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2009-01-12 10:49:19.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -528,12 +630,15 @@
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/D03/">
 <dc:identifier>SDN:L11::D03</dc:identifier>
 <dce:identifier>SDN:L11::D03</dce:identifier>
+<dc:date>2007-02-16 07:52:39.0</dc:date>
 <skos:notation>SDN:L11::D03</skos:notation>
 <skos:prefLabel xml:lang="en">unspecified chart datum</skos:prefLabel>
 <skos:altLabel>CD</skos:altLabel>
 <skos:definition xml:lang="en">The elevation of the zero metres contour on an unspecified marine navigation chart. These are generally based on LAT which represents the safest option for navigation.</skos:definition>
 <owl:versionInfo>1</owl:versionInfo>
-<dc:date>2007-02-16 07:52:39.0</dc:date>
+<pav:hasCurrentVersion rdf:resource="http://vocab.nerc.ac.uk/collection/L11/current/D03/1/"/>
+<pav:version>1</pav:version>
+<pav:authoredOn>2007-02-16 07:52:39.0</pav:authoredOn>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
