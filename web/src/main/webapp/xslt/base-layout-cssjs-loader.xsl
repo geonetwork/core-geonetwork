@@ -221,7 +221,7 @@
     </xsl:if>
 
     <!-- XML highlighter JS dependency. -->
-    <xsl:if test="$angularApp = 'gn_editor'">
+    <xsl:if test="$angularApp = 'gn_editor' or $angularApp = 'gn_admin'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js?v={$buildNumber}"></script>
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js?v={$buildNumber}"></script>
     </xsl:if>

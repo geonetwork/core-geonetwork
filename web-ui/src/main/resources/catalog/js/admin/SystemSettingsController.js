@@ -145,13 +145,23 @@
 
               var sectionsLevel1 = [];
               var sectionsLevel2 = [];
+              var uiConfigFound = false;
 
               // Stringify JSON for editing in text area
               angular.forEach(data, function(s) {
+                if (s.id === 'ui/config') {
+                  uiConfigFound = true;
+                }
                 if (s.dataType === 'JSON') {
                   s.value = angular.toJson(s.value);
                 }
               });
+
+              // Init empty settings for the UI configuration if none
+              // eg. an old database.
+              if (!uiConfigFound) {
+                data.push({name: 'ui/config', value: {}});
+              }
 
               $scope.settings = data;
               angular.copy(data, $scope.initalSettings);
