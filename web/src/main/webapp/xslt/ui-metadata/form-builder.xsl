@@ -168,6 +168,9 @@
             </xsl:if>
           </div>
         </div>
+        <div class="col-sm-offset-2">
+          <xsl:call-template name="get-errors"/>
+        </div>
       </xsl:when>
       <xsl:otherwise>
 
