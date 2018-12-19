@@ -2,6 +2,8 @@ package stepDefintions;
 
 import java.io.IOException;
 
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import env.BaseTest;
 import env.Env;
@@ -270,6 +272,28 @@ public class PredefinedStepDefinitions implements BaseTest {
     @Then("^I navigate to \"([^\"]*)\"$")
     public void navigate_to(String link) {
         navigationObj.navigateTo(link.replace("{endPointToTest}", endPointToTest));
+    }
+
+    @Given("^I login as admin$")
+    public void i_login_as_admin() throws Throwable {
+        navigationObj.loginAs(null, null);
+    }
+
+    @Given("^I login as admin and navigate to (.*)$")
+    public void i_login_as_admin_and_navigate(String page) throws Throwable {
+        navigationObj.loginAs(null, null);
+        navigate_to(endPointToTest + "/srv/eng/" + page);
+    }
+
+    @Given("^I login as (.*)/(.*) and navigate to (.*)")
+    public void i_login_as_user_and_navigate(String username, String password, String page) throws Throwable {
+        navigationObj.loginAs(username, password);
+        navigate_to(endPointToTest + "/srv/eng/" + page);
+    }
+
+    @And("^I sign out$")
+    public void i_sign_out() throws Throwable {
+        navigationObj.navigateTo(endPointToTest + "/signout");
     }
 
     // step to print configuration

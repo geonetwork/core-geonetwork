@@ -1,5 +1,6 @@
 package methods;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -80,6 +81,20 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
      */
     public void navigateTo(String url) {
         BaseTest.driver.get(url);
+    }
+
+
+    /**
+     * Method to login as admin if null provided for user details
+     *
+     * @param username : String : Username
+     * @param password : String : Password
+     */
+    public void loginAs(String username, String password) {
+        BaseTest.driver.get(endPointToTest + "/srv/eng/catalog.signin");
+        BaseTest.driver.findElement(By.xpath("//*[@id='inputUsername']")).sendKeys(username == null ? adminUser : username);
+        BaseTest.driver.findElement(By.xpath("//*[@id='inputPassword']")).sendKeys(password == null ? adminPassword : password);
+        BaseTest.driver.findElement(By.cssSelector("form > button.btn-primary")).click();
     }
 
     /**
