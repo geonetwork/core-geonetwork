@@ -78,15 +78,18 @@
        * Scroll page to element.
        */
         var scrollTo = function(elementId, offset, duration, easing) {
-          var top = 0;
-          if (elementId !== undefined) {
+          var top = 0, e = $(elementId);
+          if (elementId !== undefined &&  e.length == 1) {
             top = offset ?
-             $(elementId).offset().top :
-             $(elementId).position().top;
+             e.offset().top :
+             e.position().top;
           }
           $('body,html').animate({scrollTop: top},
-           duration, easing);
-
+           duration, easing, function () {
+              if (e.length == 1) {
+                e.fadeOut('slow', function () {e.fadeIn()});
+              }
+            });
           $location.search('scrollTo', elementId);
         };
 

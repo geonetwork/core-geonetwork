@@ -13,7 +13,7 @@
     </button>
   </div>
   <!-- /.panel-heading -->
-  <div class="panel-body">
+  <div class="panel-body" data-ng-show="ruleTypes.length !== 0">
     <div class="btn-toolbar" role="toolbar">
 
       <div class="pull-right">
@@ -66,6 +66,7 @@
           <ul class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
             <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
                 title="{{rule.details}}"
+                data-ng-dblclick="scrollTo(rule.ref)"
                 data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
                 data-ng-class="rule.type !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
               <p data-ng-class="rule.msg ? 'text-bold' : ''">{{pattern.title}}</p>

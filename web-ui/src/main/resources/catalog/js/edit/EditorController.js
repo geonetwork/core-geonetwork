@@ -299,11 +299,16 @@
        * Extra functions to load after the form is loaded
        */
       var formLoadExtraFunctions = function() {
-
         setViewMenuInTopToolbar();
         setEditorIndentType();
-
       };
+
+      $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+        var target = $location.search()['scrollTo'];
+        if (target) {
+          gnUtilityService.scrollTo(target);
+        }
+      });
 
       $scope.$watch('gnCurrentEdit.isMinor', function() {
         if ($('#minor')[0]) {
@@ -488,6 +493,7 @@
           $('#showvalidationerrors')[0].value =
             gnCurrentEdit.showValidationErrors = validate;
         }
+
         $scope.saveError = false;
         var promise = gnEditor.save(refreshForm)
             .then(function(form) {
