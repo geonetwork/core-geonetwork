@@ -890,6 +890,32 @@ gn-indexing-task-status {
   }
 }
 
+// fixed progress bar on top of the page
+.progress-bar-container {
+  height: 50px; // reserve height for the fixed bar
+  margin-top: -18px;
+  .progress-bar-container-fixed {
+    position: fixed;
+    z-index: 2;
+    padding-top: 15px;
+    background: @body-bg;
+    // width for different screensizes
+    width: calc(~"100% - " @grid-gutter-width);
+    @media (min-width: @screen-sm-min) {
+      width: (@container-sm - @grid-gutter-width);
+    }
+    @media (min-width: @screen-md-min) {
+      width: (@container-md - @grid-gutter-width);
+    }
+    @media (min-width: @screen-lg-min) {
+      width: (@container-lg - @grid-gutter-width);
+    }
+    .progress {
+      height: 15px;
+    }
+  }
+}
+
 // general purpose layout helpers
 .pos-relative { position: relative; }
 .pos-absolute { position: absolute; }

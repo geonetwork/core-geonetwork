@@ -1,4 +1,14 @@
 <div class="container" id="gn-import-container">
+  <div class="row progress-bar-container">
+    <div class="col-sm-12 progress-bar-container-fixed gn-width-inherit1">
+      <div id="gn-import-progress-row"
+          class="progress progress-striped active"
+          data-ng-show="importing === true">
+        <div class="progress-bar" style="width: 100%"/>
+      </div>
+    </div>
+  </div>
+
   <!-- TODO : add form constraints -->
   <div class="row">
     <div class="col-sm-7">
@@ -305,11 +315,6 @@
       </div>
     </div>
     <div class="col-sm-5">
-      <div id="gn-import-progress-row"
-           class="progress progress-striped active"
-           data-ng-show="importing === true">
-        <div class="progress-bar" style="width: 100%"/>
-      </div>
 
       <div id="gn-import-reports-row">
         <div data-ng-repeat="report in reports track by $index">
