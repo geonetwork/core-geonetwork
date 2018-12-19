@@ -211,11 +211,12 @@
          *
          * @return {HttpPromise} Future object
          */
-        getAllResources: function() {
+        getAllResources: function(types) {
 
           var defer = $q.defer();
-
-          $http.get('../api/records/' + gnCurrentEdit.uuid + '/related', {
+          var url = '../api/records/' + gnCurrentEdit.uuid + '/related' +
+                      (angular.isArray(types) ? '?' + types.join('&type=') : '');
+          $http.get(url, {
             headers: {
               'Accept': 'application/json'
             }
@@ -226,6 +227,46 @@
           return defer.promise;
         },
 
+        /**
+         * @ngdoc method
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         * @name gnOnlinesrc#formatResources
+         *
+         * @description
+         * If multilingual, get current lang url to
+         * diplay the resource in the list (img, link)
+         * lUrl means localize Url
+         *
+         * @return {Object} Containing relations and siblingTypes properties
+         */
+        formatResources: function(data, lang, mdLanguage) {
+          var siblingTypes = [];
+          // If multilingual, get current lang url to
+          // diplay the resource in the list (img, link)
+          // lUrl means localize Url
+          angular.forEach(data.onlines, function(src) {
+            src.lUrl = src.url[lang] ||
+              src.url[mdLanguage] ||
+              src.url[Object.keys(src.url)[0]];
+          });
+          angular.forEach(data.thumbnails, function(img) {
+            img.lUrl = img.url[lang] ||
+              img.url[mdLanguage] ||
+              img.url[Object.keys(img.url)[0]];
+          });
+          if (data.siblings) {
+            for (var i = 0; i < data.siblings.length; i++) {
+              var type = data.siblings[i].associationType;
+              if ($.inArray(type, scope.siblingTypes) == -1) {
+                siblingTypes.push(type);
+              }
+            }
+          }
+          return {
+            relations: data,
+            siblingTypes: siblingTypes
+          };
+        },
         /**
          * @ngdoc method
          * @methodOf gn_onlinesrc.service:gnOnlinesrc
@@ -485,7 +526,7 @@
 
           // It is a url thumbnail
           if (thumb.id.indexOf('resources.get') < 0) {
-            runProcess(this,
+            return runProcess(this,
                 setParams('thumbnail-remove', {
                   id: gnCurrentEdit.id,
                   thumbnail_url: thumb.id
@@ -493,7 +534,7 @@
           }
           // It is an uploaded tumbnail
           else {
-            runService('removeThumbnail', {
+            return runService('removeThumbnail', {
               type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
               id: gnCurrentEdit.id,
               version: gnCurrentEdit.version
