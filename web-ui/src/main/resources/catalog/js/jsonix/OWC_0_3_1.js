@@ -107,6 +107,16 @@ var OWC_0_3_1_Module_Factory = function() {
         t: 'a'
       }]
     }, {
+      ln: 'QIType',
+      ps: [{
+        n: 'Indicator',
+        en: 'Indicator',
+        t: 'a'
+      }, {
+        n: 'value',
+        t: 'v'
+      }]
+    }, {
       ln: 'DimensionType',
       ps: [{
         n: 'value',
@@ -163,6 +173,21 @@ var OWC_0_3_1_Module_Factory = function() {
         n: 'current',
         ti: 'Boolean',
         t: 'a'
+      }]
+    }, {
+      ln: 'MetadataUrlListType',
+      ps: [{
+        n: 'MetadataUrl',
+        en: 'MetadataUrl'
+      }]
+
+    }, {
+      ln: 'QIList',
+      ps: [{
+        n: 'QI',
+        col: true,
+        en: 'QI',
+        ti: 'OWC_0_3_1.QIType'
       }]
     }, {
       ln: 'DimensionListType',
@@ -275,6 +300,16 @@ var OWC_0_3_1_Module_Factory = function() {
         n: 'any',
         mx: true,
         t: 'ae'
+      }, {
+        n: 'metadataUrllist',
+        col: true,
+        en: 'MetadataUrlList',
+        ti: 'OWC_0_3_1.MetadataUrlListType'
+      },{
+        n: 'QIList',
+        col: true,
+        en: 'QIList',
+        ti: 'OWC_0_3_1.QIList'
       }]
     }, {
       ln: 'FormatListType',
@@ -320,6 +355,7 @@ var OWC_0_3_1_Module_Factory = function() {
         ti: 'OWC_0_3_1.StyleListType'
       }, {
         n: 'extension',
+        col: true,
         en: 'Extension',
         ti: 'OWC_0_3_1.ExtensionType'
       }, {
