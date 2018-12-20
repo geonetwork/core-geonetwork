@@ -1326,7 +1326,7 @@
     "ui-isSocialbarEnabled": "Show Socialbar",
     "ui-isSocialbarEnabled-help": "Show the button bar with all the social buttons (facebook, twitter, etc.)",
     "ui-isLogoInHeader": "Show the logo in header",
-    "ui-isLogoInHeader-help": "Show the logo in the header, above the navigation bar. The logo in the navigation bar will be removed",
+    "ui-isLogoInHeader-help": "Show the logo in the header, above the navigation bar. The logo in the navigation bar will be removed. Only for the public pages (not the editor or admin).",
     "ui-logoInHeaderPosition": "Position of logo",
     "ui-logoInHeaderPosition-help": "Position of the logo in the header",
     "left": "Left",
