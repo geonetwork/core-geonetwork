@@ -31,8 +31,7 @@ import java.util.Map;
 /**
  * Migration for adding the settings for the logo header position to ui/config setting.
  */
-public class LogoPositionInHeaderMigration extends JsonDatabaseMigration
-    implements DatabaseMigrationTask {
+public class LogoPositionInHeaderMigration extends JsonDatabaseMigration {
 
     private final String settingName = "ui/config";
 

@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.format;
 
-public class MoveHarvesterSettingsToHigherNumber implements DatabaseMigrationTask {
+public class MoveHarvesterSettingsToHigherNumber extends DatabaseMigrationTask {
     protected AtomicInteger counter = new AtomicInteger(10000);
 
     protected String getHarvesterSettingsName() {
