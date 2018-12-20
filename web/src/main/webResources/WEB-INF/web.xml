@@ -30,7 +30,7 @@
 	     version="3.0"
          metadata-complete="true">
 
-  <display-name>geonetwork</display-name>
+  <display-name>${application.name}</display-name>
   <listener>
     <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
   </listener>
