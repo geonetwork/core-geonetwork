@@ -89,14 +89,14 @@ public class TemplatesUriLocator implements UriLocator {
 
             // Build a template in a one line String for the JS templateCache
             String sTemplate = template.toString();
-            // Escape new lines
-            sTemplate = sTemplate.replaceAll("\\n", "\\\\n"); 
             // Remove all empty content between tags but not new lines
             sTemplate = sTemplate.replaceAll(">[ \\t\\r\\f]*<", "><"); 
             // Replace all successions of spaces, tabs ... by a single space
             sTemplate = sTemplate.replaceAll("\\s\\s+", " "); 
             // The backslash (\) is an escape character in Javascript
             sTemplate = sTemplate.replace("\\", "\\\\");
+            // Escape new lines
+            sTemplate = sTemplate.replaceAll("\\n", "\\\\n");
             // Escape quotes
             sTemplate = sTemplate.replace("'", "\\'");  
             javascript.append(
