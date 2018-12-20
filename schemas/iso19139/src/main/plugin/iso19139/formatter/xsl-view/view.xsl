@@ -28,6 +28,7 @@
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
@@ -597,12 +598,12 @@
       <dd>
         <div>
           <ul>
-            <li>
-              <xsl:for-each select="*/gmd:keyword">
+            <xsl:for-each select="*/gmd:keyword">
+              <li>
                 <xsl:apply-templates mode="render-value"
-                                     select="."/><xsl:if test="position() != last()">, </xsl:if>
-              </xsl:for-each>
-            </li>
+                                     select="."/>
+              </li>
+            </xsl:for-each>
           </ul>
         </div>
       </dd>
@@ -624,12 +625,12 @@
       <dd>
         <div>
           <ul>
-            <li>
-              <xsl:for-each select="*/gmd:keyword">
+            <xsl:for-each select="*/gmd:keyword">
+              <li>
                 <xsl:apply-templates mode="render-value"
-                                     select="."/><xsl:if test="position() != last()">, </xsl:if>
-              </xsl:for-each>
-            </li>
+                                     select="."/>
+              </li>
+            </xsl:for-each>
           </ul>
         </div>
       </dd>
@@ -775,6 +776,22 @@
        <xsl:with-param name="txt" select="$txt"/>
      </xsl:call-template>
   </xsl:template>
+
+
+  <xsl:template mode="render-value"
+                match="*[gmx:Anchor]">
+
+    <xsl:variable name="txt">
+      <xsl:apply-templates mode="localised" select=".">
+        <xsl:with-param name="langId" select="$langId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+
+    <a href="{gmx:Anchor/@xlink:href}">
+      <xsl:value-of select="$txt"/>
+    </a>
+  </xsl:template>
+
 
   <xsl:template mode="render-value"
                 match="gco:Integer|gco:Decimal|
