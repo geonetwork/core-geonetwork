@@ -836,7 +836,12 @@
   </fieldset>
   <br/>
   <span data-translate="">ui-advancedConfig</span>
-  <textarea name="{{id}}" id="uiconfig" class="form-control">{{jsonConfig}}</textarea>
+
+  <div style="height: 300px"
+       ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+       data-ng-model="jsonConfigSource">
+  </div>
+  <textarea name="{{id}}" id="uiconfig" class="hidden">{{jsonConfigSource}}</textarea>
   <br/>
   <button class="btn btn-default"
           data-ng-click="testClientConfig()">
