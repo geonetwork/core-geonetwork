@@ -295,6 +295,14 @@ span.gn-facet-label:first-letter {
   padding-right: 15px;
 }
 
+//removes some artifacts that prevent clicks on the datepicker
+.datepicker-dropdown.datepicker-orient-bottom,
+.datepicker-dropdown.datepicker-orient-top {
+  &:before, &:after {
+    display:none;
+  }
+}
+
 [gn-collapsible], [data-gn-collapsible] {
   cursor: pointer;
 }
