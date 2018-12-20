@@ -1,10 +1,10 @@
 <p data-ng-show="isWfsAvailable && featureType" data-translate=""
    wfsDownloadDataInstruction
 </p>
-<div data-ng-show="!isWfsAvailable">
+<p data-ng-show="!isWfsAvailable" class="text-warning clearfix">
   <i class="fa fa-warning fa-2x fa-fw pull-left" />
   {{'Unable_to_connect_to_service'|translate}}
-</div>
+</p>
 
 <div class="btn-group"
      data-ng-show="featureType && isWfsAvailable">
@@ -39,17 +39,17 @@
     </li>
   </ul>
 </div>
-<div data-ng-if="formats.length == 0 && featureType" class="clearfix">
+<p data-ng-if="formats.length == 0 && featureType" class="text-warning clearfix">
   <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
   <div class="pull-left" data-translate="">wfsNoOutputFormats</div>
-</div>
+</p>
 <div data-ng-if="formats.length > 0 && !featureType">
-  <div class="clearfix gn-margin-top gn-margin-bottom" data-ng-show="typename != ''">
+  <p class="clearfix gn-margin-top gn-margin-bottom text-warning" data-ng-show="typename != ''">
     <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
     <div data-translate=""
           class="pull-left"
           data-translate-values="{typename:'{{typename}}'}">wfsTypenameNotAvailable</div>
-  </div>
+  </p>
   <div class="row">
     <div class="col-md-8 gn-nopadding-left">
       <select class="form-control"
