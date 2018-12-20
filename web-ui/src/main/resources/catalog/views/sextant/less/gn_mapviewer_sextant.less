@@ -292,6 +292,13 @@
         }
       }
     }
+
+    // allow clickthrough on the transparent part of the geocoder widget
+    // https://forge.ifremer.fr/mantis/view.php?id=44969
+    pointer-events: none;
+    & > * {
+      pointer-events: initial;
+    }
   }
 
   .panel-carousel-container {
