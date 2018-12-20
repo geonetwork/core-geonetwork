@@ -15,3 +15,85 @@ ul.gn-resultview li.list-group-item {
     margin-bottom: 0;
   }
 }
+
+
+[ng-app="gn_admin"] {
+  body {
+    background-color: #f7f7f7;
+  }
+  .navbar-default {
+    background-color: @body-bg;
+  }
+  [data-ng-controller="GnAdminController"] {
+    padding-top: 15px;
+    .gn-row-admin-buttons {
+      margin-bottom: 20px;
+      .btn-group {
+        box-shadow: 0 0.5px 0.5px rgba(0,0,0,.03);
+        .btn {
+          border-color: darken(@gray-lighter, 6.5%);
+          padding: 15px;
+          border-right: 0;
+          p {
+            white-space: initial;
+            height: 2em;
+            margin-top: 5px;
+            @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+              height: 3em;
+              font-size: 90%;
+            }
+          }
+          &:hover {
+            background: @gray-lighter;
+            i {
+              color: @brand-warning;
+            }
+          }
+          &:last-child {
+            border-right: 1px solid darken(@gray-lighter, 6.5%);
+          }
+        }
+      }
+
+    }
+    .gn-row-admin-stats {
+      .panel {
+        border-color: darken(@gray-lighter, 6.5%);
+        box-shadow: 0 0.5px 0.5px rgba(0,0,0,.03);
+        .panel-heading {
+          padding: 5px 15px;
+          background: @gray-lighter;
+          border-color: darken(@gray-lighter, 6.5%);
+          h5 {
+            font-weight: 200;
+          }
+        }
+        .panel-body {
+          padding: 5px 15px;
+          background: @gray-lighter;
+          
+          h2 {
+            margin: 0;
+            padding: 10px 0;
+          }
+        }
+      }
+      .panel-primary {
+        border-color: darken(@brand-primary, 6.5%);
+        .panel-heading, .panel-body {
+          color: #fff;
+          background: @brand-primary;
+          border-color: darken(@brand-primary, 6.5%);
+        }
+      }
+      .panel-success {
+        border-color: darken(@brand-success, 6.5%);
+        .panel-heading, .panel-body {
+          color: #fff;
+          background: @brand-success;
+          border-color: darken(@brand-success, 6.5%);
+        }
+      }
+    }
+  }
+}
