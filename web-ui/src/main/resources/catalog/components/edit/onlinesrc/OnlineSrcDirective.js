@@ -1914,6 +1914,15 @@
                     'crossReference-upstreamData': {
                       standardName: 'ISO 19115-3 - Emodnet Checkpoint' +
                           ' - Upstream Data'
+                    },
+                    'crossReference-document': {
+                      _groupPublished: 'MYOCEAN-DOCUMENTS'
+                    },
+                    'crossReference-upstream-validation': {
+                      _groupPublished: 'MYOCEAN-ALL-PRODUCTS'
+                    },
+                    'crossReference-upstream-production': {
+                      _groupPublished: 'MYOCEAN-ALL-PRODUCTS'
                     }
                   };
 
