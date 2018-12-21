@@ -47,6 +47,10 @@ INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLe
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/vcs/enable', 'false', 2, 9161, 'n');
 
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', '', 0, 11000, 'y');
+
+
 UPDATE Settings SET value='3.5.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
