@@ -14,6 +14,12 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/history/enabled', 'false', 2, 9171, 'n');
 
+
+
+ALTER TABLE StatusValues ADD type varchar(255);
+ALTER TABLE StatusValues ADD notificationLevel varchar(255);
+
+
 UPDATE StatusValues SET type = 'workflow';
 
 UPDATE StatusValues SET notificationLevel = 'recordUserAuthor' WHERE name = 'approved';
