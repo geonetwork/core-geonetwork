@@ -42,6 +42,7 @@
       <div ng-if="processDescription">
         <div>
           <form novalidate>
+            <!--specific SEXTANT EMODNET-->
             <div ng-if="emodnetSortKeys" >
               <label>Sort by</label>
               <select class="form-control input-sm"
@@ -50,6 +51,7 @@
                         value="{{sortKey}}">{{sortKey}}</option>
               </select>
             </div><br>
+            <!--END specific SEXTANT EMODNET-->
             <!-- Inputs: loop on process description to display all inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input"
               ng-if="!isInputHidden(input.identifier.value)"
@@ -57,6 +59,7 @@
 
               <!-- Input label & info -->
               <label>
+
                 <span>{{::input.title.value}}&nbsp;</span>
                 <span class="fa fa-info-circle" ng-if="::input._abstract.value"
                   title="{{::input._abstract.value}}"></span>

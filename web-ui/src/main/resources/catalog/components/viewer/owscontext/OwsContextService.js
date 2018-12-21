@@ -199,20 +199,21 @@
             var type, layer = layers[i];
 
             // specific emodnet
+
             var metadataList = [];
             var QIList = [];
             if (layer.extension && layer.extension.length > 0) {
               angular.forEach(layer.extension, function(ext) {
                 if ('metadataUrllist' in ext) {
-                  angular.forEach(ext['metadataUrllist'], function(metadata){
+                  angular.forEach(ext['metadataUrlist'], function(metadata){
                     metadataList.push(metadata.MetadataUrl);
                   })
                 }
                 if ('QIList' in ext) {
                   angular.forEach(ext['QIList'], function(qil) {
                     var QIDict = {};
-                    qil.QI.forEach(function(qi){
-                      QIDict[qi['Indicator']] = qi['value']
+                    qil.QI.forEach(function(qi) {
+                      QIDict[qi['Indicator']] = qi['value'];
                     })
                     QIList.push(QIDict);
                   })
@@ -221,6 +222,7 @@
             }
             layer.metadataUrl = metadataList[0];
             layer.qiList = QIList[0];
+
             // end specific emodnet
 
             if (layer.name) {
@@ -335,10 +337,8 @@
                   // this object holds the WPS input values
                   var defaultInputs = extension.processInputs || {};
                 }
-
                 // create WMS layer
                 if (server.service == 'urn:ogc:serviceType:WMS') {
-
                   // generate a unique id for the layer tree
                   var id = layer.name + '-loading' + i;
 
@@ -351,10 +351,10 @@
                     group: layer.group,
 
                     // Sextant specific
-                    owc_position: 'sexposit',
+                    owc_position: layer.position,
                     owc_groupPosition: layer.groupPosition,
                     metadata_url: layer.metadataUrl,
-                    qi_list: layer.qiList,
+                    qi_list: layer.qiList
 
                     // end sextant specific
                   });
@@ -477,6 +477,7 @@
             opacity: layer.getOpacity(),
             title: layer.get('title'),
             group: layer.get('group')
+
           };
 
           if (source instanceof ol.source.OSM) {
@@ -555,7 +556,6 @@
                   process.processDescription.dataInputs.input;
             });
           }
-
           var layerParams = {
             hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
