@@ -46,7 +46,8 @@
     '$scope',
     '$rootScope',
     'gnMetadataManager',
-    function($scope,  $rootScope, gnMetadataManager) {
+    '$window',
+    function($scope,  $rootScope, gnMetadataManager, $window) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
       $scope.queue = [];
@@ -152,6 +153,8 @@
               $(formId).serialize(), $scope.params.xml).then(
               onSuccessFn, onErrorFn);
         }
+        // scroll to top
+        $window.scrollTo(0, 0);
       };
     }
   ]);

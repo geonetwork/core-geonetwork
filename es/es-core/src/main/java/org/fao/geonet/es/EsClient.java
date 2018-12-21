@@ -82,6 +82,17 @@ public class EsClient implements InitializingBean {
         return client;
     }
 
+    public String getDashboardAppUrl() {
+        return dashboardAppUrl;
+    }
+
+    public void setDashboardAppUrl(String dashboardAppUrl) {
+        this.dashboardAppUrl = dashboardAppUrl;
+    }
+
+    @Value("${kb.url}")
+    private String dashboardAppUrl;
+
 
     @Override
     public void afterPropertiesSet() throws Exception {

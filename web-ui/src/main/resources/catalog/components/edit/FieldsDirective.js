@@ -417,15 +417,20 @@
              element.is('select');
              var tooltipTarget = element;
              var iconMode = gnCurrentEdit.displayTooltipsMode === 'icon';
+             var isDatePicker = 'gnDatePicker' in attrs;
 
-
+             var createTooltipForDatePicker = function (el, tooltip) {
+               var controlColumn = el.closest(".gn-field").find("div.gn-control");
+               if(controlColumn.length > 0) {
+                 controlColumn.append(tooltip);
+               }
+             };
 
              // use a icon to click on for a tooltip
              if (iconMode) {
                var tooltipAfterLabel = false;
                var tooltipIconCompiled = $compile(iconTemplate)(scope);
                var asideCol;
-
 
                if (isField && element.attr('type') !== 'hidden') {
 
@@ -477,6 +482,8 @@
                  }
                } else if (element.is('legend')) {
                  element.contents().first().after(tooltipIconCompiled);
+               } else if (isDatePicker) {
+                 element.closest(".gn-field").find("div.gn-control").append(tooltipIconCompiled);
                } else if (element.is('label')) {
                  if (tooltipAfterLabel) {
                    element.parent().children('div')
@@ -485,7 +492,6 @@
                    element.after(tooltipIconCompiled);
                  }
                }
-
 
                // close tooltips on click in editor container
                $('.gn-editor-container').on('mousedown', function(e) {
@@ -496,7 +502,6 @@
                  }
                });
 
-
                // replace element with tooltip
                tooltipTarget = tooltipIconCompiled;
              } else {
@@ -505,7 +510,6 @@
                });
              }
 
-
              var closeTooltips = function() {
                // Close all tooltips/popovers
                // (there still might be some open)
@@ -513,7 +517,6 @@
                // Less official way to hide
                $('.popover').hide();
              };
-
 
              var initTooltip = function(event) {
                if (!isInitialized && gnCurrentEdit.displayTooltips) {

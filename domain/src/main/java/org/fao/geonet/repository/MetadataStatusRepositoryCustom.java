@@ -23,9 +23,18 @@
 
 package org.fao.geonet.repository;
 
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.StatusValueType;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
 /**
- * Custom repository methods for the MetadataValidationRepository User: Jesse Date: 9/5/13 Time:
- * 10:17 PM
+ * Custom repository methods for the MetadataValidationRepository User: Jesse
+ * Date: 9/5/13 Time: 10:17 PM
  */
 public interface MetadataStatusRepositoryCustom {
     /**
@@ -38,9 +47,31 @@ public interface MetadataStatusRepositoryCustom {
 
     /**
      * Delete all the entities that are related to the indicated user.
+     * 
      * @param userId the id of the user.
      * @return the number of rows deleted.
      */
     int deleteAllById_UserId(int userId);
 
+    /**
+     * Find all the MetadataStatus objects corresponding to a type by the associated
+     * metadata id.
+     *
+     * @param metadataId the metadata id.
+     * @param type       the status type.
+     * @param sort       how to sort the results
+     * @return all the MetadataStatus objects by the associated metadata id.
+     */
+    @Nonnull
+    List<MetadataStatus> findAllByIdAndByType(int metadataId, StatusValueType type, Sort sort);
+
+    /**
+     * Find all the MetadataStatus objects corresponding to a search
+     */
+    @Nonnull
+    List<MetadataStatus> searchStatus(List<StatusValueType> types,
+                                      List<Integer> authorIds, List<Integer> ownerIds,
+                                      List<Integer> recordIds,
+                                      String dateFrom, String dateTo,
+                                      @Nullable Pageable pageable);
 }

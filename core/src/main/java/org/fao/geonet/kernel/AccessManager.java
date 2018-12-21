@@ -38,7 +38,6 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;

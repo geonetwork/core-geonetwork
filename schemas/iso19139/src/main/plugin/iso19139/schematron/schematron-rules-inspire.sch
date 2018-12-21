@@ -464,15 +464,6 @@ USA.
 
     <sch:pattern>
         <sch:title>$loc/strings/quality</sch:title>
-        <sch:rule context="//gmd:DQ_DataQuality[../../gmd:identificationInfo/gmd:MD_DataIdentification
-			or ../../gmd:identificationInfo/*/@gco:isoType = 'gmd:MD_DataIdentification']">
-            <sch:let name="lineage" value="not(gmd:lineage/gmd:LI_Lineage/gmd:statement) or (gmd:lineage//gmd:statement/@gco:nilReason)"/>
-            <sch:assert test="not($lineage)"
-                >$loc/strings/alert.M43/div</sch:assert>
-            <sch:report test="not($lineage)"
-                >$loc/strings/report.M43/div</sch:report>
-        </sch:rule>
-
         <sch:rule context="//gmd:MD_DataIdentification/gmd:spatialResolution|//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:spatialResolution">
             <sch:assert
                 test="*/gmd:equivalentScale or */gmd:distance"
@@ -489,6 +480,14 @@ USA.
         <sch:title>$loc/strings/conformity</sch:title>
         <!-- Search for on quality report result with status ... We don't really know if it's an INSPIRE conformity report or not. -->
         <sch:rule context="/gmd:MD_Metadata">
+            <sch:let name="hasAtLeastOneLineage"
+                     value="count(gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement[not(@gco:nilReason)]) > 0"/>
+            <sch:assert test="$hasAtLeastOneLineage"
+            >$loc/strings/alert.M43/div</sch:assert>
+            <sch:report test="$hasAtLeastOneLineage"
+            >$loc/strings/report.M43/div</sch:report>
+
+
             <sch:let name="degree" value="count(gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:pass)"/>
             <sch:assert test="$degree">
                 <sch:value-of select="$loc/strings/alert.M44.nonev/div"/><sch:value-of select="$degree>0"/>

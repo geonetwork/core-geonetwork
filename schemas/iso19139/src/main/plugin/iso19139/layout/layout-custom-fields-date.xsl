@@ -85,6 +85,7 @@
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
@@ -132,6 +133,7 @@
       </div>
       <div class="col-sm-6 gn-value">
         <div data-gn-date-picker="{gco:Date|gco:DateTime}"
+             data-gn-field-tooltip="{$tooltip}"
              data-label=""
              data-element-name="{name(gco:Date|gco:DateTime)}"
              data-element-ref="{concat('_X', gn:element/@ref)}"
@@ -172,6 +174,7 @@
     <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="tooltip" select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
@@ -195,6 +198,7 @@
       </label>
       <div class="col-sm-9 gn-value nopadding-in-table">
         <div data-gn-date-picker="{gco:Date|gco:DateTime}"
+             data-gn-field-tooltip="{$tooltip}"
              data-label=""
              data-element-name="{name(gco:Date|gco:DateTime)}"
              data-element-ref="{concat('_X', gn:element/@ref)}"

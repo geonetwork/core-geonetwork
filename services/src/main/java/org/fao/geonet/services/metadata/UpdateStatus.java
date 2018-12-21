@@ -34,6 +34,8 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -44,7 +46,9 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -98,8 +102,15 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
         Set<Integer> metadataIds = new HashSet<Integer>();
         metadataIds.add(iLocalId);
-
-        sa.statusChange(status, metadataIds, changeDate, changeMessage);
+        List<MetadataStatus> list = new ArrayList<>();
+        MetadataStatus mdStatus = new MetadataStatus();
+        mdStatus.setChangeMessage(changeMessage);
+        mdStatus.setId(new MetadataStatusId()
+            .setMetadataId(iLocalId)
+            .setStatusId(Integer.parseInt(status))
+            .setChangeDate(changeDate));
+        list.add(mdStatus);
+        sa.onStatusChange(list);
 
         //--- reindex metadata
         dataMan.indexMetadata(id, true, null);

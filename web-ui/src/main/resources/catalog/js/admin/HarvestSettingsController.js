@@ -160,9 +160,14 @@
             .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
-                  label: value,
-                  text: $translate.instant('harvester-' + value)
+                  label: value
                 };
+                $translate('harvester-' + value).then(function(translated) {
+                  $scope.harvesterTypes[value] = {
+                    text: translated
+                  };
+                });
+
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
                 .done(function(script, textStatus) {

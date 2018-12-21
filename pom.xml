@@ -1406,8 +1406,8 @@
 
 
     <kb.version.sha512>b3b422c3bd157e363f528a27f5243f2ee13eba3e3bb22e1a7a9f24ea33f75b864643e297047379dfbef040a0eaa05ed6d998dd2cfe798b9d058f5b3d346f4d1d</kb.version.sha512>
-    <kb.port>5601</kb.port>
-    <kb.url>http://localhost:${kb.port}</kb.url>
+    <kb.port></kb.port>
+    <kb.url></kb.url>
 
     <jms.url>tcp://localhost:61616</jms.url>
     <activemq.version>5.6.0</activemq.version>
@@ -1442,7 +1442,7 @@
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
     <wro.version>1.7.9</wro.version>
-    <wro.debug>false</wro.debug>
+    <wro.debug>true</wro.debug>
 
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>

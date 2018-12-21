@@ -28,6 +28,18 @@
 
   var module = angular.module('gn_mdactions_directive', []);
 
+  /**
+   * @ngdoc directive
+   * @name gn_mdactions_directive.directive:gnMetadataStatusUpdater
+   * @restrict A
+   * @requires gnMetadataStatusUpdater
+   *
+   * @description
+   * The `gnMetadataStatusUpdater` directive provides a
+   * form to update the record status. Status can be related
+   * to one of the worflow step and could also be to trigger
+   * a action.
+   */
   module.directive('gnMetadataStatusUpdater', ['$translate', '$http',
     'gnMetadataManager',
     function($translate, $http, gnMetadataManager) {
@@ -38,34 +50,50 @@
         templateUrl: '../../catalog/components/metadataactions/partials/' +
             'statusupdater.html',
         scope: {
-          md: '=gnMetadataStatusUpdater'
+          md: '=gnMetadataStatusUpdater',
+          statusType: '@',
+          task: '='
         },
         link: function(scope) {
-          scope.lang = scope.$parent.lang;
           var user = scope.$parent.user;
-          scope.newStatus = {value: '0'};
-
           var metadataId = scope.md.getId();
-          function init() {
-            return $http.get('md.status.list?' +
-                '_content_type=json&id=' + metadataId).
-                success(function(data) {
-                  scope.status =
-                     data !== 'null' ? data.statusvalue : null;
+          var defaultType = 'workflow';
 
-                  angular.forEach(scope.status, function(s) {
-                    if (s.on) {
-                      scope.newStatus.value = s.id;
-                      return;
-                    }
+          scope.statusType = scope.statusType || defaultType;
+          scope.lang = scope.$parent.lang;
+          scope.task = angular.isDefined(scope.task) ? scope.task : scope.$parent.task;
+          scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+
+
+          // Retrieve last status to set it in the form
+          function init() {
+            if (scope.statusType === defaultType) {
+              return $http.get('../api/records/'
+                + metadataId + '/status/'
+                + scope.statusType + '/last').
+                  success(function(data) {
+                    scope.status =
+                       data !== 'null' ? data.status : null;
+                    scope.newStatus.status = data.currentStatus.id.statusId;
+                    scope.lastStatus = data.currentStatus.id.statusId;
                   });
-                });
+            } else {
+              return $http.get('../api/status/' + scope.statusType).
+              success(function(data) {
+                scope.status = data;
+                scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+              });
+            }
           };
 
+
           scope.updateStatus = function() {
+            // Assign task owner id if needed
+            if (scope.newStatus.owner) {
+              scope.newStatus.owner = scope.newStatus.owner.id;
+            }
             return $http.put('../api/records/' + metadataId +
-                '/status?status=' + scope.newStatus.value +
-                '&comment=' + (scope.changeMessage || '')
+                '/status', scope.newStatus
             ).then(
                 function(data) {
                   gnMetadataManager.updateMdObj(scope.md);
@@ -85,8 +113,13 @@
                 });
           };
 
-          scope.cantStatus = function(status) {
-            return ((status == 5 || status == 2 || status == 3) &&
+          var statusApproved = 2;
+          var statusSubmitted = 3;
+          var statusRejected = 5;
+          scope.cantChangeStatus = function(status) {
+            return ((status == statusRejected ||
+                     status == statusApproved ||
+                     status == statusSubmitted) &&
                 !user.isReviewerOrMore());
           };
 
@@ -94,6 +127,7 @@
         }
       };
     }]);
+
   /**
    * @ngdoc directive
    * @name gn_mdactions_directive.directive:gnMetadataCategoryUpdater

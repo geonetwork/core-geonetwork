@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.metadata;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -70,41 +71,42 @@ public class SextantStatusActions extends DefaultStatusActions {
 	/** 
 	  * Called when need to set status on a set of metadata records.
 	  *
-		* @param status The status to set.
-		* @param metadataIds The set of metadata ids to set status on.
-		* @param changeDate The date the status was changed.
-		* @param changeMessage The message explaining why the status has changed.
+		* @param listOfStatus List of status status to set.
 		*/
-        public Set<Integer> statusChange(String status, Set<Integer> metadataIds,
-                ISODate changeDate, String changeMessage) throws Exception {
+    public Set<Integer> onStatusChange(List<MetadataStatus> listOfStatus) throws Exception {
 		Set<Integer> unchanged = new HashSet<Integer>();
 
         // -- process the metadata records to set status
-        for (Integer mid : metadataIds) {
-            String currentStatus = dm.getCurrentStatus(mid);
+        for (MetadataStatus status : listOfStatus) {
+            String currentStatus = dm.getCurrentStatus(status.getId().getMetadataId());
+            String statusId = status.getId().getStatusId() + "";
+            Set<Integer> listOfId = new HashSet<>(1);
+            listOfId.add(status.getId().getMetadataId());
 
             // --- if the status is already set to value of status then do nothing
             if (status.equals(currentStatus)) {
-                unchanged.add(mid);
+                unchanged.add(status.getId().getMetadataId());
             }
 
-            if (status.equals(Params.Status.APPROVED)) {
+            if (status.equals(StatusValue.Status.APPROVED)) {
                 // setAllOperations(mid); - this is a short cut that could be enabled
-            } else if (status.equals(Params.Status.REJECTED)) {
-                unsetAllOperations(mid);
+            } else if (status.equals(StatusValue.Status.REJECTED)) {
+                unsetAllOperations(status.getId().getMetadataId());
             }
 
             // --- set status, indexing is assumed to take place later
-            dm.setStatusExt(context, mid, Integer.valueOf(status),
-                    changeDate, changeMessage);
-        }
+            metadataStatusManager.setStatusExt(status);
 
-        // --- inform content reviewers if the status is submitted
-        if (status.equals(Params.Status.SUBMITTED)) {
-            informContentReviewers(metadataIds, changeDate.toString(), changeMessage);
-            // --- inform owners if status is approved
-        } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED) || status.equals(Params.Status.RETIRED) || status.equals(Params.Status.UNKNOWN)) {
-            informOwners(metadataIds, changeDate.toString(), changeMessage, status);
+
+            // --- inform content reviewers if the status is submitted
+            try {
+                notify(getUserToNotify(status), status);
+            } catch (Exception e) {
+                context.warning(String.format(
+                    "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
+                    status.getId().getMetadataId(), status.getId().getStatusId(), e.getMessage()));
+            }
+
         }
 
         return unchanged;

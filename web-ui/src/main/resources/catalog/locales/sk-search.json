@@ -48,6 +48,7 @@
     "refresh": "Aktualizuj",
     "mapLegend": "Legenda",
     "kmlFile": "{{layer}} (KML)",
+    "tmsLinkDetails": "This dataset is published in the view service (TMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
     "wmsLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with layer name <strong>{{layer}}</strong>.",
     "wmsServiceLinkDetails": "This dataset is published in the view service (WMS) available at <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmtsLinkDetails": "This dataset is published in the view service (WMTS) available at <a href='{{url}}' target='_blank'>{{url}}</a> with identifier <strong>{{layer}}</strong>.",
@@ -71,6 +72,7 @@
     "wcsCapabilitiesNotAvailable": "Couldn't check the GetCapabilities response",
     "wcsLayerNotAvailable": "The coverage {{layerName}} is not available in the WCS service. However, you can view one of the available ones",
     "wcsChooseLayerToAdd": "Choose a coverage to add to the map",
+    "Unable_to_connect_to_service": "Unable to connect to service",
     "databaseLayerDetails": "Táto údajová sada je uvedená v databáze <strong>{{url}}</strong> v tabuľke <strong>{{layer}}</strong>.",
     "fileLayerDetails": "{{name}}. Táto údajová sada je k dispozícii v miestnej sieti <strong>{{url}}</strong>.",
     "wfsNotAvailable": "<a href='{{url}}' target='_blank'>WFS</a> nedostupné.",
@@ -222,7 +224,7 @@
     "hotkeySearchTheCatalog": "Spustiť vyhľadávanie",
     "hotkeyMap": "Vytvorte si vlastnú mapu!",
     "hotkeyFirstPage": "Presunúť sa na prvú stranu",
-    "hotkeyPreviousPage": "Presunúť sa na predchádzajúcu stranu",
+    "hotkeyPreviousPage": "Move to previous page",
     "hotkeyNextPage": "Presunúť sa na nasledujúcu stranu",
     "hotkeyLastPage": "Presunúť sa na poslednú stranu",
     "hotkeySelectAll": "Vybrať všetky výsledky vyhľadávania",
@@ -458,5 +460,8 @@
     "GUFrequired": "Required",
     "GUFtooLong": "Too long",
     "GUFnotValidFormat": "Not a valid format",
-    "clickToSelect": "Click to select or unselect"
+    "clickToSelect": "Click to select or unselect",
+    "filterDataDescription": "Select a layer on the map to begin filtering associated WFS features (if any). Features must first have been indexed by an administrator.",
+    "WPSDescription": "Enter a WPS endpoint URL to begin using the process through a dynamic form. Recently used WPS processes are shown in the second tab.",
+    "noLayersFound": "No layers found"
 }

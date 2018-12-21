@@ -27,7 +27,7 @@ public class TemplatesUriLocatorTest {
 
         assertTrue(locator.accept(resource.getUri()));
         final String actual = IOUtils.toString(locator.locate(resource.getUri()));
-        String expected = String.format("$templateCache.put('%s/template.html', '<html><div ng-class=\"test | \\'bold\\'\"></div></html>');",
+        String expected = String.format("$templateCache.put('%s/template.html', '<html>\\n<div ng-class=\"test | \\'bold\\'\"></div>\\n</html>\\n');",
             "../.." + file.getPath().replace('\\', '/'));
         assertEquals(expected, actual);
     }

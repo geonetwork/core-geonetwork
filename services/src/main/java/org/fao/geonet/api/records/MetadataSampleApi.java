@@ -25,6 +25,7 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
 import io.swagger.annotations.*;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
@@ -34,8 +35,11 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.events.history.RecordImportedEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -110,6 +114,7 @@ public class MetadataSampleApi {
         SchemaManager schemaMan = applicationContext.getBean(SchemaManager.class);
         DataManager dataManager = applicationContext.getBean(DataManager.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
         Element params = new Element("params");
         params.addContent(new Element("file_type").setText("mef"));
@@ -142,7 +147,17 @@ public class MetadataSampleApi {
                         Log.debug(Geonet.DATA_MANAGER,
                             String.format("Loading %s sample file %s ...", schemaName, file));
                     }
-                    schemaCount += MEFLib.doImport(params, context, file, null).size();
+                    List<String> importedMdIds = MEFLib.doImport(params, context, file, null);
+
+                    if(importedMdIds!=null && importedMdIds.size()>0) {
+                        schemaCount += importedMdIds.size();
+                        for (String mdId : importedMdIds) {
+                            AbstractMetadata metadata = ApiUtils.getRecord(mdId);
+                            new RecordImportedEvent(Integer.parseInt(mdId), userSession.getUserIdAsInt(),
+                                    ObjectJSONUtils.convertObjectInJsonObject(userSession.getPrincipal(), RecordImportedEvent.FIELD),
+                                    metadata.getData()).publish(applicationContext);
+                        }
+                    }
                 } catch (Exception e) {
                     Log.error(Geonet.DATA_MANAGER,
                         String.format("Error loading %s sample file %s. Error is %s.",

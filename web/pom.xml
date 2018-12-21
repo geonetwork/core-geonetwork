@@ -985,6 +985,19 @@
       <id>es</id>
       <properties>
         <es.spring.profile>es</es.spring.profile>
+
+        <es.port>9200</es.port>
+        <es.host>localhost</es.host>
+        <es.url>http://${es.host}:${es.port}</es.url>
+        <es.index.features>gn-features</es.index.features>
+        <es.index.features.type>features</es.index.features.type>
+        <es.index.records>gn-records</es.index.records>
+        <es.index.records.type>records</es.index.records.type>
+        <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
+        <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
+
+        <kb.port>5601</kb.port>
+        <kb.url>http://localhost:${kb.port}</kb.url>
       </properties>
     </profile>
 

@@ -1,0 +1,30 @@
+<section>
+  <h2><i class="fa fa-fw fa-chevron-left"/>
+    <span data-translate="">recordHistory</span>
+
+    <label data-ng-show="history.length > 0"
+           data-ng-repeat="(k, v) in filter.types"
+           title="{{k + 'Type' | translate}}">
+      <i class="fa fa-fw"
+         data-ng-class="{
+            'fa-code-fork': k === 'workflow',
+            'fa-tasks': k === 'task',
+            'fa-edit': k === 'event'}"></i>
+      <input type="checkbox" data-ng-model="filter.types[k]"/>
+    </label>
+  </h2>
+
+  <ul class="timeline timeline-1-col"
+      data-ng-show="history.length > 0">
+    <li data-ng-repeat="h in history"
+        data-gn-record-history-step="h"
+        data-no-title="true"/>
+    <li class="timeline-inverted"
+        data-ng-show="hasMoreRecords">
+      <a data-ng-click="more()">
+        <i class="fa fa-fw fa-plus"></i>
+        <span data-translate="">more</span>
+      </a>
+    </li>
+  </ul>
+</section>

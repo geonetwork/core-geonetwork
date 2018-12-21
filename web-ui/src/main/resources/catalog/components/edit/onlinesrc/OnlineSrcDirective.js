@@ -217,6 +217,7 @@
                                             gnCurrentEdit.mdLanguage);
                       scope.relations = res.relations;
                       scope.siblingTypes = scope.siblingTypes;
+
                     });
               };
               scope.isCategoryEnable = function(category) {
@@ -372,7 +373,7 @@
                         thumbnailMaker: true
                       },
                       icon: 'fa gn-icon-thumbnail',
-                      fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                      fileStoreFilter: '*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF}',
                       process: 'thumbnail-add',
                       fields: {
                         'url': {
@@ -394,7 +395,7 @@
                         thumbnailMaker: true
                       },
                       icon: 'fa gn-icon-thumbnail',
-                      fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
+                      fileStoreFilter: '*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF}',
                       process: 'thumbnail-add',
                       fields: {
                         'url': {isMultilingual: false},

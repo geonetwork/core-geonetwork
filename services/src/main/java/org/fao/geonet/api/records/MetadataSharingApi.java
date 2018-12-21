@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 
@@ -60,7 +61,12 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
+import org.fao.geonet.events.history.RecordOwnerChangeEvent;
+import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -73,6 +79,7 @@ import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -194,7 +201,7 @@ public class MetadataSharingApi {
         }
 
         List<GroupOperations> privileges = sharing.getPrivileges();
-        setOperations(sharing, dataManager, context, metadata, operationMap, privileges);
+        setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), request);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
@@ -281,7 +288,7 @@ public class MetadataSharingApi {
                     }
 
                     List<GroupOperations> privileges = sharing.getPrivileges();
-                    setOperations(sharing, dataMan, context, metadata, operationMap, privileges);
+                    setOperations(sharing, dataMan, context, appContext, metadata, operationMap, privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), request);
                     report.incrementProcessedRecords();
                     listOfUpdatedRecords.add(String.valueOf(metadata.getId()));
                 }
@@ -302,14 +309,20 @@ public class MetadataSharingApi {
         SharingParameter sharing,
         DataManager dataMan,
         ServiceContext context,
+        ApplicationContext appContext,
         AbstractMetadata metadata,
         Map<String, Integer> operationMap,
-        List<GroupOperations> privileges) throws Exception {
+        List<GroupOperations> privileges,
+        Integer userId, HttpServletRequest request) throws Exception {
         if (privileges != null) {
             SettingManager sm = context.getBean(SettingManager.class);
             DataManager dm = context.getBean(DataManager.class);
 
+            boolean sharingChanges = false;
+
             boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
+
+            SharingResponse sharingBefore = getRecordSharingSettings(metadata.getUuid(), request.getSession(), request);
 
             for (GroupOperations p : privileges) {
                 for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
@@ -327,14 +340,19 @@ public class MetadataSharingApi {
                                 continue;
                             }
                         }
-
                         dataMan.setOperation(
                             context, metadata.getId(), p.getGroup(), opId);
+                        sharingChanges = true;
                     } else if (!sharing.isClear() && !o.getValue()) {
                         dataMan.unsetOperation(
                             context, metadata.getId(), p.getGroup(), opId);
+                        sharingChanges = true;
                     }
                 }
+            }
+
+            if(sharingChanges) {
+                new RecordPrivilegesChangeEvent(metadata.getId(), userId, ObjectJSONUtils.convertObjectInJsonObject(sharingBefore.getPrivileges(), RecordPrivilegesChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(privileges, RecordPrivilegesChangeEvent.FIELD)).publish(appContext);
             }
         }
     }
@@ -515,9 +533,14 @@ public class MetadataSharingApi {
         DataManager dataManager = appContext.getBean(DataManager.class);
         IMetadataManager metadataManager = appContext.getBean(IMetadataManager.class);
 
+        Integer previousGroup = metadata.getSourceInfo().getGroupOwner();
+        Group oldGroup = appContext.getBean(GroupRepository.class).findOne(previousGroup);
+
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
         metadataManager.save(metadata);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+
+        new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
 
 
@@ -650,7 +673,7 @@ public class MetadataSharingApi {
             for (String uuid : records) {
                 updateOwnership(groupIdentifier, userIdentifier,
                     report, dataManager, accessMan, metadataRepository,
-                    serviceContext, listOfUpdatedRecords, uuid);
+                    serviceContext, listOfUpdatedRecords, uuid, session);
             }
             dataManager.flush();
             dataManager.indexMetadata(listOfUpdatedRecords);
@@ -724,7 +747,7 @@ public class MetadataSharingApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
                 report, dataManager, accessMan, metadataRepository,
-                serviceContext, listOfUpdatedRecords, metadataUuid);
+                serviceContext, listOfUpdatedRecords, metadataUuid, session);
             dataManager.flush();
             dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
@@ -745,7 +768,8 @@ public class MetadataSharingApi {
                                  AccessManager accessMan,
                                  IMetadataUtils metadataRepository,
                                  ServiceContext serviceContext,
-                                 List<String> listOfUpdatedRecords, String uuid) throws Exception {
+                                 List<String> listOfUpdatedRecords, String uuid, 
+                                 HttpSession session) throws Exception {
         AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
@@ -787,6 +811,19 @@ public class MetadataSharingApi {
                         priv.getOperationId());
                 }
             }
+            
+            Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid));
+            ApplicationContext context = ApplicationContextHolder.get();
+            if(!Objects.equals(groupIdentifier, sourceGrp)) {
+              Group newGroup = context.getBean(GroupRepository.class).findOne(groupIdentifier);
+              Group oldGroup = context.getBean(GroupRepository.class).findOne(sourceGrp);
+              new RecordGroupOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
+            }
+            if(!Objects.equals(userIdentifier, sourceUsr)) {
+              User newOwner = context.getBean(UserRepository.class).findOne(userIdentifier);
+              User oldOwner = context.getBean(UserRepository.class).findOne(sourceUsr);
+              new RecordOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldOwner, RecordOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newOwner, RecordOwnerChangeEvent.FIELD)).publish(context);
+            }            
             // -- set the new owner into the metadata record
             dataManager.updateMetadataOwner(metadata.getId(),
                 String.valueOf(userIdentifier),

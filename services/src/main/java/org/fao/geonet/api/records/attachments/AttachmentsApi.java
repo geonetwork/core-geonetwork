@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import io.swagger.annotations.*;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -34,6 +35,8 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
+import org.fao.geonet.events.history.AttachmentAddedEvent;
+import org.fao.geonet.events.history.AttachmentDeletedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -70,14 +73,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 @EnableWebMvc
 @Service
-@RequestMapping(value = {
-    "/api/records/{metadataUuid}/attachments",
-    "/api/" + API.VERSION_0_1 +
-        "/records/{metadataUuid}/attachments"
-})
-@Api(value = "records",
-    tags = "records",
-    description = "Metadata record operations")
+@RequestMapping(value = { "/api/records/{metadataUuid}/attachments",
+        "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}/attachments" })
+@Api(value = "records", tags = "records", description = "Metadata record operations")
 public class AttachmentsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
@@ -99,21 +97,21 @@ public class AttachmentsApi {
         if (contentType == null) {
             String ext = com.google.common.io.Files.getFileExtension(file.getFileName().toString()).toLowerCase();
             switch (ext) {
-                case "png":
-                case "gif":
-                case "bmp":
-                case "tif":
-                case "tiff":
-                case "jpg":
-                case "jpeg":
-                    contentType = "image/" + ext;
-                    break;
-                case "txt":
-                case "html":
-                    contentType = "text/" + ext;
-                    break;
-                default:
-                    contentType = "application/" + ext;
+            case "png":
+            case "gif":
+            case "bmp":
+            case "tif":
+            case "tiff":
+            case "jpg":
+            case "jpeg":
+                contentType = "image/" + ext;
+                break;
+            case "txt":
+            case "html":
+                contentType = "text/" + ext;
+                break;
+            default:
+                contentType = "application/" + ext;
             }
         }
         return contentType;
@@ -137,9 +135,7 @@ public class AttachmentsApi {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(
-            MetadataResourceVisibility.class,
-            new MetadataResourceVisibilityConverter());
+        binder.registerCustomEditor(MetadataResourceVisibility.class, new MetadataResourceVisibilityConverter());
         binder.registerCustomEditor(Sort.class, new SortConverter());
     }
 
@@ -147,231 +143,155 @@ public class AttachmentsApi {
         return null;
     }
 
-    @ApiOperation(
-        value = "List all metadata attachments",
-        notes = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/using-filestore.html'>More info</a>",
-        nickname = "getAllMetadataResources")
-    @RequestMapping(
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "List all metadata attachments", notes = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/using-filestore.html'>More info</a>", nickname = "getAllMetadataResources")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Return the record attachments."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
-    })
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Return the record attachments."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW) })
     @ResponseBody
     public List<MetadataResource> getAllResources(
-        @ApiParam(value = "The metadata UUID",
-            required = true,
-            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-        @PathVariable
-            String metadataUuid,
-        @ApiParam(value = "Sort by",
-            example = "type")
-        @RequestParam(required = false,
-            defaultValue = "name")
-            Sort sort,
-        @RequestParam(required = false,
-            defaultValue = FilesystemStore.DEFAULT_FILTER)
-            String filter,
-        @ApiIgnore
-            HttpServletRequest request
-    ) throws Exception {
+            @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiParam(value = "Sort by", example = "type") @RequestParam(required = false, defaultValue = "name") Sort sort,
+            @RequestParam(required = false, defaultValue = FilesystemStore.DEFAULT_FILTER) String filter,
+            @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter);
         return list;
     }
 
-    @ApiOperation(
-        value = "Delete all uploaded metadata resources",
-        nickname = "deleteAllMetadataResources")
-    @RequestMapping(
-        method = RequestMethod.DELETE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Delete all uploaded metadata resources", nickname = "deleteAllMetadataResources")
+    @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('Editor')")
-    @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Attachment added."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
-    })
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Attachment added."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delResources(@ApiParam(value = "The metadata UUID",
-        required = true,
-        example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-                             @PathVariable
-                                 String metadataUuid,
-                             @ApiIgnore
-                                     HttpServletRequest request
-    ) throws Exception {
+    public void delResources(
+            @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         store.delResource(context, metadataUuid);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if (metadataIdString != null) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), "All attachments")
+                    .publish(ApplicationContextHolder.get());
+        }
     }
 
-    @ApiOperation(
-        value = "Create a new resource for a given metadata",
-        nickname = "putResourceFromFile")
+    @ApiOperation(value = "Create a new resource for a given metadata", nickname = "putResourceFromFile")
     @PreAuthorize("hasRole('Editor')")
-    @RequestMapping(
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Attachment uploaded."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
-    })
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Attachment uploaded."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
     @ResponseBody
     public MetadataResource putResource(
-        @ApiParam(value = "The metadata UUID",
-            required = true,
-            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-        @PathVariable
-            String metadataUuid,
-        @ApiParam(value = "The sharing policy",
-            example = "public")
-        @RequestParam(required = false,
-            defaultValue = "public")
-            MetadataResourceVisibility visibility,
-        @ApiParam(value = "The file to upload")
-        @RequestParam("file")
-            MultipartFile file,
-        @ApiIgnore
-            HttpServletRequest request
-    ) throws Exception {
+            @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiParam(value = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
+            @ApiParam(value = "The file to upload") @RequestParam("file") MultipartFile file,
+            @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.putResource(context, metadataUuid, file, visibility);
+        MetadataResource resource = store.putResource(context, metadataUuid, file, visibility);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if (metadataIdString != null && file != null && !file.isEmpty()) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachmentAddedEvent(metadataId, userSession.getUserIdAsInt(), file.getOriginalFilename())
+                    .publish(ApplicationContextHolder.get());
+        }
+
+        return resource;
     }
 
-    @ApiOperation(
-        value = "Create a new resource from a URL for a given metadata",
-        nickname = "putResourcesFromURL",
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Create a new resource from a URL for a given metadata", nickname = "putResourcesFromURL", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('Editor')")
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
-    @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Attachment added."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
-    })
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Attachment added."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
     @ResponseBody
     public MetadataResource putResourceFromURL(
-        @ApiParam(value = "The metadata UUID",
-            required = true,
-            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-        @PathVariable
-            String metadataUuid,
-        @ApiParam(value = "The sharing policy",
-            example = "public")
-        @RequestParam(required = false,
-            defaultValue = "public")
-            MetadataResourceVisibility visibility,
-        @ApiParam(value = "The URL to load in the store")
-        @RequestParam("url")
-            URL url,
-        @ApiIgnore
-            HttpServletRequest request
-    ) throws Exception {
+            @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiParam(value = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
+            @ApiParam(value = "The URL to load in the store") @RequestParam("url") URL url,
+            @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.putResource(context, metadataUuid, url, visibility);
+        MetadataResource resource = store.putResource(context, metadataUuid, url, visibility);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if (metadataIdString != null && url != null) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachmentAddedEvent(metadataId, userSession.getUserIdAsInt(), url.toString())
+                    .publish(ApplicationContextHolder.get());
+        }
+
+        return resource;
     }
 
-    @ApiOperation(
-        value = "Get a metadata resource",
-        nickname = "getResource")
-//    @PreAuthorize("permitAll")
-    @RequestMapping(value = "/{resourceId:.+}",
-        method = RequestMethod.GET)
+    @ApiOperation(value = "Get a metadata resource", nickname = "getResource")
+    // @PreAuthorize("permitAll")
+    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Record attachment."),
-        @ApiResponse(code = 403, message = "Operation not allowed. " +
-            "User needs to be able to download the resource.")
-    })
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Record attachment."),
+            @ApiResponse(code = 403, message = "Operation not allowed. "
+                    + "User needs to be able to download the resource.") })
     @ResponseBody
     public HttpEntity<byte[]> getResource(
-        @ApiParam(value = "The metadata UUID",
-            required = true,
-            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-        @PathVariable
-            String metadataUuid,
-        @ApiParam(value = "The resource identifier (ie. filename)",
-            required = true)
-        @PathVariable
-            String resourceId,
-        @ApiIgnore
-            HttpServletRequest request
-    ) throws Exception {
+            @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
+            @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         Path file = store.getResource(context, metadataUuid, resourceId);
 
         // TODO: Check user privileges
 
         MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Disposition",
-            "inline; filename=\"" + file.getFileName() + "\"");
-        headers.add("Cache-Control",
-            "no-cache");
+        headers.add("Content-Disposition", "inline; filename=\"" + file.getFileName() + "\"");
+        headers.add("Cache-Control", "no-cache");
         headers.add("Content-Type", getFileContentType(file));
 
         return new HttpEntity<>(Files.readAllBytes(file), headers);
     }
 
-    @ApiOperation(
-        value = "Update the metadata resource visibility",
-        nickname = "patchMetadataResourceVisibility")
+    @ApiOperation(value = "Update the metadata resource visibility", nickname = "patchMetadataResourceVisibility")
     @PreAuthorize("hasRole('Editor')")
-    @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Attachment visibility updated."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
-    })
-    @RequestMapping(value = "/{resourceId:.+}",
-        method = RequestMethod.PATCH,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = { @ApiResponse(code = 201, message = "Attachment visibility updated."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public MetadataResource patchResource(@ApiParam(value = "The metadata UUID",
-        required = true,
-        example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-                                          @PathVariable
-                                              String metadataUuid,
-                                          @ApiParam(value = "The resource identifier (ie. filename)",
-                                              required = true)
-                                          @PathVariable
-                                              String resourceId,
-                                          @ApiParam(value = "The visibility",
-                                              required = true,
-                                              example = "public")
-                                          @RequestParam(required = true)
-                                              MetadataResourceVisibility visibility,
-                                          @ApiIgnore
-                                          HttpServletRequest request) throws Exception {
+    public MetadataResource patchResource(
+            @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
+            @ApiParam(value = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
+            @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         return store.patchResourceStatus(context, metadataUuid, resourceId, visibility);
     }
 
-    @ApiOperation(
-        value = "Delete a metadata resource",
-        nickname = "deleteMetadataResource")
+    @ApiOperation(value = "Delete a metadata resource", nickname = "deleteMetadataResource")
     @PreAuthorize("hasRole('Editor')")
-    @RequestMapping(
-        value = "/{resourceId:.+}",
-        method = RequestMethod.DELETE)
-    @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Attachment visibility removed."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
-    })
+    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.DELETE)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Attachment visibility removed."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delResource(@ApiParam(value = "The metadata UUID",
-        required = true,
-        example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-                            @PathVariable
-                                String metadataUuid,
-                            @ApiParam(value = "The resource identifier (ie. filename)",
-                                required = true)
-                            @PathVariable
-                                String resourceId,
-                            @ApiIgnore
-                                    HttpServletRequest request
-    ) throws Exception {
+    public void delResource(
+            @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+            @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
+            @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         store.delResource(context, metadataUuid, resourceId);
+
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        if (metadataIdString != null) {
+            long metadataId = Long.parseLong(metadataIdString);
+            UserSession userSession = ApiUtils.getUserSession(request.getSession());
+            new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), resourceId)
+                    .publish(ApplicationContextHolder.get());
+        }
     }
 }

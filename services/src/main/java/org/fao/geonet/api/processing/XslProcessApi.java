@@ -23,27 +23,31 @@
 
 package org.fao.geonet.api.processing;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
+import java.io.StringWriter;
+import java.nio.file.Path;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.xml.transform.stream.StreamResult;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
+import org.fao.geonet.events.history.RecordProcessingChangeEvent;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,18 +59,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.nio.file.Path;
-import java.util.Set;
-
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata schema. Parameters sent
@@ -290,6 +295,7 @@ public class XslProcessApi {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
             ApplicationContext context = ApplicationContextHolder.get();
             DataManager dataMan = context.getBean(DataManager.class);
+            UserSession userSession = ApiUtils.getUserSession(httpSession);
 
             final String siteURL = request.getRequestURL().toString() + "?" + request.getQueryString();
 
@@ -298,7 +304,7 @@ public class XslProcessApi {
             BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
                 ApiUtils.createServiceContext(request),
                 dataMan, records, process, httpSession, siteURL,
-                xslProcessingReport, request, index);
+                xslProcessingReport, request, index, userSession.getUserIdAsInt());
             m.process();
 
         } catch (Exception exception) {
@@ -320,6 +326,7 @@ public class XslProcessApi {
         XsltMetadataProcessingReport xslProcessingReport;
         HttpServletRequest request;
         ServiceContext context;
+        int userId;
 
         public BatchXslMetadataReindexer(ServiceContext context,
                                          DataManager dm,
@@ -328,7 +335,8 @@ public class XslProcessApi {
                                          HttpSession session,
                                          String siteURL,
                                          XsltMetadataProcessingReport xslProcessingReport,
-                                         HttpServletRequest request, boolean index) {
+                                         HttpServletRequest request, boolean index,
+                                         int userId) {
             super(dm);
             this.records = records;
             this.process = process;
@@ -338,18 +346,30 @@ public class XslProcessApi {
             this.request = request;
             this.xslProcessingReport = xslProcessingReport;
             this.context = context;
+            this.userId = userId;
         }
 
         @Override
         public void process() throws Exception {
+            DataManager dataMan = context.getBean(DataManager.class);
+            ApplicationContext appContext = ApplicationContextHolder.get();
             for (String uuid : this.records) {
                 String id = getDataManager().getMetadataId(uuid);
                 Log.info("org.fao.geonet.services.metadata",
                     "Processing metadata with id:" + id);
 
+                Element beforeMetadata = dataMan.getMetadata(context, id, false, false, false);
+
                 XslProcessUtils.process(context, id, process,
                     true, index, xslProcessingReport,
                     siteURL, request.getParameterMap());
+
+                Element afterMetadata = dataMan.getMetadata(context, id, false, false, false);
+
+                XMLOutputter outp = new XMLOutputter();
+                String xmlAfter = outp.outputString(afterMetadata);
+                String xmlBefore = outp.outputString(beforeMetadata);
+                new RecordProcessingChangeEvent(Long.parseLong(id), this.userId, xmlBefore, xmlAfter, process).publish(appContext);
             }
         }
     }

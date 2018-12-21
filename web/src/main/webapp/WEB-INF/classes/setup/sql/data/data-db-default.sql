@@ -523,12 +523,28 @@ INSERT INTO IsoLanguages (id, code, shortcode) VALUES  (484,'zza', NULL);
 -- === Table: StatusValues
 -- ======================================================================
 
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (0,'unknown','y', 0);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (1,'draft','y', 1);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (2,'approved','y', 3);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (3,'retired','y', 5);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (4,'submitted','y', 2);
-INSERT INTO StatusValues (id, name, reserved, displayorder) VALUES  (5,'rejected','y', 4);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (0,'unknown','y', 0, 'workflow', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (1,'draft','y', 1, 'workflow', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (2,'approved','y', 3, 'workflow', 'recordUserAuthor');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (3,'retired','y', 5, 'workflow', 'recordUserAuthor');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (4,'submitted','y', 2, 'workflow', 'recordProfileReviewer');
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (5,'rejected','y', 4, 'workflow', 'recordUserAuthor');
+
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (100,'doiCreationTask','n', 100, 'task', 'statusUserOwner');
+
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (50,'recordcreated','y', 50, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (51,'recordupdated','y', 51, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (52,'attachmentadded','y', 52, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (53,'attachmentdeleted','y', 53, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (54,'recordownerchange','y', 54, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (55,'recordgroupownerchange','y', 55, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (56,'recordprivilegeschange','y', 56, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (57,'recordcategorychange','y', 57, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (58,'recordvalidationtriggered','y', 58, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (59,'recordstatuschange','y', 59, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (60,'recordprocessingchange','y', 60, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (61,'recorddeleted','y', 61, 'event', null);
+INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (62,'recordimported','y', 62, 'event', null);
 
 -- ======================================================================
 -- === Table: StatusValuesDes
@@ -631,7 +647,11 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/harvesting/mail/level3', 'false', 2, 9028, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/prefergrouplogo', 'true', 2, 9111, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/allThesaurus', 'false', 2, 9160, 'n');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/vcs/enable', 'false', 2, 9161, 'n');
+
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', 'false', 2, 9170, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/history/enabled', 'false', 2, 9171, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/usergrouponly', 'false', 2, 9180, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/threadedindexing/maxthreads', '1', 1, 9210, 'y');
@@ -646,9 +666,10 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/summaryWidth', '500', 0, 9590, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('region/getmap/mapproj', 'EPSG:3857', 0, 9590, 'n');
 
-
+-- The default UI config is defined in CatController.js
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES
-  ('ui/config', '{"langDetector":{"fromHtmlTag":false,"regexp":"^(?:/.+)?/.+/([a-z]{2,3})/.+","default":"eng"},"nodeDetector":{"regexp":"^(?:/.+)?/(.+)/[a-z]{2,3}/.+","default":"srv"},"serviceDetector":{"regexp":"^(?:/.+)?/.+/[a-z]{2,3}/(.+)","default":"catalog.search"},"baseURLDetector":{"regexp":"^((?:/.+)?)+/.+/[a-z]{2,3}/.+","default":"/geonetwork"},"mods":{"header":{"enabled":true,"languages":{"eng":"en","dut":"nl","fre":"fr","ger":"ge","kor":"ko","spa":"es","cze":"cz","cat":"ca","fin":"fi","ice":"is","rus":"ru","chi":"zh","slo":"sk"},"isLogoInHeader":true,"logoInHeaderPosition":"left"},"home":{"enabled":true,"appUrl":"../../srv/{{lang}}/catalog.search#/home"},"search":{"enabled":true,"appUrl":"../../srv/{{lang}}/catalog.search#/search","hitsperpageValues":[10,50,100],"paginationInfo":{"hitsPerPage":20},"defaultSearchString":"","facetsSummaryType":"details","facetConfig":[],"facetTabField":"","filters":{},"sortbyValues":[{"sortBy":"relevance","sortOrder":""},{"sortBy":"changeDate","sortOrder":""},{"sortBy":"title","sortOrder":"reverse"},{"sortBy":"rating","sortOrder":""},{"sortBy":"popularity","sortOrder":""},{"sortBy":"denominatorDesc","sortOrder":""},{"sortBy":"denominatorAsc","sortOrder":"reverse"}],"sortBy":"relevance","resultViewTpls":[{"tplUrl":"../../catalog/components/search/resultsview/partials/viewtemplates/grid.html","tooltip":"Grid","icon":"fa-th"}],"resultTemplate":"../../catalog/components/search/resultsview/partials/viewtemplates/grid.html","advancedSearchTemplate":"../../catalog/views/default/templates/advancedSearchForm/defaultAdvancedSearchForm.html","formatter":{"list":[{"label":"full","url":"../api/records/{{uuid}}/formatters/xsl-view?root=div&view=advanced"}]},"grid":{"related":["parent","children","services","datasets"]},"linkTypes":{"links":["LINK","kml"],"downloads":["DOWNLOAD"],"layers":["OGC"],"maps":["ows"]},"isFilterTagsDisplayedInSearch":false},"defaultSearchString":"","map":{"enabled":true,"appUrl":"../../srv/{{lang}}/catalog.search#/map","is3DModeAllowed":true,"isSaveMapInCatalogAllowed":true,"isExportMapAsImageEnabled":true,"bingKey":"","storage":"sessionStorage","map":"../../map/config-viewer.xml","listOfServices":{"wms":[],"wmts":[]},"useOSM":true,"context":"","layer":{"url":"http://data.fao.org/maps/wms?","layers":"COMMON:dark_bluemarble","version":"1.1.1"},"projection":"EPSG:3857","projectionList":[{"code":"EPSG:4326","label":"WGS84(EPSG:4326)"},{"code":"EPSG:3857","label":"Googlemercator(EPSG:3857)"}],"disabledTools":{"processes":false,"addLayers":false,"layers":false,"filter":false,"contexts":false,"print":false,"mInteraction":false,"graticule":false,"syncAllLayers":false,"drawVector":false},"searchMapLayers":[],"viewerMapLayers":[]},"recordview": {"enabled": true, "isSocialbarEnabled": true},"editor":{"enabled":true,"appUrl":"../../srv/{{lang}}/catalog.edit","geocoder": {"enabled": true, "appUrl": "https://secure.geonames.org/searchJSON"},"isUserRecordsOnly":false,"isFilterTagsDisplayed":false,"createPageTpl": "../../catalog/templates/editor/new-metadata-horizontal.html"},"admin":{"enabled":true,"appUrl":"../../srv/{{lang}}/admin.console"},"signin":{"enabled":true,"appUrl":"../../srv/{{lang}}/catalog.signin"},"signout":{"appUrl":"../../signout"}}}', 3, 10000, 'n');
+  ('ui/config', '', 3, 10000, 'n');
+
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/resourceIdentifierPrefix', 'http://localhost:8080/geonetwork/srv/resources', 0, 10001, 'n');
 

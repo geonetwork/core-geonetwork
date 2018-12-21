@@ -258,7 +258,7 @@
             for (var i = 0; i < data.siblings.length; i++) {
               var type = data.siblings[i].associationType;
               if ($.inArray(type, scope.siblingTypes) == -1) {
-                scope.siblingTypes.push(type);
+                siblingTypes.push(type);
               }
             }
           }

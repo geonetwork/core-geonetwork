@@ -101,7 +101,9 @@
       };
 
       this.setSearch = function(params) {
-        $location.path(state.current.path);
+        if (!this.isSearch()) {
+          $location.path(this.SEARCH);
+        }
         if (params) {
           $location.search(params);
         }

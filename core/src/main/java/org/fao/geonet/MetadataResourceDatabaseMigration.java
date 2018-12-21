@@ -63,7 +63,7 @@ import javax.annotation.Nullable;
  *
  * Created by francois on 12/01/16.
  */
-public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask {
+public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
 
     private static final ArrayList<Namespace> NAMESPACES =
         Lists.newArrayList(
@@ -175,7 +175,7 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
                      "SELECT data,id,uuid FROM metadata WHERE isharvested = 'n'")
             ) {
                 int numInBatch = 0;
-                final SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+                final SettingManager settingManager = applicationContext.getBean(SettingManager.class);
 
                 while (resultSet.next()) {
                     final Element xml = Xml.loadString(resultSet.getString(1), false);
