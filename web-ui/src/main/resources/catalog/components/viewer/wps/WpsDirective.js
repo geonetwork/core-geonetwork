@@ -176,23 +176,42 @@
             }
             // Specific SEXTANT EMODNET
             // Gets the labels // names of usable layers (checked and visible)
-            scope.applyMapLayersToInput = function () {
-              if (!scope.applicationProfile) return;
-              var availableLayers = scope.map.getLayers()
+            scope.filterAvailableLayers = function () {
+              return scope.map.getLayers()
                 .getArray()
                 .filter(function(l) {
                   return (l.getVisible() && !l.background); // remove background layers
                 })
+
+            }
+            scope.applyMapLayersToInput = function () {
+              if (!scope.applicationProfile) return;
+              var availableLayers = scope.filterAvailableLayers()
                 .map(function(ll) {
-                  return ll.get('label') || ll.get('name');
-                });
+                return ll.get('label') || ll.get('name');
+              });
               scope.applicationProfile.inputs.forEach(function(input) {
                 if (input.bindWmsNameToWPS) {
+                  scope.emodnetSortKeys = input.sortBy;
+                  scope.emodnetSortInputKey = input.identifier;
                   scope.removeAllInputValuesByName(input.identifier);
                   availableLayers.forEach(function(layerName) {
                     scope.addInputValueByName(input.identifier, layerName);
                   });
                 }
+              });
+            }
+            scope.reOrderLayerInputs = function(key){
+              scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
+              var availableLayers = scope.filterAvailableLayers()
+                .map(function(ll) {
+                  return {'name' : ll.get('label') || ll.get('name'), 'qi': ll.get('qi_list')[key]};
+                })
+              var layersOrderedList = availableLayers.sort(function (a, b) {
+                return a.qi > b.qi;
+              });
+              layersOrderedList.forEach(function(layer) {
+                scope.addInputValueByName(scope.emodnetSortInputKey, layer.name);
               });
             }
 

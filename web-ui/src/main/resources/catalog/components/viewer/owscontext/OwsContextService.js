@@ -319,7 +319,7 @@
 
                 // load extension content (JSON)
                 if (layer.extension && layer.extension.any) {
-                  var extension JSON.parse(layer.extension.any);
+                  var extension = JSON.parse(layer.extension.any);
                   // import saved filters if available
                   if (extension.filters && extension.wfsUrl) {
                     var url = extension.wfsUrl;

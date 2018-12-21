@@ -42,7 +42,14 @@
       <div ng-if="processDescription">
         <div>
           <form novalidate>
-
+            <div ng-if="emodnetSortKeys" >
+              <label>Sort by</label>
+              <select class="form-control input-sm"
+                      ng-model="sortKey" ng-change="reOrderLayerInputs(sortKey)">
+                <option ng-repeat="sortKey in emodnetSortKeys"
+                        value="{{sortKey}}">{{sortKey}}</option>
+              </select>
+            </div><br>
             <!-- Inputs: loop on process description to display all inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input"
               ng-if="!isInputHidden(input.identifier.value)"
