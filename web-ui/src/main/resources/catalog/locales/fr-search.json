@@ -50,7 +50,7 @@
     "kmlFile": "{{layer}} (KML)",
     "tmsLinkDetails": "Cette donnée est publiée dans le service de visualisation (TMS) disponible à l'adresse {{url}} avec l'identifiant {{layer}}.",
     "wmsLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse <a href='{{url}}'>{{url}}</a>, couche <strong>{{layer}}</strong>.",
-    "wmsServiceLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse <a href=\"{url}\">{{url}}</a>.",
+    "wmsServiceLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMS) disponible à l'adresse<a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wmtsLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMTS) disponible à l'adresse <a href='{{url}}' target='_blank'>{{url}}</a> couche <strong>{{layer}}</strong>.",
     "wmtsServiceLinkDetails": "Cette donnée est publiée dans le service de visualisation (WMTS) disponible à l'adresse <a href='{{url}}' target='_blank'>{{url}}</a>.",
     "wfsLinkDetails": "Cette donnée est publiée dans le service de téléchargement (WFS) disponible à l'adresse <a href=\"{{url}}\">{{url}}</a>, couche <strong>{{layer}}</strong>.",
