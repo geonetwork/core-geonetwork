@@ -197,6 +197,32 @@
 
           for (i = 0; i < layers.length; i++) {
             var type, layer = layers[i];
+
+            // specific emodnet
+            var metadataList = [];
+            var QIList = [];
+            if (layer.extension && layer.extension.length > 0) {
+              angular.forEach(layer.extension, function(ext) {
+                if ('metadataUrllist' in ext) {
+                  angular.forEach(ext['metadataUrllist'], function(metadata){
+                    metadataList.push(metadata.MetadataUrl);
+                  })
+                }
+                if ('QIList' in ext) {
+                  angular.forEach(ext['QIList'], function(qil) {
+                    var QIDict = {};
+                    qil.QI.forEach(function(qi){
+                      QIDict[qi['Indicator']] = qi['value']
+                    })
+                    QIList.push(QIDict);
+                  })
+                }
+              })
+            }
+            layer.metadataUrl = metadataList[0];
+            layer.qiList = QIList[0];
+            // end specific emodnet
+
             if (layer.name) {
               if (layer.group == 'Background layers') {
 
@@ -293,8 +319,7 @@
 
                 // load extension content (JSON)
                 if (layer.extension && layer.extension.any) {
-                  var extension = JSON.parse(layer.extension.any);
-
+                  var extension JSON.parse(layer.extension.any);
                   // import saved filters if available
                   if (extension.filters && extension.wfsUrl) {
                     var url = extension.wfsUrl;
@@ -326,11 +351,13 @@
                     group: layer.group,
 
                     // Sextant specific
-                    owc_position: layer.position,
-                    owc_groupPosition: layer.groupPosition
+                    owc_position: 'sexposit',
+                    owc_groupPosition: layer.groupPosition,
+                    metadata_url: layer.metadataUrl,
+                    qi_list: layer.qiList,
+
                     // end sextant specific
                   });
-
                   loadingLayer.displayInLayerManager = true;
 
                   var layerIndex = map.getLayers().push(loadingLayer);
@@ -540,6 +567,8 @@
             // Sextant specific
             position: layer.get('owc_position'),
             groupPosition: layer.get('owc_groupPosition'),
+            metadataUrl: layer.get('metadata_url'),
+            qiList: layer.get('qi_list'),
             // end sextant specific
 
             server: [{
@@ -667,6 +696,8 @@
             // Sextant specific
             olL.set('owc_position', layer.position);
             olL.set('owc_groupPosition', layer.groupPosition);
+            olL.set('metadata_url', layer.metadataUrl);
+            olL.set('qi_list', layer.qiList);
             // end sextant specific
 
             olL.setOpacity(layer.opacity);
@@ -703,6 +734,8 @@
                   // Sextant specific
                   olL.set('owc_position', layer.position);
                   olL.set('owc_groupPosition', layer.groupPosition);
+                  olL.set('metadata_url', layer.metadataUrl);
+                  olL.set('qi_list', layer.qiList);
                   // end sextant specific
 
                   olL.set('tree_index', index);
