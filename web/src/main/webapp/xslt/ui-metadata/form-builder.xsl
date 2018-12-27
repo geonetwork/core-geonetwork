@@ -181,7 +181,7 @@
             <xsl:value-of select="$label/label"/>
           </label>
 
-          <div class="col-sm-9 gn-value nopadding-in-table">
+          <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table">
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field"
                              select="$metadataOtherLanguagesAsJson"/>
@@ -288,7 +288,7 @@
               </xsl:for-each>
             </xsl:if>
           </div>
-          <div class="col-sm-1 gn-control">
+          <div class="col-sm-1 col-xs-1 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>
