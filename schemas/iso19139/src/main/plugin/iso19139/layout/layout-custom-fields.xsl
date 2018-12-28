@@ -118,7 +118,7 @@
           (<xsl:value-of select="$labelMeasureType/label"/>)
         </xsl:if>
       </label>
-      <div class="col-sm-9 gn-value nopadding-in-table">
+      <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table">
         <xsl:variable name="elementRef"
                       select="gco:*/gn:element/@ref"/>
         <xsl:variable name="helper"
@@ -133,7 +133,7 @@
               saxon:serialize($helper, 'default-serialize-mode'))"/>
         </textarea>
       </div>
-      <div class="col-sm-1 gn-control">
+      <div class="col-sm-1 col-xs-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
           <xsl:with-param name="editInfo" select="*/gn:element"/>
           <xsl:with-param name="parentEditInfo" select="$refToDelete"/>
