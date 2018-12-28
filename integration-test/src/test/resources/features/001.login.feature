@@ -21,3 +21,4 @@ Feature: GeoNetwork Login
         And I click on element having css "form > button.btn-primary"
         And I wait for 1 sec
         Then element having xpath "//strong[text() = 'Incorrect username or password.']" should be present
+

@@ -3,15 +3,9 @@ Feature: Cleanup Draft Tests
  
  Scenario: Remove everything we created for the tests
         # Login as admin
-        Given I navigate to "{endPointToTest}"
-	      When I click on element having css "li.signin-dropdown"
-        And I enter "{adminUser}" into input field having xpath "//*[@id='inputUsername']"
-        And I enter "{adminPassword}" into input field having xpath "//*[@id='inputPassword']"
-        And I click on element having css "form > button.btn-primary"
-        And I wait 1 seconds for element having css "div.search-over" to display
-        
+        Given I login as admin/admin and navigate to catalog.edit#/board
+
         # Remove all records
-        When I navigate to "{endPointToTest}/srv/eng/catalog.edit#/board"
         Then I click on element having css "div.gn-editor-board button.dropdown-toggle"
         Then I click on element having xpath "//a[@data-ng-click='selectAll()']"
         Then I click on element having css "div.gn-selection-actions"
@@ -34,6 +28,4 @@ Feature: Cleanup Draft Tests
         And I accept alert
         
         # Logout   
-        When I hover over element having css ".gn-user-info"  
-        Then I wait 1 seconds for element having css ".fa-sign-out" to display
-        Then I click on element having css ".fa-sign-out"
+        And I sign out

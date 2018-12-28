@@ -2,17 +2,9 @@ Feature: Edit with reviewer
         When a reviewer tries to edit a published metadata, it uses the same draft
  
  Scenario: When a reviewer tries to edit a published metadata, it uses the same draft
-        Given I navigate to "{endPointToTest}"
-        # Login as editor
-        Then I wait 10 seconds for element having css "li.signin-dropdown" to display
-	      When I click on element having css "li.signin-dropdown"
-        And I enter "reviewertest" into input field having xpath "//*[@id='inputUsername']"
-        And I enter "editorpass" into input field having xpath "//*[@id='inputPassword']"
-        And I click on element having css "form > button.btn-primary"
-        And I wait 1 seconds for element having css "div.search-over" to display
+       Given I login as reviewertest/editorpass and navigate to catalog.edit#/board
         
-        # Edit published record       
-        When I navigate to "{endPointToTest}/srv/eng/catalog.edit#/board"
+        # Edit published record
         Then I click on link having text "Second Version"
         Then I click on element having css "a.gn-md-edit-btn"
         And I wait 10 seconds for element having css "div.gn-title" to display
@@ -34,13 +26,8 @@ Feature: Edit with reviewer
         And I wait 10 seconds for element having css "i.fa-lock" to display
         Then I click on element having css "i.fa-lock"
         And I wait 5 seconds for element having css "div.alert-success" to display
-                
-        # Logout as reviewer
-        When I hover over element having css ".gn-user-info"  
-        Then I wait 1 seconds for element having css ".fa-sign-out" to display
-        Then I click on element having css ".fa-sign-out"
-	      Then I wait 10 seconds for element having css "li.signin-dropdown" to display
-        
+        And I sign out
+
         # Check metadata not viewed as anonymous
         When I navigate to "{endPointToTest}/srv/eng/catalog.search#/search"
         Then element having xpath "//*a[title='Third Version']" should not be present

@@ -107,17 +107,20 @@
   <div data-gn-need-help="user-guide/publishing/index.html"
        data-icon-only="true"></div> 
   <button type="button" class="btn btn-primary"
+          id="gn-share-btn-replace"
           data-gn-click-and-spin="save(true)">
     <i class="fa fa-eraser"></i>&nbsp;
     <span data-translate="">replaceByThoseOperations</span>
   </button>
   <button type="button" class="btn btn-primary"
+          id="gn-share-btn-add"
           data-gn-click-and-spin="save(false)"
           data-ng-show="batch">
     <i class="fa fa-plus"></i>&nbsp;
     <span data-translate="">addThoseOperations</span>
   </button>
   <button type="button" class="btn btn-default"
+          id="gn-share-btn-reset"
           data-ng-click="reset()"
           data-ng-show="batch"
           title="{{'resetOps' | translate}}">

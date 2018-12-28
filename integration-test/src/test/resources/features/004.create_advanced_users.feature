@@ -2,16 +2,9 @@ Feature: Create (draft) editor
         Setup environment to test draft feature
  
  Scenario: Setup environment to test draft feature
-        Given I navigate to "{endPointToTest}"
-        # Login as admin
-	      When I click on element having css "li.signin-dropdown"
-        And I enter "{adminUser}" into input field having xpath "//*[@id='inputUsername']"
-        And I enter "{adminPassword}" into input field having xpath "//*[@id='inputPassword']"
-        And I click on element having css "form > button.btn-primary"
-        And I wait 5 seconds for element having css "div.search-over" to display
-        
+        Given I login as admin/admin and navigate to admin.console#/organization
+
         # Add editor
-        Then I navigate to "{endPointToTest}/srv/eng/admin.console#/organization"
         And I click on element having id "gn-btn-user-add"
         And I enter "editortest" into input field having id "username"
         And I enter "editorpass" into input field having id "gn-user-password"
@@ -61,7 +54,4 @@ Feature: Create (draft) editor
         Then I wait 10 seconds for element having css "div.panel-success" to display
         
         # Logout admin
-        And I hover over element having css ".gn-user-info"
-        Then I wait 1 seconds for element having css "i.fa-sign-out" to display
-        And I click on element having css "a > i.fa-sign-out"
-	      Then I wait 5 seconds for element having css "li.signin-dropdown" to display
+        And I sign out
