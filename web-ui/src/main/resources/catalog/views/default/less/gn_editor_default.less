@@ -2,6 +2,8 @@
 @import "../../../style/gn_editor.less";
 @import "gn_view.less";
 
+
+
 [ng-app="gn_editor"] {
   .gn-top-bar {
     // status
@@ -72,7 +74,7 @@
       border-color: #ddd;
       box-shadow: none;
       outline: 0;
-      border-radius: 0;
+      border-radius: @gn-border-radius;
       &:focus {
         border-color: @brand-info;
         outline: 0;
@@ -80,10 +82,25 @@
       }
     }
     .btn {
-      border-radius: 0;
+      border-radius: @gn-border-radius;
     }
     .input-group-addon, .input-group-btn {
       width: 0.1%;
+    }
+    @media (max-width: @screen-xs-max) {
+      .col-xs-11.gn-value {
+        width: 90%;
+        padding-right: 0;
+      }
+      .col-xs-1.gn-control {
+        padding: 0;
+        [data-gn-field-highlight-remove] {
+          padding: 6px;
+        }
+      }
+      div.gn-extra-field > label {
+        display: none;
+      }
     }
     select:not([multiple]) {
       -webkit-appearance: none;
@@ -175,13 +192,13 @@
       .col-sm-9, .col-sm-12 {
         padding-left: 2px;
         padding-right: 0;
-      }
-      .input-group-btn {
-        float: left;
+        @media (max-width: @screen-xs-max) {
+          padding-left: 15px !important;
+        }
       }
     }
     .gn-date-picker > input[type=date], .gn-date-picker > input[type=time] {
-      width: 40%;
+      width: 50%;
     }
     // default switch
     [data-ng-switch-default] {
@@ -207,14 +224,20 @@
     }
     .gn-date {
       .col-sm-3 {
-        width: 21%;
-        padding-right: 0;
+        @media (min-width: @screen-sm-min) {
+          width: 25%;
+          padding-right: 0;
+        }
+        select {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
       }
       .col-sm-6 {
         padding-left: 0;
       }
     }
-    // special case
+    // special cases
     [data-gn-topiccategory-selector] {
       width: 90%;
       .col-sm-10 {
@@ -237,6 +260,35 @@
         }
       }
     }
+    [data-gn-directory-entry-selector] {
+      .input-group {
+        .input-group-btn {
+          a.btn-default {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+        }
+        .form-control {
+          border-top-right-radius: @gn-border-radius;
+          border-bottom-right-radius: @gn-border-radius;
+        }
+      }
+    }
+    [data-gn-editor-helper] {
+      .col-xs-8 {
+        .form-control {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          // border-right: 0;
+        }
+      }
+      .col-xs-4 {
+        select {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+      }
+    }
     .col-lg-2.gn-control {
       width: 10%;
     }
@@ -251,7 +303,7 @@
   // sidebar in the editor
   .gn-editor-tools-container {
     .panel {
-      border-radius: 2px;
+      border-radius: @gn-border-radius;
       [data-gn-slide-toggle] {
         padding-left: 24px;
         &:before {
@@ -305,8 +357,8 @@ form.gn-editor.gn-indent-colored {
       font-size: 16px;
       padding: 3px 23px;
       line-height: 34px;
-      border-top-left-radius: 2px;
-      border-top-right-radius: 2px;
+      border-top-left-radius: @gn-border-radius;
+      border-top-right-radius: @gn-border-radius;
     }
     // No highlight on hover
     .field-bg {
