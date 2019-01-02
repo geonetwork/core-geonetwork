@@ -271,7 +271,7 @@
 
     <xsl:variable name="ref">
       <xsl:choose>
-        <xsl:when test="string-length( $see ) &gt; 0"><xsl:value-of select="concat($see, '/@uuid')"/></xsl:when>
+        <xsl:when test="string-length( $see ) &gt; 0"><xsl:value-of select="$see"/></xsl:when>
         <xsl:otherwise><xsl:value-of select="'geonet:element/@ref'"/></xsl:otherwise>
       </xsl:choose>
 
