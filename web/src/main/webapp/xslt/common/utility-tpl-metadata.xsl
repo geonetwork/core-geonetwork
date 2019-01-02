@@ -139,6 +139,7 @@
 
     <xsl:if test="$showValidationErrors">
       <xsl:variable name="ref" select="concat('#_', gn:element/@ref)"/>
+      <xsl:variable name="uuid" select="concat('#_', ./@uuid)"/>
 
       <xsl:variable name="listOfErrors">
         <errors>
@@ -148,12 +149,23 @@
             </error>
           </xsl:for-each>
 
-          <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
-            <error type="{ancestor::svrl:schematron-output/@title}">
-              <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
-              <xsl:copy-of select="svrl:text/*"/>
-            </error>
-          </xsl:for-each>
+          <xsl:if test="name() = 'geonet:child'">
+            <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$uuid]">
+              <error type="{ancestor::svrl:schematron-output/@title}">
+                <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+                <xsl:copy-of select="svrl:text/*"/>
+              </error>
+            </xsl:for-each>
+          </xsl:if>
+          <xsl:if test="name()  != 'geonet:child'">
+            <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
+              <error type="{ancestor::svrl:schematron-output/@title}">
+                <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+                <xsl:copy-of select="svrl:text/*"/>
+              </error>
+            </xsl:for-each>
+          </xsl:if>
+
         </errors>
       </xsl:variable>
       <xsl:if test="count($listOfErrors//error) > 0">

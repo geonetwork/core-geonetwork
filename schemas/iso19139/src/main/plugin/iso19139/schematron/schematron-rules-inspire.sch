@@ -296,7 +296,7 @@ USA.
 				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
             <sch:let name="inspire-theme-found"
                 value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
-            <sch:assert test="$inspire-theme-found > 0">
+            <sch:assert test="$inspire-theme-found > 0" see="geonet:child[@name='descriptiveKeywords']">
                 <sch:value-of select="$loc/strings/alert.M40/div"/>
             </sch:assert>
             <sch:report test="$inspire-theme-found > 0">

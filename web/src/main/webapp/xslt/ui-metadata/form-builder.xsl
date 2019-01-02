@@ -961,6 +961,8 @@
         </div>
       </div>
     </xsl:if>
+    <xsl:call-template name="get-errors"/>
+
   </xsl:template>
 
   <!-- Create a form field ie. a textarea, an input, a select, ...
