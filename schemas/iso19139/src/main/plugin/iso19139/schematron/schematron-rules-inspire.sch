@@ -297,12 +297,18 @@ USA.
             </sch:report>
 
             <sch:let name="serviceType" value="srv:serviceType/gco:LocalName"/>
-            <sch:let name="noServiceType" value="geonet:contains-any-of(srv:serviceType/gco:LocalName,
+            <sch:let name="serviceTypeWellDefined" value="geonet:contains-any-of(srv:serviceType/gco:LocalName,
 				('view', 'discovery', 'download', 'transformation', 'invoke', 'other'))"/>
-            <sch:assert test="$noServiceType">
+            <sch:assert test="$serviceTypeWellDefined" see="srv:serviceType/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M60/div"/></sch:assert>
-            <sch:report test="$noServiceType">
+            <sch:report test="$serviceTypeWellDefined">
                 <sch:value-of select="$loc/strings/report.M60/div"/><sch:value-of select="$serviceType"/></sch:report>
+
+            <sch:let name="serviceTypeDefined" value="srv:serviceType/node()"/>
+            <sch:assert test="$serviceTypeDefined" see="geonet:child[@name='serviceType']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M60/div"/>
+            </sch:assert>
+
         </sch:rule>
     </sch:pattern>
 
