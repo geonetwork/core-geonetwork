@@ -139,11 +139,11 @@ USA.
         </sch:rule>
 
         <!-- Resource type -->
-        <sch:rule context="//gmd:MD_Metadata">
-            <sch:let name="resourceType_present" value="gmd:hierarchyLevel/*/@codeListValue='dataset'
-				or gmd:hierarchyLevel/*/@codeListValue='series'
-				or gmd:hierarchyLevel/*/@codeListValue='service'"/>
-            <sch:let name="resourceType" value="string-join(gmd:hierarchyLevel/*/@codeListValue, ',')"/>
+        <sch:rule context="//gmd:hierarchyLevel">
+            <sch:let name="resourceType_present" value="./*/@codeListValue='dataset'
+				or ./*/@codeListValue='series'
+				or ./*/@codeListValue='service'"/>
+            <sch:let name="resourceType" value="string-join(./*/@codeListValue, ',')"/>
 
             <sch:assert test="$resourceType_present">
                 <sch:value-of select="$loc/strings/alert.M37/div"/>
@@ -154,6 +154,15 @@ USA.
             </sch:report>
         </sch:rule>
 
+        <sch:rule context="/gmd:MD_Metadata">
+            <sch:let name="resourceType_present" value="gmd:hierarchyLevel/node()"/>
+
+            <sch:assert test="$resourceType_present" see="geonet:child[@name='hierarchyLevel']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M37/div"/>
+            </sch:assert>
+        </sch:rule>
+
+        <!-- Abstract -->
         <sch:rule context="//gmd:MD_DataIdentification/gmd:abstract|
 			//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:abstract|
 			//srv:SV_ServiceIdentification/gmd:abstract|
