@@ -92,19 +92,26 @@ USA.
     <sch:pattern>
         <sch:title>$loc/strings/identification</sch:title>
 
-        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
+        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
             <!-- Title -->
-            <sch:let name="noResourceTitle" value="not(gmd:title) or gmd:title/@gco:nilReason='missing'"/>
-            <sch:let name="resourceTitle" value="gmd:title/*/text()"/>
+            <sch:let name="noResourceTitle" value="./@gco:nilReason='missing'"/>
+            <sch:let name="resourceTitle" value="./*/text()"/>
 
             <sch:assert test="not($noResourceTitle)"><sch:value-of select="$loc/strings/alert.M35/div"/></sch:assert>
             <sch:report test="not($noResourceTitle)">
                 <sch:value-of select="$loc/strings/report.M35/div"/><sch:value-of select="$resourceTitle"/>
             </sch:report>
-
-
         </sch:rule>
 
+        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
+            <!-- Title -->
+            <sch:let name="noResourceTitle" value="not(gmd:title/node())"/>
+
+            <sch:assert test="not($noResourceTitle)" see="geonet:child[@name='title']/@uuid"><sch:value-of select="$loc/strings/alert.M35/div"/></sch:assert>
+            <sch:report test="not($noResourceTitle)">
+                <sch:value-of select="$loc/strings/report.M35/div"/>
+            </sch:report>
+        </sch:rule>
 
         <!-- Online resource
             Conditional for spatial dataset and spatial dataset
