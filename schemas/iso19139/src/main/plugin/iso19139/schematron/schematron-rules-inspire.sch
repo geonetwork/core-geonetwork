@@ -108,9 +108,6 @@ USA.
             <sch:let name="noResourceTitle" value="not(gmd:title/node())"/>
 
             <sch:assert test="not($noResourceTitle)" see="geonet:child[@name='title']/@uuid"><sch:value-of select="$loc/strings/alert.M35/div"/></sch:assert>
-            <sch:report test="not($noResourceTitle)">
-                <sch:value-of select="$loc/strings/report.M35/div"/>
-            </sch:report>
         </sch:rule>
 
         <!-- Online resource
@@ -139,9 +136,6 @@ USA.
             <sch:assert test="not($noResourceLocator)" see="geonet:child[@name='linkage']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M52/div"/>
             </sch:assert>
-            <sch:report test="not($noResourceLocator)">
-                <sch:value-of select="$loc/strings/report.M52/div"/>
-            </sch:report>
         </sch:rule>
 
         <!-- Resource type -->
