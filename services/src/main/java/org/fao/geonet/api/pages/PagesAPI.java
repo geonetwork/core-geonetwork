@@ -93,6 +93,8 @@ public class PagesAPI {
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final PageRepository pageRepository = appContext.getBean(PageRepository.class);
+        
+        checkMandatoryContent(data, link);
 
         checkUniqueContent(data, link);
 
@@ -163,7 +165,7 @@ public class PagesAPI {
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found");
+            throw new ResourceNotFoundException("Page " + pageId + " not found.");
         }
 
         if (!language.equals(newLanguage) || !pageId.equals(newPageId)) {
@@ -297,7 +299,7 @@ public class PagesAPI {
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found");
+            throw new ResourceNotFoundException("Page " + pageId + " not found.");
         }
 
         final Page.PageSection sectionToAdd = section;
@@ -332,7 +334,7 @@ public class PagesAPI {
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found");
+            throw new ResourceNotFoundException("Page " + pageId + " not found.");
         }
 
         if (section.equals(Page.PageSection.ALL)) {
@@ -367,7 +369,7 @@ public class PagesAPI {
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if (page == null) {
-            throw new ResourceNotFoundException("Page " + pageId + " not found");
+            throw new ResourceNotFoundException("Page " + pageId + " not found.");
         }
 
         page.setStatus(status);
@@ -436,12 +438,25 @@ public class PagesAPI {
     private void checkCorrectFormat(final MultipartFile data, final String link, final Page.PageFormat format) {
         // Cannot set format to LINK and upload a file
         if (Page.PageFormat.LINK.equals(format) && data != null && !data.isEmpty()) {
-            throw new IllegalArgumentException("Wrong format");
+            throw new IllegalArgumentException("Wrong format.");
         }
 
         // Cannot set a link without setting format to LINK
         if (!Page.PageFormat.LINK.equals(format) && !StringUtils.isBlank(link)) {
-            throw new IllegalArgumentException("Wrong format");
+            throw new IllegalArgumentException("Wrong format.");
+        }
+    }
+    
+    /**
+     * Check that link or a file is defined.
+     *
+     * @param data the data
+     * @param link the link
+     */
+    private void checkMandatoryContent(final MultipartFile data, final String link) {
+        // Cannot set both: link and file
+        if (StringUtils.isBlank(link) && (data == null || data.isEmpty())) {
+            throw new IllegalArgumentException("A content associated to the page, a link or a file, is mandatory.");
         }
     }
 
@@ -454,7 +469,7 @@ public class PagesAPI {
     private void checkUniqueContent(final MultipartFile data, final String link) {
         // Cannot set both: link and file
         if (!StringUtils.isBlank(link) && data != null && !data.isEmpty()) {
-            throw new IllegalArgumentException("Cannot define link and file in the same page");
+            throw new IllegalArgumentException("A content associated to the page, a link or a file, is mandatory. But is not possible to associate both to the same page.");
         }
     }
 
@@ -469,7 +484,7 @@ public class PagesAPI {
             final String[] supportedExtensions = { "html", "HTML", "txt", "TXT", "md", "MD" };
 
             if (!ArrayUtils.contains(supportedExtensions, extension)) {
-                throw new MultipartException("Unsuppoted file type (only html, txt and md are allowed)");
+                throw new MultipartException("Unsuppoted file type (only html, txt and md are allowed).");
             }
         }
     }
