@@ -154,15 +154,12 @@ USA.
             </sch:report>
         </sch:rule>
 
-
-
-
-        <sch:rule context="//gmd:MD_DataIdentification|
-			//*[@gco:isoType='gmd:MD_DataIdentification']|
-			//srv:SV_ServiceIdentification|
-			//*[@gco:isoType='srv:SV_ServiceIdentification']">
-            <sch:let name="resourceAbstract" value="gmd:abstract/*/text()"/>
-            <sch:let name="noResourceAbstract" value="not(gmd:abstract) or gmd:abstract/@gco:nilReason='missing'"/>
+        <sch:rule context="//gmd:MD_DataIdentification/gmd:abstract|
+			//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:abstract|
+			//srv:SV_ServiceIdentification/gmd:abstract|
+			//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:abstract">
+            <sch:let name="resourceAbstract" value="./*/text()"/>
+            <sch:let name="noResourceAbstract" value="./@gco:nilReason='missing'"/>
 
             <!-- Abstract -->
             <sch:assert test="not($noResourceAbstract)">
@@ -173,7 +170,18 @@ USA.
                 <sch:value-of select="$resourceAbstract"/>
             </sch:report>
 
+        </sch:rule>
 
+         <sch:rule context="//gmd:MD_DataIdentification|
+            //*[@gco:isoType='gmd:MD_DataIdentification']|
+            //srv:SV_ServiceIdentification|
+            //*[@gco:isoType='srv:SV_ServiceIdentification']">
+            <sch:let name="noResourceAbstract" value="not(gmd:abstract/node())"/>
+
+            <!-- Abstract -->
+            <sch:assert test="not($noResourceAbstract)" see="geonet:child[@name='abstract']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M36/div"/>
+            </sch:assert>
         </sch:rule>
     </sch:pattern>
 
