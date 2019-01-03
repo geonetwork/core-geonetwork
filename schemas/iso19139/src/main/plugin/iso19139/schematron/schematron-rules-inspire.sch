@@ -120,10 +120,9 @@ USA.
             • Conditional for services: Mandatory if linkage to the
             service is available
         -->
-        <sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource">
-            <sch:let name="resourceLocator" value="gmd:linkage/*/text()"/>
-            <sch:let name="noResourceLocator" value="normalize-space(gmd:linkage/gmd:URL)=''
-					or not(gmd:linkage)"/>
+        <sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage">
+            <sch:let name="resourceLocator" value="./*/text()"/>
+            <sch:let name="noResourceLocator" value="normalize-space(./gmd:URL/text())=''"/>
 
             <sch:assert test="not($noResourceLocator)">
                 <sch:value-of select="$loc/strings/alert.M52/div"/>
@@ -134,7 +133,16 @@ USA.
             </sch:report>
         </sch:rule>
 
+        <sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource">
+            <sch:let name="noResourceLocator" value="not(gmd:linkage/node())"/>
 
+            <sch:assert test="not($noResourceLocator)" see="geonet:child[@name='linkage']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M52/div"/>
+            </sch:assert>
+            <sch:report test="not($noResourceLocator)">
+                <sch:value-of select="$loc/strings/report.M52/div"/>
+            </sch:report>
+        </sch:rule>
 
         <!-- Resource type -->
         <sch:rule context="//gmd:MD_Metadata">
