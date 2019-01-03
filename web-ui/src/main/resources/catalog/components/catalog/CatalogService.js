@@ -511,9 +511,15 @@
          */
         getServiceURL: function() {
           var port = '';
-          if(gnConfig['system.server.port'] &&
+          if(gnConfig['system.server.protocol']==='http' &&
+             gnConfig['system.server.port'] &&
              gnConfig['system.server.port']!=null &&
              gnConfig['system.server.port']!=80) {
+            port = ':'+gnConfig['system.server.port'];
+          } else if(gnConfig['system.server.protocol']==='https' &&
+             gnConfig['system.server.port'] &&
+             gnConfig['system.server.port']!=null &&
+             gnConfig['system.server.port']!=443) {
             port = ':'+gnConfig['system.server.port'];
           }
 
