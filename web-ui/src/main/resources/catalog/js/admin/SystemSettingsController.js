@@ -149,7 +149,7 @@
 
               // Stringify JSON for editing in text area
               angular.forEach(data, function(s) {
-                if (s.id === 'ui/config') {
+                if (s.name === 'ui/config') {
                   uiConfigFound = true;
                 }
                 if (s.dataType === 'JSON') {
