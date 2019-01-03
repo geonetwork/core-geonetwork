@@ -378,7 +378,7 @@ USA.
 				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
             <sch:let name="inspire-theme-found"
                 value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
-            <sch:assert test="$inspire-theme-found > 0">
+            <sch:assert test="$inspire-theme-found > 0" see="gmd:descriptiveKeywords[gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'INSPIRE Service taxonomy']/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M58/div"/>
             </sch:assert>
             <sch:report test="$inspire-theme-found > 0">
