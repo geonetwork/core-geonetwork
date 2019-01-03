@@ -217,26 +217,32 @@ USA.
 				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt',
 				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul',
 				'hun', 'swe', 'gle'))"/>
-            <sch:assert test="$euLanguage">
+            <sch:assert test="$euLanguage" see="gmd:language/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M55/div"/>
             </sch:assert>
             <sch:report test="$euLanguage">
                 <sch:value-of select="$loc/strings/report.M55/div"/><sch:value-of select="$resourceLanguage"/>
             </sch:report>
 
-
-
+            <sch:let name="languageDefined" value="gmd:language/node()"/>
+            <sch:assert test="$languageDefined" see="geonet:child[@name='language']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M55/div"/>
+            </sch:assert>
 
             <!-- Topic category -->
             <sch:let name="topic" value="gmd:topicCategory/gmd:MD_TopicCategoryCode"/>
-            <sch:let name="noTopic" value="not(gmd:topicCategory)  or
-				gmd:topicCategory/gmd:MD_TopicCategoryCode/text() = ''"/>
-            <sch:assert test="not($noTopic)">
-                <sch:value-of select="$loc/strings/alert.M39/div"/></sch:assert>
+            <sch:let name="noTopic" value="gmd:topicCategory/gmd:MD_TopicCategoryCode/text() = ''"/>
+            <sch:assert test="not($noTopic)" see="gmd:topicCategory/geonet:element/@ref">
+                <sch:value-of select="$loc/strings/alert.M39/div"/>
+            </sch:assert>
             <sch:report test="not($noTopic)">
-                <sch:value-of select="$loc/strings/report.M39/div"/><sch:value-of select="$topic"/></sch:report>
+                <sch:value-of select="$loc/strings/report.M39/div"/><sch:value-of select="$topic"/>
+            </sch:report>
 
-
+            <sch:let name="topicDefined" value="gmd:topicCategory/node()"/>
+            <sch:assert test="topicDefined" see="geonet:child[@name='topicCategory']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M39/div"/>
+            </sch:assert>
 
 
             <!-- Unique identifier -->
@@ -245,13 +251,20 @@ USA.
             <sch:let name="resourceIdentifier_code" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/*/text()"/>
             <sch:let name="resourceIdentifier_codeSpace" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:codeSpace/*/text()"/>
 
-            <sch:assert test="$resourceIdentifier"><sch:value-of select="$loc/strings/alert.M38/div"/></sch:assert>
+            <sch:assert test="$resourceIdentifier" see="gmd:citation/gmd:CI_Citation/gmd:identifier/geonet:element/@ref">
+                <sch:value-of select="$loc/strings/alert.M38/div"/>
+            </sch:assert>
             <sch:report test="$resourceIdentifier_code"><sch:value-of select="$loc/strings/report.M38/div"/>
                 <sch:value-of select="$resourceIdentifier_code"/>
             </sch:report>
             <sch:report test="$resourceIdentifier_codeSpace"><sch:value-of select="$loc/strings/report.M38.codespace/div"/>
                 <sch:value-of select="$resourceIdentifier_codeSpace"/>
             </sch:report>
+
+            <sch:let name="idDefined" value="gmd:citation/gmd:CI_Citation/gmd:identifier/node()"/>
+            <sch:assert test="$idDefined" see="gmd:citation/gmd:CI_Citation/geonet:child[@name='identifier']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M39/div"/>
+            </sch:assert>
         </sch:rule>
     </sch:pattern>
 
