@@ -43,7 +43,7 @@
           // merge on top of default config
           scope.jsonConfig = angular.merge(
             // If the config is empty, use the default one set in CatController
-            (Object.keys(scope.config).length === 0 ?
+            (Object.keys(scope.config).length === 0 || scope.config === "null" || !scope.config ?
               gnGlobalSettings.getDefaultConfig() :
               gnGlobalSettings.getMergeableDefaultConfig()),
               angular.fromJson(scope.config));
