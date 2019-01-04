@@ -155,7 +155,9 @@ public class MetadataStatus extends GeonetEntity {
      * @return this entity object
      */
     public MetadataStatus setOwner(Integer ownerId) {
-        this._owner = ownerId;
+        if (ownerId != null) {
+            this._owner = ownerId;
+        }
         return this;
     }
 
