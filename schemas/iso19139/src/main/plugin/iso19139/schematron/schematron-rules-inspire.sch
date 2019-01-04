@@ -180,15 +180,20 @@ USA.
         <sch:title>$loc/strings/dataIdentification</sch:title>
 
         <sch:rule context="//gmd:MD_DataIdentification[
-			normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'series'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'dataset'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = '']|
-			//*[@gco:isoType='gmd:MD_DataIdentification' and (
-			normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'series'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'dataset'
-			or normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = '')]">
-            <!-- resource language is only conditional for 'dataset' and 'series'.
-            -->
+			                    normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'series' or
+			                    normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'dataset' or
+			                    normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = '']|
+			               //*[@gco:isoType='gmd:MD_DataIdentification' and (
+			                    normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'series' or
+			                    normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'dataset' or
+			                    normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = '')]">
+
+            <!-- resource language is only conditional for 'dataset' and 'series'. -->
+            <sch:let name="languageDefined" value="gmd:language/node()"/>
+            <sch:assert test="$languageDefined" see="geonet:child[@name='language']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M55/div"/>
+            </sch:assert>
+
             <sch:let name="resourceLanguage" value="string-join(gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue, ', ')"/>
             <sch:let name="euLanguage" value="
 				not(gmd:language/@gco:nilReason='missing') and
@@ -203,12 +208,12 @@ USA.
                 <sch:value-of select="$loc/strings/report.M55/div"/><sch:value-of select="$resourceLanguage"/>
             </sch:report>
 
-            <sch:let name="languageDefined" value="gmd:language/node()"/>
-            <sch:assert test="$languageDefined" see="geonet:child[@name='language']/@uuid">
-                <sch:value-of select="$loc/strings/alert.M55/div"/>
+            <!-- Topic category -->
+            <sch:let name="topicDefined" value="gmd:topicCategory/node()"/>
+            <sch:assert test="$topicDefined" see="geonet:child[@name='topicCategory']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M39/div"/>
             </sch:assert>
 
-            <!-- Topic category -->
             <sch:let name="topic" value="gmd:topicCategory/gmd:MD_TopicCategoryCode"/>
             <sch:let name="noTopic" value="gmd:topicCategory/gmd:MD_TopicCategoryCode/text() = ''"/>
             <sch:assert test="not($noTopic)" see="gmd:topicCategory/geonet:element/@ref">
@@ -218,18 +223,16 @@ USA.
                 <sch:value-of select="$loc/strings/report.M39/div"/><sch:value-of select="$topic"/>
             </sch:report>
 
-            <sch:let name="topicDefined" value="gmd:topicCategory/node()"/>
-            <sch:assert test="$topicDefined" see="geonet:child[@name='topicCategory']/@uuid">
+            <!-- Unique identifier -->
+            <sch:let name="idDefined" value="gmd:citation/gmd:CI_Citation/gmd:identifier/node()"/>
+            <sch:assert test="$idDefined" see="gmd:citation/gmd:CI_Citation/geonet:child[@name='identifier']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M39/div"/>
             </sch:assert>
 
-
-            <!-- Unique identifier -->
+            <sch:let name="resourceIdentifier_code" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/*/text()"/>
             <sch:let name="resourceIdentifier" value="gmd:citation/gmd:CI_Citation/gmd:identifier
 				and not(gmd:citation/gmd:CI_Citation/gmd:identifier[*/gmd:code/@gco:nilReason='missing'])"/>
-            <sch:let name="resourceIdentifier_code" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/*/text()"/>
             <sch:let name="resourceIdentifier_codeSpace" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:codeSpace/*/text()"/>
-
             <sch:assert test="$resourceIdentifier" see="gmd:citation/gmd:CI_Citation/gmd:identifier/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M38/div"/>
             </sch:assert>
@@ -239,15 +242,8 @@ USA.
             <sch:report test="$resourceIdentifier_codeSpace"><sch:value-of select="$loc/strings/report.M38.codespace/div"/>
                 <sch:value-of select="$resourceIdentifier_codeSpace"/>
             </sch:report>
-
-            <sch:let name="idDefined" value="gmd:citation/gmd:CI_Citation/gmd:identifier/node()"/>
-            <sch:assert test="$idDefined" see="gmd:citation/gmd:CI_Citation/geonet:child[@name='identifier']/@uuid">
-                <sch:value-of select="$loc/strings/alert.M39/div"/>
-            </sch:assert>
         </sch:rule>
     </sch:pattern>
-
-
 
     <!-- Service only -->
     <sch:pattern>
