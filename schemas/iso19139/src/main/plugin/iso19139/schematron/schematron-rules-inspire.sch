@@ -250,27 +250,11 @@ USA.
     <sch:pattern>
         <sch:title>$loc/strings/serviceIdentification</sch:title>
 
-        <!-- No operatesOn for services -->
-        <sch:rule context="//srv:SV_ServiceIdentification|
-			//*[@gco:isoType='srv:SV_ServiceIdentification']">
-            <sch:let name="coupledResourceHref" value="string-join(srv:operatesOn/@xlink:href, ', ')"/>
-            <sch:let name="coupledResourceUUID" value="string-join(srv:operatesOn/@uuidref, ', ')"/>
-            <sch:let name="coupledResource" value="../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'
-				and //srv:operatesOn"/>
-
-            <!--
-              "Conditional to services: Mandatory if linkage to
-              datasets on which the service operates are available."
-              TODO : maybe check if service couplingType=tight or serviceType=view ?
-            <sch:assert test="$coupledResource">
-                <sch:value-of select="$loc/strings/alert.M51/div"/>
-            </sch:assert>-->
-            <sch:report test="$coupledResource and $coupledResourceHref!=''">
-                <sch:value-of select="$loc/strings/report.M51/div"/><sch:value-of select="$coupledResourceHref"/>
-            </sch:report>
-            <sch:report test="$coupledResource and $coupledResourceUUID!=''">
-                <sch:value-of select="$loc/strings/report.M51/div"/><sch:value-of select="$coupledResourceUUID"/>
-            </sch:report>
+        <sch:rule context="//srv:SV_ServiceIdentification|//*[@gco:isoType='srv:SV_ServiceIdentification']">
+            <sch:let name="serviceTypeDefined" value="srv:serviceType/node()"/>
+            <sch:assert test="$serviceTypeDefined" see="geonet:child[@name='serviceType']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M60/div"/>
+            </sch:assert>
 
             <sch:let name="serviceType" value="srv:serviceType/gco:LocalName"/>
             <sch:let name="serviceTypeWellDefined" value="geonet:contains-any-of(srv:serviceType/gco:LocalName,
@@ -280,10 +264,25 @@ USA.
             <sch:report test="$serviceTypeWellDefined">
                 <sch:value-of select="$loc/strings/report.M60/div"/><sch:value-of select="$serviceType"/></sch:report>
 
-            <sch:let name="serviceTypeDefined" value="srv:serviceType/node()"/>
-            <sch:assert test="$serviceTypeDefined" see="geonet:child[@name='serviceType']/@uuid">
-                <sch:value-of select="$loc/strings/alert.M60/div"/>
+            <sch:let name="coupledResourceHref" value="string-join(srv:operatesOn/@xlink:href, ', ')"/>
+            <sch:let name="coupledResourceUUID" value="string-join(srv:operatesOn/@uuidref, ', ')"/>
+            <sch:let name="coupledResource" value="../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue='service'
+				and //srv:operatesOn"/>
+            <!--
+              "Conditional to services: Mandatory if linkage to
+              datasets on which the service operates are available."
+              TODO : maybe check if service couplingType=tight or serviceType=view ?
+            <sch:assert test="$coupledResource">
+                <sch:value-of select="$loc/strings/alert.M51/div"/>
             </sch:assert>
+            -->
+
+            <sch:report test="$coupledResource and $coupledResourceHref!=''">
+                <sch:value-of select="$loc/strings/report.M51/div"/><sch:value-of select="$coupledResourceHref"/>
+            </sch:report>
+            <sch:report test="$coupledResource and $coupledResourceUUID!=''">
+                <sch:value-of select="$loc/strings/report.M51/div"/><sch:value-of select="$coupledResourceUUID"/>
+            </sch:report>
 
         </sch:rule>
     </sch:pattern>
