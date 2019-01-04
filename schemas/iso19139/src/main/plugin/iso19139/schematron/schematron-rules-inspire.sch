@@ -501,13 +501,23 @@ USA.
                 <sch:value-of select="$loc/strings/alert.M43/div"/>
             </sch:assert>
 
-            <sch:let name="hasAtLeastOneLineage" value="count(gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement[not(@gco:nilReason)]) > 0"/>
-            <sch:assert test="$hasAtLeastOneLineage" see="gmd:dataQualityInfo[1]/gmd:DQ_DataQuality/geonet:child[@name='lineage']/@uuid">
+            <sch:let name="lineageDefined" value="gmd:dataQualityInfo/*/gmd:lineage/node()"/>
+            <sch:assert test="$lineageDefined" see="gmd:dataQualityInfo[1]/gmd:DQ_DataQuality/geonet:child[@name='lineage']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M43/div"/>
             </sch:assert>
-            <sch:report test="$hasAtLeastOneLineage"
-            >$loc/strings/report.M43/div</sch:report>
 
+            <sch:let name="statementDefined" value="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/node()"/>
+            <sch:assert test="$statementDefined" see="gmd:dataQualityInfo/*/gmd:lineage/*/geonet:child[@name='statement'][1]/@uuid">
+                <sch:value-of select="$loc/strings/alert.M43/div"/>
+            </sch:assert>
+
+            <sch:let name="hasAtLeastOneLineage" value="count(gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement[not(@gco:nilReason)]) > 0"/>
+            <sch:assert test="$hasAtLeastOneLineage" see="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/geonet:element[1]/@ref">
+                <sch:value-of select="$loc/strings/alert.M43/div"/>
+            </sch:assert>
+            <sch:report test="$hasAtLeastOneLineage">
+                <sch:value-of select="$loc/strings/report.M43/div"/>
+            </sch:report>
 
             <sch:let name="degree" value="count(gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:pass)"/>
             <sch:assert test="$degree">
