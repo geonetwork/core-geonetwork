@@ -1,6 +1,5 @@
 *.iml
 rebel.xml
-e2e-tests/images/
 harvesters/harvester_*.log
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
@@ -17,7 +16,6 @@ web/src/main/webResources/WEB-INF/classes/git.properties
 web/logs/
 web/jcs_caching/
 web/*.db
-e2e-tests/*.db
 /geonetwork*
 changes-*
 web/coverage.ec
@@ -58,8 +56,6 @@ web-ui/src/main/resources/catalog/style/gn*.css
 web-ui/src/main/resources/catalog/style/gn.css
 datadir_node1/
 web/src/main/webapp/WEB-INF/data_*
-e2e-tests/node
-e2e-tests/node_modules
 web-ui-docs/node
 web-ui-docs/node_modules
 out/
