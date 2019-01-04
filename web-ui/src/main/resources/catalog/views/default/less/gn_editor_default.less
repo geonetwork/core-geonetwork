@@ -300,6 +300,54 @@
       }
     }
   }
+  // map
+  .gn-drawmap-panel {
+    input[type="number"] {
+      margin: 0;
+      text-align: left;
+    }
+    .extent {
+      display: inline-block;
+      position: relative;
+      margin-top: 30px;
+    }
+    .coord {
+      position: absolute;
+      width: 200px;
+      z-index: 100;
+    }
+    .coord-north {
+      top: -1.25em;
+      left: 50%;
+      margin-left: -75px;
+    }
+    .coord-south {
+      bottom: -1.25em;
+      left: 50%;
+      margin-left: -75px;
+    }
+    .coord-east {
+      right: -75px;
+      top: 50%;
+      margin-top: -1.25em;
+    }
+    .coord-west {
+      left: -75px;
+      top: 50%;
+      margin-top: -1.25em;
+    }
+    @media (max-width: @screen-xs-max) {
+      .coord {
+        width: 150px;
+      }
+      .coord-east {
+        right: -30px;
+      }
+      .coord-west {
+        left: -30px;
+      }
+    }
+  }
   // sidebar in the editor
   .gn-editor-tools-container {
     .panel {
