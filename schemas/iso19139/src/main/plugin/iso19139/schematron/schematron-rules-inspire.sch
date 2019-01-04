@@ -478,12 +478,15 @@ USA.
     <sch:pattern>
         <sch:title>$loc/strings/quality</sch:title>
         <sch:rule context="//gmd:MD_DataIdentification/gmd:spatialResolution|//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:spatialResolution">
-            <sch:assert
-                test="*/gmd:equivalentScale or */gmd:distance"
-                >$loc/strings/alert.M56/div</sch:assert>
-            <sch:report
-                test="*/gmd:equivalentScale or */gmd:distance"
-                >$loc/strings/report.M56/div</sch:report>
+            <sch:let name="distanceDefined" value="*/gmd:distance/node()"/>
+            <sch:let name="equivalentScaleDefined" value="*/gmd:equivalentScale/node()"/>
+
+            <sch:assert test="$distanceDefined or $equivalentScaleDefined">
+                <sch:value-of select="$loc/strings/alert.M56/div"/>
+            </sch:assert>
+            <sch:report test="*/gmd:equivalentScale or */gmd:distance">
+                <sch:value-of select="$loc/strings/alert.M56/div"/>
+            </sch:report>
         </sch:rule>
     </sch:pattern>
 
