@@ -231,7 +231,8 @@ USA.
 
             <sch:let name="resourceIdentifier_code" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/*/text()"/>
             <sch:let name="resourceIdentifier" value="gmd:citation/gmd:CI_Citation/gmd:identifier
-				and not(gmd:citation/gmd:CI_Citation/gmd:identifier[*/gmd:code/@gco:nilReason='missing'])"/>
+				and not(gmd:citation/gmd:CI_Citation/gmd:identifier[*/gmd:code/@gco:nilReason='missing'])
+				and $resourceIdentifier_code"/>
             <sch:let name="resourceIdentifier_codeSpace" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:codeSpace/*/text()"/>
             <sch:assert test="$resourceIdentifier" see="gmd:citation/gmd:CI_Citation/gmd:identifier/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M38/div"/>
