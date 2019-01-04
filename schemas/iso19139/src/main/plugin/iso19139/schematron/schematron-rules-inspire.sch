@@ -496,10 +496,15 @@ USA.
         <sch:title>$loc/strings/conformity</sch:title>
         <!-- Search for on quality report result with status ... We don't really know if it's an INSPIRE conformity report or not. -->
         <sch:rule context="/gmd:MD_Metadata">
-            <sch:let name="hasAtLeastOneLineage"
-                     value="count(gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement[not(@gco:nilReason)]) > 0"/>
-            <sch:assert test="$hasAtLeastOneLineage"
-            >$loc/strings/alert.M43/div</sch:assert>
+            <sch:let name="qualityInfoDefined" value="gmd:dataQualityInfo/node()"/>
+            <sch:assert test="$qualityInfoDefined" see="geonet:child[@name='dataQualityInfo']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M43/div"/>
+            </sch:assert>
+
+            <sch:let name="hasAtLeastOneLineage" value="count(gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement[not(@gco:nilReason)]) > 0"/>
+            <sch:assert test="$hasAtLeastOneLineage" see="gmd:dataQualityInfo[1]/gmd:DQ_DataQuality/geonet:child[@name='lineage']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M43/div"/>
+            </sch:assert>
             <sch:report test="$hasAtLeastOneLineage"
             >$loc/strings/report.M43/div</sch:report>
 
