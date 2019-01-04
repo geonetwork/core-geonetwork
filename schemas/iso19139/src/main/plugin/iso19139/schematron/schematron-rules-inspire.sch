@@ -347,7 +347,6 @@ USA.
                 Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
             </sch:assert>
 
-
             <sch:let name="keyword"
                 value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString | gmd:descriptiveKeywords/*/gmd:keyword//gmd:LocalisedCharacterString |
 				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
@@ -361,11 +360,7 @@ USA.
             </sch:report>
 
         </sch:rule>
-
-
     </sch:pattern>
-
-
 
     <sch:pattern>
         <sch:title>$loc/strings/geo</sch:title>
@@ -406,6 +401,7 @@ USA.
                 <sch:value-of select="$north"/>
             </sch:report>
         </sch:rule>
+
         <sch:rule context="//srv:SV_ServiceIdentification[
 			normalize-space(../../gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue) = 'service']
 			/srv:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
@@ -429,8 +425,6 @@ USA.
         </sch:rule>
     </sch:pattern>
 
-
-
     <sch:pattern>
         <sch:title>$loc/strings/temporal</sch:title>
         <sch:rule context="//gmd:MD_DataIdentification|
@@ -449,7 +443,6 @@ USA.
                 value="count(gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='creation'])"/>
             <sch:let name="revisionDate"
                 value="gmd:citation/*/gmd:date[./*/gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*"/>
-
 
             <sch:assert test="$no_creationDate &lt;= 1">
                 <sch:value-of select="$loc/strings/alert.M42.creation/div"/>
