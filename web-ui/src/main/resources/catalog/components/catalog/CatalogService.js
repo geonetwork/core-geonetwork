@@ -510,9 +510,21 @@
          * @return {String} service url.
          */
         getServiceURL: function() {
+          var port = '';
+          if(gnConfig['system.server.protocol']==='http' &&
+             gnConfig['system.server.port'] &&
+             gnConfig['system.server.port']!=null &&
+             gnConfig['system.server.port']!=80) {
+            port = ':'+gnConfig['system.server.port'];
+          } else if(gnConfig['system.server.protocol']==='https' &&
+             gnConfig['system.server.port'] &&
+             gnConfig['system.server.port']!=null &&
+             gnConfig['system.server.port']!=443) {
+            port = ':'+gnConfig['system.server.port'];
+          }
+
           var url = gnConfig['system.server.protocol'] + '://' +
-              gnConfig['system.server.host'] + ':' +
-              gnConfig['system.server.port'] +
+              gnConfig['system.server.host'] + port +
               gnConfig.env.baseURL + '/' +
               gnConfig.env.node + '/';
           return url;
