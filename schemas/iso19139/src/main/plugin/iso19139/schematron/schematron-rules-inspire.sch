@@ -92,36 +92,38 @@ USA.
     <sch:pattern>
         <sch:title>$loc/strings/identification</sch:title>
 
-        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title">
-            <!-- Title -->
-            <sch:let name="noResourceTitle" value="./@gco:nilReason='missing'"/>
-            <sch:let name="resourceTitle" value="./*/text()"/>
+        <!-- Title -->
+        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
+            <sch:let name="resourceTitleDefined" value="gmd:title/node()"/>
+            <sch:assert test="$resourceTitleDefined" see="geonet:child[@name='title']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M35/div"/>
+            </sch:assert>
 
-            <sch:assert test="not($noResourceTitle)"><sch:value-of select="$loc/strings/alert.M35/div"/></sch:assert>
+            <sch:let name="noResourceTitle" value="gmd:title/@gco:nilReason='missing'"/>
+            <sch:let name="resourceTitle" value="gmd:title/*/text()"/>
+            <sch:assert test="not($noResourceTitle)" see="gmd:title/geonet:element/@ref">
+                <sch:value-of select="$loc/strings/alert.M35/div"/>
+            </sch:assert>
             <sch:report test="not($noResourceTitle)">
                 <sch:value-of select="$loc/strings/report.M35/div"/><sch:value-of select="$resourceTitle"/>
             </sch:report>
         </sch:rule>
 
-        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
-            <!-- Title -->
-            <sch:let name="noResourceTitle" value="not(gmd:title/node())"/>
-
-            <sch:assert test="not($noResourceTitle)" see="geonet:child[@name='title']/@uuid"><sch:value-of select="$loc/strings/alert.M35/div"/></sch:assert>
-        </sch:rule>
-
         <!-- Online resource
-            Conditional for spatial dataset and spatial dataset
-            series: Mandatory if a URL is available to obtain
+            Conditional for spatial dataset and spatial dataset series: Mandatory if a URL is available to obtain
             IR more information on the resources and/or access Obligation / condition related services.
-            • Conditional for services: Mandatory if linkage to the
-            service is available
+            Conditional for services: Mandatory if linkage to the service is available
         -->
-        <sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage">
-            <sch:let name="resourceLocator" value="./*/text()"/>
-            <sch:let name="noResourceLocator" value="normalize-space(./gmd:URL/text())=''"/>
+        <sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource">
+            <sch:let name="resourceLocatorDefined" value="gmd:linkage/node()"/>
+            <sch:assert test="$resourceLocatorDefined" see="geonet:child[@name='linkage']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M52/div"/>
+            </sch:assert>
 
-            <sch:assert test="not($noResourceLocator)">
+
+            <sch:let name="resourceLocator" value="gmd:linkage/*/text()"/>
+            <sch:let name="noResourceLocator" value="normalize-space(gmd:linkage/gmd:URL/text())=''"/>
+            <sch:assert test="not($noResourceLocator)" see="gmd:linkage/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M52/div"/>
             </sch:assert>
             <sch:report test="not($noResourceLocator)">
@@ -130,22 +132,18 @@ USA.
             </sch:report>
         </sch:rule>
 
-        <sch:rule context="//gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource">
-            <sch:let name="noResourceLocator" value="not(gmd:linkage/node())"/>
-
-            <sch:assert test="not($noResourceLocator)" see="geonet:child[@name='linkage']/@uuid">
-                <sch:value-of select="$loc/strings/alert.M52/div"/>
-            </sch:assert>
-        </sch:rule>
-
         <!-- Resource type -->
-        <sch:rule context="//gmd:hierarchyLevel">
-            <sch:let name="resourceType_present" value="./*/@codeListValue='dataset'
-				or ./*/@codeListValue='series'
-				or ./*/@codeListValue='service'"/>
-            <sch:let name="resourceType" value="string-join(./*/@codeListValue, ',')"/>
+        <sch:rule context="/gmd:MD_Metadata">
+            <sch:let name="resourceTypeDefined" value="gmd:hierarchyLevel/node()"/>
+            <sch:assert test="$resourceTypeDefined" see="geonet:child[@name='hierarchyLevel']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M37/div"/>
+            </sch:assert>
 
-            <sch:assert test="$resourceType_present">
+            <sch:let name="resourceType_present" value="gmd:hierarchyLevel/*/@codeListValue='dataset' or
+                                                        gmd:hierarchyLevel/*/@codeListValue='series' or
+                                                        gmd:hierarchyLevel/*/@codeListValue='service'"/>
+            <sch:let name="resourceType" value="string-join(gmd:hierarchyLevel/*/@codeListValue, ',')"/>
+            <sch:assert test="$resourceType_present" see="gmd:hierarchyLevel/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M37/div"/>
             </sch:assert>
             <sch:report test="$resourceType_present">
@@ -154,47 +152,28 @@ USA.
             </sch:report>
         </sch:rule>
 
-        <sch:rule context="/gmd:MD_Metadata">
-            <sch:let name="resourceType_present" value="gmd:hierarchyLevel/node()"/>
-
-            <sch:assert test="$resourceType_present" see="geonet:child[@name='hierarchyLevel']/@uuid">
-                <sch:value-of select="$loc/strings/alert.M37/div"/>
-            </sch:assert>
-        </sch:rule>
-
         <!-- Abstract -->
-        <sch:rule context="//gmd:MD_DataIdentification/gmd:abstract|
-			//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:abstract|
-			//srv:SV_ServiceIdentification/gmd:abstract|
-			//*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:abstract">
-            <sch:let name="resourceAbstract" value="./*/text()"/>
-            <sch:let name="noResourceAbstract" value="./@gco:nilReason='missing'"/>
+        <sch:rule context="//gmd:MD_DataIdentification|
+			                //*[@gco:isoType='gmd:MD_DataIdentification']|
+			                //srv:SV_ServiceIdentification|
+			                //*[@gco:isoType='srv:SV_ServiceIdentification']">
 
-            <!-- Abstract -->
-            <sch:assert test="not($noResourceAbstract)">
+            <sch:let name="abstractDefined" value="gmd:abstract/node()"/>
+            <sch:assert test="$abstractDefined" see="geonet:child[@name='abstract']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M36/div"/>
             </sch:assert>
-            <sch:report test="not($noResourceAbstract)">
+
+            <sch:let name="resourceAbstract" value="gmd:abstract/*/text()"/>
+            <sch:let name="abstractMissing" value="gmd:abstract/@gco:nilReason='missing'"/>
+            <sch:assert test="not($abstractMissing)" see="gmd:abstract/geonet:element/@ref">
+                <sch:value-of select="$loc/strings/alert.M36/div"/>
+            </sch:assert>
+            <sch:report test="not($abstractMissing)">
                 <sch:value-of select="$loc/strings/report.M36/div"/>
                 <sch:value-of select="$resourceAbstract"/>
             </sch:report>
-
-        </sch:rule>
-
-         <sch:rule context="//gmd:MD_DataIdentification|
-            //*[@gco:isoType='gmd:MD_DataIdentification']|
-            //srv:SV_ServiceIdentification|
-            //*[@gco:isoType='srv:SV_ServiceIdentification']">
-            <sch:let name="noResourceAbstract" value="not(gmd:abstract/node())"/>
-
-            <!-- Abstract -->
-            <sch:assert test="not($noResourceAbstract)" see="geonet:child[@name='abstract']/@uuid">
-                <sch:value-of select="$loc/strings/alert.M36/div"/>
-            </sch:assert>
         </sch:rule>
     </sch:pattern>
-
-
 
     <!-- Dataset and series only -->
     <sch:pattern>
