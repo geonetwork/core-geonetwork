@@ -240,7 +240,7 @@ USA.
             </sch:report>
 
             <sch:let name="topicDefined" value="gmd:topicCategory/node()"/>
-            <sch:assert test="topicDefined" see="geonet:child[@name='topicCategory']/@uuid">
+            <sch:assert test="$topicDefined" see="geonet:child[@name='topicCategory']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M39/div"/>
             </sch:assert>
 

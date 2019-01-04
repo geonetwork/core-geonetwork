@@ -151,8 +151,7 @@
   <gmd:dateStamp>
     <gco:DateTime>2013-09-04T15:33:48</gco:DateTime>
   </gmd:dateStamp>
-  <gmd:metadataStandardName
-  >
+  <gmd:metadataStandardName>
     <gco:CharacterString>GM03_2</gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:locale>
@@ -211,8 +210,7 @@
       </gmd:referenceSystemIdentifier>
     </gmd:MD_ReferenceSystem>
   </gmd:referenceSystemInfo>
-  <gmd:identificationInfo
-  >
+  <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
       <gmd:citation>
         <gmd:CI_Citation>
@@ -378,8 +376,7 @@
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords
-        >
+        <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Adressen</gco:CharacterString>
             <gmd:PT_FreeText>
