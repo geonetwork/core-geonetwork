@@ -614,8 +614,6 @@ USA.
 
         </sch:rule>
 
-
-
         <sch:rule context="//gmd:MD_DataIdentification/gmd:resourceConstraints/*|
 			//*[@gco:isoType='gmd:MD_DataIdentification']/gmd:resourceConstraints/*|
 			//srv:SV_ServiceIdentification/gmd:resourceConstraints/*|
@@ -642,9 +640,11 @@ USA.
 			//*[@gco:isoType='srv:SV_ServiceIdentification']">
             <sch:let name="useLimitation" value="gmd:resourceConstraints/*/gmd:useLimitation/*/text()"/>
             <sch:let name="useLimitation_count" value="count(gmd:resourceConstraints/*/gmd:useLimitation/*/text())"/>
+           <!-- 5/1/19 don't understand what this assertion is for, commenting it
             <sch:assert test="$useLimitation_count">
                 <sch:value-of select="$loc/strings/alert.M45.ul/div"/>
             </sch:assert>
+           end 5/1/19 don't understand what this assertion is for, commenting it -->
             <sch:report test="$useLimitation_count">
                 <sch:value-of select="$loc/strings/report.M45.ul/div"/>
                 <sch:value-of select="$useLimitation"/>
