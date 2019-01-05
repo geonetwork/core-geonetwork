@@ -520,9 +520,13 @@ USA.
             </sch:report>
 
             <sch:let name="degree" value="count(gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:pass)"/>
+
+            <!-- 5/1/19 don't understand what this assertion is for, commenting it
             <sch:assert test="$degree">
                 <sch:value-of select="$loc/strings/alert.M44.nonev/div"/><sch:value-of select="$degree>0"/>
             </sch:assert>
+
+            5/1/19 end, don't understand what this assertion is for, commenting it -->
             <sch:report test="$degree">
                 <sch:value-of select="$loc/strings/report.M44.nonev/div"/>
             </sch:report>
@@ -545,11 +549,9 @@ USA.
         </sch:rule>
     </sch:pattern>
 
-
-
-
     <sch:pattern>
         <sch:title>$loc/strings/constraints</sch:title>
+
         <sch:rule context="//gmd:MD_DataIdentification|
 			//*[@gco:isoType='gmd:MD_DataIdentification']|
 			//srv:SV_ServiceIdentification|
