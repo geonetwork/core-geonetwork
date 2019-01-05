@@ -692,7 +692,6 @@ USA.
             </sch:report>
         </sch:rule>
 
-
     </sch:pattern>
 
 
@@ -717,7 +716,7 @@ USA.
 				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul',
 				'hun', 'swe', 'gle'))"/>
 
-            <sch:assert test="$language_present">
+            <sch:assert test="$language_present" see="gmd:language/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M49/div"/>
             </sch:assert>
             <sch:report test="$language_present">
