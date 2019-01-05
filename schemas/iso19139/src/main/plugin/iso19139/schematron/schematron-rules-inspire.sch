@@ -658,7 +658,7 @@ USA.
         <sch:rule context="//gmd:identificationInfo">
             <sch:let name="missing" value="not(*/gmd:pointOfContact)"/>
             <sch:assert
-                test="not($missing)"
+                test="not($missing)" see="gmd:MD_DataIdentification/geonet:child[@name='pointOfContact']/@uuid"
                 ><sch:value-of select="$loc/strings/alert.M47/div"/></sch:assert>
             <sch:report
                 test="not($missing)"
