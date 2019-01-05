@@ -556,11 +556,13 @@ USA.
 			//*[@gco:isoType='gmd:MD_DataIdentification']|
 			//srv:SV_ServiceIdentification|
 			//*[@gco:isoType='srv:SV_ServiceIdentification']">
-            <sch:assert test="count(gmd:resourceConstraints/*) > 0">
+
+            <sch:assert test="count(gmd:resourceConstraints/*) > 0" see="geonet:child[@name='resourceConstraints']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M45.rc/div"/>
             </sch:assert>
 
             <!-- cardinality of accessconstraints is [1..n] -->
+            <sch:let name="accessConstraints_node" value="gmd:resourceConstraints/*/gmd:accessConstraints/node()"/>
             <sch:let name="accessConstraints_count" value="count(gmd:resourceConstraints/*/gmd:accessConstraints[*/@codeListValue != ''])"/>
             <sch:let name="accessConstraints_found" value="$accessConstraints_count > 0"/>
 
@@ -588,16 +590,21 @@ USA.
             <sch:let name="otherConstraintInfo"
                 value="gmd:resourceConstraints/*/gmd:otherConstraints/gco:CharacterString"/>
 
-            <sch:assert test="$accessConstraints_found">
+            <sch:assert test="$accessConstraints_node" see="geonet:child[@name='resourceConstraints']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M45.ca/div"/>
+            </sch:assert>
+
+            <sch:assert test="$accessConstraints_found" see="gmd:resourceConstraints/*/gmd:accessConstraints/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M45.ca/div"/>
             </sch:assert>
             <sch:report test="$accessConstraints_found">
                 <sch:value-of select="$accessConstraints_count"/> <sch:value-of select="$loc/strings/report.M45.ca/div"/>
             </sch:report>
-            <sch:assert test="not($accessConstraints)">
+
+            <sch:assert test="not($accessConstraints)" see="gmd:resourceConstraints/*/gmd:accessConstraints/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M45.or/div"/>
             </sch:assert>
-            <sch:assert test="not($otherConstraints)">
+            <sch:assert test="not($otherConstraints)" see="gmd:resourceConstraints/*/gmd:accessConstraints/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M45.or/div"/>
             </sch:assert>
             <sch:report test="$otherConstraintInfo!='' and not($accessConstraints) and not($otherConstraints)">
