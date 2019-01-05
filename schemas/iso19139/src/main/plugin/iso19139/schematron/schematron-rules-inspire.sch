@@ -226,7 +226,7 @@ USA.
             <!-- Unique identifier -->
             <sch:let name="idDefined" value="gmd:citation/gmd:CI_Citation/gmd:identifier/node()"/>
             <sch:assert test="$idDefined" see="gmd:citation/gmd:CI_Citation/geonet:child[@name='identifier']/@uuid">
-                <sch:value-of select="$loc/strings/alert.M39/div"/>
+                <sch:value-of select="$loc/strings/alert.M38/div"/>
             </sch:assert>
 
             <sch:let name="resourceIdentifier_code" value="gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/*/text()"/>
