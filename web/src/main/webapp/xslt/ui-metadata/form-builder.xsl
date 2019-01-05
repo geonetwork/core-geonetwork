@@ -961,7 +961,7 @@
         </div>
       </div>
     </xsl:if>
-    <xsl:call-template name="get-errors"/>
+    <xsl:call-template name="get-errors-for-child"/>
 
   </xsl:template>
 
