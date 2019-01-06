@@ -521,12 +521,24 @@ USA.
 
             <sch:let name="degree" value="count(gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:pass)"/>
 
-            <!-- 5/1/19 don't understand what this assertion is for, commenting it
-            <sch:assert test="$degree">
-                <sch:value-of select="$loc/strings/alert.M44.nonev/div"/><sch:value-of select="$degree>0"/>
+            <sch:assert test="$qualityInfoDefined" see="geonet:child[@name='dataQualityInfo']/@uuid">
+                   <sch:value-of select="$loc/strings/alert.M44/div"/>
             </sch:assert>
 
-            5/1/19 end, don't understand what this assertion is for, commenting it -->
+            <sch:let name="reportDefined" value="gmd:dataQualityInfo/*/gmd:report/node()"/>
+            <sch:assert test="$reportDefined" see="gmd:dataQualityInfo/*/geonet:child[@name='report'][1]/@uuid">
+                <sch:value-of select="$loc/strings/alert.M44/div"/>
+            </sch:assert>
+
+            <sch:let name="resultDefined" value="gmd:dataQualityInfo/*/gmd:report/*/gmd:result/node()"/>
+            <sch:assert test="$resultDefined" see="gmd:dataQualityInfo/*/gmd:report/*/geonet:child[@name='result'][1]/@uuid">
+                <sch:value-of select="$loc/strings/alert.M44/div"/>
+            </sch:assert>
+
+            <sch:assert test="$degree">
+                <sch:value-of select="$loc/strings/alert.M44/div"/><sch:value-of select="$degree>0"/>
+            </sch:assert>
+
             <sch:report test="$degree">
                 <sch:value-of select="$loc/strings/report.M44.nonev/div"/>
             </sch:report>
