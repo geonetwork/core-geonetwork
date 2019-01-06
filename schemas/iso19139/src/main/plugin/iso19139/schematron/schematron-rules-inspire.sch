@@ -310,7 +310,7 @@ USA.
 
             <sch:let name="thesaurus_name" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:title/*/text()"/>
             <sch:let name="thesaurus_date" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:date/*/text()"/>
-            <sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
+            <sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue"/>
             <sch:let name="keyword"
                 value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
 				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
@@ -502,17 +502,17 @@ USA.
             </sch:assert>
 
             <sch:let name="lineageDefined" value="gmd:dataQualityInfo/*/gmd:lineage/node()"/>
-            <sch:assert test="$lineageDefined" see="gmd:dataQualityInfo[1]/gmd:DQ_DataQuality/geonet:child[@name='lineage']/@uuid">
+            <sch:assert test="$lineageDefined" see="gmd:dataQualityInfo/gmd:DQ_DataQuality/geonet:child[@name='lineage']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M43/div"/>
             </sch:assert>
 
             <sch:let name="statementDefined" value="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/node()"/>
-            <sch:assert test="$statementDefined" see="gmd:dataQualityInfo/*/gmd:lineage/*/geonet:child[@name='statement'][1]/@uuid">
+            <sch:assert test="$statementDefined" see="gmd:dataQualityInfo/*/gmd:lineage/*/geonet:child[@name='statement']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M43/div"/>
             </sch:assert>
 
             <sch:let name="hasAtLeastOneLineage" value="count(gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement[not(@gco:nilReason)]) > 0"/>
-            <sch:assert test="$hasAtLeastOneLineage" see="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/geonet:element[1]/@ref">
+            <sch:assert test="$hasAtLeastOneLineage" see="gmd:dataQualityInfo/*/gmd:lineage/*/gmd:statement/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M43/div"/>
             </sch:assert>
             <sch:report test="$hasAtLeastOneLineage">
@@ -526,12 +526,12 @@ USA.
             </sch:assert>
 
             <sch:let name="reportDefined" value="gmd:dataQualityInfo/*/gmd:report/node()"/>
-            <sch:assert test="$reportDefined" see="gmd:dataQualityInfo/*/geonet:child[@name='report'][1]/@uuid">
+            <sch:assert test="$reportDefined" see="gmd:dataQualityInfo/*/geonet:child[@name='report']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M44/div"/>
             </sch:assert>
 
             <sch:let name="resultDefined" value="gmd:dataQualityInfo/*/gmd:report/*/gmd:result/node()"/>
-            <sch:assert test="$resultDefined" see="gmd:dataQualityInfo/*/gmd:report/*/geonet:child[@name='result'][1]/@uuid">
+            <sch:assert test="$resultDefined" see="gmd:dataQualityInfo/*/gmd:report/*/geonet:child[@name='result']/@uuid">
                 <sch:value-of select="$loc/strings/alert.M44/div"/>
             </sch:assert>
 
@@ -652,13 +652,22 @@ USA.
 			//*[@gco:isoType='srv:SV_ServiceIdentification']">
             <sch:let name="useLimitation" value="gmd:resourceConstraints/*/gmd:useLimitation/*/text()"/>
             <sch:let name="useLimitation_count" value="count(gmd:resourceConstraints/*/gmd:useLimitation/*/text())"/>
-           <!-- 5/1/19 don't understand what this assertion is for, commenting it
-            <sch:assert test="$useLimitation_count">
-                <sch:value-of select="$loc/strings/alert.M45.ul/div"/>
+
+           <sch:assert test="count(gmd:resourceConstraints/*) > 0" see="geonet:child[@name='resourceConstraints']/@uuid">
+               <sch:value-of select="$loc/strings/alert.M45/div"/>
+           </sch:assert>
+
+            <sch:let name="useLimitationDefined" value="gmd:resourceConstraints/*/gmd:useLimitation/node()"/>
+            <sch:assert test="$useLimitationDefined" see="gmd:resourceConstraints/*/geonet:child[@name='useLimitation']/@uuid">
+                <sch:value-of select="$loc/strings/alert.M45/div"/>
             </sch:assert>
-           end 5/1/19 don't understand what this assertion is for, commenting it -->
+
+            <sch:assert test="$useLimitation_count" see="gmd:resourceConstraints/*/gmd:useLimitation/geonet:element/@ref">
+                <sch:value-of select="$loc/strings/alert.M45/div"/>
+            </sch:assert>
+
             <sch:report test="$useLimitation_count">
-                <sch:value-of select="$loc/strings/report.M45.ul/div"/>
+                <sch:value-of select="$loc/strings/report.M45/div"/>
                 <sch:value-of select="$useLimitation"/>
             </sch:report>
         </sch:rule>
