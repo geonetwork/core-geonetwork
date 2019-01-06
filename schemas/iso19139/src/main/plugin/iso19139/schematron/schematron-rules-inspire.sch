@@ -310,7 +310,7 @@ USA.
 
             <sch:let name="thesaurus_name" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:title/*/text()"/>
             <sch:let name="thesaurus_date" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:date/*/text()"/>
-            <sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue"/>
+            <sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
             <sch:let name="keyword"
                 value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
 				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
