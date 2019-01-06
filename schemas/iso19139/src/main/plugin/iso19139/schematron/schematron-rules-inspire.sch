@@ -606,7 +606,7 @@ USA.
                 <sch:value-of select="$loc/strings/alert.M45.ca/div"/>
             </sch:assert>
 
-            <sch:assert test="$accessConstraints_found" see="gmd:resourceConstraints/*/gmd:accessConstraints/geonet:element/@ref">
+            <sch:assert test="$accessConstraints_found or not($accessConstraints_node)" see="gmd:resourceConstraints/*/gmd:accessConstraints/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M45.ca/div"/>
             </sch:assert>
             <sch:report test="$accessConstraints_found">
@@ -662,7 +662,7 @@ USA.
                 <sch:value-of select="$loc/strings/alert.M45/div"/>
             </sch:assert>
 
-            <sch:assert test="$useLimitation_count" see="gmd:resourceConstraints/*/gmd:useLimitation/geonet:element/@ref">
+            <sch:assert test="$useLimitation_count or not($useLimitationDefined)" see="gmd:resourceConstraints/*/gmd:useLimitation/geonet:element/@ref">
                 <sch:value-of select="$loc/strings/alert.M45/div"/>
             </sch:assert>
 
