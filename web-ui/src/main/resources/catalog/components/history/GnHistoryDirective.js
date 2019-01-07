@@ -74,7 +74,7 @@
               // BTW allowRemoval attribute could control if remove button
               // is displayed or not.
               scope.allowRemoval = false;
-              if(scope.user) {
+              if(scope.user && scope.user.isAdministrator) {
                 scope.allowRemoval =
                   angular.isDefined(attrs.allowRemoval) ?
                     attrs.allowRemoval == 'true' && scope.user.isAdministrator() :
@@ -114,8 +114,9 @@
             replace: true,
             scope: {
               h: '=gnRecordHistoryStep',
-              noTitle: '@noTitle'
-            },
+              noTitle: '@noTitle',
+              allowRemoval: '=allowRemoval'
+          },
             templateUrl:
               '../../catalog/components/history/partials/historyStep.html'
           }
