@@ -44,7 +44,7 @@
           <form novalidate>
             <!--specific SEXTANT EMODNET-->
             <div ng-if="emodnetSortKeys" >
-              <label>Sort by</label>
+              <label>{{::'sortedBy' | translate}}</label>
               <select class="form-control input-sm"
                       ng-model="sortKey" ng-change="reOrderLayerInputs(sortKey)">
                 <option ng-repeat="sortKey in emodnetSortKeys"
