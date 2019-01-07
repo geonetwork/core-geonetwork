@@ -270,10 +270,15 @@
               // WMS layer not in background
               else if (layer.server) {
                 var server = layer.server[0];
+                var currentStyle;
 
                 // load extension content (JSON)
                 if (layer.extension && layer.extension.any) {
                   var extension = JSON.parse(layer.extension.any);
+
+                  if (extension.style) {
+                    currentStyle = {Name: extension.style};
+                  }
 
                   // import saved filters if available
                   if (extension.filters && extension.wfsUrl) {
@@ -305,7 +310,7 @@
                   loadingLayer.displayInLayerManager = true;
 
                   var layerIndex = map.getLayers().push(loadingLayer);
-                  var p = self.createLayer(layer, map, undefined, i);
+                  var p = self.createLayer(layer, map, undefined, i, currentStyle);
                   loadingLayer.set('index', layerIndex);
 
                   (function(idx, loadingLayer) {
@@ -511,9 +516,15 @@
             layerParams.server[0].version = version;
           }
 
+
           // apply filters & processes inputs in extension if needed
-          if (filters || processInputs) {
+          if (layer.get('currentStyle') || filters || processInputs) {
             var extension = {};
+
+            if (layer.get('currentStyle')) {
+              extension.style = layer.get('currentStyle').Name;
+            }
+
             if (esObj) {
               var wfsUrl = esObj.config.params.wfsUrl;
               if (wfsUrl) {
@@ -594,7 +605,7 @@
        * dropdown
        * @param {numeric} index of the layer in the tree
        */
-      this.createLayer = function(layer, map, bgIdx, index) {
+      this.createLayer = function(layer, map, bgIdx, index, style) {
 
         var server = layer.server[0];
         var res = server.onlineResource[0];
@@ -640,7 +651,7 @@
           // even when loaded from a context.
           return gnMap.addWmsFromScratch(
               map, res.href, layer.name,
-              createOnly, null, server.version).
+              createOnly, null, server.version, style).
               then(function(olL) {
                 if (olL) {
                   try {
