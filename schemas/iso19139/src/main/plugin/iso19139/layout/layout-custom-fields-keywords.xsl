@@ -65,12 +65,12 @@
 
     <xsl:variable name="thesaurusTitle">
       <xsl:choose>
-        <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">
+        <xsl:when test="normalize-space($thesaurusTitleEl/(gco:CharacterString|gmx:Anchor)) != ''">
           <xsl:value-of select="if ($overrideLabel != '')
               then $overrideLabel
               else concat(
                       $iso19139strings/keywordFrom,
-                      normalize-space($thesaurusTitleEl/gco:CharacterString))"/>
+                      normalize-space($thesaurusTitleEl/(gco:CharacterString|gmx:Anchor)))"/>
         </xsl:when>
         <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/
                           gmd:textGroup/gmd:LocalisedCharacterString[
@@ -153,7 +153,7 @@
                   select="normalize-space(gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text())"/>
 
     <xsl:variable name="thesaurusTitle"
-                  select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
+                  select="gmd:thesaurusName/gmd:CI_Citation/gmd:title/(gco:CharacterString|gmx:Anchor|gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString)"/>
 
 
     <xsl:variable name="thesaurusConfig"
