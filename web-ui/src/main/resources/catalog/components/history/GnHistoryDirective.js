@@ -64,23 +64,23 @@
               }
              });
 
-            // History step removal is only allowed to admin
-            // BTW allowRemoval attribute could control if remove button
-            // is displayed or not.
-            scope.allowRemoval = false;
-            if(scope.user) {
-              scope.allowRemoval =
-                angular.isDefined(attrs.allowRemoval) ?
-                attrs.allowRemoval == 'true' && scope.user.isAdministrator() :
-                scope.user.isAdministrator();
-            }
-
             scope.more = function() {
               scope.filter.size = scope.filter.size + recordByPage;
               loadHistory();
             };
 
             function loadHistory() {
+              // History step removal is only allowed to admin
+              // BTW allowRemoval attribute could control if remove button
+              // is displayed or not.
+              scope.allowRemoval = false;
+              if(scope.user) {
+                scope.allowRemoval =
+                  angular.isDefined(attrs.allowRemoval) ?
+                    attrs.allowRemoval == 'true' && scope.user.isAdministrator() :
+                    scope.user.isAdministrator();
+              }
+
               if (scope.md ) {
                 scope.filter.recordFilter = scope.md['geonet:info'].id;
                 gnRecordHistoryService.search(scope.filter).then(function(r) {
