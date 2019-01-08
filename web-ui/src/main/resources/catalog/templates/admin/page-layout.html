@@ -1,18 +1,54 @@
-<div data-ng-controller="GnAdminController">
-  <div class="row">
-    <div class="col-md-12">
-      <ul class="nav nav-pills">
+<div class="row" data-ng-controller="GnAdminController">
+
+  <div class="sidebar">
+
+    <div class="sidebar-col-main">
+      <ul data-ng-if="user.isUserAdmin()" class="nav nav-sidebar" role="menu">
+          <li>
+            <a data-gn-active-tb-item="admin.console#/home">
+              <i class="fa fa-fw fa-th"></i>
+              <span translate>adminHome</span>
+            </a>
+          </li>
+          <li role="separator" class="divider"></li>
+          <li data-ng-repeat="t in userAdminMenu">
+            <a data-gn-active-tb-item="admin.console{{t.route}}">
+              <i class="fa fa-fw {{t.icon}}"></i>
+              <span translate>{{t.name | translate}}</span>
+            </a>
+          </li>
+        </ul>
+        <ul data-ng-if="user.isAdministrator()" class="nav nav-sidebar" role="menu">
+          <li>
+            <a data-gn-active-tb-item="admin.console#/home">
+              <i class="fa fa-fw fa-th"></i>
+              <span translate>adminHome</span>
+            </a>
+          </li>
+          <li role="separator" class="divider"></li>
+          <li data-ng-repeat="t in adminMenu">
+            <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
+              <i class="fa fa-fw {{t.icon}}"></i>
+              <span translate>{{t.name | translate}}</span>
+            </a>
+          </li>
+        </ul>
+    </div>
+    <!-- /.sidebar-col-main -->
+    <div class="sidebar-col-sub">
+       <ul class="nav nav-sidebar">
         <li data-ng-repeat="t in pageMenu.tabs"
-            data-ng-class="href === t.href && 'active'">
+            data-ng-class="(href === t.href && 'active') || (!href && t.href + '' === '#/' + pageMenu.folder + pageMenu.defaultTab && 'active')">
           <a href="{{t.href}}">
-            <i class="fa {{t.icon || 'fa-fw'}}"/>
+            <i class="fa fa-fw {{t.icon || 'fa-fw'}}"/>
             <span data-translate="">{{t.label}}</span>
           </a>
         </li>
       </ul>
     </div>
+    <!-- /.sidebar-col-sub -->
   </div>
-  <br/>
-
-  <div data-ng-include="getTpl(pageMenu)"></div>
+  <!-- /.sidebar -->
+  <div class="main" data-ng-include="getTpl(pageMenu)"></div>
+  <!-- /.main -->
 </div>

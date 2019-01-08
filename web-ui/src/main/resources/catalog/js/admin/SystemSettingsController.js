@@ -269,6 +269,34 @@
               by: buildUrl($scope.settings)
             });
       };
+      $scope.filterForm = function(e,formId) {
+
+        var filterValue = e.target.value.toLowerCase();
+
+        $(formId + " .form-group").filter(function() {
+
+          var filterText = $(this).find('label').text().toLowerCase();
+          var matchStart = filterText.indexOf("" + filterValue.toLowerCase() + "");
+
+          if (matchStart > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      };
+      $scope.resetFilter = function(formId) {
+
+        $(formId + " .form-group").each(function() {
+          // clear filter
+          $('#filter-settings').val('');
+          // show the element
+          $(this).show();
+          // show the fieldsets
+          $(formId + ' fieldset').show();
+        });
+
+      };
 
       $scope.testMailConfiguration = function() {
         $http.get('../api/0.1/tools/mail/test')
