@@ -1357,8 +1357,8 @@
     <!--<db.config.file>../config-db/${db.type}.xml</db.config.file>-->
     <db.host>localhost</db.host>
     <db.port>5432</db.port>
-    <db.name>sextant65x</db.name>
-    <db.username>sxtcatal</db.username>
+    <db.name>sextant66x</db.name>
+    <db.username>www-data</db.username>
     <db.password>www-data</db.password>
     <db.pool.maxActive>10</db.pool.maxActive>
 

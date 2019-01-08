@@ -29,8 +29,6 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	">
-  <context:property-placeholder location="WEB-INF/config-db/jdbc-${overrides.props}.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="1"/>
-
   <import resource="defaultJdbcDataSource.xml" />
 
   <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
