@@ -2,8 +2,7 @@
   <h2><i class="fa fa-fw fa-chevron-left"/>
     <span data-translate="">recordHistory</span>
 
-    <label data-ng-show="history.length > 0"
-           data-ng-repeat="(k, v) in filter.types"
+    <label data-ng-repeat="(k, v) in filter.types"
            title="{{k + 'Type' | translate}}">
       <i class="fa fa-fw"
          data-ng-class="{

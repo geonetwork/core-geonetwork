@@ -14,8 +14,8 @@
   <div class="timeline-panel">
     <div class="timeline-heading">
       <a class="btn btn-link pull-right"
-         data-ng-show="allowRemoval"
-         data-ng-click="removeStep(h)"
+         data-ng-show="$parent.allowRemoval"
+         data-ng-click="$parent.removeStep(h)"
          title="{{'removeHistoryStep' | translate}}">
         <i class="fa fa-times text-danger"/>
       </a>

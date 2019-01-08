@@ -142,14 +142,15 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
         final Path<ISODate> statusIdDatePath = metadataStatusRoot.get(MetadataStatus_.id)
                 .get(MetadataStatusId_.changeDate);
         final Path<Integer> statusIdPath = statusValueRoot.get(StatusValue_.id);
+        final Path<StatusValueType> statusTypePath = statusValueRoot.get(StatusValue_.type);
+
+        Predicate statusIdJoin = cb.equal(statusIdInMetadataPath, statusIdPath);
 
         Predicate typeFilter = null;
         Predicate authorPredicate = null;
         Predicate ownerPredicate = null;
         Predicate recordPredicate = null;
         if (types != null) {
-            final Path<StatusValueType> statusTypePath = statusValueRoot.get(StatusValue_.type);
-            Predicate statusIdJoin = cb.equal(statusIdInMetadataPath, statusIdPath);
             Predicate typePredicate = statusTypePath.in(types);
             typeFilter = cb.and(statusIdJoin, typePredicate);
         }
@@ -169,7 +170,7 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
             recordPredicate = recordIdPath.in(recordIds);
         }
 
-        Predicate whereClause = cb.and();
+        Predicate whereClause = cb.and(statusIdJoin);
         if (typeFilter != null) {
             whereClause.getExpressions().add(typeFilter);
         }
