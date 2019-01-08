@@ -41,6 +41,9 @@
     <msg id="a" xml:lang="fre">Cette fiche ne contient pas d'identifiant pour la ressource. Ajouter
       l'identifiant suivant :
     </msg>
+    <msg id="a" xml:lang="dut">Het huidige record bevat geen resource-ID. Voeg de
+       volgende identifier toe:
+    </msg>
   </xsl:variable>
 
 

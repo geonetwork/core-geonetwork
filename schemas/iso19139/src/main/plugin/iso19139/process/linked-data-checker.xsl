@@ -39,6 +39,8 @@
     <msg id="b" xml:lang="fre">). Si l'erreur persiste, corriger le lien manuellement ou exécuter
       cette action pour le supprimer.
     </msg>
+    <msg id="a" xml:lang="dut">geeft een fout (</msg>
+    <msg id="b" xml:lang="dut">). Draai deze taak om link te verwijderen.</msg>
   </xsl:variable>
 
   <xsl:template name="list-linked-data-checker">
