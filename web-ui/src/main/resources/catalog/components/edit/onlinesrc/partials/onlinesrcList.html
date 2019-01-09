@@ -149,8 +149,6 @@
                 {{(resource[resource.protocol.indexOf('OGC') !== -1 ? 'description' : 'title'] | gnLocalized: lang) || resource.lUrl}}
               </a>
               <span data-ng-if="resource.lUrl.match('^http|ftp') === null">
-                <i class="fa fa-fw"
-                   data-ng-class="onlinesrcService.getIconByProtocol(resource)"></i>
                 {{(resource.title | gnLocalized: lang) || resource.lUrl}}
               </span>
             </div>
