@@ -306,10 +306,14 @@
       margin: 0;
       text-align: left;
     }
-    .extent {
-      display: inline-block;
+    .gn-editor-map {
+      padding: 15px;
       position: relative;
       margin-top: 30px;
+      [ngeo-map] {
+        border: 1px solid @input-border;
+        border-radius: @border-radius-base;
+      }
     }
     .coord {
       position: absolute;
@@ -317,22 +321,22 @@
       z-index: 100;
     }
     .coord-north {
-      top: -1.25em;
+      top: -0.25em;
       left: 50%;
       margin-left: -75px;
     }
     .coord-south {
-      bottom: -1.25em;
+      bottom: -0.25em;
       left: 50%;
       margin-left: -75px;
     }
     .coord-east {
-      right: -75px;
+      right: -15px;
       top: 50%;
       margin-top: -1.25em;
     }
     .coord-west {
-      left: -75px;
+      left: -15px;
       top: 50%;
       margin-top: -1.25em;
     }
