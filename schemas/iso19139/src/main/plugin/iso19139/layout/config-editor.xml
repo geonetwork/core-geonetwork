@@ -458,6 +458,7 @@
   <!-- View configuration -->
   <views>
     <view name="sextant"
+          class="gn-label-above-input gn-indent-colored"
           upAndDownControlHidden="true"
           displayIfRecord="contains(
                             gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
