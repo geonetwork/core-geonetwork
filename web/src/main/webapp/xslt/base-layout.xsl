@@ -106,7 +106,7 @@
   <xsl:template name="no-js-alert">
     <noscript>
       <xsl:call-template name="header"/>
-      <div class="container-fluid">
+      <div class="container page">
         <div class="row gn-row-main">
           <div class="col-sm-8 col-sm-offset-2">
             <h1><xsl:value-of select="$env/system/site/name"/></h1>
