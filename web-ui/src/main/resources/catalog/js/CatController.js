@@ -615,7 +615,7 @@
                      type: 'danger'});
               });
         });
-        var casInfo = promiseStart.then(function(value) {
+        promiseStart.then(function(value) {
           return $http.get('../api/site/info/isCasEnabled').
               success(function(data, status) {
                 $scope.isCasEnabled = data;
@@ -669,103 +669,21 @@
           };
         });
 
-        var isSearch = !!gnGlobalSettings.gnUrl ||
-            $('[ng-app]').attr('ng-app').indexOf('gn_search') == 0;
-        var casDefer = $q.defer();
-        // After we get all infos, we get user (depending on if cas is enabled
-        // or not
-        casInfo.then(function() {
-
-          if ($scope.isCasEnabled && isSearch) {
-            var onCasCheck = function() {
-
-              var intervalID;
-              var loginAttempts = 0;
-
-              intervalID = setInterval(function() {
-                loginAttempts += 1;
-                if (loginAttempts > (25)) {
-                  clearInterval(intervalID);
-                  casDefer.reject();
-                }
-                else {
-                  var innerDoc = undefined;
-                  var loginEvent = undefined;
-                  try {
-
-                    var iframe = document.getElementById('casLoginFrame');
-                    innerDoc = iframe.contentDocument ||
-                        iframe.contentWindow.document;
-
-                    // Test if the CAS login form is in the iframe
-                    if (innerDoc.forms.length == 1 &&
-                        innerDoc.forms[0].id == 'fm1') {
-                      clearInterval(intervalID);
-                      loginEvent = false;
-                    }
-
-                    // Test if the auth have been made
-                    var connectedDiv = innerDoc.getElementsByTagName('info');
-                    if (connectedDiv) {
-                      clearInterval(intervalID);
-                      loginEvent = true;
-                    }
-
-                    // If we find bad credentials, we reload the iframe
-                    var badCred = innerDoc.getElementsByTagName('h1');
-                    if (badCred && badCred.length == 1 &&
-                        badCred[0].innerHTML.indexOf('HTTP Status 401') >= 0) {
-                      innerDoc.location.reload(true);
-                      clearInterval(intervalID);
-                    }
-                  }
-                  catch (err) {
-                    loginAttempts += 25;
-                    casDefer.reject();
-                  }
-                  if (loginEvent == true) {
-                    casDefer.resolve();
-                  }
-                  else if (loginEvent == false) {
-                    casDefer.reject();
-                  }
-                }
-              }, 200);
-            };
-
-            var casLoginFrame = document.createElement('iframe');
-            casLoginFrame.id = 'casLoginFrame';
-            casLoginFrame.onload = onCasCheck;
-            casLoginFrame.setAttribute('src', gnGlobalSettings.gnUrl +
-                'info?casLogin');
-            casLoginFrame.setAttribute('style', 'display:none');
-            document.body.appendChild(casLoginFrame);
-
-          }
-          else {
-            casDefer.resolve();
-          }
-        });
-
         // Retrieve user information if catalog is online
-        var userLogin = casDefer.promise.finally(function(value) {
-          return $http.get('../api/me').
-              success(function(me, status) {
-                if (angular.isObject(me)) {
-                  angular.extend($scope.user, me);
-                  angular.extend($scope.user, userFn);
-                  $scope.authenticated = true;
-                } else {
-                  $scope.authenticated = false;
-                  $scope.user = undefined;
-                }
-              });
+        var userLogin = $http.get('../api/me', { withCredentials: true }).success(function (me, status) {
+          if (angular.isObject(me)) {
+            angular.extend($scope.user, me);
+            angular.extend($scope.user, userFn);
+            $scope.authenticated = true;
+          } else {
+            $scope.authenticated = false;
+            $scope.user = undefined;
+          }
         });
         $scope.userLoginPromise = userLogin;
 
-
         // Retrieve main search information
-        var searchInfo = userLogin.then(function(value) {
+        userLogin.then(function(value) {
           var url = 'qi?_content_type=json&summaryOnly=true';
           angular.forEach(gnGlobalSettings.gnCfg.mods.search.filters,
               function(v, k) {

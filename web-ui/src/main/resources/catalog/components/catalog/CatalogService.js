@@ -399,7 +399,10 @@
             var config = {
               url: url,
               params: params,
-              method: 'GET'
+              method: 'GET',
+
+              // sextant specific: use cookies to authenticate user on cross origin requests
+              withCredentials: true
             };
             angular.extend(config, httpConfig);
             return $http(config);
