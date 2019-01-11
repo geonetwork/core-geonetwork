@@ -27,54 +27,34 @@
           </button>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav" id="topbar-left">
             <li>
               <a href="{/root/gui/nodeUrl}{$lang}/catalog.search#/home">
                 <img class="gn-logo"
                      alt="{$i18n/siteLogo}"
                      src="{/root/gui/url}/images/logos/{$env//system/site/siteId}.png"></img>
-                <span class="hidden-xs">
-                  <xsl:value-of select="$env//system/site/name"/>
-                </span>
+                <xsl:value-of select="$env//system/site/name"/>
               </a>
             </li>
             <li>
-              <div style="padding-top: 4px;">
-                <form action="{$nodeUrl}search"
-                      class="form-inline">
-                  <div class="input-group gn-form-any">
-                    <input type="text"
-                           name="any"
-                           id="fldAny"
-                           placeholder="{$t/anyPlaceHolder}"
-                           value="{/root/request/any}"
-                           class="form-control"
-                           autofocus=""/>
-                    <div class="input-group-btn">
-                      <button type="submit"
-                              class="btn btn-primary">
-                        &#160;&#160;
-                        <i class="fa fa-search">&#160;</i>
-                        &#160;&#160;
-                      </button>
-                      <a href="{$nodeUrl}search"
-                         class="btn btn-link">
-                        <i class="fa fa-times">&#160;</i>
-                      </a>
-                    </div>
-                  </div>
-                  <input type="hidden" name="fast" value="index"/>
-                </form>
-              </div>
+              <a title="{$t/search}" href="{/root/gui/nodeUrl}search" onclick="location.href=('{/root/gui/nodeUrl}{$lang}/catalog.search#/search');return false;">
+                <i class="fa fa-fw fa-search hidden-sm">&#160;</i>
+                <span><xsl:value-of select="$t/search"/></span>
+              </a>
+            </li>
+            <li id="map-menu" class="hidden-nojs">
+              <a  title="{$t/map}"
+                  href="{/root/gui/nodeUrl}{$lang}/catalog.search#/map">
+                <i class="fa fa-fw fa-globe hidden-sm">&#160;</i>
+                <span><xsl:value-of select="$t/map"/></span></a>
             </li>
           </ul>
 
-
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a href="{/root/gui/nodeUrl}{lang}/signin"
+              <a href="{/root/gui/nodeUrl}{$lang}/catalog.signin"
                  title="{$t/signIn}">
-                <i class="fa fa-sign-in">&#160;</i>&#160;
+                <i class="fa fa-sign-in fa-fw">&#160;</i>
                 <xsl:value-of select="$t/signIn"/>
               </a>
             </li>
@@ -82,6 +62,44 @@
         </div>
       </div>
     </div>
+
+    <xsl:if test="/root/search/response">
+      <form action="{$nodeUrl}search"
+            class="form-horizontal" role="form">
+        <div class="row gn-top-search" style="margin:15px auto">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-offset-4 col-md-4 relative">
+                <div class="gn-form-any input-group">
+                  <input type="text"
+                         name="any"
+                         id="gn-any-field"
+                         placeholder="{$t/anyPlaceHolder}"
+                         value="{/root/request/any}"
+                         class="form-control input-lg"
+                         autofocus=""/>
+                  <div class="input-group-btn">
+                    <button type="submit"
+                            class="btn btn-primary btn-lg"
+                            title="{$t/search}">
+                      &#160;&#160;
+                      <i class="fa fa-search">&#160;</i>
+                      &#160;&#160;
+                    </button>
+                    <a href="{$nodeUrl}search"
+                       class="btn btn-link btn-lg"
+                       title="{$t/reset}">
+                      <i class="fa fa-times">&#160;</i>
+                    </a>
+                  </div>
+                </div>
+                <input type="hidden" name="fast" value="index"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template name="footer">
@@ -104,7 +122,7 @@
           </a>
         </li>
         <li>
-          <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}">API</a>
+          <a href="{/root/gui/url}/doc/api" title="{$t/learnTheApi}"><xsl:value-of select="$t/api"/></a>
         </li>
       </ul>
     </div>
