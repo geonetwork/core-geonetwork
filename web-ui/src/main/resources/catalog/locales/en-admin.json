@@ -1337,5 +1337,8 @@
     "usersInGroup": "Users in group",
     "ui-editorIndentType": "Editor page indent type",
     "ui-editorIndentType-default": "Default, minimal indents",
-    "ui-editorIndentType-colored": "Colored indents"
+    "ui-editorIndentType-colored": "Colored indents",
+    "filterSettings": "Filter settings ",
+    "filterPlaceHolder": "e.g. INSPIRE",
+    "filterReset": "Reset the filter"
 }

@@ -1,6 +1,21 @@
 @import "gn_search_default.less";
 @import "../../../style/gn_admin";
 
+@gn-sidebar-width: 270px;
+@gn-col-main-width: 45px;
+
+@keyframes fadein{
+  0% { opacity:0; }
+  66% { opacity:0; }
+  100% { opacity:1; }
+}
+
+@-webkit-keyframes fadein{
+  0% { opacity:0; }
+  66% { opacity:0; }
+  100% { opacity:1; }
+}
+
 ul.gn-resultview li.list-group-item {
   margin-bottom: 0;
 }
@@ -15,3 +30,253 @@ ul.gn-resultview li.list-group-item {
     margin-bottom: 0;
   }
 }
+
+[ng-app="gn_admin"] {
+  body {
+    padding-top: calc(~"@{gn-menubar-height} + 1px");
+    background-color: #f7f7f7;
+  }
+  .gn-top-bar {
+    position: fixed;
+    width: 100%;
+    height: calc(~"@{gn-menubar-height} + 1px");
+    border-width: 0 0 1px 0;
+    background-color: #fff;
+    top: 0;
+    z-index: 100;
+    .navbar-collapse {
+      background: #fff;
+    }
+  }
+  [data-ng-controller="GnAdminController"] {
+    .sidebar {
+      position: fixed;
+      padding: 0;
+      width: @gn-sidebar-width;
+      border-right: 1px solid @navbar-default-border;
+      background-color: #fff;
+      height: 100%;
+      @media (max-width: @screen-xs-max) {
+        display: none;
+      }
+      .sidebar-col-main {
+        position: fixed;
+        width: @gn-col-main-width;
+        float: left;
+        border-right: 1px solid @navbar-default-border;
+        height: 100%;
+        background-color: #fff;
+        white-space: nowrap;
+        z-index: 10;
+        transition: width 0.5s;
+        .nav-sidebar {
+          span {
+            display: none;
+          }
+        }
+        &:hover {
+          width: calc(~"@{gn-sidebar-width} - @{gn-col-main-width}");
+          .nav-sidebar {
+            span {
+              display: inline-block;
+              -webkit-animation: 0.5s ease 0s normal forwards 1 fadein;
+              animation: 0.5s ease 0s normal forwards 1 fadein;
+            }
+          }
+        }
+      }
+      .sidebar-col-sub {
+        width: calc(~"100% - @{gn-col-main-width}");
+        margin-left: @gn-col-main-width;
+        float: left;
+      }
+      .sidebar-col-full {
+        width: @gn-sidebar-width;
+        transition: none;
+        .nav-sidebar {
+          span {
+            display: inline-block;
+          }
+        }
+        &:hover {
+          width: @gn-sidebar-width;
+          .nav-sidebar {
+            span {
+              animation: none;
+            }
+          }
+        }
+      }
+      .nav-sidebar {
+        span {
+          padding-left: 10px;
+        }
+      }
+      h2 {
+        font-size: 12px;
+        text-transform: uppercase;
+        padding-left: 15px;
+      }
+      ul {
+        li {
+          a {
+            padding-left: 15px;
+            border-left: 3px solid #fff;
+            color: @gray;
+            padding: 10px;
+            &:hover {
+              color: @gray-dark;
+            }
+          }
+          &.active, &:hover {
+            a {
+              color: @gray-darker;
+              background-color: lighten(@brand-primary, 46.7%);
+              border-left-color: @brand-primary;
+            }
+          }
+    
+        }
+      }
+    }
+    .main {
+      margin-left: @gn-sidebar-width;
+      padding: 25px 10px 10px 10px;
+      @media (max-width: @screen-xs-max) {
+        margin-left: 0;
+      }
+      // dashboard
+      .gn-row-admin-buttons {
+        margin-bottom: 20px;
+        .btn-group {
+          box-shadow: 0 0.5px 0.5px rgba(0,0,0,.03);
+          .btn {
+            border-color: darken(@gray-lighter, 6.5%);
+            padding: 15px;
+            border-right: 0;
+            p {
+              white-space: initial;
+              height: 2em;
+              margin-top: 5px;
+              @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+                height: 3em;
+                font-size: 90%;
+              }
+            }
+            &:hover {
+              background: @gray-lighter;
+              i {
+                color: @brand-primary;
+              }
+            }
+            &:last-child {
+              border-right: 1px solid darken(@gray-lighter, 6.5%);
+            }
+          }
+          @media (max-width: @screen-xs-max) {
+            margin-left: -5px;
+            margin-right: -5px;
+            width: calc(~"100% + 10px");
+            box-shadow: none;
+            .btn {
+              padding: 15px 10px;
+              width: calc(~"50% - 10px");
+              display: block;
+              float: left;
+              border: 1px solid darken(@gray-lighter, 6.5%) !important;
+              margin: 5px;
+              border-radius: 4px;
+            }
+          }
+        }
+  
+      }
+      .gn-row-admin-stats {
+        .panel {
+          border-color: darken(@gray-lighter, 6.5%);
+          box-shadow: 0 0.5px 0.5px rgba(0,0,0,.03);
+          .panel-heading {
+            padding: 5px 15px;
+            background: @gray-lighter;
+            border-color: darken(@gray-lighter, 6.5%);
+            h5 {
+              font-weight: 200;
+            }
+          }
+          .panel-body {
+            padding: 5px 15px;
+            background: @gray-lighter;
+  
+            h2 {
+              margin: 0;
+              padding: 10px 0;
+            }
+          }
+        }
+        .panel-primary {
+          border-color: darken(@brand-primary, 6.5%);
+          .panel-heading, .panel-body {
+            color: #fff;
+            background: @brand-primary;
+            border-color: darken(@brand-primary, 6.5%);
+          }
+        }
+        .panel-success {
+          border-color: darken(@brand-success, 6.5%);
+          .panel-heading, .panel-body {
+            color: #fff;
+            background: @brand-success;
+            border-color: darken(@brand-success, 6.5%);
+          }
+        }
+      }
+      // admin pages
+      .btn-toolbar {
+        margin-left: 0;
+        .input-group {
+          float: none;
+        }
+        .navbar-right {
+          margin-right: 0;
+          @media (max-width: @screen-xs-max) {
+            .form-control, .btn {
+              margin: 10px 0;
+              width: 100%;
+            }
+          }
+        }
+      }
+      .panel {
+        .panel-heading {
+          .clearfix();
+          .btn-toolbar {
+            float: right;
+          }
+        }
+    
+      }
+      .thumbnail {
+        padding: 0;
+        .caption {
+          padding: 5px;
+          margin-bottom: 10px;
+          background-color: @panel-default-heading-bg;
+          border-bottom: 1px solid @panel-default-border;
+          p {
+            margin: 0;
+          }
+          a {
+            &:hover {
+              text-decoration: none;
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+}
+
+
+

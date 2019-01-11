@@ -163,9 +163,7 @@
                   label: value
                 };
                 $translate('harvester-' + value).then(function(translated) {
-                  $scope.harvesterTypes[value] = {
-                    text: translated
-                  };
+                  $scope.harvesterTypes[value].text = translated;
                 });
 
                 $.getScript('../../catalog/templates/admin/harvest/type/' +

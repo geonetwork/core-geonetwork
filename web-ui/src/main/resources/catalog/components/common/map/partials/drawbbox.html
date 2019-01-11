@@ -78,7 +78,7 @@
 
   <!--Map and coordinates inputs-->
   <div class="text-center">
-    <div class="thumbnail extent">
+    <div class="gn-editor-map">
       <span>
         <div class="input-group coord coord-north">
           <input data-ng-model="extent.form[3]"
@@ -117,7 +117,14 @@
           <span class="input-group-addon hidden-xs">W</span>
         </div>
       </span>
-      <div ng-if="map" ngeo-map="map"></div>
+      <table>
+        <tr>
+          <td>
+            <div ng-if="map" ngeo-map="map"></div>
+          </td>
+        </tr>
+      </table>
     </div>
+    
   </div>
 </div>

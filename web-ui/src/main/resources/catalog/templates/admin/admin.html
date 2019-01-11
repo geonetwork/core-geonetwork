@@ -1,38 +1,96 @@
-<span>
-  <div class="col-lg-8" data-ng-controller="GnAdminController">
-    <div class="clearfix">
-      <a data-ng-repeat="m in getMenu()" href="{{getMenuUrl(m)}}"
-         class="btn btn-lg btn-block {{m.classes}} gn-btn-admin">
-        <i class="fa {{m.icon}} fa-4x"/>
-        <p data-translate="">{{m.name}}</p>
-      </a>
+<div class="row" data-ng-controller="GnAdminController">
+
+    <div class="sidebar">
+  
+      <div class="sidebar-col-main sidebar-col-full">
+        <ul data-ng-if="user.isUserAdmin()" class="nav nav-sidebar" role="menu">
+            <li>
+              <a data-gn-active-tb-item="admin.console#/home">
+                <i class="fa fa-fw fa-th"></i>
+                <span translate>adminHome</span>
+              </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li data-ng-repeat="t in userAdminMenu">
+              <a data-gn-active-tb-item="admin.console{{t.route}}">
+                <i class="fa fa-fw {{t.icon}}"></i>
+                <span translate>{{t.name | translate}}</span>
+              </a>
+            </li>
+          </ul>
+          <ul data-ng-if="user.isAdministrator()" class="nav nav-sidebar" role="menu">
+            <li>
+              <a data-gn-active-tb-item="admin.console#/home">
+                <i class="fa fa-fw fa-th"></i>
+                <span translate>adminHome</span>
+              </a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li data-ng-repeat="t in adminMenu">
+              <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
+                <i class="fa fa-fw {{t.icon}}"></i>
+                <span translate>{{t.name | translate}}</span>
+              </a>
+            </li>
+          </ul>
+      </div>
+      <!-- /.sidebar-col-main -->
+      <div class="sidebar-col-sub">
+         <ul class="nav nav-sidebar">
+          <li data-ng-repeat="t in pageMenu.tabs"
+              data-ng-class="href === t.href && 'active'">
+            <a href="{{t.href}}">
+              <i class="fa fa-fw {{t.icon || 'fa-fw'}}"/>
+              <span data-translate="">{{t.label}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- /.sidebar-col-sub -->
     </div>
-  </div>
-  <div class="col-lg-4">
-    <div class="panel panel-default" data-ng-hide="true">
-      <div class="panel-heading" data-translate="">latestNews</div>
-    </div>
-    <div class="panel panel-default" data-ng-hide="true">
-      <div class="panel-heading" data-translate="">quicklinks</div>
-    </div>
-    <div class="panel panel-default text-center" data-ng-hide="searchInfo.facet.types.length === 0">
-      <div class="panel-body">
-        <div data-ng-repeat="type in searchInfo.facet.types">
-          <h2>{{type['@count']}}</h2>
-          <h5>{{(type['@label'] || type['@name']) | translate}}</h5>
+    <!-- /.sidebar -->
+    <div class="main"">
+
+      <div class="row gn-row-admin-buttons">
+        <div class="col-md-12" data-ng-controller="GnAdminController">
+          <div class="btn-group btn-group-justified">
+            <a data-ng-repeat="m in getMenu()"
+                href="{{getMenuUrl(m)}}"
+                title="{{m.name}}"
+                class="btn btn-default">
+              <i class="fa fa-fw {{m.icon}} fa-2x"/>
+              <p class="hidden-sm hidden-xs" data-translate="">{{m.name}}</p>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="panel panel-default text-center">
-      <div class="panel-body">
-        <div data-ng-hide="searchInfo.count == 0">
-          <h2>{{searchInfo.count}}</h2>
-          <h5 data-translate="" title="{{'totalNumberOfRecordsHelp' | translate}}"
-          >totalNumberOfRecords</h5>
+      <!-- /.gn-row-admin-buttons -->
+      <div class="row gn-row-admin-stats">
+        <div class="col-lg-2 col-md-4 col-sm-4" data-ng-repeat="type in searchInfo.facet.types" data-ng-hide="searchInfo.facet.types.length === 0">
+          <div class="panel panel-default panel-primary1">
+            <div class="panel-heading">
+              <h5>{{(type['@label'] || type['@name']) | translate}}</h5>
+            </div>
+            <div class="panel-body">
+              <h2>{{type['@count']}}</h2>
+            </div>
+          </div>
         </div>
-        <div data-ng-show="searchInfo.count == 0" data-translate=""> emptyCatalogShouldBeFilled
+        <div class="col-md-4 col-sm-8" data-ng-hide="searchInfo.count == 0">
+          <div class="panel panel-default panel-success">
+            <div class="panel-heading">
+              <h5 data-translate="" title="{{'totalNumberOfRecordsHelp' | translate}}">totalNumberOfRecords</h5>
+            </div>
+            <div class="panel-body">
+              <h2>{{searchInfo.count}}</h2>
+            </div>
+            <div data-ng-show="searchInfo.count == 0" data-translate=""> emptyCatalogShouldBeFilled
+            </div>
+          </div>
         </div>
       </div>
+      <!-- /.gn-row-admin-stats -->
     </div>
+    <!-- /.main -->
   </div>
-</span>
+

@@ -1311,7 +1311,7 @@
            * @param {boolean} createOnly or add it to the map
            * @param {!Object} md object
            */
-          addWmsFromScratch: function(map, url, name, createOnly, md, version) {
+          addWmsFromScratch: function(map, url, name, createOnly, md, version, style) {
             var defer = $q.defer();
             var $this = this;
 
@@ -1368,7 +1368,7 @@
               	       capL.useProxy = true;
   	              }
 
-                  olL = $this.createOlWMSFromCap(map, capL, url);
+                  olL = $this.createOlWMSFromCap(map, capL, url, style);
 
                   var finishCreation = function() {
 
