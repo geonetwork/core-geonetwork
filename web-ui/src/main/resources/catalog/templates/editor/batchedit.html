@@ -392,7 +392,12 @@
           <div class="col-sm-6"
                data-ng-hide="selectedRecords.metadata.length > 0">
             <p class="alert alert-warning"
+               data-ng-show="selectedRecordsCount == 0"
                data-translate="">selectRecordsToEdit</p>
+            <p class="alert alert-warning"
+               data-ng-show="tooManyRecordInSelForSearch"
+               data-translate=""
+               data-translate-values="{count: selectedRecordsCount}">tooManyRecordInSelForSearch</p>
           </div>
           <div class="col-sm-6"
                data-ng-show="selectedRecords.metadata.length > 0">
