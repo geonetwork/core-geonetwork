@@ -96,6 +96,8 @@ public class CswParams extends AbstractParams {
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
 
         try {
+            capabUrl = capabUrl.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+            capabUrl = capabUrl.replaceAll("\\+", "%2B");
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
         } catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());
@@ -130,6 +132,8 @@ public class CswParams extends AbstractParams {
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", rejectDuplicateResource);
 
         try {
+            capabUrl = capabUrl.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+            capabUrl = capabUrl.replaceAll("\\+", "%2B");
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
         } catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());
