@@ -50,10 +50,12 @@
   </xsl:template>
 
   <!-- Remove GeoNetwork info element and children -->
-  <xsl:template mode="gn-element-cleaner" match="gn:info|gn:validationReport" priority="2"/>
+  <xsl:template mode="gn-element-cleaner"
+                match="gn:info|gn:validationReport|gn:report|gn:schematronVerificationError" priority="2"/>
 
   <!-- Remove Schematron error report element and children -->
-  <xsl:template mode="gn-element-cleaner" match="svrl:*" priority="2"/>
+  <xsl:template mode="gn-element-cleaner"
+                match="svrl:*" priority="2"/>
 
 
   <!-- Combine the context node with the node-to-merge
