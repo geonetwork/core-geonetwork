@@ -36,23 +36,23 @@ If you want to use a new profile on a new instance, you have to:
 •	system/server/port: with the http port used by the tomcat instance of the application
 
 
-III) Create new profile
+III) Configuring the application
 
 In the source code (follow step 1 and 2 of part IV to know how get it):
-1. Create a new profile file to the following path: /web/src/main/filters/deployment. His name must be: config_<profile name>.properties. 
+1. Create a new property file to the following path: /web/src/main/filters/deployment. His name must be: config_<profile name>.properties. 
    You can take example of a profile file which already exists. Be sure to fill in correctly the overrides.props option (define it with the profile name) and the application paths (gn.datadir, gn.webappdir and jcs.path). You also can configure the log options of the application deployment.
-2. Create a file which specifies the connexions to the database to the following path: web/src/main/webapp/WEB-INF/. 
-	Take as model an existing file (like config-overrides-sextant-props-ifr-exp) to create it. His name must be config-overrides-sextant-props-<profile names>.xml
-3. Declare your profile to the following file /web/pom.xml. Add one 'profile' tag next to the existing ones.
-4. Commit these three files in sextant github repository
-
+2. Use env variables to configure the DB to use (or modify the default in the root pom.xml) eg.
+```
+mvn clean install -DskipTests -Ddb.name=sextant -Ddb.host=db.serveur -Ddb.username=catalogue -Ddb.pa
+ssword=secured -Dsxt.properties=ifr-exp
+```
 
 IV) Deploy web application
 
 1. Get source code from github:
 create folder where you want to have the source code
 git init
-git clone --recursive https://github.com/camptocamp/sextant-geonetwork.git
+git clone --recursive https://gitlab.ifremer.fr/sextant/geonetwork.git
 
 2.	go to sextant-geonetwork
 cd sextant-geonetwork
@@ -60,7 +60,7 @@ optional: switch to a specific branch of geonetwork:
 git fetch origin; git checkout <name of branch>
 
 3.	compile web application with proper profile:
-mvn clean install -U -P <profile name> 
+mvn clean install -U -Dsxt.properties=<profile name> 
 
 4.	
 	• If this is an update and the application is already deployed then follow the next pre-steps:
