@@ -116,6 +116,18 @@
 
           var addGeonames = !attrs['disableGeonames'];
           scope.regionTypes = [];
+         
+          function setDefault() {
+            var defaultThesaurus = attrs['default'];
+            for (t in scope.regionTypes) {
+              if (scope.regionTypes[t].name === defaultThesaurus) {
+                scope.regionType = scope.regionTypes[t];
+                return;
+              }
+            }
+            scope.regionType = scope.regionTypes[0];
+          }
+
           /**
            * Load list on init to fill the dropdown
            */
@@ -127,7 +139,7 @@
                 id: 'geonames'
               });
             }
-            scope.regionType = scope.regionTypes[0];
+            setDefault();
           });
 
           scope.setRegion = function(regionType) {
