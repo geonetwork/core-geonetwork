@@ -208,6 +208,12 @@
                     md.standardName = md.standardName[0];
                   }
                   if (md.standardName &&
+                    md.standardName.match(/ISO 19139, MyOcean profile short/i)) {
+                    return 'copernicus-marine-short';
+                  } else if (md.standardName &&
+                    md.standardName.match(/ISO 19139, MyOcean profile/i)) {
+                    return 'copernicus-marine';
+                  } else if (md.standardName &&
                       md.standardName.match(/targeted data product/i)) {
                     return 'checkpoint-tdp-characteristics';
                   } else if (md.standardName &&
