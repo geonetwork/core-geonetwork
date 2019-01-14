@@ -4207,10 +4207,10 @@
 
   <!-- SeaVox Gazetter -->
   <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/#SeaVoXGazetteer">
-    <skos:prefLabel xml:lang="en">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
-    <skos:prefLabel xml:lang="es">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
-    <skos:prefLabel xml:lang="de">SeaVoX salt and fresh water body gazetteer</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">Marine zones</skos:prefLabel>
+    <skos:prefLabel xml:lang="es">Marine zones</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Zones marines</skos:prefLabel>
+    <skos:prefLabel xml:lang="de">Marine zones</skos:prefLabel>
     <skos:inScheme rdf:resource="http://geonetwork-opensource.org/regions"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_1/">

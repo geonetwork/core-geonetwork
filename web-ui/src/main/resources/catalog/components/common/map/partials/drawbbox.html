@@ -3,7 +3,8 @@
 
     <!--Region picker-->
     <div class="col-md-9">
-      <div data-gn-region-picker=""></div>
+      <div data-gn-region-picker=""
+           data-default="SeaVoXGazetteer"></div>
     </div>
 
     <!--Draw Button-->
@@ -59,7 +60,7 @@
   </div>
 
   <!--Projection selector-->
-  <div class="row">
+  <div class="row" data-ng-show="projs.list.length > 1">
     <div class="btn-group">
       <button type="button" class="btn btn-link dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"

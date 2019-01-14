@@ -360,16 +360,18 @@
   <isNotINSPIREConform>or not</isNotINSPIREConform>
   <sextant-add-scale>Add a scale</sextant-add-scale>
   <sextant-add-resolution>Add a resolution</sextant-add-resolution>
+  <sextant-add-free-keyword>Add free-text keywords</sextant-add-free-keyword>
+  <sextant-free-keyword>Free-text keyword</sextant-free-keyword>
 
   <add-vector-info>This resource is a vector</add-vector-info>
-  <change-to-vector-info>This is a grid. Change the resource type to vector?</change-to-vector-info>
+  <change-to-vector-info>Do you want to change the resource type? Switch to vector type.</change-to-vector-info>
   <change-to-vector-infoHelp>Changing the resource type from grid to vector or from vector to grid
     will remove information about the current dataset to add the new field
     required for the selected type. Check that you are not going to lose important information
     when changing the spatial representation type of the current record.</change-to-vector-infoHelp>
   <add-vector-infoHelp>Add information related to a vector dataset (eg. spatial representation type, scale). It will remove information about grid.</add-vector-infoHelp>
   <add-grid-info>This resource is a grid</add-grid-info>
-  <change-to-grid-info>This is a vector. Change the resource type to grid?</change-to-grid-info>
+  <change-to-grid-info>Do you want to change the resource type? Switch to grid type.</change-to-grid-info>
   <change-to-grid-infoHelp>Changing the resource type from grid to vector or from vector to grid
     will remove information about the current dataset to add the new field
     required for the selected type. Check that you are not going to lose important information

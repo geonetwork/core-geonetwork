@@ -419,15 +419,17 @@
   <isNotINSPIREConform>ou ne l'est pas</isNotINSPIREConform>
   <sextant-add-scale>Ajouter une échelle</sextant-add-scale>
   <sextant-add-resolution>Ajouter une résolution</sextant-add-resolution>
+  <sextant-add-free-keyword>Ajouter des mots clés libres</sextant-add-free-keyword>
+  <sextant-free-keyword>Mot clé libre</sextant-free-keyword>
 
   <sdnSpatialRepresentationType>Type de représentation spatiale</sdnSpatialRepresentationType>
 
 
   <add-vector-info>Cette ressource est une donnée vecteur</add-vector-info>
-  <change-to-vector-info>Modifier le type de donnée. C'est un vecteur ?</change-to-vector-info>
+  <change-to-vector-info>Voulez-vous modifier le type de donnée ? Passer en mode vecteur</change-to-vector-info>
   <add-vector-infoHelp>Ajoute des informations sur la donnée de type vecteur (eg. type de représentation, échelle). Cela supprime les informations concernant les raster.</add-vector-infoHelp>
   <add-grid-info>Cette ressource est un raster</add-grid-info>
-  <change-to-grid-info>Modifier le type de donnée. C'est un raster ?</change-to-grid-info>
+  <change-to-grid-info>Voulez-vous modifier le type de donnée ? Passer en mode raster</change-to-grid-info>
   <add-grid-infoHelp>Ajoute des informations sue la donnée de type raster (eg. nombre de dimensions). Cela supprime les information sur les vecteur.</add-grid-infoHelp>
   <country>Country</country>
   <hr>

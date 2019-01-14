@@ -530,9 +530,31 @@
                             'geonetwork.thesaurus.local.theme.sextant-theme' and
                           */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text() !=
                             'geonetwork.thesaurus.external.theme.httpinspireeceuropaeutheme-theme']"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]"
-                 or="descriptiveKeywords"
-                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]/*/gmd:keyword"
+                 name="sextant-add-free-keyword"
+                 or="keyword"
+                 in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]/*"/>
+
+          <action type="add" btnLabel="sextant-free-keyword"
+                  or="descriptiveKeywords"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[not(*/gmd:thesaurusName)]) = 0">
+            <template>
+              <snippet>
+                <gmd:descriptiveKeywords>
+                  <gmd:MD_Keywords>
+                    <gmd:keyword>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:keyword>
+                    <gmd:type>
+                      <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                              codeListValue="theme"/>
+                    </gmd:type>
+                  </gmd:MD_Keywords>
+                </gmd:descriptiveKeywords>
+              </snippet>
+            </template>
+          </action>
         </section>
 
       </tab>
@@ -555,7 +577,7 @@
         </section>
       </tab>
       <tab id="sextant-spatial" mode="flat">
-        <section name="sdnSpatialRepresentationType">
+        <section>
           <!-- TODO: layout on one line ? -->
           <action type="process"
                   btnClass="fa fa-square-o"
@@ -3172,6 +3194,9 @@
       </thesaurusList>
 
       <sidePanel>
+        <directive data-gn-overview-manager=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|sibling"/>
 
         <action type="associatedResource"
                 name="cm-linkToDocument"
@@ -3189,9 +3214,6 @@
           <directiveAttributes>{"associationType": "crossReference", "initiativeType": "upstream-production"}</directiveAttributes>
         </action>
 
-        <directive data-gn-overview-manager=""/>
-        <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling"/>
         <directive data-gn-validation-report=""/>
       </sidePanel>
 

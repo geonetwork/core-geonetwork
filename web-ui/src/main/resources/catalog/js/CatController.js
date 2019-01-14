@@ -177,9 +177,6 @@
           'projectionList': [{
             'code': 'EPSG:4326',
             'label': 'WGS84 (EPSG:4326)'
-          }, {
-            'code': 'EPSG:3857',
-            'label': 'Google mercator (EPSG:3857)'
           }],
           'switcherProjectionList': [{
             'code': 'EPSG:3857',
