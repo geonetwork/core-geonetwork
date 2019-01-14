@@ -5,26 +5,49 @@
 
       <div class="panel-body">
         <div class="list-group">
-          <a class="list-group-item" data-ng-repeat="s in schemas">
-            <h4 class="list-group-item-heading">{{s.name | translate}}</h4>
-            <p> {{(s.name + '-help') | translate}} </p>
-            <p>
+          <li class="list-group-item" data-ng-repeat="s in schemas">
+            <h4 class="list-group-item-heading">
+              {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
+            </h4>
+
+            <p> {{s.descriptions[iso2lang] || s.descriptions['en'] || ''}} </p>
+
+            <a data-ng-if="s.standardUrl" data-ng-href="{{s.standardUrl}}" data-translate="">moreStandardInfo</a>
+
             <ul>
+              <li>
+                <span data-translate="">appMinorVersionSupported</span>
+                {{s.appMinorVersionSupported}}
+              </li>
+              <li>
+                <span data-translate="">appMajorVersionSupported</span>
+                {{s.appMajorVersionSupported}}
+              </li>
+              <li>
+                <span data-translate="">readwriteUUID</span>
+                {{s.readwriteUUID}}
+              </li>
               <li data-ng-show="s.namespaces">
                 <span data-translate="">namespace</span>
                 <ul>
                   <li data-ng-repeat="(key, value) in s.namespaces">{{value}}</li>
                 </ul>
               </li>
+              <li data-ng-show="s.schematronRules">
+                <span data-translate="">schematronRules</span>
+                <ul>
+                  <li data-ng-repeat="value in s.schematronRules">{{value}}</li>
+                </ul>
+              </li>
             </ul>
-            </p>
+
             <div class="btn-toolbar hidden">
               <button type="button" class="btn btn-primary pull-right"
                       data-ng-click="removeStandard(s.id)"><span class="fa fa-times"></span>
                 {{"removeStandard"|translate}}
               </button>
             </div>
-          </a>
+          </li>
         </div>
       </div>
     </div>
@@ -37,7 +60,7 @@
       <div class="panel-heading" data-translate="">addOrUpdateStandards</div>
       <div class="panel-body">
         <form id="gn-standard-add" action="admin.standards.add@json">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="form-group">
             <label class="control-label" data-translate="">standardName</label>
             <input type="text" name="schema" class="form-control"/>
