@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <identification>Product identification</identification>
+    <keywords>Descriptive keywords</keywords>
+    <spatiotemp>Spatio-temporal extent</spatiotemp>
+    <processing>Processing operations</processing>
+    
+    <R1>Distribution fields are mandatory</R1>
+    <alert.R1>
+        <div>Check that the title is defined.</div>
+    </alert.R1>
+    <report.R1>Title is:</report.R1>
+    <alert.R2>
+        <div>Check that the internal shortname is defined.</div>
+    </alert.R2>
+    <report.R2>External internal is:</report.R2>
+    <alert.R3>
+        <div>Check that the external shortname is defined.</div>
+    </alert.R3>
+    <report.R3>External shortname is:</report.R3>
+    <alert.R4>
+        <div>Check that creation date is defined.</div>
+    </alert.R4>
+    <report.R4>Creation date is:</report.R4>
+    <alert.R5>
+        <div>Check that the update date is defined.</div>
+    </alert.R5>
+    <report.R5>Update date is:</report.R5>
+    <alert.R6>
+        <div>Check that the abstract is defined.</div>
+    </alert.R6>
+    <report.R6>Abstract date is:</report.R6>
+    <alert.R7>
+        <div>Check that the quickview is defined.</div>
+    </alert.R7>
+    <report.R7>Quickview date is:</report.R7>
+    <alert.R8>
+        <div>Check that the mission type is defined.</div>
+    </alert.R8>
+    <report.R8>Mission type is:</report.R8>
+    <alert.R9>
+        <div>Check that the area of benefit is defined.</div>
+    </alert.R9>
+    <report.R9>Area of benefit is:</report.R9>
+    <alert.R10>
+        <div>Check that the ocean variables is defined.</div>
+    </alert.R10>
+    <report.R10>Ocean variables is:</report.R10>
+    <alert.R11>
+        <div>Check that the display priority is defined.</div>
+    </alert.R11>
+    <report.R11>Display priority is:</report.R11>
+    <alert.R12>
+        <div>Check that the BBox is defined.</div>
+    </alert.R12>
+    <report.R12>BBox is:</report.R12>
+    <alert.R13>
+        <div>Check that the reference area is defined.</div>
+    </alert.R13>
+    <report.R13>Reference area is:</report.R13>
+    <alert.R14>
+        <div>Check that the min/max level is defined.</div>
+    </alert.R14>
+    <report.R14>Min/max level system is:</report.R14>
+    <alert.R15>
+        <div>Check that the start date is defined.</div>
+    </alert.R15>
+    <report.R15>Start date is:</report.R15>
+    <alert.R15.end>
+        <div>Check that the end date is defined.</div>
+    </alert.R15.end>
+    <report.R15.end>End date is:</report.R15.end>
+    <report.R15.endIndeterminate>End date is unknown.</report.R15.endIndeterminate>
+    <alert.R16>
+        <div>Check that the temporal scale is defined.</div>
+    </alert.R16>
+    <report.R16>Temporal scale is:</report.R16>
+    <alert.R17>
+        <div>Check that the processing level is defined.</div>
+    </alert.R17>
+    <report.R17>Processing level is:</report.R17>
+    <alert.R18>
+        <div>Check that the update frequency is defined.</div>
+    </alert.R18>
+    <report.R18>Update frequency is:</report.R18>
+    <alert.R19>
+        <div>Check that the sliding window of updates is defined.</div>
+    </alert.R19>
+    <report.R19>Sliding window of updates:</report.R19>
+    <alert.R20>
+        <div>Check that the production center is defined.</div>
+    </alert.R20>
+    <report.R20> production center(s) found.</report.R20>
+    <alert.R21>
+        <div>Check that the product manager is defined.</div>
+    </alert.R21>
+    <report.R21> product manager(s) found.</report.R21>
+    <alert.R22>
+        <div>Check that the local service desk is defined.</div>
+    </alert.R22>
+    <report.R22> local service desk(s) found.</report.R22>
+    
+    <contentInfo>Feature type</contentInfo>
+    <alert.R23>
+        <div>Check that the features type is defined.</div>
+    </alert.R23>
+    <crs>Coordinate reference system</crs>
+    <report.R23>Features type system is:</report.R23>
+    <alert.R24>
+        <div>Check that the Coordinate reference system is defined.</div>
+    </alert.R24>
+    <report.R24>Coordinate reference system is:</report.R24>
+    <alert.R25>
+        <div>Check that the Number of vertical levels is defined.</div>
+    </alert.R25>
+    <report.R25>Number of vertical levels is:</report.R25>
+    <alert.R26>
+        <div>Check that the Temporal resolution is defined.</div>
+    </alert.R26>
+    <report.R26>Temporal resolution system is:</report.R26>
+    <contact>Organisations</contact>
+</strings>
