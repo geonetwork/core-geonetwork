@@ -7,7 +7,10 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import env.BaseTest;
 import env.Env;
+import junit.framework.Assert;
 import methods.TestCaseFailed;
+
+import static org.junit.Assert.assertEquals;
 
 public class PredefinedStepDefinitions implements BaseTest {
     // Navigation Steps
@@ -296,7 +299,19 @@ public class PredefinedStepDefinitions implements BaseTest {
         navigationObj.navigateTo(endPointToTest + "/signout");
     }
 
-    // step to print configuration
+    @Then("^I check API operation (GET|POST|DELETE|PUT) ([^ ]*) and expect status ([0-9]{3})$")
+    public void apicheck_status(String method, String url, int status) throws Exception {
+        apicheck_auth_status(method, url, null, null, status);
+    }
+
+    @Then("^I check API operation (GET|POST|DELETE|PUT) ([^ ]*) as (.*)/(.*) and expect status ([0-9]{3})$")
+    public void apicheck_auth_status(String method, String url, String username, String password, int status) throws Exception {
+        Integer statusReturned = navigationObj.apiCallStatus(method, endPointToTest + "/srv/api/0.1" + url, username, password);
+        Assert.assertEquals((int) statusReturned, status);
+        //             .andExpect(jsonPath("$[*].name", hasItem("all")))
+    }
+
+
     @Then("^I print configuration$")
     public void print_config() {
         configObj.printDesktopConfiguration();

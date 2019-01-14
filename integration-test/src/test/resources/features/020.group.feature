@@ -37,6 +37,8 @@ Feature: GeoNetwork Manage group
     Then I click on link having partial text "itest-group2"
     # TODO: Check all properties are here
 
+    # TODO: Check group presence by using the API.
+    # Then I check API operation GET /groups as admin/admin and expect status 200
 
   Scenario: I create the same group twice should return an exception
     And I click on element having id "gn-btn-group-add"
