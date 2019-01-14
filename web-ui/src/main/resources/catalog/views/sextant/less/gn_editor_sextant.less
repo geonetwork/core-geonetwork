@@ -293,6 +293,59 @@ form.gn-editor {
   }
 }
 
+// map
+.gn-drawmap-panel {
+  input[type="number"] {
+    margin: 0;
+    text-align: left;
+  }
+  .gn-editor-map {
+    padding: 15px;
+    position: relative;
+    margin-top: 30px;
+    [ngeo-map] {
+      border: 1px solid @input-border;
+      border-radius: @border-radius-base;
+    }
+  }
+  .coord {
+    position: absolute;
+    width: 200px;
+    z-index: 100;
+  }
+  .coord-north {
+    top: -0.25em;
+    left: 50%;
+    margin-left: -75px;
+  }
+  .coord-south {
+    bottom: -0.25em;
+    left: 50%;
+    margin-left: -75px;
+  }
+  .coord-east {
+    right: -15px;
+    top: 50%;
+    margin-top: -1.25em;
+  }
+  .coord-west {
+    left: -15px;
+    top: 50%;
+    margin-top: -1.25em;
+  }
+  @media (max-width: @screen-xs-max) {
+    .coord {
+      width: 150px;
+    }
+    .coord-east {
+      right: -30px;
+    }
+    .coord-west {
+      left: -30px;
+    }
+  }
+}
+
 // alternative style for the editor form
 // Class to put label above fields
 form.gn-editor.gn-label-above-input {
