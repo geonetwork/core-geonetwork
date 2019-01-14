@@ -80,15 +80,14 @@
             </a>
           </li>
 
-          <!-- Extra config in Sextant that can't be managed in config-editor.xml -->
-          <li data-ng-show="gnCurrentEdit.metadata.standardName.indexOf('ISO 19115-3 - Emodnet Checkpoint') !== 0">
-            <a href=""
-               data-ng-click="onlinesrcService.onOpenPopup('sibling')">
-              <i class="fa gn-icon-sibling"></i>
-              <i class="icon-external-link"></i>&nbsp;
-              <span data-translate="">linkToSibling</span>
-            </a>
-          </li>
+          <!-- Specific sibling link related to Checkpoint
+          Could be replaced at some point in editor-config by something like:
+          <action type="associatedResource"
+                name="cm-linkToDocument"
+                process="sibling">
+          <directiveAttributes>{"associationType": "crossReference", "initiativeType": "document"}</directiveAttributes>
+        </action>
+          -->
           <li data-ng-show="gnCurrentEdit.metadata.standardName == 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'">
             <a href=""
                data-ng-click="onlinesrcService.onOpenPopup('sibling', {associationType: 'crossReference', initiativeType: 'specification'})">
