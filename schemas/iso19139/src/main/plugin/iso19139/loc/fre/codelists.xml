@@ -2343,17 +2343,17 @@
 	</codelist>
 
 	<codelist name="indeterminatePosition">
-		<entry>
+		<entry hideInEditMode="true">
 			<code>after</code>
 			<label>Après</label>
 		</entry>
-		<entry>
+		<entry hideInEditMode="true">
 			<code>before</code>
 			<label>Avant</label>
 		</entry>
 		<entry>
 			<code>now</code>
-			<label>Maintenant</label>
+			<label>En cours</label>
 		</entry>
 		<entry>
 			<code>unknown</code>
