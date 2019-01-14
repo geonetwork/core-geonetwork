@@ -39,6 +39,12 @@ public class GeonetworkWrojModelFactoryProvider extends ConfigurableProviderSupp
                 return new StripGoogProcessor();
             }
         }));
+        preProcessorMap.put(RemoveSourceMapUrlProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
+            @Override
+            protected ResourcePreProcessor initialize() {
+                return new RemoveSourceMapUrlProcessor();
+            }
+        }));
         preProcessorMap.put(AddFileUriCommentProcessor.ALIAS, new LazyProcessorDecorator(new LazyInitializer<ResourcePreProcessor>() {
             @Override
             protected ResourcePreProcessor initialize() {
