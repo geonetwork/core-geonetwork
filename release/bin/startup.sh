@@ -21,7 +21,7 @@ done
 
 echo "Archiving old log files..."
 if [ ! -d "logs/archive" ]; then
-    mkdir logs/archive
+    mkdir -p logs/archive
 fi
 rm -f logs/*request.log*
 rm -f logs/output.log
