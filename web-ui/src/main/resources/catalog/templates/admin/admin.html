@@ -84,9 +84,13 @@
             <div class="panel-body">
               <h2>{{searchInfo.count}}</h2>
             </div>
-            <div data-ng-show="searchInfo.count == 0" data-translate=""> emptyCatalogShouldBeFilled
-            </div>
           </div>
+        </div>
+
+
+        <div class="col-md-4 col-sm-8"
+             data-ng-show="searchInfo.count == 0"
+             data-translate=""> emptyCatalogShouldBeFilled
         </div>
       </div>
       <!-- /.gn-row-admin-stats -->
