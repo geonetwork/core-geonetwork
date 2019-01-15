@@ -131,7 +131,7 @@
        * Language switch for keyword list
        */
       $scope.currentLangShown = $scope.lang;
-      $scope.availableLangs = gnConfig['ui.config'].mods.header.languages;
+      $scope.availableLangs = gnGlobalSettings.gnCfg.mods.header.languages;
       $scope.switchLang = function(lang3) {
         $scope.currentLangShown = lang3;
       };
