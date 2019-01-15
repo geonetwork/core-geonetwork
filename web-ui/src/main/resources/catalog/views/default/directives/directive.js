@@ -86,8 +86,8 @@
     }
   ]);
 
-  module.directive('gnMdActionsMenu', ['gnMetadataActions', '$http',
-    function(gnMetadataActions, $http) {
+  module.directive('gnMdActionsMenu', ['gnMetadataActions', '$http', 'gnConfig',
+    function(gnMetadataActions, $http, gnConfig) {
       return {
         restrict: 'A',
         replace: true,
@@ -108,6 +108,9 @@
 
           scope.taskConfiguration = {
             doiCreationTask: {
+              isVisible: function(md) {
+                return gnConfig['system.publication.doi.doienabled'];
+              },
               isApplicable: function(md) {
                 // TODO: Would be good to return why a task is not applicable as tooltip
                 // TODO: Add has DOI already
