@@ -80,6 +80,7 @@
 
 
       <li data-ng-repeat="t in tasks"
+          data-ng-show="taskConfiguration[t.name].isVisible(md)"
           data-ng-class="::{'disabled': !taskConfiguration[t.name].isApplicable(md)}">
         <a data-ng-click="mdService.openUpdateStatusPanel(getScope(md), 'task', t)">
           <i class="fa fa-fw"></i>&nbsp;
