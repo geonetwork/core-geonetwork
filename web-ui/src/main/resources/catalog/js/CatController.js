@@ -78,7 +78,7 @@
             'chi': 'zh',
             'slo': 'sk'
           },
-          'isLogoInHeader': true,
+          'isLogoInHeader': false,
           'logoInHeaderPosition': 'left'
         },
         'home': {
