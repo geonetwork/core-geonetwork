@@ -6,35 +6,34 @@
   </div>
   <div class="panel-body">
 
+    <ul class="list-inline">
+      <!-- Current thumbnails -->
+      <li class="gn-list-thumb thumbnail"
+          data-ng-repeat="thumb in relations.thumbnails">
+        <img class="thumb-small"
+             title="{{thumb.title | gnLocalized: lang}}"
+             data-ng-src="{{thumb.lUrl || thumb.id}}"/>
+
+        <a href="" class="onlinesrc-remove"
+           data-ng-if="readonly !== true"
+           data-gn-click-and-spin="removeOverview(thumb)"
+           title="{{'removeThumbnail' | translate}}">
+          <i class="btn fa fa-times text-danger"></i>
+        </a>
+      </li>
+      <!-- The one currently uploaded -->
+      <li data-ng-repeat="file in queue"
+          class="gn-list-thumb thumbnail">
+        <i class="fa gn-icon-thumbnail fa-5x"></i>
+        {{file.name}}
+      </li>
+    </ul>
 
     <form class="form-horizontal"
           role="form"
           method="POST"
           enctype="multipart/form-data"
           data-file-upload="filestoreUploadOptions">
-
-      <ul class="list-inline">
-        <!-- Current thumbnails -->
-        <li class="gn-list-thumb thumbnail"
-            data-ng-repeat="thumb in relations.thumbnails">
-          <img class="thumb-small"
-               title="{{thumb.title | gnLocalized: lang}}"
-               data-ng-src="{{thumb.lUrl || thumb.id}}"/>
-
-          <a href="" class="onlinesrc-remove"
-             data-ng-if="readonly !== true"
-             data-ng-click="removeOverview(thumb)"
-             title="{{'removeThumbnail' | translate}}">
-            <i class="btn fa fa-times text-danger"></i>
-          </a>
-        </li>
-        <!-- The one currently uploaded -->
-        <li data-ng-repeat="file in queue"
-            class="gn-list-thumb thumbnail">
-          <i class="fa gn-icon-thumbnail fa-5x"></i>
-          {{file.name}}
-        </li>
-      </ul>
 
       <!-- The upload zone -->
       <span class="btn btn-success btn-block fileinput-button"
