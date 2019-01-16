@@ -65,8 +65,8 @@
 [data-ng-search-form] {
   .gn-top-search {
     position: relative;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 2em;
+    padding-bottom: 2em;
     [typeahead] {
       vertical-align: middle;
       display: inline-block;
@@ -81,7 +81,6 @@
       margin-left: 64px;
     }
     .gn-form-any {
-      max-width: 45vw;
       input[type="text"], button {
         height: 36px;
       }
@@ -102,25 +101,36 @@
     padding: .2em;
   }
 }
-
+// advanced search
 .gn-search-filter {
   padding: 5px;
   .nav-pills li {
     display: block;
   }
-  div {
-    ul, div.tab-content {
-      float: left;
-    }
-    ul.nav {
-      width: 10vw;
-    }
-    div.tab-content {
-      width: 84vw;
-
-    }
+  .form-group {
+    margin-bottom: 0;
+  }
+  .btn-link {
+    padding-left: 0;
+    font-size: 14px;
+  }
+  .control-label {
+    padding: 3px 0 2px 0;
   }
   .bootstrap-tagsinput {
+    padding-top: 6px;
+    padding-bottom: 5px;
+    .tagsinput-trigger {
+      top: 34px;
+      right: 25px;
+      @media (max-width: @screen-sm-max) {
+        top: 38px;
+      }
+    }
+    .tagsinput-clear {
+      right: 20px;
+      top: 0px;
+    }
     .tag {
       white-space: normal;
       display: inline-flex;
@@ -129,36 +139,31 @@
       font-weight: normal;
       margin-bottom: 3px;
     }
-  }
-}
-
-.gn-row-filters {
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-
-  .gn-flfilter {
-
-  }
-  .gn-flfilter-icon {
-    text-align: center;
-    li {
-      list-style: none;
-      float: left;
-      width: 100px;
-    }
-    i {
-      //    .@{fa-css-prefix}-4x;
-      font-size: 4em;
-      width: 70px;
-      img {
-        width: 70px;
+    .tt-menu {
+      .tt-dataset {
+        .tt-suggestion {
+          &:hover {
+            cursor: pointer;
+            background-color: @dropdown-link-hover-bg;
+          }
+        }
       }
     }
   }
-}
-
-.gn-results-switch {
-  float: left;
+  .gn-search-filter-datepicker {
+    margin-bottom: 10px;
+    .col-md-6 {
+      padding-left: 0;
+      @media (min-width: 400px) and (max-width: @screen-sm-max) {
+        width: 50%;
+        float: left;
+      }
+      @media (max-width: 400px) {
+        padding-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+  }
 }
 
 /*
