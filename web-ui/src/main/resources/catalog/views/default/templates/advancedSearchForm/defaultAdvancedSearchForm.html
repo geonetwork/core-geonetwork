@@ -1,16 +1,12 @@
-<div
-     class="gn-search-filter col-lg-12 advancedSearchForm">
-
-
+<div class="gn-search-filter col-lg-12 advancedSearchForm">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5 col-md-offset-1">
       <h3 data-translate="">what</h3>
       <div class="form-group">
-        <label for="categoriesF"
-               class="col-md-4 col-sm-12 control-label"
-               data-translate="">categories</label>
-
-        <div class="col-sm-8">
+        <div class="col-sm-12">
+          <label for="categoriesF"
+                class="control-label"
+                data-translate="">categories</label>
           <input type="text" id="categoriesF" value=""
                  class="form-control"
                  gn-typeahead="categoriesOptions"
@@ -18,11 +14,10 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="keywordsF"
-               class="col-md-4 col-sm-12 control-label"
-               data-translate="">keywords</label>
-
-        <div class="col-sm-8">
+        <div class="col-sm-12">
+          <label for="keywordsF"
+                class="control-label"
+                data-translate="">keywords</label>
           <input type="text" id="keywordsF" value=""
                  class="form-control"
                  gn-values="searchObj.params.keyword"
@@ -30,11 +25,10 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="orgNameF"
-               class="col-md-4 col-sm-12 control-label"
-               data-translate="">orgName</label>
-
-        <div class="col-sm-8">
+        <div class="col-sm-12">
+          <label for="orgNameF"
+                class="control-label"
+                data-translate="">orgName</label>
           <input type="text" id="orgNameF" value=""
                  class="form-control"
                  gn-values="searchObj.params.orgName"
@@ -42,20 +36,19 @@
         </div>
       </div>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-5 gn-search-filter-datepickers">
       <h3 data-translate="">when</h3>
       <div data-gn-period-chooser="resourcesCreatedTheLast"
            data-date-from="searchObj.params.creationDateFrom"
-           data-date-to="searchObj.params.creationDateTo">
+           data-date-to="searchObj.params.creationDateTo"
+           class="gn-search-filter-datepicker">
       </div>
 
       <div data-gn-period-chooser="recordsCreatedTheLast"
            data-date-from="searchObj.params.dateFrom"
-           data-date-to="searchObj.params.dateTo">
+           data-date-to="searchObj.params.dateTo"
+           class="gn-search-filter-datepicker">
       </div>
-    </div>
-    <div class="col-md-5">
-
     </div>
   </div>
 </div>
