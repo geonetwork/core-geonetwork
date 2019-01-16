@@ -40,6 +40,26 @@
           left: 0;
         }
       }
+      // highlight the active view
+      .gn-view-menu-button {
+        .dropdown-menu {
+          li.disabled {
+            background-color: @dropdown-link-hover-bg;
+            &:after {
+              float: right;
+              margin-top: -1.5em;
+              margin-right: 8px;
+              content: "\f00c";
+              // display: inline-block;
+              font: normal normal normal 14px/1 FontAwesome;
+              font-size: inherit;
+              text-rendering: auto;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+          }
+        } 
+      }
     }
   }
 
