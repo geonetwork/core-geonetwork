@@ -64,6 +64,16 @@
 }
 
 // minimap on search results
+.gn-search-map {
+  [ngeo-map] {
+    background: @body-bg;
+    .ol-attribution {
+      li, a {
+        font-size: 10px;
+      }
+    }
+  }
+}
 .gn-toggle {
   background-color: @brand-primary;
   color: white !important;
@@ -79,6 +89,9 @@
   bottom: 10px;
   right: 10px;
   z-index: 999;
+  &:focus {
+    background-color: @brand-primary;
+  }
 }
 .gn-minimap-button {
   padding: 7px;
