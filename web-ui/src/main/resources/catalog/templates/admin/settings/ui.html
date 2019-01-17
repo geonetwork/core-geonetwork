@@ -16,7 +16,9 @@
 
           <div class="pull-left"
                data-ng-show="uiConfigurations.length !== 0">
-            <label for="uiConfigurationList" data-translate="">chooseAUiConfiguration</label>
+            <label for="uiConfigurationList"
+                   title="{{'uiConfiguration-help' | translate}}"
+                   data-translate="">chooseAUiConfiguration</label>
             <select id="uiConfigurationList"
                     class="form-control"
                     data-ng-options="c as c.id for c in uiConfigurations | orderBy: 'id'"

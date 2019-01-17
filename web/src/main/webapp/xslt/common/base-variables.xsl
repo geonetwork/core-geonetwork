@@ -121,12 +121,12 @@
 
   <xsl:variable name="is3DModeAllowed"
                 select="if ($service = 'catalog.search' and
-                            (util:getJsonSettingValue('ui/config', 'mods.map.is3DModeAllowed') = 'true' or /root/request/with3d))
+                            (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.map.is3DModeAllowed') = 'true' or /root/request/with3d))
                         then true()
                         else false()"/>
 
   <xsl:variable name="isSocialbarEnabled"
-                select="if (util:getJsonSettingValue('ui/config', 'mods.recordview.isSocialbarEnabled') = 'true')
+                select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.recordview.isSocialbarEnabled') = 'true')
                         then true()
                         else false()"/>
 

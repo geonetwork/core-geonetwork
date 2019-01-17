@@ -194,7 +194,7 @@
     </xsl:choose>
 
     <xsl:variable name="appConfig"
-                  select="util:getSettingValue('ui/config')"/>
+                  select="util:getUiConfiguration(/root/request/ui)"/>
 
     <xsl:if test="$angularApp = 'gn_search'">
       <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js?v={$buildNumber}"></script>

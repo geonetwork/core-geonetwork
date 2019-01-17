@@ -56,6 +56,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
@@ -67,6 +68,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -175,6 +177,57 @@ public final class XslUtil {
     }
 
     /**
+     * Get the UI configuration. Return the JSON string.
+     * @param key Optional key, if null, return a default configuration nammed 'srv'
+     *            if exist. If not, empty config is returned.
+     * @return
+     */
+    public static String getUiConfiguration(String key) {
+        final String defaultUiConfiguration = "srv";
+        UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
+
+        if (uiSettingsRepository != null) {
+            UiSetting one = null;
+            if (StringUtils.isNotEmpty(key)) {
+                one = uiSettingsRepository.findOne(key);
+            }
+            if (one == null) {
+                one = uiSettingsRepository.findOne(defaultUiConfiguration);
+            }
+            if (one != null) {
+                return one.getConfiguration();
+            } else {
+                return "{}";
+            }
+        }
+        return "{}";
+    }
+
+    /**
+     * Get a precise value in the JSON UI configuration
+     * @param key
+     * @param path JSON path to the property
+     * @return
+     */
+    public static String getUiConfigurationJsonProperty(String key, String path) {
+        String json = getUiConfiguration(key);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            Object jsonObj = objectMapper.readValue(json, Object.class);
+
+            Object value = PropertyUtils.getProperty(jsonObj, path);
+            if (value != null) {
+                return value.toString();
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
      * Get a setting value
      */
     public static String getSettingValue(String key) {
@@ -199,6 +252,7 @@ public final class XslUtil {
 
         return "";
     }
+
 
     public static String getJsonSettingValue(String key, String path) {
         if (key == null) {
