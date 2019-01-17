@@ -201,18 +201,20 @@
                 }
               });
             }
+            scope.sortKeyValue = '&#9660;'
             scope.reOrderLayerInputs = function(key){
               scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
-              var availableLayers = scope.filterAvailableLayers()
+              var layersOrderedList = scope.filterAvailableLayers()
                 .map(function(ll) {
                   return {'name' : ll.get('label') || ll.get('name'), 'qi': ll.get('qi_list')[key]};
                 })
-              var layersOrderedList = availableLayers.sort(function (a, b) {
+                .sort(function (a, b) {
                 return a.qi > b.qi;
               });
               layersOrderedList.forEach(function(layer) {
                 scope.addInputValueByName(scope.emodnetSortInputKey, layer.name);
               });
+              scope.sortKeyValue = key + ' &#9660;'
             }
 
             // call on layerChange

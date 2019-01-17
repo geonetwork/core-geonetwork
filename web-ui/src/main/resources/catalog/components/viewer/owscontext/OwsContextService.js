@@ -314,6 +314,7 @@
                 // load extension content (JSON)
                 if (layer.extension && layer.extension.any) {
                   var extension = JSON.parse(layer.extension.any);
+
                   // import saved filters if available
                   if (extension.filters && extension.wfsUrl) {
                     var url = extension.wfsUrl;
@@ -329,8 +330,10 @@
                   // this object holds the WPS input values
                   var defaultInputs = extension.processInputs || {};
                 }
+
                 // create WMS layer
                 if (server.service == 'urn:ogc:serviceType:WMS') {
+
                   // generate a unique id for the layer tree
                   var id = layer.name + '-loading' + i;
 
@@ -469,7 +472,6 @@
             opacity: layer.getOpacity(),
             title: layer.get('title'),
             group: layer.get('group')
-
           };
 
           if (source instanceof ol.source.OSM) {
@@ -549,8 +551,8 @@
             });
           }
           // Emodnet specific
-          var formatQIList= []
-          var qiList = layer.get('qi_list')
+          var formatQIList = [];
+          var qiList = layer.get('qi_list');
           Object.keys(qiList).forEach(function(k) {
             formatQIList.push({Indicator:k, value:qiList[k]})
           })

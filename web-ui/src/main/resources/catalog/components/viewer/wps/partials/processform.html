@@ -43,20 +43,30 @@
         <div>
           <form novalidate>
             <!--specific SEXTANT EMODNET-->
-            <div ng-if="emodnetSortKeys" >
-              <label>{{::'sortedBy' | translate}}</label>
-              <select class="form-control input-sm"
-                      ng-model="sortKey" ng-change="reOrderLayerInputs(sortKey)">
-                <option ng-repeat="sortKey in emodnetSortKeys"
-                        value="{{sortKey}}">{{sortKey}}</option>
-              </select>
-            </div><br>
+            <div class="gn-sort-by" ng-if="emodnetSortKeys">
+              <div>
+                <span translate>sortBy</span>&nbsp;:&nbsp;
+              </div>
+              <div class="btn-group pull-right btn-wps-sort">
+                <button type="button"
+                        class="btn btn-link dropdown-toggle"
+                        data-toggle="dropdown"
+                        ng-bind-html="sortKeyValue">
+                </button>
+                <br>
+                <ul class="dropdown-menu" role="menu">
+                  <li ng-repeat="sortKey in emodnetSortKeys"
+                      data-ng-class="sortKey === params.sortBy ? 'disabled' : ''">
+                    <a data-ng-click="reOrderLayerInputs(sortKey)">{{sortKey| translate}}</a></li>
+                </ul>
+              </div>
+            </div>
+            <br>
             <!--END specific SEXTANT EMODNET-->
             <!-- Inputs: loop on process description to display all inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input"
               ng-if="!isInputHidden(input.identifier.value)"
               class="form-group">
-
               <!-- Input label & info -->
               <label>
 

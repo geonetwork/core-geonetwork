@@ -174,6 +174,7 @@ var OWC_0_3_1_Module_Factory = function() {
         ti: 'Boolean',
         t: 'a'
       }]
+      // SPECIFIC EMODNET
     }, {
       ln: 'MetadataUrlListType',
       ps: [{
@@ -189,6 +190,7 @@ var OWC_0_3_1_Module_Factory = function() {
         en: 'QI',
         ti: 'OWC_0_3_1.QIType'
       }]
+      // SPECIFIC EMODNET END
     }, {
       ln: 'DimensionListType',
       ps: [{
@@ -294,6 +296,7 @@ var OWC_0_3_1_Module_Factory = function() {
         en: 'Style',
         ti: 'OWC_0_3_1.StyleType'
       }]
+      // SPECIFIC EMODNET
     }, {
       ln: 'ExtensionType',
       ps: [{
@@ -310,6 +313,7 @@ var OWC_0_3_1_Module_Factory = function() {
         en: 'QIList',
         ti: 'OWC_0_3_1.QIList'
       }]
+      // SPECIFIC EMODNET END
     }, {
       ln: 'FormatListType',
       ps: [{
@@ -330,11 +334,15 @@ var OWC_0_3_1_Module_Factory = function() {
         n: 'dataURL',
         en: 'DataURL',
         ti: 'OWC_0_3_1.URLType'
-      }, {
+      },
+      // SPECIFIC EMODNET
+      {
         n: 'metadataURL',
         en: 'MetadataURL',
         ti: 'OWC_0_3_1.URLType'
-      }, {
+      },
+       // SPECIFIC EMODNET END
+        {
         n: 'minScaleDenominator',
         en: {
           lp: 'MinScaleDenominator',
