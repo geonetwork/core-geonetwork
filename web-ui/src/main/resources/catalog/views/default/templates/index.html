@@ -37,6 +37,8 @@
            data-ng-show="activeTab == '/map'"/>
       <div data-ng-include="'../../catalog/views/default/templates/recordView.html'"
            data-ng-show="activeTab == '/metadata'"/>
+      <div data-ng-include="'../../catalog/views/default/templates/page.html'"
+           data-ng-if="activeTab == '/page'"/>
     </div>
   </div>
 </div>
