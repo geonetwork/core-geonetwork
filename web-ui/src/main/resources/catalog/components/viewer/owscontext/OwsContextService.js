@@ -199,30 +199,22 @@
             var type, layer = layers[i];
 
             // specific emodnet
+            var qiList = [];
 
-            var metadataList = [];
-            var QIList = [];
-            if (layer.extension && layer.extension.length > 0) {
-              angular.forEach(layer.extension, function(ext) {
-                if ('metadataUrllist' in ext) {
-                  angular.forEach(ext['metadataUrlist'], function(metadata){
-                    metadataList.push(metadata.MetadataUrl);
+            if (layer.extension) {
+              layer.metadataUrl = layer.extension['metadataUrlList']['metadataUrl'];
+              if (layer.extension['QIList']) {
+                angular.forEach(layer.extension['QIList'], function(qil) {
+                  var qiDict = {};
+                  if (!qil.QI) {return}
+                  qil.QI.forEach(function(qi) {
+                    qiDict[qi['Indicator']] = qi['value'];
                   })
-                }
-                if ('QIList' in ext) {
-                  angular.forEach(ext['QIList'], function(qil) {
-                    var QIDict = {};
-                    qil.QI.forEach(function(qi) {
-                      QIDict[qi['Indicator']] = qi['value'];
-                    })
-                    QIList.push(QIDict);
-                  })
-                }
-              })
+                  qiList.push(qiDict);
+                })
+              }
+              layer.qiList = qiList[0];
             }
-            layer.metadataUrl = metadataList[0];
-            layer.qiList = QIList[0];
-
             // end specific emodnet
 
             if (layer.name) {
@@ -353,8 +345,8 @@
                     // Sextant specific
                     owc_position: layer.position,
                     owc_groupPosition: layer.groupPosition,
-                    metadata_url: layer.metadataUrl,
-                    qi_list: layer.qiList
+                    metadataUrl: layer.metadataUrl,
+                    qiList: layer.qiList
 
                     // end sextant specific
                   });
@@ -556,6 +548,13 @@
                   process.processDescription.dataInputs.input;
             });
           }
+          // Emodnet specific
+          var formatQIList= []
+          var qiList = layer.get('qi_list')
+          Object.keys(qiList).forEach(function(k) {
+            formatQIList.push({Indicator:k, value:qiList[k]})
+          })
+          // Emodnet specific end
           var layerParams = {
             hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
@@ -567,8 +566,14 @@
             // Sextant specific
             position: layer.get('owc_position'),
             groupPosition: layer.get('owc_groupPosition'),
-            metadataUrl: layer.get('metadata_url'),
-            qiList: layer.get('qi_list'),
+            extension: {
+              metadataUrlList: {
+                metadataUrl: layer.get('metadata_url')
+              },
+              QIList: [{
+                  QI: formatQIList
+                }]
+            },
             // end sextant specific
 
             server: [{

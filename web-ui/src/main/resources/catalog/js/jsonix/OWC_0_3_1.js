@@ -177,7 +177,7 @@ var OWC_0_3_1_Module_Factory = function() {
     }, {
       ln: 'MetadataUrlListType',
       ps: [{
-        n: 'MetadataUrl',
+        n: 'metadataUrl',
         en: 'MetadataUrl'
       }]
 
@@ -301,8 +301,7 @@ var OWC_0_3_1_Module_Factory = function() {
         mx: true,
         t: 'ae'
       }, {
-        n: 'metadataUrllist',
-        col: true,
+        n: 'metadataUrlList',
         en: 'MetadataUrlList',
         ti: 'OWC_0_3_1.MetadataUrlListType'
       },{
@@ -355,7 +354,6 @@ var OWC_0_3_1_Module_Factory = function() {
         ti: 'OWC_0_3_1.StyleListType'
       }, {
         n: 'extension',
-        col: true,
         en: 'Extension',
         ti: 'OWC_0_3_1.ExtensionType'
       }, {
