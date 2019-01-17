@@ -90,6 +90,9 @@ public class UiSettingApi {
         method = RequestMethod.PUT,
         consumes = {
             MediaType.APPLICATION_JSON_VALUE
+        },
+        produces = {
+            MediaType.TEXT_PLAIN_VALUE
         }
     )
     @ResponseStatus(HttpStatus.CREATED)

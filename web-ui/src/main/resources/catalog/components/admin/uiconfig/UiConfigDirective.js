@@ -40,17 +40,25 @@
         link: function(scope, element, attrs) {
           var testAppUrl = '../../catalog/views/api/?config=';
 
-          // merge on top of default config
-          scope.jsonConfig = angular.merge(
-            // If the config is empty, use the default one set in CatController
-            (Object.keys(scope.config).length === 0 || scope.config === "null" || !scope.config ?
-              gnGlobalSettings.getDefaultConfig() :
-              gnGlobalSettings.getMergeableDefaultConfig()),
+          function init() {
+            // merge on top of default config
+            scope.jsonConfig = angular.merge(
+              // If the config is empty, use the default one set in CatController
+              (Object.keys(scope.config).length === 0 || scope.config === "null" || !scope.config ?
+                gnGlobalSettings.getDefaultConfig() :
+                gnGlobalSettings.getMergeableDefaultConfig()),
               angular.fromJson(scope.config));
+          }
+          scope.$watch('config', function (n, o) {
+            if (angular.isDefined(n) && n !== o) {
+              init();
+            }
+          }, true);
+
 
           // Make a copy as string for the ui-ace widget to work on
           scope.$watch('jsonConfig', function (n) {
-            scope.jsonConfigSource = JSON.stringify(n, null, 2);
+            scope.jsonConfigSource = scope.config = JSON.stringify(n, null, 2);
           }, true);
           scope.$watch('jsonConfigSource', function (n, o) {
             if (n !== o) {
