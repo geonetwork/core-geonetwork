@@ -1052,6 +1052,37 @@
   <element name="gmd:description" id="401.0" context="gmd:CI_OnlineResource">
     <label>Description</label>
     <description>Detailed text description of what the online resource is/does</description>
+        <helper>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3035">ETRS89 / LAEA Europe</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/31370">Belge 1972 / Belgian Lambert 72</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4936">ETRS89-XYZ: 3D Cartesian in ETRS89</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4937">ETRS89-GRS80h: 3D geodetic in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4258">ETRS89-GRS802D: geodetic in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3035">ETRS89-LAEA2D: LAEA projection in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3034">ETRS89-LCC2D: LCC projection in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3038">ETRS89-TM26N2D: TM projection in ETRS89 on GRS80, zone 26N (30°W to 24°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3039">ETRS89-TM27N2D: TM projection in ETRS89 on GRS80, zone 27N (24°W to 18°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3040">ETRS89-TM28N: 2D TM projection in ETRS89 on GRS80, zone 28N (18°W to 12°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3041">ETRS89-TM29N: 2D TM projection in ETRS89 on GRS80, zone 29N (12°W to 6°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3042">ETRS89-TM30N: 2D TM projection in ETRS89 on GRS80, zone 30N (6°W to 0°)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3043">ETRS89-TM31N:  2D TM projection in ETRS89 on GRS80, zone 31N (0° to 6°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3044">ETRS89-TM32N: 2D TM projection in ETRS89 on GRS80, zone 32N (6°E to 12°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3045">ETRS89-TM33N: 2D TM projection in ETRS89 on GRS80, zone 33N (12°E to 18°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3046">ETRS89-TM34N: 2D TM projection in ETRS89 on GRS80, zone 34N (18°E to 24°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3047">ETRS89-TM35N: 2D TM projection in ETRS89 on GRS80, zone 35N (24°E to 30°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3048">ETRS89-TM36N: 2D TM projection in ETRS89 on GRS80, zone 36N (30°E to 36°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3049">ETRS89-TM37N: 2D TM projection in ETRS89 on GRS80, zone 37N (36°E to 42°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3050">ETRS89-TM38N: 2D TM projection in ETRS89 on GRS80, zone 38N (42°E to 48°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3051">ETRS89-TM39N: 2D TM projection in ETRS89 on GRS80, zone 39N (48°E to 54°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/5730">EVRS: Height in EVRS</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/7409">ETRS89-GRS80-EVRS: 3D compound: 2D geodetic in ETRS89 on GRS80, and EVRS height</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/2154">RGF93 / Lambert-93</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/32620">WGS 84 / UTM zone 20N</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/2972">RGFG95 / UTM zone 22N</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/2975">RGR92 / UTM zone 40S</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4467">RGSPM06 / UTM zone 21N</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4471">RGM04 / UTM zone 38S</option>
+        </helper>
   </element>
   <element name="gmd:description" id="541.0" context="gmd:MD_CodeDomain">
     <label>Description</label>
