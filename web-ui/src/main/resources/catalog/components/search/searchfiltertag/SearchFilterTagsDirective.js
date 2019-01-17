@@ -10,8 +10,8 @@
   });
 
   module.directive('searchFilterTags',
-      ['$location', 'gnThesaurusService', '$q', '$cacheFactory', '$browser',
-       function($location, gnThesaurusService, $q, $cacheFactory, $browser) {
+      ['$location', 'gnThesaurusService', '$q', '$cacheFactory', '$browser', '$timeout',
+       function($location, gnThesaurusService, $q, $cacheFactory, $browser, $timeout) {
          var cache = $cacheFactory('locationsSearchFilterTags');
          var useLocationParameters = true;
 
@@ -401,11 +401,13 @@
                return getSearchParameters(useLocationParameters,
                 $location, ngSearchFormCtrl);
              }, function(newFilters, oldVal, currentScope) {
-               generateCurrentFilters(newFilters,
-                currentScope.currentFilters, ngSearchFormCtrl)
-                .then(function(calculatedFilters) {
-                  scope.currentFilters = calculatedFilters;
-                });
+               $timeout(function () {
+                 generateCurrentFilters(newFilters,
+                   currentScope.currentFilters, ngSearchFormCtrl)
+                   .then(function (calculatedFilters) {
+                     scope.currentFilters = calculatedFilters;
+                   });
+               }, 100);
              }, true);
 
              scope.removeFilter = function(filter) {
