@@ -43,18 +43,23 @@
       // highlight the active view
       .gn-view-menu-button {
         .dropdown-menu {
-          li.disabled {
-            background-color: @dropdown-link-hover-bg;
-            &:after {
-              float: right;
-              margin-top: -1.5em;
-              margin-right: 8px;
-              content: "\f00c";
-              font: normal normal normal 14px/1 FontAwesome;
-              font-size: inherit;
-              text-rendering: auto;
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
+          li {
+            .gn-editor-view {
+              padding-left: 44px;
+            }
+            &.disabled {
+              background-color: @dropdown-link-hover-bg;
+              &:before {
+                position: absolute;
+                margin-top: 6px;
+                margin-left: 20px;
+                content: "\f1db";
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: inherit;
+                text-rendering: auto;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+              }
             }
           }
         } 

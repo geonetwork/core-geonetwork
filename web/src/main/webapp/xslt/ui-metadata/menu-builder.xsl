@@ -62,7 +62,7 @@
                 <xsl:if test="'simple' = $currentView/@name">
                   <xsl:attribute name="class">disabled</xsl:attribute>
                 </xsl:if>
-                <a data-ng-click="switchToTab('simple', '')" href="">
+                <a data-ng-click="switchToTab('simple', '')" href="" class="gn-editor-view">
                   <xsl:value-of select="$strings/*[name() = 'simple']"/>
                 </a>
               </li>
@@ -70,7 +70,7 @@
                 <xsl:if test="'xml' = $currentView/@name">
                   <xsl:attribute name="class">disabled</xsl:attribute>
                 </xsl:if>
-                <a data-ng-click="switchToTab('xml', '')" href="">
+                <a data-ng-click="switchToTab('xml', '')" href="" class="gn-editor-view">
                   <xsl:value-of select="$strings/*[name() = 'xml']"/>
                 </a>
               </li>
@@ -94,7 +94,7 @@
                     <!-- When a view contains multiple tab, the one with
                   the default attribute is the one to open -->
                     <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')"
-                       href="">
+                       href="" class="gn-editor-view">
                       <xsl:variable name="viewName" select="@name"/>
                       <xsl:value-of select="$strings/*[name() = $viewName]"/>
                     </a>
@@ -145,7 +145,7 @@
                   <xsl:if test="$tab = @id">
                     <xsl:attribute name="class">disabled</xsl:attribute>
                   </xsl:if>
-                  <a href="">
+                  <a href="" class="gn-editor-view">
                     <xsl:if test="$tab != @id">
                       <xsl:attribute name="data-ng-click"
                                      select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
@@ -179,7 +179,7 @@
     -->
     <li role="menuitem"
       class="{if ($tab = @id) then 'active' else ''} {if ($isTabDisplayed) then '' else 'disabled'}">
-      <a href="">
+      <a href="" class="gn-editor-view">
         <xsl:if test="$tab != @id and $isTabDisplayed">
           <xsl:attribute name="data-ng-click"
                          select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
