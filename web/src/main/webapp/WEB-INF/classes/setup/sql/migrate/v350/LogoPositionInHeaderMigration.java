@@ -39,7 +39,7 @@ public class LogoPositionInHeaderMigration extends JsonDatabaseMigration {
     protected Map<String, String> setUpNewSettingValues() {
         Map<String, String> fieldsToUpdate = new HashMap<>(1);
         fieldsToUpdate.put("/mods/header/isLogoInHeader",
-            "true");
+            "false");
         fieldsToUpdate.put("/mods/header/logoInHeaderPosition",
             "\"left\"");
 

@@ -14,8 +14,8 @@
   <div class="timeline-panel">
     <div class="timeline-heading">
       <a class="btn btn-link pull-right"
-         data-ng-show="$parent.allowRemoval"
-         data-ng-click="$parent.removeStep(h)"
+         data-ng-show="allowRemoval"
+         data-ng-click="removeStep(h)"
          title="{{'removeHistoryStep' | translate}}">
         <i class="fa fa-times text-danger"/>
       </a>
@@ -56,26 +56,31 @@
         <div class="text-muted" data-translate="">createDoiForRecord-help</div>
 
         <a class="btn btn-primary"
-           data-translate=""
-           data-gn-click-and-spin="doiCreationTask.check(h)">doiCreationTaskCheckAction</a>
+           data-gn-click-and-spin="doiCreationTask.check(h)">
+          <i class="fa fa-fw"
+             data-ng-class="{'fa-check': response.doiCreationTask.check == null, 'fa-thumbs-up': response.doiCreationTask.check.status === 200, 'fa-thumbs-down': response.doiCreationTask.check.status === 400}" ></i>
+          <span data-translate="">doiCreationTaskCheckAction</span>
+        </a>
 
         <a class="btn btn-primary"
-           data-translate=""
-           data-ng-disabled="response.doiCreationTask[key].check.status !== 200"
-           data-gn-click-and-spin="doiCreationTask.create(h)">doiCreationTaskCreateAction</a>
+           data-ng-disabled="response.doiCreationTask.check.status !== 200"
+           data-gn-click-and-spin="doiCreationTask.create(h)">
+          <i class="fa fa-fw fa-play"/>
+          <span data-translate="">doiCreationTaskCreateAction</span>
+        </a>
 
         <a class="btn btn-default"
            data-translate=""
            data-ng-show="user.isAdministratorOrMore()"
            data-gn-click-and-spin="closeTask(h)">closeTask</a>
 
-        <div data-ng-if="response.doiCreationTask[key].check"
-             data-ng-class="{'text-danger': response.doiCreationTask[key].check.status === 400}">
-        {{response.doiCreationTask[key].check.data.description}}
+        <div data-ng-if="response.doiCreationTask.check"
+             data-ng-class="{'text-danger': response.doiCreationTask.check.status === 400}">
+        {{response.doiCreationTask.check.data.description}}
         </div>
-        <div data-ng-if="response.doiCreationTask[key].create"
-             data-ng-class="{'text-danger': response.doiCreationTask[key].create.status === 400}">
-          {{response.doiCreationTask[key].create.data.description}}
+        <div data-ng-if="response.doiCreationTask.create"
+             data-ng-class="{'text-danger': response.doiCreationTask.create.status === 400}">
+          {{response.doiCreationTask.create.data.description}}
         </div>
       </div>
     </div>

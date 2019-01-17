@@ -134,17 +134,27 @@
               scope.clear(scope.queue);
             };
 
-            // Remove from filestore,
             scope.removeOverview = function(thumbnail) {
               var url = thumbnail.url[gnCurrentEdit.mdLanguage];
-              gnFileStoreService.delete({url: url}).then(function () {
-                // then remove from record
+              if (url.match(".*/api/records/(.*)/attachments/.*") == null) {
+                // An external URL
                 gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
                   // and update list.
                   loadRelations();
-                })
-              });
+                });
+              } else {
+                // A thumbnail from the filestore
+                gnFileStoreService.delete({url: url}).then(function () {
+                  // then remove from record
+                  gnOnlinesrc.removeThumbnail(thumbnail).then(function() {
+                    // and update list.
+                    loadRelations();
+                  })
+                });
+              }
+
             };
+            http://localhost:8080/geonetwork/srv/api/records/01788925-ea24-4a7e-ac0d-aa10f8210b8c/attachments/oldmaps.jpeg
             scope.$watch('gnCurrentEdit.uuid', function(n, o) {
               if (angular.isUndefined(scope.uuid) ||
                 n != o) {

@@ -66,6 +66,7 @@
     "availableSet": "Available set",
     "noChangesToApply": "Define changes first in order to update selected records.",
     "selectRecordsToEdit": "Select one or more records to edit.",
+    "tooManyRecordInSelForSearch": "There is too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
     "advancedBatchEditMode": "Advanced mode (XPath)",
     "cancel": "Cancel",
     "cancelChangesFromNow": "Cancel all changes since the start of the editing session {{timeAgo}}.",

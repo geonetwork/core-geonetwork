@@ -3,7 +3,6 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">loadSchemaSamplesOrTemplates</div>
       <div class="panel-body">
-        <h2 data-translate="">listOfSchemas</h2>
 
         <div class="clearfix">
           <div class="btn-group pull-right">
@@ -31,8 +30,6 @@
                  data-ng-class="isSchemaSelected(s.name) ? 'fa-check-square-o' : 'fa-square-o'"/>&nbsp
                  {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
             </h4>
-            <p> {{s.descriptions[iso2lang] || s.descriptions['en'] || ''}} </p>
-            <a data-ng-if="s.standardUrl" data-ng-href="{{s.standardUrl}}" data-translate="">moreStandardInfo</a>
           </li>
         </div>
 
