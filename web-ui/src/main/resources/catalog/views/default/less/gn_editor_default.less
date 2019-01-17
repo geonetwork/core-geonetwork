@@ -44,21 +44,11 @@
       .gn-view-menu-button {
         .dropdown-menu {
           li {
-            .gn-editor-view {
-              padding-left: 44px;
-            }
             &.disabled {
               background-color: @dropdown-link-hover-bg;
-              &:before {
-                position: absolute;
-                margin-top: 6px;
-                margin-left: 20px;
-                content: "\f1db";
-                font: normal normal normal 14px/1 FontAwesome;
-                font-size: inherit;
-                text-rendering: auto;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
+              a {
+                color: @gray-base;
+                font-weight: bold;
               }
             }
           }

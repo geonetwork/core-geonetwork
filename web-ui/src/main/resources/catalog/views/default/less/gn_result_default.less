@@ -18,6 +18,20 @@
 .gn-md-view {
   padding: 15px 20px;
   background-color: @gn-md-view-background-color;
+  // highlight the active view
+  .gn-view-menu-button {
+    .dropdown-menu {
+      li {
+        &.disabled {
+          background-color: @dropdown-link-hover-bg;
+          a {
+            color: @gray-base;
+            font-weight: bold;
+          }
+        }
+      }
+    } 
+  }
   .gn-related-item {
     margin-top: -1px;
     border-radius: 0;
