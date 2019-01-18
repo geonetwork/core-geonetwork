@@ -54,6 +54,10 @@
     "batchreplacer-addReplacement": "Pridať náhradu",
     "massive-search-and-replace": "Nájst a zameniť",
     "batchreplacer-vacuum-mode": "Mód vákua",
+    "appMinorVersionSupported": "Minor version supported:",
+    "appMajorVersionSupported": "Major version supported:",
+    "readwriteUUID": "UUID mode read/write:",
+    "schematronRules": "Standard schematron rules available",
     "vacuum-none": "Žiadny (napr. ponechať prázdny prvok)",
     "vacuum-element": "Odobrať prvok s ponechaním prázdňaj hodnoty po nahradeňí",
     "vacuum-record": "Odobrať všetky prázdné prvky v zázname po nahradeňí",
@@ -674,7 +678,7 @@
     "saveSettings": "Uložit nastavenie",
     "saveUser": "Uložit",
     "saveVirtualCSW": "Uložit",
-    "schematron": "Schematron",
+    "schematron": "Overovanie",
     "schematronApplicationCriteria": "Použitelnosť Schematronu",
     "schematronDescriptionAlwaysAccept": "Toto kritérium sa akceptuje vždy",
     "schematronDescriptionGeneric": "Toto kritérium je akceptované, keď metaúdaje majú '{{type}}' s hodnotou '{{value}}'",
@@ -1337,5 +1341,8 @@
     "usersInGroup": "Users in group",
     "ui-editorIndentType": "Editor page indent type",
     "ui-editorIndentType-default": "Default, minimal indents",
-    "ui-editorIndentType-colored": "Colored indents"
+    "ui-editorIndentType-colored": "Colored indents",
+    "filterSettings": "Filter settings",
+    "filterPlaceHolder": "e.g. INSPIRE",
+    "filterReset": "Reset the filter"
 }

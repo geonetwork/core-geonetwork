@@ -54,6 +54,10 @@
     "batchreplacer-addReplacement": "Ajouter un changement",
     "massive-search-and-replace": "Chercher et remplacer",
     "batchreplacer-vacuum-mode": "Mode de suppression des éléments vides",
+    "appMinorVersionSupported": "Version mineure supportée :",
+    "appMajorVersionSupported": "Version majeure supportée :",
+    "readwriteUUID": "UUID en mode lecture/écriture :",
+    "schematronRules": "Règles schématron disponibles :",
     "vacuum-none": "Aucun (ie. conserver les éléments vides)",
     "vacuum-element": "Supprimer les éléments si après remplacement ils sont vides",
     "vacuum-record": "Supprimer tous les éléments vides de la fiche.",
@@ -674,7 +678,7 @@
     "saveSettings": "Sauver la configuration",
     "saveUser": "Enregistrer",
     "saveVirtualCSW": "Enregistrer",
-    "schematron": "Schematron",
+    "schematron": "Validation",
     "schematronApplicationCriteria": "Schematron Applicability",
     "schematronDescriptionAlwaysAccept": "This criteria always passes",
     "schematronDescriptionGeneric": "This criteria passes when the metadata has '{{type}}' with the value '{{value}}'",
@@ -1337,5 +1341,8 @@
     "usersInGroup": "Utilisateurs dans le groupe",
     "ui-editorIndentType": "Type d'indentation des blocs dans le formulaire d'édition",
     "ui-editorIndentType-default": "Par défaut",
-    "ui-editorIndentType-colored": "Barre verticale colorée"
+    "ui-editorIndentType-colored": "Barre verticale colorée",
+    "filterSettings": "Filtres",
+    "filterPlaceHolder": "e.g. INSPIRE",
+    "filterReset": "Réinitialiser les filtres"
 }
