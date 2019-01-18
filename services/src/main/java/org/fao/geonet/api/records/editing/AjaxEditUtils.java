@@ -659,7 +659,7 @@ public class AjaxEditUtils extends EditUtils {
         Processor.processXLink(md, this.context);
 
         //--- do the validation on the metadata
-        return dataManager.doValidate(session, schema, id, md, lang, false).one();
+        return metadataValidator.doValidate(session, schema, id, md, lang, false).one();
 
     }
 

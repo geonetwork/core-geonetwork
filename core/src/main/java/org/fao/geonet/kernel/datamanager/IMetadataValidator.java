@@ -2,9 +2,9 @@ package org.fao.geonet.kernel.datamanager;
 
 import java.util.List;
 
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -44,25 +44,9 @@ public interface IMetadataValidator {
     void setNamespacePrefix(Element md);
 
     /**
-     * Use this validate method for XML documents with dtd.
-     */
-    void validate(String schema, Document doc) throws Exception;
-
-    /**
      * Use this validate method for XML documents with xsd validation.
      */
     void validate(String schema, Element md) throws Exception;
-
-    /**
-     * Validates an xml document with respect to an xml schema described by .xsd file path using supplied error handler.
-     *
-     * @param schema
-     * @param md
-     * @param eh
-     * @return
-     * @throws Exception
-     */
-    Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception;
 
     /**
      * Creates XML schematron report.
@@ -72,12 +56,10 @@ public interface IMetadataValidator {
     /**
      * Used by harvesters that need to validate metadata.
      *
-     * @param schema name of the schema to validate against
-     * @param metadataId metadata id - used to record validation status
-     * @param doc metadata document as JDOM Document not JDOM Element
+     * @param metadata metadata
      * @param lang Language from context
      */
-    boolean doValidate(String schema, String metadataId, Document doc, String lang);
+    boolean doValidate(AbstractMetadata metadata, String lang);
 
     /**
      * Used by the validate embedded service. The validation report is stored in the session.

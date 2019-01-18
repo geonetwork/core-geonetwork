@@ -20,38 +20,16 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.repository.page;
 
-(function() {
-  goog.provide('gn_standards_controller');
+import java.util.List;
 
+import org.fao.geonet.domain.page.Page;
+import org.fao.geonet.domain.page.PageIdentity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-  var module = angular.module('gn_standards_controller',
-      []);
+public interface PageRepository extends JpaRepository<Page, PageIdentity> {
+    
+    List<Page> findByPageIdentityLanguage(String language);
 
-
-  /**
-   * GnStandardsController provides administration tools
-   * for standards.
-   */
-  module.controller('GnStandardsController', [
-    '$scope', '$routeParams', '$http',
-    function($scope, $routeParams, $http) {
-
-      $scope.pageMenu = {
-        folder: 'standards/',
-        defaultTab: 'standards',
-        tabs: []
-      };
-
-      $scope.schemas = [];
-
-      function loadSchemas() {
-        $http.get('../api/standards').success(function(data) {
-          $scope.schemas = data;
-        });
-      }
-      loadSchemas();
-
-    }]);
-
-})();
+}

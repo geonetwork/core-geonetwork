@@ -47,6 +47,19 @@ ul.gn-resultview li.list-group-item {
     .navbar-collapse {
       background: #fff;
     }
+    .dropdown-menu {
+      > li {
+        > a {
+          padding: 8px 20px;
+        }
+        &.active, &:hover {
+          > a {
+            color: @gn-menubar-color;
+            background-color: lighten(@brand-primary, 46.7%);
+          }
+        }
+      }
+    }
   }
   [data-ng-controller="GnAdminController"] {
     .sidebar {

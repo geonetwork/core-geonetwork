@@ -90,12 +90,6 @@
               }
             };
 
-            scope.removeStep = function(s){
-              gnRecordHistoryService.delete(s).then(function(r) {
-                loadHistory();
-              });
-            };
-
             scope.$watch('filter', function(n, o) {
               if (n !== o) {
                 loadHistory();
@@ -107,8 +101,8 @@
 
   module
     .directive(
-      'gnRecordHistoryStep', [
-        function() {
+      'gnRecordHistoryStep', ['gnRecordTaskService', 'gnRecordHistoryService',
+        function(gnRecordTaskService, gnRecordHistoryService) {
           return {
             restrict: 'A',
             replace: true,
@@ -116,9 +110,47 @@
               h: '=gnRecordHistoryStep',
               noTitle: '@noTitle',
               allowRemoval: '=allowRemoval'
-          },
+            },
             templateUrl:
-              '../../catalog/components/history/partials/historyStep.html'
+                '../../catalog/components/history/partials/historyStep.html',
+            link: function postLink(scope, element, attrs) {
+
+              scope.response = {
+                doiCreationTask: {}
+              };
+              scope.doiCreationTask = {
+                check: function(status) {
+                  scope.response.doiCreationTask = {};
+                  scope.response.doiCreationTask['check'] = null;
+                  return gnRecordTaskService.doiCreationTask.check(status).then(function (r) {
+                    scope.response.doiCreationTask['check'] = r;
+                  }, function (r) {
+                    scope.response.doiCreationTask['check'] = r;
+                  });
+                },
+                create: function(status){
+                  return gnRecordTaskService.doiCreationTask.create(status).then(function(r) {
+                    scope.response.doiCreationTask['create'] = r;
+                    scope.closeTask(status);
+                  }, function(r) {
+                    scope.response.doiCreationTask['create'] = r;
+                  });
+                }
+              };
+
+              scope.removeStep = function(s){
+                gnRecordHistoryService.delete(s).then(function(r) {
+                  scope.$parent.loadHistory();
+                });
+              };
+
+              scope.closeTask = function(status) {
+                // Close the related task
+                gnRecordHistoryService.close(status).then(function() {
+                  scope.$parent.loadHistory();
+                });
+              };
+            }
           }
       }]);
   /**
@@ -165,47 +197,12 @@
                 });
               };
 
-              scope.response = {
-                doiCreationTask: {}
-              };
-              scope.doiCreationTask = {
-                check: function(status) {
-                  var key = status.id.metadataId + '-' + status.id.statusId;
-                  scope.response.doiCreationTask[key] = {};
-                  scope.response.doiCreationTask[key]['check'] = null;
-                  return gnRecordTaskService.doiCreationTask.check(status).then(function (r) {
-                    scope.response.doiCreationTask[key]['check'] = r;
-                  }, function (r) {
-                    scope.response.doiCreationTask[key]['check'] = r;
-                  });
-                },
-                create: function(status){
-                  var key = status.id.metadataId + '-' + status.id.statusId;
-                  return gnRecordTaskService.doiCreationTask.check(status).then(function(r) {
-                    scope.response.doiCreationTask[key]['create'] = r;
-                    scope.closeTask(status);
-                    then(function(r) {
-                      loadHistory();
-                    });
-                  }, function(r) {
-                    scope.response.doiCreationTask[key]['create'] = r;
-                  });
-                }
-              };
-
-              scope.closeTask = function(status) {
-                // Close the related task
-                gnRecordHistoryService.close(status).then(function() {
-                  loadHistory();
-                });
-              };
-
               scope.more = function() {
                 scope.filter.size = scope.filter.size + recordByPage;
-                loadHistory();
+                scope.loadHistory();
               };
 
-              function loadHistory() {
+              scope.loadHistory = function() {
                 gnRecordHistoryService.search(scope.filter).then(function(r) {
                   scope.history = r.data;
                   scope.hasMoreRecords = r.data.length >= scope.filter.size;
@@ -214,11 +211,11 @@
 
               scope.$watch('filter', function(n, o) {
                 if (n !== o) {
-                  loadHistory();
+                  scope.loadHistory();
                 }
               }, true);
 
-              loadHistory();
+              scope.loadHistory();
             }
           };
         }]);

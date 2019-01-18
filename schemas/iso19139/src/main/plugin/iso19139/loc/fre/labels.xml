@@ -6534,7 +6534,13 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
   <element name="gco:Measure">
     <label>Mesure</label>
   </element>
+  <element name="gco:Integer">
+    <label>Nombre entier</label>
+  </element>
   <element name="gco:Scale">
     <label>Échelle</label>
+  </element>
+  <element name="gco:Boolean">
+    <label>Booléen</label>
   </element>
 </labels>

@@ -64,6 +64,7 @@
       </xsl:choose>
     </xsl:variable>
 
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="$labelConfig/*"/>

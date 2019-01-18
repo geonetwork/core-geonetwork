@@ -211,6 +211,7 @@
              gnCurrentEdit.working = true;
              $http.post(
              '../api/records/' + gnCurrentEdit.id + '/editor?' +
+             (gnCurrentEdit.showValidationErrors ? '&withValidationErrors=true' : '') +
              (refreshForm ? '' : '&commit=true') +
              (terminate ? '&terminate=true' : ''),
              getFormParameters(),

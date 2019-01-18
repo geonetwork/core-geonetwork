@@ -509,7 +509,8 @@
     <xsl:param name="md" as="node()"/>
     <xsl:param name="withPosition" as="xs:boolean"/>
 
-    <xsl:variable name="node" select="$md/descendant::node()[gn:element/@ref = $nodeRef]"/>
+    <!-- when walking thru expanded document with validation report info, ignore report info avoid ing multiple matches-->
+    <xsl:variable name="node" select="$md/descendant::node()[gn:element/@ref = $nodeRef][not(ancestor::*[name() = 'geonet:report'])]"/>
 
     <xsl:value-of select="gn-fn-metadata:getXPath($node, $withPosition)"/>
   </xsl:function>

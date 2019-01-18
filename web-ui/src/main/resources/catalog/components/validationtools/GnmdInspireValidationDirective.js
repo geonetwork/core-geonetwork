@@ -28,18 +28,21 @@
 
   module.directive(
       'gnMdValidationTools', ['gnConfig', '$http', '$interval',
-        'gnAlertService', '$translate', 'gnPopup',
+        'gnAlertService', '$translate', 'gnPopup', 'gnCurrentEdit',
         function(gnConfig, $http, $interval, 
-            gnAlertService, $translate, gnPopup) {
+            gnAlertService, $translate, gnPopup, gnCurrentEdit) {
           return {
             restrict: 'AEC',
             replace: true,
             templateUrl:
             '../../catalog/components/validationtools/partials/mdValidationTools.html',
             link: function postLink(scope, element, attrs) {
-
+              // INSPIRE validator only support ISO19139 records.
+              // TODO: For other schema support we may need to convert the record
+              // to ISO19139 first. eg. ISO19115-3
               scope.isInspireValidationEnabled =
-              gnConfig[gnConfig.key.isInspireEnabled];
+                gnConfig[gnConfig.key.isInspireEnabled]
+                && gnCurrentEdit.schema == 'iso19139';
               scope.isDownloadingRecord = false;
               scope.isDownloadedRecord = false;
               scope.isEnabled = false;

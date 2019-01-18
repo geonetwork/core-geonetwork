@@ -53,6 +53,11 @@
               icon: 'fa-archive',
               href: '#/metadata/metadata-and-template'
             },{
+              type: 'standards',
+              label: 'standards',
+              icon: 'fa-puzzle-piece',
+              href: '#/metadata/standards'
+            },{
               type: 'formatter',
               label: 'metadataFormatter',
               icon: 'fa-eye',

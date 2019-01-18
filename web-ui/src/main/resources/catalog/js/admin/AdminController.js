@@ -33,15 +33,13 @@
   goog.require('gn_harvest_controller');
   goog.require('gn_report_controller');
   goog.require('gn_settings_controller');
-  goog.require('gn_standards_controller');
   goog.require('gn_usergroup_controller');
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
        'gn_adminmetadata_controller', 'gn_classification_controller',
-       'gn_harvest_controller', 'gn_standards_controller',
-       'gn_report_controller', 'gn_admin_menu']);
+       'gn_harvest_controller', 'gn_report_controller', 'gn_admin_menu']);
 
 
   var tplFolder = '../../catalog/templates/admin/';
@@ -276,15 +274,6 @@
             resolve: {
               permission: function() {
                 authorizationService.$get[0]().check('Administrator');
-              }
-            }
-          }).
-          when('/standards', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnStandardsController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
               }
             }
           }).

@@ -42,6 +42,7 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -248,10 +249,9 @@ public class MetadataEditingApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataMan = applicationContext.getBean(DataManager.class);
         UserSession session = ApiUtils.getUserSession(httpSession);
-
+        IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
         String id = String.valueOf(metadata.getId());
         String isTemplate = allRequestParams.get(Params.TEMPLATE);
-
 //        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 //        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
 //        boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
@@ -325,8 +325,7 @@ public class MetadataEditingApi {
 
             // Save validation if the forceValidationOnMdSave is enabled
             if (forceValidationOnMdSave) {
-                dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
-                    new Document(metadata.getXmlData(false)), context.getLanguage());
+                validator.doValidate(metadata, context.getLanguage());
                 reindex = true;
             }
 

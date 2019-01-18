@@ -40,6 +40,20 @@
           left: 0;
         }
       }
+      // highlight the active view
+      .gn-view-menu-button {
+        .dropdown-menu {
+          li {
+            &.disabled {
+              background-color: @dropdown-link-hover-bg;
+              a {
+                color: @gray-base;
+                font-weight: bold;
+              }
+            }
+          }
+        } 
+      }
     }
   }
 
@@ -200,6 +214,14 @@
     .gn-date-picker > input[type=date], .gn-date-picker > input[type=time] {
       width: 50%;
     }
+    .gn-date-picker.gn-time-with-ind-position {
+      input[type=month], input[type=number] {
+        width: 80%;
+      }
+      &> input[type=date], &> input[type=time] {
+        width: 40%;
+      }
+    }
     // default switch
     [data-ng-switch-default] {
       .col-xs-8, .col-xs-4 {
@@ -294,6 +316,9 @@
     }
     // field in field
     .gn-field {
+      label {
+        font-size: 12px;
+      }
       .gn-field {
         padding-top: 0;
         padding-bottom: 0;
@@ -378,16 +403,22 @@
 // Class to put label above fields
 form.gn-editor.gn-label-above-input {
   // override default bootstrap widths for the editor
+  // Increase label width to full width
   .col-sm-2 {
     width: 100%;
     text-align: left;
   }
+  // Form field on a second row
   .col-sm-9 {
     width: 90%;
     .col-sm-12 {
       padding-left: 0;
       padding-right: 0;
     }
+  }
+  // Cancel offset used in action
+  .col-xs-offset-2 {
+    margin-left: 0px;
   }
   div.gn-extra-field > label {
     display: none;

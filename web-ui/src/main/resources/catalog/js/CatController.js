@@ -78,7 +78,7 @@
             'chi': 'zh',
             'slo': 'sk'
           },
-          'isLogoInHeader': true,
+          'isLogoInHeader': false,
           'logoInHeaderPosition': 'left'
         },
         'home': {
@@ -241,6 +241,10 @@
         },
         'signout': {
           'appUrl': '../../signout'
+        },
+        'page': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/catalog.search#/page'
         }
       }
     };
