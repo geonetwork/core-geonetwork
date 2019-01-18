@@ -50,6 +50,7 @@
     <div class="btn-group">
       <button type="button" class="btn btn-default navbar-btn gn-tooltip"
               gn-click-and-spin="cancel()"
+              id="gn-editor-btn-cancel"
               data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
         <i class="fa fa-fw fa-undo"/>
         <span class="visible-lg" data-translate="">cancel</span>
@@ -60,7 +61,8 @@
               class="btn btn-default navbar-btn gn-tooltip"
               aria-label="{{'closeEditor' | translate}}"
               title="{{'closeEditor'|translate}}"
-              gn-click-and-spin="close()">
+              gn-click-and-spin="close()"
+              id="gn-editor-btn-close">
         <i class="fa fa-fw fa-sign-out"/>
         <span class="visible-lg" data-translate="">closeEditor</span>
       </button>
@@ -69,6 +71,7 @@
     <div class="btn-group" title="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}">
       <button type="button"
               data-gn-click-and-spin="save(true, false)"
+              id="gn-editor-btn-save"
               aria-label="{{(isTemplate() ? 'saveTemplate' : 'saveMetadata') | translate}}"
               class="btn btn-success navbar-btn">
         <i class="fa fa-fw fa-save"/>

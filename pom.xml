@@ -1240,7 +1240,6 @@
         <module>web-ui</module>
         <module>web-ui-docs</module>
         <module>web</module>
-        <module>e2e-tests</module>
       </modules>
     </profile>
     <profile>
