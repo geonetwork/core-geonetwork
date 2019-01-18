@@ -66,6 +66,7 @@
     "availableSet": "Beschikbare set",
     "noChangesToApply": "Definieer de wijzigingen met als doel de geselecteerde records bij te werken.",
     "selectRecordsToEdit": "Select 1 of meer records om bij te werken.",
+    "tooManyRecordInSelForSearch": "There is too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
     "advancedBatchEditMode": "Geavanceerde modus (XPath)",
     "cancel": "Annuleren",
     "cancelChangesFromNow": "Annuleer alle wijzigingen sinds de start van de bewerkingssessie {{timeago}} .",

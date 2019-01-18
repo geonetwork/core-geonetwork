@@ -56,12 +56,12 @@
           <button type="button" class="btn btn-default pull-right"
                   data-ng-hide="userSelected.security.authtype == 'LDAP'"
                   data-ng-click="resetPassword(userSelected.id)">
-            <i class="fa fa-lock"></i> <span data-translate=""
+            <i class="fa fa-lock fa-fw"></i> <span data-translate=""
           >resetPassword</span></button>
           <button type="button" class="btn btn-primary pull-right"
                   data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
                   data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
-            <i class="fa fa-save"></i> <span data-translate=""
+            <i class="fa fa-save fa-fw"></i> <span data-translate=""
           >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger"
                   data-ng-disabled="searchResults.count > 0"

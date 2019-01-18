@@ -54,6 +54,10 @@
     "batchreplacer-addReplacement": "Lisää korvaava",
     "massive-search-and-replace": "Etsi ja korvaa",
     "batchreplacer-vacuum-mode": "Siivoustila",
+    "appMinorVersionSupported": "Minor version supported:",
+    "appMajorVersionSupported": "Major version supported:",
+    "readwriteUUID": "UUID mode read/write:",
+    "schematronRules": "Standard schematron rules available",
     "vacuum-none": "Ei mitään (eli säilytä tyhjä elementti)",
     "vacuum-element": "Poista elementit, joissa on tyhjä arvo korvauksen jälkeen",
     "vacuum-record": "Poista kaikki dokumentin tyhjät elementit korvauksen jälkeen",
@@ -674,7 +678,7 @@
     "saveSettings": "Tallenna asetukset",
     "saveUser": "Tallenna",
     "saveVirtualCSW": "Tallenna",
-    "schematron": "Schematron",
+    "schematron": "Validointi",
     "schematronApplicationCriteria": "Schematron Applicability",
     "schematronDescriptionAlwaysAccept": "Kriteerit läpäistään aina",
     "schematronDescriptionGeneric": "Kriiterit läpäistään kun metatiedolla on '{{type}}' arvolla '{{value}}'",
@@ -1337,5 +1341,8 @@
     "usersInGroup": "Users in group",
     "ui-editorIndentType": "Editor page indent type",
     "ui-editorIndentType-default": "Default, minimal indents",
-    "ui-editorIndentType-colored": "Colored indents"
+    "ui-editorIndentType-colored": "Colored indents",
+    "filterSettings": "Filter settings",
+    "filterPlaceHolder": "e.g. INSPIRE",
+    "filterReset": "Reset the filter"
 }

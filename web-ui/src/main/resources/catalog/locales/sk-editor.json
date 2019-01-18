@@ -66,6 +66,7 @@
     "availableSet": "Dostupná sada",
     "noChangesToApply": "Najprv definovať zmeny v poradí na aktualizáciu záznamov.",
     "selectRecordsToEdit": "Vybrať jeden alebo viac záznamov k editácii.",
+    "tooManyRecordInSelForSearch": "There is too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
     "advancedBatchEditMode": "Pokročilý mód (XPath)",
     "cancel": "Zrušiť",
     "cancelChangesFromNow": "Zrušiť všetky zmeny od zahájenia relace úprav {{timeAgo}}.",

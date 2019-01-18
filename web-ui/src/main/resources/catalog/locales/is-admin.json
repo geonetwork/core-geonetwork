@@ -54,6 +54,10 @@
     "batchreplacer-addReplacement": "Setja inn því sem skipt var út",
     "massive-search-and-replace": "Leita og skipta um",
     "batchreplacer-vacuum-mode": "Tæmihamur",
+    "appMinorVersionSupported": "Minor version supported:",
+    "appMajorVersionSupported": "Major version supported:",
+    "readwriteUUID": "UUID mode read/write:",
+    "schematronRules": "Standard schematron rules available",
     "vacuum-none": "Ekkert (þ.e.a.s. varðveita tóman þátt)",
     "vacuum-element": "Fjarlægja þætti sem hafa tóm gildi eftir að hafa skipt út",
     "vacuum-record": "Fjarlægja alla tóma þætti í skránni eftir að hafa skipt út",
@@ -674,7 +678,7 @@
     "saveSettings": "Vista stillingar",
     "saveUser": "Vista",
     "saveVirtualCSW": "Vista",
-    "schematron": "Schematron",
+    "schematron": "Fullgilding",
     "schematronApplicationCriteria": "Schematron Notkunarsvið",
     "schematronDescriptionAlwaysAccept": "Þetta viðmið stenst alltaf prófun",
     "schematronDescriptionGeneric": "Þetta viðmið stenst prófun þegar lýsigögnin eru '{{type}}' með gildið '{{value}}'",
@@ -1337,5 +1341,8 @@
     "usersInGroup": "Users in group",
     "ui-editorIndentType": "Editor page indent type",
     "ui-editorIndentType-default": "Default, minimal indents",
-    "ui-editorIndentType-colored": "Colored indents"
+    "ui-editorIndentType-colored": "Colored indents",
+    "filterSettings": "Filter settings",
+    "filterPlaceHolder": "e.g. INSPIRE",
+    "filterReset": "Reset the filter"
 }
