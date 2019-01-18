@@ -46,10 +46,12 @@
   module.controller('GnMdViewController', [
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
-    'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig', 'gnGlobalSettings',
+    'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
+    'gnGlobalSettings', 'gnConfigService',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
-             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig, gnGlobalSettings) {
+             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
+             gnGlobalSettings, gnConfigService) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -60,16 +62,20 @@
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
-      $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
 
-      statusSystemRating =
-         gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-      if (statusSystemRating == 'advanced') {
-        $scope.isUserFeedbackEnabled = true;
-      }
-      if (statusSystemRating == 'basic') {
-        $scope.isRatingEnabled = true;
-      }
+      gnConfigService.load().then(function(c) {
+        $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
+
+        var statusSystemRating =
+          gnConfig['system.localrating.enable'];
+
+        if (statusSystemRating == 'advanced') {
+          $scope.isUserFeedbackEnabled = true;
+        }
+        if (statusSystemRating == 'basic') {
+          $scope.isRatingEnabled = true;
+        }
+      });
 
       $scope.search = function(params) {
         $location.path('/search');
