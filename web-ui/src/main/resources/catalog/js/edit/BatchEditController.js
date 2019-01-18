@@ -120,6 +120,10 @@
           });
       $scope.hasRecordsInStandard = function(standard) {
         var isFound = false;
+        // We can't do this check when too many records in selection.
+        if ($scope.tooManyRecordInSelForSearch) {
+          return true;
+        }
         $.each($scope.selectedStandards, function(idx, facet) {
           if (facet['@value'] == standard) {
             isFound = true;
