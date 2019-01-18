@@ -41,6 +41,7 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -87,6 +88,7 @@ public class Update extends NotInReadOnlyModeService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
+        IMetadataValidator validator = gc.getBean(IMetadataValidator.class);
         UserSession session = context.getUserSession();
 
         String id = Utils.getIdentifierFromParameters(params, context);
@@ -158,8 +160,7 @@ public class Update extends NotInReadOnlyModeService {
 				final IMetadataUtils metadataRepository = gc.getBean(IMetadataUtils.class);
 				AbstractMetadata metadata = metadataRepository.findOne(id);
 
-				dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
-						new Document(metadata.getXmlData(false)), context.getLanguage());
+				validator.doValidate(metadata, context.getLanguage());
 				reindex = true;
 			}
 

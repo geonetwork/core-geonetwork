@@ -168,6 +168,9 @@
             </xsl:if>
           </div>
         </div>
+        <div class="col-sm-offset-2">
+          <xsl:call-template name="get-errors"/>
+        </div>
       </xsl:when>
       <xsl:otherwise>
 
@@ -280,13 +283,8 @@
               </div>
             </xsl:if>
 
-            <xsl:if test="$errors">
-              <xsl:for-each select="$errors/errors/error">
-                <span class="help-block text-danger">
-                  <xsl:value-of select="."/>
-                </span>
-              </xsl:for-each>
-            </xsl:if>
+            <xsl:call-template name="get-errors"/>
+
           </div>
           <div class="col-sm-1 col-xs-1 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -397,13 +395,7 @@
         </div>
       </xsl:if>
 
-      <xsl:if test="normalize-space($errors) != ''">
-        <xsl:for-each select="$errors/errors/error">
-          <div class="alert alert-danger">
-            <xsl:value-of select="."/>
-          </div>
-        </xsl:for-each>
-      </xsl:if>
+      <xsl:call-template name="get-errors"/>
 
       <xsl:if test="$subTreeSnippet">
         <xsl:copy-of select="$subTreeSnippet"/>
@@ -969,6 +961,8 @@
         </div>
       </div>
     </xsl:if>
+    <xsl:call-template name="get-errors-for-child"/>
+
   </xsl:template>
 
   <!-- Create a form field ie. a textarea, an input, a select, ...
@@ -1443,9 +1437,8 @@
   to a node (only for gn:attribute, see next template).
   -->
   <xsl:template mode="render-for-field-for-attribute"
-                match="@gn:xsderror|@gn:addedObj|@xsi:type|
+                match="@gn:addedObj|@xsi:type|
           @min|@max|@name|@del|@add|@id|@uuid|@ref|@parent|@up|@down" priority="2"/>
-
 
   <!--
     Add attribute control

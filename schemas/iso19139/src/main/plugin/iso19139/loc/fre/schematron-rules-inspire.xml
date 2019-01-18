@@ -23,7 +23,7 @@
   -->
 
 <strings>
-  <schematron.title>INSPIRE Validation Rules</schematron.title>
+  <schematron.title>Règles INSPIRE</schematron.title>
   <!-- INSPIRE metadata rules translation / START -->
   <identification>Identification de la ressource</identification>
   <dataIdentification>Identification des données</dataIdentification>

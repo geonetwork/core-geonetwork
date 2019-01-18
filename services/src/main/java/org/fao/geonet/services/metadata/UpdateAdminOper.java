@@ -39,6 +39,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
@@ -190,6 +191,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 	private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, int mdId) throws Exception {
 	    IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
 		MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+		IMetadataValidator validator = context.getBean(IMetadataValidator.class);
 
 		boolean hasValidation =
 				(metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
@@ -197,8 +199,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		if (!hasValidation) {
 			AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
-			dm.doValidate(metadata.getDataInfo().getSchemaId(), mdId + "",
-					new Document(metadata.getXmlData(false)), context.getLanguage());
+			validator.doValidate(metadata, context.getLanguage());
 			dm.indexMetadata(mdId + "", true, null);
 		}
 

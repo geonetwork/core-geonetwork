@@ -71,6 +71,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -368,13 +369,13 @@ public class MetadataSharingApi {
      */
     private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, AbstractMetadata metadata) throws Exception {
         MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        IMetadataValidator validator = context.getBean(IMetadataValidator.class);
 
         boolean hasValidation =
             (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
 
         if (!hasValidation) {
-            dm.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
-                new Document(metadata.getXmlData(false)), context.getLanguage());
+            validator.doValidate(metadata, context.getLanguage());
             dm.indexMetadata(metadata.getId() + "", true, null);
         }
 

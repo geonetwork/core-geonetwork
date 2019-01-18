@@ -26,32 +26,32 @@
   <schematron.title>ISO Rules</schematron.title>
   <M6>CharacterString must have content or its parent must have a valid nilReason attribute.</M6>
   <M7>CRS attributes constraints</M7>
-  <M8>[ISOFTDS19139:2005-TableA1-Row24] - A name is required for contact</M8>
-  <M9>[ISOFTDS19139:2005-TableA1-Row07] - OtherConstraints required if otherRestrictions</M9>
-  <M10>[ISOFTDS19139:2005-TableA1-Row16] - Units required for values</M10>
-  <M11>[ISOFTDS19139:2005-TableA1-Row13] - Description required if no sourceExtent</M11>
-  <M12>[ISOFTDS19139:2005-TableA1-Row14] - SourceExtent required if no description</M12>
-  <M13>[ISOFTDS19139:2005-TableA1-Row10] - Content mandatory for dataset or series</M13>
-  <M14>[ISOFTDS19139:2005-TableA1-Row11 Row12] - Lineage</M14>
-  <M15>[ISOFTDS19139:2005-TableA1-Row12] - Process step required if no statement or source</M15>
-  <M16>[ISOFTDS19139:2005-TableA1-Row08] - Dataset must have report or lineage</M16>
-  <M17>[ISOFTDS19139:2005-TableA1-Row09] - LevelDescription needed unless dataset or series</M17>
-  <M18>[ISOFTDS19139:2005-TableA1-Row17] - Units required for density values</M18>
-  <M19>[ISOFTDS19139:2005-TableA1-Row18] - Distribution format required</M19>
-  <M20>[ISOFTDS19139:2005-TableA1-Row23] - Extent element required</M20>
-  <M21>[ISOFTDS19139:2005-TableA1-Row04] - Dataset must have extent</M21>
-  <M22>[ISOFTDS19139:2005-TableA1-Row05] - Dataset or series must have a topic category</M22>
-  <M23>[ISOFTDS19139:2005-TableA1-Row06] - Either aggregateDataSetName or aggregateDataSetIdentifier
+  <M8>A name is required for contact</M8>
+  <M9>OtherConstraints required if otherRestrictions</M9>
+  <M10>Units required for values</M10>
+  <M11>Description required if no sourceExtent</M11>
+  <M12>SourceExtent required if no description</M12>
+  <M13>Content mandatory for dataset or series</M13>
+  <M14>Lineage</M14>
+  <M15>Process step required if no statement or source</M15>
+  <M16>Dataset must have report or lineage</M16>
+  <M17>LevelDescription needed unless dataset or series</M17>
+  <M18>Units required for density values</M18>
+  <M19>Distribution format required</M19>
+  <M20>Extent element required</M20>
+  <M21>Dataset must have extent</M21>
+  <M22>Dataset or series must have a topic category</M22>
+  <M23>Either aggregateDataSetName or aggregateDataSetIdentifier
     must be documented
   </M23>
-  <M24>[ISOFTDS19139:2005-TableA1-Row01] - Language indication</M24>
-  <M25>[ISOFTDS19139:2005-TableA1-Row02] - Character set indication</M25>
-  <M26>[ISOFTDS19139:2005-TableA1-Row19] - Detail required unless simple term</M26>
-  <M27>[ISOFTDS19139:2005-TableA1-Row20] - Condition</M27>
-  <M28>[ISOFTDS19139:2005-TableA1-Row21] - DomainCode</M28>
-  <M29>[ISOFTDS19139:2005-TableA1-Row22] - ShortName</M29>
-  <M30>[ISOFTDS19139:2005-TableA1-Row15] - Check point description required if available</M30>
-  <M61>[ISOFTDS19139:2005-TableA1] - HierarchyLevelName must be documented if hierarchyLevel does
+  <M24>Language indication</M24>
+  <M25>Character set indication</M25>
+  <M26>Detail required unless simple term</M26>
+  <M27>Condition</M27>
+  <M28>DomainCode</M28>
+  <M29>ShortName</M29>
+  <M30>Check point description required if available</M30>
+  <M61>HierarchyLevelName must be documented if hierarchyLevel does
     not contain "dataset"
   </M61>
 

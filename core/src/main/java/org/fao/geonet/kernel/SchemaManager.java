@@ -1285,7 +1285,7 @@ public class SchemaManager {
             stage = "reading schema-ident file " + idFile;
             Element root = Xml.loadFile(idFile);
             stage = "validating schema-ident file " + idFile;
-            Xml.validate(new Document(root));
+            Xml.validate(root);
 
             final String schemaName = schemasDir.getFileName().toString();
             if (hmSchemas.containsKey(schemaName)) { // exists so ignore it
