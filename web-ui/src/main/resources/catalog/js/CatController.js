@@ -272,15 +272,17 @@
         // and override with config arg if required
         angular.merge(this.gnCfg, config, {});
 
-        // secial case: languages (replace with object from config if available)
-        this.gnCfg.mods.header.languages = angular.extend({
-          mods: {
-            header: {
-              languages: {}
+        // special case: languages (replace with object from config if available)
+        if (config && config.mods) {
+          this.gnCfg.mods.header.languages = angular.extend({
+            mods: {
+              header: {
+                languages: {}
+              }
             }
-          }
-        }, config).mods.header.languages;
-
+          }, config).mods.header.languages;
+        }
+        
         this.gnUrl = gnUrl || '../';
         this.proxyUrl = this.gnUrl + '../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
