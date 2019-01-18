@@ -54,6 +54,10 @@
     "batchreplacer-addReplacement": "Afegir reemplaçament",
     "massive-search-and-replace": "Buscar i Reemplaçar",
     "batchreplacer-vacuum-mode": "Mode neteja (vacuum)",
+    "appMinorVersionSupported": "Minor version supported:",
+    "appMajorVersionSupported": "Major version supported:",
+    "readwriteUUID": "UUID mode read/write:",
+    "schematronRules": "Standard schematron rules available",
     "vacuum-none": "Cap (és a dir, conserva l'element buit)",
     "vacuum-element": "Eliminar elements amb valor buit després del reemplaçament",
     "vacuum-record": "Eliminar tots els elements buits del registre després del reemplaçament",
@@ -674,7 +678,7 @@
     "saveSettings": "Desa la configuració",
     "saveUser": "Guardar",
     "saveVirtualCSW": "Guardar",
-    "schematron": "Schematron",
+    "schematron": "Validació",
     "schematronApplicationCriteria": "Aplicabilitat del Schematron",
     "schematronDescriptionAlwaysAccept": "Aquest criteri sempre passarà",
     "schematronDescriptionGeneric": "Aquest criteri passarà quan la metadada té '{{type}}' amb valor '{{value}}'",
@@ -1337,5 +1341,8 @@
     "usersInGroup": "Users in group",
     "ui-editorIndentType": "Editor page indent type",
     "ui-editorIndentType-default": "Default, minimal indents",
-    "ui-editorIndentType-colored": "Colored indents"
+    "ui-editorIndentType-colored": "Colored indents",
+    "filterSettings": "Filter settings",
+    "filterPlaceHolder": "e.g. INSPIRE",
+    "filterReset": "Reset the filter"
 }

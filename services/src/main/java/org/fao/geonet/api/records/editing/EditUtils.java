@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.lib.Lib;
@@ -69,6 +70,8 @@ class EditUtils {
     protected GeonetContext gc;
     protected AccessManager accessMan;
     protected UserSession session;
+    protected IMetadataValidator metadataValidator;
+
     public EditUtils(ServiceContext context) {
         this.context = context;
         this.gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -76,6 +79,7 @@ class EditUtils {
         this.xmlSerializer = gc.getBean(XmlSerializer.class);
         this.accessMan = gc.getBean(AccessManager.class);
         this.session = context.getUserSession();
+        this.metadataValidator = gc.getBean(IMetadataValidator.class);
 
     }
 

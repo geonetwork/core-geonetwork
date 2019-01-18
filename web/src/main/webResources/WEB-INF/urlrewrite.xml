@@ -291,6 +291,14 @@
   </rule>
   <rule>
     <note>
+      Redirects to hash with page name
+      Example URL: http://localhost:8080/geonetwork/page/about
+    </note>
+    <from>^/(.*)/page/(.*)</from>
+    <to type="permanent-redirect">%{context-path}/#/page/$2?page=$2</to>
+  </rule>
+  <rule>
+    <note>
       Redirects to hash with metadata (extjs-style permalinks)
       Example URL:
       http://localhost:8080/geonetwork/apps/search/?uuid=da165110-88fd-11da-a88f-000d939bc5d8
@@ -334,6 +342,22 @@
     </note>
     <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
     <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom search (html)
+    </note>
+    <from>^/opensearch/(.*)/(.*)/searchhtml?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search.html?fileIdentifier=$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom search (html)
+    </note>
+    <from>^/opensearch/(.*)/searchhtml?(.*)$</from>
+    <to type="forward">/srv/$1/atom.search.html</to>
   </rule>
 
   <rule>

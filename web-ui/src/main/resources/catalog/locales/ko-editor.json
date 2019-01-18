@@ -66,6 +66,7 @@
     "availableSet": "사용가능한 집합",
     "noChangesToApply": "선택한 레코드를 갱신하려면 먼저 변경내용을 정의하십시오.",
     "selectRecordsToEdit": "편집할 하나 이상의 레코드를 선택하십시오.",
+    "tooManyRecordInSelForSearch": "There is too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
     "advancedBatchEditMode": "고급 모드 (XPath)",
     "cancel": "취소",
     "cancelChangesFromNow": "편집 세션 시작  {{timeAgo}} 이후 모든 변경 내용을 취소합니다.",

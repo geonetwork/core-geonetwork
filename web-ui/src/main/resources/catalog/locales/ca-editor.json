@@ -66,6 +66,7 @@
     "availableSet": "Conjunt disponible",
     "noChangesToApply": "Per actualitzar els registres seleccionats, definiu primer els canvis.",
     "selectRecordsToEdit": "Seleccioneu un o més registres a editar.",
+    "tooManyRecordInSelForSearch": "There is too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
     "advancedBatchEditMode": "Mode avançat (XPath)",
     "cancel": "Cancel·lar",
     "cancelChangesFromNow": "Cancel·lar tots els canvis des de l'inici de la sessió d'edició {{timeAgo}}.",

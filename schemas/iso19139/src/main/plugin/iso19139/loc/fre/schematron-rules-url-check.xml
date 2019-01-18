@@ -1,6 +1,6 @@
 <strings>
-  <schematron.title>URL Validation</schematron.title>
-  <invalidURLCheck>Online Resource Link Check</invalidURLCheck>
-  <alert.invalidURL><div>Url is invalid, a 404 or some other error: </div></alert.invalidURL>
-  <alert.validURL><div>Url is valid</div></alert.validURL>
+  <schematron.title>Validation des liens</schematron.title>
+  <invalidURLCheck>Vérification des URLs</invalidURLCheck>
+  <alert.invalidURL><div>Le lien semble invalide. Une erreur a été retournée : </div></alert.invalidURL>
+  <alert.validURL><div>Le lien fonctionne.</div></alert.validURL>
 </strings>

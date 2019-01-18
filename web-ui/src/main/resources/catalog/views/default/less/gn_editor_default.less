@@ -40,6 +40,20 @@
           left: 0;
         }
       }
+      // highlight the active view
+      .gn-view-menu-button {
+        .dropdown-menu {
+          li {
+            &.disabled {
+              background-color: @dropdown-link-hover-bg;
+              a {
+                color: @gray-base;
+                font-weight: bold;
+              }
+            }
+          }
+        } 
+      }
     }
   }
 

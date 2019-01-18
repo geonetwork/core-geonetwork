@@ -66,6 +66,7 @@
     "availableSet": "Conjunto disponible",
     "noChangesToApply": "Para actualizar los registros seleccionados, defina primero los cambios.",
     "selectRecordsToEdit": "Seleccione uno o más registros a editar.",
+    "tooManyRecordInSelForSearch": "Hay demasiados registros (es decir, {{count}}) en la selección actual para mostrarlos aquí como una lista completa. Pero el proceso se ejecutará en la selección actual (ver primera pestaña).",
     "advancedBatchEditMode": "Modo avanzado (XPath)",
     "cancel": "Cancelar",
     "cancelChangesFromNow": "Cancelar todos los cambios desde el inicio de la sesión de edición {{timeAgo}}.",

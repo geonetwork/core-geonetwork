@@ -54,6 +54,10 @@
     "batchreplacer-addReplacement": "Добавить замену",
     "massive-search-and-replace": "Поиск и замена",
     "batchreplacer-vacuum-mode": "Режим \"Вакуум\"",
+    "appMinorVersionSupported": "Minor version supported:",
+    "appMajorVersionSupported": "Major version supported:",
+    "readwriteUUID": "UUID mode read/write:",
+    "schematronRules": "Standard schematron rules available",
     "vacuum-none": "None (т.е. сохранение пустого элемента)",
     "vacuum-element": "Удалить элементы, имеющие пустое значение после замены",
     "vacuum-record": "Удалить все пустые элементы в записи после замены",
@@ -674,7 +678,7 @@
     "saveSettings": "Сохранить настройки",
     "saveUser": "Сохранить",
     "saveVirtualCSW": "Сохранить",
-    "schematron": "Schematron",
+    "schematron": "Проверка",
     "schematronApplicationCriteria": "Schematron Applicability",
     "schematronDescriptionAlwaysAccept": "This criteria always passes",
     "schematronDescriptionGeneric": "This criteria passes when the metadata has '{{type}}' with the value '{{value}}'",
@@ -1337,5 +1341,8 @@
     "usersInGroup": "Users in group",
     "ui-editorIndentType": "Editor page indent type",
     "ui-editorIndentType-default": "Default, minimal indents",
-    "ui-editorIndentType-colored": "Colored indents"
+    "ui-editorIndentType-colored": "Colored indents",
+    "filterSettings": "Filter settings",
+    "filterPlaceHolder": "e.g. INSPIRE",
+    "filterReset": "Reset the filter"
 }

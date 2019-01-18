@@ -636,8 +636,17 @@ public class ServiceManager {
                         req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
                         req.endStream();
                     } else {
-                        req.beginStream("application/xml; charset=UTF-8", cache);
-                        req.write(response);
+                        if (response.getAttribute("redirect") != null) {
+                            HttpServiceRequest req2 = (HttpServiceRequest) req;
+                            req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                            req2.getHttpServletResponse().setHeader("Location", response.getAttribute("url").getValue());
+                            req2.getHttpServletResponse().setHeader("Content-type", response.getAttribute("mime-type").getValue());
+
+                        } else {
+                            req.beginStream("application/xml; charset=UTF-8", cache);
+                            req.write(response);
+
+                        }
                     }
                 }
             }

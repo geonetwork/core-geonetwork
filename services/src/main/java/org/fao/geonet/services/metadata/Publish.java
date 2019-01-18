@@ -48,6 +48,7 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -135,6 +136,7 @@ public class Publish {
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         MetadataValidationRepository metadataValidationRepository = appContext.getBean(MetadataValidationRepository.class);
         SettingManager sm = appContext.getBean(SettingManager.class);
+        IMetadataValidator validator = appContext.getBean(IMetadataValidator.class);
 
         boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
 
@@ -173,8 +175,7 @@ public class Publish {
                     if (!hasValidation) {
                         AbstractMetadata metadata = metadataRepository.findOne(mdId);
 
-                        dataManager.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
-                                new Document(metadata.getXmlData(false)), serviceContext.getLanguage());
+                        validator.doValidate(metadata, serviceContext.getLanguage());
                         dataManager.indexMetadata(nextId, true, null);
                     }
 

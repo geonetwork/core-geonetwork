@@ -66,6 +66,7 @@
     "availableSet": "Ensemble disponible",
     "noChangesToApply": "Définir les modifications afin de mettre à jour les fiches sélectionnées. ",
     "selectRecordsToEdit": "Sélectionner une ou plusieurs fiches à éditer.",
+    "tooManyRecordInSelForSearch": "Il y a trop d'élément dans la sélection en cours (ie. {{count}}) pour tous les afficher ici. La mise à jour sera faite sur la sélection malgré tout.",
     "advancedBatchEditMode": "Mode avancé (XPath)",
     "cancel": "Annuler",
     "cancelChangesFromNow": "Annuler les modifications faites depuis le début, {{timeAgo}}.",

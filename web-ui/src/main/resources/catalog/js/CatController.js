@@ -240,6 +240,10 @@
         },
         'signout': {
           'appUrl': '../../signout'
+        },
+        'page': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/catalog.search#/page'
         }
       }
     };

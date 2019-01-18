@@ -66,6 +66,7 @@
     "availableSet": "Saatavilla olevat",
     "noChangesToApply": "Määrittele muutokset ensin päivittääksesi valitut dokumentit.",
     "selectRecordsToEdit": "Valitse yksi tai useampia dokumentteja muokattavaksi.",
+    "tooManyRecordInSelForSearch": "There is too many (ie. {{count}}) records in current selection to be displayed here as a full list. But the process will run on the current selection (see first tab).",
     "advancedBatchEditMode": "Advanced-tila (XPath)",
     "cancel": "Peruuta",
     "cancelChangesFromNow": "Peruuta kaikki {{timeAgo}} sitten tehdyt muutokset",

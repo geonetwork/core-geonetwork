@@ -105,6 +105,15 @@
     <xsl:param name="refToDelete" required="no"/>
     <xsl:param name="overrideLabel" required="no"/>
 
+
+
+    <!-- In flat mode, block level may contains
+    validation report. Display them when traversing the tree. -->
+    <xsl:if test="$isFlatMode">
+      <xsl:call-template name="get-errors"/>
+    </xsl:if>
+
+
     <xsl:apply-templates mode="mode-iso19139" select="*|@*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
@@ -148,16 +157,10 @@
       </xsl:apply-templates>
     </xsl:variable>
 
-    <xsl:variable name="errors">
-      <xsl:if test="$showValidationErrors">
-        <xsl:call-template name="get-errors"/>
-      </xsl:if>
-    </xsl:variable>
     <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label" select="$label/label"/>
       <xsl:with-param name="editInfo" select="if ($refToDelete) then $refToDelete else gn:element"/>
-      <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
       <xsl:with-param name="attributesSnippet" select="$attributes"/>
@@ -173,6 +176,8 @@
     </xsl:call-template>
 
   </xsl:template>
+
+
 
 
   <!-- Render simple element which usually match a form field -->
@@ -246,14 +251,6 @@
       </xsl:apply-templates>
     </xsl:variable>
 
-    <xsl:variable name="errors">
-      <xsl:if test="$showValidationErrors">
-        <xsl:call-template name="get-errors">
-          <xsl:with-param name="theElement" select="$theElement"/>
-        </xsl:call-template>
-      </xsl:if>
-    </xsl:variable>
-
 
     <xsl:variable name="values">
       <xsl:if test="$isMultilingualElement">
@@ -325,7 +322,6 @@
       <xsl:with-param name="label"
                       select="$labelConfig/*"/>
       <xsl:with-param name="value" select="if ($isMultilingualElement) then $values else *"/>
-      <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
         <xsl:with-param name="widgetParams"/>-->
