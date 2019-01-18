@@ -60,6 +60,7 @@
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
+      $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
 
       statusSystemRating =
          gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
