@@ -271,18 +271,6 @@
         // and override with config arg if required
         angular.merge(this.gnCfg, config, {});
 
-        if (gnUrl) {
-          this.gnUrl = gnUrl + this.iso3lang + '/';
-
-          // add current protocol if the specified api.gn.url has none
-          if (this.gnUrl.substr(0, 2) === '//') {
-            var protocol = window.location.href.substr(0, 5) === 'https' ?
-              'https:' : 'http:';
-            this.gnUrl = protocol + this.gnUrl;
-          }
-        }
-
-
         // special case: languages (replace with object from config if available)
         if (config && config.mods) {
           this.gnCfg.mods.header.languages = angular.extend({
@@ -293,8 +281,19 @@
             }
           }, config).mods.header.languages;
         }
-        
-        this.proxyUrl = this.gnUrl + '../proxy?url=';
+
+        if (gnUrl) {
+          this.gnUrl = gnUrl + this.iso3lang + '/';
+
+          // add current protocol if the specified api.gn.url has none
+          if (this.gnUrl.substr(0, 2) === '//') {
+            var protocol = window.location.href.substr(0, 5) === 'https' ?
+              'https:' : 'http:';
+            this.gnUrl = protocol + this.gnUrl;
+          }
+        }
+        this.proxyUrl = this.gnUrl + '../../proxy?url=';
+
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
