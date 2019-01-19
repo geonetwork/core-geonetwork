@@ -28,6 +28,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.BadSoapResponseEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
@@ -340,7 +341,7 @@ class Harvester implements IHarvester<HarvestResult> {
             String uuid = sourceEl.getChildText("uuid");
             String name = sourceEl.getChildText("name");
 
-            Source source = new Source(uuid, name, new HashMap<String, String>(), false);
+            Source source = new Source(uuid, name, new HashMap<String, String>(), SourceType.harvester);
             // If translation element provided and has values, use it.
             // Otherwise use the default ones from the name of the source
             if ((sourceEl.getChild("label") != null) &&
@@ -377,7 +378,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     retrieveLogo(context, params.host, sourceUuid);
                 } else {
                     String sourceName = "(unknown)";
-                    source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), false);
+                    source = new Source(sourceUuid, sourceName, new HashMap<String, String>(), SourceType.harvester);
                     Resources.copyUnknownLogo(context, sourceUuid);
                 }
 

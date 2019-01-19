@@ -60,6 +60,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
@@ -572,7 +573,7 @@ public class Importer {
 
             // --- only update sources table if source is not current site
             if (!source.equals(gc.getBean(SettingManager.class).getSiteId())) {
-                Source source1 = new Source(source, sourceName, sourceTranslations, true);
+                Source source1 = new Source(source, sourceName, sourceTranslations, SourceType.externalportal);
                 context.getBean(SourceRepository.class).save(source1);
             }
         }

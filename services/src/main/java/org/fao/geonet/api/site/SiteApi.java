@@ -413,7 +413,7 @@ public class SiteApi {
             final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
             sourceRepository.save(newSource);
 
             PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
