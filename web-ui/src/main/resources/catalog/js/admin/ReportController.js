@@ -140,15 +140,38 @@
             }
           });
 
-      function loadGroups() {
-        $http.get('../api/groups').success(function(data) {
-          $scope.groups = data;
-        }).error(function(data) {
-          // TODO
-        });
-      }
 
-      loadGroups();
+      $scope.$watch('user.id', function(newId) {
+        if (angular.isDefined(newId)) {
+          loadGroups();
+        }
+      });
+
+      function loadGroups() {
+        if ($scope.user.profile == null) return;
+
+        if ($scope.user.profile === 'Administrator') {
+          $http.get('../api/groups').success(function(data) {
+            $scope.groups = data;
+          }).error(function(data) {
+            // TODO
+          });
+        } else {
+          $http.get('../api/users/' + $scope.user.id + '/groups').success(function(data) {
+            // Extract the group property from user groups array
+            var groups = _.map(data, 'group');
+
+            // Get unique groups
+            $scope.groups = _.uniq(groups, function (e) {
+              return e.id;
+            });
+
+          }).error(function(data) {
+            // TODO
+          });
+
+        }
+      }
 
     }]);
 
