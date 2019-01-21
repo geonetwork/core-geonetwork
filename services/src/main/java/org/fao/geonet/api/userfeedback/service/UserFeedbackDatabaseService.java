@@ -94,10 +94,15 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         userFeedbackRepository.delete(userFeedback);
 
         // Then update global metadata rating
+        List<UserFeedback> listFeedbacks = retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true);
         IMetadataUtils dataManager = appContext.getBean(IMetadataUtils.class);
-        UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
-            .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
-        dataManager.rateMetadata(metadata.getId(), ip, averageRating.getRatingAverages().get(AVERAGE_ID));
+        Integer average = 0;
+        if(listFeedbacks.size()>0) {
+            UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
+                    .getAverage(listFeedbacks);
+            average = averageRating.getRatingAverages().get(AVERAGE_ID);
+        }
+        dataManager.rateMetadata(metadata.getId(), ip, average);
     }
 
     /*

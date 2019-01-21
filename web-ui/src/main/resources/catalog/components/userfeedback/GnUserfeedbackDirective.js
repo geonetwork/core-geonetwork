@@ -395,7 +395,7 @@
 
                   return false;
                 }
-                if (scope.uf.authorOrganization.length > 64) {
+                if (scope.uf.authorOrganization && scope.uf.authorOrganization.length > 64) {
                   scope.authorOrganizationError =
                     $translate.instant('GUFtooLong');
 
