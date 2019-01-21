@@ -175,7 +175,7 @@
                     scope.enableallowedcategories =
                         data.enableAllowedCategories;
                     scope.allowedcategories = [];
-                    angular.forEach(data.allowedcategories, function(c) {
+                    angular.forEach(data.allowedCategories, function(c) {
                       scope.allowedcategories.push(c.id);
                     });
                   });
