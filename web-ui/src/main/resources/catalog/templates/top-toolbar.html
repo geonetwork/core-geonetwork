@@ -146,7 +146,7 @@
             alt="{{'avatar' | translate}}"
             data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>
           <div class="gn-user-info hidden-sm">
-            &nbsp;{{user.name}} {{user.surname}}<br>
+            {{user.name}} {{user.surname}}<br>
             <span class="gn-user-role">{{user.profile | lowercase | translate}}</span>
           </div>
           <span class="alert alert-danger ng-hide"
