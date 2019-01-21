@@ -98,13 +98,21 @@
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
 
           scope.tasks = [];
+          scope.hasVisibletasks = false;
 
           function loadTasks() {
             return $http.get('../api/status/task', {cache: true}).
             success(function(data) {
               scope.tasks = data;
+              scope.getVisibleTasks();
             });
           };
+
+          scope.getVisibleTasks = function() {
+            $.each(scope.tasks, function(i,t) {
+              scope.hasVisibletasks = scope.taskConfiguration[t.name].isVisible();
+            });
+          }
 
           scope.taskConfiguration = {
             doiCreationTask: {

@@ -44,10 +44,10 @@
           <span data-ng-if="!md.isPublished()"
                 data-translate="">publish</span>&nbsp;
 
-          <i class="fa"
+          <i class="fa fa-fw"
              data-ng-if="!md.isPublished() && md.hasValidation()"
              data-ng-class="md.isValid() ? 'gn-recordtype-n text-success' : 'gn-recordtype-n text-danger'"></i>
-          <i class="fa gn-recordtype-n text-muted"
+          <i class="fa fa-fw gn-recordtype-n text-muted"
              data-ng-if="!md.isPublished() && !md.hasValidation()"></i>
         </a>
 
@@ -70,13 +70,13 @@
         <a role="menuitem"
            data-ng-href=""
            data-ng-click="mdService.startWorkflow(md, getCatScope())">
-          <i class="fa fa-code-fork"></i>&nbsp;
+          <i class="fa fa-fw fa-code-fork"></i>&nbsp;
           <span data-translate="">enableWorkflow</span>
         </a>
       </li>
 
       <li role="menuitem" class="divider"
-          data-ng-if="user.isConnected()"></li>
+          data-ng-if="user.isConnected() && user.canEditRecord(md)"></li>
 
 
       <li data-ng-repeat="t in tasks"
@@ -88,8 +88,7 @@
         </a>
       </li>
       <li role="menuitem" class="divider"
-          data-ng-if="user.isConnected() && tasks.length > 0">&nbsp;</li>
-
+          data-ng-if="user.isConnected() && tasks.length > 0 && hasVisibletasks">&nbsp;</li>
 
       <li role="menuitem">
         <a data-ng-href=""
