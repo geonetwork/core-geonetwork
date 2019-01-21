@@ -156,7 +156,17 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc.perform(delete("/api/groups/" + sampleGroup.getId())
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(403));
+
+        this.mockMvc.perform(delete("/api/groups/" + sampleGroup.getId() + "?force=true")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
+
+        this.mockMvc.perform(get("/api/groups/" + sampleGroup.getId())
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(404));
 
         sampleGroup = _groupRepo.findByName("sample");
         Assert.assertNull(sampleGroup);
