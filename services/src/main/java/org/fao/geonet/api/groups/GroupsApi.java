@@ -73,6 +73,8 @@ import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
 
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 @RequestMapping(value = {
     "/api/groups",
     "/api/" + API.VERSION_0_1 +
@@ -492,7 +494,6 @@ public class GroupsApi {
 
             if (reindex.size() > 0 && force) {
                 operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, groupIdentifier);
-                userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
 
                 //--- reindex affected metadata
                 DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
@@ -501,6 +502,16 @@ public class GroupsApi {
                 throw new NotAllowedException(String.format(
                     "Group %s has privileges associated with %d record(s). Add 'force' parameter to remove it or remove privileges associated with that group first.",
                     group.getName(), reindex.size()
+                ));
+            }
+
+            final List<Integer> users = userGroupRepo.findUserIds(where(UserGroupSpecs.hasGroupId(group.getId())));
+            if (users.size() > 0 && force) {
+                userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
+            } else if (users.size() > 0 && !force) {
+                throw new NotAllowedException(String.format(
+                    "Group %s is associated with %d user(s). Add 'force' parameter to remove it or remove users associated with that group first.",
+                    group.getName(), users.size()
                 ));
             }
 
