@@ -154,8 +154,7 @@
               gnUserfeedbackService.loadComments(scope.mdrecord.getUuid(),
                 scope.nbOfComments || defaultNbOfComments).then(
                 function(response) {
-                  scope.fewCommentsList =
-                    scope.fewCommentsList.concat(response.data);
+                  scope.fewCommentsList = [].concat(response.data);
                   scope.loaded = true;
                 }, function(response) {
                   console.log(response.statusText);
@@ -395,7 +394,7 @@
 
                   return false;
                 }
-                if (scope.uf.authorOrganization.length > 64) {
+                if (scope.uf.authorOrganization && scope.uf.authorOrganization.length > 64) {
                   scope.authorOrganizationError =
                     $translate.instant('GUFtooLong');
 
