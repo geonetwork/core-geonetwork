@@ -282,7 +282,7 @@
             controller: 'GnReportController',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
@@ -291,7 +291,7 @@
             controller: 'GnReportController',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
@@ -299,7 +299,7 @@
             templateUrl: tplFolder + 'admin.html',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
