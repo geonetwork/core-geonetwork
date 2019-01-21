@@ -609,7 +609,8 @@
       };
 
       var createOrModifyGroup = function() {
-        if ($scope.groupSelected.defaultCategory === '') {
+        if (($scope.groupSelected.defaultCategory) &&
+            ($scope.groupSelected.defaultCategory.id == null)) {
           $scope.groupSelected.defaultCategory = null;
         }
         $http.put('../api/groups' + (
