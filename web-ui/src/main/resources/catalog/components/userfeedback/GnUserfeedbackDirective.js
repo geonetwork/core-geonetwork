@@ -154,8 +154,7 @@
               gnUserfeedbackService.loadComments(scope.mdrecord.getUuid(),
                 scope.nbOfComments || defaultNbOfComments).then(
                 function(response) {
-                  scope.fewCommentsList =
-                    scope.fewCommentsList.concat(response.data);
+                  scope.fewCommentsList = [].concat(response.data);
                   scope.loaded = true;
                 }, function(response) {
                   console.log(response.statusText);
