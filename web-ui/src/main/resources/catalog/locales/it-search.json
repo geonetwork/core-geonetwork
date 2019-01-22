@@ -153,7 +153,7 @@
     "browseBy": "Sfoglia per",
     "browseTopics": "Sfogliare gli argomenti",
     "browseTypes": "Sfogliare risorse",
-    "versionDetails": "Offerto da <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
+    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "Ultime Notizie",
     "preferredRecords": "I più visti",
     "about": "Su",

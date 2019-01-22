@@ -153,7 +153,7 @@
     "browseBy": "탐색: ",
     "browseTopics": "주제 탐색",
     "browseTypes": "자원 탐색",
-    "versionDetails": "<span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span> 제공",
+    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "최근 소식",
     "preferredRecords": "가장 인기있는",
     "about": "소개",

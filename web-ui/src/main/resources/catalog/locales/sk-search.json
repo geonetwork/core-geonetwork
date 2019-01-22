@@ -153,7 +153,7 @@
     "browseBy": "Vyhľadávať podľa",
     "browseTopics": "Vyhľadávať tému",
     "browseTypes": "Vyhľadávať zdroje",
-    "versionDetails": "Funguje na základe <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
+    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "Najnovšie správy",
     "preferredRecords": "Najobľúbenejšie",
     "about": "Info",

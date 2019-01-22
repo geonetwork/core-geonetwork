@@ -153,7 +153,7 @@
     "browseBy": "Buscar por",
     "browseTopics": "Explorar temas",
     "browseTypes": "Explorar recursos",
-    "versionDetails": "Powered by <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
+    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "Últimas noticias",
     "preferredRecords": "Más popular",
     "about": "Acerca de",
