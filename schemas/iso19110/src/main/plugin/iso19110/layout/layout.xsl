@@ -190,9 +190,9 @@
 
   <!-- Render simple element which usually match a form field -->
   <xsl:template mode="mode-iso19110" priority="100"
-                match="*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
-    gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
-    gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName]">
+                match="*[gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:UnlimitedInteger|
+                        gco:Decimal|gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|
+                        gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName]">
 
     <xsl:variable name="elementSchema"
                   select="if(namespace-uri() = 'http://www.isotc211.org/2005/gfc')
