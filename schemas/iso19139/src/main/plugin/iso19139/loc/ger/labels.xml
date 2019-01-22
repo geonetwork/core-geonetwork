@@ -3787,4 +3787,12 @@
   <element name="gmd:MD_ScopeCode">
     <label>Anwendungsbereich</label>
   </element>
+  <element name="gco:lower">
+    <label>Lower cardinality</label>
+    <description>Lower cardinality</description>
+  </element>
+  <element name="gco:upper">
+    <label>Upper cardinality</label>
+    <description>Upper cardinality</description>
+  </element>
 </labels>

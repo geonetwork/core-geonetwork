@@ -153,7 +153,7 @@
     "browseBy": "Skoða eftir",
     "browseTopics": "Vafra eftir þemum",
     "browseTypes": "Skoða eftir tegundum",
-    "versionDetails": "Kerfi <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
+    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "Nýjustu skráningar",
     "preferredRecords": "Vinsælast",
     "about": "Um",

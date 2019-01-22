@@ -153,7 +153,7 @@
     "browseBy": "Navegació per",
     "browseTopics": "Explorar temes",
     "browseTypes": "Explorar recursos",
-    "versionDetails": "Powered by <span class = 'gn-version'>{{platform}} {{version}}. {{Subversion}}</span>",
+    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "Darreres notícies",
     "preferredRecords": "Els més populars",
     "about": "Quant a",

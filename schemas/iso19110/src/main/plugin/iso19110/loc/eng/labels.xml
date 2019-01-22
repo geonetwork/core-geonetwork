@@ -39,6 +39,10 @@
     <label>Name</label>
     <description>Feature catalogue name</description>
   </element>
+  <element name="gco:range">
+    <label>Range</label>
+    <description></description>
+  </element>
   <element name="gfc:scope">
     <label>Scope</label>
     <description>Scope definition</description>

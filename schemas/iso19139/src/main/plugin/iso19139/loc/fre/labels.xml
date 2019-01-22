@@ -6488,6 +6488,10 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <label>Minimum</label>
     <description/>
   </element>
+  <element name="gco:upper">
+    <label>Maximum</label>
+    <description></description>
+  </element>
   <element name="gmx:language">
     <label>Langue des métadonnées</label>
     <description></description>

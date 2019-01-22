@@ -153,7 +153,7 @@
     "browseBy": "Blader per",
     "browseTopics": "Blader per onderwerpen",
     "browseTypes": "Blader door bronnen",
-    "versionDetails": "Mogelijk gemaakt door <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
+    "versionDetails": "Powered by GeoNetwork <span class='gn-version'>{{platform}} {{version}}.{{subversion}}</span>",
     "lastRecords": "Laatst gewijzigd",
     "preferredRecords": "Meest populair",
     "about": "Over",

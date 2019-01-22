@@ -38,6 +38,10 @@
     <label>Nom du catalogue attributaire</label>
     <description>Nom général attribué au catalogue</description>
   </element>
+  <element name="gco:range">
+    <label>Intervalle</label>
+    <description></description>
+  </element>
   <element name="gfc:scope">
     <label>Contenu du catalogue attributaire</label>
     <description>Contenu du catalogue attributaire</description>
@@ -92,14 +96,6 @@
     <label>Organisation responsable</label>
     <description>Identification des personnes et organisations responsables de la ressource
     </description>
-  </element>
-  <element name="gco:lower">
-    <label>Cardinalité min</label>
-    <description>Cardinalité min</description>
-  </element>
-  <element name="gco:upper">
-    <label>Cardinalité max</label>
-    <description>Cardinalité max</description>
   </element>
   <element name="gfc:cardinality">
     <label>Cardinalités</label>
