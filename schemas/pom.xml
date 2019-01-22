@@ -28,7 +28,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
   </parent>
 
   <version>3.5</version>
@@ -54,7 +54,7 @@
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
-    <gn.project.version>3.5.0-SNAPSHOT</gn.project.version>
+    <gn.project.version>3.7.0-SNAPSHOT</gn.project.version>
   </properties>
 
 </project>
