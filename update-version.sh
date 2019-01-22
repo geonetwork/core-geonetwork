@@ -38,19 +38,19 @@ then
 fi
 
 
-if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
+if [[ $1 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
     echo
 else
 	echo
 	echo 'Update failed due to incorrect versionnumber format: ' $1
-	echo 'The format should be three numbers separated by dots with optional -SNAPSHOT. e.g.: 2.7.0 or 2.7.0-SNAPSHOT'
+	echo 'The format should be three numbers separated by dots with optional -SNAPSHOT. e.g.: 2.7.0 or 2.7.0-SNAPSHOT or 2.7.x-SNAPSHOT'
 	echo
 	echo "Usage: ./`basename $0 $1` 2.7.0 2.7.0-RC0"
 	echo
 	exit
 fi
 
-if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
+if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9x]+(-SNAPSHOT|-RC[0-2]|-[0-9]+)?$ ]]; then
     # Retrieve version and subversion
     if [[ $2 =~ ^[0-9]+.[0-9]+.[0-9]+-.*$ ]]; then
         new_version_main=`echo $2 | cut -d- -f1`
@@ -121,6 +121,4 @@ mvn versions:set-property -Dproperty=gn.project.version -DnewVersion=${new_versi
 echo 'Module'
 mvn versions:set -DnewVersion=${new_version} -DgenerateBackupPoms=false -Pwith-doc
 echo
-
-
 
