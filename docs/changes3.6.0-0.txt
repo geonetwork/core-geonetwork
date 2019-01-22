@@ -1,0 +1,648 @@
+================================================================================
+===
+=== GeoNetwork 3.6.0: List of changes
+===
+================================================================================
+- Update doc to 3.6.0 version.
+- User administrator can delete his own group #2391
+- INSPIRE Remote validation not available in the metadata editor #3493
+- Translation updates (#3489)
+- Record view / Do not display twice feature catalogue links (#3490)
+- ISO19139 / Template must not have schema location (#3492)
+- Update help link for metadata standards
+- Administration menu fixes for UserAdmin profile #3486
+- Fix for 'Manage record' button dropdown (#3474)
+- Metadata editor - empty category entry in Categories menu #3479
+- Metadata editor - categories selection doesn't work for groups with allowed categories list #3480 (#3481)
+- User administrator can delete his own group #2391
+- Small fix for outlining username/user role in the menu
+- User Feedback multiple issues (#3477)
+- Metadata rating options (advanced mode) doesn't display always when the option is enabled #3469
+- Metadata detail page for Registered user displays Manage record menu with no options #3468
+- Batch editor / Display all type of updates when selection is too big
+- Record history options are displayed in the metadata detail page when the related option is disabled #3466
+- Language selector is not displayed #3464
+- Footer text for "Powered by" doesn't include "GeoNetwork" only the version number #2988
+- Update from transifex and minor cosmetic fix - missing space between icon and text.
+- Exception in the log due to empty setting, expecting json value instead #3460 (#3461)
+- Fixes for INSPIRE Atom remote feeds: (#2950)
+- itest / Improve test coverage  (#3380)
+- Search / Filter tag not translated #3448.
+- SQL Migration / UI config should be updated using JsonDatabaseMigration (#3456)
+- Editor / Inline validation errors (#3298)
+- Simplified the highlight of the active view, and also added the highlight to the detail view
+- Position the icon in front of the menu item label. Change the icon to a circle icon.
+- Cleanup unused style
+- Highlight the active view in the dropdown menu of the editor
+- Load static pages into GeoNetwork (#3285)
+- Small improvements to the mini map: - background-color added - toggle button has an `:focus` background - mini map is hidden on small screens - larger font for attribution text
+- Harvester / Runtime exception on startup with non escaped character #3422. Harvester URL not properly saved when containing characters to be escaped.
+- Re-arrange the elements in the advanced search form
+- Align facet toggle buttons to the left
+- Match the dropdown menu colours with the sidebar colours
+- Installer / Avoid error when parent dir does not exist.
+- Editor / When label are placed above field, the offset of action button should be removed to keep all aligned left
+- No JS mode / update html-only header/footer to match more closely the ng-header.
+- Editor / Bbox / Do not show projection selector if there is only one.
+- Batch editing / List of selected record is invalid when too many records are selected due to HTTP 414 URI too long error. Display a message instead.
+- Editor / Codelist / Hide in edit mode when configured
+- Editor / Overview manager / Remove properly external thumbnail.
+- DOI / Cleanup and icon to highlight the status.
+- Tasks / Add configuration to define if a task is visible or not.
+- Fix for the width of a datepicker
+- Admin console / Restore message suggesting to load samples & template when empty the catalogue is.
+- Broken Thesaurus page in the admin #3436 .
+- Fix for the logo in the header: the default option is set to `false` (do not show the logo in the header)
+- Admin console / Move standard 1st level tab to metadata section.
+- Editor / Region selector / Add an optional attribute to set the default
+- Wro4j / add a resource processor to remove sourcemap urls
+- Metadata editor - Map widget strips decimals if are all 0s causing issues with INSPIRE validator #2229
+- Increase the `z-index` of the topbar and decrease the `z-index` of the draw map elements in the editor.
+- Map viewer not zooming to context extent
+- ISO19139 / Codelist typo (#3412)
+- Build / Fix maven warning (#3417)
+- ISO19139 / ISO website is now available with HTTPs (#3420)
+- Fix for too small maps in the editor
+- Editor / Link list / Remove duplicated protocol icon
+- Added phone number and used the `<address>` element
+- Restyle and reorganise the elements on the admin dashboard
+- Map / Restore layer style.
+- added dutch translation to iso19139 processes
+- UI Improvements to the admin interface: - menu in sidebar on the left - uniform use of panels and rows - filter option for `settings` and `user interface` settings - reorganised `CSS & Style` page, added buttons to toolbar - small changes to the logo page
+- Fixes harvester type names not translated (#3362) / Fix missing label
+- Record history and tasks / Misc fix (#3397)
+- Library / Moment.js / Update to 2.23.0.
+- Fix a bug handling initial value of `ui/config` setting
+- Adjusted map in the editor. Style taken from the detail view. (#3390)
+- Record history / Exception when owner is null. (#3394)
+- Don't concat port number if it's null or 80 in settings (#3393)
+- Fixes for the editor fields: (#3389)
+- Updates from transifex.
+- Editor / Simple overview manager #3170 - fix sibling collection.
+- NullPointerException in metadata notifications management (#3383)
+- DB / Migration needs context to be available for 'new' migration tasks (#3366)
+- UI configuration improvement. (#3378)
+- WRO4J / New lines are now preserved in template cache. Fix test.
+- UI CSS Config / When updated, the config can't take effect because WRO4J reload model API is not available (#3377)
+- Build / Add maven property to configure application name (#3374)
+- hide datepicker artifact (#3312)
+- WRO4J / Properly handle new lines for HTML templates (#3040) (#3311)
+- Tooltip for datepickers in the editor (#3344)
+- ES / Configure ES only when the profil is set. HealthCheck on Kibana only if URL is not empty to avoid exception in the log. HealthCheck on index with the type to avoid forbidden when ES cluster is secured. (#3371)
+- Editor / Month date / When saving year is reset to current year (#3369)
+- Fix back to search button. Currently does nothing. Issue introduced by https://github.com/geonetwork/core-geonetwork/pull/3197. Cleanup. (#3379)
+- ISO19139 / Formatter / Advanced view / Display link on keyword using Anchor. Fix for #2358 (#3320)
+- ISO19139 / Schematron INSPIRE / Check at least one lineage is defined (#3280)
+- Fixes harvester type names not translated (#3362)
+- Improve display of `tables` and `listviews` on small screens (#3381)
+- Extra help text in the admin for the `logo in header` part (#3382)
+- Editor / Simple overview manager (#3170)
+- Merge pull request #3368 from MichelGabriel/master-import-message
+- Record history and tasks (#3209)
+- Adds license header
+- SVN / Add possibility to turn off SVN / Improve message
+- SVN / Add possibility to turn off SVN.
+- Update translations.
+- Small Improved styling for the metadata editor (#3376)
+- Use a variable for the background color
+- WFS Indexing / Admin panel does not display correct information
+- Improvements in projectionSwitcher configuration (#3330)
+- Fix for categories update
+- Map / 3D mode does not work. Turn off terrain provider which is not freely accessible anymore  #3317
+- Map is blank in non debug mode when opening the map tab. Force OL to render the map if not yet initialized.
+- Merge pull request #3304 from geonetwork/fix/workflow/emailinwronglanguage
+- Merge pull request #3357 from juanluisrp/fix/maps-manager-proj-config
+- Fix the z-index so the menu is displayed on top of the progress bar
+- Replaced progress bar with a fixed progress bar on top of the page. Added a scroll to top after the import button is clicked.
+- DB / Missing indexes #3358
+- Merge pull request #3306 from MichelGabriel/master-logo-position
+- Adds the username to the users select (#3360) (#3364)
+- Merge branch 'master' into master-logo-position
+- Avoid GN crashes when a projection is not correctly defined
+- Fixes a bug when checking the waitForUse attribute in SearchFormDirective
+- Refresh board after bulk ownership change
+- Display users of a group in the group maintenance #3341
+- Routing in user/groups controller using the user or group id doesn't work #3342
+- Patches typeahead.bundle.js to fix an error in results shown (#3332)
+- TemplatesUriLocator.locate assumes file system path separator is uri path separator #3328
+- Merge pull request #2 from juanluisrp/master-logo-position-settings
+- Uses JsonDatabaseMigration instead of SQL migration
+- Changes colouring and added toggle function
+- Set the locale for the features table
+- ArcSDE harvester - Allow SQLXML type
+- ID's added to: - Import pages - Harvester pages - Online Resource pages
+- Map / Specific error message for GetCapabilities returning 401 ie. Unauthorized.
+- Changed function to close a modal
+- Removing validation button from panel
+- Allow deleting a harvester even if no bean for it is defined
+- Print stack trace #2607
+- If a harvester type bean is not available don't fail on GN initialisation
+- Add possibility to change the background color of the header
+- Settings for showing the logo in the header
+- Merge pull request #3259 from juanluisrp/2569-view-edit-map-config
+- Merge pull request #3254 from geonetwork/fix/settings/linksindoc
+- Workflow / Email not in correct language
+- Merge pull request #3299 from Delawen/fix_lucene_viewing
+- Fixing tests
+- Merge pull request #2866 from PascalLike/cssStyleImprovements
+- Merge pull request #3262 from Delawen/fix_lucene_viewing
+- Merge pull request #3248 from fxprunayre/fix/editor/regionselectorlimitations
+- Merge pull request #3252 from geonetwork/thesaurus/regions/name-update/cz
+- Merge pull request #3183 from geonetwork/feature/editor/directivetohideprefixorsuffix
+- Merge pull request #3197 from fxprunayre/feature/editorboard-search-initialized-by-url
+- Merge pull request #3205 from geonetwork/feature/wfsharvester/align-with-sextant
+- Merge pull request #3246 from jahow/indexing-status-widget
+- let index request stay synchronous
+- jolokia use restricted to authenticated user
+- move jmx mbean exporter to core
+- forbid operation/command thru jolokia
+- user need to be authenticated to access jolokia features
+- Indexing / more info on tasks with tooltip
+- Indexing / added translations for task status
+- Indexing / show actual status of running indexing tasks
+- Indexing / add basic UI directives for rendering status
+- publish jmx idx threads metrics make probe expire use jolokia to make probe available (using something like /geonetwork/jolokia/read/geonetwork:name=indexing-task,idx=*) let service return probe id
+- Remove non ISO19139 namespace from onlinesrc-add process #3292 (#3294)
+- WFS filter / do not compromise the global state when clicking on more...
+- fix date range behaviour in wfs filters
+- add filter on facets with more values
+- ES / Add support for custom index name (and index collections).
+- WFS indexing / Add comment.
+- WFS indexing / Clean todo.
+- WFS indexing / Remove proxy from URL and highlight some issues related to (probably fixed in?) Sextant.
+- WFS indexing / Fix concat of columns in feature type description.
+- WFS indexing / Fix invalid handler when PUT report in index. Ids in ES 6.4.x needs to be URL encoded.
+- WFS indexing / Replace WMS by WFS.
+- WFS indexing / Fix JMS hardcoded property. Needs to be loaded from property file on startup. Not filtered on build.
+- WFS indexing / Add options to set a fixed number of decimals (instead of the default 4 applies by GeometryJSON) and optionnaly apply a precision model to reduce the geometry complexity and avoid to build invalid geometry when removing decimals. This may create a simplified geometry above the equivalent displayed in WMS. Set those values depending on the WFS harvested.
+- Re-simplify WFS index menu and make sure features have unique ID when harvesting
+- ES / INDEXING / want geotools sax parse exception to be file logged
+- ES/ INDEXING / refactor + phaser for async
+- Merge pull request #3128 from fxprunayre/es-feature/indexing/morerobust
+- Fix js error in harvester creation (#3289)
+- XslUtil.getSiteUrl returns the url with an additional slash #3286
+- Adding datasets to a service metadata and saving the metadata corrupts the service metadata #3283
+- Merge pull request #3277 from julsbreakdown/use_lang_bootstrap_table
+- Fix identation
+- Editor / Fix alignement of field using div directive eg. topicCategory and duration. (#3279)
+- Remove unused schema.
+- DOI / Cleanup, typo and remove testmode which is now set by the API endpoint.
+- DOI / Add API to check status and create DOI.
+- DOI / Add verification call example.
+- DOI / Add draft DOI manager.
+- Shell script  to add a metadata schema in GeoNetwork for development (#3232)
+- remove test line
+- remove line
+- remove dupicate code
+- WPS 2 harvester - Provide service template for each process
+- Small improvements to the scrollspy: - increased the `z-index` for the `toggle` and `go to top` buttons - added a `close` button in the upper right corner
+- GeoNetwork harvester doesn't add new files when reharvesting using MEF format #3273
+- Add headers to `multiselect` select boxes (#3153) (#3276)
+- ISO19139 / Dimension size is not a multilingual field. (#3278)
+- Map / Small improvements - Display style menu only when there are styles. Set WFS property even when no record attached.
+- Map / Small improvements.
+- Merge pull request #3215 from Delawen/thesaurus_tests_fix
+- Merge pull request #3147 from Delawen/show_layers_with_errors
+- Merge pull request #3253 from julsbreakdown/do_not_trigger_search_if_no_geometry
+- Use locale file for bootstrap table
+- Disable browser autocomplete in the editor form
+- Add support for xpath in the metadata editor fields configuration
+- Support custom titles for metadata editor tables
+- Opens cron help in a new window (#3266)
+- Update to latest ES type
+- Bug fix: Registered users were able to see metadata without viewing privileges but with editing privileges
+- Load projection definitions before creating maps
+- API / Delete metadata record API endpoint doesn't work when a UUID is provided #3255 (#3256)
+- Settings / Link in setting documentation not rendered
+- Search not trigged if geom is empty or undefined
+- Thesaurus / Czech Republic geographical short name is now Czechia
+- Editor / Region selection.
+- ES / More doc & improvement.
+- Formatter / XSL / Remove hardcoded sample title
+- Batch edit / Add link to record
+- Utility method to retrieve the thesaurus dir from xsl processes.
+- Indexing / Add some boolean fields.
+- Access manager / Sort groups and avoid long list
+- API / Standard / Codelist not properly retrieved when multiple defined. (#3188)
+- ISO19139 / Editor / Add possibility to customize field label for fileIdentifier or dateStamp (#3182)
+- API / Formatter / Add JSON and text responses support.
+- ISO19139 / Formatter / Last publication date in case record has multiple publication date.
+- ISO19139 / Formatter / Add datacite format scope mapping.
+- ISO19139 / Formatter / Fix test checking the list of formatter present.
+- ISO19139 / Formatter / Add datacite format - set DOI and align with ECCC practice.
+- ISO19139 / Formatter / Add datacite format.
+- Utility method to change metadata schema identifier
+- Utility method to change metadata schema identifier
+- added a regex for detecting image files in render-variables.xsl
+- XSL Formatter / handle logos in contact info
+- PDF export/full view fails if ISO19139 has several publication dates #3219
+- set version 1.1.1 as default
+- add wcs capabilities parsing
+- fix map loading in non-google projection
+- fix documentation
+- fixes loading order error (projection undefined when creating map) moves projection initialisation to mapsManager
+- Add shell declaration to the script
+- Avoid fails when in first run when no log files exist yet
+- Update en-admin.json (#3227)
+- Update en-core.json (#3228)
+- Update en-editor.json (#3229)
+- Update en-search.json (#3230)
+- Harvester / Fix duplicated override UUID parameter.
+- Jetty / Remove binary version from repository.
+- Updated jetty dependencies
+- Thesaurus / Import from registry / Fix date for INSPIRE classifcation of (#3218)
+- Cleaning.
+- Editor / Use thesaurus for field / Restore language badge when using multilingual mode + typeahead.
+- Editor / Use thesaurus for field / Display attributes for Anchor elements.
+- Editor / Use thesaurus for field / Add any attribute encoding based on concept id. More doc.
+- Editor / Use thesaurus for field / Add configuration for field in a specific view.
+- Editor / Use thesaurus for field / Support empty anchor with xlink, empty xlink with no anchor.
+- Editor / Use thesaurus for field / Add multilingual Anchor support.
+- Editor / Use thesaurus for field / Doc.
+- Editor / Use thesaurus for field / Handle substitution in both direction depending on presence of xlink:href value.
+- Editor / Use thesaurus for field / Use exsiting xlink:href field if exist. Fix usage of directive on attribute to not mix with a field level directive.
+- [#3078] Uses the new attributes of `data-gn-keyword-picker` directive
+- [#3078] Manages gmx:Anchor elements
+- Preprocess metadata changes
+- Sends an _ID_xlinkCOLONhref field in gnKeywordPicker
+- Editor / Thesaurus for field / Dispatch translations in fields. Show definition. Define number of suggestions.
+- Editor / Use thesaurus for field / Add support to multilingual fields.
+- Fix parameter name.
+- Editor / Add configuration for field to use a thesaurus.
+- remove capabilities parsing from wmts-links in metadata view (and duplicated text) add missing tms label
+- Moved the `INSERT` statement form `v340` to `v350`
+- Social bar configurable via settings
+- typo and missing translation
+- ES / Move to 6.4.2.
+- Fixing more tests on thesauri: Order is important if you use offset
+- Refactor Keyword search class to reuse code instead of repeating it
+- Use proper temporary files on thesauri tests
+- Sometimes the tests fail because the thesauri search sometimes return duplicated results.
+- Updated jackson dependencies
+- Schema / Doc on displayIf for helper - typo
+- Schema / Doc on displayIf for helper.
+- Add global settings getNonProxifiedUrl utility.
+- Map / Context contains layer URL with proxy
+- Unify the usage of language default property #3195 (#3196)
+- Merge pull request #3174 from jahow/secure-cookies
+- Remove trailing comma
+- Editor board / Init search based on URL to be able to create direct link to a set of records.
+- Merge pull request #2898 from Delawen/fix_2897
+- Merge pull request #3187 from Delawen/whitespaces
+- Merge pull request #3190 from cmangeat/change_logger
+- Update version to 3.4.4-0
+- Merge pull request #3109 from fxprunayre/itest/mavendriverdownload
+- Caches .m2 folder in Travis builds to speed up them (#3181)
+- Merge pull request #3112 from pvgenuchten/iso19139-missing-translations
+- Merge pull request #3161 from MichelGabriel/master-harvester-config
+- remove senseless comment and strange concat
+- change logger
+- change logger
+- remove try/catch of no use
+- Adding a warning on the print map tool when WMS layers with whitespaces are added on the map.
+- Editor / Add directive to hide a prefix or a suffix
+- Update for the info list on the homepage. The heavily animated cards have been replaced by card with thumbnails or text.
+- cookie secure flags are now set when instructed in the session config
+- Merge pull request #3169 from pvgenuchten/backport-3055
+- added secure flag on session expiry cookies when necessary
+- add property for enabling secure cookies in prod only
+- Merge pull request #3162 from fxprunayre/fix/record-not-deleted-when-having-feedback-3.4.x
+- Merge pull request #3163 from fxprunayre/fix/thesaurus/inspiretheme/date-3.4.x
+- Merge pull request #3151 from geosolutions-it/35x_3085_slovak
+- Merge pull request #3086 from geosolutions-it/34x_3085_slovak
+- Multiselect directive bug
+- Multiselect directive bug
+- Documentation
+- Harvester / OGC WxS / Remove space causing match to fails #2823
+- Merge pull request #3107 from geosolutions-it/3104_transactionresponse
+- Merge pull request #3108 from geosolutions-it/34x_3104_transactionresponse
+- Update registry-to-skos.xsl
+- Fix record removal when having feedbacks (#3122). Similar to #3123 without removal of parent comment.
+- Fix record removal when having feedbacks (#3122). Similar to #3123 without removal of parent comment.
+- Added the surname to the users combobox
+- #3085: other adjustments
+- #3085: rename SLK to SLO according to INSPIRE reqs
+- #3085: rename SLK to SLO according to INSPIRE reqs
+- #3085: rename SLO to SLK according to java.util.LocaleISOData
+- Update registry-to-skos.xsl
+- #3085: add Slovak language
+- Merge pull request #3096 from Delawen/projection_switcher
+- Merge pull request #3148 from PascalLike/fixImportsApiUtils
+- Fix imports in ApiUtils
+- Merge pull request #3145 from pvgenuchten/backport-wfs-name-match-3.4
+- Merge pull request #3110 from geonetwork/warning-on-duplicate-uuid
+- Let layers with errors be shown on LayerManager. Layers are shown anyway, but as they don't appear on LayerManager there is no way to handle them (or remove them). Better to show them with errors, as with this change, so the user can: 1.- Check the list of errors associated to it 2.- If there is something added to the map and shown, even if it is ugly and weird, have a button to remove it.
+- Adding error message to return to UI instead of HTTP status, which is not very useful on this case
+- Adding missing $translate on translation key
+- Restrict timeout to 5 seconds. (According to studies, users leave a page when it takes more than 3 seconds to load)
+- Removing error if we have to reproject layer.
+- Only show Projection Switcher Tool if there is more than one projection available
+- Simplify tool to be smaller
+- Removing conflicted unused ID references
+- Compare codes instead of referenced objects
+- Improved Settings for Projection Switcher
+- Improvements on the code and styling. Fixed a bug with layers coming from context not being automatically loaded on a projection change. Also, now it remembers the background layer that was chosen before the projection switch.
+- Adding attribution property to layers defined on settings
+- Adding decode function to get the proper URL
+- Projection Switcher: Now there is new configuration on the UI Settings to add a list of projections to populate the projection switcher.
+- ISO19139 - Lost of view hideTimeInCalendar attribute to hide the time part in date xslt templates #3136
+- Colors have been replaced with variables, headings now have a more distinct style.
+- Accessibility and styling changes to the scroll spy: - more color contrast - added aria-labels - larger font - scrollspy is closed by default - changed the icons in more commenly used icons - open and scroll buttons are larger and rounded
+- Better colouring for inputs with errors
+- Improved responsiveness of the register page
+- Restyled Login, Account and New Password page.
+- More uniform styling for Detail Page
+- Added a11y options: - aria labels - added `<h1>` to the page - added main landmark - added more color contrast to the toolbar
+- Improved displaying of the editor toolbar
+- when configured so in settings, wfs in online resource should be displayed as a 'layer protocol'
+- when configured so in settings, wfs in online resource should be displayed as a 'layer protocol'
+- ISO19139 - Lost of view hideTimeInCalendar attribute to hide the time part in date xslt templates #3136
+- MapServers configuration - Reset password option sends the password in the url #3140
+- MapServers configuration - Reset password option sends the password in the url #3140
+- fix map loading in non-google projection
+- Remote index / Health check / Better warning.
+- Upload thesaurus error - permission denied #3131 (#3135)
+- Upload thesaurus error - permission denied #3131
+- ES / Cleanup. Analysis should return the results of the analyzer. Not the value if none found.
+- Es / Add utility XSL to convert a thesaurus to a synonym map for ES config.
+- Es / Indexing / Make it more robust for links.
+- Refactoring applyElementSetName in CSW (#3104)
+- Refactoring applyElementSetName in CSW
+- Merge pull request #3111 from jahow/fix-transfer-api-useradmin
+- compared the schema label strings between english and dutch
+- fixed available user lists when transferring records as useradmin
+- Log a warning on duplicate UUID
+- Fix build error.
+- ES / Move to 6.4.0.
+- ES / Add HTTPs+BA support.
+- Ignore_case is now deprecated in synonym analyzer. Fix INSPIRE theme and annexe synonym match.
+- Fix typo.
+- Improve ES indexing
+- ES / Update to 6.3.2.
+- Access rights overview panel / Do not render table if no results.
+- Access rights overview panel / debounce and link to record.
+- Access rights overview panel / Selected group in filter is added to table.
+- Missing copyright header.
+- Access rights overview panel.
+- itest / Add possibility to download chromedriver from maven.
+- Don't add JSESSIONID in url and set HttpOnly flag #3094 (#3099)
+- #3104: add test for CSW Transaction response
+- Fix #3104: apply csw-brief.xsl to Transaction response
+- Fix #3104: apply csw-brief.xsl to Transaction response
+- WFS Indexing dashboard / do not depend on index name
+- Merge pull request #3095 from Delawen/fix_#2356
+- [BP] Fixes an error related to thesaurus encoding when uploading from a registry
+- Fixes an error related to thesaurus encoding when uploading from a registry
+- improved map thumbnail in home page and map tools
+- Merge pull request #3092 from josegar74/fix/printmap-layers-through-proxy
+- Merge pull request #3091 from josegar74/fix/http-proxy-redirects
+- Merge pull request #3054 from geonetwork/pvgenuchten-patch-typo-description
+- Merge pull request #3013 from GIM-be/pr/master-editor-add-button
+- Transfer Owner / add translated groups in admin tools
+- Transfer Owner / translate groups in UI & put admins apart
+- Update sk/slo translations
+- [BP] Fixes problem with WMS layers when url ends with ?
+- LDAP / Preserve user privileges on sign in.
+- Merge pull request #2868 from geonetwork/fix/xslt-formatter/temporalextent
+- add capability to add to map for tms protocol
+- Merge pull request #3067 from MichelGabriel/master-popups-to-dialogs
+- Merge pull request #3093 from josegar74/fix/add-wms-layer
+- Merge pull request #3073 from cmangeat/refactoring
+- Merge pull request #3059 from MichelGabriel/master-editor-sidepanels
+- Merge pull request #2892 from pvgenuchten/impr-errors-db-migration
+- Add WMS layer doesn't work fine when url ends with ? the proxy adds an extra ? character and the GetMap requests fail #3088
+- Bug fix: Prefer to use capabilities url instead of hand-hard-coded URL. When the online resource defines a URL with extra parameters like getCapabilities, addToMap fails.
+- Map viewer - add layers with redirects (for example http -> https) doesn't work #3062
+- HTTPs support / Remove default port 443 when required #2987. Always set global variables for all services ie. Jeeves services and formatters
+- HTTPs support / Remove default port 443 when required #2987.
+- Better positioning of the featureinfo panel (on smaller screens)
+- Added a text when no layers are found
+- Better positioning of the `control-tools` on smaller screens (no more overlapping of toolbars) and a box is added when you zoom in with dragzoom
+- Styling changes and uniform look for the maptools and map panels: - tools now look more like tabs - all panels have close button - all panels have a title - added descriptions when necessary - added whitespace
+- add wfs 2 capabilities parsing (#3026)
+- Fixes #1554 Try to use known formats, better and more format parsing and add a failback plan. Failback plan is not a good plan, but may work.
+- Editor configuration / Add class attribute to action element. This allows you to add a mandatory flag using gn-required css class when needed. (#3087)
+- #3085: add Slovak language on 3.4.x
+- Formatter / XSLT / Display temporal extent properly based on config editor (#2878)
+- Cleanup of styles
+- Close the `<i>` elements because they're not self-closing. Make the validation label translatable.
+- Added accessibility attributes: - add titles and aria labels to links and buttons - change `<h4>` to `<h2>` (headings should follow each other)
+- Small UI changes: - make resources panel collapsable - add buttons to add new resources - add validate button - add get suggestions button - add the buttons to a toolbar
+- [BP] Throws a more legible exception when region is not found (#3069)
+- Support geosticker approach (embedded iso19139 in esri metadata) in sde harvester #2914
+- [BP] OutOfMemoryError when listing groups using service admin.group.list (#3079)
+- OutOfMemoryError when listing groups using service admin.group.list (#3079)
+- Throws a more legible exception when region is not found (#3069)
+- Editor / Properly close editor tab when a new window is opened. Do not alter history when switching tabs. This means to close tab if empty history or use the redirectUrl in other cases.
+- Harvester / OGC WxS / When using template mode, always synch records. Fix missing title for WPS2 services. (#3032)
+- Siblings / Association type is mandatory, initiative is optional (#3024)
+- Standard / Add API to reload standards - mainly recompile schematron rules. (#3081)
+- Merge pull request #3037 from jahow/proxy-remove-hsts
+- Merge pull request #3075 from juanluisrp/index-inspire-themes
+- Only index INSPIRE related fields if thesaurus is present
+- Merge pull request #2733 from juanluisrp/2719-inspire-keyword-check-thesaurus
+- [CSW REPLACE + REFACTOR] change logger for slf4j one, remove 'todo javadoc' and redundant static
+- Added missing translation for cancelMetadataEditor
+- Change the opening of metadata action from popup to modal.
+- Formatter / XSLT / Enable tab mode or not.
+- Print map doesn't work for layers accessed through the GeoNetwork http proxy #3060
+- update string to match translations
+- Indexing / fix fallback logic with online resources in multilang
+- Fix for tests
+- Update view.xsl
+- RSS / Fix XSLT error when a DC record contains more than one extent.
+- Record creation / Set title with 'Copy of' record or template title ' created at' date (#3046)
+- Merge pull request #3041 from jahow/add-submenus
+- cleaned up top toolbar HTML
+- added a 'home' item for editor and admin dropdowns
+- Typo in english translation
+-  add STS header to headers not transmitted in proxy
+- Accessibility: Change the color contrast (#2941)
+- Small changes to the list view of the search results: - added whitespace between buttons and icons - aligned elements to the top - changed status style to meet accessibility standards - uniform style for buttons
+- Map / fix projection used when creating a WMTS layer
+- Removed unused code
+- Accessibility changes for dropdowns and same style for dropdown on resultspage.
+- resolves comments by @josegar74
+- Merge pull request #3009 from jahow/fix-formatter-header
+- Editor / maps for bounding box & polygon now initialize properly
+- Directory / prevent locale from breaking bouding box generation in XSL
+- add missing module dependency, fixes #3014 (#3015)
+- Review error messages returned after CSS style saving
+- Resolve behaviour of add button in editor #3010
+- Merge pull request #2905 from jahow/external-viewer-fix
+- Indexing / keywords from the same thesaurus in different gmd:descriptiveKeywords elements are now grouped properly
+- Formatter / fix edit link in formatter header
+- External Viewer / allow opening in same window
+- External Viewer / only change viewer tab url if required
+- External Viewer / improve service & do not use if no url defined
+- Bug fix: Prefer to use capabilities url instead of hand-hard-coded URL. When the online resource defines a URL with extra parameters like getCapabilities, addToMap fails.
+- Added accessibility features to the elements on the map (#2957)
+- [BP] Display the menubar correctly on small screens (#2999)
+- Display the menubar correctly on small screens (#2999)
+- [BP] Fix for the upload directory of the `favicon.png`
+- Fix for the upload directory of the `favicon.png` (#2993)
+- [BP] Update en-editor.json (#3000)
+- Update en-editor.json (#3000)
+- Merge pull request #2939 from juanluisrp/fix/deploy-root-folder
+- [BP] Excluding servlet-related dependencies (#1912) (#2287)
+- Excluding servlet-related dependencies (#1912) (#2287)
+- Fix problem when harvesting GN deployed at root
+- Update versions release script: - Fix OSX check. - Update gn.project.version property added in https://github.com/geonetwork/core-geonetwork/pull/2793
+- Update version to 3.4.4-SNAPSHOT
+- Update version to 3.4.3-0
+- ISO19139 / Parent identifier is not multilingual (#2985)
+- ISO19139 / Parent identifier is not multilingual (#2985)
+- Formatter / XSLT / Break work with some hardcoded rules #2959. (#2960)
+- Formatter / XSLT / Break work with some hardcoded rules (#2961)
+- GeoPublisher / wrong html metadatalink posted to geoserver #2970. (#2980)
+- GeoPublisher / wrong html metadatalink posted to geoserver #2970. (#2980)
+- Rating / When off, should not be displayed in search results #2974. (#2975)
+- Editor / CRS search is case sensitive #2971. (#2972)
+- Rating / When off, should not be displayed in search results #2974. (#2975)
+- Editor / CRS search is case sensitive #2971. (#2972)
+- Formatter / Schema resources are not properly loaded due to URL change with the API. Use request accept language header instead. (#2979)
+- Formatter / Schema resources are not properly loaded due to URL change with the API. Use request accept language header instead. (#2979)
+- Fix for content that is overlapping the footer (#2952)
+- Fix for content that is overlapping the footer (#2952)
+- Fix for gfi result to pop over panels (#2917)
+- Integration test / Add chrome driver instruction. (#2963)
+- Integration test / Add chrome driver instruction. (#2964)
+- Metadata editor - INSPIRE view - Add INSPIRE themes button doesn't work as expected with the INSPIRE themes thesaurus created from INSPIRE Registry option #2882. (#2966)
+- Metadata editor - INSPIRE view - Add INSPIRE themes button doesn't work as expected with the INSPIRE themes thesaurus created from INSPIRE Registry option #2882. (#2966)
+- The doc in the website looks to have moved to some new folder. (#2968)
+- The doc in the website looks to have moved to some new folder. (#2968)
+- Geonames search when editing a record doesn't seem to be working #2803
+- Topic categories widget doesn't work with schemas based in iso19139 #2953
+- Editor / Topic category / + should not be displayed if topic categories are defined #2940. (#2945)
+- Editor / Topic category / + should not be displayed if topic categories are defined #2940. (#2945)
+- Workflow / Fix invalid links in email. (#2949)
+- ISO19110 / producer does not use directory #2942. (#2944)
+- Workflow / Fix invalid links in email. (#2948)
+- ISO19110 / producer does not use directory #2942. (#2943)
+- Build installer is broken. Remove GeoServer module #2743 (#2962)
+- Build installer is broken. Remove GeoServer module #2743 (#2955)
+- Topic categories widget doesn't work with schemas based in iso19139 #2953
+- Geonames search when editing a record doesn't seem to be working #2803
+- Crawlers don't work with urls provided in the sitemap #2873
+- Editor / Topic category / + should not be displayed #2940. (#2945)
+- Use database setting for the map in simple record view (#2938)
+- Use database setting for the map in simple record view (#2938)
+- Optimize imports.
+- Allow GN to deploy at root (#2901)
+- Allow to deploy geonetwork at root - #2901
+- Allow to deploy geonetwork at root - #2901
+- Fix for too long keywords in the advanced search form (#2918) (#2928)
+- Update en-admin.json (#2933)
+- Merge branch 'master' into cssStyleImprovements
+- Related to #2661 WMTS was not parsed on Online Resource wizard on the editor
+- Fix for too long keywords in the advanced search form (#2918) (#2928)
+- Accessibility for the Search page (#2903)
+- Add accessibility features and attributes: - aria-labels to buttons and inputs - main landmark - add a main heading (`<h1>`)
+- Added accessibility labels, roles and headings in the right order
+- Merge pull request #2920 from jahow/groovy-add-tab-param
+- Groovy Formatter / add a 'tab' param to choose which tab to toggle
+- Merge pull request #2909 from jahow/improve-crs-record-view
+- UI Config / properly updates iso2code in langs
+- restores schemaLocation attributes in CSW iso19139 responses
+- Fix for IE11 flexbox bugs in the `Contact for the resource` block
+- Improve CRS details indexing & rendering, fixes #2357
+- Merge pull request #2900 from fxprunayre/feature/map/addlegendpanel
+- Fixing schema related tests: now version is important
+- Merge pull request #2906 from jahow/fix-iso2code-lang
+- UI Config / properly updates iso2code in langs
+- restores schemaLocation attributes in CSW iso19139 responses
+- Added default title in the thumbnail `Alt` attribute
+- Changes for images (alt attribute), labels and ARIA attributes: * Screenreader only labels for search buttons * Add aria label to the search buttons * Add aria label to the language switcher * Add Landmark role to the main content * Remove possible duplicate ID in tabset * Alt text for the logo
+- Change and add correct ARIA roles to the homepage: * for tabs, tabpanels * grid * language switcher
+- Remove the duplicate ID's for chips-card and tabset and change the corresponding styles
+- WRO4J / Set debug mode only if using env-dev profile. This allows to not set cache-control:nocache in HTTP response header.
+- WRO4J / Add buildnumber to CSS and JS resources for better caching by browser.
+- WRO4J / Properly set path to templates which might be on sub folders. Past mechanism was only adding templates from the current folder.
+- WRO4J / Add all HTML templates to the template cache.
+- WRO4J / Template cache was not used since the introduction of CORSInterceptor. It manipulates the config.url and then the URL is not found in the cache. If the resource is available on the template cache, do not process it in CORS interceptor.
+- WRO4J / Template cache is populated on the basis of the name of JS files. It looks for partials folder when a resource folder contains a JS file ending with directive.js. Add Alert to that case.
+- Metadata import / Select first group by default (instead of the empty one added if optional is true).
+- Search results / Restore the possibility to switch template used for rendering results based on the UI config. Make the list mode looks like the grid mode.
+- Fixing tests: Workaround to ignore empty filters that are used on Lucene
+- Map / Add legend panel.
+- Search page - filter tag for inspire themes thesaurus is not translated #2869
+- Enhancement/bug fix: when CSW has a wrong filter, instead of returning error it applied a null filter. Now it returns an error
+- improve error messages in database migration (set info log level)
+- Set sortby for resolution facet to value
+- wildcard attribute in PropertyIsLike must be wildCard (CSW harvester)
+- Merge pull request #2881 from Delawen/merge_3.4.x
+- Fixing schema related tests: now version is important
+- Hopefully, last Merge: Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork
+- GeoNetwork harvester issues with sources - store remote source translations if available - Check if translation element has values #2810
+- Merge pull request #2877 from MichelGabriel/master-ie11-flexbox-fix
+- Fix for IE11 flexbox bugs in the `Contact for the resource` block
+- Merge pull request #2875 from josegar74/fix/crawler-sitemap-urls
+- Search page - filter tag for inspire themes thesaurus is not translated #2869
+- Admin / Categories / Add notification when a category can't be removed
+- Crawlers don't work with urls provided in the sitemap #2873
+- Metadata editor (ISO19139) - Bounding box in full view displays before the map, the content of labels.xml #2864 (#2865)
+- Formatter / XSLT / Display temporal extent properly based on config editor
+- CSS Style, Validate user input
+- Update wro4j to latest minor release
+- Export Css style function
+- Merge pull request #2836 from Delawen/merge_develop
+- Merge branch 'develop' into merge_develop
+- Update issue templates
+- Merge pull request #2833 from jahow/external-viewer
+- using an external viewer now overwrites the map tab link and settings are clearer
+- made sure the user will never be redirected on the viewer when disabled
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+- implement external viewer in saved selection directive
+- handle several chained view requests
+- make sure that the default viewer is not included when using an external one
+- added new tokens for URL template
+- added a new service: gnExternalViewer which handles redirection when applicable
+- added new UI settings for external viewer handling
+- Only index INSPIRE related fields if thesaurus is present
+- Update translation from 3.4.x to have them loaded in transifex.
+- Update translation from 3.4.x to have them loaded in transifex.
+- Update version to v3.5.0-SNAPSHOT
+- - By default hide bing maps from the map viewer and do not provide any bing key.   Advanced users, can easily enable the map by uncommenting the code on the config-viewer.xml, and by providing a valid key. First-time users are spared from the experience of having a blank background layer.
+- - Added support to Stamen terrain map, in the map viewer.
+- Fixing bad merge
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+-   Editor / Related OGC resource / Display desc instead of title (ie. layername)
+- Fix typo and formatting on en-admin.json
+- Default search parameter in Ui config
+- Merge branch 'Delawen-draft1' into develop
+- Merge branch 'develop' of github.com:geonetwork/core-geonetwork into draft1
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+- Merge branch 'develop' of github.com:geonetwork/core-geonetwork into draft1
+- Merge branch 'develop' of github.com:geonetwork/core-geonetwork into draft1
+- Fixing duplicated signin form (duplicated elements with the same id)
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+- Copy files from 3.4.x to develop for transifex update.
+- fixed problem with filtering on type in dutch
+- There was no explicit LICENSE file
+- We need to cascade the removal of harvesters. At least on mysql, this is the easiest way to achieve it (hibernate cascading properties are being ignored).
+- Renaming IMetadata with AbstractMetadata, because it is not a java interface
+- Merge branch 'develop' of github.com:geonetwork/core-geonetwork into draft1
+- Update docs to get multilingual
+- Adding settings to override, skip or generate a random UUID for CSW, GeoNetwork and webdav harvesters
+- Adding debug to webdav harvester on collision
+- Merge pull request #2259 from jahow/improve-layer-manager
+- restyled layers in the layer manager panel
+- layer settings popover fix - fixes #2201
+- Merge pull request #2258 from jahow/fix-related-download
+- fix download action on related resources
+- Simplify GeonetEntity and refactor the code to make sure it is understandable
+- Enhancing comments and making a cleaner source code for GeonetEntity
+- Try not to use MetadataRepository except when mandatory
+- Refactor Metadata object in the database. Now you can extend the Metadata object to have different types of metadata with more attributes. For example, you can have an unpublished copy of a record to work on it while the "real" published record remains intact.
+- Refactoring Metadata and creating IMetadata interface to be able to have different types of metadata objects. Preparing for Draft, but can be reused for example if at some point we have different types of records that are completely different from metadata.
+- Merge branch '3.4.x' into develop
+- New feature: on webdav harvesters, if record collides by uuid, choose what to do.
+- Restyling of Topics, Categories and Inspire themes on the homepage
+- Updating version to 3.5.0-SNAPSHOT unstable
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+- Merge branch '3.4.x' of github.com:geonetwork/core-geonetwork into develop
+- Using geocoder that works fine with https and IE (just a different "secure" domain). Url now on the settings to easily change it in the future.
+- Using context.getBean until the node bug with @Autowired is solved
+- Refactoring DataManager.java into smaller helper classes that are Spring friendly
