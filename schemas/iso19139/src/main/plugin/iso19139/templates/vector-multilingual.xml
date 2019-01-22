@@ -26,8 +26,7 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../schema.xsd"
->
+  xmlns:gml="http://www.opengis.net/gml">
   <gmd:fileIdentifier>
     <gco:CharacterString>cdecfe47-1780-4dda-9fdf-e0a099e4ba9b</gco:CharacterString>
   </gmd:fileIdentifier>
