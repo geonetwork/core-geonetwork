@@ -1,5 +1,16 @@
 <div class="container-fluid">
   <div class="navbar-header">
+    <a class="hidden-sm hidden-md hidden-lg pull-left gn-logo-link" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}" data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}">
+      <img class="gn-logo"
+           alt="{{'siteLogo' | translate}}"
+           data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
+    </a>
+    <a class="hidden-sm hidden-md hidden-lg btn btn-link pull-left"
+       data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
+      <span class="gn-name"
+            data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
+            title="{{info['system/site/name']}}">{{info['system/site/name']}}</span>
+    </a>
     <button type="button"
             class="navbar-toggle collapsed"
             data-toggle="collapse"
@@ -14,14 +25,14 @@
     </button>
   </div>
   <div id="navbar" class="navbar-collapse collapse">
-    <ul class="nav navbar-nav">
-      <li class="clearfix" data-ng-if="gnCfg.mods.home.enabled">
-        <a class="pull-left" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}" data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}">
+    <ul class="nav navbar-nav gn-menu-xs">
+      <li class="clearfix hidden-xs" data-ng-if="gnCfg.mods.home.enabled">
+        <a class="pull-left gn-logo-link" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}" data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}">
           <img class="gn-logo"
                 alt="{{'siteLogo' | translate}}"
                 data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
         </a>
-        <a class="hidden-sm hidden-md pull-left"
+        <a class="pull-left"
            data-ng-class="gnCfg.mods.header.isLogoInHeader ? '' : 'gn-nopadding-left'"
            data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <span class="gn-name"
@@ -29,59 +40,59 @@
                 title="{{info['system/site/name']}}">{{info['system/site/name']}}</span>
         </a>
       </li>
-      <li data-ng-if="gnCfg.mods.search.enabled">
+      <li class="gn-menuitem-xs data-ng-if="gnCfg.mods.search.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
-           title="{{'search' | translate}}">
+          title="{{'search' | translate}}">
           <i class="fa fa-fw fa-search hidden-sm"></i>
           <span translate>search</span>
         </a>
       </li>
-      <li data-ng-if="gnCfg.mods.map.enabled">
+      <li class="gn-menuitem-xs data-ng-if="gnCfg.mods.map.enabled">
         <a data-gn-active-tb-item="{{isExternalViewerEnabled ? externalViewerUrl : gnCfg.mods.map.appUrl}}"
-           title="{{'map' | translate}}">
+          title="{{'map' | translate}}">
           <i class="fa fa-fw fa-globe hidden-sm"></i>
           <span translate>makeYourMap</span>
           <span data-gnv-layer-indicator=""/>
         </a>
       </li>
-      <li class="dropdown dropdown-hover open" data-ng-if="gnCfg.mods.editor.enabled"
+      <li class="dropdown dropdown-hover open gn-clear-xs" data-ng-if="gnCfg.mods.editor.enabled"
           data-ng-show="authenticated && user.isEditorOrMore()"
           id="gn-login-dropdown">
         <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}"
            title="{{'editorBoard' | translate}}"
-           class="dropdown-toggle"
+           class="dropdown-toggle gn-menuheader-xs"
            role="button" aria-expanded="false">
           <i class="fa fa-fw fa-pencil hidden-sm"></i>
           <span translate>contribute</span>
         </a>
-        <ul class="dropdown-menu" role="menu">
-          <li>
+        <ul class="dropdown-menu gn-menu-xs clearfix" role="menu">
+          <li class="gn-menuitem-xs">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/board">
               <i class="fa fa-fw fa-bars"></i>&nbsp;<span translate>editorHome</span>
             </a>
           </li>
-          <li role="separator" class="divider"></li>
-          <li>
+          <li role="separator" class="divider gn-separator-xs"></li>
+          <li class="gn-menuitem-xs">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/create">
               <i class="fa fa-fw fa-plus"></i>&nbsp;<span translate>addRecord</span>
             </a>
           </li>
-          <li>
+          <li class="gn-menuitem-xs">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
               <i class="fa fa-fw fa-upload"></i>&nbsp;<span translate>ImportRecord</span>
             </a>
           </li>
-          <li>
+          <li class="gn-menuitem-xs">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory">
               <i class="fa fa-fw fa-bookmark"></i>&nbsp;<span translate>directoryManager</span>
             </a>
           </li>
-          <li>
+          <li class="gn-menuitem-xs">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/batchedit">
               <i class="fa fa-fw fa-pencil"></i>&nbsp;<span translate>batchEditing</span>
             </a>
           </li>
-          <li ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
+          <li class="gn-menuitem-xs" ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/accessManager">
               <i class="fa fa-fw fa-lock"/>&nbsp;<span data-translate="">accessManager</span>
             </a>
@@ -91,32 +102,32 @@
       <li class="dropdown dropdown-hover open" data-ng-show="user.isUserAdminOrMore()">
         <a data-gn-active-tb-item="admin.console"
            title="{{'adminConsole' | translate}}"
-           class="dropdown-toggle"
+           class="dropdown-toggle gn-menuheader-xs"
            role="button" aria-expanded="false">
           <i class="fa fa-fw fa-wrench hidden-sm"></i>
           <span translate>adminConsole</span>
         </a>
-        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu" role="menu">
-          <li>
+        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu gn-menu-xs" role="menu">
+          <li class="gn-menuitem-xs">
             <a data-gn-active-tb-item="admin.console#/home">
               <i class="fa fa-fw fa-th"></i>&nbsp;<span translate>adminHome</span>
             </a>
           </li>
-          <li role="separator" class="divider"></li>
-          <li data-ng-repeat="t in userAdminMenu">
+          <li role="separator" class="divider gn-separator-xs"></li>
+          <li class="gn-menuitem-xs" data-ng-repeat="t in userAdminMenu">
             <a data-gn-active-tb-item="admin.console{{t.route}}">
               <i class="fa fa-fw {{t.icon}}"></i>&nbsp;<span translate>{{t.name | translate}}</span>
             </a>
           </li>
         </ul>
-        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu" role="menu">
-          <li>
+        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu gn-menu-xs" role="menu">
+          <li class="gn-menuitem-xs">
             <a data-gn-active-tb-item="admin.console#/home">
               <i class="fa fa-fw fa-th"></i>&nbsp;<span translate>adminHome</span>
             </a>
           </li>
-          <li role="separator" class="divider"></li>
-          <li data-ng-repeat="t in adminMenu">
+          <li role="separator" class="divider gn-separator-xs"></li>
+          <li class="gn-menuitem-xs" data-ng-repeat="t in adminMenu">
             <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
               <i class="fa fa-fw {{t.icon}}"></i>&nbsp;<span translate>{{t.name | translate}}</span>
             </a>
@@ -127,7 +138,10 @@
     </ul>
 
 
-    <form class="navbar-form navbar-right">
+    <form class="navbar-form navbar-right language-switcher">
+      <span class="gn-menuheader-xs visible-xs"
+            data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethEnabled"
+            data-translate="">language</span>
       <div class="form-group"
            data-gn-language-switcher="lang"
            data-langs="langs"
@@ -140,7 +154,7 @@
       <li class="dropdown dropdown-hover open" data-ng-show="authenticated">
         <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
           title="{{'userDetails' | translate}}"
-          class="dropdown-toggle"
+          class="dropdown-toggle gn-menuitem-xs"
           role="button" aria-expanded="false">
           <img class="img-circle"
             alt="{{'avatar' | translate}}"
@@ -157,7 +171,7 @@
             sessionWillExpireIn
           </span>
         </a>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu gn-menuitem-xs" role="menu">
           <li class="text-center hidden-xs">
             <img class="img-circle"
                  alt="{{'avatar' | translate}}"
@@ -186,10 +200,10 @@
         data-ng-if="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethEnabled">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
-           class="dropdown-toggle"
+           class="dropdown-toggle gn-menuheader-xs"
            data-ng-keypress="$event"
            data-ng-mouseover="focusLoginPopup()">
-          <i class="fa fa-sign-in hidden-sm"></i>&nbsp;
+          <i class="fa fa-fw fa-sign-in hidden-sm"></i>
           {{'signIn' | translate}}
         </a>
         <ul class="dropdown-menu" role="menu">
@@ -201,19 +215,19 @@
                 <label class="sr-only" for="inputUsername" translate>username</label>
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <i class="fa fa-user"></i>
+                    <i class="fa fa-fw fa-user"></i>
                   </span>
                   <input type="text" class="form-control" id="inputUsername" name="username" autofocus=""
                          placeholder="{{'username' | translate}}" data-ng-model="signinUsername"
                          required=""/>
                 </div>
               </div>
-              <div class="flex-spacer"></div>
+              <div class="flex-spacer hidden-xs"></div>
               <div class="form-group form-group-sm">
                 <label class="sr-only" for="inputPassword" translate>password</label>
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <i class="fa fa-lock"></i>
+                    <i class="fa fa-fw fa-lock"></i>
                   </span>
                   <input type="password" class="form-control" id="inputPassword" name="password"
                     autocomplete="off"
@@ -221,7 +235,7 @@
                     required=""/>
                 </div>
               </div>
-              <div class="flex-spacer"></div>
+              <div class="flex-spacer hidden-xs"></div>
               <button type="submit" class="btn btn-primary btn-sm pull-right"
                       aria-label="{{'signIn' | translate}}"
                       data-ng-disabled="!gnSigninForm.$valid">
