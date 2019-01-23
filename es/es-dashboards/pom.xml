@@ -29,7 +29,7 @@
   <parent>
     <artifactId>es</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.6.0-0</version>
+    <version>3.6.1-SNAPSHOT</version>
   </parent>
   <profiles>
     <profile>
