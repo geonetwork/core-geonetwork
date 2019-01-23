@@ -118,6 +118,12 @@ div[gn-transfer-ownership] * .list-group {
     top: 52px;
     left: 20px;
     right: 20px;
+    @media (max-width: @screen-xs-max) {
+      left: 0;
+      right: 0;
+      border-left: 0;
+      border-right: 0;
+    }
   }
   .gn-editor-board {
     padding-top: 120px;
