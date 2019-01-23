@@ -74,7 +74,15 @@ public class JeevesDispatcherServlet extends DispatcherServlet {
         if (node == null) {
             return; // Should not happen
         }
-        node.setId(request.getPathInfo().split("/")[1]);
+        // URL path contains the node id as the first part of the URL
+        // eg. /srv/eng/catalogue.search or /srv/api/...
+        String path = request.getPathInfo();
+        if (path.length() > 1 && path.contains("/")) {
+            node.setId(request.getPathInfo().split("/")[1]);
+        } else {
+            // eg. when accessing /
+            node.setId(NodeInfo.DEFAULT_NODE);
+        }
     }
 
 }

@@ -34,6 +34,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,8 +53,7 @@ import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicatio
 
 /**
  * Handles requests where there is no locale and a redirect to a correct (and localized) service is
- * needed.  For example index.html redirects to /srv/eng/home but that redirect should depend on the
- * language of the users browser.
+ * needed.  Redirect should depend on the language of the users browser or the forced language.
  * <p/>
  * Created by Jesse on 12/4/13.
  */
@@ -81,14 +81,51 @@ public class LocaleRedirects {
     @Autowired
     DefaultLanguage defaultLanguage;
 
-    @RequestMapping(value = "/home")
-    public ModelAndView home(final HttpServletRequest request,
+    @Autowired
+    NodeInfo currentNode;
+
+    /**
+     * Handle redirect for / to the default node if no extra parameter.
+     * Use /?node=A to redirect to a node
+     * Use /?hl=fre to redirect to a specific language
+     *
+     * @param request
+     * @param langCookie
+     * @param langParam Define which lang to redirect to
+     * @param node  Define which node to redirect to
+     * @param langHeader
+     * @return
+     */
+    @RequestMapping(value = "/")
+    public ModelAndView redirectRootPath(final HttpServletRequest request,
                              @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                              @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
                              @RequestParam(value = NODE_PARAMETER, required = false) String node,
                              @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
         return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, node));
+    }
+
+    /**
+     * Handle redirect for /portalId
+     *
+     * @param request
+     * @param portal
+     * @param langCookie
+     * @param langParam
+     * @param langHeader
+     * @return
+     */
+    @RequestMapping(value = "/{portal}")
+    public ModelAndView redirectPortalPath(final HttpServletRequest request,
+                             @PathVariable String portal,
+                             @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
+                             @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
+                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
+        // TODO: Could make sense to check that the portal exist
+        // And return the list of existing ones if requested one is not found.
+        String lang = lang(langParam, langCookie, langHeader);
+        return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
     }
 
     @RequestMapping(value = "/login.jsp")
@@ -117,18 +154,13 @@ public class LocaleRedirects {
     }
 
     private ModelAndView redirectURL(final String url) {
-
         RedirectView rv = new RedirectView(url);
         rv.setStatusCode(HttpStatus.FOUND);
         return new ModelAndView(rv);
     }
 
     private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ConfigurableApplicationContext context = getApplicationContextFromServletContext(appContext.getBean(ServletContext.class));
-        String currentNode = context.getBean(NodeInfo.class).getId();
-
-        node = node == null ? currentNode : node;
+        node = node == null ? currentNode.getId() : node;
 
         final Enumeration parameterNames = request.getParameterNames();
         StringBuilder headers = new StringBuilder();
