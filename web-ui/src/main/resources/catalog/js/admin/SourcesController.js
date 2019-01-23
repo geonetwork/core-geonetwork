@@ -41,12 +41,16 @@
         $http.get('../api/sources')
             .success(function(data) {
               $scope.sources = data;
+              $scope.isNew = false;
             });
       }
 
+      $scope.isNew = false;
       $scope.addSubPortal = function() {
+        $scope.isNew = true;
         $scope.source = {
           type: 'subportal',
+          uuid: '',
           name: '',
           logo: '',
           uiConfig: '',
@@ -57,8 +61,7 @@
 
       $scope.updateSource = function() {
         var url = '../api/sources/' + (
-          angular.isDefined($scope.source.uuid) ?
-            $scope.source.uuid : '');
+          $scope.isNew ? '' : $scope.source.uuid);
         $http.put(url,
                   $scope.source)
             .success(function(data) {

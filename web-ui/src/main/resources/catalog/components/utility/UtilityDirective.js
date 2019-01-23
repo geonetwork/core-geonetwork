@@ -1230,8 +1230,8 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
-  module.directive('gnActiveTbItem', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.directive('gnActiveTbItem', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -1240,6 +1240,7 @@
 
           // Replace lang in link
           link = link.replace('{{lang}}', gnLangs.getCurrent());
+          link = link.replace('{{node}}', gnConfig.env.node);
 
           // Insert debug mode between service and route
           if (link.indexOf('#') !== -1) {
@@ -1295,10 +1296,11 @@
         }
       };
     }]);
-  module.filter('signInLink', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.filter('signInLink', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return function(href) {
-        href = href.replace('{{lang}}', gnLangs.getCurrent()) +
+        href = href.replace('{{lang}}', gnLangs.getCurrent())
+                   .replace('{{node}}', gnConfig.env.node) +
             '?redirect=' + encodeURIComponent(window.location.href);
         return href;
       }}

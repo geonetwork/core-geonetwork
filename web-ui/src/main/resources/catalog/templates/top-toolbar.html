@@ -236,6 +236,9 @@
                 </div>
               </div>
               <div class="flex-spacer hidden-xs"></div>
+
+              <input type="hidden" name="redirectUrl" value="{{redirectUrlAfterSign}}"/>
+
               <button type="submit" class="btn btn-primary btn-sm pull-right"
                       aria-label="{{'signIn' | translate}}"
                       data-ng-disabled="!gnSigninForm.$valid">

@@ -91,7 +91,6 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
             servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
 
-            // check if the context is the default context
             NodeInfo nodeInfo = jeevesAppContext.getBean(NodeInfo.class);
             nodeInfo.setId(nodeId);
 

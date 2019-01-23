@@ -35,9 +35,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,6 +58,10 @@ import org.springframework.web.multipart.MultipartRequest;
 @Controller
 public class GenericController {
     public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
+
+    @Autowired
+    NodeInfo node;
+
 
     @RequestMapping(value = {
         "/{portal}/{lang:[a-z]{3}}/{service:.+}"
