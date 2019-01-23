@@ -57,72 +57,72 @@ import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-        "/api/me",
-        "/api/" + API.VERSION_0_1 +
-            "/me"
+    "/{portal}/api/me",
+    "/{portal}/api/" + API.VERSION_0_1 +
+        "/me"
+})
+@Api(value = "me",
+    tags = "me",
+    description = "Me operations")
+@Controller("me")
+public class MeApi {
+
+    @ApiOperation(
+        value = "Get information about me",
+        notes = "If not authenticated, return status 204 (NO_CONTENT), " +
+            "else return basic user information. This operation is usually used to " +
+            "know if current user is authenticated or not." +
+            "It returns also info about groups and profiles.",
+        nickname = "getMe")
+    @RequestMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Authenticated. Return user details."),
+        @ApiResponse(code = 204, message = "Not authenticated.")
     })
-    @Api(value = "me",
-        tags = "me",
-        description = "Me operations")
-    @Controller("me")
-    public class MeApi {
+    @ResponseBody
+    public ResponseEntity<MeResponse> getMe(
+        @ApiIgnore
+        @ApiParam(
+            hidden = true
+        )
+            HttpSession session
+    ) throws Exception {
 
-        @ApiOperation(
-            value = "Get information about me",
-            notes = "If not authenticated, return status 204 (NO_CONTENT), " +
-                "else return basic user information. This operation is usually used to " +
-                "know if current user is authenticated or not." +
-                "It returns also info about groups and profiles.",
-            nickname = "getMe")
-        @RequestMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.GET)
-        @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Authenticated. Return user details."),
-            @ApiResponse(code = 204, message = "Not authenticated.")
-        })
-        @ResponseBody
-        public ResponseEntity<MeResponse> getMe(
-                @ApiIgnore
-                @ApiParam(
-                        hidden = true
-                        )
-                HttpSession session
-                ) throws Exception {
+        UserSession userSession = ApiUtils.getUserSession(session);
 
-            UserSession userSession = ApiUtils.getUserSession(session);
+        if (userSession.isAuthenticated()) {
 
-            if (userSession.isAuthenticated()) {
+            MeResponse myInfos = new MeResponse().setId(userSession.getUserId()).setProfile(userSession.getProfile().name())
+                .setUsername(userSession.getUsername()).setName(userSession.getName()).setSurname(userSession.getSurname())
+                .setEmail(userSession.getEmailAddr()).setOrganisation(userSession.getOrganisation())
+                .setAdmin(userSession.getProfile().equals(Profile.Administrator))
+                .setGroupsWithRegisteredUser(getGroups(userSession, Profile.RegisteredUser))
+                .setGroupsWithEditor(getGroups(userSession, Profile.Editor))
+                .setGroupsWithReviewer(getGroups(userSession, Profile.Reviewer))
+                .setGroupsWithUserAdmin(getGroups(userSession, Profile.UserAdmin));
 
-                MeResponse myInfos = new MeResponse().setId(userSession.getUserId()).setProfile(userSession.getProfile().name())
-                        .setUsername(userSession.getUsername()).setName(userSession.getName()).setSurname(userSession.getSurname())
-                        .setEmail(userSession.getEmailAddr()).setOrganisation(userSession.getOrganisation())
-                        .setAdmin(userSession.getProfile().equals(Profile.Administrator))
-                        .setGroupsWithRegisteredUser(getGroups(userSession, Profile.RegisteredUser))
-                        .setGroupsWithEditor(getGroups(userSession, Profile.Editor))
-                        .setGroupsWithReviewer(getGroups(userSession, Profile.Reviewer))
-                        .setGroupsWithUserAdmin(getGroups(userSession, Profile.UserAdmin));
-
-                return new ResponseEntity<>(myInfos, HttpStatus.OK);
-            }
-
-            return new ResponseEntity<>(NO_CONTENT);
+            return new ResponseEntity<>(myInfos, HttpStatus.OK);
         }
 
-        /**
-         *  Retrieves the user's groups ids
-         * @param session
-         * @param profile
-         * @return
-         * @throws SQLException
-         */
-        private List<Integer> getGroups(UserSession session, Profile profile) throws SQLException {
-            ApplicationContext applicationContext = ApplicationContextHolder.get();
-            final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
+        return new ResponseEntity<>(NO_CONTENT);
+    }
 
-            Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
-            spec = spec.and(UserGroupSpecs.hasProfile(profile));
+    /**
+     *  Retrieves the user's groups ids
+     * @param session
+     * @param profile
+     * @return
+     * @throws SQLException
+     */
+    private List<Integer> getGroups(UserSession session, Profile profile) throws SQLException {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
 
-            return userGroupRepository.findGroupIds(spec);
-        }
+        Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
+        spec = spec.and(UserGroupSpecs.hasProfile(profile));
+
+        return userGroupRepository.findGroupIds(spec);
+    }
 }

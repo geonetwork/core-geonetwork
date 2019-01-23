@@ -89,8 +89,8 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author fxprunayre
  */
 @RequestMapping(value = {
-    "/api/processes",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/processes",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/processes"
 })
 @Api(value = "processes",

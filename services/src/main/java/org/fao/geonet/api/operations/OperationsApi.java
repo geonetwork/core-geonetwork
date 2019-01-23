@@ -43,8 +43,8 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 @RequestMapping(value = {
-    "/api/operations",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/operations",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/operations"
 })
 @Api(value = "operations",

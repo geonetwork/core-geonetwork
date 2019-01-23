@@ -75,8 +75,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.stream.Collectors;
 
 @RequestMapping(value = {
-    "/api/users",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/users",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/users"
 })
 @Api(value = "users",

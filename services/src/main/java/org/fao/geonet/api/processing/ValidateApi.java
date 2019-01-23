@@ -68,8 +68,8 @@ import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(

@@ -65,7 +65,7 @@ import io.swagger.annotations.ApiResponses;
 import jeeves.server.UserSession;
 import springfox.documentation.annotations.ApiIgnore;
 
-@RequestMapping(value = { "/api/pages", "/api/" + API.VERSION_0_1 + "/pages" })
+@RequestMapping(value = { "/{portal}/api/pages", "/{portal}/api/" + API.VERSION_0_1 + "/pages" })
 @Api(value = "pages", tags = "pages", description = "Static pages inside GeoNetwork")
 @Controller("pages")
 public class PagesAPI {

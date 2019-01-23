@@ -63,8 +63,8 @@ import jeeves.server.dispatchers.ServiceManager;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-    "/api/languages",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/languages",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/languages"
 })
 @Api(value = "languages",

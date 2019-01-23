@@ -66,8 +66,8 @@ import jeeves.server.context.ServiceContext;
  */
 
 @RequestMapping(value = {
-    "/api/standards",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/standards",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/standards"
 })
 @Api(value = "standards",

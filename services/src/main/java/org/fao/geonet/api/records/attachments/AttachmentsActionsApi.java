@@ -91,7 +91,7 @@ public class AttachmentsActionsApi {
         response = MetadataResource.class,
         nickname = "createMetadataOverview")
     @RequestMapping(
-        value = "/api/" + API.VERSION_0_1 +
+        value = "/{portal}/api/" + API.VERSION_0_1 +
         "/records/{metadataUuid}/attachments/print-thumbnail",
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)

@@ -38,8 +38,8 @@ import jeeves.services.ReadWriteController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = {
-    "/api/formatters",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/formatters",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/formatters"
 })
 @Api(value = "formatters",

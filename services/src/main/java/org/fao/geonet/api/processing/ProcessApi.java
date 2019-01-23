@@ -57,8 +57,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 @RequestMapping(value = {
-    "/api/processes",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/processes",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/processes"
 })
 @Api(value = "processes",

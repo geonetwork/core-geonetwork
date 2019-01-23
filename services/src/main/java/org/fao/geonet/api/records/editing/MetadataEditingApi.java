@@ -85,8 +85,8 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasO
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,

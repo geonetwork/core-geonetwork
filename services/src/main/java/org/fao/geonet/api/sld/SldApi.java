@@ -46,8 +46,8 @@ import io.swagger.annotations.ApiParam;
 
 @Service
 @RequestMapping(value = {
-    "/api/tools/ogc",
-    "/api/" + API.VERSION_0_1 + "/tools/ogc"
+    "/{portal}/api/tools/ogc",
+    "/{portal}/api/" + API.VERSION_0_1 + "/tools/ogc"
 })
 @Api(value = "tools",
     tags = "tools",

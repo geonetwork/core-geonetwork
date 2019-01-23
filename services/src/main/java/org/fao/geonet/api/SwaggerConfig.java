@@ -97,7 +97,7 @@ public class SwaggerConfig {
 
     private Predicate<String> paths() {
         return or(
-            regex("/api/" + API.VERSION_0_1 + "/.*")
+            regex("/.*/api/" + API.VERSION_0_1 + "/.*")
         );
     }
 }

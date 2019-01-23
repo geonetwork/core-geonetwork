@@ -41,8 +41,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/api/identifiers",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/identifiers",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/identifiers"
 })
 @Api(value = "identifiers",

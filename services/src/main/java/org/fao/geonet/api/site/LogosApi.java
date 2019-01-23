@@ -68,8 +68,8 @@ import java.util.Set;
  */
 
 @RequestMapping(value = {
-    "/api/logos",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/logos",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/logos"
 })
 @Api(value = "logos",

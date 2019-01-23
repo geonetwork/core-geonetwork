@@ -76,8 +76,8 @@ import java.util.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
-    "/api/groups",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/groups",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/groups"
 })
 @Api(value = "groups",

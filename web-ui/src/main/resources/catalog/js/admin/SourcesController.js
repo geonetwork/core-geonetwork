@@ -32,9 +32,9 @@
     '$scope', '$http', '$rootScope', '$translate',
     function($scope, $http, $rootScope, $translate) {
       $scope.sources = [];
-      $scope.sourcesSelected = null;
+      $scope.source = null;
       $scope.selectSource = function(source) {
-        $scope.sourcesSelected = source;
+        $scope.source = source;
       };
 
       function loadSources() {
@@ -44,25 +44,41 @@
             });
       }
 
-      $scope.saveSources = function() {
-        $http.put('../api/sources/' + $scope.sourcesSelected.uuid,
-                  $scope.sourcesSelected)
+      $scope.addSubPortal = function() {
+        $scope.source = {
+          type: 'subportal',
+          name: '',
+          logo: '',
+          uiConfig: '',
+          filter: ''
+        };
+        // TODO: init labels
+      };
+
+      $scope.updateSource = function() {
+        var url = '../api/sources/' + (
+          angular.isDefined($scope.source.uuid) ?
+            $scope.source.uuid : '');
+        $http.put(url,
+                  $scope.source)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate.instant('settingsUpdated'),
+                msg: $translate.instant('sourceUpdated'),
                 timeout: 2,
                 type: 'success'});
+
+              loadSources();
             })
             .error(function(data) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate.instant('settingsUpdateError'),
+                    title: $translate.instant('sourceUpdateError'),
                     error: data,
                     timeout: 0,
                     type: 'danger'});
                 });
       };
+
       loadSources();
 
     }]);
-
 })();

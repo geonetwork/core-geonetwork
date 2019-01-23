@@ -69,8 +69,8 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
 @RequestMapping(value = {
-    "/api/harvesters",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/harvesters",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/harvesters"
 })
 @Api(value = "harvesters",

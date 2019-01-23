@@ -120,8 +120,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @Service
 @RequestMapping(
     value = {
-        "/api/registries/vocabularies",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/registries/vocabularies",
+        "/{portal}/api/" + API.VERSION_0_1 +
             "/registries/vocabularies"
     })
 @Api(

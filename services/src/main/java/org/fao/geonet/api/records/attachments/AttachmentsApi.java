@@ -73,8 +73,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @EnableWebMvc
 @Service
-@RequestMapping(value = { "/api/records/{metadataUuid}/attachments",
-        "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}/attachments" })
+@RequestMapping(value = { "/{portal}/api/records/{metadataUuid}/attachments",
+        "/{portal}/api/" + API.VERSION_0_1 + "/records/{metadataUuid}/attachments" })
 @Api(value = "records", tags = "records", description = "Metadata record operations")
 public class AttachmentsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();

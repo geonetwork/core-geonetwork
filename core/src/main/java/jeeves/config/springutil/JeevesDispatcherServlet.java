@@ -61,7 +61,8 @@ public class JeevesDispatcherServlet extends DispatcherServlet {
     @Override
     protected WebApplicationContext findWebApplicationContext() {
         final ServletContext servletContext = getServletContext();
-        return createWebApplicationContext((org.springframework.context.ApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY + this.nodeId));
+        return createWebApplicationContext(
+            (org.springframework.context.ApplicationContext) servletContext.getAttribute(User.NODE_APPLICATION_CONTEXT_KEY));
     }
 
 

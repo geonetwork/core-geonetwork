@@ -68,8 +68,8 @@ import springfox.documentation.annotations.ApiIgnore;
  * Select a list of elements stored in session.
  */
 @RequestMapping(value = {
-    "/api/userselections",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/userselections",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/userselections"
 })
 @Api(value = "userselections",

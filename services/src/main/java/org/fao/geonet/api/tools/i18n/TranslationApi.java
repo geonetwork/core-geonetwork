@@ -90,8 +90,8 @@ import io.swagger.annotations.ApiOperation;
  */
 
 @RequestMapping(value = {
-    "/api/tools/i18n",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tools/i18n",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tools/i18n"
 })
 @Api(value = "tools",

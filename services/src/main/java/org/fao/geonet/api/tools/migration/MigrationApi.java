@@ -49,8 +49,8 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 
 @RequestMapping(value = {
-    "/api/tools/migration",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tools/migration",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tools/migration"
 })
 @Api(value = "tools",

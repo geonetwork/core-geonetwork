@@ -87,7 +87,7 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * User Feedback REST API.
  */
-@RequestMapping(value = { "/api", "/api/" + API.VERSION_0_1 })
+@RequestMapping(value = { "/{portal}/api", "/{portal}/api/" + API.VERSION_0_1 })
 @Api(value = "userfeedback", tags = "userfeedback",
     description = "User feedback")
 @Controller("userfeedback")

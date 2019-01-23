@@ -65,8 +65,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
-    "/api/related",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/related",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/related"
 })
 @Api(value = "related",

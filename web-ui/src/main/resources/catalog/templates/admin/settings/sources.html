@@ -10,35 +10,81 @@
                    data-ng-model="sourcesSearch.$" autofocus=""
                    placeholder="{{'filter' | translate}}"/>
             <a class="list-group-item"
-               data-ng-class="source.uuid === sourcesSelected.uuid ? 'active' : ''"
-               data-ng-click="selectSource(source)"
-               data-ng-repeat="source in sources | filter:sourcesSearch | orderBy:'name'">{{source.name}}</a>
+               data-ng-class="s.uuid === source.uuid ? 'active' : ''"
+               data-ng-click="selectSource(s)"
+               data-ng-repeat="s in sources | filter:sourcesSearch | orderBy:'name'">
+              {{s.name}} ({{s.type | translate}})
+            </a>
           </ul>
         </div>
+
+
+        <button type="button" class="btn btn-primary btn-block" id="gn-btn-source-add"
+                data-ng-click="addSubPortal()"
+                data-ng-show="user.isAdministrator()">
+          <i class="fa fa-plus"/>
+          <span data-translate="">addSubPortal</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="col-lg-8" data-ng-hide="!sourcesSelected">
+  <div class="col-lg-8" data-ng-hide="!source">
     <div class="panel panel-default">
       <div class="panel-heading">
-        {{sourcesSelected.name}}
+        {{source.name}} ({{source.type | translate}})
         <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right"
-                  data-ng-click="saveSources()">
+                  data-ng-click="updateSource()">
             <i class="fa fa-floppy-o"></i>&nbsp;
             <span data-translate="">save</span>
+          </button>
+          <button type="button" class="btn btn-danger pull-right"
+                  data-ng-disabled="source.type !== 'subportal' && !user.isAdministrator()"
+                  data-ng-click="removeSource()">
+            <i class="fa fa-times"></i>&nbsp;
+            <span data-translate="">removeSource</span>
           </button>
         </div>
       </div>
       <div class="panel-body">
+
+        <div data-ng-show="source.type === 'subportal'">
+          <label data-translate="">sourceName</label>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="source.name"/>
+          <p class="help-block" data-translate="">sourceNameHelp</p>
+
+
+          <label data-translate="">sourceFilter</label>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="source.filter"/>
+          <p class="help-block" data-translate="">sourceFilterHelp</p>
+
+
+          <label data-translate="">sourceLogo</label>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="source.logo"/>
+          <p class="help-block" data-translate="">sourceLogoHelp</p>
+
+
+          <label data-translate="">sourceUiConfig</label>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="source.uiConfig"/>
+          <p class="help-block" data-translate="">sourceUiConfigHelp</p>
+        </div>
+
         <table class="table table-striped">
           <tr
-            data-ng-repeat="(key, value) in sourcesSelected.label">
+            data-ng-repeat="(key, value) in source.label">
             <td>{{key | translate}}</td>
             <td><input type="text" class="form-control"
                        value="{{value}}"
-                       data-ng-model="sourcesSelected.label[key]"
+                       data-ng-model="source.label[key]"
             /></td>
           </tr>
         </table>

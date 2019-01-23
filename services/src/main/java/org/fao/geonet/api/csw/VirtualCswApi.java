@@ -41,8 +41,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/api/csw/virtuals",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/csw/virtuals",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/csw/virtuals"
 })
 @Api(value = "csw",

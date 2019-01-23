@@ -122,8 +122,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/registries/actions/entries",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/registries/actions/entries",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/registries/actions/entries"
 })
 @Api(value = "registries",

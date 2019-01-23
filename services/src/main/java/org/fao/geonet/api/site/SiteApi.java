@@ -112,8 +112,8 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 
 @RequestMapping(value = {
-    "/api/site",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/site",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/site"
 })
 @Api(value = API_CLASS_CATALOG_TAG,

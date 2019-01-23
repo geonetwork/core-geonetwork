@@ -43,8 +43,8 @@ import io.swagger.annotations.ApiOperation;
 import jeeves.server.context.ServiceContext;
 
 @RequestMapping(value = {
-    "/api/isolanguages",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/isolanguages",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/isolanguages"
 })
 @Api(value = "languages",
