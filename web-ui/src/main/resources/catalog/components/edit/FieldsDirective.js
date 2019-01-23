@@ -352,7 +352,6 @@
                        '</div><div class="popover-inner">' + closeBtn +
                        '<h3 class="popover-title"></h3>' +
                        '<div class="popover-content"><p></p></div></div></div>',
-                       //                       trigger: 'click',
                        trigger: isField ? 'focus' : 'click'
                      });
 
@@ -365,7 +364,6 @@
 
                      if (iconMode) {
                        tooltipTarget.mouseleave(function() {
-                         tooltipTarget.popover('hide');
                          isInitialized = false;
                        });
                      }
