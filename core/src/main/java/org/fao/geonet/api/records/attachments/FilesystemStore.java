@@ -28,7 +28,6 @@ package org.fao.geonet.api.records.attachments;
 import com.google.common.net.UrlEscapers;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -80,15 +79,7 @@ public class FilesystemStore implements Store {
                                                String filter) throws Exception {
         List<MetadataResource> resourceList = new ArrayList<>();
         ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataId;
-
-        if (StringUtils.isNumeric(metadataUuid)) {
-            metadataId = metadataUuid;
-            metadataUuid = getAndCheckMetadataUuid(metadataId);
-        } else {
-            metadataId = getAndCheckMetadataId(metadataUuid);
-        }
-
+        String metadataId = getAndCheckMetadataId(metadataUuid);
         AccessManager accessManager = _appContext.getBean(AccessManager.class);
         boolean canEdit = accessManager.canEdit(context, metadataId);
 
@@ -369,17 +360,6 @@ public class FilesystemStore implements Store {
             ));
         }
         return metadataId;
-    }
-
-    private String getAndCheckMetadataUuid(String metadataId) throws Exception {
-        ApplicationContext _appContext = ApplicationContextHolder.get();
-        String metadataUuid = _appContext.getBean(DataManager.class).getMetadataUuid(metadataId);
-        if (metadataUuid == null) {
-            throw new ResourceNotFoundException(String.format(
-                "Metadata with ID '%s' not found.", metadataId
-            ));
-        }
-        return metadataUuid;
     }
 
     private void canEdit(ServiceContext context, String metadataUuid) throws Exception {
