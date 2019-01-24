@@ -155,7 +155,7 @@
             'metadatacategoryupdater.html',
         scope: {
           currentCategories: '=gnMetadataCategoryUpdater',
-          metadataUuid: '=',
+          metadataId: '=',
           groupOwner: '=gnGroupOwner'
         },
         link: function(scope, e, attrs) {
@@ -294,7 +294,7 @@
               method = 'delete';
             }
             $http[method]('../api/records/' +
-                          scope.metadataUuid + '/tags?id=' + c.id)
+                          scope.metadataId + '/tags?id=' + c.id)
                 .then(function() {
                   if (existIndex === -1) {
                     scope.ids.push(c.id);
@@ -429,7 +429,7 @@
           var ownerId = parseInt(attrs['gnTransferMdOwner']);
           var groupOwner = parseInt(attrs['gnTransferMdGroupOwner']);
           var bucket = attrs['selectionBucket'];
-          var mdUuid = attrs['gnTransferOwnership'];
+          var mdId = attrs['gnTransferOwnership'];
           scope.selectedUserGroup = null;
 
           scope.selectUser = function(user) {
@@ -475,7 +475,7 @@
             if (bucket != 'null') {
               url += 'ownership?bucket=' + bucket + '&';
             } else {
-              url += mdUuid + '/ownership?';
+              url += mdId + '/ownership?';
             }
             return $http.put(url +
                 'userIdentifier=' + scope.selectedUserGroup.userId +

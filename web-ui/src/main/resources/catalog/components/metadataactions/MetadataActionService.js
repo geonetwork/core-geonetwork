@@ -270,12 +270,12 @@
       };
 
       this.openTransferOwnership = function(md, bucket, scope) {
-        var uuid = md ? md.getUuid() : '';
+        var mdId = md ? md.getId() : '';
         var ownerId = md ? md.getOwnerId() : '';
         var groupOwner = md ? md.getGroupOwner() : '';
         openModal({
           title: 'transferOwnership',
-          content: '<div gn-transfer-ownership="' + uuid +
+          content: '<div gn-transfer-ownership="' + mdId +
               '" gn-transfer-md-owner="' + ownerId + '" ' +
               '" gn-transfer-md-group-owner="' + groupOwner + '" ' +
               'selection-bucket="' + bucket + '"></div>'

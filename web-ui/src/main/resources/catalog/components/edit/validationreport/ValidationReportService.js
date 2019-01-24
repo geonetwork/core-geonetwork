@@ -35,7 +35,7 @@
       return {
         get: function() {
           return $http.put(
-              '../api/records/' + gnCurrentEdit.uuid + '/validate/internal');
+              '../api/records/' + gnCurrentEdit.id + '/validate/internal');
         },
         errorCheck: function() {
           return this.get()

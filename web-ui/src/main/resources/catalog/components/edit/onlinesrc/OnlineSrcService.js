@@ -214,7 +214,7 @@
         getAllResources: function(types) {
 
           var defer = $q.defer();
-          var url = '../api/records/' + gnCurrentEdit.uuid + '/related' +
+          var url = '../api/records/' + gnCurrentEdit.id + '/related' +
                       (angular.isArray(types) ? '?' + types.join('&type=') : '');
           $http.get(url, {
             headers: {

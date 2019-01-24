@@ -138,13 +138,13 @@
 
               scope.updateRelations = function() {
                 scope.relations = null;
-                if (scope.uuid) {
+                if (scope.mdId) {
                   scope.relationFound = false;
                   if (controller) {
                     controller.startGnRelatedRequest(elem);
                   }
                   (promise = gnRelatedService.get(
-                     scope.uuid, scope.types)
+                     scope.mdId, scope.types)
                   ).then(function(data) {
                        angular.forEach(data, function(value, idx) {
                          if (!value) { return; }
@@ -200,12 +200,12 @@
               scope.config = gnRelatedResources;
 
               scope.$watchCollection('md', function(n, o) {
-                if (n && n !== o || angular.isUndefined(scope.uuid)) {
+                if (n && n !== o || angular.isUndefined(scope.mdId)) {
                   if (promise && angular.isFunction(promise.abort)) {
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    scope.uuid = scope.md.getUuid();
+                    scope.mdId = scope.md.getId();
                   }
                   scope.updateRelations();
                 }

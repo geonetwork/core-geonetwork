@@ -44,20 +44,20 @@
         }
       };
 
-      this.loadComments = function(metatdataUUID, size) {
+      this.loadComments = function(metatadataId, size) {
         var numberOfCommentsDisplayed = size || -1;
         return $http({
           method: 'GET',
-          url: '../api/records/' + metatdataUUID +
+          url: '../api/records/' + metatadataId +
           '/userfeedback?size=' + numberOfCommentsDisplayed,
           isArray: true
         });
       };
 
-      this.loadRating = function(metatdataUUID) {
+      this.loadRating = function(metatadataId) {
         return $http({
           method: 'GET',
-          url: '../api/records/' + metatdataUUID + '/userfeedbackrating',
+          url: '../api/records/' + metatadataId + '/userfeedbackrating',
           isArray: false
         });
       };
@@ -151,7 +151,7 @@
             function refreshList() {
               scope.loaded = false;
               scope.fewCommentsList = [];
-              gnUserfeedbackService.loadComments(scope.mdrecord.getUuid(),
+              gnUserfeedbackService.loadComments(scope.mdrecord.getId(),
                 scope.nbOfComments || defaultNbOfComments).then(
                 function(response) {
                   scope.fewCommentsList = [].concat(response.data);
@@ -160,7 +160,7 @@
                   console.log(response.statusText);
                 });
 
-              gnUserfeedbackService.loadRating(scope.mdrecord.getUuid()).then(
+              gnUserfeedbackService.loadRating(scope.mdrecord.getId()).then(
                 function mySuccess(response) {
                   scope.rating = null;
                   scope.rating = response.data;
@@ -193,7 +193,7 @@
             function initRecord(md) {
               if (scope.record != null) {
                 var m = new Metadata(md);
-                scope.metatdataUUID = m.getUuid();
+                scope.metatadataId = m.getId();
                 scope.metatdataTitle = m.getTitle();
               }
             }
@@ -226,11 +226,11 @@
               scope.fullCommentsList = [];
               scope.rating = null;
 
-              gnUserfeedbackService.loadComments(scope.metatdataUUID,
+              gnUserfeedbackService.loadComments(scope.metatadataId,
                 -1).then(function(response) {
                 scope.fullCommentsList = response.data;
               });
-              gnUserfeedbackService.loadRating(scope.metatdataUUID).then(
+              gnUserfeedbackService.loadRating(scope.metatadataId).then(
                 function(response) {
                   scope.rating = response.data;
                 }
@@ -285,7 +285,7 @@
             function initRecord(md) {
               if (scope.record != null) {
                 var m = new Metadata(md);
-                scope.metatdataUUID = m.getUuid();
+                scope.metadataUUID = m.getUuid();
                 scope.metatdataTitle = m.getTitle();
               }
             }
@@ -329,7 +329,7 @@
 
             scope.initPopup = function() {
 
-              if (gnUserfeedbackService.isBlank(scope.metatdataUUID)) {
+              if (gnUserfeedbackService.isBlank(scope.metadataUUID)) {
                 console.log('Metadata UUID is null');
                 return;
               }
@@ -402,9 +402,9 @@
                 }
               }
 
-              scope.uf.metadataUUID = scope.metatdataUUID;
+              scope.uf.metadataUUID = scope.metadataUUID;
 
-              if (angular.isUndefined(scope.metatdataUUID)) {
+              if (angular.isUndefined(scope.metadataUUID)) {
                 console.log('Metadata UUID is null!');
                 return;
               }
