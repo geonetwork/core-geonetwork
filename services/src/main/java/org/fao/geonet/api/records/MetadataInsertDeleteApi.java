@@ -400,6 +400,8 @@ public class MetadataInsertDeleteApi {
         // User assigned uuid: check if already exists
         String metadataUuid = null;
         if (generateUuid) {
+            metadataUuid = UUID.randomUUID().toString();
+        } else {
             if (StringUtils.isEmpty(targetUuid)) {
                 // Create a random UUID
                 metadataUuid = UUID.randomUUID().toString();
@@ -409,15 +411,15 @@ public class MetadataInsertDeleteApi {
                     AbstractMetadata checkRecord = ApiUtils.getRecord(targetUuid);
                     if (checkRecord != null) {
                         throw new BadParameterEx(String.format(
-                                "You can't create a new record with the UUID '%s' because a record already exist with this UUID.",
-                                targetUuid), targetUuid);
+                            "You can't create a new record with the UUID '%s' because a record already exist with this UUID.",
+                            targetUuid), targetUuid);
                     }
                 } catch (ResourceNotFoundException e) {
                     // Ignore. Ok to create a new record with the requested UUID.
                 }
+
+                metadataUuid = targetUuid;
             }
-        } else {
-            metadataUuid = UUID.randomUUID().toString();
         }
 
         // TODO : Check user can create a metadata in that group
