@@ -17,15 +17,6 @@ import jeeves.server.context.ServiceContext;
 public interface IMetadataOperations {
 
     /**
-     * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
-     * @param context
-     * @param force
-     * @throws Exception
-     */
-    public void init(ServiceContext context, Boolean force) throws Exception;
-
-    /**
      * Removes all operations stored for a metadata.
      */
     void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception;

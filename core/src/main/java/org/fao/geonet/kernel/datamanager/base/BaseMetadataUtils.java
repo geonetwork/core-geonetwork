@@ -85,33 +85,17 @@ public class BaseMetadataUtils implements IMetadataUtils {
 	@Autowired
 	private IndexingList indexingList;
 
+	@Autowired
+	private GeonetworkDataDirectory dataDirectory;
+
 	@Autowired(required = false)
 	private XmlSerializer xmlSerializer;
-
-	private Path stylePath;
 
 	private IMetadataManager metadataManager;
 
 	@Override
 	public void setMetadataManager(IMetadataManager metadataManager) {
 		this.metadataManager = metadataManager;
-	}
-
-	@SuppressWarnings("unchecked")
-	public void init(ServiceContext context, Boolean force) throws Exception {
-		metadataRepository = context.getBean(MetadataRepository.class);
-		metadataNotifierManager = context.getBean(MetadataNotifierManager.class);
-		servContext = context;
-		schemaManager = context.getBean(SchemaManager.class);
-		metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-		metadataIndexer = context.getBean(IMetadataIndexer.class);
-		ratingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
-		settingManager = context.getBean(SettingManager.class);
-		xmlSerializer = context.getBean(XmlSerializer.class);
-		indexingList = context.getBean(IndexingList.class);
-
-		final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
-		stylePath = dataDirectory.resolveWebResource(Geonet.Path.STYLESHEETS);
 	}
 
 	/**
@@ -182,7 +166,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 		boolean keepXlinkAttributes = true;
 		boolean forEditing = false;
 		boolean withValidationErrors = false;
-		Element metadataBeforeAnyChanges = context.getBean(IMetadataManager.class).getMetadata(context, id, forEditing,
+		Element metadataBeforeAnyChanges = metadataManager.getMetadata(context, id, forEditing,
 				withValidationErrors, keepXlinkAttributes);
 		context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
 	}
@@ -212,7 +196,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 			boolean ufo = false;
 			boolean index = true;
 			metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-			context.getBean(IMetadataManager.class).updateMetadata(context, id, metadataBeforeAnyChanges, validate, ufo,
+            metadataManager.updateMetadata(context, id, metadataBeforeAnyChanges, validate, ufo,
 					index, context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
 			endEditingSession(id, session);
 		} else {
@@ -339,7 +323,8 @@ public class BaseMetadataUtils implements IMetadataUtils {
 	 */
 	@Override
 	public Element extractSummary(Element md) throws Exception {
-		Path styleSheet = stylePath.resolve(Geonet.File.METADATA_BRIEF);
+		Path styleSheet = dataDirectory.resolveWebResource(Geonet.Path.STYLESHEETS)
+            .resolve(Geonet.File.METADATA_BRIEF);
 		Element summary = Xml.transform(md, styleSheet);
 		if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
 			Log.debug(Geonet.DATA_MANAGER, "Extracted summary '\n" + Xml.getString(summary));
@@ -544,7 +529,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception {
-		Element md = srvContext.getBean(IMetadataManager.class).getMetadata(srvContext, id, false, false, false);
+		Element md = metadataManager.getMetadata(srvContext, id, false, false, false);
 		md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
 		// Drop Geonet namespace declaration. It may be contained
@@ -684,7 +669,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 	private void manageThumbnail(ServiceContext context, String id, boolean small, Element env, String styleSheet,
 			boolean indexAfterChange) throws Exception {
 		boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
-		Element md = context.getBean(IMetadataManager.class).getMetadata(context, id, forEditing, withValidationErrors,
+		Element md = metadataManager.getMetadata(context, id, forEditing, withValidationErrors,
 				keepXlinkAttributes);
 
 		if (md == null)

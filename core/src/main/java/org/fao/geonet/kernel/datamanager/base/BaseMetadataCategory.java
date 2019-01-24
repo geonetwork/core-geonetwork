@@ -30,11 +30,6 @@ public class BaseMetadataCategory implements IMetadataCategory {
     @Autowired
     private MetadataCategoryRepository metadataCategoryRepository;
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        this.metadataUtils = context.getBean(IMetadataUtils.class);
-        this.svnManager = context.getBean(SvnManager.class);
-        this.metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
-    }
 
     /**
      * Adds a category to a metadata. Metadata is not reindexed.

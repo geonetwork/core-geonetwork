@@ -59,24 +59,19 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     private MetadataValidationRepository validationRepository;
 
     @Autowired
+    private ThesaurusManager thesaurusManager;
+
+    @Autowired
     @Lazy
     private SettingManager settingManager;
 
     private IMetadataManager metadataManager;
-    private Path thesaurusDir;
 
     @Override
     public void setMetadataManager(IMetadataManager metadataManager) {
         this.metadataManager = metadataManager;
     }
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        validationRepository = context.getBean(MetadataValidationRepository.class);
-        schematronValidator = context.getBean(SchematronValidator.class);
-        thesaurusDir = context.getBean(ThesaurusManager.class).getThesauriDirectory();
-        settingManager = context.getBean(SettingManager.class);
-    }
 
     /**
      * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx if xsd errors or
@@ -305,7 +300,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("lang", lang);
                     params.put("rule", rule);
-                    params.put("thesaurusDir", this.thesaurusDir);
+                    params.put("thesaurusDir", thesaurusManager.getThesauriDirectory());
                     Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
                     if (xmlReport != null) {
                         report.addContent(xmlReport);

@@ -43,6 +43,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
 import org.fao.geonet.repository.page.PageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -70,7 +71,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller("pages")
 public class PagesAPI {
 
-
+    @Autowired
+    private PageRepository pageRepository;
 
     @ApiOperation(value = "Add a new Page object in DRAFT section in status HIDDEN", notes = "<p>Is not possible to load a link and a file at the same time.</p> <a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/define-static-pages/define-pages.html'>More info</a>", nickname = "addPage")
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -91,9 +93,6 @@ public class PagesAPI {
             @ApiIgnore final HttpServletResponse response) throws ResourceAlreadyExistException {
 
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
-        
         checkMandatoryContent(data, link);
 
         checkUniqueContent(data, link);
@@ -130,9 +129,6 @@ public class PagesAPI {
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
 
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
-
         checkUniqueContent(data, link);
 
         checkCorrectFormat(data, link, format);
@@ -157,10 +153,6 @@ public class PagesAPI {
             @RequestParam(value = "newLanguage", required = false) final String newLanguage,
             @RequestParam(value = "newPageId", required = false) final String newPageId,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException, ResourceAlreadyExistException {
-
-
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
@@ -204,10 +196,6 @@ public class PagesAPI {
             @RequestParam(value = "format", required = true) final Page.PageFormat format,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
 
-
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
-
         searchPage(language, pageId, pageRepository);
 
         pageRepository.delete(new PageIdentity(language, pageId));
@@ -227,9 +215,6 @@ public class PagesAPI {
             @ApiIgnore final HttpSession session) {
 
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
-
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         return checkPermissionsOnSinglePageAndReturn(session, page);
@@ -248,9 +233,6 @@ public class PagesAPI {
             @ApiIgnore final HttpServletResponse response,
             @ApiIgnore final HttpSession session) {
 
-
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
@@ -292,7 +274,6 @@ public class PagesAPI {
             @PathVariable(value = "section") final Page.PageSection section,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
 
-
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
@@ -326,7 +307,6 @@ public class PagesAPI {
             @PathVariable(value = "pageId") final String pageId,
             @PathVariable(value = "section") final Page.PageSection section,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
-
 
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final PageRepository pageRepository = appContext.getBean(PageRepository.class);
@@ -362,7 +342,6 @@ public class PagesAPI {
             @PathVariable(value = "status") final Page.PageStatus status,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
 
-
         final ApplicationContext appContext = ApplicationContextHolder.get();
         final PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
@@ -388,10 +367,6 @@ public class PagesAPI {
             @RequestParam(value = "format", required = false) final Page.PageFormat format,
             @ApiIgnore final HttpServletResponse response,
             @ApiIgnore final HttpSession session) {
-
-
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
         final UserSession us = ApiUtils.getUserSession(session);
         List<Page> unfilteredResult = null;

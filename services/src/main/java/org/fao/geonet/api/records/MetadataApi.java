@@ -106,6 +106,12 @@ public class MetadataApi implements ApplicationContextAware {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    DataManager dataManager;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
     private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
@@ -239,7 +245,6 @@ public class MetadataApi implements ApplicationContextAware {
     )
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        DataManager dataManager = appContext.getBean(DataManager.class);
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
@@ -374,7 +379,6 @@ public class MetadataApi implements ApplicationContextAware {
     )
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
 
         AbstractMetadata metadata;
         try {
@@ -450,7 +454,7 @@ public class MetadataApi implements ApplicationContextAware {
         notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
-    @RequestMapping(value = "/{metadataUuid}/related",
+    @RequestMapping(value = "/{metadataUuid:.+}/related",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
@@ -503,7 +507,6 @@ public class MetadataApi implements ApplicationContextAware {
             )),
             MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
         ));
-        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);

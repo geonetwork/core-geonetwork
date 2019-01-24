@@ -48,6 +48,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -78,6 +79,21 @@ import io.swagger.annotations.Authorization;
     description = "Harvester operations")
 @Controller("harvesters")
 public class HarvestersApi {
+
+    @Autowired
+    private HarvestManager harvestManager;
+
+    @Autowired
+    private SourceRepository sourceRepository;
+
+    @Autowired
+    private IMetadataUtils metadataRepository;
+
+    @Autowired
+    private IMetadataManager metadataManager;
+
+    @Autowired
+    private DataManager dataManager;
 
     @ApiOperation(
         value = "Assign harvester records to a new source",
@@ -113,7 +129,6 @@ public class HarvestersApi {
         HttpServletRequest request) throws Exception {
         final long elapsedTime = System.currentTimeMillis();
         final ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final HarvestManager harvestManager = applicationContext.getBean(HarvestManager.class);
         final AbstractHarvester harvester = harvestManager.getHarvester(harvesterUuid);
         if (harvester == null) {
             throw new ResourceNotFoundException(String.format(
@@ -121,7 +136,6 @@ public class HarvestersApi {
                 harvesterUuid));
         }
 
-        final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
         final Source sourceNode = sourceRepository.findOneByUuid(source);
         if (sourceNode == null) {
             throw new ResourceNotFoundException(String.format(
@@ -129,8 +143,6 @@ public class HarvestersApi {
                 source));
         }
 
-        final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
-        final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
         final List<? extends AbstractMetadata> allHarvestedRecords = metadataRepository.findAllByHarvestInfo_Uuid(harvesterUuid);
         List<String> records = new ArrayList<>(allHarvestedRecords.size());
 
@@ -150,8 +162,6 @@ public class HarvestersApi {
             records.add(record.getId() + "");
         }
 
-
-        DataManager dataManager = applicationContext.getBean(DataManager.class);
         dataManager.indexMetadata(records);
 
         // Add an harvester history step

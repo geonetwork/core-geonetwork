@@ -130,6 +130,14 @@ public class GroupsApi {
     @Autowired
     private LanguageUtils languageUtils;
 
+    @Autowired
+    private LanguageRepository langRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Writes the group logo image to the response. If no image is found it
@@ -161,9 +169,6 @@ public class GroupsApi {
         if (context == null) {
             throw new RuntimeException("ServiceContext not available");
         }
-
-        GroupRepository groupRepository = context.getBean(GroupRepository.class);
-
 
         Group group = groupRepository.findOne(groupId);
         if (group == null) {
@@ -293,9 +298,6 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        GroupRepository groupRepository = appContext.getBean(GroupRepository.class);
-
         final Group existingId = groupRepository
             .findOne(group.getId());
 
@@ -316,7 +318,6 @@ public class GroupsApi {
         }
 
         // Populate languages if not already set
-        LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
         java.util.List<Language> allLanguages = langRepository.findAll();
         Map<String, String> labelTranslations = group.getLabelTranslations();
         for (Language l : allLanguages) {
@@ -350,7 +351,6 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        final GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
         final Group group = groupRepository.findOne(groupIdentifier);
 
         if (group == null) {
@@ -388,8 +388,6 @@ public class GroupsApi {
         @PathVariable
             Integer groupIdentifier
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
         final Group group = groupRepository.findOne(groupIdentifier);
 
         if (group == null) {
@@ -397,7 +395,6 @@ public class GroupsApi {
                 MSG_GROUP_WITH_IDENTIFIER_NOT_FOUND, groupIdentifier
             ));
         }
-        UserRepository userRepository = applicationContext.getBean(UserRepository.class);
         return userRepository.findAllUsersInUserGroups(
             UserGroupSpecs.hasGroupId(groupIdentifier));
     }
@@ -447,6 +444,14 @@ public class GroupsApi {
         }
     }
 
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepo;
+
+    @Autowired
+    private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private DataManager dm;
 
     @ApiOperation(
         value = "Remove a group",
@@ -481,14 +486,9 @@ public class GroupsApi {
         @ApiIgnore
             ServletRequest request
     ) throws Exception {
-        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
-
         Group group = groupRepository.findOne(groupIdentifier);
 
         if (group != null) {
-            OperationAllowedRepository operationAllowedRepo = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
-            UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-
             List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(groupIdentifier),
                 OperationAllowedId_.metadataId);
 
@@ -496,7 +496,6 @@ public class GroupsApi {
                 operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, groupIdentifier);
 
                 //--- reindex affected metadata
-                DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
                 dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
             } else if (reindex.size() > 0 && !force) {
                 throw new NotAllowedException(String.format(
@@ -505,9 +504,9 @@ public class GroupsApi {
                 ));
             }
 
-            final List<Integer> users = userGroupRepo.findUserIds(where(UserGroupSpecs.hasGroupId(group.getId())));
+            final List<Integer> users = userGroupRepository.findUserIds(where(UserGroupSpecs.hasGroupId(group.getId())));
             if (users.size() > 0 && force) {
-                userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
+                userGroupRepository.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(groupIdentifier));
             } else if (users.size() > 0 && !force) {
                 throw new NotAllowedException(String.format(
                     "Group %s is associated with %d user(s). Add 'force' parameter to remove it or remove users associated with that group first.",
@@ -538,9 +537,6 @@ public class GroupsApi {
         boolean includingSystemGroups,
         boolean all)
         throws SQLException {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final GroupRepository groupRepository = applicationContext.getBean(GroupRepository.class);
-        final UserGroupRepository userGroupRepository = applicationContext.getBean(UserGroupRepository.class);
         final Sort sort = SortUtils.createSort(Group_.id);
 
         if (all || !session.isAuthenticated() || Profile.Administrator == session.getProfile()) {

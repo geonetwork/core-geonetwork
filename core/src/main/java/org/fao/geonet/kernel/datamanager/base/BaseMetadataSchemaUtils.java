@@ -27,11 +27,6 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
     @Autowired
     private IMetadataUtils metadataUtils;
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        schemaManager = context.getBean(SchemaManager.class);
-        metadataUtils = context.getBean(IMetadataUtils.class);
-    }
-
     /**
      *
      * @param name

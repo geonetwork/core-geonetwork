@@ -75,6 +75,9 @@ public class MapServersApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    MapServerRepository mapServerRepository;
+
     @ApiOperation(
         value = "Get mapservers",
         notes = "Mapservers are used by the catalog to publish record attachements " +
@@ -100,10 +103,7 @@ public class MapServersApi {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     List<AnonymousMapserver> getMapservers() throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-
-        List<MapServer> mapServers = applicationContext.getBean(MapServerRepository.class)
-            .findAll();
+        List<MapServer> mapServers = mapServerRepository.findAll();
         List<AnonymousMapserver> list = new ArrayList<>(mapServers.size());
         mapServers.stream().forEach(e -> list.add(new AnonymousMapserver(e)));
         return list;
@@ -133,10 +133,7 @@ public class MapServersApi {
             example = "")
         @PathVariable String mapserverId
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServer mapserver =
-            applicationContext.getBean(MapServerRepository.class)
-                .findOneById(mapserverId);
+        MapServer mapserver = mapServerRepository.findOneById(mapserverId);
         if (mapserver == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_MAPSERVER_WITH_ID_NOT_FOUND,
@@ -177,18 +174,14 @@ public class MapServersApi {
         @RequestBody
             MapServer mapserver
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-
-        MapServer existingMapserver = repo.findOneById(mapserver.getId());
+        MapServer existingMapserver = mapServerRepository.findOneById(mapserver.getId());
         if (existingMapserver != null) {
             throw new IllegalArgumentException(String.format(
                 "Mapserver with id '%d' already exists.",
                 mapserver.getId()
             ));
         } else {
-            repo.save(mapserver);
+            mapServerRepository.save(mapserver);
         }
         return new ResponseEntity<>(mapserver.getId(), HttpStatus.CREATED);
     }
@@ -225,13 +218,9 @@ public class MapServersApi {
         @RequestBody
             MapServer mapserver
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-
-        MapServer existingMapserver = repo.findOneById(mapserverId);
+        MapServer existingMapserver = mapServerRepository.findOneById(mapserverId);
         if (existingMapserver != null) {
-            updateMapserver(mapserverId, mapserver, repo);
+            updateMapserver(mapserverId, mapserver, mapServerRepository);
         } else {
             throw new ResourceNotFoundException(String.format(
                 MSG_MAPSERVER_WITH_ID_NOT_FOUND,
@@ -279,13 +268,9 @@ public class MapServersApi {
         @RequestParam
             String password
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repository =
-            applicationContext.getBean(MapServerRepository.class);
-
-        MapServer existingMapserver = repository.findOneById(mapserverId);
+        MapServer existingMapserver = mapServerRepository.findOneById(mapserverId);
         if (existingMapserver != null) {
-            repository.update(mapserverId, entity -> {
+            mapServerRepository.update(mapserverId, entity -> {
                 entity.setUsername(username);
                 entity.setPassword(password);
             });
@@ -342,12 +327,9 @@ public class MapServersApi {
         )
         @PathVariable Integer mapserverId
     ) throws Exception {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        MapServerRepository repo =
-            applicationContext.getBean(MapServerRepository.class);
-        MapServer m = repo.findOneById(mapserverId);
+        MapServer m = mapServerRepository.findOneById(mapserverId);
         if (m != null) {
-            repo.delete(m);
+            mapServerRepository.delete(m);
         } else {
             throw new ResourceNotFoundException(String.format(
                 MSG_MAPSERVER_WITH_ID_NOT_FOUND,

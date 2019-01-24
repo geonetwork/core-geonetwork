@@ -42,14 +42,6 @@ public class BaseMetadataStatus implements IMetadataStatus {
     @Lazy
     private SettingManager settingManager;
 
-    public void init(ServiceContext context, Boolean force) throws Exception {
-        metadataStatusRepository = context.getBean(MetadataStatusRepository.class);
-        metadataIndexer = context.getBean(IMetadataIndexer.class);
-        statusValueRepository = context.getBean(StatusValueRepository.class);
-        groupRepository = context.getBean(GroupRepository.class);
-        settingManager = context.getBean(SettingManager.class);
-    }
-
     @Override
     public boolean isUserMetadataStatus(int userId) throws Exception {
         return metadataStatusRepository.count(MetadataStatusSpecs.hasUserId(userId)) > 0;

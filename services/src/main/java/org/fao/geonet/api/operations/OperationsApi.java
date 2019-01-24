@@ -27,6 +27,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.repository.OperationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,9 @@ import jeeves.server.context.ServiceContext;
 @Controller("operations")
 public class OperationsApi {
 
+    @Autowired
+    private OperationRepository operationRepository;
+
     @ApiOperation(
         value = "Get operations",
         notes = "Return the list of operations. Operations are used to define authorization per group. " +
@@ -66,6 +70,6 @@ public class OperationsApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<Operation> getOperations() throws Exception {
-        return ApplicationContextHolder.get().getBean(OperationRepository.class).findAll();
+        return operationRepository.findAll();
     }
 }

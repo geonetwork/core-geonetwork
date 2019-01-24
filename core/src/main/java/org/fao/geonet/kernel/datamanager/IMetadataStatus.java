@@ -16,15 +16,6 @@ import java.util.List;
 public interface IMetadataStatus {
 
     /**
-     * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     *
-     * @param context
-     * @param force
-     * @throws Exception
-     */
-    public void init(ServiceContext context, Boolean force) throws Exception;
-
-    /**
      * Returns if the user has at least one metadata status associated
      *
      * @param userId

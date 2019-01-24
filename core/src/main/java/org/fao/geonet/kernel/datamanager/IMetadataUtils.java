@@ -30,15 +30,6 @@ import jeeves.server.context.ServiceContext;
 public interface IMetadataUtils {
 
     /**
-     * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     *
-     * @param context
-     * @param force
-     * @throws Exception
-     */
-    public void init(ServiceContext context, Boolean force) throws Exception;
-
-    /**
      * Notify a metadata modification
      *
      * @param md

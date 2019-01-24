@@ -60,6 +60,7 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -90,6 +91,15 @@ tags = API_CLASS_RECORD_TAG)
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
 public class InspireValidationApi {
+
+    @Autowired
+    private SettingManager settingManager;
+
+    @Autowired
+    private SchemaManager schemaManager;
+
+    @Autowired
+    private DataManager dataManager;
 
     @ApiOperation(
             value = "Submit a record to the INSPIRE service for validation.",
@@ -129,7 +139,6 @@ public class InspireValidationApi {
             ) throws Exception {
 
         ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), null).publish(appContext);
@@ -156,7 +165,7 @@ public class InspireValidationApi {
             }
             md.detach();
             ServiceContext context = ApiUtils.createServiceContext(request);
-            Attribute schemaLocAtt =  appContext.getBean(SchemaManager.class).getSchemaLocation(
+            Attribute schemaLocAtt =  schemaManager.getSchemaLocation(
                     metadata.getDataInfo().getSchemaId(), context);
 
             if (schemaLocAtt != null) {
@@ -171,7 +180,7 @@ public class InspireValidationApi {
                 }
             }
 
-            EditLib editLib = appContext.getBean(DataManager.class).getEditLib();
+            EditLib editLib = dataManager.getEditLib();
 
             editLib.removeEditingInfo(md);
             editLib.contractElements(md);
@@ -235,8 +244,6 @@ public class InspireValidationApi {
             HttpSession session
             ) throws Exception {
 
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
 
         try {
