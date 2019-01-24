@@ -436,6 +436,10 @@
       <param-name>log</param-name>
       <param-value>true</param-value>
     </init-param>
+    <init-param>
+      <param-name>isSecured</param-name>
+      <param-value>true</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>ESFeaturesProxy</servlet-name>
@@ -459,6 +463,10 @@
     </init-param>
     <init-param>
       <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>isSecured</param-name>
       <param-value>true</param-value>
     </init-param>
   </servlet>

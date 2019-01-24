@@ -1,7 +1,6 @@
 package org.fao.geonet.proxy;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 
@@ -38,12 +37,11 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      *
      * Called from {@link #init(ServletConfig)}.
      *
-     * @param requestConfig the configuration used for the request made by the client.
      */
     @Override
-    protected HttpClient createHttpClient(RequestConfig requestConfig) {
+    protected HttpClient createHttpClient() {
         return HttpClients.custom()
-            .setDefaultRequestConfig(requestConfig)
+            .setDefaultRequestConfig(buildRequestConfig())
             .useSystemProperties()
             .build();
     }

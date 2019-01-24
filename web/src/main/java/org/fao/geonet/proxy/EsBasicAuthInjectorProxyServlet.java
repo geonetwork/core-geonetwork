@@ -75,10 +75,9 @@ public class EsBasicAuthInjectorProxyServlet
     
     /**
      * Add the basic authentication
-     * @param requestConfig the configuration used for the request made by the client.
      */
     @Override
-    protected HttpClient createHttpClient(RequestConfig requestConfig) {
+    protected HttpClient createHttpClient() {
         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
             CredentialsProvider credentialsProvider =
                 new BasicCredentialsProvider();
@@ -87,11 +86,11 @@ public class EsBasicAuthInjectorProxyServlet
                 new UsernamePasswordCredentials(username, password));
             return HttpClients.custom()
                 .setDefaultCredentialsProvider(credentialsProvider)
-                .setDefaultRequestConfig(requestConfig)
+                .setDefaultRequestConfig(buildRequestConfig())
                 .useSystemProperties()
                 .build();
         } else {
-            return super.createHttpClient(requestConfig);
+            return super.createHttpClient();
         }
     }
 }
