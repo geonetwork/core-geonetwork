@@ -44,6 +44,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
@@ -336,9 +337,18 @@ public class UserFeedbackAPI {
         )
         int size,
         @ApiIgnore final HttpServletResponse response,
+        @ApiIgnore final HttpServletRequest request,
         @ApiIgnore final HttpSession httpSession) throws Exception {
 
-        return getUserFeedback(metadataUuid, size, response, httpSession);
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        return getUserFeedback(md.getUuid(), size, response, httpSession);
     }
 
     /**
@@ -379,9 +389,18 @@ public class UserFeedbackAPI {
         )
         int size,
         @ApiIgnore final HttpServletResponse response,
+        @ApiIgnore final HttpServletRequest request,
         @ApiIgnore final HttpSession httpSession) throws Exception {
 
-        return getUserFeedback(metadataUuid, size, response, httpSession);
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        return getUserFeedback(md.getUuid(), size, response, httpSession);
     }
 
     private List<UserFeedbackDTO> getUserFeedback(
@@ -400,6 +419,7 @@ public class UserFeedbackAPI {
 
         try {
             Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComments");
+
 
             final IUserFeedbackService userFeedbackService = getUserFeedbackService();
 

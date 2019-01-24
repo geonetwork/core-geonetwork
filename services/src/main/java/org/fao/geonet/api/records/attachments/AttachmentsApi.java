@@ -32,11 +32,14 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
 import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
+import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -155,7 +158,16 @@ public class AttachmentsApi {
             @RequestParam(required = false, defaultValue = FilesystemStore.DEFAULT_FILTER) String filter,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter);
+
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        List<MetadataResource> list = store.getResources(context, md.getUuid(), sort, filter);
         return list;
     }
 
@@ -169,15 +181,20 @@ public class AttachmentsApi {
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        store.delResource(context, metadataUuid);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
-        if (metadataIdString != null) {
-            long metadataId = Long.parseLong(metadataIdString);
-            UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), "All attachments")
-                    .publish(ApplicationContextHolder.get());
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canEditRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
         }
+
+        store.delResource(context, md.getUuid());
+
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new AttachmentDeletedEvent(md.getId(), userSession.getUserIdAsInt(), "All attachments")
+            .publish(ApplicationContextHolder.get());
     }
 
     @ApiOperation(value = "Create a new resource for a given metadata", nickname = "putResourceFromFile")
@@ -193,13 +210,20 @@ public class AttachmentsApi {
             @ApiParam(value = "The file to upload") @RequestParam("file") MultipartFile file,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        MetadataResource resource = store.putResource(context, metadataUuid, file, visibility);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
-        if (metadataIdString != null && file != null && !file.isEmpty()) {
-            long metadataId = Long.parseLong(metadataIdString);
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canEditRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+        }
+
+        MetadataResource resource = store.putResource(context, md.getUuid(), file, visibility);
+
+        if (file != null && !file.isEmpty()) {
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachmentAddedEvent(metadataId, userSession.getUserIdAsInt(), file.getOriginalFilename())
+            new AttachmentAddedEvent(md.getId(), userSession.getUserIdAsInt(), file.getOriginalFilename())
                     .publish(ApplicationContextHolder.get());
         }
 
@@ -219,13 +243,20 @@ public class AttachmentsApi {
             @ApiParam(value = "The URL to load in the store") @RequestParam("url") URL url,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        MetadataResource resource = store.putResource(context, metadataUuid, url, visibility);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
-        if (metadataIdString != null && url != null) {
-            long metadataId = Long.parseLong(metadataIdString);
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canEditRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+        }
+
+        MetadataResource resource = store.putResource(context, md.getUuid(), url, visibility);
+
+        if (url != null) {
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachmentAddedEvent(metadataId, userSession.getUserIdAsInt(), url.toString())
+            new AttachmentAddedEvent(md.getId(), userSession.getUserIdAsInt(), url.toString())
                     .publish(ApplicationContextHolder.get());
         }
 
@@ -245,7 +276,16 @@ public class AttachmentsApi {
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        Path file = store.getResource(context, metadataUuid, resourceId);
+
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        Path file = store.getResource(context, md.getUuid(), resourceId);
 
         // TODO: Check user privileges
 
@@ -270,7 +310,16 @@ public class AttachmentsApi {
             @ApiParam(value = "The visibility", required = true, example = "public") @RequestParam(required = true) MetadataResourceVisibility visibility,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility);
+
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canEditRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+        }
+
+        return store.patchResourceStatus(context, md.getUuid(), resourceId, visibility);
     }
 
     @ApiOperation(value = "Delete a metadata resource", nickname = "deleteMetadataResource")
@@ -284,14 +333,19 @@ public class AttachmentsApi {
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        store.delResource(context, metadataUuid, resourceId);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
-        if (metadataIdString != null) {
-            long metadataId = Long.parseLong(metadataIdString);
-            UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachmentDeletedEvent(metadataId, userSession.getUserIdAsInt(), resourceId)
-                    .publish(ApplicationContextHolder.get());
+        AbstractMetadata md;
+        try{
+            md = ApiUtils.canEditRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
         }
+
+        store.delResource(context, md.getUuid(), resourceId);
+
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        new AttachmentDeletedEvent(md.getId(), userSession.getUserIdAsInt(), resourceId)
+            .publish(ApplicationContextHolder.get());
     }
 }

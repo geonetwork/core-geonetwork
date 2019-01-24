@@ -238,7 +238,7 @@
 
         return promiseMd.then(function(md) {
           if (angular.isString(fUrl)) {
-            url = fUrl.replace('{{uuid}}', md.getUuid());
+            url = fUrl.replace('{{uuid}}', md.getId());
           }
           else if (angular.isFunction(fUrl)) {
             url = fUrl(md);
