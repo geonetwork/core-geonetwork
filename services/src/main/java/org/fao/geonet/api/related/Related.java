@@ -81,6 +81,9 @@ public class Related implements ApplicationContextAware {
 
     private ApplicationContext context;
 
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
     public synchronized void setApplicationContext(ApplicationContext context) {
         this.context = context;
     }
@@ -118,7 +121,6 @@ public class Related implements ApplicationContextAware {
 
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         final ServiceContext context = ApiUtils.createServiceContext(request);
-        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         AbstractMetadata md;

@@ -45,6 +45,7 @@ import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -73,6 +74,22 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 @Controller("users")
 public class UsersApi {
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
+
+    @Autowired
+    UserSavedSelectionRepository userSavedSelectionRepository;
+
+    @Autowired
+    DataManager dataManager;
+
+
     @ApiOperation(
         value = "Get users",
         notes = "",
@@ -89,8 +106,6 @@ public class UsersApi {
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session.getProfile();
-
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         if (profile == Profile.Administrator) {
             return userRepository.findAll(SortUtils.createSort(User_.name));
@@ -144,9 +159,6 @@ public class UsersApi {
 
         if (myProfile.equals(Profile.Administrator) || myProfile.equals(Profile.UserAdmin) ||
             myUserId.equals(Integer.toString(userIdentifier))) {
-            UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-            UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-
             User user = userRepository.findOne(userIdentifier);
 
             if (user == null) {
@@ -196,9 +208,6 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-        UserSavedSelectionRepository userSavedSelectionRepository = ApplicationContextHolder.get().getBean(UserSavedSelectionRepository.class);
 
         if (myUserId == null || myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException(
@@ -219,9 +228,6 @@ public class UsersApi {
                     "You don't have rights to delete this user because the user is not part of your group");
             }
         }
-
-        DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
-
         // Before processing DELETE check that the user is not referenced
         // elsewhere in the GeoNetwork database - an exception is thrown if
         // this is the case
@@ -273,7 +279,6 @@ public class UsersApi {
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         if (profile == Profile.Administrator) {
             checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
@@ -355,9 +360,6 @@ public class UsersApi {
         if (myProfile != Profile.Administrator && myProfile != Profile.UserAdmin && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
-
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
         if (profile == Profile.Administrator) {
             checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
@@ -465,8 +467,6 @@ public class UsersApi {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-
         User user = userRepository.findOne(userIdentifier);
         if (user == null) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
@@ -507,9 +507,6 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        final UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        final UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin || myUserId.equals(Integer.toString(userIdentifier))) {
             // -- get the profile of the user id supplied
             User user = userRepository.findOne(userIdentifier);
@@ -526,7 +523,6 @@ public class UsersApi {
                 // TODO: Check if a better option returning instead of UserGroup a customised GroupDTO
                 // containing all group properties and user profile
                 userGroups = new ArrayList<UserGroup>();
-                final GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
 
                 List<Group> groups = groupRepository.findAll();
 
@@ -567,15 +563,11 @@ public class UsersApi {
     }
 
     private List<Integer> getGroupIds(int userId) {
-        return ApplicationContextHolder.get().getBean(UserGroupRepository.class)
-            .findGroupIds(hasUserId(userId));
+        return  userGroupRepository.findGroupIds(hasUserId(userId));
     }
 
     private void setUserGroups(final User user, List<GroupElem> userGroups)
         throws Exception {
-
-        final GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
-        final UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
         Collection<UserGroup> all = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));

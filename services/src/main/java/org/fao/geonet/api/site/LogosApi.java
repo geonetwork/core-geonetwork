@@ -41,6 +41,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -193,6 +194,8 @@ public class LogosApi {
         }
     }
 
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
 
     @ApiOperation(
         value = "Remove a logo",
@@ -221,7 +224,6 @@ public class LogosApi {
         checkFileName(file);
 
         ApplicationContext appContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
         Path nodeLogoDirectory = dataDirectory.getResourcesDir()
             .resolve("images").resolve("harvesting");
 

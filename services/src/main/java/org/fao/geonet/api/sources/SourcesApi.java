@@ -37,6 +37,7 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.Updater;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,6 +70,12 @@ import jeeves.server.context.ServiceContext;
 @Controller("sources")
 public class SourcesApi {
 
+    @Autowired
+    SourceRepository sourceRepository;
+
+    @Autowired
+    LanguageRepository langRepository;
+
     @ApiOperation(
         value = "Get all sources",
         notes = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.",
@@ -82,8 +89,7 @@ public class SourcesApi {
     })
     @ResponseBody
     public List<Source> getSources() throws Exception {
-        ApplicationContext context = ApplicationContextHolder.get();
-        return context.getBean(SourceRepository.class).findAll(SortUtils.createSort(Source_.name));
+        return sourceRepository.findAll(SortUtils.createSort(Source_.name));
     }
 
 
@@ -109,10 +115,6 @@ public class SourcesApi {
         @RequestBody
             Source source
     ) {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SourceRepository sourceRepository =
-            appContext.getBean(SourceRepository.class);
-
         Source existing = sourceRepository.findOne(source.getUuid());
         if (existing != null) {
             throw new IllegalArgumentException(String.format(
@@ -128,7 +130,6 @@ public class SourcesApi {
         }
 
         // Populate languages if not already set
-        LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
         java.util.List<Language> allLanguages = langRepository.findAll();
         Map<String, String> labelTranslations = source.getLabelTranslations();
         for (Language l : allLanguages) {
@@ -168,10 +169,6 @@ public class SourcesApi {
         @RequestBody
             Source source
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SourceRepository sourceRepository =
-            appContext.getBean(SourceRepository.class);
-
         Source existingSource = sourceRepository.findOne(sourceIdentifier);
         if (existingSource != null) {
             updateSource(sourceIdentifier, source, sourceRepository);
@@ -207,10 +204,6 @@ public class SourcesApi {
         @PathVariable
             String sourceIdentifier
     ) throws ResourceNotFoundException {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SourceRepository sourceRepository =
-            appContext.getBean(SourceRepository.class);
-
         Source existingSource = sourceRepository.findOne(sourceIdentifier);
         if (existingSource != null) {
             sourceRepository.delete(existingSource);
