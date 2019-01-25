@@ -300,6 +300,11 @@
       <span role="tooltip" data-translate="">ZoomOut</span>
     </button>
 
+    <button class="btn btn-default" type="submit" data-ng-click="zoomToYou(map)">
+      <span class="fa fa-crosshairs"></span>
+      <span role="tooltip" data-translate="">ZoomToYourLocation</span>
+    </button>
+
     <!-- graticule: hidden if no layer info given -->
     <button gn-graticule-btn="map" class="btn btn-default" type="submit"
       ng-if="graticuleOgcService" graticule-ogc-service="graticuleOgcService">
