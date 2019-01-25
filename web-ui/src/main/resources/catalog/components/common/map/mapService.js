@@ -624,6 +624,39 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
+           * @name gnMap#addGeoJSONToMap
+           *
+           * @description
+           * Add a GeoJSON layer to the map from a given source.
+           *
+           * @param {string} name of the layer
+           * @param {number} url of the GeoJSON source
+           * @param {ol.Map} map object
+           */
+          addGeoJSONToMap: function(name, url, map) {
+            if (!url || url == '') {
+              return;
+            }
+
+            var GeoJSONSource = new ol.source.Vector({
+              projection: map.getView().getProjection(),
+              format: new ol.format.GeoJSON(),
+              url: url
+            });
+
+            var vector = new ol.layer.Vector({
+              source: GeoJSONSource,
+              label: name
+            });
+
+            ngeoDecorateLayer(vector);
+            vector.displayInLayerManager = true;
+            map.getLayers().push(vector);
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
            * @name gnMap#addKmlToMap
            *
            * @description
@@ -638,9 +671,10 @@
               return;
             }
 
-            var kmlSource = new ol.source.KML({
+            var kmlSource = new ol.source.Vector({
+              url: url,
               projection: map.getView().getProjection(),
-              url: url
+              format: new ol.format.KML()
             });
 
             var vector = new ol.layer.Vector({
