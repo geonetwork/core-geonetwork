@@ -73,6 +73,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -158,6 +159,9 @@ public class MetadataApi implements ApplicationContextAware {
         HttpServletRequest request
     )
         throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         try {
             ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
@@ -241,6 +245,9 @@ public class MetadataApi implements ApplicationContextAware {
         ApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
         AbstractMetadata metadata;
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
@@ -376,6 +383,8 @@ public class MetadataApi implements ApplicationContextAware {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
 
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
@@ -483,6 +492,8 @@ public class MetadataApi implements ApplicationContextAware {
             int rows,
         HttpServletRequest request) throws Exception {
 
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata md;
         try{
             md = ApiUtils.canViewRecord(metadataUuid, request);
@@ -537,6 +548,7 @@ public class MetadataApi implements ApplicationContextAware {
             String metadataUuid,
         HttpServletRequest request) throws ResourceNotFoundException {
 
+
         RelatedItemType[] type = {RelatedItemType.fcats};
 
         FeatureResponse response = new FeatureResponse();
@@ -544,6 +556,8 @@ public class MetadataApi implements ApplicationContextAware {
         Map<String, String[]> decodeMap = new HashMap<>();
 
         try {
+            metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
             RelatedResponse related = getRelated(metadataUuid, type, 0, 100, request);
 
             if (isIncludedAttributeTable(related.getFcats())) {

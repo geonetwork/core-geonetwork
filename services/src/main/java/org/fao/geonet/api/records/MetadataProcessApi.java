@@ -28,6 +28,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_OP_NOTE_PROCESS;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -100,6 +101,9 @@ public class MetadataProcessApi {
     public @ResponseBody List<SuggestionType> getSuggestions(
             @ApiParam(value = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
             HttpServletRequest request) throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();

@@ -139,6 +139,9 @@ public class MetadataWorkflowApi {
         )
             Sort.Direction sortOrder,
         HttpServletRequest request) throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         MetadataStatusRepositoryCustom metadataStatusRepository =
@@ -186,6 +189,9 @@ public class MetadataWorkflowApi {
         )
             Sort.Direction sortOrder,
         HttpServletRequest request) throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         ServiceContext context = ApiUtils.createServiceContext(request);
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         MetadataStatusRepositoryCustom metadataStatusRepository =
@@ -232,6 +238,9 @@ public class MetadataWorkflowApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
@@ -300,6 +309,9 @@ public class MetadataWorkflowApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request, languageUtils.getIso3langCode(request.getLocales()));
@@ -378,6 +390,9 @@ public class MetadataWorkflowApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
@@ -434,6 +449,9 @@ public class MetadataWorkflowApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatusRepository statusRepository = ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);

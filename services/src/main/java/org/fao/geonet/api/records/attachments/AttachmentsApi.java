@@ -62,6 +62,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -159,6 +160,8 @@ public class AttachmentsApi {
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata md;
         try{
             md = ApiUtils.canViewRecord(metadataUuid, request);
@@ -181,6 +184,8 @@ public class AttachmentsApi {
             @ApiParam(value = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
 
         AbstractMetadata md;
         try{
@@ -210,6 +215,8 @@ public class AttachmentsApi {
             @ApiParam(value = "The file to upload") @RequestParam("file") MultipartFile file,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
 
         AbstractMetadata md;
         try{
@@ -244,6 +251,8 @@ public class AttachmentsApi {
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata md;
         try{
             md = ApiUtils.canEditRecord(metadataUuid, request);
@@ -276,6 +285,8 @@ public class AttachmentsApi {
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
 
         AbstractMetadata md;
         try{
@@ -311,6 +322,8 @@ public class AttachmentsApi {
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata md;
         try{
             md = ApiUtils.canEditRecord(metadataUuid, request);
@@ -333,6 +346,8 @@ public class AttachmentsApi {
             @ApiParam(value = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
             @ApiIgnore HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
 
         AbstractMetadata md;
         try{

@@ -69,7 +69,7 @@
           scope: {},
           link: function (scope, element, attrs) {
             scope.relations = {};
-            scope.uuid = undefined;
+            scope.mdId = undefined;
             scope.lang = scope.$parent.lang;
             scope.readonly = false;
             scope.numberOfOverviews = parseInt(attrs['numberOfOverviews']) || Infinity;
@@ -91,7 +91,7 @@
               scope.queue = [];
               scope.filestoreUploadOptions = {
                 autoUpload: true,
-                url: '../api/0.1/records/' + gnCurrentEdit.uuid +
+                url: '../api/0.1/records/' + gnCurrentEdit.id +
                 '/attachments?visibility=public',
                 dropZone: $('#gn-overview-dropzone'),
                 singleUpload: true,
@@ -143,6 +143,10 @@
                   loadRelations();
                 });
               } else {
+                // Encode the uuid in the path
+                var uuid = url.match(".*/api/records/(.*)/attachments/.*")[1];
+                url = url.replace(uuid, encodeURIComponent(uuid));
+
                 // A thumbnail from the filestore
                 gnFileStoreService.delete({url: url}).then(function () {
                   // then remove from record
@@ -155,10 +159,10 @@
 
             };
             http://localhost:8080/geonetwork/srv/api/records/01788925-ea24-4a7e-ac0d-aa10f8210b8c/attachments/oldmaps.jpeg
-            scope.$watch('gnCurrentEdit.uuid', function(n, o) {
-              if (angular.isUndefined(scope.uuid) ||
+            scope.$watch('gnCurrentEdit.id', function(n, o) {
+              if (angular.isUndefined(scope.mdId) ||
                 n != o) {
-                scope.uuid = n;
+                scope.mdId = n;
                 loadRelations();
                 uploadOverview();
               }
@@ -973,7 +977,7 @@
                 		  });
 
                   return $http.put('../api/0.1/records/' +
-                      scope.gnCurrentEdit.uuid +
+                      scope.gnCurrentEdit.id +
                       '/attachments/print-thumbnail', null, {
                         params: {
                           jsonConfig: angular.fromJson(jsonSpec),
@@ -1528,9 +1532,12 @@
                  */
                 scope.selectUploadedResource = function(res) {
                   if (res && res.url) {
+                    var uuid = res.url.match(".*/api/records/(.*)/attachments/.*")[1];
+                    var url = res.url.replace(uuid, encodeURIComponent(uuid));
+
                     var o = {
                       name: res.id.split('/').splice(2).join('/'),
-                      url: res.url
+                      url: url
                     };
                     ['url', 'name'].forEach(function(pName) {
                       setParameterValue(pName, o[pName]);

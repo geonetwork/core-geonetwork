@@ -29,8 +29,7 @@ import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PL
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -279,6 +278,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             FormatType formatType,
         @ApiIgnore final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
+
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());

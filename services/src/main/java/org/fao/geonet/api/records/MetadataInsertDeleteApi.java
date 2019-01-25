@@ -399,7 +399,7 @@ public class MetadataInsertDeleteApi {
 
         // User assigned uuid: check if already exists
         String metadataUuid = null;
-        if (generateUuid) {
+        if (!generateUuid) {
             if (StringUtils.isEmpty(targetUuid)) {
                 // Create a random UUID
                 metadataUuid = UUID.randomUUID().toString();
@@ -415,6 +415,8 @@ public class MetadataInsertDeleteApi {
                 } catch (ResourceNotFoundException e) {
                     // Ignore. Ok to create a new record with the requested UUID.
                 }
+
+                metadataUuid = targetUuid;
             }
         } else {
             metadataUuid = UUID.randomUUID().toString();

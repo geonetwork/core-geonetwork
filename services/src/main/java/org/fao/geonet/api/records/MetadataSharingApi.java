@@ -172,6 +172,9 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -414,6 +417,8 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         // TODO: Restrict to user group only in response depending on settings?
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
@@ -520,6 +525,8 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -733,6 +740,8 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);

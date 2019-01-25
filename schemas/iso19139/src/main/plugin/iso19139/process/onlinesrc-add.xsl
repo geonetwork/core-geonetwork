@@ -173,6 +173,9 @@ Insert is made in first transferOptions found.
       In that case on one online element is added per
       layer/featureType.
       -->
+
+      <xsl:variable name="localUrl" select="contains($url, '/api/records/')" />
+
       <xsl:choose>
         <xsl:when test="starts-with($protocol, 'OGC:') and $name != ''">
           <xsl:for-each select="tokenize($name, ',')">
@@ -184,7 +187,22 @@ Insert is made in first transferOptions found.
               <gmd:CI_OnlineResource>
                 <gmd:linkage>
                   <gmd:URL>
-                    <xsl:value-of select="$url"/>
+                    <xsl:choose>
+                      <xsl:when test="$localUrl = true()">
+                        <xsl:variable name="uuid" select="substring-before(substring-after($url, '/api/records/'), '/attachments')" />
+                        <xsl:variable name="encodedUuid" select="encode-for-uri($uuid)" />
+                        <xsl:variable name="updatedUrl" select="replace($url, $uuid, $encodedUuid)" />
+
+                        <gco:CharacterString>
+                          <xsl:value-of select="$updatedUrl"/>
+                        </gco:CharacterString>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>
+                          <xsl:value-of select="$url"/>
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </gmd:URL>
                 </gmd:linkage>
                 <gmd:protocol>

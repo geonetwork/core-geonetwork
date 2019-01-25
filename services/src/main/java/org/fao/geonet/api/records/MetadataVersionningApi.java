@@ -97,6 +97,8 @@ public class MetadataVersionningApi {
             String metadataUuid,
         HttpServletRequest request
     ) throws Exception {
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 

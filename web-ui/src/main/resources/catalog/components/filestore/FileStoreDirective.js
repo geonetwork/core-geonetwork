@@ -41,7 +41,7 @@
             templateUrl: '../../catalog/components/filestore/' +
                 'partials/filestore.html',
             scope: {
-              mdId: '=gnFileStore',
+              uuid: '=gnFileStore',
               selectCallback: '&',
               filter: '='
             },
@@ -60,7 +60,7 @@
               scope.metadataResources = [];
 
               scope.loadMetadataResources = function() {
-                gnfilestoreService.get(scope.mdId, scope.filter).success(
+                gnfilestoreService.get(scope.uuid, scope.filter).success(
                     function(data) {
                       scope.metadataResources = data;
                     }
@@ -108,13 +108,13 @@
               };
 
               scope.$watch('filter', function(newValue, oldValue) {
-                if (angular.isDefined(scope.mdId) &&
+                if (angular.isDefined(scope.uuid) &&
                     newValue != oldValue) {
                   scope.loadMetadataResources();
                 }
               });
-              scope.$watch('mdId', function(newValue, oldValue) {
-                if (angular.isDefined(scope.mdId) &&
+              scope.$watch('uuid', function(newValue, oldValue) {
+                if (angular.isDefined(scope.uuid) &&
                     newValue != oldValue) {
 
                   scope.loadMetadataResources();
@@ -122,7 +122,7 @@
                   scope.queue = [];
                   scope.filestoreUploadOptions = {
                     autoUpload: scope.autoUpload,
-                    url: '../api/0.1/records/' + scope.mdId +
+                    url: '../api/0.1/records/' + encodeURIComponent(scope.uuid) +
                         '/attachments?visibility=' + defaultStatus,
                     dropZone: $('#' + scope.id),
                     singleUpload: false,

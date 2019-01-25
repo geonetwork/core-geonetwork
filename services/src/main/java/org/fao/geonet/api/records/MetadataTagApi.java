@@ -154,6 +154,9 @@ public class MetadataTagApi {
             boolean clear,
         HttpServletRequest request
     ) throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getMetadataCategories();
@@ -215,6 +218,8 @@ public class MetadataTagApi {
             Integer[] id,
         HttpServletRequest request
     ) throws Exception {
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         Set<MetadataCategory> before = metadata.getMetadataCategories();

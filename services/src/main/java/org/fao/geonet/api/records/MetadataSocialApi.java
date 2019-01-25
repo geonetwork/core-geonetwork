@@ -126,6 +126,9 @@ public class MetadataSocialApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);

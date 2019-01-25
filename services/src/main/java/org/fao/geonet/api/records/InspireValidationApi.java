@@ -128,6 +128,8 @@ public class InspireValidationApi {
             HttpSession session
             ) throws Exception {
 
+        metadataUuid = ApiUtils.decodeValue(metadataUuid);
+
         ApplicationContext appContext = ApplicationContextHolder.get();
         final SettingManager settingManager = appContext.getBean(SettingManager.class);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);

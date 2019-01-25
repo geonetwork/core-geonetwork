@@ -63,6 +63,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -144,6 +145,8 @@ public class MetadataEditingApi {
             Map<String,String> allRequestParams,
         HttpServletRequest request
         ) throws Exception {
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         boolean showValidationErrors = false;
@@ -241,6 +244,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
         ) throws Exception {
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
@@ -420,6 +425,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -487,6 +494,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -573,6 +582,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -632,6 +643,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
@@ -684,6 +697,8 @@ public class MetadataEditingApi {
         @ApiParam(hidden = true)
             HttpSession httpSession
     ) throws Exception {
+        metadataUuid = URLDecoder.decode(metadataUuid, "UTF-8");
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 

@@ -28,8 +28,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,6 +44,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -272,5 +275,15 @@ public class ApiUtils {
         try (OutputStream out = Files.newOutputStream(outFile)) {
             ImageIO.write(bimg, type, out);
         }
+    }
+
+    public static String decodeValue(String value) throws UnsupportedEncodingException {
+
+        if (StringUtils.isNotEmpty(value)) {
+            return URLDecoder.decode(value, "UTF-8");
+        } else {
+            return value;
+        }
+
     }
 }

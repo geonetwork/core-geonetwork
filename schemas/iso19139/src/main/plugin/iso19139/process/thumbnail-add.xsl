@@ -101,6 +101,7 @@
   -->
 
   <xsl:template name="fill">
+
     <xsl:if test="$thumbnail_url != ''">
 
       <xsl:variable name="useOnlyPTFreeText"
@@ -149,9 +150,25 @@
                 </gmd:PT_FreeText>
               </xsl:when>
               <xsl:otherwise>
-                <gco:CharacterString>
-                  <xsl:value-of select="$thumbnail_url"/>
-                </gco:CharacterString>
+
+                <xsl:variable name="localUrl" select="contains($thumbnail_url, '/api/records/')" />
+
+                <xsl:choose>
+                  <xsl:when test="$localUrl = true()">
+                    <xsl:variable name="uuid" select="substring-before(substring-after($thumbnail_url, '/api/records/'), '/attachments')" />
+                    <xsl:variable name="encodedUuid" select="encode-for-uri($uuid)" />
+                    <xsl:variable name="updatedThumbnailUrl" select="replace($thumbnail_url, $uuid, $encodedUuid)" />
+
+                    <gco:CharacterString>
+                      <xsl:value-of select="$updatedThumbnailUrl"/>
+                    </gco:CharacterString>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <gco:CharacterString>
+                      <xsl:value-of select="$thumbnail_url"/>
+                    </gco:CharacterString>
+                  </xsl:otherwise>
+                </xsl:choose>
               </xsl:otherwise>
             </xsl:choose>
           </gmd:fileName>
