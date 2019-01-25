@@ -37,7 +37,6 @@
         <span title="{{::member.get('label')}}">
           {{::member.get('label')}}</span>
       </label>
-
       <div class="flex-spacer flex-grow"></div>
 
       <!--Drop down button for layer actions-->
@@ -96,6 +95,9 @@
           <!--Remove layer-->
           <li class="list-group-item"><a href="" data-ng-click="remove(); hidePopover()">
             <!--<i class="fa fa-trash-o"></i>&nbsp;--><span translate="">remove</span>
+          </a></li>
+          <li><a ng-if="member.get('metadata_url')" target="_blank" href="{{::member.get('metadata_url')}}">
+            Lien
           </a></li>
         </ul>
       </div>
