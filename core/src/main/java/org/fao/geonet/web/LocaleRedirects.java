@@ -25,8 +25,13 @@ package org.fao.geonet.web;
 
 import jeeves.constants.Jeeves;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -41,9 +46,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -84,6 +91,9 @@ public class LocaleRedirects {
     @Autowired
     NodeInfo currentNode;
 
+    @Autowired
+    SourceRepository sourceRepository;
+
     /**
      * Handle redirect for / to the default node if no extra parameter.
      * Use /?node=A to redirect to a node
@@ -101,8 +111,13 @@ public class LocaleRedirects {
                              @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                              @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
                              @RequestParam(value = NODE_PARAMETER, required = false) String node,
-                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
+                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) throws ResourceNotFoundException {
         String lang = lang(langParam, langCookie, langHeader);
+
+        if(StringUtils.isNotEmpty(node)) {
+            checkPortalExist(node);
+        }
+
         return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, node));
     }
 
@@ -121,11 +136,36 @@ public class LocaleRedirects {
                              @PathVariable String portal,
                              @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                              @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
-                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
-        // TODO: Could make sense to check that the portal exist
-        // And return the list of existing ones if requested one is not found.
+                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) throws ResourceNotFoundException {
         String lang = lang(langParam, langCookie, langHeader);
+
+        checkPortalExist(portal);
+
         return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
+    }
+
+    /**
+     * Check that the requested portal exist.
+     *If not return the list of existing ones if requested one is not found.
+     *
+     * @param portal
+     * @throws ResourceNotFoundException
+     */
+    private void checkPortalExist(String portal) throws ResourceNotFoundException {
+        final Source one = sourceRepository.findOne(portal);
+        if (one == null) {
+            List<String> portalList = new ArrayList<>();
+            portalList.add(NodeInfo.DEFAULT_NODE);
+            sourceRepository.findAll().forEach(e -> {
+                if (e.getType().equals(SourceType.subportal)){
+                    portalList.add(e.getUuid());
+                }
+            });
+            throw new ResourceNotFoundException(String.format(
+                "No portal found with id '%s'. The list of available portals are: %s",
+                portal, portalList.toString()
+                ));
+        }
     }
 
     @RequestMapping(value = "/login.jsp")
