@@ -24,21 +24,21 @@
 package org.fao.geonet.api.sources;
 
 import io.swagger.annotations.*;
-import org.fao.geonet.ApplicationContextHolder;
+import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.Source_;
 import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.Updater;
+import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,13 +51,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
+import javax.servlet.http.HttpServletRequest;
 
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
     "/{portal}/api/sources",
@@ -113,8 +117,9 @@ public class SourcesApi {
             name = "source"
         )
         @RequestBody
-            Source source
-    ) {
+            Source source,
+        @ApiIgnore
+        HttpServletRequest request) {
         Source existing = sourceRepository.findOne(source.getUuid());
         if (existing != null) {
             throw new IllegalArgumentException(String.format(
@@ -139,7 +144,15 @@ public class SourcesApi {
         }
 
         Source sourceCreated = sourceRepository.save(source);
+        copySourceLogo(source, request);
         return new ResponseEntity(sourceCreated.getUuid(), HttpStatus.CREATED);
+    }
+
+    private void copySourceLogo(Source source, HttpServletRequest request) {
+        if (source.getLogo() != null) {
+            ServiceContext context = ApiUtils.createServiceContext(request);
+            Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + source.getLogo(), source.getUuid());
+        }
     }
 
     @ApiOperation(
@@ -167,11 +180,13 @@ public class SourcesApi {
             name = "source"
         )
         @RequestBody
-            Source source
-    ) throws Exception {
+            Source source,
+        @ApiIgnore
+        HttpServletRequest request) throws Exception {
         Source existingSource = sourceRepository.findOne(sourceIdentifier);
         if (existingSource != null) {
             updateSource(sourceIdentifier, source, sourceRepository);
+            copySourceLogo(source, request);
         } else {
             throw new ResourceNotFoundException(String.format(
                 "Source with uuid '%s' does not exist.",
@@ -202,10 +217,22 @@ public class SourcesApi {
             required = true
         )
         @PathVariable
-            String sourceIdentifier
+            String sourceIdentifier,
+        @ApiIgnore
+            HttpServletRequest request
     ) throws ResourceNotFoundException {
         Source existingSource = sourceRepository.findOne(sourceIdentifier);
         if (existingSource != null) {
+            if (existingSource.getLogo() != null) {
+                ServiceContext context = ApiUtils.createServiceContext(request);
+                Path icon = Resources.locateLogosDir(context)
+                    .resolve(existingSource.getUuid() + "." +
+                        FilenameUtils.getExtension(existingSource.getLogo()));
+                try {
+                    Files.deleteIfExists(icon);
+                } catch (IOException e) {
+                }
+            }
             sourceRepository.delete(existingSource);
         } else {
             throw new ResourceNotFoundException(String.format(

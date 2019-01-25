@@ -122,6 +122,15 @@ import springfox.documentation.annotations.ApiIgnore;
 @Controller("site")
 public class SiteApi {
 
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    NodeInfo node;
+
+    @Autowired
+    SourceRepository sourceRepository;
+
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
@@ -179,17 +188,29 @@ public class SiteApi {
     @ResponseBody
     public SettingsListResponse get(
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
-
         SettingsListResponse response = new SettingsListResponse();
-        response.setSettings(sm.getSettings(new String[]{
+        response.setSettings(settingManager.getSettings(new String[]{
             Settings.SYSTEM_SITE_NAME_PATH,
             Settings.SYSTEM_SITE_ORGANIZATION,
             Settings.SYSTEM_SITE_SITE_ID_PATH,
             Settings.SYSTEM_PLATFORM_VERSION,
             Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
+        if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            Source source = sourceRepository.findOne(node.getId());
+            if (source != null) {
+                final List<Setting> settings = response.getSettings();
+                settings.add(
+                    new Setting().setName(Settings.NODE_DEFAULT)
+                        .setValue("false"));
+                settings.add(
+                    new Setting().setName(Settings.NODE)
+                        .setValue(source.getUuid()));
+                settings.add(
+                    new Setting().setName(Settings.NODE_NAME)
+                        .setValue(source.getName()));
+            }
+        }
         return response;
     }
 

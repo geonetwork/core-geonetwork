@@ -108,7 +108,6 @@ public class MetadataProcessApi {
             HttpServletRequest request) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         Map<String, Object> xslParameter = new HashMap<String, Object>();

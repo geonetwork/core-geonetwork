@@ -203,21 +203,11 @@ public class SettingManager {
         List<Setting> settings = new ArrayList<>();
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            // Sub portal exception to retrieve the name of the current catalogue.
-            if (!"srv".equals(node.getId()) && key.equals(SYSTEM_SITE_NAME_PATH)) {
-                final Source source = sourceRepository.findOne(node.getId());
-                if (source != null) {
-                    settings.add(new Setting()
-                        .setName(SYSTEM_SITE_NAME_PATH)
-                        .setValue(source.getName()));
-                }
+            Setting se = repo.findOne(key);
+            if (se == null) {
+                Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
             } else {
-                Setting se = repo.findOne(key);
-                if (se == null) {
-                    Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
-                } else {
-                    settings.add(se);
-                }
+                settings.add(se);
             }
         }
         return settings;
