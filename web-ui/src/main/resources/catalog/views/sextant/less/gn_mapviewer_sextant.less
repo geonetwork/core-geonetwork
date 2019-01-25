@@ -22,6 +22,12 @@
     background: rgb(219, 232, 255);
   }
 
+  // replaces the GN tooltip background color
+  button:focus [role=tooltip],
+  button:hover [role=tooltip] {
+    background: rgba(0,0,0,.6);
+  }
+
   .main-tools {
     right: auto;
     left: 1.8em;
@@ -36,7 +42,7 @@
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
-      top: 2.9em;
+      top: 3.8em;
       border-radius: .2em;
       left: 50%;
       transform: translate(-50%, 0);
