@@ -394,9 +394,11 @@
               if (!filter) { return; }
 
               // make the filter case insensitive, ie : abc => [aA][bB][cC]
-              filter = filter.replace(/./g, function(match) {
-                return '[' + match.toLowerCase() + match.toUpperCase() + ']';
-              });
+              if (isNaN(filter)) {
+                filter = filter.replace(/./g, function (match) {
+                  return isNaN(match) ? '[' + match.toLowerCase() + match.toUpperCase() + ']': match;
+                });
+              }
 
               aggs[facetName] = {
                 terms: {
