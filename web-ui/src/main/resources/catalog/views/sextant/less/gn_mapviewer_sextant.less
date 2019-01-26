@@ -22,6 +22,12 @@
     background: rgb(219, 232, 255);
   }
 
+  // replaces the GN tooltip background color
+  button:focus [role=tooltip],
+  button:hover [role=tooltip] {
+    background: rgba(0,0,0,.6);
+  }
+
   .main-tools {
     right: auto;
     left: 1.8em;
@@ -36,7 +42,7 @@
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
-      top: 2.9em;
+      top: 3.8em;
       border-radius: .2em;
       left: 50%;
       transform: translate(-50%, 0);
@@ -127,6 +133,7 @@
     left: auto;
     bottom: auto;
     width: 2.25em;
+    border: none;
     button {
       margin-bottom: .5em;
     }
@@ -273,9 +280,11 @@
       border-radius: 0;
       border: none;
       box-shadow: @sxt-shadow;
+      width: 20em;
     }
     .clear {
-      top: 1.2em;
+      top: 1.1em;
+      right: 1.1em;
     }
     .dropdown-menu {
       border-radius: 0;
@@ -291,6 +300,12 @@
           font-size: 11px;
         }
       }
+    }
+
+    // hide the 'locate myself' button and 'roadsign' icon
+    .input-group-addon,
+    .input-group-btn {
+      display: none;
     }
 
     // allow clickthrough on the transparent part of the geocoder widget
