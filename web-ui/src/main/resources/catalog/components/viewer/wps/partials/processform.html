@@ -42,35 +42,34 @@
       <div ng-if="processDescription">
         <div>
           <form novalidate>
-            <!--specific SEXTANT EMODNET-->
-            <div class="gn-sort-by" ng-if="emodnetSortKeys">
-              <div class="pull-right">
-                <span translate>sortBy</span>&nbsp;:&nbsp;
-
-                <div class="btn-group pull-right btn-wps-sort">
-                  <button type="button"
-                          class="btn btn-link dropdown-toggle btn-wps-sort-container"
-                          data-toggle="dropdown"
-                          ng-bind-html="sortKeyValue">
-                  </button>
-                  <br>
-                  <ul class="dropdown-menu" role="menu">
-                    <li ng-repeat="sortKey in emodnetSortKeys"
-                        data-ng-class="sortKey === params.sortBy ? 'disabled' : ''">
-                      <a data-ng-click="reOrderLayerInputs(sortKey)">{{sortKey| translate}}</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <br>
-            <!--END specific SEXTANT EMODNET-->
-            <!-- Inputs: loop on process description to display all inputs -->
             <div ng-repeat="input in processDescription.dataInputs.input"
               ng-if="!isInputHidden(input.identifier.value)"
               class="form-group">
               <!-- Input label & info -->
               <label>
                 <span>{{::input.title.value}}&nbsp;</span>
+                <!--specific SEXTANT EMODNET-->
+                <div class="gn-sort-by" ng-if="emodnetSortKeys && input.title.value=='dtm files'">
+                  <div class="pull-right">
+                    <span translate>sortBy</span>&nbsp;:&nbsp;
+                    <div class="btn-group pull-right btn-wps-sort">
+                      <button type="button"
+                              class="btn btn-link dropdown-toggle btn-wps-sort-container"
+                              data-toggle="dropdown"
+                              ng-bind-html="sortKeyValue">
+                      </button>
+                      <br>
+                      <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="sortKey in emodnetSortKeys"
+                            data-ng-class="sortKey === params.sortBy ? 'disabled' : ''">
+                          <a data-ng-click="reOrderLayerInputs(sortKey)">{{sortKey| translate}}</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <!--END specific SEXTANT EMODNET-->
+                <!-- Inputs: loop on process description to display all inputs -->
                 <span class="fa fa-info-circle" ng-if="::input._abstract.value"
                   title="{{::input._abstract.value}}"></span>
                 <small class="text-danger" ng-if="::input.minOccurs">

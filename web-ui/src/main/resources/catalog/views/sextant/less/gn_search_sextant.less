@@ -465,14 +465,20 @@ div.gn, div.g, * {
   width: 10em;
 }
 
+[sxt-main-viewer] .panel-tools label div span {
+  line-height:1.95em;
+}
+gn-wps-process-form label, [sxt-main-viewer] .panel-tools gn-wps-process-form label {
+  width: 100%;
+}
+
 [sxt-main-viewer] .main-tools .btn-wps-sort-container {
-  color: #333333;
+  color: @sxt-base-color;
   background-color: transparent;
   box-shadow: none;
   border: 0;
   font-family: 'Roboto', sans-serif;
   font-size: 12px;
-  color: #333333;
 }
 
 .sxt-center-panel {
@@ -490,6 +496,7 @@ div.gn, div.g, * {
       margin-top: -2px;
     }
     .gn-sort-by {
+      float: right;
       .pull-right {
         margin-top: 0;
         height: 2.8em;
