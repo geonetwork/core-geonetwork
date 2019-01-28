@@ -52,12 +52,12 @@
       && user.isReviewerOrMore && !user.isReviewerOrMore());
 
 
-      scope.unFilteredlinks = md.getLinksByType('LINK')
+      scope.unFilteredlinks = md.getLinksByType('LINK', 'WWW:DOWNLOAD-1.0-http--download')
         // we do not want to display the following protocols
         // link https://forge.ifremer.fr/mantis/view.php?id=40721
       scope.links = []
       scope.unFilteredlinks.forEach(function(link){
-         if (link.protocol !== 'NETWORK:LINK' && link.protocol !== 'WWW:DOWNLOAD-1.0-link--download'){
+         if (link.protocol !== 'NETWORK:LINK'){
           scope.links.push(link)
         };
       })
