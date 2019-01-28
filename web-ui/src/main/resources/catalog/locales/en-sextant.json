@@ -3,6 +3,7 @@
   "applyFilter": "Apply filters",
   "view": "View",
   "links": "Links",
+  "liencdicprd": "CDI/CPRD Link",
   "print_legend": "Legends",
   "print_legend_field": "Include legends",
   "validateConstraints": "Validate limits/constraints of use",
