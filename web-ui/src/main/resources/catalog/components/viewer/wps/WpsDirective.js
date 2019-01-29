@@ -187,9 +187,12 @@
             scope.applyMapLayersToInput = function () {
               if (!scope.applicationProfile) return;
               var availableLayers = scope.filterAvailableLayers()
+                .filter(function(ll) {
+                  return ll.get('qi_list') != undefined;
+                })
                 .map(function(ll) {
-                return ll.get('label') || ll.get('name');
-              });
+                  return ll.get('label') || ll.get('name');
+                });
               scope.applicationProfile.inputs.forEach(function(input) {
                 if (input.bindWmsNameToWPS) {
                   scope.emodnetSortKeys = input.sortBy;
@@ -205,12 +208,15 @@
             scope.reOrderLayerInputs = function(key){
               scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
               var layersOrderedList = scope.filterAvailableLayers()
+                .filter(function(ll) {
+                  return ll.get('qi_list') != undefined;
+                })
                 .map(function(ll) {
                   return {'name' : ll.get('label') || ll.get('name'), 'qi': ll.get('qi_list')[key]};
                 })
-                .sort(function(a,b){
-                  return parseInt(a.qi) - parseInt(b.qi)
-                });
+                .sort(function(a,b) {
+                  return parseInt(a.qi) - parseInt(b.qi);
+                })
               layersOrderedList.forEach(function(layer) {
                 scope.addInputValueByName(scope.emodnetSortInputKey, layer.name);
               });
