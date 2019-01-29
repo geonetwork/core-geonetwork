@@ -338,7 +338,7 @@
           }
 
           if(link.protocol.match(
-              "WWW:FTP|WWW:DOWNLOAD-1.0-link--download|WWW:OPENDAP|MYO:MOTU-SUB") != null) {
+              "WWW:FTP|WWW:DOWNLOAD-1.0-link--download|WWW:DOWNLOAD-1.0-http--download|WWW:OPENDAP|MYO:MOTU-SUB") != null) {
             if (link.protocol == 'MYO:MOTU-SUB') {
               link.url = link.url.replace('action=describeproduct', 'action=productdownloadhome');
             }
