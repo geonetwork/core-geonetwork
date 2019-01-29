@@ -626,7 +626,6 @@
             $scope.authenticated = true;
           } else {
             $scope.authenticated = false;
-            $scope.user = undefined;
           }
         });
         $scope.userLoginPromise = userLogin;
