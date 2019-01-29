@@ -96,6 +96,43 @@ public class ISODateTest {
     }
 
     @Test
+    public void testSetDateAndTime_OnlyYear() {
+        ISODate date = new ISODate();
+        date.setDateAndTime("2019");
+        assertEquals(true, date.isDateYearOnly());
+        assertEquals(2019, date.getYears());
+        assertEquals(12, date.getMonths());
+        assertEquals(31, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
+
+    }
+
+    @Test
+    public void testSetDateAndTime_OnlyYearMonth() {
+        ISODate date = new ISODate();
+        date.setDateAndTime("2019-10");
+        assertEquals(true, date.isDateYearMonthOnly());
+        assertEquals(2019, date.getYears());
+        assertEquals(10, date.getMonths());
+        assertEquals(31, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
+
+        date = new ISODate();
+        date.setDateAndTime("2019-04");
+        assertEquals(true, date.isDateYearMonthOnly());
+        assertEquals(2019, date.getYears());
+        assertEquals(4, date.getMonths());
+        assertEquals(30, date.getDays());
+        assertEquals(0, date.getHours());
+        assertEquals(0, date.getMinutes());
+        assertEquals(0, date.getSeconds());
+    }
+
+    @Test
     public void testSetDateAndTime() {
 
         ISODate date = new ISODate();
@@ -293,8 +330,13 @@ public class ISODateTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void testCreateISODateExceptionBecauseOfEmpty() throws Exception {
+        new ISODate("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateISODateExceptionBecauseOfBadFormat() throws Exception {
-        new ISODate("2001");
+        new ISODate("2019hh");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -306,7 +348,13 @@ public class ISODateTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSetDateExceptionBecauseOfBadFormat() throws Exception {
         ISODate isoDate = new ISODate();
-        isoDate.setDateAndTime("2001");
+        isoDate.setDateAndTime("2019hh");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetDateExceptionBecauseOfEmpty() throws Exception {
+        ISODate isoDate = new ISODate();
+        isoDate.setDateAndTime("");
     }
 
     @Test
@@ -357,6 +405,13 @@ public class ISODateTest {
     public void testGetDate() throws Exception {
         ISODate isoDate = new ISODate("2013-10-10T13:20:00Z");
         assertEquals("2013-10-10", isoDate.getDateAsString());
+
+
+        isoDate = new ISODate("2019-01");
+        assertEquals("2019-01", isoDate.getDateAsString());
+
+        isoDate = new ISODate("2019");
+        assertEquals("2019", isoDate.getDateAsString());
     }
 
     @Test

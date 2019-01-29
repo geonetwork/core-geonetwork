@@ -85,6 +85,12 @@ public class ISODate
     private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
 
     @XmlTransient
+    private boolean _shortDateYear; // --- 'true' if the format is yyyy
+
+    @XmlTransient
+    private boolean _shortDateYearMonth; // --- 'true' if the format is yyyy-mm
+
+    @XmlTransient
     private Calendar _calendar = Calendar.getInstance();
 
     // ---------------------------------------------------------------------------
@@ -344,6 +350,8 @@ public class ISODate
             clone = (ISODate) super.clone();
             clone._calendar = (Calendar) _calendar.clone();
             clone._shortDate = _shortDate;
+            clone._shortDateYear = _shortDateYear;
+            clone._shortDateYearMonth = _shortDateYearMonth;
             return clone;
         } catch (CloneNotSupportedException e) {
             return new ISODate(_calendar.getTimeInMillis(), _shortDate);
@@ -364,7 +372,13 @@ public class ISODate
     // --------------------------------------------------------------------------
     @Transient
     public String getDateAsString() {
-        return getYears() + "-" + pad(getMonths()) + "-" + pad(getDays());
+        if (_shortDateYearMonth) {
+            return getYears() + "-" + pad(getMonths()) ;
+        } else if (_shortDateYear) {
+            return getYears() + "";
+        } else {
+            return getYears() + "-" + pad(getMonths()) + "-" + pad(getDays());
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -394,10 +408,11 @@ public class ISODate
 
     @XmlValue
     public String getDateAndTime() {
-        if (_shortDate) {
+        if (_shortDate || _shortDateYearMonth || _shortDateYear) {
             return getDateAsString();
+        } else {
+            return getDateAsString() + "T" + getTimeAsString();
         }
-        return getDateAsString() + "T" + getTimeAsString();
     }
 
     public void setDateAndTime(String isoDate) {
@@ -446,6 +461,26 @@ public class ISODate
     @Transient
     public boolean isDateOnly() {
         return _shortDate;
+    }
+
+    /**
+     * Return true if this object is only the date (year) and time should be ignored.
+     *
+     * @return true if this object is only the date (year) and time should be ignored.
+     */
+    @Transient
+    public boolean isDateYearOnly() {
+        return _shortDateYear;
+    }
+
+    /**
+     * Return true if this object is only the date (year, month) and time should be ignored.
+     *
+     * @return true if this object is only the date (year, month) and time should be ignored.
+     */
+    @Transient
+    public boolean isDateYearMonthOnly() {
+        return _shortDateYearMonth;
     }
 
     /**
@@ -519,10 +554,15 @@ public class ISODate
     private void parseDate(@Nonnull String isoDate) {
         try {
             String[] parts = isoDate.split("-|/");
-            if (parts.length != 3) {
+            if ((parts.length == 0) || (parts.length > 3)) {
                 throw new IllegalArgumentException(
                     "Invalid ISO date : " + isoDate);
             }
+
+            _shortDate = (parts.length == 3);
+            _shortDateYearMonth = (parts.length == 2);
+            _shortDateYear = (parts.length == 1);
+
             int year;
             if (parts[0].length() < 4) {
                 int shortYear = Integer.parseInt(parts[0]);
@@ -539,13 +579,28 @@ public class ISODate
             } else {
                 year = Integer.parseInt(parts[0]);
             }
-            int month = Integer.parseInt(parts[1]);
-            int day;
-            if (parts[2].toLowerCase().endsWith("z")) {
-                day = Integer
-                    .parseInt(parts[2].substring(0, parts[2].length() - 1));
+
+            int month;
+            if (_shortDate || _shortDateYearMonth) {
+                month = Integer.parseInt(parts[1]);
             } else {
-                day = Integer.parseInt(parts[2]);
+                month = 12;
+            }
+
+            int day;
+            if (_shortDate) {
+
+                if (parts[2].toLowerCase().endsWith("z")) {
+                    day = Integer
+                        .parseInt(parts[2].substring(0, parts[2].length() - 1));
+                } else {
+                    day = Integer.parseInt(parts[2]);
+                }
+            } else {
+                _calendar.set(year, month - 1, 1);
+
+                // Calculate the last day for the year/month
+                day = _calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             }
 
             _shortDate = true;
