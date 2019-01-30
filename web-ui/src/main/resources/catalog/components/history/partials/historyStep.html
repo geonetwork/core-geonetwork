@@ -44,6 +44,10 @@
               data-from-now=""></span>
       </span><br/>
 
+      <p class="gn-margin-top" data-ng-if="h.changeMessage !== ''">
+        {{h.changeMessage}}
+      </p>
+
       <img class="img-circle"
            data-ng-src="//gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
       {{h.authorName}}
