@@ -1519,4 +1519,28 @@
       };
     }
   ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnStringToNumber
+   *
+   * @description
+   * Converts a string with a number value to a number.
+   * To be used for example in input type=number fields
+   * when the model value is stored in a string field.
+   *
+   */
+  module.directive('gnStringToNumber', function() {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function (value) {
+          return '' + value;
+        });
+        ngModel.$formatters.push(function (value) {
+          return parseFloat(value);
+        });
+      }
+    };
+  });
 })();
