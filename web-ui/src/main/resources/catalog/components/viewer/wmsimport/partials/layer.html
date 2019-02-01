@@ -8,7 +8,7 @@
            class="truncate"
            data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
            title="{{member.Title || member.title}}">
-          <i class='fa'
+          <i class='fa fa-fw'
              data-ng-class='::isParentNode ? "fa-folder-o" : ""'></i>
           {{member.Title || member.title}}
           <span data-ng-if="member.Style.length === 1">
@@ -18,7 +18,7 @@
       </div>
       <div class="flex-spacer"></div>
       <div class="flex-col">
-        <div class="gn-layer-actions"             
+        <div class="gn-layer-actions"
              data-ng-if="!isParentNode && member.Style.length > 1">
           <div ngeo-popover
                ngeo-popover-placement="bottom">
