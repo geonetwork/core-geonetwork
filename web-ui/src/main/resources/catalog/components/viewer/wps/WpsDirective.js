@@ -214,8 +214,8 @@
                 .map(function(ll) {
                   return {'name' : ll.get('label') || ll.get('name'), 'qi': ll.get('qi_list')[key]};
                 })
-                .sort(function(a,b) {
-                  return parseInt(a.qi) - parseInt(b.qi);
+                .sort(function(a, b) {
+                  return parseInt(b.qi) - parseInt(a.qi);
                 })
               layersOrderedList.forEach(function(layer) {
                 scope.addInputValueByName(scope.emodnetSortInputKey, layer.name);
