@@ -11,10 +11,10 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="listbox">
-            <li data-ng-repeat="srv in catServicesList">
+            <li data-ng-repeat="srv in catServicesList | orderBy: 'title'">
               <a href="" data-ng-click="setUrl(srv)"
-                 title="{{srv.desc}}">
-                {{srv.title}} ({{srv.url}}) - {{srv.type}}
+                 title="{{srv.desc}} ({{srv.url}}) - {{srv.type}}">
+                {{srv.title}} ({{srv.url}}))
               </a>
             </li>
           </ul>
