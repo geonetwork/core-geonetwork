@@ -93,6 +93,13 @@
 
             <xsl:apply-templates mode="content" select="."/>
 
+            <xsl:if test="$angularApp != 'gn_search' and $angularApp != 'gn_viewer' and $angularApp != 'gn_formatter_viewer'">
+              <div class="navbar gn-footer-bar"
+                   role="navigation"
+                   data-ng-hide="layout.hideTopToolBar"
+                   data-ng-include="'{$uiResourcesPath}templates/footer.html'"></div>
+            </xsl:if>
+
             <xsl:if test="$isJsEnabled">
               <xsl:call-template name="javascript-load"/>
             </xsl:if>
