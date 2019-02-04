@@ -96,6 +96,13 @@
                 inheritedCrs = layer.CRS;
               }
 
+              // SEXTANT SPECIFIC: ALSO ADD NODES TO LAYERS ARRAY
+
+              // add to flat layer array if we're on a leave (layer w/o child)
+              layer.url = url;
+              layer.CRS = inheritedCrs;
+              layers.push(layer);
+
               if (layer.Layer) {
                 // make sure Layer element is an array
                 if (!angular.isArray(layer.Layer)) {
@@ -104,12 +111,9 @@
 
                 // process recursively on child layers
                 getFlatLayers(layer.Layer, inheritedCrs);
-              } else {
-                // add to flat layer array if we're on a leave (layer w/o child)
-                layer.url = url;
-                layer.CRS = inheritedCrs;
-                layers.push(layer);
               }
+
+              // END SEXTANT SPECIFIC
             }
           };
 
