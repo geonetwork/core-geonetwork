@@ -143,7 +143,6 @@
                 <xsl:attribute name="{$type}">
                 {
                 <xsl:for-each select="$value/values/value">
-                  <xsl:sort select="@lang"/>
                   "<xsl:value-of select="@lang" />":
                   {"ref" : "<xsl:value-of select="@ref" />", "value": "<xsl:value-of select="." />"}
                   <xsl:if test="position() != last()">,</xsl:if>
@@ -201,8 +200,8 @@
                 <xsl:variable name="tooltip"
                               select="concat($schema, '|', name(.), '|', name(..), '|', $xpath)"></xsl:variable>
 
+                <!-- Preserve order of the languages as defined in the record. -->
                 <xsl:for-each select="$value/values/value">
-                  <xsl:sort select="@lang"/>
                   <xsl:if test="@lang != ''">
                     <xsl:call-template name="render-form-field">
                       <xsl:with-param name="name" select="@ref"/>
