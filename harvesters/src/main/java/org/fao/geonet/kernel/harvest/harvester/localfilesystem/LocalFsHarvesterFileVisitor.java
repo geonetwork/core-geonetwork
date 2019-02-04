@@ -88,8 +88,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private long startTime;
 
     public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, LocalFilesystemHarvester harvester) throws Exception {
-        this.aligner = new BaseAligner(cancelMonitor) {};
-
+        this.aligner = new LocalFileSytemAligner(cancelMonitor, params);
         this.cancelMonitor = cancelMonitor;
         this.context = context;
         this.thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
@@ -293,6 +292,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     public void apply(@Nonnull final Metadata metadata) {
                        metadata.getHarvestInfo().setHarvested(true);
                        metadata.getHarvestInfo().setUuid(params.getUuid());
+                       metadata.getSourceInfo().setOwner(aligner.getOwner());
                     }
                 });
                 aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);

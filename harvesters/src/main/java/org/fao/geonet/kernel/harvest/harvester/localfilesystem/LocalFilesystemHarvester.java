@@ -201,7 +201,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
             setChangeDate(new ISODate(createDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId())).
+            setOwner(aligner.getOwner()).
             setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         metadata.getHarvestInfo().
             setHarvested(true).

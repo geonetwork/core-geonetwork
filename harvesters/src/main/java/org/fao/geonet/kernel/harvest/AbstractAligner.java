@@ -30,7 +30,7 @@ public abstract class AbstractAligner<P extends AbstractParams> {
 
     protected P params;
 
-    protected int getOwner() {
+    public int getOwner() {
         return Integer.parseInt(
                 (StringUtils.isNumeric(params.getOwnerIdUser()) && params.getOwnerIdUser().length() > 0) ? params.getOwnerIdUser() : params.getOwnerId());
     }
