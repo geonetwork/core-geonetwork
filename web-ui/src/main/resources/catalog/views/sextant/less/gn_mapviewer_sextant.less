@@ -26,6 +26,8 @@
   button:focus [role=tooltip],
   button:hover [role=tooltip] {
     background: rgba(0,0,0,.6);
+    padding: 0.2em 0.5em;
+    font-size: 1em;
   }
 
   .main-tools {
@@ -42,7 +44,7 @@
     button:focus [role=tooltip],
     button:hover [role=tooltip] {
       right: auto;
-      top: 3.8em;
+      top: 3.3em;
       border-radius: .2em;
       left: 50%;
       transform: translate(-50%, 0);
@@ -105,6 +107,7 @@
     &:focus [role=tooltip],
     &:hover [role=tooltip] {
       right: 2.3em;
+      margin-top: -0.15em;
     }
   }
 
@@ -275,12 +278,15 @@
     right: 1.8em;
     bottom: 2.85em;
     margin: 0px;
+    z-index: 90;
+
     input {
       height: 3em;
       border-radius: 0;
       border: none;
       box-shadow: @sxt-shadow;
       width: 20em;
+      padding-left: 2.3em;
     }
     .clear {
       top: 1.1em;
@@ -302,10 +308,23 @@
       }
     }
 
-    // hide the 'locate myself' button and 'roadsign' icon
-    .input-group-addon,
+    // hide the 'locate myself' button
     .input-group-btn {
       display: none;
+    }
+
+    // show the roadsign with transparency
+    .input-group-addon {
+      border: none;
+      background: none;
+      position: absolute;
+      color: @sxt-font-color;
+      opacity: 0.3;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      padding: 1em 0.8em;
     }
 
     // allow clickthrough on the transparent part of the geocoder widget

@@ -85,6 +85,23 @@
                 map.getView().fit(map.getView().
                     getProjection().getExtent(), map.getSize());
               };
+
+              // copy of the code in LocalisationDirective (TODO: put this in a service)
+              scope.zoomToYou = function(map) {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(function(pos) {
+                    var position = new ol.geom.Point([
+                      pos.coords.longitude,
+                      pos.coords.latitude]);
+                    map.getView().setCenter(
+                      position.transform(
+                        'EPSG:4326',
+                        map.getView().getProjection()).getFirstCoordinate()
+                    );
+                  });
+                }
+              };
+
               scope.ol3d = null;
 
               // 3D mode is allowed and disabled by default
