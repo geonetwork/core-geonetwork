@@ -71,6 +71,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -150,7 +151,12 @@ public class SiteApi {
                 String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
                 String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
+            } else {
+                pi.setProxyInfo(null, -1, null, null);
             }
+
+            // Update http.proxyHost, http.proxyPort and http.nonProxyHosts
+            Lib.net.setupProxy(settingMan);
         } catch (Exception e) {
             e.printStackTrace();
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
