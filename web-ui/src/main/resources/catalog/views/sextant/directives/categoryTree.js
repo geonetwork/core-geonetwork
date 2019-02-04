@@ -103,6 +103,11 @@
               var key = t['@name'], name;
                 name = findLabel(key, translations);
               if (name) {
+                  // make sure the name starts with /
+                  // see https://forge.ifremer.fr/mantis/view.php?id=45687
+                  if (name.substring(0, 1) !== '/') {
+                    name = '/' + name;
+                  }
                   var g = name.split('/');
                   createNode(scope.member, g, 1, t);
               }
