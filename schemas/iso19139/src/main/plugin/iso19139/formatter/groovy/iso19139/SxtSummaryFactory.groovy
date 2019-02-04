@@ -104,6 +104,7 @@ class SxtSummaryFactory {
 
   def configureContacts(metadata, summary) {
     def contacts = metadata.'gmd:identificationInfo'."**".findAll{it.name() == 'gmd:CI_ResponsibleParty'}
+      .sort{it.parent().name() == 'gmd:pointOfContact' ? -1 : 1}
     if (!contacts.isEmpty()) {
       summary.contacts = this.isoHandlers.contactsElSxt(contacts).toString()
     }
