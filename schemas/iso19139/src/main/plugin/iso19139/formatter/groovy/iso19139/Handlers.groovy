@@ -25,6 +25,9 @@ package iso19139
 
 import org.fao.geonet.api.records.formatters.groovy.Environment
 import org.fao.geonet.api.records.formatters.groovy.MapConfig
+import org.fao.geonet.domain.ISODate
+
+import java.text.SimpleDateFormat
 
 public class Handlers {
     protected org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
@@ -528,13 +531,19 @@ public class Handlers {
     def datesElSxt =  { els ->
         def dates = ''
         els.each { el ->
-            def date = el.'gmd:date'.'gco:Date'.text().isEmpty() ?
-                    el.'gmd:date'.'gco:DateTime'.text() :
-                    el.'gmd:date'.'gco:Date'.text()
+            def date = el.'gmd:date'.'gco:Date'.text()
+            def dateTime = el.'gmd:date'.'gco:DateTime'.text()
+            def dateText
+            if (!date.isEmpty()) {
+                dateText = date
+            } else if (!dateTime.isEmpty()){
+                ISODate isoDate = new ISODate(dateTime)
+                dateText = new SimpleDateFormat("dd-MM-yyyy").format(isoDate.toDate())
+            }
 
-            if(date) {
+            if(dateText) {
                 def dateType = f.codelistValueLabel(el.'gmd:dateType'.'gmd:CI_DateTypeCode')
-                dates += '<p>' + date + ' - ' + dateType + '</p>'
+                dates += '<p>' + dateText + ' - ' + dateType + '</p>'
             }
         }
         return dates
