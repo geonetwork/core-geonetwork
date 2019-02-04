@@ -75,7 +75,7 @@
               <li data-ng-if="::(user.profile != 'Editor')"><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i>&nbsp;<span translate>privileges</span></a></li>
               <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a ng-href=""><i class="fa fa-key"></i>&nbsp;<span translate>privileges</span></a></li>
 
-              <li data-ng-if="(md.isWorkflowEnabled() && !cantStatus)" ><a href="" data-ng-click="mdService.openUpdateStatusPanel(getScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
+              <li data-ng-if="(md.isWorkflowEnabled() && !cantStatus)" ><a href="" data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
               <li data-ng-if="(md.isWorkflowEnabled() && cantStatus)" class="disabled"><a href="" data-ng-click=""><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
 
               <li><a href="" data-ng-if="!md.isWorkflowEnabled()" data-ng-click="mdService.startWorkflow(md, getCatScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">enableWorkflow</span></a></li>

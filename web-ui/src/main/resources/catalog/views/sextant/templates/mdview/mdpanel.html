@@ -49,7 +49,7 @@
 
           <li data-ng-if="::(md.isWorkflowEnabled() && !cantStatus)">
             <a href=""
-               data-ng-click="mdService.openUpdateStatusPanel(getScope())"><i
+               data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')"><i
               class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a>
           </li>
           <li data-ng-if="::(md.isWorkflowEnabled() && cantStatus)" class="disabled">
