@@ -22,10 +22,21 @@
  */
 package v370;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.annotations.VisibleForTesting;
 import org.fao.geonet.DatabaseMigrationTask;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.migration.DatabaseMigrationException;
 import org.fao.geonet.migration.JsonDatabaseMigration;
+import org.fao.geonet.utils.Log;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
