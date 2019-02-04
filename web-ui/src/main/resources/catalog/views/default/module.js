@@ -130,6 +130,8 @@
       $scope.gnWmsQueue = gnWmsQueue;
       $scope.$location = $location;
       $scope.activeTab = '/home';
+      $scope.currentTabMdView = gnGlobalSettings.gnCfg.mods.recordview.mdDefaultTab;
+      $scope.mdViewTemplate = '../../catalog/views/default/templates/' + gnGlobalSettings.gnCfg.mods.recordview.mdViewTemplate;
       $scope.listOfResultTemplate = gnGlobalSettings.gnCfg.mods.search.resultViewTpls;
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.advandedSearchTemplate = gnSearchSettings.advancedSearchTemplate;
@@ -339,8 +341,36 @@
         match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
       };
 
+      var availableTabs = ['general', 'contact', 'relations', 'inspire'];
+      $scope.changeTabMdView =function(newTab) {
+        if (availableTabs.indexOf(newTab) == -1) {
+          newTab = availableTabs[0];
+        }
+        $location.search('tab', newTab);
+      };
+
+      $scope.$on('tabChangeRequested', function(event, requestedTab) {
+        $scope.changeTabWithoutModifyingUrl(requestedTab);
+      });
+
+      $scope.changeTabWithoutModifyingUrl = function (newTab) {
+        if (newTab && availableTabs.indexOf(newTab) != -1) {
+          $scope.currentTabMdView = newTab;
+        } else {
+          $scope.currentTabMdView = 'general';
+        }
+      };
+
       setActiveTab();
-      $scope.$on('$locationChangeSuccess', setActiveTab);
+
+      $scope.$on('$locationChangeSuccess', function(next,current) {
+        setActiveTab();
+
+        var search = $location.search();
+
+        $scope.changeTabWithoutModifyingUrl(search.tab);
+      });
+
 
       angular.extend($scope.searchObj, {
         advancedMode: false,

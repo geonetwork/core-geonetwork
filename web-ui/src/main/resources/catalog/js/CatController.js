@@ -220,7 +220,9 @@
         },
         'recordview': {
           'enabled': true,
-          'isSocialbarEnabled': true
+          'isSocialbarEnabled': true,
+          'mdViewTemplate': 'recordView.html',
+          'mdDefaultTab': 'general'
         },
         'editor': {
           'enabled': true,

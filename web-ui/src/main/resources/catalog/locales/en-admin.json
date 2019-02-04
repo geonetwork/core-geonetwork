@@ -1348,5 +1348,14 @@
     "distributedSearch": "Distributed search",
     "distributedSearchHelp": "Enables the distributed search in remote server (if the remote server supports it). When this option is enabled, the remote catalog cascades the search to the Federated CSW servers that has configured.",
     "hopCount": "Hop count",
-    "hopCountHelp": "Control the maximum number of message hops (default to 2) before the search is terminated in a distributed search."
+    "hopCountHelp": "Control the maximum number of message hops (default to 2) before the search is terminated in a distributed search.",
+    "ui-mdViewTemplate": "Record view template",
+    "ui-mdViewTemplate-help": "The template to use when a single metadata record is displayed",
+    "ui-mdDefaultTab": "Select the default tab",
+    "ui-mdDefaultTab-help": "Select the tab page that's shown when opening the record view (NOTE: only when the 'tabbed' template is selected)",
+    "default": "Default",
+    "tabbed": "Information in tabs",
+    "mdTabGeneral": "General",
+    "mdTabContact": "Contact",
+    "mdTabRelations": "Downloads and links"
 }

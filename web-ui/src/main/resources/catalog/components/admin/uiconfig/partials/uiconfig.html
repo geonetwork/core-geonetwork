@@ -632,6 +632,59 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="mdViewTemplate">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+        <div class="checkbox">
+          <label>
+            <input type="radio" data-ng-model="mCfg[key]"
+                   value="recordView.html"/>
+            <span data-translate="">default</span>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="radio" data-ng-model="mCfg[key]"
+                   value="recordViewTabbed.html"/>
+            <span data-translate="">tabbed</span>
+          </label>
+        </div>
+
+        <p class="help-block"
+            data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="mdDefaultTab">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+
+        <div class="checkbox">
+          <label>
+            <input type="radio" data-ng-model="mCfg[key]"
+                    value="general"/>
+            <span data-translate="">mdTabGeneral</span>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="radio" data-ng-model="mCfg[key]"
+                    value="contact"/>
+            <span data-translate="">mdTabContact</span>
+          </label>
+        </div>
+        <div class="checkbox">
+            <label>
+              <input type="radio" data-ng-model="mCfg[key]"
+                      value="relations"/>
+              <span data-translate="">mdTabRelations</span>
+            </label>
+          </div>
+
+        <p class="help-block"
+            data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
       <div data-ng-switch-when="isLogoInHeader">
         <input type="checkbox"
                id="{{key}}-checkbox"
