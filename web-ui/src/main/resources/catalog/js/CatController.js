@@ -165,7 +165,7 @@
             'openNewWindow': false,
             'valuesSeparator': ','
           },
-          'is3DModeAllowed': true,
+          'is3DModeAllowed': false,
           'isSaveMapInCatalogAllowed': true,
           'isExportMapAsImageEnabled': false,
           'storage': 'sessionStorage',
