@@ -119,5 +119,31 @@
   </fieldset>
 
 
+  <div>
+    <label class="control-label">
+      <input id="gn-harvest-settings-gn-advanced-distributedsearch-checkbox"
+             type="checkbox" data-ng-true-value="'distributed'" data-ng-false-value="'local'"
+             data-ng-model="harvesterSelected.site.queryScope"/>
+      <span id="gn-harvest-settings-gn-advanced-distributedsearch-label" data-translate="">distributedSearch</span>
+    </label>
+
+    <fieldset data-ng-show="harvesterSelected.site.queryScope == 'distributed'">
+      <div class="well">
+        <div id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-row">
+          <label id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-label" class="control-label" data-translate="">hopCount</label>
+          <input id="gn-harvest-settings-gn-advanced-distributedsearch-hopcount-input"
+                 type="number" data-gn-string-to-number
+                 class="form-control"
+                 data-ng-model="harvesterSelected.site.hopCount"/>
+
+          <p class="help-block" data-translate="">hopCountHelp</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <p class="help-block" data-translate="">distributedSearchHelp</p>
+  </div>
+
+
   <div id="gn-harvest-settings-csw-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>
