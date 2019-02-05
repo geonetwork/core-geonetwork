@@ -108,6 +108,7 @@ public class CORSResponseFilter
                     String clientOriginHost = new java.net.URI(clientOriginUrl).getHost();
                     if (addHeaderForAllHosts ||
                         allowedRemoteHosts.indexOf(clientOriginHost) != -1) {
+                        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");   // sextant specific
                         httpResponse.setHeader("Access-Control-Allow-Origin", clientOriginUrl); // Sextant specific: use client URL and not a wildcard for CORS
 //                        httpResponse.setHeader("Access-Control-Allow-Origin", "*");
                         httpResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");

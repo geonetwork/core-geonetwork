@@ -673,15 +673,17 @@
           };
         });
 
+        // Sextant: use `withCredentials` by default in http requests
+        $http.defaults.withCredentials = true;
+
         // Retrieve user information if catalog is online
-        var userLogin = $http.get('../api/me', { withCredentials: true }).success(function (me, status) {
+        var userLogin = $http.get('../api/me').success(function (me, status) {
           if (angular.isObject(me)) {
             angular.extend($scope.user, me);
             angular.extend($scope.user, userFn);
             $scope.authenticated = true;
           } else {
             $scope.authenticated = false;
-            $scope.user = undefined;
           }
         });
         $scope.userLoginPromise = userLogin;
