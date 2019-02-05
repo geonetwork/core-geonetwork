@@ -23,23 +23,12 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.StringTokenizer;
-
+import com.google.common.base.Splitter;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.facet.DrillDownQuery;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.index.Term;
@@ -59,7 +48,18 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 
-import com.google.common.base.Splitter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Class to create a Lucene query from a {@link LuceneQueryInput} representing a search request.
@@ -448,18 +448,34 @@ public class LuceneQueryBuilder {
      */
     private BooleanClause tokenizeSearchParam(String fieldValue, String similarity, Occur singleTokenOccur, Occur moreTokensOccur) {
         // tokenize searchParam
+
         BooleanClause anyClause = null;
-        StringTokenizer st = new StringTokenizer(fieldValue, STRING_TOKENIZER_DELIMITER);
-        if (st.countTokens() == 1) {
-            String token = st.nextToken();
+        List<String> tokens = new ArrayList();
+
+        try {
+            TokenStream stream = _analyzer.tokenStream("any", fieldValue);
+            CharTermAttribute cattr = stream.addAttribute(CharTermAttribute.class);
+            stream.reset();
+            while (stream.incrementToken()) {
+                tokens.add(cattr.toString());
+            }
+            stream.end();
+            stream.close();
+        } catch (Exception e) {
+
+        }
+
+        if (tokens.size() == 1) {
+            String token = tokens.get(0);
             Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
             if (subQuery != null) {
                 anyClause = new BooleanClause(subQuery, singleTokenOccur);
             }
         } else {
             BooleanQuery orBooleanQuery = new BooleanQuery();
-            while (st.hasMoreTokens()) {
-                String token = st.nextToken();
+            Iterator<String> tokenIterator = tokens.iterator();
+            while (tokenIterator.hasNext()) {
+                String token =tokenIterator.next();
                 Query subQuery = textFieldToken(token, LuceneIndexField.ANY, similarity);
                 if (subQuery != null) {
                     BooleanClause subClause = new BooleanClause(subQuery, moreTokensOccur);
