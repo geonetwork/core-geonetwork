@@ -1470,6 +1470,10 @@
     "es.url": "Elasticsearch server",
     "es.version": "Elasticsearch version",
     "es.index": "Index name",
-    "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties."
+    "systemPropertiesProxyConfiguration": "Using http proxy settings in system properties.",
+    "fieldRequired": "The value is required",
+    "fieldTooLong": "The value is too long",
+    "fieldTooShort": "The value is too short",
+    "fieldEmailNotValid": "A valid email address is required"
 }
 
