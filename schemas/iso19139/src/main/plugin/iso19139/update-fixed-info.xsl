@@ -340,30 +340,7 @@
 
               <xsl:if test="gmd:PT_FreeText[normalize-space(.) != '']">
                 <gmd:PT_FreeText>
-                  <xsl:variable name="freeText"
-                                select="gmd:PT_FreeText/gmd:textGroup"/>
-  
-                  <!-- Loop on locales in order to preserve order.
-                      Keep main language on top.
-                      Translations having no locale are ignored. eg. when removing a lang. -->
-                  <xsl:for-each select="$locales[@id = $mainLanguageId]">
-                    <xsl:variable name="localId"
-                                  select="@id"/>
-
-                    <xsl:variable name="element"
-                                  select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                    <xsl:apply-templates select="$element"/>
-                  </xsl:for-each>
-                  <xsl:for-each select="$locales[@id != $mainLanguageId]">
-                    <xsl:variable name="localId"
-                                  select="@id"/>
-
-                    <xsl:variable name="element"
-                                  select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                    <xsl:apply-templates select="$element"/>
-                  </xsl:for-each>
+                  <xsl:call-template name="populate-free-text"/>
                 </gmd:PT_FreeText>
               </xsl:if>
 
@@ -378,38 +355,42 @@
                     <xsl:value-of select="gco:CharacterString"/>
                   </gmd:LocalisedCharacterString>
                 </gmd:textGroup>
-
-                <!-- Process all translations ... -->
-                <xsl:variable name="freeText"
-                              select="gmd:PT_FreeText/gmd:textGroup"/>
-
-                <!-- Loop on locales in order to preserve order.
-                    Keep main language on top.
-                    Translations having no locale are ignored. eg. when removing a lang. -->
-                <xsl:for-each select="$locales[@id = $mainLanguageId]">
-                  <xsl:variable name="localId"
-                                select="@id"/>
-
-                  <xsl:variable name="element"
-                                select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                  <xsl:apply-templates select="$element"/>
-                </xsl:for-each>
-                <xsl:for-each select="$locales[@id != $mainLanguageId]">
-                  <xsl:variable name="localId"
-                                select="@id"/>
-
-                  <xsl:variable name="element"
-                                select="$freeText[*/@locale = concat('#', $localId)]"/>
-
-                  <xsl:apply-templates select="$element"/>
-                </xsl:for-each>
+                <xsl:call-template name="populate-free-text"/>
               </gmd:PT_FreeText>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:copy>
+  </xsl:template>
+
+
+  <xsl:template name="populate-free-text">
+    <xsl:variable name="freeText"
+                  select="gmd:PT_FreeText/gmd:textGroup"/>
+
+    <!-- Loop on locales in order to preserve order.
+        Keep main language on top.
+        Translations having no locale are ignored. eg. when removing a lang. -->
+    <xsl:for-each select="$locales[@id = $mainLanguageId]">
+      <xsl:variable name="localId"
+                    select="@id"/>
+
+      <xsl:variable name="element"
+                    select="$freeText[*/@locale = concat('#', $localId)]"/>
+
+      <xsl:apply-templates select="$element"/>
+    </xsl:for-each>
+
+    <xsl:for-each select="$locales[@id != $mainLanguageId]">
+      <xsl:variable name="localId"
+                    select="@id"/>
+<xsl:message><xsl:value-of select="$localId"/>aa </xsl:message>
+      <xsl:variable name="element"
+                    select="$freeText[*/@locale = concat('#', $localId)]"/>
+
+      <xsl:apply-templates select="$element"/>
+    </xsl:for-each>
   </xsl:template>
 
   <!-- For multilingual elements. Check that the local
