@@ -186,7 +186,7 @@
               scope.dateFrom = today.clone().startOf('year')
                 .format(scope.format);
             }
-            scope.dateTo = today.add(1, 'day').format(scope.format);
+            scope.dateTo = today.clone().add(1, 'day').format(scope.format);
           };
         }
       };
