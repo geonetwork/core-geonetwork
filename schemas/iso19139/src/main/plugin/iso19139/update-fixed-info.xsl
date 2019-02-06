@@ -385,7 +385,7 @@
     <xsl:for-each select="$locales[@id != $mainLanguageId]">
       <xsl:variable name="localId"
                     select="@id"/>
-<xsl:message><xsl:value-of select="$localId"/>aa </xsl:message>
+
       <xsl:variable name="element"
                     select="$freeText[*/@locale = concat('#', $localId)]"/>
 
