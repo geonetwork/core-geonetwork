@@ -146,7 +146,7 @@
                 <!-- For OGC resources, the description contains the label
                 and the title the layer name which in some cases eg. ESRI
                 is a number only. -->
-                {{(resource[resource.protocol.indexOf('OGC') !== -1 ? 'description' : 'title'] | gnLocalized: lang) || resource.lUrl}}
+                {{(resource[resource.protocol && resource.protocol.indexOf('OGC') !== -1 ? 'description' : 'title'] | gnLocalized: lang) || resource.lUrl}}
               </a>
               <span data-ng-if="resource.lUrl.match('^http|ftp') === null">
                 {{(resource.title | gnLocalized: lang) || resource.lUrl}}
