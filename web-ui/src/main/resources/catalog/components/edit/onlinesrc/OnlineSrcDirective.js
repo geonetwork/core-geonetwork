@@ -1310,7 +1310,7 @@
                   if (scope.OGCProtocol) {
                     scope.layers = [];
                     if (scope.OGCProtocol === 'WMS') {
-                      return gnOwsCapabilities.getWMSCapabilities(url)
+                      return gnOwsCapabilities.getWMSCapabilities(url, true)
                           .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
