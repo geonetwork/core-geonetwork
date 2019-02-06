@@ -92,7 +92,7 @@
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
 
-        var displayFileContent = function(data) {
+        var displayFileContent = function(data, withGroupLayer) {
           var parser = new ol.format.WMSCapabilities();
           var result = parser.read(data);
 
@@ -105,6 +105,9 @@
           // Also adjust crs (by inheritance) and url
           var getFlatLayers = function(layer, inheritedCrs) {
             if (angular.isArray(layer)) {
+              if (withGroupLayer && layer.Name) {
+                layers.push(layer);
+              }
               for (var i = 0, len = layer.length; i < len; i++) {
                 getFlatLayers(layer[i], inheritedCrs);
               }
@@ -247,7 +250,7 @@
           mergeDefaultParams: mergeDefaultParams,
           mergeParams: mergeParams,
 
-          getWMSCapabilities: function(url) {
+          getWMSCapabilities: function(url, withGroupLayer) {
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
@@ -263,7 +266,7 @@
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data));
+                        defer.resolve(displayFileContent(data, withGroupLayer));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
