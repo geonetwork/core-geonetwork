@@ -178,7 +178,7 @@ public class InspireValidationApi {
 
             InputStream metadataToTest = convertElement2InputStream(md);
 
-            String testId = InspireValidatorUtils.submitFile(URL, metadataToTest, metadata.getUuid());
+            String testId = InspireValidatorUtils.submitFile(URL, metadataToTest, metadata.getUuid(), settingManager);
 
             return testId;
         } catch (Exception e) {
@@ -240,10 +240,10 @@ public class InspireValidationApi {
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
 
         try {
-            if (InspireValidatorUtils.isReady(URL, testId, null)) {
+            if (InspireValidatorUtils.isReady(URL, testId, null, settingManager)) {
                 Map<String, String> values = new HashMap<>();
 
-                values.put("status", InspireValidatorUtils.isPassed(URL, testId, null));
+                values.put("status", InspireValidatorUtils.isPassed(URL, testId, null, settingManager));
                 values.put("report", InspireValidatorUtils.getReportUrl(URL, testId));
                 response.setStatus(HttpStatus.SC_OK);
 
