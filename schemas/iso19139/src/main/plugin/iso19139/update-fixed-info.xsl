@@ -485,6 +485,27 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- For XLinked subtemplates, the lang parameter MUST be in the same order as in the record.
+  Main language first, then other locales. If not, then the default CharacterString does not contain
+  the main language. It user change the language order in the record, the lang parameter needs to
+  be reordered too.
+
+  Example of URL:
+  <gmd:pointOfContact xmlns:xlink="http://www.w3.org/1999/xlink"
+                             xlink:href="local://srv/api/registries/entries/af9e5d4e-2c1a-48c0-853f-3a771fcf9ee3?
+                               process=gmd:role/gmd:CI_RoleCode/@codeListValue~distributor&amp;
+                               lang=eng,ara,spa,rus,fre,ger,chi&amp;
+                               schema=iso19139"
+  Can also be using lang=eng&amp;lang=ara.
+  -->
+  <xsl:template match="@xlink:href[starts-with(., 'local://srv/api/registries/entries')]">
+    <xsl:attribute name="xlink:href"
+                   select="replace(.,
+                                  '(&amp;lang=.*)+&amp;',
+                                  concat('&amp;lang=', $mainLanguage, ',',
+                                    string-join($locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage], ','),
+                                    '&amp;'))"/>
+  </xsl:template>
 
   <!-- ================================================================= -->
   <!-- Set local identifier to the first 2 letters of iso code. Locale ids
