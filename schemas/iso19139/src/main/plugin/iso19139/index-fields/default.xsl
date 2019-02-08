@@ -423,16 +423,6 @@
                       select="//gmd:MD_Keywords[
                                 not(gmd:thesaurusName) or gmd:thesaurusName/*/gmd:title/*/text() = '']/
                                   gmd:keyword[*/text() != '']"/>
-        <xsl:if test="count($keywordWithNoThesaurus) > 0">
-          'keywords': [
-          <xsl:for-each select="$keywordWithNoThesaurus/(gco:CharacterString|gmx:Anchor)">
-            {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
-            'link': '<xsl:value-of select="@xlink:href"/>'}
-            <xsl:if test="position() != last()">,</xsl:if>
-          </xsl:for-each>
-          ]
-          <xsl:if test="//gmd:MD_Keywords[gmd:thesaurusName]">,</xsl:if>
-        </xsl:if>
         <xsl:for-each-group select="//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/*/text() != '']"
                             group-by="gmd:thesaurusName/*/gmd:title/*/text()">
           '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
@@ -444,6 +434,16 @@
           ]
           <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each-group>
+        <xsl:if test="count($keywordWithNoThesaurus) > 0">
+          <xsl:if test="count(//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/*/text() != '']) > 0">,</xsl:if>
+          'otherKeywords': [
+          <xsl:for-each select="$keywordWithNoThesaurus/(gco:CharacterString|gmx:Anchor)">
+            {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
+            'link': '<xsl:value-of select="@xlink:href"/>'}
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]
+        </xsl:if>
         }
       </xsl:variable>
 

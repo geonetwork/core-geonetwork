@@ -325,6 +325,7 @@
   "gray":"gray",
   "Results":"Results",
   "Legend":"Legend",
+  "otherKeywords": "Other keywords",
   "isValid": "Validation status",
   "Attribution":"Attribution",
   "layerDelete":"Remove layer",
