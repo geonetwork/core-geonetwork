@@ -23,12 +23,17 @@
 package org.fao.geonet.kernel.datamanager;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
@@ -37,6 +42,7 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.StatusValue;
@@ -48,6 +54,7 @@ import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -125,13 +132,23 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
 		assertTrue(metadataUtils.findOne(md.getId()) instanceof Metadata);
 
+		HashSet<Integer> set = new HashSet<Integer>();
+		set.add(md.getId());
+		Iterable<? extends AbstractMetadata> mds = metadataUtils.findAll(set);
+		Iterator<? extends AbstractMetadata> it = mds.iterator();
+		
+		assertTrue(it.hasNext());
+		it.next();
+		assertFalse(it.hasNext());
+
 		Integer id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
 
 		assertNotNull(id);
 
-		metadataStatus.setStatus(context, id, Integer.valueOf(StatusValue.Status.APPROVED), new ISODate(), "Approve record");
+		metadataStatus.setStatus(context, id, Integer.valueOf(StatusValue.Status.APPROVED), new ISODate(),
+				"Approve record");
 		id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
-		
+
 		assertTrue(id != md.getId());
 		assertTrue(metadataUtils.findOne(id) instanceof MetadataDraft);
 
@@ -167,6 +184,21 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 		md.getDataInfo().setSchemaId("iso19139");
 		md.getDataInfo().setType(MetadataType.TEMPLATE);
 		return md;
+	}
+
+	@Test
+	public void auxiliaryFunctions() throws Exception {
+		assertNull(metadataUtils.getMetadataId("-1"));
+		assertTrue(Integer.valueOf(metadataUtils.getMetadataId(md.getUuid())) == md.getId());
+
+		Map<Integer, MetadataSourceInfo> res = metadataUtils.findAllSourceInfo(MetadataSpecs.hasMetadataId(md.getId()));
+		assertNotNull(res);
+		assertFalse(res.isEmpty());
+	}
+
+	@Test
+	public void getMetadataIdNotExist() throws Exception {
+		assertNull(metadataUtils.getMetadataId("-1"));
 	}
 
 	@After

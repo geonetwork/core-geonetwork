@@ -20,6 +20,7 @@ Feature: GeoNetwork Login
     And I enter "AnInvalidPassword" into input field having xpath "//*[@id='inputPassword']"
     And I click on element having css "form > button.btn-primary"
     And I wait for 1 sec
-    Then element having xpath "//strong[text() = 'Incorrect username or password.']" should be present
+    Then element having xpath "//p[@data-ng-show='signinFailure']" should be present
 
 # TODO: Create guest account when enabled or not
+

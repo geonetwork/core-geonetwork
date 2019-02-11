@@ -33,5 +33,6 @@ Feature: Create and publish record
     Then I click on element having css "div.gn-md-actions-btn i.fa-cog"
     And I wait 10 seconds for element having css "i.fa-unlock" to display
     Then I click on element having css "i.fa-unlock"
+    Then I accept alert
     And I wait 5 seconds for element having css "div.alert-success" to display
     And I sign out
