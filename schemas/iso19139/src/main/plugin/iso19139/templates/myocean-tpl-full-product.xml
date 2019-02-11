@@ -413,9 +413,6 @@
 			</gmd:topicCategory>
 			<gmd:extent>
 				<gmd:EX_Extent>
-					<gmd:description>
-						<gco:CharacterString>bounding box</gco:CharacterString>
-					</gmd:description>
 					<gmd:geographicElement>
 						<gmd:EX_GeographicBoundingBox>
 							<gmd:westBoundLongitude>

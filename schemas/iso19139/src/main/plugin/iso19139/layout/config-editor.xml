@@ -3189,6 +3189,7 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
         <thesaurus key="local.processing-level.myocean.processing-level"
                    fieldset="false"
+                   maxtags="1"
                    transformations="to-iso19139-keyword-with-anchor"/>
 
       </thesaurusList>
@@ -3228,7 +3229,8 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"
                  name="cm-abstract"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue='creation']"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue='creation']"
+                 name="cm-creationDate"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:editionDate"
                  name="cm-updateDate"/><!-- TODO:CM label override -->
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:edition"
@@ -3293,240 +3295,239 @@
                                  data-field-type="number"/>
           </field>
         </section>
-        <section name="cm-spatioTemporalCoverage">
-          <section name="cm-geoCoverage">
+        <section name="cm-geoCoverage">
 
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"/>
-            <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[1]/*/gmd:resolution" name="cm-resy"/>
-            <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[2]/*/gmd:resolution" name="cm-resx"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"/>
+          <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[1]/*/gmd:resolution" name="cm-resy"/>
+          <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[2]/*/gmd:resolution" name="cm-resx"/>
 
-            <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code" name="cm-crs"/>
+          <field xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/*/gmd:referenceSystemIdentifier/*/gmd:code" name="cm-crs" del="../../../.."/>
 
-            <action type="add"
-                    btnLabel="addCrs"
-                    name="referenceSystemInfo" or="referenceSystemInfo"
-                    in="/gmd:MD_Metadata">
-              <template>
-                <snippet label="cm-addCrsEPSG4326">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>WGS 84 (EPSG 4326)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG41001">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>WGS 84 / Simple Mercator (EPSG 41001)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG3035">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>Lambert Azimuthal Equal Area (EPSG 3035)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG4258">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>ETRS89 (EPSG 4258)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG32662">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>WGS 84 / Plate Carree (EPSG 32662)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG3395">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>WGS 84 / World Mercator (EPSG 3395)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsORCA025">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>MYO Arakawa-C ORCA025 native grid (ORCA025)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG3411">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG3412">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsEPSG6404">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>Spherical 3D CS (EPSG 6404)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-                <snippet label="cm-addCrsSR-ORG29">
-                  <gmd:referenceSystemInfo>
-                    <gmd:MD_ReferenceSystem>
-                      <gmd:referenceSystemIdentifier>
-                        <gmd:RS_Identifier>
-                          <gmd:code>
-                            <gco:CharacterString>WRF Lambert Conformal Conic (SR-ORG 29)</gco:CharacterString>
-                          </gmd:code>
-                          <gmd:codeSpace>
-                            <gco:CharacterString>EPSG</gco:CharacterString>
-                          </gmd:codeSpace>
-                        </gmd:RS_Identifier>
-                      </gmd:referenceSystemIdentifier>
-                    </gmd:MD_ReferenceSystem>
-                  </gmd:referenceSystemInfo>
-                </snippet>
-              </template>
-            </action>
-            <!--
-            local.reference-geographical-area.myocean.reference-geographical-area
-            -->
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:type/*/@codeListValue='reference-geographical-area']"/>
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet label="cm-addCrsEPSG4326">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 (EPSG 4326)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG41001">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / Simple Mercator (EPSG 41001)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG3035">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>Lambert Azimuthal Equal Area (EPSG 3035)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG4258">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>ETRS89 (EPSG 4258)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG32662">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / Plate Carree (EPSG 32662)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG3395">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG 3395)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsORCA025">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>MYO Arakawa-C ORCA025 native grid (ORCA025)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG3411">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic North (EPSG 3411)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG3412">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>NSIDC Sea Ice Polar Stereographic South (EPSG 3412)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsEPSG6404">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>Spherical 3D CS (EPSG 6404)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="cm-addCrsSR-ORG29">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WRF Lambert Conformal Conic (SR-ORG 29)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+          <!--
+          local.reference-geographical-area.myocean.reference-geographical-area
+          -->
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:type/*/@codeListValue='reference-geographical-area']"/>
 
-          </section>
-          <section name="cm-verticalCoverage">
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:minimumValue" name="cm-minLevel"/>
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:maximumValue" name="cm-maxLevel"/>
+        </section>
+        <section name="cm-verticalCoverage">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:minimumValue" name="cm-minLevel"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:verticalElement/*/gmd:maximumValue" name="cm-maxLevel"/>
 
-            <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]"
-                   name="cm-nbOfVerticalLevels"
-                   use="data-gn-field-with-prefix-or-suffix">
-              <directiveAttributes data-prefix="vertical level number: "
-                                   data-field-type="number"/>
-            </field>
-          </section>
-          <section name="cm-temporalCoverage">
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod/*/gml:description"/>
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//*[gml:beginPosition]"/>
-            <!-- indeterminatePosition checkbox TODO-->
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//*[gml:endPosition]"/>
+          <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]"
+                 name="cm-nbOfVerticalLevels"
+                 use="data-gn-field-with-prefix-or-suffix">
+            <directiveAttributes data-prefix="vertical level number: "
+                                 data-field-type="number"/>
+          </field>
+        </section>
+        <section name="cm-temporalCoverage">
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod/*/gml:description"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//*[gml:beginPosition]"/>
+          <!-- indeterminatePosition checkbox TODO-->
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//*[gml:endPosition]"/>
 
-            <!-- Helper -->
+          <!-- Helper -->
 
-            <!--
-            TODO:CM Combine prefixed field with helper
-            <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[contains(gco:CharacterString, 'temporal')]"
-                   name="cm-temporalResolution"
-                   use="data-gn-field-with-prefix-or-suffix">
-              <directiveAttributes data-prefix="temporal resolution: "/>
-            </field>-->
-            <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[contains(gco:CharacterString, 'temporal')]"
-                   name="cm-temporalResolution"/>
+          <!--
+          TODO:CM Combine prefixed field with helper
+          -->
+          <!--<field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[contains(gco:CharacterString, 'temporal')]"
+                 name="cm-temporalResolution"
+                 use="data-gn-field-with-prefix-or-suffix">
+            <directiveAttributes data-prefix="temporal resolution: "/>
+          </field>-->
+          <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[contains(gco:CharacterString, 'temporal')]"
+                 name="cm-temporalResolution"/>
 
-            <!--
-            local.temporal-scale.myocean.temporal-scale
-            to-iso19139.myocean-keyword-with-anchor
-            -->
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[gmd:MD_Keywords/gmd:type/*/@codeListValue='temporal-scale']"/>
-          </section>
+          <!--
+          local.temporal-scale.myocean.temporal-scale
+          to-iso19139.myocean-keyword-with-anchor
+          -->
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[gmd:MD_Keywords/gmd:type/*/@codeListValue='temporal-scale']"/>
         </section>
 
         <section name="cm-processingOperation">
