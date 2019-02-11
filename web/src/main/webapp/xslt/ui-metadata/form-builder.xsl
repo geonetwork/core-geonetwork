@@ -1577,6 +1577,9 @@
                   <xsl:attribute name="class" select="'gn-table-label'"/>
                 </xsl:if>
 
+                <xsl:variable name="ref"
+                              select="*/gn:element/@ref"/>
+
                 <!-- TODO: Add move up/down control? -->
                 <xsl:choose>
                   <xsl:when test="@remove">
@@ -1595,6 +1598,12 @@
                     <!-- Empty col -->
                   </xsl:when>
                   <xsl:otherwise>
+
+                    <!-- Children of an element having an XLink using the directory
+                                is in readonly mode. -->
+                    <xsl:variable name="isReadonlyDueToXlink"
+                                  select="count($metadata//*[gn:element/@ref = $ref]/ancestor-or-self::node()[contains(@xlink:href, 'api/registries/entries')]) > 0"/>
+
                     <xsl:choose>
                       <xsl:when test="@type">
                         <xsl:variable name="name"
@@ -1606,6 +1615,9 @@
                           <xsl:when test="@type = 'select'">
                             <select class="form-control"
                                       name="{$name}">
+                              <xsl:if test="$isReadonlyDueToXlink">
+                                <xsl:attribute name="disabled" select="'disabled'"/>
+                              </xsl:if>
                               <xsl:variable name="value"
                                             select="*/text()"/>
                               <option></option>
@@ -1646,6 +1658,9 @@
                               </xsl:if>
                               <xsl:if test="@step">
                                 <xsl:attribute name="step" select="@step"/>
+                              </xsl:if>
+                              <xsl:if test="$isReadonlyDueToXlink">
+                                <xsl:attribute name="disabled" select="'disabled'"/>
                               </xsl:if>
                               <xsl:if test="@pattern">
                                 <xsl:attribute name="pattern" select="@pattern"/>
