@@ -483,21 +483,15 @@
         removeThumbnail: function(thumb) {
           var scope = this;
 
-          // It is a url thumbnail
-          if (thumb.id.indexOf('resources.get') < 0) {
+          if(thumb && gnCurrentEdit.id) {
             runProcess(this,
-                setParams('thumbnail-remove', {
-                  id: gnCurrentEdit.id,
-                  thumbnail_url: thumb.id
-                }));
-          }
-          // It is an uploaded tumbnail
-          else {
-            runService('removeThumbnail', {
-              type: (thumb.title === 'thumbnail' ? 'small' : 'large'),
-              id: gnCurrentEdit.id,
-              version: gnCurrentEdit.version
-            }, this);
+              setParams('thumbnail-remove', {
+                id: gnCurrentEdit.id,
+                thumbnail_url: thumb.id
+            }));
+          } else {
+            console.error('Error in removeThumbnail');
+            console.error(thumb);
           }
         },
 
