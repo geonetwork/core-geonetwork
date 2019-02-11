@@ -30,7 +30,8 @@
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
     'gn_multiselect',
-    'blueimp.fileupload']);
+    'blueimp.fileupload',
+    'ngMessages']);
 
 
   /**
