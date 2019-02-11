@@ -157,8 +157,8 @@
       <xs:attribute name="editorMode">
         <xs:annotation>
           <xs:documentation>By default, the list of suggestion is displayed in a
-            combo next to the
-            element. The layout may be customized by setting the editorMode.
+            combo next to the element.
+            The layout may be customized by setting the editorMode attribute.
           </xs:documentation>
         </xs:annotation>
         <xs:simpleType>
@@ -166,6 +166,12 @@
             <xs:enumeration value="radio">
               <xs:annotation>
                 <xs:documentation>Simple radio displayed next to each other.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="suggestion">
+              <xs:annotation>
+                <xs:documentation>Suggestion list. Preserve existing value, but does not allow to type value not provided in the list.
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
