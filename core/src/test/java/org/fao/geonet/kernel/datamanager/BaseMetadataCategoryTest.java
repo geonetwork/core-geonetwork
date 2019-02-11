@@ -101,6 +101,11 @@ public class BaseMetadataCategoryTest extends AbstractCoreIntegrationTest {
 		assertFalse(metadataCategory.unsetCategory(context, String.valueOf(Integer.MAX_VALUE), mdc.getId()));
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void whenNoMetadata() throws Exception {
+		metadataCategory.getCategories("-20");
+	}
+	
 	@After
 	public void cleanup() {
 		metadataRepository.delete(md);
