@@ -3,7 +3,6 @@
     class="table-content table table-striped table-hover table-condensed">
     <tbody>
     <tr data-ng-repeat="layer in layers | orderBy:'title':reverse"
-        data-ng-show="layer.Name !== undefined"
         data-ng-click="select(layer)"
         title="{{layer.abstract}}"
         class="

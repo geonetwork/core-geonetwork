@@ -725,7 +725,8 @@
                       process: 'fcats-file-add',
                       fields: {
                         'url': {isMultilingual: false},
-                        'name': {}
+                        'name': {},
+                        'desc': {}
                       }
                     }, {
                       group: 'onlineUse',
@@ -787,7 +788,8 @@
                       process: 'legend-add',
                       fields: {
                         'url': {isMultilingual: false},
-                        'name': {}
+                        'name': {},
+                        'desc': {}
                       }
                     }, {
                       group: 'onlineUse',
@@ -801,7 +803,8 @@
                       process: 'legend-add',
                       fields: {
                         'url': {isMultilingual: false},
-                        'name': {}
+                        'name': {},
+                        'desc': {}
                       }
                     }, {
                       group: 'onlineUse',
@@ -815,7 +818,8 @@
                       process: 'legend-add',
                       fields: {
                         'url': {isMultilingual: false},
-                        'name': {}
+                        'name': {},
+                        'desc': {}
                       }
                       //},{
                       //  group: 'onlineUse',
@@ -1297,6 +1301,7 @@
                  * passed to the layers grid directive.
                  */
                 scope.loadCurrentLink = function(reportError) {
+                  var withGroupLayers = true;
 
                   // If multilingual or not
                   var url = scope.params.url;
@@ -1315,7 +1320,7 @@
                             scope.layers = [];
                             scope.isUrlOk = true;
                             angular.forEach(capabilities.layers, function(l) {
-                              if (angular.isDefined(l.Name)) {
+                              if (withGroupLayers || (!withGroupLayers && angular.isDefined(l.Name))) {
                                 scope.layers.push(l);
                               }
                             });
