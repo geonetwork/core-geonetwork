@@ -3,6 +3,7 @@ Feature: Create (draft) editor
 
   Scenario: Setup environment to test draft feature
     Given I login as admin/admin and navigate to admin.console#/organization
+    Then I maximize browser window
 
     # Add editor
     And I click on element having id "gn-btn-user-add"
@@ -15,7 +16,8 @@ Feature: Create (draft) editor
     And I click on element having css "div[data-gn-multiselect*='Editor'] option"
     And I double click on element having css "div[data-gn-multiselect*='Editor'] option"
     And I wait 3 seconds for element having css "select[data-ng-model='currentSelectionRight'] > option" to display
-    When I click on element having id "gn-btn-user-save"
+    Then I scroll to top of page
+    And I click on element having id "gn-btn-user-save"
     And I wait 5 seconds for element having css "div.alert.gn-info" to display
         
     # Add editor 2
@@ -30,6 +32,7 @@ Feature: Create (draft) editor
     And I click on element having css "div[data-gn-multiselect*='Editor'] option"
     And I double click on element having css "div[data-gn-multiselect*='Editor'] option"
     And I wait 3 seconds for element having css "select[data-ng-model='currentSelectionRight'] > option" to display
+    Then I scroll to top of page
     When I click on element having id "gn-btn-user-save"
     And I wait 5 seconds for element having css "div.alert.gn-info" to display
 
@@ -44,6 +47,7 @@ Feature: Create (draft) editor
     And I click on element having css "div[data-gn-multiselect*='Reviewer'] option"
     And I double click on element having css "div[data-gn-multiselect*='Reviewer'] option"
     And I wait 3 seconds for element having css "select[data-ng-model='currentSelectionRight'] > option" to display
+    Then I scroll to top of page
     When I click on element having id "gn-btn-user-save"
     Then I wait 5 seconds for element having css "div.alert.gn-info" to display
         

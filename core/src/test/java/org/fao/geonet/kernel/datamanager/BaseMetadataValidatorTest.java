@@ -34,7 +34,6 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.XmlSerializerIntegrationTest;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator;
 import org.fao.geonet.repository.GroupRepository;
-import org.jdom.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,8 +82,7 @@ public class BaseMetadataValidatorTest extends AbstractCoreIntegrationTest {
 	 */
 	@Test
 	public void testCreate() throws Exception {
-		metadataValidator.doValidate(md.getDataInfo().getSchemaId(), String.valueOf(md.getId()),
-				new Document(md.getXmlData(false)), "eng");
+		metadataValidator.doValidate(md, "eng");
 	}
 
 	private AbstractMetadata createMetadata() throws IOException {
