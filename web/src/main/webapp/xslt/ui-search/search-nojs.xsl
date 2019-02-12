@@ -38,11 +38,18 @@
     <xsl:variable name="count"
                   select="/root/search/response[1]/summary[1]/@count"/>
 
+    <div class="row"
+      id="{/root/gui/systemConfig/system/site/siteId}"
+      itemscope="itemscope"
+      itemtype="http://schema.org/DataCatalog">
+      <meta itemprop="name" content="{/root/gui/systemConfig/system/site/name}"></meta>
+      <span itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization">
+        <meta itemprop="name" content="{/root/gui/systemConfig/system/site/organization}"></meta>
+        <meta itemprop="email" content="{/root/gui/systemConfig/system/feedback/email}"></meta>
+      </span>
+      <meta itemprop="url" content="{$nodeUrl}search"></meta>
 
-
-    <div class="row">
       <div class="col-md-3 gn-facet">
-
         <div>
           <xsl:variable name="parameters"
                         select="/root/search/params/*[
@@ -158,8 +165,11 @@
             <ul class="list-group gn-resultview gn-resultview-sumup">
               <xsl:for-each select="metadata">
                <li class="list-group-item gn-grid"
+                   id="{*[name()='geonet:info']/uuid}"
+                   itemprop="dataset"
                    itemscope="itemscope"
                    itemtype="{gn-fn-core:get-schema-org-class(type[1])}">
+                 <meta itemprop="url" content="{$nodeUrl}api/records/{*[name()='geonet:info']/uuid}"></meta>
                  <div class="row">
                    <xsl:if test="count(category) > 0">
                      <div class="gn-md-category">
@@ -196,15 +206,14 @@
                  <div>
                    <div class="gn-md-thumbnail">
                      <xsl:for-each select="image[1]">
-                       <img class="gn-img-thumbnail"
+                       <img class="gn-img-thumbnail" itemprop="thumbnailUrl"
                             src="{tokenize(., '\|')[2]}"></img>
                      </xsl:for-each>
                    </div>
                    <div style="float:left; display:block; width: calc(100% - 162px)">
-
                      <div class="text-justify gn-md-abstract ellipsis">
                        <div>
-                         <p>
+                         <p itemprop="description">
                            <xsl:value-of select="abstract"/>
                          </p>
                        </div>

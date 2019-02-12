@@ -67,21 +67,22 @@
         <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
       </xsl:variable>
 
-
-      <article id="gn-metadata-view-{$metadataId}"
+      <article id="{$metadataUuid}"
                class="gn-md-view gn-metadata-display"
                itemscope="itemscope"
                itemtype="{gn-fn-core:get-schema-org-class($type)}">
-
-
+        <meta itemprop="identifier" content="{$metadataUuid}"></meta>
+        <span itemprop="includedInDataCatalog" 
+              itemscope="itemscope"
+              itemtype="http://schema.org/DataCatalog">
+                 <meta itemprop="url" content="{$nodeUrl}search"></meta>
+        </span>
 
         <div class="row">
           <div class="col-md-8">
 
             <header>
-              <h1 itemprop="name"
-                  itemscope="itemscope"
-                  itemtype="http://schema.org/name">
+              <h1 itemprop="name">
                 <i class="fa gn-icon-{$type}">&#160;</i>
                 <xsl:value-of select="$title"/>
               </h1>
@@ -182,15 +183,7 @@
 
               <section class="gn-md-side-access">
                 <div class="well text-center">
-                  <span itemprop="identifier"
-                      itemscope="itemscope"
-                      itemtype="http://schema.org/identifier"
-                      class="hidden">
-                    <xsl:value-of select="$metadataUuid"/>
-                  </span>
                   <a itemprop="url"
-                     itemscope="itemscope"
-                     itemtype="http://schema.org/url"
                      class="btn btn-block btn-primary"
                      href="{if ($portalLink != '')
                             then replace($portalLink, '\$\{uuid\}', $metadataUuid)
