@@ -331,7 +331,7 @@
     "moreSpecificConcept": "Concepts plus spécifiques",
     "associatedConcept": "Concepts associés",
     "xsd": "Encodage",
-    "linkToXmlTab": "Certaines erreurs peuvent être corrigées <a href=\"#/metadata/{{metadataId}}/tab/xml\">dans la vue XML</a>.",
+    "linkToXmlTab": "Certaines erreurs peuvent être corrigées <a href=\"#/metadata/{{metadataId}}?tab=xml\">dans la vue XML</a>.",
     "directoryManagerSubtitle": "Ce menu vous permet de gérer des éléments réutilisables tel que des contacts, formats, etc. Ces éléments peuvent être construits à partir de gabarits.",
     "directoryManagerSubtitleImport": "Entrez ici le contenu complet en XML d'un élément réutilisable afin de l'importer dans la base de donnée.",
     "directoryEntryTypes": "Types d'éléments",

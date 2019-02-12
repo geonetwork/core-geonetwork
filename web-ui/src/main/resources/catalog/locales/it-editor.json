@@ -331,7 +331,7 @@
     "moreSpecificConcept": "Concetti più specifici",
     "associatedConcept": "Concetti associati",
     "xsd": "Validazione schema",
-    "linkToXmlTab": "Alcuni tipi di errori possono essere corretti utilizzando l'<a href=\"#/metadata/{{metadataId}}/tab/xml\"> editor XML </a>.",
+    "linkToXmlTab": "Alcuni tipi di errori possono essere corretti utilizzando l'<a href=\"#/metadata/{{metadataId}}?tab=xml\"> editor XML </a>.",
     "directoryManagerSubtitle": "Questa schermata consente di modificare le voci della rubrica come contatti, formati, ecc. gestione dei modelli inclusa.",
     "directoryManagerSubtitleImport": "Inserisci qui il contenuto XML completo di una voce per importarlo nel database.",
     "directoryEntryTypes": "Tipi di voci",
