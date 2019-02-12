@@ -331,7 +331,7 @@
     "moreSpecificConcept": "Meer specifieke concepten",
     "associatedConcept": "Geassocieerde concepten",
     "xsd": "Schema validatie",
-    "linkToXmlTab": "XML structuur fouten kunnen opgelost worden in de <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>.",
+    "linkToXmlTab": "XML structuur fouten kunnen opgelost worden in de <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "Dit scherm stelt u in staat om snippet entries zoals, contactgegevens, formaten, etc. te beheren, inclusief template beheer",
     "directoryManagerSubtitleImport": "Vul hier de XML inhoud van een snippet in om het te in de database te importeren",
     "directoryEntryTypes": "Snippet typen",

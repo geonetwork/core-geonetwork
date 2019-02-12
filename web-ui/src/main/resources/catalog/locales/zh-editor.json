@@ -328,7 +328,7 @@
     "moreSpecificConcept": "更具体的概念",
     "associatedConcept": "相关概念",
     "xsd": "模式验证",
-    "linkToXmlTab": "可以使用<a href=\"#/metadata/{{metadataId}}/tab/xml\"> XML编辑器</a>修复某些错误。",
+    "linkToXmlTab": "可以使用<a href=\"#/metadata/{{metadataId}}?tab=xml\"> XML编辑器</a>修复某些错误。",
     "directoryManagerSubtitle": "This screen allows you to edit directory entries such as contacts, formats, etc. including template management.",
     "directoryManagerSubtitleImport": "Enter here the full XML content of an entry to import it to the database.",
     "directoryEntryTypes": "Entry Types",
