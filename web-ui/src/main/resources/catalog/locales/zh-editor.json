@@ -329,7 +329,7 @@
     "moreSpecificConcept": "更具体的概念",
     "associatedConcept": "相关概念",
     "xsd": "模式验证",
-    "linkToXmlTab": "可以使用<a href=\"#/metadata/{{metadataId}}/tab/xml\"> XML编辑器</a>修复某些错误。",
+    "linkToXmlTab": "可以使用<a href=\"#/metadata/{{metadataId}}?tab=xml\"> XML编辑器</a>修复某些错误。",
     "directoryManagerSubtitle": "此屏幕允许您编辑目录条目，如联系人，格式等，包括模板管理。",
     "directoryManagerSubtitleImport": "在此处输入条目的完整的XML内容以将其导入数据库。",
     "directoryEntryTypes": "条目类型",
