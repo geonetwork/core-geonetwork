@@ -122,8 +122,9 @@
         });
         scope.params['facet.q'] = facetQParam;
 
-        scope.$emit('resetSearch', scope.params);
-      };
+        var preserveGeometrySearch = true;
+        scope.$emit('resetSearch', scope.params, preserveGeometrySearch);
+      }
 
 
       buildPath = function(path, category) {
