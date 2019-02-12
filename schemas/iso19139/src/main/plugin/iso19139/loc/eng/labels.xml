@@ -977,7 +977,7 @@
   <element name="gmd:descriptor" id="258.0">
     <label>Descriptor</label>
     <description>Description of the range of a cell measurement value</description>
-    <helper displayIf="gco:CharacterString[contains(., 'temporal resolution: ')]">
+    <helper displayIf="gco:CharacterString[contains(., 'temporal resolution: ')]" editorMode="suggestion">
       <option value="temporal resolution: irregular">Irregular</option>
       <option value="temporal resolution: instantaneous">Instantaneous</option>
       <option value="temporal resolution: hourly mean">Hourly mean</option>

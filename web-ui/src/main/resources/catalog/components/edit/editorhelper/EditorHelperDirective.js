@@ -94,8 +94,8 @@
    * in labels.xml for each schema.
    *
    */
-  module.directive('gnEditorHelper', [
-    function() {
+  module.directive('gnEditorHelper', ['$timeout', '$translate',
+    function($timeout, $translate) {
 
       return {
         restrict: 'A',
@@ -198,6 +198,92 @@
           scope.$watch('config.value', function() {
             populateField(field, scope.config.value);
           });
+
+
+          // In suggestion mode, existing record value
+          // are preserved but user can not enter a value
+          // which is not in the helper list.
+          if (scope.mode === 'suggestion') {
+            // Init typeahead and tag input
+            var initTagsInput = function() {
+              var id = '#tagsinput_' + scope.ref;
+              $timeout(function() {
+                try {
+                  $(id).tagsinput({
+                    itemValue: '@value',
+                    itemText: '@value'
+                  });
+
+                  // Add current value
+                  var found = false;
+                  for (var i = 0; i < scope.config.option.length; i ++) {
+                    var h = scope.config.option[i];
+                    if (h['@value'] == scope.config.value) {
+                      found = true;
+                      $(id).tagsinput('add', h);
+                      break;
+                    }
+                  }
+                  // Add the value from the record in case it is not
+                  // in the helper.
+                  if (!found) {
+                    $(id).tagsinput('add', {'@value': scope.config.value});
+                  }
+
+                  var field = $(id).tagsinput('input');
+
+                  var helperAutocompleter = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('@value'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    local: scope.config.option
+                  });
+                  helperAutocompleter.initialize();
+
+                  function allOrSearchFn(q, sync) {
+                    if (q === '') {
+                      sync(helperAutocompleter.all());
+                    } else {
+                      helperAutocompleter.search(q, sync);
+                    }
+                  }
+
+                  field.typeahead({
+                    minLength: 0,
+                    highlight: true
+                  }, {
+                    name: 'helper',
+                    displayKey: '@value',
+                    limit: scope.config.option.length,
+                    source: allOrSearchFn
+                  }).bind('typeahead:selected',
+                    $.proxy(function(obj, h) {
+                      // Add to tags
+                      if (this.tagsinput('items').length > 0) {
+                        this.tagsinput('removeAll');
+                      }
+                      this.tagsinput('add', h);
+
+                      // Update selection and snippet
+                      angular.copy(this.tagsinput('items'), scope.selected);
+                      scope.config.selected = h;
+                      scope.$apply();
+
+                      // Clear typeahead
+                      this.tagsinput('input').typeahead('val', '');
+
+                      // helperAutocompleter.initialize(true);
+                    }, $(id))
+                  );
+
+                } catch (e) {
+                  console.warn('No tagsinput for ' + id +
+                    ', error: ' + e.message);
+                }
+              });
+            };
+
+            initTagsInput();
+          }
         }
       };
     }]);
