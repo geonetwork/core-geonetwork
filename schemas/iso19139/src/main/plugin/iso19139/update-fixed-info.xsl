@@ -652,6 +652,22 @@
   <xsl:template match="gmd:extent[gmd:EX_Extent/not(*)]|srv:extent[gmd:EX_Extent/not(*)]"/>
 
 
+  <!-- Remove empty boolean  and set gco:nilReason='unknown' -->
+  <xsl:template match="*[gco:Boolean and not(string(gco:Boolean))]">
+    <xsl:copy>
+      <xsl:copy-of select="@*[name() != 'gco:nilReason']" />
+      <xsl:attribute name="gco:nilReason">unknown</xsl:attribute>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- Remove gco:nilReason if not empty boolean -->
+  <xsl:template match="*[string(gco:Boolean)]">
+    <xsl:copy>
+      <xsl:copy-of select="@*[name() != 'gco:nilReason']" />
+      <xsl:apply-templates select="*" />
+    </xsl:copy>
+  </xsl:template>
+
   <!-- ================================================================= -->
   <!-- copy everything else as is -->
 
