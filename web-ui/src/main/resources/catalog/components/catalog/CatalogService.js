@@ -811,7 +811,9 @@
         }
       },
       isUsingAngularEditor: function() {
-        if (angular.isUndefined(this.standardName)) {
+        if (this["geonet:info"].schema === 'dublin-core') {
+          return true;
+        } else if (angular.isUndefined(this.standardName)) {
           return false;
         } else {
           return this["geonet:info"].schema === 'iso19115-3' ||
