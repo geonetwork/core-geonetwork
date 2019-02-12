@@ -938,6 +938,21 @@ div.gn-individualName {
       width: 0px;
     }
   }
+  /* Hide link to store concept URI */
+  div.gn-featureTypes div.gn-keyword-picker-concept-id {
+    display: none;
+  }
+  /* Hide gazetteer search */
+  div.gn-drawmap-panel {
+    div.col-md-9 {
+      display: none;
+    }
+    div.col-md-3 {
+      button.btn {
+        .btn-xs();
+      }
+    }
+  }
 }
 
 .gn-tab-emodnetHydrography-when,
