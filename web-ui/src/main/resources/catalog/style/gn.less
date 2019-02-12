@@ -599,31 +599,24 @@ i.fa-times.delete:hover {
 
 .gn-search-page {
   .gn-status {
-    border: 2px solid darken(@brand-info, 5%);
+    border: 2px solid @brand-primary;
     position: absolute;
-    top: 95px;
-    left: 2px;
-    border-radius: 6px;
-    padding: 2px;
-    -ms-transform: rotate(-30deg);
-    -webkit-transform: rotate(-30deg);
-    transform: rotate(-30deg);
-    color: @brand-info;
-    font-weight: bold;
+    margin-top: 15px;
+    border-radius: 20px;
+    padding: 5px 8px;
+    color: @brand-primary;
+    font-weight: 500;
     font-size: 80%;
-    background-color: rgba(255, 255, 255 , 0.7);
+    background-color: #fff;
   }
   .gn-status-mdview {
     position: relative;
-    top: 0;
-    left: 0;
+    margin-top: 0;
     display: inline-block;
-    font-size: 100%;
     border-radius: 20px;
     padding: 8px 12px;
-    font-weight: normal;
-    font-size: 80%;
-    transform: none;
+    font-weight: 500;
+    font-size: 90%;
   }
   /* Decide here which status should be displayed
   or not and with which colors */
@@ -853,7 +846,7 @@ input.ng-invalid {
     line-height: 1em;
     .gn-user-role {
       text-transform: uppercase;
-      opacity: 0.7;
+      opacity: 0.9;
       font-size: 0.8em;
     }
   }

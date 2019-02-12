@@ -31,7 +31,7 @@
   </div>
 
   <form class="form-horizontal"
-        role="grid"
+        role="form"
         data-ng-controller="gnsSearchTopEntriesController"
         data-ng-search-form=""
         data-runSearch="true"
@@ -177,7 +177,7 @@
         </button>
       </div>
 
-      <tabset id="info-tabset pull-left" type="pills" justified="false">
+      <tabset id="info-tabset pull-left" type="pills" justified="false" role="tablist">
         <tab heading="{{'lastRecords' | translate}}"
              role="tab"
              active="infoTabs.lastRecords.active">

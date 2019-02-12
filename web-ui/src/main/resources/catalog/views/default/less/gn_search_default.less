@@ -41,6 +41,8 @@
   padding-bottom: calc(~"@{gn-bottombar-height} + 10px");
   .badge {
       margin-right: 5px;
+      background-color: #333;
+      font-weight: normal;
     }
   .nav-pills {
     margin-bottom: 1em;
@@ -116,6 +118,13 @@
   }
   .control-label {
     padding: 3px 0 2px 0;
+    display: inline;
+    text-align: left;
+    .control-label-span {
+      display: block;
+      margin-bottom: 2px;
+      margin-top: 3px;
+    }
   }
   .bootstrap-tagsinput {
     padding-top: 6px;
