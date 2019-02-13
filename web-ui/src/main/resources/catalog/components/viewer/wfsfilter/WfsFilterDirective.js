@@ -394,9 +394,11 @@
               if (!filter) { return; }
 
               // make the filter case insensitive, ie : abc => [aA][bB][cC]
-              if (isNaN(filter)) {
+              // only alpha regex
+              var lettersRegexOnly = /^[a-zA-Z]+$/;
+              if (lettersRegexOnly.test(filter)) {
                 filter = filter.replace(/./g, function (match) {
-                  return isNaN(match) ? '[' + match.toLowerCase() + match.toUpperCase() + ']': match;
+                  return lettersRegexOnly.test(match) ? '[' + match.toLowerCase() + match.toUpperCase() + ']': match;
                 });
               }
 
