@@ -122,7 +122,8 @@
       </h4>
 
       <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-        <img class="gn-img-thumbnail center-block"
+        <img class="gn-img-thumbnail center-block" 
+             itemprop="thumbnailUrl" alt="thumbnail"
              src="{gmd:fileName/*}"/>
 
         <xsl:for-each select="gmd:fileDescription">
@@ -251,7 +252,7 @@
   </xsl:template>
 
   <xsl:template mode="render-field"
-                match="*[gco:CharacterString]|gml:beginPosition[. != '']|gml:endPosition[. != '']"
+                match="*[gmx:Anchor]|*[normalize-space(gco:CharacterString) != '']|gml:beginPosition[. != '']|gml:endPosition[. != '']"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
 
@@ -262,6 +263,14 @@
                                 else tr:node-label(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
+        <xsl:choose>
+          <xsl:when test="ancestor::gmd:MD_LegalConstraints">
+            <xsl:attribute name="itemprop" select="'license'"/>
+          </xsl:when>
+          <xsl:when test="ancestor::gmd:extent/gml:TimePeriod">
+            <xsl:attribute name="itemprop" select="'temporalCoverage'"/>
+          </xsl:when>
+        </xsl:choose>
         <xsl:apply-templates mode="render-value" select="."/>
         <xsl:apply-templates mode="render-value" select="@*"/>
       </dd>
@@ -305,7 +314,7 @@
           <xsl:otherwise>
             No information provided.
           </xsl:otherwise>
-        </xsl:choose>
+        </xsl:choose>&#160;
       </div>
     </div>
 
@@ -548,19 +557,19 @@
         </xsl:variable>
         <a href="{$linkUrl}" title="{$linkName}" itemprop="contentUrl">
           <span itemprop="name">
-            <xsl:value-of select="$linkName"/>
+            <xsl:value-of select="$linkName"/>&#160;
           </span>
         </a> 
-        <xsl:if test="*/gmd:protocol[* != '']">
+        <xsl:if test="*/gmd:protocol[normalize-space(gco:CharacterString|gmx:Anchor) != '']">
         (<span itemprop="encodingFormat">
           <xsl:apply-templates mode="render-value"
                    select="*/gmd:protocol"/>&#160;
         </span>)</xsl:if>
-        <xsl:if test="*/gmd:description[* != '' and * != $linkName]">
+        <xsl:if test="*/gmd:description[normalize-space(gco:CharacterString|gmx:Anchor) != '' and * != $linkName]">
           <p itemprop="description">
             <xsl:apply-templates mode="render-value"
                                  select="*/gmd:description"/>
-          </p>
+          &#160;</p>
         </xsl:if>
       </dd>
     </dl>
@@ -590,10 +599,10 @@
                                select="*/gmd:version"/>
         </xsl:if>
         <xsl:if test="*/gmd:authority">
-          <p>&#160;
+          <p>
             <xsl:apply-templates mode="render-field"
                                  select="*/gmd:authority"/>
-          </p>
+          &#160;</p>
         </xsl:if>
       </dd>
     </dl>
@@ -680,7 +689,7 @@
                   <xsl:apply-templates mode="render-field"
                                       select="*/(gmd:amendmentNumber|gmd:specification|
                                 gmd:fileDecompressionTechnique|gmd:formatDistributor)"/>
-                </p>
+                &#160;</p>
               </li>
             </xsl:if>
           </xsl:for-each>
@@ -711,7 +720,7 @@
         <xsl:attribute name="itemprop">
           <xsl:choose>
           <xsl:when test="$dType='creation'">dateCreated</xsl:when>
-          <xsl:when test="$dType='modification'">dateModified</xsl:when>
+          <xsl:when test="$dType='revision'">dateModified</xsl:when>
           <xsl:when test="$dType='publication'">datePublished</xsl:when>
           </xsl:choose>
         </xsl:attribute>
@@ -768,9 +777,9 @@
           <ul>
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
               <li>
-                <a href="#/metadata/{@uuidref}">
+                <a href="{$nodeUrl}api/records/{@uuidref}">
                   <i class="fa fa-link">&#160;</i>
-                  <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/>
+                  <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $langId)"/>
                 </a>
               </li>
             </xsl:for-each>
@@ -800,10 +809,25 @@
          <xsl:with-param name="langId" select="$langId"/>
        </xsl:apply-templates>
      </xsl:variable>
-
-     <xsl:call-template name="addLineBreaksAndHyperlinks">
-       <xsl:with-param name="txt" select="$txt"/>
-     </xsl:call-template>
+     <span>
+      <xsl:choose>
+        <xsl:when test="name()='gmd:edition'">
+          <xsl:attribute name="itemprop" select="'version'"/>
+        </xsl:when>
+        <xsl:when test="name()='gmd:parentIdentifier'">
+          <a href="{$nodeUrl}api/records/{./gco:CharacterString}" itemprop="isBasedOn">
+            <i class="fa fa-fw fa-link">&#160;</i>
+            <xsl:value-of select="gn-fn-render:getMetadataTitle(./gco:CharacterString, $langId)"/>
+          </a>
+        </xsl:when>
+        <xsl:when test="name()='gmd:alternateTitle'">
+          <xsl:attribute name="itemprop" select="'alternateName'"/>
+        </xsl:when>
+      </xsl:choose>
+      <xsl:call-template name="addLineBreaksAndHyperlinks">
+        <xsl:with-param name="txt" select="$txt"/>
+      </xsl:call-template>
+     &#160;</span>
   </xsl:template>
 
 
@@ -848,7 +872,7 @@
     </xsl:choose>
 
     <xsl:if test="@uom">
-      &#160;<xsl:value-of select="@uom"/>
+      <xsl:value-of select="@uom"/>&#160;
     </xsl:if>
   </xsl:template>
 
@@ -890,42 +914,42 @@
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}')]">
     <span data-gn-humanize-time="{.}" data-format="MMM YYYY">
       <xsl:value-of select="."/>
-    </span>
+    &#160;</span>
   </xsl:template>
 
   <xsl:template mode="render-value"
                 match="gco:Date[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}')]">
     <span data-gn-humanize-time="{.}" data-format="DD MMM YYYY">
       <xsl:value-of select="."/>
-    </span>
+    &#160;</span>
   </xsl:template>
 
   <xsl:template mode="render-value"
                 match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
     <span data-gn-humanize-time="{.}">
       <xsl:value-of select="."/>
-    </span>
+    &#160;</span>
   </xsl:template>
 
   <xsl:template mode="render-value"
                 match="gco:Date|gco:DateTime">
     <span data-gn-humanize-time="{.}">
       <xsl:value-of select="."/>
-    </span>
+    &#160;</span>
   </xsl:template>
 
   <xsl:template mode="render-value"
                 match="gmd:language/gmd:LanguageCode/@codeListValue">
     <span itemprop="inLanguage">
       <xsl:value-of select="xslUtils:twoCharLangCode(.)"/>
-    </span>
+    &#160;</span>
   </xsl:template>
 
   <xsl:template mode="render-value"
                 match="gmd:language/gco:CharacterString">
     <span data-translate="" itemprop="inLanguage">
       <xsl:value-of select="."/>
-    </span>
+    &#160;</span>
   </xsl:template>
   
   <!-- ... Codelists -->
@@ -987,56 +1011,5 @@
   </xsl:template>
   <xsl:template mode="render-value"
                 match="@*"/>
-
-  <!-- isBasedOn parentidentifier -->
-
-  <xsl:template mode="render-value"
-                match="gmd:parentidentifier/gco:CharacterString">
-    <span itemprop="isBasedOn">
-      <a href="{concat($nodeUrl, 'api/records/', .)}"><xsl:value-of select="."/></a>
-    </span>
-  </xsl:template>
-
-  <!-- license -->
-  <xsl:template mode="render-value"
-                match="gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/@xlink.href">
-    <span itemprop="license"><a href="{.}"><xsl:value-of select="."/></a></span>
-  </xsl:template>
-
-  <!-- spatialCoverage	Place 
-  temporalCoverage	DateTime -->
-  <xsl:template mode="render-value"
-                match="gmd:extent/gml:TimePeriod/gml:beginPosition">
-    <span itemprop="temporalCoverage" >
-      <xsl:value-of select="."/> / 
-      <xsl:value-of select="../endPosition"/>
-    </span>
-  </xsl:template>
-
-  <!-- thumbnailUrl	URL  -->
-  <xsl:template mode="render-value"
-                match="gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString">
-    <a href="{.}" itemprop="thumbnailUrl">
-      <img src="{.}" style="max-width:250px"/>
-    </a>
-  </xsl:template>
-
-  <!-- version -->
-  <xsl:template mode="render-value"
-                match="gmd:edition/gco:CharacterString">
-    <span itemprop="version">
-      <xsl:value-of select="."/>
-    </span>
-  </xsl:template>
-
-
-  <!-- alternateName -->
-  <xsl:template mode="render-value"
-                match="gmd:alternateTitle/gco:CharacterString">
-    <span itemprop="alternateName">
-      <xsl:value-of select="."/>
-    </span>
-  </xsl:template>
-
 
 </xsl:stylesheet>

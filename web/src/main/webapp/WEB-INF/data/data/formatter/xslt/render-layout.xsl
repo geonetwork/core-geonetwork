@@ -72,6 +72,7 @@
                itemscope="itemscope"
                itemtype="{gn-fn-core:get-schema-org-class($type)}">
         <meta itemprop="identifier" content="{$metadataUuid}"></meta>
+        <meta itemprop="url" content="{$nodeUrl}api/records/{$metadataUuid}"></meta>
         <span itemprop="includedInDataCatalog" 
               itemscope="itemscope"
               itemtype="http://schema.org/DataCatalog">
@@ -282,7 +283,7 @@
                 match="section[@xpath]">
     <div id="gn-view-{generate-id()}" class="gn-tab-content">
       <xsl:apply-templates mode="render-view" select="@xpath"/>
-    </div>
+    &#160;</div>
   </xsl:template>
 
 
@@ -299,8 +300,8 @@
         </xsl:element>
       </xsl:if>
       <xsl:apply-templates mode="render-view"
-                           select="section|field"/>&#160;
-    </div>
+                           select="section|field"/>
+    &#160;</div>
   </xsl:template>
 
 
