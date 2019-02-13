@@ -154,7 +154,6 @@
               }
 
             };
-            http://localhost:8080/geonetwork/srv/api/records/01788925-ea24-4a7e-ac0d-aa10f8210b8c/attachments/oldmaps.jpeg
             scope.$watch('gnCurrentEdit.uuid', function(n, o) {
               if (angular.isUndefined(scope.uuid) ||
                 n != o) {
