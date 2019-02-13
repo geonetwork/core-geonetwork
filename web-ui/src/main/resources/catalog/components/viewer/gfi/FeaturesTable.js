@@ -88,8 +88,16 @@
       });
       return lang;
     }
+    // Force the table to resetWidth on window resize
+    // this enables the header and the rows to be aligned
+    function resizeBsTable() {
+      element.bootstrapTable('resetWidth');
+      element.bootstrapTable('resetView');
+    }
 
     this.loader.getBsTableConfig().then(function(bstConfig) {
+      window.removeEventListener('resize', resizeBsTable);
+      window.addEventListener('resize', resizeBsTable);
       var once = true;
       element.bootstrapTable('destroy');
       element.bootstrapTable(
