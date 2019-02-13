@@ -81,6 +81,10 @@
           'isLogoInHeader': false,
           'logoInHeaderPosition': 'left'
         },
+        'footer': {
+          'enabled': true,
+          'showSocialBar': true
+        },
         'home': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/home'
@@ -421,11 +425,12 @@
 
 
       //Update Links for social media
+      $scope.showSocialBarInFooter = gnGlobalSettings.gnCfg.mods.footer.showSocialBar;
       $scope.socialMediaLink = $location.absUrl();
       $scope.$on('$locationChangeSuccess', function(event) {
         $scope.socialMediaLink = $location.absUrl();
         $scope.showSocialMediaLink =
-            ($scope.socialMediaLink.indexOf('/metadata/') != -1);
+          (($scope.socialMediaLink.indexOf('/metadata/') == -1) && ($scope.showSocialBarInFooter));
       });
       $scope.getPermalink = gnUtilityService.getPermalink;
 

@@ -15,10 +15,10 @@
     <a href="../../doc/api" title="{{'learnTheApi' | translate}}">API</a>
   </li>
   <li gn-static-pages-list-viewer data-section="footer" data-language="{{lang}}" />
-  <li class="gn-footer-text" ng-hide="showSocialMediaLink">
+  <li class="gn-footer-text" ng-show="showSocialMediaLink">
     <span data-translate="">shareOn</span>
   </li>
-  <li class="socialmedia" ng-hide="showSocialMediaLink">
+  <li class="socialmedia" ng-show="showSocialMediaLink">
     <a href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
        target="_blank" title="{{'shareOnTwitter' | translate}}"><i class="fa fa-twitter"></i>
     </a>
@@ -40,7 +40,7 @@
       data-ng-click="getPermalink('', socialMediaLink)"
       title="{{'permalink' | translate}}"><i class="fa fa-fw fa-link"></i></a>
   </li>
-  <li>
+  <li ng-show="showSocialMediaLink">
     <a href="rss.search?sortBy=changeDate&georss=simplepoint"
        title="{{'lastRecords' | translate}}">
       <i class="fa fa-rss"/>
