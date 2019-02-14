@@ -29,7 +29,8 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                version="1.0"
+                version="2.0"
+                exclude-result-prefixes="#all"
 >
 
   <!-- =================================================================-->
