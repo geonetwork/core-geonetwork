@@ -3,6 +3,7 @@
   "applyFilter": "Appliquer les filtres",
   "view": "Visualiser",
   "links": "Liens",
+  "liencdicprd": "Lien CDI/CPRD",
   "print_legend": "Légendes",
   "print_legend_field": "Inclure les légendes",
   "validateConstraints": "Valider les limites/contraintes d'utilisation",

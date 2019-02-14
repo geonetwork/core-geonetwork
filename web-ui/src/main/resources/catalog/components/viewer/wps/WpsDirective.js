@@ -187,9 +187,12 @@
             scope.applyMapLayersToInput = function () {
               if (!scope.applicationProfile) return;
               var availableLayers = scope.filterAvailableLayers()
+                .filter(function(ll) {
+                  return ll.get('qi_list') != undefined;
+                })
                 .map(function(ll) {
-                return ll.get('label') || ll.get('name');
-              });
+                  return ll.get('label') || ll.get('name');
+                });
               scope.applicationProfile.inputs.forEach(function(input) {
                 if (input.bindWmsNameToWPS) {
                   scope.emodnetSortKeys = input.sortBy;
@@ -201,20 +204,23 @@
                 }
               });
             }
-            scope.sortKeyValue = '&#9660;'
+            scope.sortKeyValue = '&#9660;';
             scope.reOrderLayerInputs = function(key){
               scope.removeAllInputValuesByName(scope.emodnetSortInputKey);
               var layersOrderedList = scope.filterAvailableLayers()
+                .filter(function(ll) {
+                  return ll.get('qi_list') != undefined;
+                })
                 .map(function(ll) {
                   return {'name' : ll.get('label') || ll.get('name'), 'qi': ll.get('qi_list')[key]};
                 })
-                .sort(function (a, b) {
-                return a.qi > b.qi;
-              });
+                .sort(function(a, b) {
+                  return parseInt(b.qi) - parseInt(a.qi);
+                })
               layersOrderedList.forEach(function(layer) {
                 scope.addInputValueByName(scope.emodnetSortInputKey, layer.name);
               });
-              scope.sortKeyValue = key + ' &#9660;'
+              scope.sortKeyValue = key + ' &#9660;';
             }
 
             // call on layerChange

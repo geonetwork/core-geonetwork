@@ -8,7 +8,8 @@
   module.service('sxtService', [ function() {
 
     var orderedDownloadTypes = ['#FILE', '#DB', '#COPYFILE',
-      '#WWW:DOWNLOAD-1.0-link--download', '#WWW:OPENDAP', '#MYO:MOTU-SUB',
+      '#WWW:DOWNLOAD-1.0-link--download', '#WWW:DOWNLOAD-1.0-http--download',
+      '#WWW:OPENDAP', '#MYO:MOTU-SUB',
       '#WWW:FTP', '#OGC:WFS', '#OGC:WCS'];
 
     var layerTypes =  ['#OGC:WMTS', '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map',
@@ -52,15 +53,15 @@
       && user.isReviewerOrMore && !user.isReviewerOrMore());
 
 
-      scope.unFilteredlinks = md.getLinksByType('LINK', 'WWW:DOWNLOAD-1.0-http--download')
+      scope.unFilteredlinks = md.getLinksByType('LINK');
         // we do not want to display the following protocols
         // link https://forge.ifremer.fr/mantis/view.php?id=40721
-      scope.links = []
+      scope.links = [];
       scope.unFilteredlinks.forEach(function(link){
-         if (link.protocol !== 'NETWORK:LINK'){
+        if (link.protocol !== 'NETWORK:LINK' && link.protocol !== 'WWW:DOWNLOAD-1.0-link--download'){
           scope.links.push(link)
-        };
-      })
+        }
+      });
 
       scope.downloads = [];
       scope.layers = [];

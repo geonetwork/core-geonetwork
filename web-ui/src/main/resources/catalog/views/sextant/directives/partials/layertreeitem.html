@@ -96,8 +96,8 @@
           <li class="list-group-item"><a href="" data-ng-click="remove(); hidePopover()">
             <!--<i class="fa fa-trash-o"></i>&nbsp;--><span translate="">remove</span>
           </a></li>
-          <li ng-if="member.get('metadata_url')" target="_blank" href="{{::member.get('metadata_url')}}"><a>
-            Lien
+          <li ng-if="member.get('metadata_url')"><a target="_blank" href="{{::member.get('metadata_url')}}">
+            <span translate="">liencdicprd</span>
           </a></li>
         </ul>
       </div>
