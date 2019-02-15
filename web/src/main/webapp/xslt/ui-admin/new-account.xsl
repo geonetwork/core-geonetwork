@@ -29,8 +29,6 @@
   <xsl:template mode="content" match="/">
     <div data-ng-include="'{$uiResourcesPath}templates/new-account.html'">
     </div>
-    <div ng-include="'{$uiResourcesPath}templates/info.html'">
-    </div>
   </xsl:template>
 
 </xsl:stylesheet>

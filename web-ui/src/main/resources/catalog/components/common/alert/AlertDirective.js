@@ -33,13 +33,24 @@
     '$timeout',
     function(gnAlertValue, $timeout) {
 
+      // delay to close the alert in milliseconds.
       var delay = 2000;
+
+      /**
+       * Adds an alert to be handled by the alert manager.
+       *
+       * @param {Object} alert Alert to display.
+       * @param {Number} d     Timeout to close the alert (in seconds)
+       */
       this.addAlert = function(alert, d) {
         gnAlertValue.push(alert);
 
-        $timeout(function() {
-          gnAlertValue.splice(0, 1);
-        }, d || delay);
+        // Error alerts require to be closed by the user
+        if (alert.type !== 'danger') {
+          $timeout(function() {
+            gnAlertValue.splice(0, 1);
+          }, (d * 1000) ||  delay);
+        }
       };
     }]);
 
@@ -53,6 +64,13 @@
             'partials/alert.html',
         link: function(scope, element, attrs) {
           scope.alerts = gnAlertValue;
+
+          scope.closeAlert = function(pos) {
+            if ((pos > -1) &&
+                (pos < gnAlertValue.length)) {
+              gnAlertValue.splice(pos, 1);
+            }
+          };
         }
       };
     }]);
