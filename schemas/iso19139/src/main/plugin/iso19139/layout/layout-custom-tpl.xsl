@@ -57,6 +57,7 @@
         <header>
           <xsl:for-each select="$tableConfig/header/col">
             <col>
+              <xsl:copy-of select="@*"/>
               <xsl:if test="@label">
                 <!-- TODO: column names may comes from strings.xml -->
                 <xsl:value-of select="gn-fn-metadata:getLabel($schema, @label, $labels, '', $isoType, $xpath)/label"/>
