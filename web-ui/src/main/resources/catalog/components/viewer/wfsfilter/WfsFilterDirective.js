@@ -115,9 +115,10 @@
     'gnGlobalSettings',
     'ngeoDebounce',
     'gnFeaturesTableManager',
-    function($http, wfsFilterService, $q, $rootScope,
+    'gnSearchSettings',
+        function($http, wfsFilterService, $q, $rootScope,
              gnIndexRequestManager, gnIndexService, gnGlobalSettings,
-             ngeoDebounce, gnFeaturesTableManager) {
+             ngeoDebounce, gnFeaturesTableManager, gnSearchSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -502,6 +503,9 @@
                 var aChecked = scope.isFacetSelected(facette.name, a.value);
                 var bChecked = scope.isFacetSelected(facette.name, b.value);
                 if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+                  if (gnSearchSettings.facetOrdering === 'alphabetical') {
+                    return a.value.localeCompare(b.value);
+                  }
                   return b.count - a.count;
                 }
                 return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
