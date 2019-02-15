@@ -362,7 +362,9 @@
                                select="*/gmd:organisationName"/></span>
           -
           <span itemprop="employee" itemscope="itemscope" itemtype="http://schema.org/Person">
-            <span itemprop="name"><xsl:comment select="name()"/><xsl:value-of select="*/gmd:individualName"/></span>
+            <span itemprop="name"><xsl:comment select="name()"/>
+              <xsl:apply-templates mode="render-value"
+                  select="*/gmd:individualName"/></span>
             <xsl:if test="*/gmd:positionName">
               (<span itemprop="jobTitle"><xsl:comment select="name()"/>
                 <xsl:apply-templates mode="render-value"
