@@ -202,7 +202,8 @@
             var qiList = [];
 
             if (layer.extension) {
-              layer.metadataUrl = layer.extension['metadataUrlList']['metadataUrl'];
+              var metadataUrlList = layer.extension['metadataUrlList'];
+              layer.metadataUrl =  metadataUrlList ? metadataUrlList['metadataUrl']: null;
               if (layer.extension['QIList']) {
                 angular.forEach(layer.extension['QIList'], function(qil) {
                   var qiDict = {};
