@@ -282,7 +282,7 @@
             indexObject.getDocTypeInfo(config).then(function() {
               scope.isFeaturesIndexed = true;
               scope.status = null;
-              var docFields = indexObject.filteredDocTypeFieldsInfo;
+              docFields = indexObject.filteredDocTypeFieldsInfo;
               scope.countTotal = indexObject.totalCount;
 
               if (scope.md && scope.md.attributeTable) {
@@ -422,7 +422,7 @@
               }, aggs).
                   then(function(resp) {
                     indexObject.pushState();
-                    scope.fields = resp.facets;
+                    scope.sortFacette();
                     scope.count = resp.count;
                     angular.forEach(scope.fields, function(f) {
                       if (expandedFields.indexOf(f.name) >= 0) {
@@ -479,6 +479,37 @@
           };
 
           /**
+           * the facette and sorted based on if they are selected
+           * and then based on localcompare
+           * The values of each facette are also sorted the same way
+           */
+          scope.sortFacette = function() {
+            // sort facette
+            scope.fields.sort(function (a, b) {
+              var aChecked = !!scope.output[a.name];
+              var bChecked = !!scope.output[b.name];
+              var aLabel = a.label;
+              var bLabel = b.label;
+              if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+                return aLabel.localeCompare(bLabel);
+              }
+              return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+
+            })
+            // sort items in facette
+            scope.fields.forEach(function (facette) {
+              facette.values.sort(function (a, b) {
+                var aChecked = scope.isFacetSelected(facette.name, a.value);
+                var bChecked = scope.isFacetSelected(facette.name, b.value);
+                if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+                  return b.count - a.count;
+                }
+                return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+              })
+            })
+          }
+
+          /**
            * alter form values & resend a search in case there are initial
            * filters loaded from the context. This must only happen once
            */
@@ -506,7 +537,7 @@
               geometry: initialFilters.geometry
             }).then(function(resp) {
               indexObject.pushState();
-              scope.fields = resp.facets;
+              scope.sortFacette();
               scope.count = resp.count;
 
               // look for date graph fields; call onUpdateDate to refresh them
