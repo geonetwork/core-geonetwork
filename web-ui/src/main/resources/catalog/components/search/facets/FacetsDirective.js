@@ -291,6 +291,7 @@
                 e.preventDefault();
               };
 
+              // Specific Sextant
               /**
                * Filter facet inputs depending on text filter
                * @param {Object} v Facet item.
@@ -299,7 +300,8 @@
                 var filter = scope.ctrl.activeFilter;
                 if (!filter) return true;
                 filter = filter.toLowerCase();
-                return v.name.toLowerCase().indexOf(filter) >= 0;
+                var keyName = 'name' in v ? 'name' : '@name';
+                return v[keyName].toLowerCase().indexOf(filter) >= 0;
 
               };
 
