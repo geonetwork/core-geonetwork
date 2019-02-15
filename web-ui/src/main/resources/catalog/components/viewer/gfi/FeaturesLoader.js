@@ -51,6 +51,9 @@
     this.$http = this.$injector.get('$http');
     this.urlUtils = this.$injector.get('gnUrlUtils');
 
+    // Sextant specific (handling of GFI on NCWMS layers)
+    this.ncwmsService = this.$injector.get('gnNcWms');
+
     this.layer = config.layer;
     this.map = config.map;
 
@@ -91,7 +94,9 @@
       uuid = layer.get('metadataUuid');
     }
 
-    var infoFormat = false;
+    // Sextant specific
+    var infoFormat = this.ncwmsService.isLayerNcwms(layer) ? 'text/xml' :
+                'application/vnd.ogc.gml';
 
     //check if infoFormat is available in getCapabilities
     if(layer.get('capRequest') &&
@@ -142,8 +147,17 @@
         "Content-Type": "text/plain"
       }
     }).then(function(response) {
-      
-      if(infoFormat == 'application/json') {
+      // Sextant specific
+      if (this.ncwmsService.isLayerNcwms(layer)) {
+        var doc = ol.xml.parse(response.data);
+        var props = {};
+        ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
+          var node = doc.getElementsByTagName(v);
+          if (node && node.length > 0) {
+            props[v] = ol.xml.getAllTextContent(node[0], true);
+          }
+        });
+      } else if(infoFormat == 'application/json') {
         var jsonf = new ol.format.GeoJSON();
         var features = [];
         response.data.features.forEach(function(f) {

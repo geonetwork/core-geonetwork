@@ -38,8 +38,6 @@
    * The directive `gnNcwmsTransect` provides the form for all NCWMS parameters.
    */
 
-  var DATE_INPUT_FORMAT = 'DD-MM-YYYY';
-
   module.directive('gnNcwmsTransect', [
     'gnHttp',
     'gnNcWms',
@@ -57,19 +55,9 @@
         templateUrl: '../../catalog/components/viewer/ncwms/' +
         'partials/ncwmstools.html',
         link: function(scope, element, attrs) {
-
           var drawInteraction, featureOverlay;
           var map = scope.map;
-          var isOceanotron = false;
-          var elevationMin = 0;
-          var elevationMax = 1;
-          var timeMin = 0;
-          var timeMax = 1;
 
-
-          scope.ctrl = {};
-
-          //element.find('[ui-slider]').slider();
           /**
            * Just manage active button in ui.
            * Values of activeTool can be 'time', 'profile', 'transect'
@@ -124,57 +112,22 @@
 
             drawInteraction.on('drawend',
               function(evt) {
-
-                var promiseUrl;
-                if (isOceanotron || activeTool == 'time') {
-
-                  var layerParams = {
-                    INFO_FORMAT: isOceanotron ? 'text/xml' : 'image/png'
-                  };
-                  if(!isOceanotron) {
-                    layerParams.TIME = gnNcWms.formatTimeSeries(
-                      scope.timeSeries.tsfromD,
-                      scope.timeSeries.tstoD);
-                  }
-
-                  promiseUrl = scope.layer.getSource().getGetFeatureInfoUrl(
-                    evt.feature.getGeometry().getCoordinates(),
-                    map.getView().getResolution(),
-                    map.getView().getProjection(), layerParams);
-
-                  if(isOceanotron) {
-                    promiseUrl = $http.get(promiseUrl).then(
-                      function(response) {
-                        var ids =
-                          gnNcWms.parseOceanotronXmlCapabilities(response.data);
-
-                        if(!ids) return null;
-                        return gnNcWms.getNcwmsServiceUrl(
-                          scope.layer,
-                          scope.map.getView().getProjection(),
-                          evt.feature.getGeometry().getCoordinates(),
-                          activeTool, {
-                            LAYER: ids
-                          });
-                      });
-                  }
-                } else {
-                  promiseUrl = gnNcWms.getNcwmsServiceUrl(
-                    scope.layer,
-                    scope.map.getView().getProjection(),
-                    evt.feature.getGeometry().getCoordinates(),
-                    activeTool);
-                }
+                var promiseUrl = gnNcWms.getResultImageUrl(scope.layer,
+                  map.getView().getProjection(),
+                  map.getView().getResolution(),
+                  evt.feature.getGeometry(),
+                  activeTool,
+                  { timeSeries: scope.timeSeries }
+                );
 
                 $q.when(promiseUrl, function(url) {
                   if(url){
                     gnPopup.create({
                       title: activeTool,
-                      url: url,
                       content: '<div class="gn-popup-iframe ' +
                       activeTool + '">' +
                       '<img style="width:100%;height:100%;" ' +
-                      'src="{{options.url}}" />' +
+                      'src="' + url + '" />' +
                       '</div>'
                     });
                   }
@@ -187,7 +140,6 @@
 
             ngeoDecorateInteraction(drawInteraction);
             map.addInteraction(drawInteraction);
-
           };
           var disableInteractionWatchFn = function(nv, ov) {
             if (!nv) {
@@ -202,23 +154,20 @@
           /**
            * init source layer params object
            */
-          var initExtraDimensionParams = function() {
+          var initFormValues = function() {
             var layer = scope.layer;
-            var ncInfo = layer.ncInfo;
+            var layerMetadata = layer.get('advancedMetadata');
             scope.params = layer.getSource().getParams() || {};
-            scope.ctrl.isNcWMS = layer.isNcwms
+            scope.datesWithData = {};
 
             // for ncWMS several extra params are used
-            if (scope.ctrl.isNcWMS) {
-              isOceanotron = scope.layer.get('oceanotron');
-              scope.ctrl.isOceanotron = isOceanotron;
-
+            if (scope.isLayerNcwms()) {
               var proj = map.getView().getProjection();
               var bbox = [
-                parseFloat(ncInfo.bbox[0]),
-                parseFloat(ncInfo.bbox[1]),
-                parseFloat(ncInfo.bbox[2]),
-                parseFloat(ncInfo.bbox[3])
+                parseFloat(layerMetadata.bbox[0]),
+                parseFloat(layerMetadata.bbox[1]),
+                parseFloat(layerMetadata.bbox[2]),
+                parseFloat(layerMetadata.bbox[3])
               ];
 
               // use bbox only if it is contained in the world extent
@@ -228,112 +177,84 @@
                   proj.getExtent()
               );
 
+              // scale range
+              if (layer.get('advancedMetadata').units) {
+                scope.colorRange = {
+                  step: 1,
+                  min: layerMetadata.scaleRange[0],
+                  max: layerMetadata.scaleRange[1]
+                };
 
-              scope.colorRange = {
-                step: 1,
-                min: ncInfo.scaleRange[0],
-                max: ncInfo.scaleRange[1]
-              };
-              scope.colorscalerange = [scope.colorRange.min,
-                scope.colorRange.max];
+                // oceanotron: range was fetched before
+                if (scope.isLayerOceanotron()) {
+                  scope.colorRange.min = scope.layer.get('oceanotronScaleRange')[0];
+                  scope.colorRange.max = scope.layer.get('oceanotronScaleRange')[1];
+                }
+
+                scope.colorscale = {
+                  range: [
+                    scope.colorRange.min,
+                    scope.colorRange.max
+                  ]
+                }
+              }
+
               scope.timeSeries = {
                 from: undefined,
                 to: undefined
               };
-              scope.palettes = gnNcWms.parseStyles(ncInfo);
 
-              if (angular.isUndefined(scope.params.LOGSCALE)) {
-                scope.params.LOGSCALE = false;
-              }
-
-              // Set default STYLES= to WMS
-              scope.ctrl.palette = ncInfo.defaultPalette || ncInfo.palettes[0];
-            }
-            // For layers that are not ncWMS
-            // we get the units if month, year, day is dealt with a combo as it is done for elevation
-            // if no units we assume date is in a standard format
-
-            var datesWithData = {}
-            if (!scope.ctrl.isNcWMS){
-              scope.time = ncInfo.time ? ncInfo.time.values : [];
-              scope.ctrl.useComboForTime = false;
-              if (ncInfo.time.units == 'unknown') {
-                for (var i = 0, length =  scope.time.length; i < length; i++) {
-                  var date = new Date(scope.time[i])
-                  var year = date.getFullYear()
-                  // first time we add the months to the year
-                  if (!datesWithData.hasOwnProperty(year)) {
-                    datesWithData[year] = {}
-                    // now add the months
-                    for (var j = 0; j <= 11; j++) {
-                      datesWithData[year][j] = [];
-                    }
-                  }
-                  datesWithData[year][date.getMonth()].push(date.getDate());
-                }
-                layer.ncInfo.datesWithData = datesWithData
-                scope.ncTime.value = moment(new Date(ncInfo.time.values[0])).format('DD-MM-YYYY');
-              }
-              else {
-                var time = scope.layer.get('time');
-                if (time) {
-                  var range = time.values[0];
-                  if (angular.isString(range)) {
-                    scope.timeRange = range.replace('/', time.units + ' / ')
-                      + time.units;
-                  }
-                }
-                scope.params.TIME = timeMin + '/' + timeMax;
-                scope.params.TIMEUNIT = ncInfo.time.units;
-
-                // display combo
-                scope.ctrl.useComboForTime = true;
-
+              // make sure there is a value for LOGSCALE
+              if (scope.params.LOGSCALE === undefined) {
+                scope.params.LOGSCALE = 'false';
               }
             }
+
+            // styles: init array & set default value
+            scope.palettes = gnNcWms.parseStyles(layer);
+            scope.palette = {
+              value: layerMetadata.defaultPalette || ''
+            };
+
             // elevation (zaxis)
-            scope.elevations = ncInfo.zaxis ? ncInfo.zaxis.values : [];
-
             var elevation = scope.layer.get('elevation');
-            if(elevation) {
-              var range = elevation.values[0];
-              scope.params.ELEVATION = range;
-              if(angular.isString(range)) {
+            if (elevation) {
+              scope.elevations = elevation.values;
 
-                scope.elevRange = range.replace('/', elevation.units + ' / ')
-                  + elevation.units;
+              // generate bounds for elevation
+              if(scope.isLayerOceanotron()) {
+                var parts = elevation.values[0].split('/');
+
+                // range description
+                scope.elevationMin = parseFloat(parts[0]);
+                scope.elevationMax = parseFloat(parts[1]);
+                scope.elevRange =
+                    scope.elevationMin.toFixed(1) + elevation.units + ' / ' +
+                    scope.elevationMax.toFixed(1) + elevation.units;
+
+                // initial values
+                parts = scope.params.ELEVATION.split('/');
+                scope.elevation = {
+                  low: parseFloat(parts[0]),
+                  high: parseFloat(parts[1])
+                };
               }
             }
 
-            //Oceanotron is a special type of ncwms
-            if(isOceanotron) {
-              var timeP = scope.layer.getSource().getParams().TIME.split('/');
-              scope.ncTime.value = {
-                from: moment(timeP[0]).format(gnNcWms.DATE_INPUT_FORMAT),
-                to: moment(timeP[1]).format(gnNcWms.DATE_INPUT_FORMAT)
-              };
-
-              gnNcWms.getOceanotronInfo(scope.layer).then(function(type) {
-                scope.ctrl.elevationMinFn = function(elev) {
-                  if(elev) {
-                    scope.params.ELEVATION = elev + '/' + elevationMax;
-                    scope.updateLayerParams();
-                  }
-                  return angular.isDefined(elev) ?
-                    (elevationMin = elev) : elevationMin;
+            // time
+            var time = scope.layer.get('time');
+            if (time) {
+              // initial values
+              if (scope.isLayerOceanotron()) {
+                parts = scope.params.TIME.split('/');
+                scope.ncTime.value = {
+                  from: moment(parts[0]).format('DD-MM-YYYY'),
+                  to: moment(parts[1]).format('DD-MM-YYYY')
                 };
-                scope.ctrl.elevationMaxFn = function(elev) {
-                  if(elev) {
-                    scope.params.ELEVATION = elevationMin + '/' + elev;
-                    scope.updateLayerParams();
-                  }
-                  return angular.isDefined(elev) ?
-                    (elevationMax = elev) : elevationMax;
-                };
-                scope.params.ELEVATION = elevationMin + '/' + elevationMax;
-                scope.ctrl.oceanotronType = type;
-              });
+              }
             }
+
+            scope.updateLayerParams();
           };
 
           /**
@@ -341,15 +262,16 @@
            *  Called when user wlick on 'auto' button.
            *  Update the slider values to this bounds.
            */
-          scope.setAutoColorranges = function(evt) {
+          scope.setAutoColorRanges = function(evt) {
             $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
               ol.proj.transformExtent(
                 map.getView().calculateExtent(map.getSize()),
-                map.getView().getProjection(), 'EPSG:4326').join(',')).
-            success(function(data) {
-              scope.colorscalerange = [data.min, data.max];
-              scope.onColorscaleChange(scope.colorscalerange);
+                map.getView().getProjection(), 'EPSG:4326').join(','))
+            .then(function(response) {
+              scope.colorscale.range[0] = response.data.min;
+              scope.colorscale.range[1] = response.data.max;
+              scope.onColorScaleChange();
               $(evt.target).removeClass('fa-spinner');
             });
           };
@@ -360,38 +282,29 @@
            * with `COLORSCALERANGE` params and refreshes it.
            * @param {?array} v the colorange array
            */
-          scope.onColorscaleChange = function(v) {
-            if (angular.isArray(v) && v.length == 2) {
-              colorange = v[0] + ',' + v[1];
-              scope.params.COLORSCALERANGE = colorange;
+          scope.onColorScaleChange = _.debounce(function() {
+            var range = scope.colorscale.range;
+            if (angular.isArray(range) && range.length == 2) {
+              scope.params.COLORSCALERANGE = range[0] + ',' + range[1];
               scope.updateLayerParams();
             }
-          };
+          }, 400);
 
           scope.ncTime = {};
 
+          // watch time argument for NcWMS/Oceanotron layers
           scope.$watch('ncTime.value', function(time) {
-            if (time) {
-              var timeA = [];
-              if(angular.isString(time)) {
-                timeA.push(time);
-              }
-              else if(time.from && time.to) {
-                timeA.push(time.from, time.to);
-              }
-
-              if(timeA.length) {
-                var newTime = timeA.map(function(t){
-                  return moment(t, 'DD-MM-YYYY').format(
-                    'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]')
-                }).join('/');
-
-                if(newTime != scope.params.TIME) {
-                  scope.params.TIME = newTime;
-                  scope.updateLayerParams();
-                }
-              }
+            if (!time) {
+              return;
             }
+            if (time.to && time.from) {
+              scope.params.TIME =
+                  gnNcWms.getFullTimeValue(scope.layer, time.from) + '/' +
+                  gnNcWms.getFullTimeValue(scope.layer, time.to);
+            } else if (typeof time === 'string') {
+              scope.params.TIME = gnNcWms.getFullTimeValue(scope.layer, time);
+            }
+            scope.updateLayerParams();
           }, true);
 
           scope.hasStyles = function() {
@@ -404,7 +317,13 @@
           };
 
           scope.updateStyle = function() {
-            scope.params.STYLES = scope.palettes[scope.ctrl.palette];
+            scope.params.STYLES = scope.palettes[scope.palette.value];
+            scope.updateLayerParams();
+          };
+
+          // oceanotron only
+          scope.updateElevationRange = function() {
+            scope.params.ELEVATION = scope.elevation.low + '/' + scope.elevation.high;
             scope.updateLayerParams();
           };
 
@@ -412,17 +331,28 @@
             scope.layer.getSource().updateParams(scope.params);
 
             scope.layer.set('legend',
-              gnNcWms.updateLengendUrl(scope.layer.get('legend'),
+              gnNcWms.updateLegendUrl(scope.layer.get('legend'),
                 angular.extend({
-                  PALETTE: scope.ctrl.palette
+                  PALETTE: scope.params.STYLES
                 }, scope.params)));
           };
 
-          element.bind('$destroy', function(e) {
-            element.find('[ui-slider]').slider();
-          });
+          scope.isLayerNcwms = function() {
+            return gnNcWms.isLayerNcwms(scope.layer);
+          }
+          scope.isLayerOceanotron = function() {
+            return gnNcWms.isLayerOceanotron(scope.layer);
+          }
 
-          initExtraDimensionParams();
+          // handle layer change in the directive
+          scope.$watch('layer', function(layer) {
+            if (!layer || !layer.getSource()) { return }
+            scope.loadingMetadata = true;
+            gnNcWms.feedOlLayer(layer).then(function() {
+              scope.loadingMetadata = false;
+              initFormValues();
+            })
+          });
         }
       };
     }]);

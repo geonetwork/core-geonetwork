@@ -739,7 +739,6 @@
               attributionUrl: options.attributionUrl,
               label: options.label,
               group: options.group,
-              isNcwms: options.isNcwms,
               advanced: options.advanced,
               minResolution: options.minResolution,
               maxResolution: options.maxResolution,
@@ -801,6 +800,7 @@
                     msg: msg
                   });
                 });
+
             return olLayer;
           },
 
@@ -963,12 +963,20 @@
                       units: dimension.units,
                       values: dimension.values.split(',')
                     });
+
+                    if (dimension.default) {
+                      layer.getSource().updateParams({ ELEVATION: dimension.default });
+                    }
                   }
                   if (dimension.name == 'time') {
                     layer.set('time', {
                       units: dimension.units,
                       values: dimension.values.split(',')
                     });
+
+                    if (dimension.default) {
+                        layer.getSource().updateParams({ TIME: dimension.default });
+                    }
                   }
                 }
               }
@@ -1280,6 +1288,7 @@
                 label: layerInfo.name
               }
               );
+
               map.addLayer(layer);
               return layer;
             }
