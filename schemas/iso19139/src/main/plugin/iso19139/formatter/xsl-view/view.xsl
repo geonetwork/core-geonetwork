@@ -173,7 +173,7 @@
                           select="normalize-space(gmd:individualName)"/>
 
             <xsl:value-of select="$name"/>
-            <xsl:if test="$name != ''"><xsl:comment select="name()"/>(</xsl:if>
+            <xsl:if test="$name != ''">&#160;(</xsl:if>
             <xsl:value-of select="gmd:organisationName/*"/>
             <xsl:if test="$name">)</xsl:if>
             <xsl:if test="position() != last()">&#160;-&#160;</xsl:if>
@@ -778,10 +778,12 @@
         <dd>
           <ul>
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
-              <li>
-                <a href="{$nodeUrl}api/records/{@uuidref}">
+              <li itemprop="dataset" itemscope="itemscope" itemtype="http://schema.org/Dataset">
+                <a href="{$nodeUrl}api/records/{@uuidref}" itemprop="url">
                   <i class="fa fa-link"><xsl:comment select="'link'"/></i>
-                  <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $langId)"/>
+                  <span itemprop="name"><xsl:comment select="'dataset'"/>
+                    <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $langId)"/>
+                  </span>
                 </a>
               </li>
             </xsl:for-each>
