@@ -32,16 +32,16 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -94,7 +94,8 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
         boolean update = Util.getParam(params, Params.UPDATEONLY, "false").equals("true");
 		SettingManager sm = context.getBean(SettingManager.class);
 
-		boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
+		boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD);
+        boolean allowPublishNonApprovedMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD);
 
         //-----------------------------------------------------------------------
         //--- check access
@@ -146,8 +147,9 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 
 				if (!update) {
 					// For privileges to ALL group, check if it's allowed or not to publish invalid metadata
-					if (groupId.equals(ReservedGroup.all.getId() + "") && (!allowPublishInvalidMd)) {
-						if (!canPublishToAllGroup(context, dm, Integer.parseInt(id))) {
+					if (groupId.equals(ReservedGroup.all.getId() + "")) {
+						if (!canPublishToAllGroup(context, dm, Integer.parseInt(id),
+                            allowPublishInvalidMd, allowPublishNonApprovedMd)) {
 							continue;
 						}
 					}
@@ -158,8 +160,9 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 					if (publish) {
 
 						// For privileges to ALL group, check if it's allowed or not to publish invalid metadata
-						if (groupId.equals(ReservedGroup.all.getId() + "") && (!allowPublishInvalidMd)) {
-							if (!canPublishToAllGroup(context, dm, Integer.parseInt(id))) {
+						if (groupId.equals(ReservedGroup.all.getId() + "")) {
+							if (!canPublishToAllGroup(context, dm, Integer.parseInt(id),
+                                allowPublishInvalidMd, allowPublishNonApprovedMd)) {
 								continue;
 							}
 						}
@@ -188,24 +191,40 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 	 * @return
      * @throws Exception
      */
-	private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, int mdId) throws Exception {
+	private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, int mdId,
+                                         boolean allowPublishInvalidMd,
+                                         boolean allowPublishNonApprovedMd) throws Exception {
 	    IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
 		MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+        IMetadataStatus metadataStatusRepository = context.getBean(IMetadataStatus.class);
 		IMetadataValidator validator = context.getBean(IMetadataValidator.class);
 
-		boolean hasValidation =
-				(metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
+		boolean canPublish = true;
 
-		if (!hasValidation) {
-			AbstractMetadata metadata = metadataUtils.findOne(mdId);
+		if (!allowPublishInvalidMd) {
+            boolean hasValidation =
+                (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
 
-			validator.doValidate(metadata, context.getLanguage());
-			dm.indexMetadata(mdId + "", true, null);
-		}
+            if (!hasValidation) {
+                AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
-		boolean isInvalid =
-				(metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(mdId)) > 0);
+                validator.doValidate(metadata, context.getLanguage());
+                dm.indexMetadata(mdId + "", true, null);
+            }
 
-		return !isInvalid;
+            boolean isInvalid =
+                (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(mdId)) > 0);
+
+            canPublish = !isInvalid;
+        }
+
+        if (canPublish && !allowPublishNonApprovedMd) {
+            MetadataStatus metadataStatus = metadataStatusRepository.getStatus(mdId);
+
+            String statusId = metadataStatus.getId().getStatusId() + "";
+            canPublish = statusId.equals(StatusValue.Status.APPROVED);
+        }
+
+        return canPublish;
 	}
 }

@@ -102,6 +102,18 @@ public class GlobalExceptionController {
     }
 
     @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+        FeatureNotEnabledException.class
+    })
+    public ApiError runtimeExceptionHandler(final FeatureNotEnabledException exception) {
+        return new ApiError("feature_disabled", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+
+
+
+    @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({
         WebApplicationException.class

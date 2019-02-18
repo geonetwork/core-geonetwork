@@ -213,18 +213,20 @@
       this.startWorkflow = function(md, scope) {
         return $http.put('../api/records/' + md.getId() +
             '/status', {status: 1, changeMessage: 'Enable workflow'}).then(
-            function(data) {
+            function(response) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {
                 msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
                 timeout: 2,
                 type: 'success'});
-            }, function(data) {
+            }, function(response) {
               scope.$emit('metadataStatusUpdated', false);
+
+
               scope.$emit('StatusUpdated', {
                 title: $translate.instant('metadataStatusUpdatedErrors'),
-                error: data,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });

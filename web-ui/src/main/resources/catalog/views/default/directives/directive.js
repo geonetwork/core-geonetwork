@@ -100,6 +100,8 @@
           scope.tasks = [];
           scope.hasVisibletasks = false;
 
+          scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
           function loadTasks() {
             return $http.get('../api/status/task', {cache: true}).
             success(function(data) {

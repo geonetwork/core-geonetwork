@@ -53,16 +53,7 @@ import org.fao.geonet.api.records.model.GroupPrivilege;
 import org.fao.geonet.api.records.model.SharingParameter;
 import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordOwnerChangeEvent;
@@ -70,9 +61,11 @@ import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -128,7 +121,6 @@ public class MetadataSharingApi {
 
     @Autowired
     LanguageUtils languageUtils;
-
 
     @ApiOperation(
         value = "Set record sharing",
@@ -321,7 +313,8 @@ public class MetadataSharingApi {
 
             boolean sharingChanges = false;
 
-            boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
+            boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD);
+            boolean allowPublishNonApprovedMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD);
 
             SharingResponse sharingBefore = getRecordSharingSettings(metadata.getUuid(), request.getSession(), request);
 
@@ -336,9 +329,10 @@ public class MetadataSharingApi {
 
                     if (o.getValue()) {
                         // For privileges to ALL group, check if it's allowed or not to publish invalid metadata
-                        if ((p.getGroup() == ReservedGroup.all.getId()) && (!allowPublishInvalidMd)) {
-                            if (!canPublishToAllGroup(context, dm, metadata)) {
-                                continue;
+                        if ((p.getGroup() == ReservedGroup.all.getId())) {
+                            if (!canPublishToAllGroup(context, dm, metadata,
+                                allowPublishInvalidMd, allowPublishNonApprovedMd)) {
+                                throw new Exception("Can't publish metadata");
                             }
                         }
                         dataMan.setOperation(
@@ -367,22 +361,37 @@ public class MetadataSharingApi {
      * @return
      * @throws Exception
      */
-    private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, AbstractMetadata metadata) throws Exception {
+    private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, AbstractMetadata metadata,
+                                         boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd) throws Exception {
         MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
         IMetadataValidator validator = context.getBean(IMetadataValidator.class);
+        IMetadataStatus metadataStatusRepository = context.getBean(IMetadataStatus.class);
 
-        boolean hasValidation =
-            (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
+        boolean canPublish = true;
 
-        if (!hasValidation) {
-            validator.doValidate(metadata, context.getLanguage());
-            dm.indexMetadata(metadata.getId() + "", true, null);
+        if (!allowPublishInvalidMd) {
+            boolean hasValidation =
+                (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
+
+            if (!hasValidation) {
+                validator.doValidate(metadata, context.getLanguage());
+                dm.indexMetadata(metadata.getId() + "", true, null);
+            }
+
+            boolean isInvalid =
+                (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
+
+            canPublish = !isInvalid;
         }
 
-        boolean isInvalid =
-            (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
+        if (canPublish && !allowPublishNonApprovedMd) {
+            MetadataStatus metadataStatus = metadataStatusRepository.getStatus(metadata.getId());
 
-        return !isInvalid;
+            String statusId = metadataStatus.getId().getStatusId() + "";
+            canPublish = statusId.equals(StatusValue.Status.APPROVED);
+        }
+
+        return canPublish;
     }
 
     @ApiOperation(

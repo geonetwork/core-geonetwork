@@ -22,6 +22,7 @@ import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.specification.MetadataStatusSpecs;
+import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
@@ -153,21 +154,17 @@ public class BaseMetadataStatus implements IMetadataStatus {
         if (StringUtils.isEmpty(groupOwner)) {
             return;
         }
-        String groupMatchingRegex = settingManager.getValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP);
-        if (!StringUtils.isEmpty(groupMatchingRegex)) {
-            final Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
-            String groupName = "";
-            if (group != null) {
-                groupName = group.getName();
-            }
 
-            final Pattern pattern = Pattern.compile(groupMatchingRegex);
-            final Matcher matcher = pattern.matcher(groupName);
-            if (matcher.find()) {
-                setStatus(context, Integer.valueOf(newId), Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(),
-                        String.format("Workflow automatically enabled for record in group %s. Record status is set to %s.", groupName,
-                                StatusValue.Status.DRAFT));
-            }
+        final Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
+        String groupName = "";
+        if (group != null) {
+            groupName = group.getName();
+        }
+
+        if (WorkflowUtil.isGroupWithEnabledWorkflow(groupName)) {
+            setStatus(context, Integer.valueOf(newId), Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(),
+                String.format("Workflow automatically enabled for record in group %s. Record status is set to %s.", groupName,
+                    StatusValue.Status.DRAFT));
         }
     }
 

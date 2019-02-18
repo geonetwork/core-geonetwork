@@ -43,11 +43,14 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.FeatureNotEnabledException;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.api.records.model.MetadataStatusResponse;
 import org.fao.geonet.api.records.model.MetadataWorkflowStatusResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
@@ -64,14 +67,14 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataStatusRepositoryCustom;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.StatusValueRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
@@ -280,6 +283,7 @@ public class MetadataWorkflowApi {
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Status updated."),
+        @ApiResponse(code = 400, message = "Metadata workflow not enabled."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -304,7 +308,12 @@ public class MetadataWorkflowApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request, languageUtils.getIso3langCode(request.getLocales()));
 
+        SettingManager sm = appContext.getBean(SettingManager.class);
+        boolean isMdWorkflowEnable = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
+        if (!isMdWorkflowEnable) {
+            throw new FeatureNotEnabledException("Metadata workflow is disabled, can not be set the status of metadata");
+        }
 
         AccessManager am = appContext.getBean(AccessManager.class);
         //--- only allow the owner of the record to set its status
@@ -312,6 +321,17 @@ public class MetadataWorkflowApi {
             throw new SecurityException(String.format(
                 "Only the owner of the metadata can set the status of this record. User is not the owner of the metadata."
             ));
+        }
+
+        boolean isAllowedSubmitApproveInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
+        if (((status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED)) ||
+            (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED))) && !isAllowedSubmitApproveInvalidMd) {
+
+            boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
+
+            if (isInvalid) {
+               throw new Exception("Metadata is invalid: can't be submitted or approved");
+            }
         }
 
         //--- use StatusActionsFactory and StatusActions class to
