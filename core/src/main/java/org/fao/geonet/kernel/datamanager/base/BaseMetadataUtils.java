@@ -264,7 +264,25 @@ public class BaseMetadataUtils implements IMetadataUtils {
 		return uuid;
 	}
 
-	/**
+    /**
+     * Extract metadata default language from the metadata record using the schema XSL for default language extraction)
+     */
+    @Override
+    public String extractDefaultLanguage(String schema, Element md) throws Exception {
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DEFAULT_LANGUAGE);
+        String defaultLanguage = Xml.transform(md, styleSheet).getText().trim();
+
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "Extracted default language '" + defaultLanguage + "' for schema '" + schema + "'");
+
+        // --- needed to detach md from the document
+        md.detach();
+
+        return defaultLanguage;
+    }
+
+
+    /**
 	 *
 	 * @param schema
 	 * @param md

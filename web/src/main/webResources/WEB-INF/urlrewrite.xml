@@ -378,6 +378,17 @@
 
   <rule>
     <note>
+      INSPIRE HTML search
+    </note>
+    <from>^/(.*)/(.*)/opensearch/htmlsearch\?.*q=(.*)</from>
+<!--
+    <to type="forward">/$1/$2/catalog.search#/search?any=$3</to>
+-->
+    <to type="permanent-redirect">%{context-path}/$1/$2/catalog.search#/search?any=$3</to>
+  </rule>
+
+  <rule>
+    <note>
       INSPIRE Atom Describe (service)
     </note>
     <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>
@@ -392,6 +403,21 @@
     <to type="forward">/srv/$1/atom.describe</to>
   </rule>
 
+  <rule>
+    <note>
+      INSPIRE Atom Predefined Service Describe
+    </note>
+    <from>^/(.*)/atom.predefined.service?(.*)$</from>
+    <to type="forward">/srv/atom/describe/service?$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom Predefined Dataset Describe
+    </note>
+    <from>^/(.*)/atom.predefined.dataset?(.*)$</from>
+    <to type="forward">/srv/atom/describe/dataset?$2</to>
+  </rule>
 
   <rule>
     <note>

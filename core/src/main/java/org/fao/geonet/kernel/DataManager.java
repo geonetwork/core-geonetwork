@@ -275,6 +275,11 @@ public class DataManager {
     }
 
     @Deprecated
+    public String extractDefaultLanguage(String schema, Element md) throws Exception {
+        return metadataUtils.extractDefaultLanguage(schema, md);
+    }
+
+    @Deprecated
     public String extractDateModified(String schema, Element md) throws Exception {
         return metadataUtils.extractDateModified(schema, md);
     }
