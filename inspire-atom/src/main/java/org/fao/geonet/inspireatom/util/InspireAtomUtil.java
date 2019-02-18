@@ -39,6 +39,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -443,7 +444,7 @@ public class InspireAtomUtil {
         SearchManager searchMan = context.getBean(SearchManager.class);
 
         // Search for the dataset identified by spIdentifier
-        Metadata datasetMd = null;
+        AbstractMetadata datasetMd = null;
         Document dsLuceneSearchParams = createDefaultLuceneSearcherParams();
         dsLuceneSearchParams.getRootElement().addContent(new Element("identifier").setText(spIdentifier));
         if (StringUtils.isNotBlank(spNamespace)) {
@@ -469,7 +470,7 @@ public class InspireAtomUtil {
                 Text uuidTxt = (Text) xp.selectSingleNode(new Document(searchResult));
                 String datasetMdUuid = uuidTxt.getText();
 
-                MetadataRepository repo = context.getBean(MetadataRepository.class);
+                IMetadataUtils repo = context.getBean(IMetadataUtils.class);
                 datasetMd = repo.findOneByUuid(datasetMdUuid);
             }
 
@@ -508,7 +509,6 @@ public class InspireAtomUtil {
         }
 
         DataManager dm = context.getBean(DataManager.class);
-        SettingManager sm = context.getBean(SettingManager.class);
         Element md = datasetMd.getXmlData(false);
         if (StringUtils.isBlank(requestedLanguage)) {
             String schema = dm.getMetadataSchema(String.valueOf(datasetMd.getId()));
