@@ -1022,17 +1022,22 @@
         fieldsQ.push('+*' + v + '*');
       });
     }
+    if (this.initialParams.filter != '') {
+      fieldsQ.push(this.initialParams.filter);
+    }
 
     // Search for all if no filter defined
+    var filter;
     if (fieldsQ.length === 0) {
       fieldsQ.push('*:*');
+      filter = fieldsQ.join(' ');
+    } else {
+      filter = '(' + fieldsQ.join(') AND (') +')'
     }
 
     if (this.initialParams.filter != '') {
       fieldsQ.push(this.initialParams.filter);
     }
-
-    var filter = fieldsQ.join(' ');
     qParam += filter;
     return qParam;
 

@@ -450,6 +450,9 @@
         if(angular.isUndefined(searchSettings.tabOverflow.panier)) {
           delete searchSettings.mainTabs.panier;
         }
+        if(sxtSettings.facetOrdering)  {
+          searchSettings.facetOrdering = sxtSettings.facetOrdering;
+        }
         if(sxtSettings.sortBy)  {
           searchSettings.sortbyValues = sxtSettings.sortBy.map(
             function(criteria) {

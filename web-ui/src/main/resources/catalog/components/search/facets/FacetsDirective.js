@@ -231,6 +231,20 @@
                               return catalog.indexOf(i['@name']) >= 0;
                             });
                           }
+                          // order by @name
+                          scope.facetObj = facets.sort(function (a, b) {
+                            var aName = a['@name'];
+                            var bName = b['@name'];
+                            var aChecked = scope.isInSearch(aName);
+                            var bChecked = scope.isInSearch(bName);
+                            if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+                              if (gnSearchSettings.facetOrdering === 'alphabetical') {
+                                return a['@count'].localeCompare(b['@count']);
+                              }
+                              return aName.localeCompare(bName);
+                            }
+                            return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+                          });
                           // end specific
 
                           scope.facetObj = facets;
