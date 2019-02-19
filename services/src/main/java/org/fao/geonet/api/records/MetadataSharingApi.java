@@ -535,7 +535,10 @@ public class MetadataSharingApi {
         IMetadataManager metadataManager = appContext.getBean(IMetadataManager.class);
 
         Integer previousGroup = metadata.getSourceInfo().getGroupOwner();
-        Group oldGroup = appContext.getBean(GroupRepository.class).findOne(previousGroup);
+        Group oldGroup = null;
+        if(previousGroup!=null) {
+            oldGroup = appContext.getBean(GroupRepository.class).findOne(previousGroup);
+        }
 
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
         metadataManager.save(metadata);
