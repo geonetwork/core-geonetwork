@@ -107,7 +107,11 @@
         <h1>
           <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
           {{mdView.current.record.title || mdView.current.record.defaultTitle}}
+          <span class="text-muted badge"
+                data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
+                data-ng-if="md.mdStatus<50">{{('mdStatus-' + md.mdStatus) | translate}}</span>
         </h1>
+
 
         <div class="lead1 gn-margin-bottom"
             data-ng-bind-html="(mdView.current.record.abstract || mdView.current.record.defaultAbstract) | linky | newlines"/>

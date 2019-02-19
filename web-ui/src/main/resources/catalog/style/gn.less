@@ -345,6 +345,20 @@ div.gn-scroll-spy {
     }
   }
 }
+.modal-dialog {
+  // footer inside `modal-body`
+  .modal-footer-inline {
+    margin: 10px -15px -15px -15px;
+    border-top: 1px solid @modal-footer-border-color;
+    padding: 15px;
+    [data-gn-need-help] {
+      margin-top: 0;
+      border: 0;
+      font-size: 18px;
+    }
+  }
+}
+
 .gn-save-invalid-modal {
   max-width: none;
   max-height: none;

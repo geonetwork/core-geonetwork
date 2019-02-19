@@ -201,12 +201,14 @@
         }, scope, 'PrivilegesUpdated');
       };
 
-      this.openUpdateStatusPanel = function(scope, statusType, t) {
+      this.openUpdateStatusPanel = function(scope, statusType, t, statusToSelect) {
         scope.task = t;
-        gnUtilityService.openModal({
-          title: 'updateStatus',
+        scope.statusToSelect = statusToSelect;
+        openModal({
+          title: 'mdStatusTitle-' + statusToSelect,
           content: '<div data-gn-metadata-status-updater="md" ' +
-                        'data-status-type="' + statusType + '" task="t"></div>'
+                        'data-status-to-select="' + statusToSelect +
+                        '" data-status-type="' + statusType + '" task="t"></div>'
         }, scope, 'metadataStatusUpdated');
       };
 
