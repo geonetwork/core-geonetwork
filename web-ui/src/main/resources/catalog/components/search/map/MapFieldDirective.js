@@ -181,9 +181,11 @@
               });
 
               // When search form is reset, remove the geom
-              scope.$on('beforeSearchReset', function() {
-                resetSpatialFilter();
-                scope.interaction.active = false;
+              scope.$on('beforeSearchReset', function(event, preserveGeometrySearch) {
+                if (!preserveGeometrySearch) {
+                  resetSpatialFilter();
+                  scope.interaction.active = false;
+                }
               });
             }
           };
