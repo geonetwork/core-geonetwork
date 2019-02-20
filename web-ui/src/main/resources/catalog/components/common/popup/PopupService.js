@@ -129,6 +129,10 @@
           if (!scopeProvided) {
             newScope.$destroy();
           }
+
+          if (options.onCloseCallback) {
+            options.onCloseCallback();
+          }
         });
         return element;
       };
