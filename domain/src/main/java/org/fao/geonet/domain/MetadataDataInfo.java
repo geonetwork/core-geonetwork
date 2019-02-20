@@ -385,4 +385,17 @@ public class MetadataDataInfo implements Serializable {
             return false;
         return true;
     }
+
+	@Override
+	public String toString() {
+		return "MetadataDataInfo [" + (_title != null ? "_title=" + _title + ", " : "")
+				+ (_changeDate != null ? "_changeDate=" + _changeDate + ", " : "")
+				+ (_createDate != null ? "_createDate=" + _createDate + ", " : "")
+				+ (_schemaId != null ? "_schemaId=" + _schemaId + ", " : "") + "_template=" + _template + ", "
+				+ (_root != null ? "_root=" + _root + ", " : "")
+				+ (_doctype != null ? "_doctype=" + _doctype + ", " : "")
+				+ (_extra != null ? "_extra=" + _extra + ", " : "")
+				+ (_displayOrder != null ? "_displayOrder=" + _displayOrder + ", " : "") + "_rating=" + _rating
+				+ ", _popularity=" + _popularity + "]";
+	}
 }

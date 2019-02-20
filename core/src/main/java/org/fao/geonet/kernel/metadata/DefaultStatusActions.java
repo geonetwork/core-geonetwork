@@ -203,7 +203,8 @@ public class DefaultStatusActions implements StatusActions {
             		Log.debug(Geonet.DATA_MANAGER, "  > Status changed for record (" + mid + ") to status " + status);
             		context.getApplicationContext().publishEvent(new MetadataStatusChanged(
     	                    metadataUtils.findOne(Integer.valueOf(mid)), 
-    	                    status.getStatusValue(), status.getChangeMessage()));
+    	                    status.getStatusValue(), status.getChangeMessage(),
+            				status.getId().getUserId()));
             	}
             }
 

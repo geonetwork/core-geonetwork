@@ -25,8 +25,6 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
@@ -36,9 +34,9 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataFileUpload_;
+import org.fao.geonet.events.md.MetadataPublished;
 import org.fao.geonet.events.md.MetadataRemove;
 import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
@@ -54,7 +52,8 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import jeeves.server.context.ServiceContext;
 
@@ -68,43 +67,46 @@ import jeeves.server.context.ServiceContext;
  * @author delawen
  *
  */
-@Service
+@Component
 public class DraftCleanup implements ApplicationListener<MetadataRemove> {
-    
+
 	@Autowired
 	private MetadataDraftRepository metadataDraftRepository;
 
 	@Autowired
 	private SearchManager searchManager;
-	
+
 	@Autowired
 	private XmlSerializer xmlSerializer;
 
 	@Autowired
 	private IMetadataOperations metadataOperations;
-	
+
 	@Autowired
 	private MetadataFileUploadRepository metadataFileUploadRepository;
-	
+
 	@Autowired
 	private MetadataRatingByIpRepository metadataRatingByIpRepository;
-	
+
 	@Autowired
 	private MetadataValidationRepository metadataValidationRepository;
-	
+
 	@Autowired
 	private MetadataStatusRepository metadataStatusRepository;
-	
+
 	@Autowired
 	private UserSavedSelectionRepository userSavedSelectionRepository;
 
 	@Override
-	@Transactional(value=TxType.REQUIRES_NEW)
 	public void onApplicationEvent(MetadataRemove event) {
+	}
+
+	@TransactionalEventListener
+	public void doAfterCommit(MetadataRemove event) {
 		List<MetadataDraft> toRemove = metadataDraftRepository
 				.findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
-		
-		for(MetadataDraft md : toRemove) {
+
+		for (MetadataDraft md : toRemove) {
 			remove(md);
 		}
 	}
@@ -112,8 +114,8 @@ public class DraftCleanup implements ApplicationListener<MetadataRemove> {
 	private void remove(MetadataDraft metadata) {
 		try {
 			ServiceContext context = ServiceContext.get();
-			
-     		//Remove related data
+
+			// Remove related data
 			metadataOperations.deleteMetadataOper(context, String.valueOf(metadata.getId()), false);
 			metadataRatingByIpRepository.deleteAllById_MetadataId(metadata.getId());
 			metadataValidationRepository.deleteAllById_MetadataId(metadata.getId());

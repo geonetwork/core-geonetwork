@@ -23,8 +23,7 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import java.util.Arrays;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -42,7 +41,8 @@ import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import jeeves.server.context.ServiceContext;
 
@@ -53,12 +53,12 @@ import jeeves.server.context.ServiceContext;
  * @author delawen
  *
  */
-@Service
+@Component
 public class UpdateOperations implements ApplicationListener<MetadataShare> {
 
 	@Autowired
 	private IMetadataUtils metadataUtils;
-	
+
 	@Autowired
 	private IMetadataIndexer metadataIndexer;
 
@@ -72,8 +72,11 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
 	private MetadataDraftRepository metadataDraftRepository;
 
 	@Override
-	@Transactional(value = TxType.REQUIRES_NEW)
 	public void onApplicationEvent(MetadataShare event) {
+	}
+
+	@TransactionalEventListener
+	public void doAfterCommit(MetadataShare event) {
 
 		Log.trace(Geonet.DATA_MANAGER,
 				"UpdateOperationsListener: " + event.getRecord() + " op: " + event.getOp().getId().getOperationId());
@@ -118,7 +121,7 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
 								metadataOperations.forceSetOperation(context, draft.getId(), op.getId().getGroupId(),
 										op.getId().getOperationId());
 							}
-							metadataIndexer.indexMetadata(String.valueOf(draft.getId()), false, null);
+							metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(draft.getId())));
 						} catch (Exception e) {
 							Log.error(Geonet.DATA_MANAGER, "Error cascading operation to draft", e);
 						}

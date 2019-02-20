@@ -60,7 +60,7 @@ public class DraftUtilities {
 	 * @param draft
 	 * @return
 	 */
-	@Transactional(value = TxType.REQUIRED)
+	@Transactional(value=TxType.REQUIRED)
 	public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md) {
 		AbstractMetadata draft = metadataDraftRepository.findOneByUuid(md.getUuid());
 
