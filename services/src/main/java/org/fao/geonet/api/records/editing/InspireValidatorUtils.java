@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -109,13 +110,7 @@ public class InspireValidatorUtils {
             Log.warning(Log.SERVICE, "Error calling INSPIRE service: " + endPoint, e);
             return false;
         } finally {
-            if (close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
+            if (close) IOUtils.closeQuietly(client);
         }
 
         if (response.getStatusLine().getStatusCode() == 200) {
@@ -354,13 +349,7 @@ public class InspireValidatorUtils {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
         } finally {
-            if (close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
+            if (close) IOUtils.closeQuietly(client);
         }
 
         return false;
@@ -423,13 +412,7 @@ public class InspireValidatorUtils {
             Log.error(Log.SERVICE, "Exception in INSPIRE service: " + endPoint, e);
             throw e;
         } finally {
-            if (close) {
-                try {
-                    client.close();
-                } catch (IOException e) {
-                    Log.error(Log.SERVICE, "Error closing CloseableHttpClient: " + endPoint, e);
-                }
-            }
+            if (close) IOUtils.closeQuietly(client);
         }
 
         return null;
