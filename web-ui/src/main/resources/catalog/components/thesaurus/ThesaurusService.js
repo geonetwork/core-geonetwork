@@ -182,21 +182,10 @@
                */
               DEFAULT_NUMBER_OF_SUGGESTIONS: 30,
               getKeywordAutocompleter: function(config) {
+
                 var keywordsAutocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
-                  sorter: config.orderById == 'true' ?
-                  function(a, b) {
-                    var nameA = a.props.uri.toUpperCase();
-                    var nameB = b.props.uri.toUpperCase();
-                    if (nameA < nameB) {
-                      return -1;
-                    }
-                    if (nameA > nameB) {
-                      return 1;
-                    }
-                    return 0;
-                  } : null,
                   limit: config.max || this.DEFAULT_NUMBER_OF_RESULTS,
                   remote: {
                     wildcard: 'QUERY',
@@ -207,10 +196,24 @@
                         undefined,
                         config.outputLang),
                     filter: function(data) {
+                      if (config.orderById == 'true') {
+                        data.sort(function (a, b) {
+                          var nameA = a.uri.toUpperCase();
+                          var nameB = b.uri.toUpperCase();
+                          if (nameA < nameB) {
+                            return -1;
+                          }
+                          if (nameA > nameB) {
+                            return 1;
+                          }
+                          return 0;
+                        });
+                      }
                       return parseKeywordsResponse(data, config.dataToExclude);
                     }
                   }
                 });
+
                 keywordsAutocompleter.initialize();
                 return keywordsAutocompleter;
               },
