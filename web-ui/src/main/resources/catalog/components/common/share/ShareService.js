@@ -169,17 +169,24 @@
           return defer.promise;
         },
 
-        publish: function(metadataId, bucket, onOrOff, user) {
-          var privileges = [{
-            group: 1,
-            operations: {
-              view: onOrOff,
-              download: onOrOff,
-              dynamic: onOrOff
-            }
-          }];
-          return this.savePrivileges(
-              metadataId, bucket, privileges, user, false);
+        publish: function(metadataId, bucket, publish, user) {
+          var defer = $q.defer();
+          var url = '../api/records' + (
+              angular.isDefined(metadataId) ? '/' + metadataId : '') +
+            '/' + (publish?'publish':'unpublish');
+
+          if (angular.isDefined(bucket)) {
+            url += '?bucket=' + bucket;
+          }
+
+          $http.put(url)
+            .success(function(data) {
+              defer.resolve(data);
+            }).error(function(data) {
+            defer.reject(data);
+          });
+
+          return defer.promise;
         },
 
         /**
