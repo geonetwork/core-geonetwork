@@ -435,5 +435,10 @@
     "indexingTaskRunning": "Indexing {{total}} records...",
     "indexingTaskFinished": "Indexing finished, {{total}} records processed",
     "indexingTaskFinishedWithErrors": "Indexing finished, {{total}} records processed with {{errors}} errors",
-    "indexingTaskCanceled": "Indexing canceled"
+    "indexingTaskCanceled": "Indexing canceled",
+    "metadataPublished": "Metadata published.",
+    "metadataPublishedError": "Error occurred while publishing metadata.",
+    "metadataUnpublished": "Metadata un-published.",
+    "metadataUnpublishedError": "Error occurred while un-publishing metadata.",
+    "categoriesUpdated": "Categories updated."
 }

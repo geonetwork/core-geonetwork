@@ -24,9 +24,11 @@
 (function() {
   goog.provide('gn_share_directive');
 
-  goog.require('gn_share_service');
+  
+  goog.require('gn_popup');
+goog.require('gn_share_service');
 
-  var module = angular.module('gn_share_directive', ['gn_share_service']);
+  var module = angular.module('gn_share_directive', ['gn_share_service', 'gn_popup']);
 
   /**
    * @ngdoc directive
@@ -46,8 +48,8 @@
    * TODO: User group only privilege
    */
   module.directive('gnShare', [
-    'gnShareService', 'gnShareConstants', 'gnConfig', '$translate', '$filter',
-    function(gnShareService, gnShareConstants, gnConfig, $translate, $filter) {
+    'gnShareService', 'gnShareConstants', 'gnConfig', 'gnUtilityService', '$translate', '$filter',
+    function(gnShareService, gnShareConstants, gnConfig, gnUtilityService, $translate, $filter) {
 
       return {
         restrict: 'A',
@@ -155,11 +157,27 @@
                 scope.user,
                 replace).then(
                 function(data) {
-                  scope.$emit('PrivilegesUpdated', true);
-                  scope.$emit('StatusUpdated', {
-                    msg: translations.privilegesUpdated,
-                    timeout: 0,
-                    type: 'success'});
+                  if (data !== '') {
+                    scope.processReport = data;
+
+                    // A report is returned
+                    gnUtilityService.openModal({
+                      title: translations.privilegesUpdated,
+                      content: '<div gn-batch-report="processReport"></div>',
+                      className: 'gn-privileges-popup',
+                      onCloseCallback: function() {
+                        scope.$emit('PrivilegesUpdated', true);
+                        scope.processReport = null;
+                      }
+                    }, scope, 'PrivilegesUpdated');
+                  } else {
+                    scope.$emit('PrivilegesUpdated', true);
+                    scope.$emit('StatusUpdated', {
+                      msg: translations.privilegesUpdated,
+                      timeout: 0,
+                      type: 'success'});
+                  }
+
                 }, function(data) {
                   scope.$emit('PrivilegesUpdated', false);
                   scope.$emit('StatusUpdated', {
