@@ -474,6 +474,8 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
         saveValidationStatus(intMetadataId, validations);
 
+        session.setProperty(Geonet.Session.VALIDATION_REPORT + metadataId, errorReport);
+
         return Pair.read(errorReport, version);
     }
 
