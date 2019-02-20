@@ -160,4 +160,10 @@ public class MetadataHarvestInfo {
             return false;
         return true;
     }
+
+	@Override
+	public String toString() {
+		return "MetadataHarvestInfo [_harvested=" + _harvested + ", " + (_uuid != null ? "_uuid=" + _uuid + ", " : "")
+				+ (_uri != null ? "_uri=" + _uri : "") + "]";
+	}
 }

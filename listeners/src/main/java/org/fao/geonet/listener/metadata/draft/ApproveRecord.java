@@ -23,17 +23,15 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import java.util.Arrays;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -43,7 +41,9 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import jeeves.server.context.ServiceContext;
 
@@ -56,7 +56,7 @@ import jeeves.server.context.ServiceContext;
  * @author delawen
  *
  */
-@Service
+@Component
 public class ApproveRecord implements ApplicationListener<MetadataStatusChanged> {
 
 	@Autowired
@@ -70,13 +70,16 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 
 	@Autowired
 	private IMetadataIndexer metadataIndexer;
-	
+
 	@Autowired
 	private DraftUtilities draftUtilities;
 
 	@Override
 	public void onApplicationEvent(MetadataStatusChanged event) {
+	}
 
+	@TransactionalEventListener(phase=TransactionPhase.BEFORE_COMMIT)
+	public void doAfterCommit(MetadataStatusChanged event) {
 		Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
 
 		// Handle draft accordingly to the status change
@@ -96,7 +99,6 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 			try {
 				Log.trace(Geonet.DATA_MANAGER,
 						"Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");
-
 				removeDraft(event.getMd());
 			} catch (Exception e) {
 				Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
@@ -117,41 +119,19 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 		}
 	}
 
-	@Transactional(value = TxType.REQUIRES_NEW)
 	private void removeDraft(AbstractMetadata md) throws Exception {
 		draftUtilities.removeDraft(md);
 	}
-	
-	/**
-	 * This needs to be done on a new separated transaction to make sure the
-	 * previous one is committed.
-	 * 
-	 * @param event
-	 */
-	@Transactional(value = TxType.REQUIRES_NEW)
-	private void validate(AbstractMetadata event) {
-		List<String> metadataIds = new LinkedList<String>();
-		metadataIds.add(String.valueOf(event.getId()));
+
+	private void validate(AbstractMetadata md) {
 		try {
-			metadataIndexer.indexMetadata(metadataIds);
+			metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(md.getId())));
 		} catch (Exception e) {
-			Log.error(Geonet.DATA_MANAGER, "Error validating record with id " + event.getId(), e);
+			Log.error(Geonet.DATA_MANAGER, "Error validating record with id " + md.getId(), e);
 		}
 	}
 
-	/**
-	 * This needs to be done on a separated transaction to make sure the validation
-	 * is done on the right data.
-	 * 
-	 * @param event
-	 * @throws Exception
-	 * @throws NumberFormatException
-	 */
-	@Transactional(value = TxType.REQUIRES_NEW)
 	private AbstractMetadata approveWithDraft(MetadataStatusChanged event) throws NumberFormatException, Exception {
-		Log.debug(Geonet.DATA_MANAGER, "Record '" + event.getMd().getUuid() + "' approved.");
-
-		ServiceContext context = ServiceContext.get();
 		AbstractMetadata md = event.getMd();
 		AbstractMetadata draft = null;
 
@@ -160,8 +140,18 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 			md = metadataRepository.findOneByUuid(draft.getUuid());
 
 			// This status should be associated to original record, not draft
-			metadataStatus.setStatus(context, md.getId(), event.getStatus().getId(), new ISODate(),
-					event.getMessage());
+			MetadataStatus status = new MetadataStatus();
+			status.setChangeMessage(event.getMessage());
+			status.setStatusValue(event.getStatus());
+
+			MetadataStatusId mdStatusId = new MetadataStatusId();
+			mdStatusId.setStatusId(event.getStatus().getId());
+			mdStatusId.setMetadataId(md.getId());
+			mdStatusId.setChangeDate(new ISODate());
+			mdStatusId.setUserId(event.getUser());
+			status.setId(mdStatusId);
+
+			metadataStatus.setStatusExt(status);
 
 		} else if (md instanceof Metadata) {
 			draft = metadataDraftRepository.findOneByUuid(md.getUuid());

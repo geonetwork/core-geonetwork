@@ -132,4 +132,11 @@ public class MetadataSourceInfo {
         result = 31 * result + (_owner != null ? _owner.hashCode() : 0);
         return result;
     }
+
+	@Override
+	public String toString() {
+		return "MetadataSourceInfo [" + (_sourceId != null ? "_sourceId=" + _sourceId + ", " : "")
+				+ (_groupOwner != null ? "_groupOwner=" + _groupOwner + ", " : "")
+				+ (_owner != null ? "_owner=" + _owner : "") + "]";
+	}
 }

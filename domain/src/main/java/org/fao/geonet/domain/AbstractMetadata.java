@@ -23,7 +23,9 @@
 package org.fao.geonet.domain;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -314,5 +316,30 @@ public abstract class AbstractMetadata extends GeonetEntity {
     }
     @Transient
     protected Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
+
+	@Override
+	public String toString() {
+		final int maxLen = 3;
+		return this.getClass().getSimpleName() + " [_id=" + _id + ", " + (_uuid != null ? "_uuid=" + _uuid + ", " : "")
+		//		+ (_data != null ? "_data=" + _data + ", " : "")
+				+ (_dataInfo != null ? "_dataInfo=" + _dataInfo + ", " : "")
+				+ (_sourceInfo != null ? "_sourceInfo=" + _sourceInfo + ", " : "")
+				+ (_harvestInfo != null ? "_harvestInfo=" + _harvestInfo + ", " : "")
+				+ (metadataCategories != null ? "metadataCategories=" + toString(metadataCategories, maxLen) : "")
+				+ "]";
+	}
+
+	private String toString(Collection<?> collection, int maxLen) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		int i = 0;
+		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext() && i < maxLen; i++) {
+			if (i > 0)
+				builder.append(", ");
+			builder.append(iterator.next());
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

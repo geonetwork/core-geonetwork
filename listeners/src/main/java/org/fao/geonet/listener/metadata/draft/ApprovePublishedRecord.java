@@ -23,19 +23,19 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataPublished;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import jeeves.server.context.ServiceContext;
 
@@ -47,14 +47,17 @@ import jeeves.server.context.ServiceContext;
  * @author delawen
  *
  */
-@Service
-public class PublishRecord implements ApplicationListener<MetadataPublished> {
+@Component
+public class ApprovePublishedRecord implements ApplicationListener<MetadataPublished> {
 
 	@Autowired
 	private IMetadataStatus metadataStatus;
 
 	@Autowired
 	private DraftUtilities draftUtilities;
+
+	@Autowired
+	private StatusValueRepository statusValueRepository;
 
 	@Override
 	public void onApplicationEvent(MetadataPublished event) {
@@ -63,34 +66,34 @@ public class PublishRecord implements ApplicationListener<MetadataPublished> {
 
 		try {
 			// Only do something if the workflow is enabled
-			if (metadataStatus.getStatus(event.getMd().getId()) != null) {
+			MetadataStatus previousStatus = metadataStatus.getStatus(event.getMd().getId());
+			if (previousStatus != null) {
 				draftUtilities.replaceMetadataWithDraft(event.getMd());
-				if (!Integer.valueOf(StatusValue.Status.APPROVED)
-						.equals(metadataStatus.getStatus(event.getMd().getId()).getId().getStatusId())) {
-					changeToApproved(event.getMd());
-				} 
+				if (!Integer.valueOf(StatusValue.Status.APPROVED).equals(previousStatus.getId().getStatusId())) {
+					changeToApproved(event.getMd(), previousStatus);
+				}
 			}
 		} catch (Exception e) {
 			Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow", e);
 		}
 	}
 
-	/**
-	 * This needs to be done on a new separated transaction to make sure the
-	 * previous one is committed.
-	 * 
-	 * @param event
-	 * @throws Exception
-	 * @throws NumberFormatException
-	 */
-	@Transactional(value = TxType.REQUIRES_NEW)
-	private void changeToApproved(AbstractMetadata md) throws NumberFormatException, Exception {
-
-		ServiceContext context = ServiceContext.get();
-
+	private void changeToApproved(AbstractMetadata md, MetadataStatus previousStatus)
+			throws NumberFormatException, Exception {
 		// This status should be associated to original record, not draft
-		metadataStatus.setStatusExt(context, md.getId(), Integer.valueOf(StatusValue.Status.APPROVED), new ISODate(),
-				"Record published.");
+		MetadataStatus status = new MetadataStatus();
+		status.setChangeMessage("Record published.");
+		status.setPreviousState(previousStatus.getCurrentState());
+		status.setStatusValue(statusValueRepository.findOne(Integer.valueOf(StatusValue.Status.APPROVED)));
+
+		MetadataStatusId mdStatusId = new MetadataStatusId();
+		mdStatusId.setStatusId(Integer.valueOf(StatusValue.Status.APPROVED));
+		mdStatusId.setMetadataId(md.getId());
+		mdStatusId.setChangeDate(new ISODate());
+		mdStatusId.setUserId(ServiceContext.get().getUserSession().getUserIdAsInt());
+		status.setId(mdStatusId);
+
+		metadataStatus.setStatusExt(status);
 
 		Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + md.getId() + " automatically approved due to publishing.");
 	}
