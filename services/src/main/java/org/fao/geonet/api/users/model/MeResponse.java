@@ -23,82 +23,13 @@
 
 package org.fao.geonet.api.users.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Current user info
  */
 public class MeResponse {
-    public String getId() {
-        return id;
-    }
-
-    public MeResponse setId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public MeResponse setProfile(String profile) {
-        this.profile = profile;
-        return this;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public MeResponse setUsername(String username) {
-        this.username = username;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public MeResponse setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public MeResponse setSurname(String surname) {
-        this.surname = surname;
-        return this;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public MeResponse setEmail(String email) {
-        this.email = email;
-        this.hash = email != null ? org.apache.commons.codec.digest.DigestUtils.md5Hex(email) : "";
-        return this;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public MeResponse setHash(String hash) {
-        this.hash = hash;
-        return this;
-    }
-
-    public String getOrganisation() {
-        return organisation;
-    }
-
-    public MeResponse setOrganisation(String organisation) {
-        this.organisation = organisation;
-        return this;
-    }
 
     private String id;
     private String profile;
@@ -108,7 +39,133 @@ public class MeResponse {
     private String email;
     private String hash;
     private String organisation;
+    private boolean admin;
+
+    // Each list is associated with a profile and contains the groups for which the user is enabled with that profile
+    private List<Integer> groupsWithRegisteredUser = new ArrayList<>();
+    private List<Integer> groupsWithEditor = new ArrayList<>();
+    private List<Integer> groupsWithReviewer = new ArrayList<>();
+    private List<Integer> groupsWithUserAdmin = new ArrayList<>();
 
     public MeResponse() {
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public MeResponse setId(final String id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public MeResponse setProfile(final String profile) {
+        this.profile = profile;
+        return this;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public MeResponse setUsername(final String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public MeResponse setName(final String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public MeResponse setSurname(final String surname) {
+        this.surname = surname;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public MeResponse setEmail(final String email) {
+        this.email = email;
+        this.hash = email != null ? org.apache.commons.codec.digest.DigestUtils.md5Hex(email) : "";
+        return this;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public MeResponse setHash(final String hash) {
+        this.hash = hash;
+        return this;
+    }
+
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public MeResponse setOrganisation(final String organisation) {
+        this.organisation = organisation;
+        return this;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public MeResponse setAdmin(final boolean admin) {
+        this.admin = admin;
+        return this;
+    }
+
+    public List<Integer> getGroupsWithRegisteredUser() {
+        return groupsWithRegisteredUser;
+    }
+
+    public MeResponse setGroupsWithRegisteredUser(List<Integer> groupsWithRegisteredUser) {
+        this.groupsWithRegisteredUser = groupsWithRegisteredUser;
+        return this;
+    }
+
+    public List<Integer> getGroupsWithEditor() {
+        return groupsWithEditor;
+    }
+
+    public MeResponse setGroupsWithEditor(List<Integer> groupsWithEditor) {
+        this.groupsWithEditor = groupsWithEditor;
+        return this;
+    }
+
+    public List<Integer> getGroupsWithReviewer() {
+        return groupsWithReviewer;
+    }
+
+    public MeResponse setGroupsWithReviewer(List<Integer> groupsWithReviewer) {
+        this.groupsWithReviewer = groupsWithReviewer;
+        return this;
+    }
+
+    public List<Integer> getGroupsWithUserAdmin() {
+        return groupsWithUserAdmin;
+    }
+
+    public MeResponse setGroupsWithUserAdmin(List<Integer> groupsWithUserAdmin) {
+        this.groupsWithUserAdmin = groupsWithUserAdmin;
+        return this;
+    }
+
 }
