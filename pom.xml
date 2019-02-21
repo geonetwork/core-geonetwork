@@ -1368,6 +1368,6 @@
     <xbean.version>3.18</xbean.version>
     <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
-    <gn.schemas.version>3.5</gn.schemas.version>
+    <gn.schemas.version>3.6</gn.schemas.version>
   </properties>
 </project>
