@@ -1311,7 +1311,7 @@
                 $editInfo/@del = 'true' or
                 $editInfo/@min != 1
               )
-            )) and not($isRequired)">
+            )) and not($isRequired and ($editInfo and $editInfo/@max and $editInfo/@max = 1) and ($parentEditInfo and $parentEditInfo/@max and $parentEditInfo/@max = 1))">
 
       <xsl:variable name="elementToRemove" select="if ($parentEditInfo) then
         $parentEditInfo else $editInfo"/>
