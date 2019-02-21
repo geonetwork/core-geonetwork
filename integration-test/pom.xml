@@ -4,7 +4,7 @@
 
   <groupId>geonetwork-integration-test</groupId>
   <artifactId>geonetwork-integration-test</artifactId>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>3.7.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>geonetwork-integration-test</name>
 
