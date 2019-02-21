@@ -788,7 +788,7 @@
                     select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
       <xsl:variable name="parentName"
                     select="name(ancestor::*[not(contains(name(), 'CHOICE_ELEMENT'))][1])"/>
-      <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
+      <xsl:variable name="isRequired" select="$childEditInfo/@min = 1"/>
 
       <!-- This element is replaced by the content received when clicking add -->
       <div
