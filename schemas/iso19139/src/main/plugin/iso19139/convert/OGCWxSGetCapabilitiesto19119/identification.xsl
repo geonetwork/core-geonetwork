@@ -931,7 +931,8 @@
     </xsl:if>
 
     <language gco:nilReason="missing">
-      <gco:CharacterString/>
+      <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
+                    codeListValue=""/>
     </language>
 
     <characterSet>

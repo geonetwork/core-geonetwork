@@ -63,6 +63,16 @@
   <xsl:param name="Name"
              select="''"/>
 
+  <!--
+  Editor can change the language once the record is created.
+
+  Multilingual records injection is partially supported for the
+  field title and abstract. Which means that editor can translated
+  the title of a record harvested and those will be preserved.
+  -->
+  <xsl:param name="lang"
+             select="''"/>
+
   <xsl:variable name="isBuildingDatasetRecord"
                 select="$Name != ''"/>
 
@@ -188,7 +198,7 @@
 
 
 
-  <!-- Insert title. -->
+  <!-- Insert title.   -->
   <xsl:template mode="copy"
                 match="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title"
                 priority="1999">
@@ -198,6 +208,7 @@
       <gco:CharacterString>
         <xsl:value-of select="$serviceTitle"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
@@ -210,6 +221,7 @@
       <gco:CharacterString>
         <xsl:value-of select="$layerTitle"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
@@ -230,11 +242,12 @@
                        */csw:Capabilities/ows:ServiceIdentification/ows:Abstract|
                        */wcs:Service/wcs:description)/text()"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString"
+                match="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"
                 priority="1999">
 
     <xsl:copy>
@@ -255,19 +268,32 @@
           * <xsl:value-of select="concat(local-name(.), ':', ows2:Title, ', ', ows2:Abstract, '(', string-join(wps2:LiteralData/wps2:Format/@mimeType, ', '), ')')"/>
         </xsl:for-each>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
 
 
 
+  <!-- If GetCapabilities define a language with INSPIRE extension use it,
+   if a language is defined in the template or in the record, use it,
+   if a parameter is set on the harvester parameters, use it or default to eng. -->
   <xsl:template mode="copy"
-                match="gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue"
-                priority="1999">
-    <xsl:variable name="language"
-                  select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language/text())"/>
+              match="gmd:MD_Metadata/gmd:language"
+              priority="1999">
+    <xsl:copy>
+      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/">
+        <xsl:variable name="currentLanguage"
+                      select="*/@codeListValue"/>
+        <xsl:variable name="language"
+                      select="normalize-space(//inspire_vs:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language/text())"/>
 
-    <xsl:value-of select="if ($language != '') then $language else 'eng'"/>
+        <xsl:attribute name="codeListValue"
+                       select="if ($currentLanguage = '' and $language != '') then $language
+                               else if ($currentLanguage != '') then $currentLanguage
+                               else if ($lang != '') then $lang else 'eng'"/>
+      </gmd:LanguageCode>
+    </xsl:copy>
   </xsl:template>
 
 
@@ -552,6 +578,7 @@
       <gco:CharacterString>
         <xsl:value-of select="$getCapabilities//*:Fees"/>
       </gco:CharacterString>
+      <xsl:copy-of select="gmd:PT_FreeText"/>
     </xsl:copy>
   </xsl:template>
 
@@ -813,13 +840,7 @@
         <gmd:linkage>
           <gmd:URL><xsl:value-of select="@xlink:href|@onlineResource"/></gmd:URL>
         </gmd:linkage>
-        <xsl:if test="$isBuildingDatasetRecord">
-          <gmd:name>
-            <gco:CharacterString>
-              <xsl:value-of select="$Name"/>
-            </gco:CharacterString>
-          </gmd:name>
-        </xsl:if>
+
         <gmd:protocol>
           <gco:CharacterString>
             <xsl:choose>
@@ -831,6 +852,14 @@
             </xsl:choose>
           </gco:CharacterString>
         </gmd:protocol>
+
+        <xsl:if test="$isBuildingDatasetRecord">
+          <gmd:name>
+            <gco:CharacterString>
+              <xsl:value-of select="$Name"/>
+            </gco:CharacterString>
+          </gmd:name>
+        </xsl:if>
 
         <gmd:description>
           <gco:CharacterString>

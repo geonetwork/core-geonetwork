@@ -106,9 +106,8 @@
             -->
 
       <language>
-        <gco:CharacterString>
-          <xsl:value-of select="$lang"/>
-        </gco:CharacterString>
+        <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
+                      codeListValue="{$lang}"/>
       </language>
 
       <!--
