@@ -11,6 +11,7 @@ Feature: GeoNetwork Create new user
     And I enter "Beta" into input field having name "surname"
     And I enter "etabeta@email.com" into input field having name "email"
     And I click on element having id "gn-btn-user-save"
+    And I wait 10 seconds for element having css ".alert-success" to display
     And I sign out
 
     Then I login as etabeta/PassTests and navigate to catalog.search

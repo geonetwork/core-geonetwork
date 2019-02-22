@@ -3,6 +3,7 @@ Feature: GeoNetwork Manage group
 
   Scenario: I login and create group1 with only mandatory field ie. name
     Given I login as admin/admin and navigate to admin.console#/organization/groups
+    And I wait 5 seconds for element having id "gn-btn-group-add" to display
     And I click on element having id "gn-btn-group-add"
     Then element having id "gn-btn-group-save" should be disabled
     And I enter "itest-group1" into input field having id "groupname"
@@ -33,7 +34,8 @@ Feature: GeoNetwork Manage group
 
     Then I click on element having id "gn-btn-group-save"
     Then I wait for 1 sec
-    # Check group is created
+
+  Scenario: Check group is created
     Then I click on link having partial text "itest-group2"
     # TODO: Check all properties are here
 

@@ -10,9 +10,9 @@ Feature: GeoNetwork Load samples and template
     Then element having id "gn-btn-loadTemplates" should be enabled
     Then element having id "gn-btn-loadSamples" should be enabled
     And I click on element having id "gn-btn-loadTemplates"
-    And I wait for 5 sec
+    And I wait 5 seconds for element having css "div#gn-templates-reportStatus.panel-success" to display
     Then element having xpath "//*[@id='gn-templates-reportStatus']" should have attribute "class" with value "panel panel-default panel-success"
     And I click on element having id "gn-btn-loadSamples"
-    And I wait for 5 sec
+    And I wait 5 seconds for element having css "div#gn-samples-reportStatus.panel-success" to display
     Then element having xpath "//*[@id='gn-samples-reportStatus']" should have attribute "class" with value "panel panel-default panel-success"
     And I sign out

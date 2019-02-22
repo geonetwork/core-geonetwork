@@ -1,7 +1,7 @@
 Feature: Create (draft) editor
   Setup environment to test draft feature
 
-  Scenario: Setup environment to test draft feature
+  Scenario: Add editortest
     Given I login as admin/admin and navigate to admin.console#/organization
     Then I maximize browser window
 
@@ -21,6 +21,7 @@ Feature: Create (draft) editor
     And I wait 5 seconds for element having css "div.alert.gn-info" to display
         
     # Add editor 2
+  Scenario: Add editortest2
     Then I navigate to "{endPointToTest}/srv/eng/admin.console#/organization"
     And I click on element having id "gn-btn-user-add"
     And I enter "editortest2" into input field having id "username"
@@ -37,6 +38,7 @@ Feature: Create (draft) editor
     And I wait 5 seconds for element having css "div.alert.gn-info" to display
 
     # Add reviewer
+  Scenario: Add reviewertest
     And I click on element having id "gn-btn-user-add"
     And I enter "reviewertest" into input field having id "username"
     And I enter "editorpass" into input field having id "gn-user-password"
@@ -49,13 +51,7 @@ Feature: Create (draft) editor
     And I wait 3 seconds for element having css "select[data-ng-model='currentSelectionRight'] > option" to display
     Then I scroll to top of page
     When I click on element having id "gn-btn-user-save"
-    Then I wait 5 seconds for element having css "div.alert.gn-info" to display
-        
-    # Import templates, just in case
-    Given I navigate to "{endPointToTest}/srv/eng/admin.console#/metadata"
-    Then I click on element having css "div.list-group > li:nth-child(1) > h4 > i"
-    Then I click on element having css "button > i.gn-recordtype-y"
-    Then I wait 10 seconds for element having css "div.panel-success" to display
+    And I wait 5 seconds for element having css "div.alert.gn-info" to display
         
     # Logout admin
     And I sign out

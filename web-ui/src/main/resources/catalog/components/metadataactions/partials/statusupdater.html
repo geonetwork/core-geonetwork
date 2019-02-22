@@ -1,4 +1,4 @@
-<form name="myForm">
+<form name="myForm" id="gn-workflow-status-change">
   <input type="hidden" name="_csrf" value="{{csrf}}"/>
   <div class="row" data-ng-if="statusType === 'workflow'">
     <div class="col-md-4">
@@ -31,7 +31,8 @@
 
       <div class="btn-toolbar">
         <button class="btn btn-default"
-                data-gn-click-and-spin="updateStatus()">
+              id="gn-record-status-accept"
+              data-gn-click-and-spin="updateStatus()">
           <i class="fa fa-code-fork"></i>&nbsp;
           <span data-translate="">updateStatus</span>
         </button>

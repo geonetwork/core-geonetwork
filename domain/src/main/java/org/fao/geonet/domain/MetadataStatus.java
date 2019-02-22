@@ -251,4 +251,15 @@ public class MetadataStatus extends GeonetEntity {
 
     public static class EntityListener extends AbstractEntityListenerManager<MetadataStatus> {
     }
+
+	@Override
+	public String toString() {
+		return "MetadataStatus [" + (id != null ? "id=" + id + ", " : "")
+				+ (changeMessage != null ? "changeMessage=" + changeMessage + ", " : "")
+				+ (statusValue != null ? "statusValue=" + statusValue + ", " : "") + "_owner=" + _owner + ", "
+				+ (_duedate != null ? "_duedate=" + _duedate + ", " : "")
+				+ (_closedate != null ? "_closedate=" + _closedate + ", " : "")
+				+ (previousState != null ? "previousState=" + previousState + ", " : "")
+				+ (currentState != null ? "currentState=" + currentState : "") + "]";
+	}
 }
