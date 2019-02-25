@@ -635,6 +635,7 @@
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions
+        // This are not group specific, so not usable on metadata
         angular.forEach($scope.profiles, function(profile) {
           userFn['is' + profile] = function() {
             return profile === this.profile;
@@ -654,17 +655,31 @@
         // append a random number to avoid caching in IE11
         var userLogin = catInfo.then(function(value) {
           return $http.get('../api/me?_random=' +
-              Math.floor(Math.random() * 10000)).
-              success(function(me, status) {
-                if (angular.isObject(me)) {
-                  angular.extend($scope.user, me);
-                  angular.extend($scope.user, userFn);
-                  $scope.authenticated = true;
-                } else {
-                  $scope.authenticated = false;
-                  $scope.user = undefined;
-                }
-              });
+            Math.floor(Math.random() * 10000)).
+            success(function(me, status) {
+              if (angular.isObject(me)) {
+                angular.forEach($scope.profiles, function(profile) {
+                  // Builds is<ProfileName>ForGroup methods
+                  // to check the profile in the group
+                  me['is' + profile + 'ForGroup'] = function(groupId) {
+                    if('Administrator' == profile) {
+                      return me.admin;
+                    }
+                    if(me['groupsWith' + profile] &&
+                       me['groupsWith' + profile].indexOf(Number(groupId)) !== -1) {
+                      return true;
+                    }
+                    return false;
+                  };
+                });
+                angular.extend($scope.user, me);
+                angular.extend($scope.user, userFn);
+                $scope.authenticated = true;
+              } else {
+                $scope.authenticated = false;
+                $scope.user = undefined;
+              }
+           });
         });
 
 
