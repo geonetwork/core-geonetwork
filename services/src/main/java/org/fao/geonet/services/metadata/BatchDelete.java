@@ -109,7 +109,7 @@ public class BatchDelete extends BackupFileService {
 	                if (backupFile &&
 	                    info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
 	                    info.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-	                    backupFile(context, idString, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false, false));
+	                    backupFile(context, idString, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false, false, true));
 	                }
 	
 	                //--- remove the metadata directory

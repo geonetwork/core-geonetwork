@@ -72,6 +72,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -440,7 +441,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept("application/zip"))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/zip"))
+            .andExpect(content().contentType(MEF_V2_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
             .andExpect(content().string(startsWith(zipMagicNumber)));

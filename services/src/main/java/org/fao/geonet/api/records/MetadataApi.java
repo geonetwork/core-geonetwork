@@ -62,6 +62,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.mef.MEFLib.Version.Constants;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -420,6 +421,7 @@ public class MetadataApi {
                 context, id, format.toString(),
                 skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
             );
+            response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
         } else {
             Set<String> tmpUuid = new HashSet<String>();
             tmpUuid.add(metadataUuid);
@@ -458,14 +460,15 @@ public class MetadataApi {
             Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
                 + " records.");
 
-            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation);
+            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+
+            response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
         }
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
             "inline; filename=\"%s.zip\"",
             metadata.getUuid()
         ));
         response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
-        response.setContentType(acceptHeader);
         FileUtils.copyFile(file.toFile(), response.getOutputStream());
     }
 

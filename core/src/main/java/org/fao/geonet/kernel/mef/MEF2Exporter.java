@@ -59,6 +59,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
@@ -86,6 +87,20 @@ class MEF2Exporter {
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation) throws Exception {
+    	return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
+    }
+    
+    /**
+     * Create a MEF2 file in ZIP format.
+     *
+     * @param uuids  List of records to export.
+     * @param format {@link Format} to export.
+     * @return MEF2 File
+     */
+    public static Path doExport(ServiceContext context, Set<String> uuids,
+                                Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
+                                boolean approved) throws Exception {
 
         Path file = Files.createTempFile("mef-", ".mef");
         SearchManager searchManager = context.getBean(SearchManager.class);
@@ -124,10 +139,21 @@ class MEF2Exporter {
                 try {
                     IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
                     BooleanQuery query = new BooleanQuery();
-                    query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
+                    
+                    //Search by ID, not by UUID
+                    String id = String.valueOf(
+                    		context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId());
+
+                    //Here we just care if we need the approved version explicitly.
+                    //IMetadataUtils already filtered draft for non editors.
+                    if(approved) {
+                    	id = context.getBean(IMetadataUtils.class).getMetadataId(uuid);
+                    }
+                    
+                    query.add(new BooleanClause(new TermQuery(new Term(LuceneIndexField.ID, id)), BooleanClause.Occur.MUST));
                     query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
                     TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
-                    String mdSchema = null, mdTitle = null, mdAbstract = null, id = null, isHarvested = null;
+                    String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
                     MetadataType mdType = null;
 
                     for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -141,9 +167,6 @@ class MEF2Exporter {
                         }
                         if (mdAbstract == null || contextLang.equals(locale)) {
                             mdAbstract = doc.get(LuceneIndexField.ABSTRACT);
-                        }
-                        if (id == null) {
-                            id = doc.get(LuceneIndexField.ID);
                         }
                         if (isHarvested == null) {
                             isHarvested = doc.get(Geonet.IndexFieldNames.IS_HARVESTED);

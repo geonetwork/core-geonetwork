@@ -67,10 +67,19 @@ class MEFExporter {
 	 * @return the path of the generated MEF file.
 	 */
 	public static Path doExport(ServiceContext context, String uuid, Format format, boolean skipUUID,
-			boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
+			boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation,
+			boolean approved) throws Exception {
 
-		Integer id = context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId();
-		
+        //Search by ID, not by UUID
+        Integer id = 
+        		context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId();
+
+        //Here we just care if we need the approved version explicitly.
+        //IMetadataUtils already filtered draft for non editors.
+        if(approved) {
+        	id = Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(uuid));
+        }
+        
 		return doExport(context, id, format, skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
 	}
 
