@@ -129,6 +129,15 @@ public class MEFLib {
 
     // --------------------------------------------------------------------------
 
+    public static Path doExport(ServiceContext context, Integer id,
+                                String format, boolean skipUUID, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
+        return MEFExporter.doExport(context, id, Format.parse(format),
+            skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+    }
+
+    // --------------------------------------------------------------------------
+
     public static Path doMEF2Export(ServiceContext context,
                                     Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                     boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation)
@@ -186,7 +195,34 @@ public class MEFLib {
         }
 
 
-        // Retrieve the metadata document
+        return retrieveMetadata(context, removeXlinkAttribute, addSchemaLocation, metadata);
+    }
+
+    /**
+     * Get metadata record.
+     *
+     * @return A pair composed of the domain object metadata AND the record to be exported (includes
+     * Xlink resolution and filters depending on user session).
+     */
+    static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, Integer id,
+                                                   boolean resolveXlink,
+                                                   boolean removeXlinkAttribute,
+                                                   boolean addSchemaLocation)
+        throws Exception {
+
+        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(id);
+
+        if (metadata == null) {
+            throw new MetadataNotFoundEx("id=" + id);
+        }
+
+
+        return retrieveMetadata(context, removeXlinkAttribute, addSchemaLocation, metadata);
+    }
+
+	private static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, boolean removeXlinkAttribute,
+			boolean addSchemaLocation, final AbstractMetadata metadata) throws Exception {
+		// Retrieve the metadata document
         // using data manager in order to
         // apply all filters (like XLinks,
         // withheld)
@@ -226,7 +262,7 @@ public class MEFLib {
         }
 
         return Pair.read(metadata, metadataForExportAsString);
-    }
+	}
 
     /**
      * Add file to ZIP file

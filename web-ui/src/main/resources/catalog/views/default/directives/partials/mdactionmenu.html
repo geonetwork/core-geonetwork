@@ -61,7 +61,8 @@
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
            data-ng-if="user.canEditRecord(md) &&
-                                md.isWorkflowEnabled()"
+                                md.isWorkflowEnabled() &&
+                                mdView.current.record.draft != 'e'"
            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow')">
           <i class="fa fa-fw fa-code-fork"></i>&nbsp;
           <span data-translate="">updateStatus</span>
@@ -130,27 +131,27 @@
       </li>
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-click="mdService.metadataMEF(md.getUuid())">
+           data-ng-click="mdService.metadataMEF(md.getUuid(), undefined, mdView.current.record.draft != 'y')">
           <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;
           <span data-translate="">exportMEF</span>
         </a>
       </li>
       <li role="menuitem">
-        <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&output=pdf"
+        <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&output=pdf&approved={{mdView.current.record.draft != 'y'}}"
            target="_blank">
           <i class="fa fa-fw fa-file-pdf-o"></i>&nbsp;
           <span data-translate="">exportPDF</span>
         </a>
       </li>
       <li role="menuitem">
-        <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true">
+        <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml?attachment=true&approved={{mdView.current.record.draft != 'y'}}">
           <i class="fa fa-fw fa-file-code-o"></i>&nbsp;
           <span data-translate="">exportXML</span>
         </a>
       </li>
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-click="mdService.metadataRDF(md.getUuid())">
+           data-ng-click="mdService.metadataRDF(md.getUuid(), mdView.current.record.draft != 'y')">
           <i class="fa fa-fw fa-share-alt"></i>&nbsp;
           <span data-translate="">exportRDF</span>
         </a>

@@ -12,15 +12,11 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
@@ -346,22 +342,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	@Override
 	public boolean exists(Integer iId) {
 		return super.exists(iId) || metadataDraftRepository.exists(iId);
-	}
-
-	/**
-	 * TODO
-	 * 
-	 * @param uuid
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public @Nullable String getMetadataId(@Nonnull String uuid) throws Exception {
-		final List<Integer> idList = findAllIdsBy(hasMetadataUuid(uuid));
-		if (idList.isEmpty()) {
-			return null;
-		}
-		return String.valueOf(idList.get(0));
 	}
 
 	@Override
