@@ -23,14 +23,24 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -50,15 +60,16 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,22 +82,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
     "/api/records",
@@ -98,19 +101,13 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
     description = API_CLASS_RECORD_OPS)
 @Controller("records")
 @ReadWriteController
-public class MetadataApi implements ApplicationContextAware {
+public class MetadataApi {
 
     @Autowired
     SchemaManager _schemaManager;
 
     @Autowired
     LanguageUtils languageUtils;
-
-    private ApplicationContext context;
-
-    public synchronized void setApplicationContext(ApplicationContext context) {
-        this.context = context;
-    }
 
 
     @ApiOperation(value = "Get a metadata record",
@@ -229,6 +226,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean attachment,
+        @ApiParam(value = "Download the approved version",
+            required = false, defaultValue="true")
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
@@ -240,6 +241,7 @@ public class MetadataApi implements ApplicationContextAware {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
+        MetadataRepository mdRepository = appContext.getBean(MetadataRepository.class);
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
@@ -270,10 +272,19 @@ public class MetadataApi implements ApplicationContextAware {
 
 
         boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
+        
+        String mdId = String.valueOf(metadata.getId());
+        
+        //Here we just care if we need the approved version explicitly.
+        //ApiUtils.canViewRecord already filtered draft for non editors.
+        if(approved) {
+        	mdId = String.valueOf(mdRepository.findOneByUuid(metadata.getUuid()).getId());
+        }
+        
         Element xml  = withInfo ?
-            dataManager.getMetadata(context,
-            metadata.getId() + "", forEditing, withValidationErrors, keepXlinkAttributes) :
-            dataManager.getMetadataNoInfo(context, metadata.getId() + "");
+            dataManager.getMetadata(context, mdId, forEditing, 
+            		withValidationErrors, keepXlinkAttributes) :
+            dataManager.getMetadataNoInfo(context, mdId + "");
 
         if (addSchemaLocation) {
             Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
@@ -364,6 +375,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false,
             defaultValue = "true")
             boolean addSchemaLocation,
+        @ApiParam(value = "Download the approved version",
+        	required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = "application/x-gn-mef-2-zip"
@@ -375,6 +390,8 @@ public class MetadataApi implements ApplicationContextAware {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+        IMetadataUtils mdUtils = appContext.getBean(IMetadataUtils.class);
+        MetadataRepository mdRepo = appContext.getBean(MetadataRepository.class);
 
         AbstractMetadata metadata;
         try {
@@ -390,8 +407,17 @@ public class MetadataApi implements ApplicationContextAware {
         if (version == MEFLib.Version.V1) {
             // This parameter is deprecated in v2.
             boolean skipUUID = false;
+            
+            Integer id = -1;
+            
+            if(approved) {
+            	id = mdRepo.findOneByUuid(metadataUuid).getId();
+            } else {
+            	id = mdUtils.findOneByUuid(metadataUuid).getId();
+            }
+            
             file = MEFLib.doExport(
-                context, metadataUuid, format.toString(),
+                context, id, format.toString(),
                 skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
             );
         } else {

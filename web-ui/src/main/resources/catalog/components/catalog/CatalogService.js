@@ -293,7 +293,7 @@
   module.value('gnHttpServices', {
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
-    mdGetMEF: 'mef.export',
+    mdGetMEF: 'mef.export', // Deprecated service
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 

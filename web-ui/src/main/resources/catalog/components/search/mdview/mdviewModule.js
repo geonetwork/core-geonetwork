@@ -123,6 +123,7 @@
       };
 
       $scope.format = function(f) {
+        showApproved = $scope.mdView.current.record.draft != 'y';
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
         if (f) {
@@ -131,6 +132,9 @@
             $http.get(url, {
               headers: {
                 Accept: 'text/html'
+              },
+              params: {
+                approved : showApproved
               }
             }).then(
                 function(response,status) {
