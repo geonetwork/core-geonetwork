@@ -396,11 +396,9 @@
               // make the filter case insensitive, ie : abc => [aA][bB][cC]
               // only alpha regex
               var lettersRegexOnly = /^[a-zA-Z]+$/;
-              if (lettersRegexOnly.test(filter)) {
-                filter = filter.replace(/./g, function (match) {
-                  return lettersRegexOnly.test(match) ? '[' + match.toLowerCase() + match.toUpperCase() + ']': match;
-                });
-              }
+              filter = filter.replace(/./g, function (match) {
+                return lettersRegexOnly.test(match) ? '[' + match.toLowerCase() + match.toUpperCase() + ']': match;
+              });
 
               aggs[facetName] = {
                 terms: {
