@@ -130,9 +130,9 @@
         </a>
       </li>
       <li role="menuitem">
-        <a data-ng-href=""
-           data-ng-click="mdService.metadataMEF(md.getUuid(), undefined, mdView.current.record.draft != 'y')">
-          <i class="fa fa-fw fa-file-zip-o"></i>&nbsp;
+        <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/zip?root=div&output=zip&approved={{mdView.current.record.draft != 'y'}}"
+           target="_blank">
+          <i class="fa fa-fw fa-file-pdf-o"></i>&nbsp;
           <span data-translate="">exportMEF</span>
         </a>
       </li>
