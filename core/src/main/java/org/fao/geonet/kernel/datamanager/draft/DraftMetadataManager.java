@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityNotFoundException;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;

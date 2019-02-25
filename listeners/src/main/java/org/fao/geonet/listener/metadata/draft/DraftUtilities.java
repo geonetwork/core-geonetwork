@@ -60,7 +60,6 @@ public class DraftUtilities {
 	 * @param draft
 	 * @return
 	 */
-	@Transactional(value=TxType.REQUIRED)
 	public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md) {
 		AbstractMetadata draft = metadataDraftRepository.findOneByUuid(md.getUuid());
 
@@ -79,7 +78,6 @@ public class DraftUtilities {
 	 * @param draft
 	 * @return
 	 */
-	@Transactional(value = TxType.REQUIRED)
 	public AbstractMetadata replaceMetadataWithDraft(AbstractMetadata md, AbstractMetadata draft) {
 		Log.trace(Geonet.DATA_MANAGER, "Found approved record with id " + md.getId());
 		Log.trace(Geonet.DATA_MANAGER, "Found draft with id " + draft.getId());
@@ -129,7 +127,6 @@ public class DraftUtilities {
 	 * @param md
 	 * @throws Exception
 	 */
-	@Transactional(value = TxType.REQUIRED)
 	public void removeDraft(AbstractMetadata md) throws Exception {
 		AbstractMetadata draft = metadataDraftRepository.findOneByUuid(md.getUuid());
 

@@ -13,8 +13,6 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -252,7 +250,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 				md = metadataDraftRepository.findOneByUuid(uuid);
 			}
 		} catch (Exception e) {
-			Log.error(Geonet.DATA_MANAGER, e);
+			Log.error(Geonet.DATA_MANAGER, e, e);
 		}
 		return md;
 	}
@@ -418,10 +416,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
 			Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
 		} else if (metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
-			String originalId = id;
 			id = createDraft(context, id, md);
-
-			reindex(id, originalId);
 
 			Log.trace(Geonet.DATA_MANAGER, "Creating draft with id " + id + " to edit.");
 		}
@@ -433,7 +428,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 		return super.startEditingSession(context, id);
 	}
 
-	@Transactional(value = TxType.REQUIRES_NEW)
 	private String createDraft(ServiceContext context, String id, AbstractMetadata md)
 			throws Exception, IOException, JDOMException {
 		// We have to create the draft using the metadata information
@@ -471,37 +465,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 		return id;
 	}
 
-	/**
-	 * Uses a new transaction to make sure changes are committed before the reindex.
-	 * 
-	 * @param id
-	 * @param originalId
-	 * @throws Exception
-	 */
-	@Transactional(value = TxType.REQUIRES_NEW)
-	private void reindex(String id, String originalId) throws Exception {
-		// We have to index both draft and approved metadata to get relation on the
-		// index
-		metadataIndexer.indexMetadata(id, true, null);
-
-		metadataIndexer.indexMetadata(originalId, true, null);
-	}
-
-	/**
-	 * Uses a new transaction to make sure changes are committed before the reindex.
-	 * 
-	 * @param context
-	 * @param templateId
-	 * @param groupOwner
-	 * @param source
-	 * @param owner
-	 * @param parentUuid
-	 * @param isTemplate
-	 * @param uuid
-	 * @return
-	 * @throws Exception
-	 */
-	@Transactional(value = TxType.REQUIRES_NEW)
 	protected String createDraft(ServiceContext context, String templateId, String groupOwner, String source, int owner,
 			String parentUuid, String isTemplate, String uuid) throws Exception {
 		Metadata templateMetadata = getMetadataRepository().findOne(templateId);

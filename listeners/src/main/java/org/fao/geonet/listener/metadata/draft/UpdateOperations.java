@@ -78,57 +78,62 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
 	@TransactionalEventListener
 	public void doAfterCommit(MetadataShare event) {
 
-		Log.trace(Geonet.DATA_MANAGER,
-				"UpdateOperationsListener: " + event.getRecord() + " op: " + event.getOp().getId().getOperationId());
-		AbstractMetadata md = metadataUtils.findOne(event.getRecord());
+		try {
 
-		if (md == null) {
-			// This is why we require a new transaction above
-			// The metadata is still being created, no need to check for draft.
-			// If we try to update now, it could lead us to concurrency issues
-			return;
-		}
+			Log.trace(Geonet.DATA_MANAGER, "UpdateOperationsListener: " + event.getRecord() + " op: "
+					+ event.getOp().getId().getOperationId());
+			AbstractMetadata md = metadataUtils.findOne(event.getRecord());
 
-		if (md instanceof MetadataDraft) {
-			Log.trace(Geonet.DATA_MANAGER, "Draft privileges are handled on approved record: " + event.getOp());
-		} else {
-			MetadataDraft draft = metadataDraftRepository.findOneByUuid(md.getUuid());
+			if (md == null) {
+				// This is why we require a new transaction above
+				// The metadata is still being created, no need to check for draft.
+				// If we try to update now, it could lead us to concurrency issues
+				return;
+			}
 
-			if (draft != null) {
-				// Copy privileges from original metadata
-				OperationAllowed op = event.getOp();
-				ServiceContext context = ServiceContext.get();
+			if (md instanceof MetadataDraft) {
+				Log.trace(Geonet.DATA_MANAGER, "Draft privileges are handled on approved record: " + event.getOp());
+			} else {
+				MetadataDraft draft = metadataDraftRepository.findOneByUuid(md.getUuid());
 
-				// Only interested in editing and reviewing privileges
-				// No one else should be able to see it
-				if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
-					Log.trace(Geonet.DATA_MANAGER, "Updating privileges on draft " + draft.getId());
+				if (draft != null) {
+					// Copy privileges from original metadata
+					OperationAllowed op = event.getOp();
+					ServiceContext context = ServiceContext.get();
 
-					// except for reserved groups
-					Group g = groupRepository.findOne(op.getId().getGroupId());
-					if (!g.isReserved()) {
-						try {
-							if (event.getType() == Type.REMOVE) {
-								Log.trace(Geonet.DATA_MANAGER, "Removing editing on group " + op.getId().getGroupId()
-										+ " for draft " + draft.getId());
+					// Only interested in editing and reviewing privileges
+					// No one else should be able to see it
+					if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
+						Log.trace(Geonet.DATA_MANAGER, "Updating privileges on draft " + draft.getId());
 
-								metadataOperations.forceUnsetOperation(context, draft.getId(), op.getId().getGroupId(),
-										op.getId().getOperationId());
-							} else {
-								Log.trace(Geonet.DATA_MANAGER, "Adding editing on group " + op.getId().getGroupId()
-										+ " for draft " + draft.getId());
+						// except for reserved groups
+						Group g = groupRepository.findOne(op.getId().getGroupId());
+						if (!g.isReserved()) {
+							try {
+								if (event.getType() == Type.REMOVE) {
+									Log.trace(Geonet.DATA_MANAGER, "Removing editing on group "
+											+ op.getId().getGroupId() + " for draft " + draft.getId());
 
-								metadataOperations.forceSetOperation(context, draft.getId(), op.getId().getGroupId(),
-										op.getId().getOperationId());
+									metadataOperations.forceUnsetOperation(context, draft.getId(),
+											op.getId().getGroupId(), op.getId().getOperationId());
+								} else {
+									Log.trace(Geonet.DATA_MANAGER, "Adding editing on group " + op.getId().getGroupId()
+											+ " for draft " + draft.getId());
+
+									metadataOperations.forceSetOperation(context, draft.getId(),
+											op.getId().getGroupId(), op.getId().getOperationId());
+								}
+								metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(draft.getId())));
+							} catch (Exception e) {
+								Log.error(Geonet.DATA_MANAGER, "Error cascading operation to draft", e);
 							}
-							metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(draft.getId())));
-						} catch (Exception e) {
-							Log.error(Geonet.DATA_MANAGER, "Error cascading operation to draft", e);
 						}
 					}
-				}
 
+				}
 			}
+		} catch (Throwable e) {
+			Log.error(Geonet.DATA_MANAGER, "Couldn't update the operations of the draft " + event.getRecord(), e);
 		}
 	}
 }

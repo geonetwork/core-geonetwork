@@ -42,10 +42,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-
-import jeeves.server.context.ServiceContext;
 
 /**
  * 
@@ -78,44 +75,48 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 	public void onApplicationEvent(MetadataStatusChanged event) {
 	}
 
-	@TransactionalEventListener(phase=TransactionPhase.BEFORE_COMMIT)
+	@TransactionalEventListener
 	public void doAfterCommit(MetadataStatusChanged event) {
-		Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
+		try {
+			Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
 
-		// Handle draft accordingly to the status change
-		// If there is no draft involved, these operations do nothing
-		StatusValue status = event.getStatus();
-		switch (String.valueOf(status.getId())) {
-		case StatusValue.Status.DRAFT:
-		case StatusValue.Status.SUBMITTED:
-			if (event.getMd() instanceof Metadata) {
-				Log.trace(Geonet.DATA_MANAGER,
-						"Replacing contents of record (ID=" + event.getMd().getId() + ") with draft, if exists.");
-				draftUtilities.replaceMetadataWithDraft(event.getMd());
-			}
-			break;
-		case StatusValue.Status.RETIRED:
-		case StatusValue.Status.REJECTED:
-			try {
-				Log.trace(Geonet.DATA_MANAGER,
-						"Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");
-				removeDraft(event.getMd());
-			} catch (Exception e) {
-				Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
+			// Handle draft accordingly to the status change
+			// If there is no draft involved, these operations do nothing
+			StatusValue status = event.getStatus();
+			switch (String.valueOf(status.getId())) {
+			case StatusValue.Status.DRAFT:
+			case StatusValue.Status.SUBMITTED:
+				if (event.getMd() instanceof Metadata) {
+					Log.trace(Geonet.DATA_MANAGER,
+							"Replacing contents of record (ID=" + event.getMd().getId() + ") with draft, if exists.");
+					draftUtilities.replaceMetadataWithDraft(event.getMd());
+				}
+				break;
+			case StatusValue.Status.RETIRED:
+			case StatusValue.Status.REJECTED:
+				try {
+					Log.trace(Geonet.DATA_MANAGER,
+							"Removing draft from record (ID=" + event.getMd().getId() + "), if exists.");
+					removeDraft(event.getMd());
+				} catch (Exception e) {
+					Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
 
-			}
-			break;
-		case StatusValue.Status.APPROVED:
-			try {
-				Log.trace(Geonet.DATA_MANAGER, "Replacing contents of approved record (ID=" + event.getMd().getId()
-						+ ") with draft, if exists.");
-				AbstractMetadata md = approveWithDraft(event);
-				validate(md);
-			} catch (Exception e) {
-				Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
+				}
+				break;
+			case StatusValue.Status.APPROVED:
+				try {
+					Log.trace(Geonet.DATA_MANAGER, "Replacing contents of approved record (ID=" + event.getMd().getId()
+							+ ") with draft, if exists.");
+					AbstractMetadata md = approveWithDraft(event);
+					validate(md);
+				} catch (Exception e) {
+					Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
 
+				}
+				break;
 			}
-			break;
+		} catch (Throwable e) {
+			Log.error(Geonet.DATA_MANAGER, "Error changing workflow status of " + event.getMd(), e);
 		}
 	}
 
