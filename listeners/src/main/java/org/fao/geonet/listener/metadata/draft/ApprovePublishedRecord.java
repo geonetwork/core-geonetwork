@@ -74,7 +74,7 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
 				}
 			}
 		} catch (Exception e) {
-			Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow", e);
+			Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow of " + event.getMd(), e);
 		}
 	}
 

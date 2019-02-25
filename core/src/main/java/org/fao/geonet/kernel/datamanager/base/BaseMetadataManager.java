@@ -1,20 +1,31 @@
 package org.fao.geonet.kernel.datamanager.base;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
-import jeeves.xlink.Processor;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
@@ -98,29 +109,22 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.UUID;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 
 public class BaseMetadataManager implements IMetadataManager {
 
@@ -383,7 +387,7 @@ public class BaseMetadataManager implements IMetadataManager {
 	 * Removes a metadata.
 	 */
 	@Override
-	public synchronized void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
+	public void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
 		AbstractMetadata findOne = metadataUtils.findOne(metadataId);
 		if (findOne != null) {
 			boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
@@ -410,7 +414,7 @@ import org.fao.geonet.domain.MetadataDraft;
 	 * @throws Exception
 	 */
 	@Override
-	public synchronized void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
+	public void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
 		deleteMetadataFromDB(context, metadataId);
 		getSearchManager().delete(metadataId);
 	}
@@ -1293,7 +1297,9 @@ import org.fao.geonet.domain.MetadataDraft;
 	}
 
 	@Override
+	@Transactional
 	public void delete(Integer id) {
+		Log.trace(Geonet.DATA_MANAGER, "Deleting record with id " + id);
 		if (metadataRepository.exists(id)) {
 			metadataRepository.delete(id);
 		}

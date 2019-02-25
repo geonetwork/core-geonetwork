@@ -25,21 +25,16 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.Arrays;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.events.md.MetadataDraftRemove;
+import org.fao.geonet.events.md.MetadataDraftAdd;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
@@ -53,7 +48,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
  *
  */
 @Component
-public class DraftRemoved implements ApplicationListener<MetadataDraftRemove> {
+public class DraftCreated implements ApplicationListener<MetadataDraftAdd> {
 
 	@Autowired
 	private IMetadataUtils metadataUtils;
@@ -62,14 +57,12 @@ public class DraftRemoved implements ApplicationListener<MetadataDraftRemove> {
 	private IMetadataIndexer metadataIndexer;
 
 	@Override
-	public void onApplicationEvent(MetadataDraftRemove event) {
+	public void onApplicationEvent(MetadataDraftAdd event) {
 	}
 
-	@TransactionalEventListener(phase=TransactionPhase.AFTER_COMMIT)
-	@Transactional(value=TxType.REQUIRES_NEW)
-	public void doAfterCommit(MetadataDraftRemove event) {
+	@TransactionalEventListener
+	public void doAfterCommit(MetadataDraftAdd event) {
 		Log.trace(Geonet.DATA_MANAGER, "Reindexing non drafted versions of uuid " + event.getMd().getUuid());
-
 		try {
 			for (AbstractMetadata md : metadataUtils.findAllByUuid(event.getMd().getUuid())) {
 				if (!(md instanceof MetadataDraft)) {
@@ -79,9 +72,6 @@ public class DraftRemoved implements ApplicationListener<MetadataDraftRemove> {
 					} catch (Exception e) {
 						Log.error(Geonet.DATA_MANAGER, e, e);
 					}
-				} else {
-					Log.error(Geonet.DATA_MANAGER, "Draft with id " + md.getId() + " still available.");
-					throw new DataIntegrityViolationException("There is an orphan draft!");
 				}
 			}
 		} catch (Throwable e) {

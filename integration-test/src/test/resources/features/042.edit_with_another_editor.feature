@@ -4,6 +4,8 @@ When another editor tries to edit a published metadata, it uses the same draft
   Scenario: Edit published record
     Given I login as editortest2/editorpass and navigate to catalog.edit#/board
     Then I click on link having text "itest-metadata"
+    And I wait 2 seconds for element having css ".gn-view-approved .see-draft-not-approved" to display
+    Then I click on element having css ".gn-view-approved .see-draft-not-approved"
     Then I click on element having css "a.gn-md-edit-btn"
     And I wait 10 seconds for element having css "div.gn-title" to display
     Then I clear input field having css "div.gn-title input"
