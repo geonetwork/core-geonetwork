@@ -1,4 +1,4 @@
-<div>
+<div data-ng-if="md">
   <div class="btn-group md-actions"
        data-ng-if="user.isEditorOrMore()">
     <button type="button"
@@ -21,14 +21,14 @@
         </a>
       </li>
       <li role="menuitem"
-          data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
+          data-ng-if="md.isOwned() || user.isUserAdminForGroup(md.groupOwner) || user.isAdmin()">
         <a data-ng-href=""
            data-ng-click="mdService.openTransferOwnership(md, null, getCatScope())">
           <i class="fa fa-fw fa-user"></i>&nbsp;
           <span data-translate="">transferOwnership</span>
         </a></li>
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+          data-ng-if="user.canEditRecord(md) && user.isReviewerForGroup(md.groupOwner)"
           data-ng-class="
             (md.isPublished() || (allowPublishInvalidMd() === true) ||
             (!md.isPublished() && (allowPublishInvalidMd() === false) &&
@@ -69,16 +69,15 @@
           2. Reject metadata (id = 5)
           3. Retire metadata (id = 3)
       -->
-
-      <li role="menuitem" class="divider" data-ng-show="md.mdStatus == 1 || md.mdStatus == 4 || md.mdStatus > 50"></li>
+      <li role="menuitem" class="divider" data-ng-show="md.mdStatus == 1 || md.mdStatus == 4"></li>
       <li role="menuitem"
           class="dropdown-header"
-          data-ng-show="md.mdStatus == 1 || md.mdStatus == 4 || md.mdStatus > 50">
+          data-ng-show="md.mdStatus == 1 || md.mdStatus == 4">
         <span data-translate="">workflow</span>
       </li>
       <!-- user = editor, status = 1, statusToSelect = 4 -->
       <li role="menuitem"
-          data-ng-if="user.isEditorOrMore() && !isReviewerOrMore() && (md.mdStatus == 1 || md.mdStatus > 50)"
+          data-ng-if="user.isEditorForGroup(md.groupOwner) && md.mdStatus == 1"
           data-ng-class="((allowPublishInvalidMd() === true) || 
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
@@ -92,7 +91,7 @@
       </li>
       <!-- user = editor, status = 4, statusToSelect = 1 -->
       <li role="menuitem"
-          data-ng-if="user.isEditorOrMore() && !isReviewerOrMore() && md.mdStatus == 4"
+          data-ng-if="user.isEditorForGroup(md.groupOwner) && md.mdStatus == 4"
           data-ng-class="((allowPublishInvalidMd() === true) || 
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
@@ -106,7 +105,7 @@
       </li>
       <!-- user = reviewer, status = 4, statusToSelect = 2 -->
       <li role="menuitem"
-          data-ng-if="user.isReviewerOrMore() && md.mdStatus == 4"
+          data-ng-if="user.isReviewerForGroup(md.groupOwner) && md.mdStatus == 4"
           data-ng-class="((allowPublishInvalidMd() === true) || 
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
@@ -120,7 +119,7 @@
       </li>
       <!-- user = reviewer, status = 4, statusToSelect = 5 -->
       <li role="menuitem"
-          data-ng-if="user.isReviewerOrMore() && md.mdStatus == 4"
+          data-ng-if="user.isReviewerForGroup(md.groupOwner) && md.mdStatus == 4"
           data-ng-class="((allowPublishInvalidMd() === true) || 
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
@@ -134,7 +133,7 @@
       </li>
       <!-- user = reviewer, status = 4, statusToSelect = 3 -->
       <li role="menuitem"
-          data-ng-if="user.isReviewerOrMore() && md.mdStatus == 4"
+          data-ng-if="user.isReviewerForGroup(md.groupOwner) && md.mdStatus == 4"
           data-ng-class="((allowPublishInvalidMd() === true) || 
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
@@ -172,7 +171,7 @@
 
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-if="user.isEditorOrMore()"
+           data-ng-if="user.isEditorForGroup(md.groupOwner)"
            data-ng-click="mdService.duplicate(md)">
           <i class="fa fa-fw fa-copy"></i>&nbsp;
           <span data-translate="">duplicate</span>
@@ -180,7 +179,7 @@
       </li>
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-if="user.isEditorOrMore()"
+           data-ng-if="user.isEditorForGroup(md.groupOwner)"
            data-ng-click="mdService.createChild(md)">
           <i class="fa fa-fw fa-sitemap"></i>&nbsp;
           <span data-translate="">createChild</span>

@@ -204,7 +204,7 @@
       this.openUpdateStatusPanel = function(scope, statusType, t, statusToSelect) {
         scope.task = t;
         scope.statusToSelect = statusToSelect;
-        openModal({
+        gnUtilityService.openModal({
           title: 'mdStatusTitle-' + statusToSelect,
           content: '<div data-gn-metadata-status-updater="md" ' +
                         'data-status-to-select="' + statusToSelect +
