@@ -499,13 +499,33 @@
   Can also be using lang=eng&amp;lang=ara.
   -->
   <xsl:template match="@xlink:href[starts-with(., 'local://srv/api/registries/entries')]">
+    <xsl:variable name="urlBase"
+                  select="substring-before(., '?')"/>
+    <xsl:variable name="urlParameters"
+                  select="substring-after(., '?')"/>
+
+    <!-- Collect all parameters excluding language -->
+    <xsl:variable name="listOfAllParameters">
+      <xsl:for-each select="tokenize($urlParameters, '&amp;')">
+        <xsl:variable name="parameterName"
+                      select="tokenize(., '=')[1]"/>
+
+        <xsl:if test="$parameterName != 'lang'">
+          <param name="{$parameterName}"
+                 value="{.}"/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+
     <xsl:attribute name="xlink:href"
-                   select="replace(.,
-                                  '(&amp;lang=.*)+&amp;',
-                                  concat('&amp;lang=', $mainLanguage, ',',
-                                    string-join($locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage], ','),
-                                    '&amp;'))"/>
+                   select="concat(
+                    $urlBase,
+                    '?lang=', $mainLanguage, ',',
+                    string-join($locales//gmd:LanguageCode/@codeListValue[. != $mainLanguage], ','),
+                    '&amp;',
+                    string-join($listOfAllParameters/param/@value, '&amp;'))"/>
   </xsl:template>
+
 
   <!-- ================================================================= -->
   <!-- Set local identifier to the first 2 letters of iso code. Locale ids
