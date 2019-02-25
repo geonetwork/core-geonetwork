@@ -38,10 +38,12 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
@@ -226,8 +228,17 @@ public class UsersApi {
         // elsewhere in the GeoNetwork database - an exception is thrown if
         // this is the case
         if (dataManager.isUserMetadataOwner(userIdentifier)) {
+            MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+            final List<Metadata> allUserRecords = metadataRepository.findAll(MetadataSpecs.isOwnedByUser(userIdentifier));
+            List<String> message = new ArrayList<>();
+            for (Metadata record : allUserRecords) {
+                message.add(String.format("%s (type: %s)", record.getUuid(), record.getDataInfo().getType()));
+            }
             throw new IllegalArgumentException(
-                "Cannot delete a user that is also a metadata owner");
+                String.format(
+                    "Cannot delete a user that is also metadata owner of %d record(s). List of user's records: %s",
+                        allUserRecords.size(),
+                        String.join(", ", message)));
         }
 
         if (dataManager.isUserMetadataStatus(userIdentifier)) {
