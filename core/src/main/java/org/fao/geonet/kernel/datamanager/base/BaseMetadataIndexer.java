@@ -37,6 +37,7 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
@@ -527,7 +528,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 			// get status
 			Sort statusSort = new Sort(Sort.Direction.DESC,
 					MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
-			List<MetadataStatus> statuses = statusRepository.findAllById_MetadataId(id$, statusSort);
+			List<MetadataStatus> statuses = statusRepository.findAllByIdAndByType(id$, StatusValueType.workflow, statusSort);
 			if (!statuses.isEmpty()) {
 				MetadataStatus stat = statuses.get(0);
 				String status = String.valueOf(stat.getId().getStatusId());
