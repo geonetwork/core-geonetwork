@@ -742,7 +742,7 @@ public class MetadataEditingApi {
                 isEmbedded ?
                         "xslt/ui-metadata/edit/edit-embedded.xsl" :
                         "xslt/ui-metadata/edit/edit.xsl");
-        Xml.transform(root, xslt, response.getOutputStream());
+        Xml.transformXml(root, xslt, response.getOutputStream());
     }
 
 
