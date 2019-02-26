@@ -498,7 +498,7 @@
                                schema=iso19139"
   Can also be using lang=eng&amp;lang=ara.
   -->
-  <xsl:template match="@xlink:href[starts-with(., 'local://srv/api/registries/entries')]">
+  <xsl:template match="@xlink:href[starts-with(., 'local://srv/api/registries/entries') and contains(., '?')]">
     <xsl:variable name="urlBase"
                   select="substring-before(., '?')"/>
     <xsl:variable name="urlParameters"
