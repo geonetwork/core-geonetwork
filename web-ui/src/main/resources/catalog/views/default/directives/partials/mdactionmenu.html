@@ -21,7 +21,7 @@
         </a>
       </li>
       <li role="menuitem"
-          data-ng-if="md.isOwned() || user.isUserAdminForGroup(md.groupOwner) || user.isAdmin()">
+          data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
         <a data-ng-href=""
            data-ng-click="mdService.openTransferOwnership(md, null, getCatScope())">
           <i class="fa fa-fw fa-user"></i>&nbsp;
@@ -171,7 +171,7 @@
 
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-if="user.isEditorForGroup(md.groupOwner)"
+           data-ng-if="user.isEditorOrMore()"
            data-ng-click="mdService.duplicate(md)">
           <i class="fa fa-fw fa-copy"></i>&nbsp;
           <span data-translate="">duplicate</span>
@@ -179,7 +179,7 @@
       </li>
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-if="user.isEditorForGroup(md.groupOwner)"
+           data-ng-if="user.isEditorOrMore()"
            data-ng-click="mdService.createChild(md)">
           <i class="fa fa-fw fa-sitemap"></i>&nbsp;
           <span data-translate="">createChild</span>
