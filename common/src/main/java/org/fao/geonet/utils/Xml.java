@@ -385,6 +385,7 @@ public final class Xml {
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
         StreamResult resStream = new StreamResult(out);
         transform(xml, styleSheetPath, resStream, null);
+        out.close();
     }
 
     //--------------------------------------------------------------------------
