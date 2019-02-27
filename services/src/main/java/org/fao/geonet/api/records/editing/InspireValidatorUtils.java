@@ -46,10 +46,14 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,7 +85,7 @@ public class InspireValidatorUtils {
 
     /** The Constant TESTS_TO_RUN. */
     private final static String[] TESTS_TO_RUN = { "Conformance class: INSPIRE Profile based on EN ISO 19115 and EN ISO 19119",
-            "Conformance class: XML encoding of ISO 19115/19119 metadata" };
+    "Conformance class: XML encoding of ISO 19115/19119 metadata" };
 
     /**
      * Check service status.
@@ -487,7 +491,9 @@ public class InspireValidatorUtils {
     }
 
     private static CloseableHttpClient getHttpClient(SettingManager settingMan) {
-        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpClientBuilder clientBuilder = ApplicationContextHolder.get().getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
+        CloseableHttpClient client = null;
 
         boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
         if (useProxy) {
@@ -507,13 +513,13 @@ public class InspireValidatorUtils {
                 credsProvider.setCredentials(new AuthScope(proxy.getHostName(), proxy.getPort()),
                         new UsernamePasswordCredentials(username, password));
 
-                client = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).setDefaultCredentialsProvider(credsProvider)
+                client = clientBuilder.setDefaultRequestConfig(defaultRequestConfig).setDefaultCredentialsProvider(credsProvider)
                         .build();
             } else {
-                client = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
+                client = clientBuilder.setDefaultRequestConfig(defaultRequestConfig).build();
             }
         } else {
-            client = HttpClients.createDefault();
+            client = clientBuilder.build();
         }
 
         return client;
