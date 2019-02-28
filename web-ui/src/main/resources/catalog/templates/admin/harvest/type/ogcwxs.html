@@ -85,17 +85,20 @@
           <span data-translate="">ogcwxs-datasetTemplateUuid</span>
         </label>
         <select id="gn-harvest-settings-ogc-advanced-records-template-list" 
-                ata-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS)') != null"
+                data-ng-show="harvesterSelected.site.ogctype.match('^(WMS|WFS|WCS|SOS|WPS)') != null"
                 class="form-control"
                 data-ng-model="harvesterSelected.options.datasetTemplateUuid"
                 data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsDatasetTemplates">
         </select>
+        <!--
+        TODO: This need more work as it requires changes in the XSL transformation
+        to inject process info in a serviceIdentification and not a dataIdentification.
         <select id="gn-harvest-settings-ogc-advanced-records-template-list-wps2"
                 data-ng-show="harvesterSelected.site.ogctype.match('^(WPS2)') != null"
                 class="form-control"
-                data-ng-model="harvesterSelected.options.serviceTemplateUuid"
+                data-ng-model="harvesterSelected.options.datasetTemplateUuid"
                 data-ng-options="t['geonet:info'].uuid as t.getTitle() for t in ogcwxsTemplates">
-        </select>
+        </select>-->
         <p class="help-block" data-translate="">ogcwxs-datasetTemplateUuidHelp</p>
       </div>
 
