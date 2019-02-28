@@ -30,6 +30,8 @@
   "switchFrom2DTo3D": "Switch from 2D to 3D",
   "bbox": "bbox",
   "backgroundMap": "Background map:",
+  "checkIfDataIsDownloadableFromWfs": "Download service available?",
+  "checkIfDataIsDownloadableFromWfsHelp": "Check if this layer is available using a WFS service. If yes, then list available download formats as defined in the service capabilities.",
   "saveMap": "Save map",
   "downloadContext": "Download current map as",
   "saveMapAsContext": "OGC context (XML)",
