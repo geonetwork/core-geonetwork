@@ -342,6 +342,7 @@
       setActiveTab();
       $scope.$on('$locationChangeSuccess', setActiveTab);
 
+      var sortConfig = gnSearchSettings.sortBy.split('#');
       angular.extend($scope.searchObj, {
         advancedMode: false,
         from: 1,
@@ -357,12 +358,14 @@
         defaultParams: {
           'facet.q': '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         params: {
           'facet.q': gnSearchSettings.defaultSearchString || '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         sortbyValues: gnSearchSettings.sortbyValues
       });
