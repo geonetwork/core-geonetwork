@@ -2442,8 +2442,8 @@
     <skos:broader rdf:resource="http://www.naturalearthdata.com/ne_admin#Continent/Oceania"/>
   </skos:Concept>
   <skos:Concept rdf:about="http://www.naturalearthdata.com/ne_admin#Country/MKD">
-    <skos:prefLabel xml:lang="en">Macedonia</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">Macedonia</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">North Macedonia</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">North Macedonia</skos:prefLabel>
     <skos:altLabel>MKD</skos:altLabel>
     <gml:BoundedBy>
       <gml:Envelope gml:srsName="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326">
