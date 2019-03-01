@@ -25,6 +25,8 @@ package iso19139;
 
 import com.google.common.base.Optional;
 
+import jeeves.constants.Jeeves;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
@@ -59,6 +61,7 @@ public class UpdateFixedInfoTest extends AbstractServiceIntegrationTest {
     public void testDescriptiveKeywords() throws Exception {
         Element md = Xml.loadFile(UpdateFixedInfoTest.class.getResource("descriptiveKeywordsUpdateFixedInfo.xml"));
         ServiceContext context = createServiceContext();
+        context.setUserSession((UserSession)loginAsAnonymous().getAttribute(Jeeves.Elem.SESSION));
         final Element updatedXml = dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), "test-uuid-123", md, null,
             UpdateDatestamp.NO, context);
 
@@ -101,6 +104,7 @@ public class UpdateFixedInfoTest extends AbstractServiceIntegrationTest {
     public void testXLinkedDescriptiveKeywords() throws Exception {
         Element md = Xml.loadFile(UpdateFixedInfoTest.class.getResource("descriptiveKeywordsUpdateFixedInfoXLinked.xml"));
         ServiceContext context = createServiceContext();
+        context.setUserSession((UserSession)loginAsAnonymous().getAttribute(Jeeves.Elem.SESSION));
         final Element updatedXml = dataManager.updateFixedInfo("iso19139", Optional.<Integer>absent(), "test-uuid-123", md, null,
             UpdateDatestamp.NO, context);
 
