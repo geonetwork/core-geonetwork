@@ -43,13 +43,31 @@
        * @param {Number} d     Timeout to close the alert (in seconds)
        */
       this.addAlert = function(alert, d) {
-        gnAlertValue.push(alert);
+        var alertToUpdatePos = -1;
 
-        // Error alerts require to be closed by the user
-        if (alert.type !== 'danger') {
-          $timeout(function() {
-            gnAlertValue.splice(0, 1);
-          }, (d * 1000) ||  delay);
+        if (alert.id) {
+          // Check if exists an alert with same id and replace it
+          for (var i = 0; i < gnAlertValue.length; i++) {
+            var selectedAlertId = gnAlertValue[i].id;
+
+            if (selectedAlertId && (alert.id == selectedAlertId)) {
+              alertToUpdatePos = i;
+              break;
+            }
+          }
+        }
+
+        if (alertToUpdatePos > -1) {
+          gnAlertValue[alertToUpdatePos] = alert;
+        } else {
+          gnAlertValue.push(alert);
+
+          // Error alerts require to be closed by the user
+          if (alert.type !== 'danger') {
+            $timeout(function() {
+              gnAlertValue.splice(0, 1);
+            }, (d * 1000) ||  delay);
+          }
         }
       };
     }]);

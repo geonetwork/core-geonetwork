@@ -299,9 +299,9 @@
             angular.isDefined(md) ? undefined : bucket,
             onOrOff, $rootScope.user)
             .then(
-            function(data) {
-              if (data !== '') {
-                scope.processReport = data;
+            function(response) {
+              if (response.data !== '') {
+                scope.processReport = response.data;
 
                 // A report is returned
                 gnUtilityService.openModal({
@@ -329,13 +329,13 @@
               if (md) {
                 md.publish();
               }
-            }, function(data) {
+            }, function(response) {
               scope.$emit('PrivilegesUpdated', false);
               scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
                 title: onOrOff ? translations.metadataPublishedError :
                   translations.metadataUnpublishedError,
-                error: data,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });

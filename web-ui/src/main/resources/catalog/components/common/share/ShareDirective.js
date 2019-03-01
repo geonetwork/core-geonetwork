@@ -156,9 +156,9 @@
                 scope.privileges,
                 scope.user,
                 replace).then(
-                function(data) {
-                  if (data !== '') {
-                    scope.processReport = data;
+                function(response) {
+                  if (response.data !== '') {
+                    scope.processReport = response.data;
 
                     // A report is returned
                     gnUtilityService.openModal({
@@ -178,11 +178,11 @@
                       type: 'success'});
                   }
 
-                }, function(data) {
+                }, function(response) {
                   scope.$emit('PrivilegesUpdated', false);
                   scope.$emit('StatusUpdated', {
                     title: translations.privilegesUpdatedError,
-                    error: data,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });

@@ -19,5 +19,10 @@
       <code data-ng-hide="!a.error.stack" class="gn-stack">{{a.error.stack}}</code>
     </div>
 
+    <button type="button" class="btn btn-danger"
+            data-ng-click="closeAlert($index)"
+            data-ng-show="a.type === 'danger'">
+      {{'close' | translate}}
+    </button>
   </div>
 </div>

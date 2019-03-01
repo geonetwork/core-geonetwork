@@ -87,6 +87,7 @@
                 startedAt: session.start.format('YYYY-MM-DD HH:mm:ss'),
                 length: session.length
               }),
+              id: 'session-alert',
               timeout: session.checkInterval,
               type: 'danger'});
           } else {
@@ -97,6 +98,7 @@
                 willBeCancelledIn: session.remainingTime,
                 length: session.length
               }),
+              id: 'session-alert',
               timeout: session.checkInterval,
               type: 'danger'});
           }
