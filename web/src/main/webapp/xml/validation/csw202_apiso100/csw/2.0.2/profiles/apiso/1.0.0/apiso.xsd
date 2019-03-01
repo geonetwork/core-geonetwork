@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.isotc211.org/2005/gmd"
-           elementFormDefault="qualified"
-           version="0.1"
->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
+           xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
+           xmlns:gmx="http://www.isotc211.org/2005/gmx" targetNamespace="http://www.isotc211.org/2005/gmd"
+           elementFormDefault="qualified" version="1.0.1">
+  <!--
+    Copyright (c) 2007,2010,2018 Open Geospatial Consortium.
+    To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
+
+    Updated: 2010-01-22
+    Updated: 2018-03-01
+-->
   <!-- ================================= Annotation ================================ -->
   <xs:annotation>
     <xs:documentation>ISO Wrapper to include service related type to GMD</xs:documentation>
@@ -11,5 +18,7 @@
   <xs:include schemaLocation="../../../../../iso/19139/20060504/gmd/gmd.xsd"/>
   <xs:import namespace="http://www.isotc211.org/2005/srv"
              schemaLocation="../../../../../iso/19139/20060504/srv/srv.xsd"/>
-</xs:schema>
+  <xs:import namespace="http://www.isotc211.org/2005/gmx"
+             schemaLocation="../../../../../iso/19139/20060504/gmx/gmx.xsd"/>
 
+</xs:schema>

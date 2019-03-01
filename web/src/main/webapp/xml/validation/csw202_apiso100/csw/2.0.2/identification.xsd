@@ -10,10 +10,10 @@
     </xs:documentation>
   </xs:annotation>
   <!-- ================================== Imports ================================== -->
-  <xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../gco/gco.xsd"/>
-  <xs:include schemaLocation="../gmd/constraints.xsd"/>
-  <xs:include schemaLocation="../gmd/distribution.xsd"/>
-  <xs:include schemaLocation="../gmd/maintenance.xsd"/>
+  <xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../../iso/19139/20060504/gco/gco.xsd"/>
+  <xs:include schemaLocation="../../iso/19139/20060504/gmd/constraints.xsd"/>
+  <xs:include schemaLocation="../../iso/19139/20060504/gmd/distribution.xsd"/>
+  <xs:include schemaLocation="../../iso/19139/20060504/gmd/maintenance.xsd"/>
   <!-- ########################################################################### -->
   <!-- ########################################################################### -->
   <!-- ================================== Classes ================================= -->

@@ -79,4 +79,7 @@
   <system systemId="http://www.w3.org/1999/xlink/xlinks.xsd"
           uri="schema/xlink/xlinks.xsd"/>
 
+  <system systemId="http://www.w3.org/1999/xlink.xsd"
+          uri="schema/xlink/xlink.xsd"/>
+
 </catalog>
