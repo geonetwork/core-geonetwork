@@ -32,8 +32,10 @@
     '$scope', '$http', '$rootScope', '$translate',
     function($scope, $http, $rootScope, $translate) {
       $scope.sources = [];
+      $scope.uiConfigurations = [];
       $scope.source = null;
       $scope.selectSource = function(source) {
+        source.uiConfig = source.uiConfig.toString();
         $scope.source = source;
       };
 
@@ -44,6 +46,20 @@
               $scope.isNew = false;
             });
       }
+
+      function loadUiConfigurations() {
+        $scope.uiConfiguration = undefined;
+        $scope.uiConfigurationId = '';
+        $http.get('../api/ui')
+          .success(function(data) {
+            $scope.uiConfigurations = [];
+            for (var i = 0; i < data.length; i ++) {
+              $scope.uiConfigurations.push({
+                id: data[i].id
+              });
+            }
+          });
+      };
 
       $scope.isNew = false;
       $scope.addSubPortal = function() {
@@ -149,6 +165,7 @@
 
 
       loadSources();
+      loadUiConfigurations();
 
     }]);
 })();

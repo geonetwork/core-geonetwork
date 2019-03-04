@@ -252,6 +252,7 @@ public class SourcesApi {
             entity.setUuid(source.getUuid());
             entity.setType(source.getType());
             entity.setFilter(source.getFilter());
+            entity.setUiConfig(source.getUiConfig());
             entity.setLogo(source.getLogo());
             Map<String, String> labelTranslations = source.getLabelTranslations();
             if (labelTranslations != null) {
