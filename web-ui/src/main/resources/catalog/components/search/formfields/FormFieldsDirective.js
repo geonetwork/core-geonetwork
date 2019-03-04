@@ -301,7 +301,7 @@
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
-                    scope.ownerGroup === '') && data) {
+                    scope.ownerGroup === '') && data && scope.groups[0]) {
                     scope.ownerGroup = scope.groups[0].id;
                   }
                   if (optional) {
