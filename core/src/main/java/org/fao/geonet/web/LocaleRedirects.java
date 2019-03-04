@@ -152,6 +152,10 @@ public class LocaleRedirects {
      * @throws ResourceNotFoundException
      */
     private void checkPortalExist(String portal) throws ResourceNotFoundException {
+        if (NodeInfo.DEFAULT_NODE.equals(portal)) {
+            // This is the default node
+            return;
+        }
         final Source one = sourceRepository.findOne(portal);
         if (one == null) {
             List<String> portalList = new ArrayList<>();
