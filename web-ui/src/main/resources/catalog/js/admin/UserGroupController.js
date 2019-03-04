@@ -704,8 +704,12 @@
         $scope.groupUpdated = true;
       };
 
-      loadGroups();
-      loadUsers();
+      $scope.$watch('user', function(n, o) {
+        if (n !== undefined) {
+          loadGroups();
+          loadUsers();
+        }
+      });
     }]);
 
   module.filter('loggedUserIsUseradminOrMore', function() {
