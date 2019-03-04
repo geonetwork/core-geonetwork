@@ -51,8 +51,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @RequestMapping(value = {
-    "/api/ui",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/ui",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/ui"
 })
 @Api(value = "ui",
