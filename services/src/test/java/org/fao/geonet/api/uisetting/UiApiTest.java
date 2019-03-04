@@ -86,7 +86,7 @@ public class UiApiTest extends AbstractServiceIntegrationTest {
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(201));
 
         UiSetting one = uiSettingsRepository.findOne(newUiConfig.getId());
