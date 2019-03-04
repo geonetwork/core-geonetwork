@@ -620,6 +620,10 @@
               });
         });
         promiseStart.then(function(value) {
+          $http.get('../../warninghealthcheck')
+            .success(healthCheckStatus)
+            .error(healthCheckStatus);
+
           return $http.get('../api/site/info/isCasEnabled').
               success(function(data, status) {
                 $scope.isCasEnabled = data;
@@ -740,9 +744,6 @@
           $scope.healthCheck[o.name] = (o.status === 'OK');
         });
       };
-      $http.get('../../warninghealthcheck')
-        .success(healthCheckStatus)
-        .error(healthCheckStatus);
     }]);
 
 })();
