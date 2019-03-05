@@ -228,4 +228,12 @@
 
   <sds-section-custodian>Responsible custodian</sds-section-custodian>
   <sds-addOperation>Add Operation</sds-addOperation>
+
+  <logo>logo</logo>
+  <overview>overview</overview>
+  <thumbnail>thumbnail</thumbnail>
+  <north>north</north>
+  <east>east</east>
+  <south>south</south>
+  <west>west</west>
 </strings>

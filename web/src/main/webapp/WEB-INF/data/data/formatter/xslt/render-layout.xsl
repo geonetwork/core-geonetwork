@@ -113,38 +113,43 @@
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
 
             <section class="gn-md-side-providedby">
-              <h4>
+              <h2>
                 <i class="fa fa-fw fa-cog">&#160;</i>
                 <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
-              </h4>
+              </h2>
               <img class="gn-source-logo"
+                   alt="{$schemaStrings/logo}"
                    src="{$nodeUrl}../images/logos/{$source}.png" />
             </section>
 
             <xsl:if test="$isSocialbarEnabled">
               <section class="gn-md-side-social">
-                <h4>
+                <h2>
                   <i class="fa fa-fw fa-share-square-o">&#160;</i>
                   <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
-                </h4>
+                </h2>
                 <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                  target="_blank"
+                  aria-label="Twitter"
+                  class="btn btn-default">
                   <i class="fa fa-fw fa-twitter">&#160;</i>
                 </a>
-                <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
-                  <i class="fa fa-fw fa-google-plus">&#160;</i>
-                </a>
                 <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                  target="_blank"
+                  aria-label="Facebook"
+                  class="btn btn-default">
                   <i class="fa fa-fw fa-facebook">&#160;</i>
                 </a>
                 <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                  target="_blank"
+                  aria-label="LinkedIn"
+                  class="btn btn-default">
                   <i class="fa fa-fw fa-linkedin">&#160;</i>
                 </a>
                 <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                  target="_blank" class="btn btn-default">
+                  target="_blank"
+                  aria-label="Mail"
+                  class="btn btn-default">
                   <i class="fa fa-fw fa-envelope-o">&#160;</i>
                 </a>
               </section>
@@ -154,10 +159,10 @@
             when in pure HTML mode. -->
             <xsl:if test="$root != 'div'">
               <section class="gn-md-side-viewmode">
-                <h4>
+                <h2>
                   <i class="fa fa-fw fa-eye">&#160;</i>
                   <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
-                </h4>
+                </h2>
                 <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
                   <ul>
                     <li>
@@ -204,10 +209,10 @@
             </xsl:if>
 
             <section class="gn-md-side-associated">
-              <h4>
+              <h2>
                 <i class="fa fa-fw fa-link">&#160;</i>
                 <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
-              </h4>
+              </h2>
               <div gn-related="md"
                    data-user="user"
                    data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
@@ -288,7 +293,7 @@
   <xsl:template mode="render-view"
                 match="section[@xpath]">
     <div id="gn-view-{generate-id()}" class="gn-tab-content">
-      <xsl:apply-templates mode="render-view" select="@xpath"/>
+      <xsl:apply-templates mode="render-view" select="@xpath"/>&#160;
     </div>
   </xsl:template>
 
@@ -300,7 +305,7 @@
         <xsl:variable name="title"
                       select="gn-fn-render:get-schema-strings($schemaStrings, @name)"/>
 
-        <xsl:element name="h{3 + count(ancestor-or-self::*[name(.) = 'section'])}">
+        <xsl:element name="h{1 + count(ancestor-or-self::*[name(.) = 'section'])}">
           <xsl:attribute name="class" select="'view-header'"/>
           <xsl:value-of select="$title"/>
         </xsl:element>

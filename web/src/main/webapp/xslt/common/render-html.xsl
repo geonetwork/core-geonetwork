@@ -46,7 +46,7 @@
                select="'dataset'"/>
 
 
-    <html>
+    <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
         <title><xsl:value-of select="$title"/></title>
         <meta charset="utf-8"/>
@@ -81,13 +81,14 @@
               type="application/opensearchdescription+xml"
               title="{$title}"/>
 
-        <xsl:call-template name="css-load"/>
+        <xsl:call-template name="css-load-nojs"/>
+
       </head>
 
-      <body>
+      <body class="gn-nojs">
         <div class="gn-full">
           <xsl:call-template name="header"/>
-          <div class="container">
+          <div class="container" role="main">
             <xsl:copy-of select="$content"/>
           </div>
           <xsl:call-template name="footer"/>
@@ -108,15 +109,15 @@
         </script>
 
         <script type="text/javascript">
-          //show elements that require js
+          <!-- //show elements that require js -->
           $(".hidden-nojs").removeClass('hidden-nojs');
 
-          // attach click to tab
+          <!-- // attach click to tab -->
           $('.nav-tabs-advanced a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
           });
-          // hide empty tab
+          <!-- // hide empty tab -->
           $('.nav-tabs-advanced a').each(function() {
 
             var tabLink = $(this).attr('href');
@@ -127,10 +128,9 @@
               }
             }
           });
-          // show the first tab
+          <!-- // show the first tab -->
           $('.nav-tabs-advanced a:first').tab('show');
         </script>
-        <xsl:call-template name="css-load"/>
       </body>
     </html>
   </xsl:template>

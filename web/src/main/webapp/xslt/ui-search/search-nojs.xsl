@@ -53,7 +53,7 @@
           for this criteria. For contact, source catalog, an extra panel
           is added with some details about this resource. -->
           <xsl:if test="count($parameters) = 1">
-            <div class="thumbnail text-center">
+            <div class="text-center">
               <xsl:variable name="parameterName"
                             select="$parameters[1]/name()"/>
               <xsl:variable name="parameterLabel"
@@ -61,9 +61,9 @@
 
               <xsl:variable name="parameterValue"
                             select="$parameters[1]/text()"/>
-              <h4>
+              <b>
                 <xsl:value-of select="$parameterLabel"/>
-              </h4>
+              </b>
               <!-- Illustration -->
               <xsl:choose>
                 <xsl:when test="$parameterName = '_groupPublished'">
@@ -94,9 +94,9 @@
                   </h2>
                 </xsl:otherwise>
               </xsl:choose>
-              <h4>
+              <span class="badge">
                 <xsl:value-of select="concat($count, ' ', $t/records)"/>
-              </h4>
+              </span>
             </div>
           </xsl:if>
           &#160;
@@ -105,7 +105,8 @@
         <xsl:if test="$count > 0">
           <xsl:for-each select="/root/search/response[1]/summary">
             <xsl:for-each select="dimension[category]">
-              <h4><xsl:value-of select="gn-fn-core:translate(@label, $t)"/></h4>
+            <details>
+              <summary><xsl:value-of select="gn-fn-core:translate(@label, $t)"/></summary>
 
               <xsl:variable name="field" select="@name"/>
               <ul>
@@ -129,13 +130,15 @@
                     </label>
                   </li>
                 </xsl:for-each>
-              </ul>
+              </ul></details>
             </xsl:for-each>
+            
           </xsl:for-each>
         </xsl:if>
       </div>
       <xsl:if test="$count > 0">
         <div class="col-md-9">
+        
           <xsl:for-each select="/root/search/response[@from]">
 
             <div class="row" style="padding-bottom:20px">
@@ -176,11 +179,11 @@
                    </xsl:if>
                  </div>
 
-                 <div class="row gn-md-title">
-                   <h3 itemprop="name">
+                 <div class="gn-md-title">
+                   <h1 itemprop="name">
                      <a href="{$nodeUrl}api/records/{*[name()='geonet:info']/uuid}"
                         itemprop="url">
-                       <i class="fa gn-icon-{type}" title="{type}">&#160;</i>
+                       <!-- <i class="fa gn-icon-{type}" title="{type}">&#160;</i> -->
                        <xsl:choose>
                          <xsl:when test="title != ''">
                            <xsl:value-of select="title"/>
@@ -190,26 +193,22 @@
                          </xsl:otherwise>
                        </xsl:choose>
                      </a>
-                   </h3>
+                   </h1>
                  </div>
 
-                 <div>
-                   <div class="gn-md-thumbnail">
+                 <div class="clearfix">
+                   <div class="gn-md-thumbnail pull-left">
                      <xsl:for-each select="image[1]">
                        <img class="gn-img-thumbnail"
+                            alt="thumbnail"
                             src="{tokenize(., '\|')[2]}"></img>
                      </xsl:for-each>
                    </div>
-                   <div style="float:left; display:block; width: calc(100% - 162px)">
 
-                     <div class="text-justify gn-md-abstract ellipsis">
-                       <div>
-                         <p>
-                           <xsl:value-of select="abstract"/>
-                         </p>
-                       </div>
-                     </div>
-                   </div>
+                    <p>
+                      <xsl:value-of select="abstract"/>
+                    </p>
+
                  </div>
                 </li>
               </xsl:for-each>
