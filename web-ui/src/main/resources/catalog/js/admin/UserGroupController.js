@@ -705,7 +705,7 @@
       };
 
       $scope.$watch('user', function(n, o) {
-        if (n !== undefined) {
+        if (n && n.profile) {
           loadGroups();
           loadUsers();
         }
