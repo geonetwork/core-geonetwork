@@ -177,8 +177,6 @@ public class Aligner extends BaseAligner<CswParams> {
         processParams = filter.two();
 
         insertOrUpdate(records, errors);
-        dataMan.forceIndexChanges();
-
         log.debug("End of alignment for : " + params.getName());
 
         return result;
@@ -225,6 +223,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
                 }
 
+                dataMan.forceIndexChanges();
                 result.totalMetadata++;
             } catch (Throwable t) {
                 errors.add(new HarvestError(this.context, t));
@@ -258,6 +257,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 result.locallyRemoved++;
             }
         }
+        dataMan.forceIndexChanges();
         
         return result;
 	}
