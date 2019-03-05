@@ -68,9 +68,9 @@
           // Retrieve last status to set it in the form
           function init() {
             if (scope.statusType === defaultType) {
-              return $http.get('../api/records/'
-                + metadataId + '/status/'
-                + scope.statusType + '/last').
+              return $http.get('../api/records/' +
+                  metadataId + '/status/' +
+                  scope.statusType + '/last').
                   success(function(data) {
                     scope.status =
                        data !== 'null' ? data.status : null;
@@ -79,10 +79,10 @@
                   });
             } else {
               return $http.get('../api/status/' + scope.statusType).
-              success(function(data) {
-                scope.status = data;
-                scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
-              });
+                  success(function(data) {
+                    scope.status = data;
+                    scope.newStatus = {status: scope.task ? scope.task.id : 0, owner: null, dueDate: null, changeMessage: ''};
+                  });
             }
           };
 
@@ -95,7 +95,7 @@
             return $http.put('../api/records/' + metadataId +
                 '/status', scope.newStatus
             ).then(
-                function(data) {
+                function(response) {
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {
@@ -103,11 +103,11 @@
                        'metadataStatusUpdatedWithNoErrors'),
                     timeout: 2,
                     type: 'success'});
-                }, function(data) {
+                }, function(response) {
                   scope.$emit('metadataStatusUpdated', false);
                   scope.$emit('StatusUpdated', {
                     title: $translate.instant('metadataStatusUpdatedErrors'),
-                    error: data,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });
@@ -188,7 +188,7 @@
           });
 
           scope.$watch('currentCategories', function(newvalue, oldvalue) {
-              init();
+            init();
           });
 
           var init = function() {
@@ -313,7 +313,7 @@
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate.instant('assignCategoryError',
                         {category: c.name}),
-                    error: response.error,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });
@@ -463,7 +463,7 @@
                   }
                 });
                 scope.userGroups = uniqueUserGroups;
-                if(scope.userGroups && Object.keys(scope.userGroups).length>0) {
+                if (scope.userGroups && Object.keys(scope.userGroups).length > 0) {
                   scope.userGroupDefined = true;
                 } else {
                   scope.userGroupDefined = false;

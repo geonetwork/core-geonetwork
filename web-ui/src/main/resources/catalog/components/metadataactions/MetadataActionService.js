@@ -299,9 +299,9 @@
             angular.isDefined(md) ? undefined : bucket,
             onOrOff, $rootScope.user)
             .then(
-            function(data) {
-              if (data !== '') {
-                scope.processReport = data;
+            function(response) {
+              if (response.data !== '') {
+                scope.processReport = response.data;
 
                 // A report is returned
                 gnUtilityService.openModal({
@@ -329,13 +329,13 @@
               if (md) {
                 md.publish();
               }
-            }, function(data) {
+            }, function(response) {
               scope.$emit('PrivilegesUpdated', false);
               scope.$broadcast('operationOnSelectionStop');
               scope.$emit('StatusUpdated', {
                 title: onOrOff ? translations.metadataPublishedError :
                   translations.metadataUnpublishedError,
-                error: data,
+                error: response.data,
                 timeout: 0,
                 type: 'danger'});
             });
@@ -418,8 +418,8 @@
        * @param {Object} crsDetails expected keys: code, codeSpace, name
        */
       this.formatCrs = function(crsDetails) {
-        var crs = (crsDetails.codeSpace ? (crsDetails.codeSpace + ':') : '') +
-          crsDetails.code;
+        var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ':') +
+            crsDetails.code;
         if (crsDetails.name) return crsDetails.name + ' (' + crs + ')';
         else return crs;
       };

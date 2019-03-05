@@ -1,6 +1,28 @@
 <div class="gn-alerts">
-  <div class="alert" role="alert" data-ng-class="'alert-' + a.type"
+  <div class="alert fade in" role="alert" data-ng-class="'alert-' + a.type"
        data-ng-repeat="a in alerts">
-    <span data-ng-bind-html="a.msg"></span>
+    <button type="button" class="close" data-ng-click="closeAlert($index)">
+      <i class="fa fa-times"/>
+    </button>
+
+    <h4 data-ng-hide="!status.title">{{status.title}}</h4>
+    <p data-ng-hide="!a.msg" data-ng-bind-html="a.msg"></p>
+    <!-- TODO: Check to use a better way to handle this -->
+    <p data-ng-hide="!gnCurrentEdit" data-translate="linkToXmlTab"
+       data-translate-values="{metadataId: gnCurrentEdit.id}"></p>
+
+    <div data-ng-hide="!a.error">
+      {{a.error['class'] | translate}}
+      <p data-ng-show="a.error.message">{{a.error.message}}</p>
+      <p data-ng-show="a.error.description">{{a.error.description}}</p>
+
+      <code data-ng-hide="!a.error.stack" class="gn-stack">{{a.error.stack}}</code>
+    </div>
+
+    <button type="button" class="btn btn-danger"
+            data-ng-click="closeAlert($index)"
+            data-ng-show="a.type === 'danger'">
+      {{'close' | translate}}
+    </button>
   </div>
 </div>

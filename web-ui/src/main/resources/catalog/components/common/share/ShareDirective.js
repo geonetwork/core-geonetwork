@@ -24,9 +24,9 @@
 (function() {
   goog.provide('gn_share_directive');
 
-  
+
   goog.require('gn_popup');
-goog.require('gn_share_service');
+  goog.require('gn_share_service');
 
   var module = angular.module('gn_share_directive', ['gn_share_service', 'gn_popup']);
 
@@ -156,9 +156,9 @@ goog.require('gn_share_service');
                 scope.privileges,
                 scope.user,
                 replace).then(
-                function(data) {
-                  if (data !== '') {
-                    scope.processReport = data;
+                function(response) {
+                  if (response.data !== '') {
+                    scope.processReport = response.data;
 
                     // A report is returned
                     gnUtilityService.openModal({
@@ -178,11 +178,11 @@ goog.require('gn_share_service');
                       type: 'success'});
                   }
 
-                }, function(data) {
+                }, function(response) {
                   scope.$emit('PrivilegesUpdated', false);
                   scope.$emit('StatusUpdated', {
                     title: translations.privilegesUpdatedError,
-                    error: data,
+                    error: response.data,
                     timeout: 0,
                     type: 'danger'});
                 });

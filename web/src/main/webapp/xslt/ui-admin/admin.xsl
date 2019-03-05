@@ -30,10 +30,6 @@
     <div class="container-fluid" data-ng-controller="GnAdminController" data-ng-show="authenticated"
          data-ng-view="">
     </div>
-
-    <!-- Make this a directive TODO -->
-    <div ng-include="'{$uiResourcesPath}templates/info.html'">
-    </div>
   </xsl:template>
 
 </xsl:stylesheet>
