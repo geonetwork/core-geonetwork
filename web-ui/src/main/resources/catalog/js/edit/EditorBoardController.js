@@ -83,7 +83,7 @@
         $scope.searchObj.params['_owner'] = $scope.user.id;
       };
 
-      var unsetOwner = function(callback) {
+      var unsetOwner = function() {
         delete $scope.searchObj.params['_owner'];
       };
 
