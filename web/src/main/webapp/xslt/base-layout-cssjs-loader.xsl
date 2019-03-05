@@ -58,6 +58,11 @@
           rel="stylesheet" media="screen"/>
   </xsl:template>
 
+  <xsl:template name="css-load-nojs">
+    <link href="{/root/gui/url}/static/{$customFilename}.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
+          media="screen"/>
+  </xsl:template>
+
 
   <xsl:template name="javascript-load">
 
