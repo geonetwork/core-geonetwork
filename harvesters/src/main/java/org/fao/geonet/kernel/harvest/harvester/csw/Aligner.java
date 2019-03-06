@@ -263,7 +263,7 @@ public class Aligner extends BaseAligner<CswParams> {
 	}
 
 
-    private void addMetadata(RecordInfo ri, Integer ownerId, Integer groupId, String uuid) throws Exception {
+    private void addMetadata(RecordInfo ri, String uuid) throws Exception {
         if (cancelMonitor.get()) {
             return;
         }
@@ -301,7 +301,7 @@ public class Aligner extends BaseAligner<CswParams> {
         //
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
-        ownerId = getOwner();
+        Integer ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
