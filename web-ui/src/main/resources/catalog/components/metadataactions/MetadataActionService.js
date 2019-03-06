@@ -260,7 +260,7 @@
               '" gn-transfer-md-owner="' + ownerId + '" ' +
               '" gn-transfer-md-group-owner="' + groupOwner + '" ' +
               'selection-bucket="' + bucket + '"></div>'
-        }, scope, 'TransferOwnership');
+        }, scope, 'TransferOwnershipDone');
       };
       /**
        * Duplicate the given metadata. Open the editor in new page.
