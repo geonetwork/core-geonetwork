@@ -257,6 +257,24 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Template for boolean fields that can be empty: no gco:Boolean subelement and @gco:nilReason attribute -->
+  <!-- Uncomment and add required fields to be handled in the match clause -->
+  <!--<xsl:template mode="render-field" match="gmd:pass[@gco:nilReason and not(gco:Boolean)]"
+                priority="100">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
+    <dl>
+      <dt>
+        <xsl:value-of select="if ($fieldName)
+                                  then $fieldName
+                                  else tr:node-label(tr:create($schema), name(), null)"/>
+      </dt>
+      <dd>
+        <xsl:value-of select="$schemaStrings/nilValue"/>
+      </dd>
+    </dl>
+  </xsl:template>-->
+
   <xsl:template mode="render-field"
                 match="*[gco:CharacterString]|gml:beginPosition[. != '']|gml:endPosition[. != '']"
                 priority="50">
@@ -795,7 +813,7 @@
 
   <xsl:template mode="render-value"
                 match="gco:Integer|gco:Decimal|
-       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
+       gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gml:beginPosition|gml:endPosition">
 
@@ -821,6 +839,21 @@
     <xsl:if test="@uom">
       &#160;<xsl:value-of select="@uom"/>
     </xsl:if>
+  </xsl:template>
+
+  <!-- Translate boolean values -->
+  <xsl:template mode="render-value"
+                match="gco:Boolean">
+
+    <xsl:choose>
+      <xsl:when test=". = 'true'">
+        <xsl:value-of select="$schemaStrings/trueValue"/>
+      </xsl:when>
+      <xsl:when test=". = 'false'">
+        <xsl:value-of select="$schemaStrings/falseValue"/>
+      </xsl:when>
+
+    </xsl:choose>
   </xsl:template>
 
   <!-- filename -->
