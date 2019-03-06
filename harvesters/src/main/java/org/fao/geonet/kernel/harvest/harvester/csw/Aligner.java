@@ -40,7 +40,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -59,7 +58,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -70,6 +68,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -222,8 +221,9 @@ public class Aligner extends BaseAligner<CswParams> {
                     updateMetadata(ri, id, false);
 
                 }
-
-                dataMan.forceIndexChanges();
+                
+                context.getBean(LuceneIndexLanguageTracker.class).commit();
+                
                 result.totalMetadata++;
             } catch (Throwable t) {
                 errors.add(new HarvestError(this.context, t));
