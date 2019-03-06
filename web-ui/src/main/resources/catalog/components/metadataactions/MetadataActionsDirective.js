@@ -419,7 +419,9 @@
    */
   module.directive('gnTransferOwnership', [
     '$translate', '$http', 'gnHttp', '$rootScope',
-    function($translate, $http, gnHttp, $rootScope) {
+    'gnUtilityService',
+    function($translate, $http, gnHttp, $rootScope,
+             gnUtilityService) {
       return {
         restrict: 'A',
         replace: false,
@@ -481,13 +483,26 @@
                 'userIdentifier=' + scope.selectedUserGroup.userId +
                 '&groupIdentifier=' + scope.selectedUserGroup.groupId)
                 .then(function(r) {
-                  $rootScope.$broadcast('search');
-                  $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate.instant('transfertPrivilegesFinished', {
-                      metadata: r.data.numberOfRecordsProcessed
-                    }),
-                    timeout: 2,
-                    type: 'success'});
+                  var msg = $translate.instant('transfertPrivilegesFinished', {
+                    metadata: r.data.numberOfRecordsProcessed
+                  });
+
+                  scope.processReport = r.data;
+
+                  // A report is returned
+                  gnUtilityService.openModal({
+                    title: msg,
+                    content: '<div gn-batch-report="processReport"></div>',
+                    className: 'gn-privileges-popup',
+                    onCloseCallback: function() {
+                      if (bucket != 'null') {
+                        scope.$emit('search', true);
+                        scope.$broadcast('operationOnSelectionStop');
+                      }
+                      scope.$emit('TransferOwnershipDone', true);
+                      scope.processReport = null;
+                    }
+                  }, scope, 'TransferOwnershipDone');
                 });
           };
         }
