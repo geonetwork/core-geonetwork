@@ -203,4 +203,8 @@ Zložte identifikátor zdroja pomocou adresy URL katalógu a identifikátora
   <sds-limitation>Obmedzenie</sds-limitation>
   <sds-section-custodian>Responsible custodian</sds-section-custodian>
   <sds-addoperation>Add Operation</sds-addoperation>
+
+  <trueValue>Yes</trueValue>
+  <falseValue>No</falseValue>
+  <nilValue>Nil</nilValue>
 </strings>
