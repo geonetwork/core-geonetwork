@@ -88,6 +88,8 @@ import com.google.common.collect.Maps;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.codec.digest.DigestUtils;
+
 
 public class Importer {
     @Deprecated
@@ -377,13 +379,19 @@ public class Importer {
                         recordSource = context.getBean(SettingManager.class).getSiteId();
                     } else {
                         // --- If siteId is not set, set to current node
-                        if (StringUtils.isEmpty(source)) {
-                            recordSource = context.getBean(SettingManager.class).getSiteId();
-                        }
                         sourceName = general.getChildText("siteName");
+                        recordSource = general.getChildText("siteId");
+                        if (StringUtils.isEmpty(recordSource)) {
+                            recordSource = context.getBean(SettingManager.class).getSiteId();
+                        } else if("dummy".equals(recordSource)) { 
+                            // fix issue about default siteId
+                            recordSource = DigestUtils.md5Hex(sourceName.getBytes());
+                            Log.warning(Geonet.MEF, "Dummy sourceId for '"+sourceName+"' replaced with " + recordSource);
+                        }
+                        
                         sourceTranslations = translationXmlToLangMap(general.getChildren("siteTranslations"));
                         if (Log.isDebugEnabled(Geonet.MEF))
-                            Log.debug(Geonet.MEF, "Assign to catalog: " + source);
+                            Log.debug(Geonet.MEF, "Assign to catalog: " + recordSource);
                     }
                     rating = general.getChildText("rating");
                     popularity = general.getChildText("popularity");
@@ -405,11 +413,11 @@ public class Importer {
 
 
                 importRecord(uuid, uuidAction, md, schema, index,
-                    source, sourceName, sourceTranslations,
+                    recordSource, sourceName, sourceTranslations,
                     context, metadataIdMap, createDate,
                     changeDate, groupId, isTemplate);
 
-                if (fc.size() != 0 && fc.get(index) != null) {
+                if (!fc.isEmpty() && fc.get(index) != null) {
                     // UUID is set as @uuid in root element
                     uuid = UUID.randomUUID().toString();
 
@@ -423,7 +431,7 @@ public class Importer {
                     boolean ufo = false, indexImmediate = false;
                     String fcId = dm.insertMetadata(
                         context, "iso19110", fc.get(index), uuid,
-                        userid, group, source, isTemplate.codeString,
+                        userid, group, recordSource, isTemplate.codeString,
                         docType, category, createDate, changeDate, ufo, indexImmediate);
 
                     if (Log.isDebugEnabled(Geonet.MEF))
