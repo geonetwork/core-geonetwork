@@ -1259,6 +1259,7 @@
     "styleVariable-gnMenubarBackgroundActive": "Background when active",
     "styleVariable-gnMenubarColor": "Color",
     "styleVariable-gnMenubarColorHover": "Color on mouse hover",
+    "styleVariable-gnMenubarBackgroundHover": "Background color on hover",
     "styleVariable-gnMenubarBorderColor": "Border color",
     "gnBottombarCss": "Bottombar",
     "styleVariable-gnBottombarBackground": "Background",

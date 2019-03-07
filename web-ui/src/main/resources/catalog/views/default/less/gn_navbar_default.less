@@ -9,12 +9,14 @@
 .navbar-default {
   background-color: @gn-menubar-background;
   border-color: @gn-menubar-border-color;
+  border-width: 0 0 1px 0;
   z-index: 100;
   .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
     height: @gn-menubar-height;
     color: @gn-menubar-color;
     &:hover, &:focus {
       color: @gn-menubar-color-hover;
+      background-color: @gn-menubar-background-hover;
     }
   }
   .dropdown-menu {
@@ -23,6 +25,9 @@
         padding: 8px 20px;
       }
     }
+  }
+  .navbar-nav > .active > a {
+    background-color: @gn-menubar-background-active;
   }
   .gn-name.gn-truncate {
     @media (min-width: @screen-lg-min) {
@@ -171,8 +176,17 @@
       padding-right: 0;
     }
   }
-
+  @media (min-width: @screen-sm-min) {
+    li.dropdown-hover {
+      &.open:not(.active) > .dropdown-toggle {
+        &:hover, &:focus {
+          background-color: @gn-menubar-background-hover;
+        }
+      }
+    }
+  }
 }
+
 
 @media (max-width: @grid-float-breakpoint) {
   .navbar-nav {
