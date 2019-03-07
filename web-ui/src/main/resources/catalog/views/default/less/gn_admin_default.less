@@ -154,7 +154,7 @@ ul.gn-resultview li.list-group-item {
     }
     .main {
       margin-left: @gn-sidebar-width;
-      padding: 25px 10px 10px 10px;
+      padding: 25px 10px 50px 10px;
       @media (max-width: @screen-xs-max) {
         margin-left: 0;
       }
@@ -281,6 +281,47 @@ ul.gn-resultview li.list-group-item {
           a {
             &:hover {
               text-decoration: none;
+            }
+          }
+        }
+      }
+    }
+    // settings page
+    [data-ng-controller="GnSystemSettingsController"] {
+      #gn-settings {
+        margin-top: 15px;
+      }
+      fieldset, [data-ng-show="uiConfiguration"] {
+        h1 {
+          font-size: 24px;
+          margin-bottom: 15px;
+          margin-top: 0;
+        }
+        fieldset {
+          padding: 10px;
+          border: 1px solid @panel-default-border;
+          border-bottom-left-radius: @gn-border-radius;
+          border-bottom-right-radius: @gn-border-radius;
+          margin-bottom: 15px;
+          legend {
+            margin: -15px -11px 0 -11px;
+            background-color: @panel-default-heading-bg;
+            border: 1px solid @panel-default-border;
+            padding: 10px;
+            width: calc(~"100% + 22px");
+            font-size: 14px;
+            border-top-left-radius: @gn-border-radius;
+            border-top-right-radius: @gn-border-radius;
+            label {
+              padding-top: 0;
+              font-size: 14px;
+              font-weight: normal;
+            }
+          }
+          .form-group {
+            margin-bottom: 5px;
+            .control-label {
+              margin-bottom: 5px;
             }
           }
         }
