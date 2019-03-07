@@ -45,6 +45,46 @@ INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLe
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (61,'recorddeleted','y', 61, 'event', null);
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (62,'recordimported','y', 62, 'event', null);
 
+
+
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'eng','Record created.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'eng','Record updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'eng','Attachment {{h.currentStatus}} added.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'eng','Attachment {{h.previousStatus}} deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'eng','Owner changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'eng','Group owner changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'eng','Privileges updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'eng','Category changed. Now categories are {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'eng','Validation triggered. Exit status is now {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'eng','Status changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'eng','Record updated by process {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'eng','Record deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'eng','Record imported.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'eng','DOI creation request');
+
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'fre','Fiche créée.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'fre','Fiche mise à jour.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'fre','Document {{h.item1}} ajouté.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'fre','Document {{h.item1}} supprimé.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'fre','Auteur {{h.item1}} remplacé par {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'fre','Groupe {{h.item1}} remplacé par {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'fre','Accès mis à jour.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'fre','Changement de catégorie. Les catégories sont {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'fre','Fiche validée. La validation est maintenant {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'fre','Changement de status de {{h.item1}} à {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'fre','Fiche mise à jour par le processus {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'fre','Fiche supprimée.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'fre','Fiche importée.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'fre','Demande de création de DOI');
+
+
+
+
+
+
+
+
+
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/vcs/enable', 'false', 2, 9161, 'n');
 
 
