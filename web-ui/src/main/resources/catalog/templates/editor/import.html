@@ -235,7 +235,7 @@
                     <input id="gn-import-publish-checkbox"
                            type="checkbox"
                            name="publishToAll"
-                           data-ng-disabled="!user.isReviewerOrMore() || file_type === 'mef'"
+                           data-ng-disabled="!user.isReviewerOrMore()"
                            data-ng-model="params.publishToAll"/>
                     <span id="gn-import-publish-label" data-translate="">publish</span>
                   </label>
@@ -250,7 +250,6 @@
                     <input id="gn-import-assigncatalog-checkbox"
                            type="checkbox"
                            name="assignToCatalog"
-                           data-ng-disabled="file_type !== 'mef'"
                            data-ng-model="params.assignToCatalog"/>
                     <span id="gn-import-assigncatalog-label" data-translate="">assignToCatalog</span>
                   </label>
