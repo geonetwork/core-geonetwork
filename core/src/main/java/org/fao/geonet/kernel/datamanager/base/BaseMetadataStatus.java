@@ -1,9 +1,13 @@
 package org.fao.geonet.kernel.datamanager.base;
 
+import java.sql.Date;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
@@ -92,7 +96,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public String getCurrentStatus(int metadataId) throws Exception {
         MetadataStatus status = getStatus(metadataId);
         if (status == null) {
-            return StatusValue.Status.UNKNOWN;
+            return StatusValue.Status.DRAFT;
         }
 
         return String.valueOf(status.getId().getStatusId());
@@ -166,6 +170,71 @@ public class BaseMetadataStatus implements IMetadataStatus {
                 String.format("Workflow automatically enabled for record in group %s. Record status is set to %s.", groupName,
                     StatusValue.Status.DRAFT));
         }
+    }
+
+    /**
+     * Safely change the status if the current is compatible.
+     */
+    @Override
+    public void changeCurrentStatus(Integer userId, Integer metadataId, Integer newStatus) throws Exception {
+
+        // Check compatible workflow status
+        String currentState = this.getCurrentStatus(metadataId);
+        String nextStatus = String.valueOf(newStatus);
+
+        if(!verifyAllowedStatusTransition(currentState, nextStatus)) {
+            throw new IllegalArgumentException("The workflow status change requested is not allowed");
+        }
+
+        MetadataStatus metatatStatus = new MetadataStatus();
+        metatatStatus.setChangeMessage("");
+        metatatStatus.setStatusValue(statusValueRepository.findOne(newStatus));
+
+        MetadataStatusId mdStatusId = new MetadataStatusId().setStatusId(newStatus)
+                .setMetadataId(metadataId)
+                .setChangeDate(new ISODate(System.currentTimeMillis()))
+                .setUserId(userId);
+
+        metatatStatus.setId(mdStatusId);
+
+        metadataStatusRepository.save(metatatStatus);
+        metadataIndexer.indexMetadata(metadataId + "", true, null);
+    }
+
+    // Utility to verify workflow status transitions
+    public static boolean verifyAllowedStatusTransition(String currentState, String nextStatus) {
+
+        HashSet<String> draftCompatible = new HashSet<>();
+        draftCompatible.add(StatusValue.Status.DRAFT);
+        draftCompatible.add(StatusValue.Status.SUBMITTED);
+        draftCompatible.add(StatusValue.Status.RETIRED);
+
+        HashSet<String> submittedCompatible = new HashSet<>();
+        submittedCompatible.add(StatusValue.Status.DRAFT);
+        submittedCompatible.add(StatusValue.Status.SUBMITTED);
+        submittedCompatible.add(StatusValue.Status.APPROVED);
+
+        HashSet<String> approvedCompatible = new HashSet<>();
+        approvedCompatible.add(StatusValue.Status.SUBMITTED);
+        approvedCompatible.add(StatusValue.Status.APPROVED);
+
+        HashSet<String> retiredCompatible = new HashSet<>();
+        retiredCompatible.add(StatusValue.Status.DRAFT);
+        retiredCompatible.add(StatusValue.Status.SUBMITTED);
+        retiredCompatible.add(StatusValue.Status.APPROVED);
+        retiredCompatible.add(StatusValue.Status.RETIRED);
+
+        if(StatusValue.Status.DRAFT.equals(currentState) && draftCompatible.contains(nextStatus)) {
+            return true;
+        } else if(StatusValue.Status.SUBMITTED.equals(currentState) && submittedCompatible.contains(nextStatus)) {
+            return true;
+        } else if(StatusValue.Status.APPROVED.equals(currentState) && approvedCompatible.contains(nextStatus)) {
+            return true;
+        } else if(StatusValue.Status.RETIRED.equals(currentState) && retiredCompatible.contains(nextStatus)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

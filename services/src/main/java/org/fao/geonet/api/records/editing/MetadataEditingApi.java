@@ -37,17 +37,27 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
@@ -210,7 +220,14 @@ public class MetadataEditingApi {
         @RequestParam(
             defaultValue = "false"
         )
-            boolean minor,
+        boolean minor,
+        @ApiParam(
+            value = "Submit for review directly after save."
+        )
+        @RequestParam(
+            defaultValue = StatusValue.Status.DRAFT
+        )
+        String status,
         @ApiParam(
             value = "Save current edits."
         )
@@ -327,6 +344,35 @@ public class MetadataEditingApi {
             if (forceValidationOnMdSave) {
                 validator.doValidate(metadata, context.getLanguage());
                 reindex = true;
+            }
+
+            // Automatically change the workflow state after save
+            boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+            if(isEnabledWorkflow) {
+                if(status.equals(StatusValue.Status.SUBMITTED)) {
+                    // Only editors can submit a record
+                    if(session.getProfile().equals(Profile.Editor)) {
+                        Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
+                        BaseMetadataStatus statusRepository = ApplicationContextHolder.get().getBean(BaseMetadataStatus.class);
+                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(), changeToStatus);
+                    } else {
+                        throw new SecurityException(String.format(
+                                "Only users with editor profile can submit."
+                                ));
+                    }
+                }
+                if(status.equals(StatusValue.Status.APPROVED)) {
+                    // Only reviewers can approve
+                    if(session.getProfile().equals(Profile.Reviewer)) {
+                        Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
+                        BaseMetadataStatus statusRepository = ApplicationContextHolder.get().getBean(BaseMetadataStatus.class);
+                        statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(), changeToStatus);
+                    } else {
+                        throw new SecurityException(String.format(
+                                "Only users with review profile can approve."
+                                ));
+                    }
+                }
             }
 
             boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");

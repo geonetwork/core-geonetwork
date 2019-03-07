@@ -196,8 +196,7 @@ public class DefaultStatusActions implements StatusActions {
         String statusId = status.getId().getStatusId() + "";
         if (statusId.equals(StatusValue.Status.APPROVED)) {
             // setAllOperations(mid);
-        } else if (statusId.equals(StatusValue.Status.DRAFT) ||
-            statusId.equals(StatusValue.Status.REJECTED)) {
+        } else if (statusId.equals(StatusValue.Status.DRAFT)) {
             unsetAllOperations(status.getId().getMetadataId());
         }
     }

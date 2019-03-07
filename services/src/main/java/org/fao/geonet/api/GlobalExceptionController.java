@@ -82,6 +82,15 @@ public class GlobalExceptionController {
     }
 
     @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler({
+        SecurityException.class
+    })
+    public Object securityHandler(final Exception exception) {
+        return new ApiError("forbidden", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         MaxUploadSizeExceededException.class
