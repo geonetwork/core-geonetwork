@@ -179,7 +179,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/srv/apiError/code").string("resource_not_found"));
+            .andExpect(xpath("/apiError/code").string("resource_not_found"));
 
 
         for (String contentTypeWithoutBody : contentTypeWithoutBodyList) {
@@ -218,16 +218,16 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/srv/apiError/code").string(equalTo("forbidden")))
-            .andExpect(xpath("/srv/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
+            .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
+            .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid)
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_XHTML_XML_VALUE))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(MediaType.APPLICATION_XHTML_XML_VALUE))
-            .andExpect(xpath("/srv/apiError/code").string(equalTo("forbidden")))
-            .andExpect(xpath("/srv/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
+            .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
+            .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
 
 
         for (String contentTypeWihoutBody : contentTypeWithoutBodyList) {
@@ -269,10 +269,10 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         MockMvcBuilders.webAppContextSetup(this.wac).build();
         loginAsAdmin();
         SpringLocalServiceInvoker toTest = super._applicationContext.getBean(SpringLocalServiceInvoker.class);
-        super._applicationContext.getBean(NodeInfo.class).setId("theNode");
+        super._applicationContext.getBean(NodeInfo.class).setId("srv");
         toTest.init();
 
-        Object resp = toTest.invoke("local://theNode/api/records/" + uuid + "/formatters/xml");
+        Object resp = toTest.invoke("local://srv/api/records/" + uuid + "/formatters/xml");
 
         assertEquals("MD_Metadata", ((Element)resp).getName());
     }
@@ -402,8 +402,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/srv/apiError/code").string(equalTo("forbidden")))
-            .andExpect(xpath("/srv/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
+            .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
+            .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
     }
 
     @Test
@@ -424,7 +424,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/srv/apiError/code").string("resource_not_found"));
+            .andExpect(xpath("/apiError/code").string("resource_not_found"));
     }
 
     @Test
@@ -535,7 +535,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isNotFound())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/srv/apiError/code").string("resource_not_found"));
+            .andExpect(xpath("/apiError/code").string("resource_not_found"));
 
     }
 
@@ -557,8 +557,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isForbidden())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/srv/apiError/code").string(equalTo("forbidden")))
-            .andExpect(xpath("/srv/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
+            .andExpect(xpath("/apiError/code").string(equalTo("forbidden")))
+            .andExpect(xpath("/apiError/message").string(equalTo(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)));
     }
 
     @Test

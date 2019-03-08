@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.repository.SourceRepository;
@@ -90,7 +91,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
-            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "creationDate"))
             .create();
         String json = gson.toJson(source);
 
@@ -102,7 +103,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(204));
     }
 
@@ -118,7 +119,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
-            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "creationDate"))
             .create();
         String json = gson.toJson(sourceToUpdate);
 
@@ -130,7 +131,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.parseMediaType("text/plain")))
             .andExpect(status().is(404));
     }
 
@@ -138,6 +139,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
         Source source = new Source();
         source.setName("source-test");
         source.setUuid("source-uuid");
+        source.setCreationDate(new ISODate());
         source.setType(SourceType.harvester);
         sourceRepo.save(source);
     }
