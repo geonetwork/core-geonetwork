@@ -395,9 +395,11 @@
 
               // make the filter case insensitive, ie : abc => [aA][bB][cC]
               // only alpha regex
-              var lettersRegexOnly = /^[a-zA-Z]+$/;
+              var lettersRegexOnly = /^[A-Za-z\u00C0-\u017F]+$/;
               filter = filter.replace(/./g, function (match) {
-                return lettersRegexOnly.test(match) ? '[' + match.toLowerCase() + match.toUpperCase() + ']': match;
+                var upperMatch = scope.accentify(match).toUpperCase();
+                var lowerMatch = scope.accentify(match).toLowerCase();
+                return lettersRegexOnly.test(match) ? '[' + lowerMatch + upperMatch + ']': match;
               });
 
               aggs[facetName] = {
@@ -425,6 +427,21 @@
                   });
             }
           };
+          scope.accentify = function(str) {
+            var searchStr = str.toLocaleLowerCase()
+            var accents = {
+                a: 'àáâãäåæa',
+                c: 'çc',
+                e: 'èéêëæe',
+                i: 'ìíîïi',
+                n: 'ñn',
+                o: 'òóôõöøo',
+                s: 'ßs',
+                u: 'ùúûüu',
+                y: 'ÿy'
+              }
+            return accents.hasOwnProperty(searchStr) ? accents[searchStr] : str
+          }
 
           scope.getMore = function(field) {
             indexObject.getFacetMoreResults(field).then(function(response) {
