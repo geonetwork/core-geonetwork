@@ -219,6 +219,7 @@
                 break;
               case 'emodnet-hydrography':
               case 'emodnet-bathymetry':
+              case 'emodnet-bathymetry-portal':
                 url = 'md.format.xml?root=div&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + uuid;
                 break;
               case 'seadatanet':
