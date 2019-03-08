@@ -116,7 +116,9 @@
           scope.buildEditorUrl = function(md) {
             var baseUrl = '#/metadata/' + md['geonet:info'].id;
             if (md['geonet:info'].schema == 'iso19115-3' ||
+                md['geonet:info'].schema == 'iso19115-3.2018' ||
                 md['geonet:info'].schema == 'iso19139' ||
+                md['geonet:info'].schema == 'iso19110' ||
                 md['geonet:info'].schema == 'dublin-core') {
               return baseUrl;
             } else {
