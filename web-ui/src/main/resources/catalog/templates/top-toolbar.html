@@ -3,13 +3,13 @@
     <a class="hidden-sm hidden-md hidden-lg pull-left gn-logo-link" data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}" data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}">
       <img class="gn-logo"
            alt="{{'siteLogo' | translate}}"
-           data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
+           data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
     </a>
     <a class="hidden-sm hidden-md hidden-lg btn btn-link pull-left"
        data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
       <span class="gn-name"
             data-ng-class="authenticated && user.isEditorOrMore() ? 'gn-truncate' : ''"
-            title="{{info['system/site/name']}}">{{info['system/site/name']}}</span>
+            title="{{info['system/site/name']}}">{{info['node/name'] || info['system/site/name']}}</span>
     </a>
     <button type="button"
             class="navbar-toggle collapsed"

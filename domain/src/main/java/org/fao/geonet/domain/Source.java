@@ -66,7 +66,7 @@ public class Source extends Localized {
     private SourceType type = null;
     private String logo;
     private String filter;
-    private Integer uiConfig;
+    private String uiConfig;
     private ISODate creationDate = new ISODate();
 
     /**
@@ -217,11 +217,11 @@ public class Source extends Localized {
      * Only applies to subportal.
      * @return
      */
-    public Integer getUiConfig() {
+    public String getUiConfig() {
         return uiConfig;
     }
 
-    public Source setUiConfig(Integer uiConfig) {
+    public Source setUiConfig(String uiConfig) {
         this.uiConfig = uiConfig;
         return this;
     }

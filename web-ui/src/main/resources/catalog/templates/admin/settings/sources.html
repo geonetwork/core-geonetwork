@@ -133,7 +133,7 @@
           <label data-translate="">sourceUiConfig</label>
           <select id="uiConfigurationList"
                   class="form-control"
-                  data-ng-options="key as c.id for (key, c) in uiConfigurations | orderBy: 'id'"
+                  data-ng-options="c.id as c.id for (key, c) in uiConfigurations | orderBy: 'id'"
                   data-ng-model="source.uiConfig"></select>
           <p class="help-block" data-translate="">sourceUiConfig-help</p>
         </div>

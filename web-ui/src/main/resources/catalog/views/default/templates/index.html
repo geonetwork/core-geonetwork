@@ -6,7 +6,7 @@
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="{{gnCfg.mods.header.logoInHeaderPosition}}"
                alt="{{'siteLogo' | translate}}"
-               data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
+               data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
           </a>
       </div>
     </div>

@@ -24,6 +24,7 @@
 package org.fao.geonet.util;
 
 import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -54,8 +56,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
@@ -66,8 +71,10 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -87,6 +94,7 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
@@ -177,23 +185,37 @@ public final class XslUtil {
     }
 
     /**
-     * Get the UI configuration. Return the JSON string.
-     * @param key Optional key, if null, return a default configuration nammed 'srv'
-     *            if exist. If not, empty config is returned.
-     * @return
+     * Get the UI configuration. UI configuration can be defined
+     * at portal level (see Source table) or as a UI (see settings_iu table).
+     *
+     *
+     * @param key Optional key, if null,
+     *            check the portal UI config and if null,
+     *            return a default configuration named 'srv' if exist.
+     *            If not, empty config is returned.
+     *
+     * @return Return the JSON config as string or an empty object.
      */
     public static String getUiConfiguration(String key) {
-        final String defaultUiConfiguration = "srv";
+        final String defaultUiConfiguration = NodeInfo.DEFAULT_NODE;
+        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        SourceRepository sourceRepository= ApplicationContextHolder.get().getBean(SourceRepository.class);
         UiSettingsRepository uiSettingsRepository = ApplicationContextHolder.get().getBean(UiSettingsRepository.class);
+
+        Source portal = sourceRepository.findOne(nodeInfo.getId());
 
         if (uiSettingsRepository != null) {
             UiSetting one = null;
-            if (StringUtils.isNotEmpty(key)) {
+            if (portal != null && StringUtils.isNotEmpty(portal.getUiConfig())) {
+                one = uiSettingsRepository.findOne(portal.getUiConfig());
+            }
+            else if (StringUtils.isNotEmpty(key)) {
                 one = uiSettingsRepository.findOne(key);
             }
-            if (one == null) {
+            else if (one == null) {
                 one = uiSettingsRepository.findOne(defaultUiConfiguration);
             }
+
             if (one != null) {
                 return one.getConfiguration();
             } else {
@@ -251,6 +273,29 @@ public final class XslUtil {
         }
 
         return "";
+    }
+
+    /**
+     * Return the name of the current catalogue.
+     * If the main one, then get the name on the source table with the site id.
+     * If a sub portal, use the sub portal key.
+     *
+     * @param key   Sub portal key
+     * @return
+     */
+    public static String getNodeName(String key, String lang, boolean withOrganization) {
+        SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (StringUtils.isEmpty(key)) {
+            key =  ApplicationContextHolder.get().getBean(NodeInfo.class).getId();
+        }
+        if (NodeInfo.DEFAULT_NODE.equals(key)) {
+            key = settingsMan.getSiteId();
+        }
+        SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
+        Source source = sourceRepository.findOne(key);
+
+        return source != null ? source.getLabel(lang) : settingsMan.getSiteName()
+            + (withOrganization ? " - " + settingsMan.getValue(SYSTEM_SITE_ORGANIZATION) : "");
     }
 
 

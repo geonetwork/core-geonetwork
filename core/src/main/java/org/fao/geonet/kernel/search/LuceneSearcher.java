@@ -1592,7 +1592,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
         if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
             final Source portal = sourceRepository.findOne(node.getId());
-            if (StringUtils.isNotEmpty(portal.getFilter())) {
+            if (portal == null) {
+                LOGGER.warn("Null portal " + node);
+            }
+            else if (StringUtils.isNotEmpty(portal.getFilter())) {
                 Query portalFilterQuery = null;
                 // Parse Lucene query
                 portalFilterQuery = parseLuceneQuery(portal.getFilter(), _luceneConfig);
