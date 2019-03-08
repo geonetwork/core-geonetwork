@@ -105,7 +105,7 @@
          $scope.$on('mdLoadingEnd', function() {
            $scope.loading = false;
          });
-
+         $scope.fullScreen = $location.search()['view'] == 'emodnetHydrography';
          var url = '../api/records' + $location.url();
 
          // special case for sextant (TODO: remove this when not used anymore)

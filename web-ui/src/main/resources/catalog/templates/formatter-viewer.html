@@ -1,6 +1,8 @@
-<div class="sxt-main-tabs ng-scope">
+<div data-ng-show="!fullScreen"
+     class="sxt-main-tabs ng-scope">
 </div>
-<div class="container formatter-container">
+<div class="formatter-container"
+     data-ng-class="{'container-fluid': fullScreen, 'container': !fullScreen}">
   <div class="row">
     <div class="gn-md-actions-btn pull-right btn-group md-actions"
          data-gn-md-actions-menu="md"/>

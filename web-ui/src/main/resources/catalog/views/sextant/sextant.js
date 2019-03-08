@@ -44,18 +44,18 @@
 
       var thumbs = md.getThumbnails();
       md.thumbnail = thumbs && (thumbs.small || thumbs.big || (
-          thumbs.list.length && thumbs.list[0].url
-        ));
+        thumbs.list.length && thumbs.list[0].url
+      ));
 
       var status = md.mdStatus;
       var user = scope.user;
       scope.cantStatus = user && ((status == 4 || status == 2 || status == 3)
-      && user.isReviewerOrMore && !user.isReviewerOrMore());
+        && user.isReviewerOrMore && !user.isReviewerOrMore());
 
 
       scope.unFilteredlinks = md.getLinksByType('LINK');
-        // we do not want to display the following protocols
-        // link https://forge.ifremer.fr/mantis/view.php?id=40721
+      // we do not want to display the following protocols
+      // link https://forge.ifremer.fr/mantis/view.php?id=40721
       scope.links = [];
       scope.unFilteredlinks.forEach(function(link){
         if (link.protocol !== 'NETWORK:LINK' && link.protocol !== 'WWW:DOWNLOAD-1.0-link--download'){

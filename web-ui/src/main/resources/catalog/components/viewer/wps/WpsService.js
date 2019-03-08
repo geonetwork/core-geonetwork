@@ -427,19 +427,21 @@
        * @param {ol.Map} map
        * @param {ol.layer.Base} parentLayer optional
        */
-      this.extractWmsLayerFromResponse =
-          function(response, map, parentLayer) {
-
+      this.extractWmsLayerFromResponse = function(response, map, parentLayer) {
         try {
           var ref = response.processOutputs.output[0].reference;
+          var identifier = response.processOutputs.output[0].identifier.value;
           gnMap.addWmsAllLayersFromCap(map, ref.href, true).
-              then(function(layers) {
-                layers.forEach(function(l) {
-                  l.set('fromWps', true);
-                  l.set('wpsParent', parentLayer);
-                  map.addLayer(l);
-                });
-              });
+          then(function(layers) {
+            layers.forEach(function(l) {
+              // only add layer that is identified
+              if (l.get('name') === identifier) {
+                l.set('fromWps', true);
+                l.set('wpsParent', parentLayer);
+                map.addLayer(l);
+              }
+            });
+          });
         } catch (e) {
           console.warn('Error extracting WMS layers from response: ', e);
         }

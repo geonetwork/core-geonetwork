@@ -89,6 +89,25 @@
                itemscope="itemscope"
                itemtype="{gn-fn-core:get-schema-org-class($type)}">
 
+        <!-- Custom header for http://portal.emodnet-bathymetry.eu/
+        Taken from https://sextant-test.ifremer.fr/www/API-Sextant/emodnet_bathymetry/12_RegionForTest_CTC.html#/map
+        -->
+        <xsl:if test="$view = 'emodnetHydrography'">
+          <div style="height: 8rem; width: 100%; background-image: url(/geonetwork/images/emodnetheader.jpg); background-size: auto 8rem; line-height: 8rem; user-select: none; margin-bottom: 10px;">
+            <a class=""
+               style="vertical-align: top; background-image: url(/geonetwork/images/emodnet.png); background-size: auto 7rem; background-repeat: no-repeat; background-position: center; text-indent: -9999px; width: 12rem; height: 8rem; display: inline-block; font-size: 1em;"
+               href="http://www.emodnet-bathymetry.eu"
+               title="EMODnet Bathymetry"
+               target="_blank">&amp;nbsp;</a>
+            <div style="display: inline-block; font-weight: bold; line-height: normal; margin: 1.2em 0; border-left: .3em solid #F8BC00; padding: 0 0 0 2em;">
+              <h1 style="margin: 0px; padding: 0px; color: #222 !important; font-size: 2.4em; text-transform: uppercase;">Bathymetry</h1>
+              <p style="font-size: 0.8em; font-style: italic; margin: 0px; padding: 0px; color: #888;">Understanding the topography of the European seas</p>
+              <h2 style="margin: 0px; padding: 0px; font-weight: bold; font-size: 0.8em;">Composite DTMs Discovery Service</h2>
+            </div>
+          </div>
+        </xsl:if>
+
+
         <div class="row">
           <div class="col-md-9">
 
@@ -101,6 +120,8 @@
                   <xsl:value-of select="$title"/>
                 </h1>
               </xsl:if>
+
+
               <xsl:if test="$view != 'emodnetHydrography' and $view != 'sdn'">
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
