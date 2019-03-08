@@ -68,7 +68,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
@@ -89,7 +89,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
@@ -110,7 +110,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
@@ -130,7 +130,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAnonymous();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
@@ -151,7 +151,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-        toTest.perform(put("/api/records/" + subTemplate.getUuid() + "/validate/internal")
+        toTest.perform(put("/srv/api/records/" + subTemplate.getUuid() + "/validate/internal")
                 .param(REQ_VALID_PARAM, "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))

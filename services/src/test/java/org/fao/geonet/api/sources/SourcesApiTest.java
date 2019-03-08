@@ -74,7 +74,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
         Long sourcesCount = sourceRepo.count();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/api/sources")
+        this.mockMvc.perform(get("/srv/api/sources")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
@@ -98,7 +98,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/sources/" + source.getUuid())
+        this.mockMvc.perform(put("/srv/api/sources/" + source.getUuid())
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
@@ -126,7 +126,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/sources/" + sourceToUpdate.getUuid())
+        this.mockMvc.perform(put("/srv/api/sources/" + sourceToUpdate.getUuid())
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
