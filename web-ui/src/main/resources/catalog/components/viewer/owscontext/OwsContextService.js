@@ -553,10 +553,12 @@
           }
           // Emodnet specific
           var formatQIList = [];
-          var qiList = layer.get('qi_list');
-          Object.keys(qiList).forEach(function(k) {
-            formatQIList.push({Indicator:k, value:qiList[k]})
-          })
+          var qiList = layer.get('qi_list') || undefined;
+          if (qiList !== undefined) {
+            Object.keys(qiList).forEach(function (k) {
+              formatQIList.push({Indicator: k, value: qiList[k]})
+            })
+          }
           // Emodnet specific end
           var layerParams = {
             hidden: !layer.getVisible(),
