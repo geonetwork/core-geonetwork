@@ -54,8 +54,8 @@
     <link href="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.min.css" rel="stylesheet"
           media="screen"></link>
     <link href="{/root/gui/url}/static/ng-skos.css" rel="stylesheet" media="screen"></link>
-    <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}"
-          rel="stylesheet" media="screen"/>
+    <!--Unused in Sextant <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}"
+          rel="stylesheet" media="screen"/>-->
   </xsl:template>
 
 
