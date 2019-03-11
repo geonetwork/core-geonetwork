@@ -80,7 +80,7 @@ goog.require('gn_share');
       };
 
       /**
-       * Open a popup and compile object content.
+       * Open a modal and compile object content.
        * Bind to an event to close the popup.
        * @param {Object} o popup config
        * @param {Object} scope to build content uppon
@@ -98,6 +98,7 @@ goog.require('gn_share');
             });
       };
 
+      // specific Sextant
       /**
        * Open a popup and compile object content.
        * Bind to an event to close the popup.
@@ -109,6 +110,7 @@ goog.require('gn_share');
         // var popup = gnPopup.create(o, scope);
         gnPopup.create(o, scope);
       };
+      // end specific Sextant
 
       var callBatch = function(service) {
         return gnHttp.callService(service).then(function(data) {
@@ -246,6 +248,7 @@ goog.require('gn_share');
 
 
       this.openPrivilegesPanel = function(md, scope) {
+        // specific Sextant
         openPopup({
           title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
@@ -253,7 +256,7 @@ goog.require('gn_share');
           className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
-
+       // end specific Sextant
       this.openUpdateStatusPanel = function(scope, statusType, t) {
         scope.task = t;
         openModal({
