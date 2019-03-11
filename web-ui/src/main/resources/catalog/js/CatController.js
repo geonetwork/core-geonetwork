@@ -91,7 +91,8 @@ goog.require('gn_alert');
         'home': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/home',
-          'showSocialBarInFooter': true
+          'showSocialBarInFooter': true,
+          'fluidLayout': true
         },
         'search': {
           'enabled': true,
@@ -235,6 +236,7 @@ goog.require('gn_alert');
           'appUrl': '../../srv/{{lang}}/catalog.edit',
           'isUserRecordsOnly': false,
           'isFilterTagsDisplayed': false,
+          'fluidEditorLayout': true,
           'createPageTpl':
               '../../catalog/templates/editor/new-metadata-horizontal.html',
           'editorIndentType': ''
@@ -433,6 +435,7 @@ goog.require('gn_alert');
       // Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.getPermalink = gnUtilityService.getPermalink;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
