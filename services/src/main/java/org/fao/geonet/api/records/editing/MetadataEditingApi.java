@@ -32,6 +32,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.records.model.Direction;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -267,11 +268,21 @@ public class MetadataEditingApi {
         DataManager dataMan = applicationContext.getBean(DataManager.class);
         UserSession session = ApiUtils.getUserSession(httpSession);
         IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
+        BaseMetadataStatus statusRepository = ApplicationContextHolder.get().getBean(BaseMetadataStatus.class);
         String id = String.valueOf(metadata.getId());
         String isTemplate = allRequestParams.get(Params.TEMPLATE);
+        SettingManager sm = context.getBean(SettingManager.class);
 //        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 //        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
 //        boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
+        boolean isEditor = session.getProfile().equals(Profile.Editor);
+        boolean isReviewer = session.getProfile().equals(Profile.Reviewer);
+
+        // Checks when workflow enabled if the user is allowed
+        boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
+        if(isEnabledWorkflow && isEditor && !statusRepository.canEditorEdit(metadata.getId())) {
+            throw new NotAllowedException("Editing is allowed only in Draft state for the current profile.");
+        }
 
         // TODO: Use map only to avoid this conversion
         Element params = new Element ("request");
@@ -334,7 +345,6 @@ public class MetadataEditingApi {
             return null;
         }
         if (terminate) {
-            SettingManager sm = context.getBean(SettingManager.class);
 
             boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
 
@@ -347,13 +357,11 @@ public class MetadataEditingApi {
             }
 
             // Automatically change the workflow state after save
-            boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
             if(isEnabledWorkflow) {
                 if(status.equals(StatusValue.Status.SUBMITTED)) {
                     // Only editors can submit a record
-                    if(session.getProfile().equals(Profile.Editor)) {
+                    if(isEditor) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
-                        BaseMetadataStatus statusRepository = ApplicationContextHolder.get().getBean(BaseMetadataStatus.class);
                         statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(), changeToStatus);
                     } else {
                         throw new SecurityException(String.format(
@@ -363,9 +371,8 @@ public class MetadataEditingApi {
                 }
                 if(status.equals(StatusValue.Status.APPROVED)) {
                     // Only reviewers can approve
-                    if(session.getProfile().equals(Profile.Reviewer)) {
+                    if(isReviewer) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
-                        BaseMetadataStatus statusRepository = ApplicationContextHolder.get().getBean(BaseMetadataStatus.class);
                         statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(), changeToStatus);
                     } else {
                         throw new SecurityException(String.format(

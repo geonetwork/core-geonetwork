@@ -237,4 +237,18 @@ public class BaseMetadataStatus implements IMetadataStatus {
         return false;
     }
 
+    public boolean canEditorEdit(Integer metadataId) throws Exception {
+
+        String currentState = this.getCurrentStatus(metadataId);
+
+        HashSet<String> draftCompatible = new HashSet<>();
+        draftCompatible.add(StatusValue.Status.DRAFT);
+
+        if(draftCompatible.contains(currentState)) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
