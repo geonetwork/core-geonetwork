@@ -137,6 +137,8 @@
       $scope.facetConfig = gnSearchSettings.facetConfig;
       $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
+      $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
