@@ -98,6 +98,18 @@ goog.require('gn_share');
             });
       };
 
+      /**
+       * Open a popup and compile object content.
+       * Bind to an event to close the popup.
+       * @param {Object} o popup config
+       * @param {Object} scope to build content uppon
+       * @param {string} eventName
+       */
+      var openPopup = function(o, scope, eventName) {
+        // var popup = gnPopup.create(o, scope);
+        gnPopup.create(o, scope);
+      };
+
       var callBatch = function(service) {
         return gnHttp.callService(service).then(function(data) {
           alertResult(data.data);
@@ -234,7 +246,7 @@ goog.require('gn_share');
 
 
       this.openPrivilegesPanel = function(md, scope) {
-        openModal({
+        openPopup({
           title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
           content: '<div gn-share="' + md.getId() + '"></div>',
