@@ -375,14 +375,10 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         filters: gnSearchSettings.filters,
         defaultParams: {
-          'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details',
           sortBy: sortConfig[0] || 'relevance',
           sortOrder: sortConfig[1] || ''
         },
         params: {
-          'facet.q': gnSearchSettings.defaultSearchString || '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details',
           sortBy: sortConfig[0] || 'relevance',
           sortOrder: sortConfig[1] || ''
         },

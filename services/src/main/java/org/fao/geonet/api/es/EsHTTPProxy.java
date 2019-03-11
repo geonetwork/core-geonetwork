@@ -129,12 +129,16 @@ public class EsHTTPProxy {
 
         JsonNode queryNode = esQuery.get("query");
 
+//        if (queryNode == null) {
+//            // Add default filter if no query provided
+//            ObjectNode objectNodeQuery = objectMapper.createObjectNode();
+//            objectNodeQuery.set("filter", nodeFilter);
+//            ((ObjectNode) esQuery).set("query", objectNodeQuery);
+//        } else
         if (queryNode.get("bool") != null) {
             // Add filter node to the bool element of the query if provided
             ObjectNode objectNode = (ObjectNode) queryNode.get("bool");
-
             objectNode.set("filter", nodeFilter);
-
         } else {
             // If no bool node in the query, create the bool node and add the query and filter nodes to it
             ObjectNode copy = esQuery.get("query").deepCopy();

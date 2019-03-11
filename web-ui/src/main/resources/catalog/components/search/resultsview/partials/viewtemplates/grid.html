@@ -105,7 +105,7 @@
 
         <div class="row gn-md-details">
           <p ng-if="::!md.getAllContacts().resource">&nbsp;</p>
-          <p data-ng-repeat="c in ::md.getAllContacts().resource">
+          <p data-ng-repeat="c in ::md.getAllContacts().resource track by $index">
             <img data-ng-if="::c.logo"
                  data-ng-src="{{::c.logo}}"
                  class="gn-source-logo"

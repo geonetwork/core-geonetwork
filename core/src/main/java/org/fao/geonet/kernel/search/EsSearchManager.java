@@ -227,9 +227,9 @@ public class EsSearchManager implements ISearchManager {
                 if (result.getResponseCode() == 404) {
                     // Check version of the index - how ?
 
-                    // Create it if not
-                    Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexId + ".json");
-                    if (Files.exists(indexConfiguration)) {
+                // Create it if not
+                Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexId + ".json");
+                if (Files.exists(indexConfiguration)) {
 
                         CreateIndex createIndex = new CreateIndex.Builder(indexName)
                             .settings(FileUtils.readFileToString(indexConfiguration.toFile()))
@@ -361,9 +361,6 @@ public class EsSearchManager implements ISearchManager {
             .add(Geonet.IndexFieldNames.HASXLINKS)
             .add("isHarvested")
             .add("isPublishedToAll")
-            .add("isTemplate")
-            .add("draft")
-            .add("isValid")
             .add("isSchemaValid")
             .add("isAboveThreshold")
             .add("isOpenData")

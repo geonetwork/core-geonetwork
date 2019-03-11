@@ -424,10 +424,9 @@
                 $timeout(checkIsIndexing, indexCheckInterval);
               }
               // Get the number of records (template, records, subtemplates)
-              $http.get('qi?_content_type=json&' +
-                 'template=y or n or s&summaryOnly=true').
+              $http.post('../api/search/records/_search', {size: 0}).
                  success(function(data, status) {
-                   $scope.numberOfIndexedRecords = data[0]['@count'];
+                   $scope.numberOfIndexedRecords = data.hits.total;
                  });
             });
       }

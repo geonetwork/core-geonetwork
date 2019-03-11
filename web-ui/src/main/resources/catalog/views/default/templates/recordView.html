@@ -137,12 +137,12 @@
               data-ng-bind-html="(mdView.current.record.resourceAbstract) | linky | newlines"/>
 
           <!-- Display the first metadata status (apply to ISO19139 record) -->
-          <div data-ng-if="mdView.current.record.status_text.length > 0"
-              title="{{mdView.current.record.status_text[0]}}"
-              class="gn-status gn-status-mdview gn-status-{{mdView.current.record.status[0]}}">
-            {{mdView.current.record.status_text[0]}}
+          <div data-ng-if="mdView.current.record.codelist_status.length > 0"
+               title="{{mdView.current.record.codelist_status}}"
+               class="gn-status gn-status-mdview gn-status-{{mdView.current.record.codelist_status}}">
+            {{mdView.current.record.codelist_status}}
           </div>
-          
+
           <div data-gn-related-observer>
             <div data-gn-related="mdView.current.record"
                 data-user="user"
@@ -563,7 +563,7 @@
               <i class="fa fa-fw fa-cog"></i>
               <span data-translate="">sourceCatalog</span>
             </h2>
-            <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
+            <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.sourceCatalogue}}.png"
                 aria-label="{{'sourceCatalog' | translate}}"
                 class="gn-source-logo"/>
           </section>
@@ -574,7 +574,7 @@
               <span data-translate="">updatedOn</span>
             </h2>
             <p>
-              <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
+              <span data-gn-humanize-time="{{mdView.current.record.changeDate}}"
                     data-from-now=""></span>
             </p>
           </section>
@@ -588,12 +588,7 @@
               title="{{'shareOnTwitter' | translate}}"
               target="_blank"
               class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
-            <a
-              data-ng-href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
-              title="{{'shareOnGooglePlus' | translate}}"
-              target="_blank"
-              class="btn btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
-            <a
+           <a
               data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
               title="{{'shareOnFacebook' | translate}}"
               target="_blank"
@@ -621,6 +616,8 @@
             </h2>
             <div data-gn-metadata-rate="mdView.current.record"/>
           </section>
+
+          <div data-gn-more-like-this="mdView.current.record"/>
 
           <div data-ng-show="isRecordHistoryEnabled && user.isEditorOrMore()"
               data-gn-record-history="mdView.current.record"></div>

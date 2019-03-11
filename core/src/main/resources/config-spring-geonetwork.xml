@@ -58,9 +58,9 @@
 
 
   <util:map id="indexList">
-    <entry key="records" value="${es.index.records}"/>
-    <entry key="features" value="${es.index.features}"/>
-    <entry key="searchlogs" value="${es.index.searchlogs}"/>
+    <entry key="records" value="\${es.index.records}"/>
+    <entry key="features" value="\${es.index.features}"/>
+    <entry key="searchlogs" value="\${es.index.searchlogs}"/>
   </util:map>
 
   <bean id="EsSearchManager"

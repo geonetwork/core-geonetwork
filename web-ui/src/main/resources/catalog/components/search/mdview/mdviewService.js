@@ -156,7 +156,9 @@
                 $http.post('../api/search/records/_search', {"query": {
                     "bool" : {
                       "must": [
-                        {"term": {"uuid": uuid}},
+                        {"multi_match": {
+                            "query": uuid,
+                            "fields": ['id', 'uuid']}},
                         {"terms": {"isTemplate": ["n", "y"]}},
                         {"terms": {"draft": ["n", "y", "e"]}}
                         ]
