@@ -281,8 +281,8 @@
 
       <xsl:if test="$css = 'sextant'">
         <!-- Avoid self closing tag. -->
-        <script src="../../static/lib.js">;</script>
-        <script src="../../static/gn_search_sextant.js">;</script>
+        <script src="{$nodeUrl}../static/lib.js">;</script>
+        <script src="{$nodeUrl}../static/gn_search_sextant.js">;</script>
         <script type="text/javascript">
         var module = angular.module('gn_search');
         </script>
