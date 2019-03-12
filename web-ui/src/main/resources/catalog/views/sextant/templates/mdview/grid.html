@@ -56,9 +56,7 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu small-dropdown" role="menu">
-              <!-- Open Ext or Angular editor based on standard name -->
-              <li data-ng-if="::md.isUsingAngularEditor()"><a ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i>&nbsp;<span translate>edit</span></a></li>
-              <li data-ng-if="::!md.isUsingAngularEditor()"><a ng-href="{{::gnUrl}}../../apps/sextant/?edit={{::md['geonet:info'].id}}&hl={{lang}}" target="_blank"><i class="fa fa-pencil"></i>&nbsp;<span translate>edit</span></a></li>
+              <li><a ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i>&nbsp;<span translate>edit</span></a></li>
 
               <li data-ng-if="::(user.profile != 'Editor')">
                 <a data-gn-click-and-spin="mdService.deleteMd(md)"

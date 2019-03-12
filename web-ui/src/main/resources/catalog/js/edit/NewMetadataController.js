@@ -223,12 +223,6 @@
       }
 
       $scope.createNewMetadata = function(isPublic) {
-        var useExtEditor = false;
-        if ($scope.activeTpl['geonet:info'].schema !== 'iso19115-3' &&
-            $scope.activeTpl['geonet:info'].schema !== 'iso19139') {
-          useExtEditor = true;
-        }
-
         var metadataUuid = '';
 
         // If no auto-generated metadata identifier, get the value
@@ -263,8 +257,7 @@
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,
-            metadataUuid,
-            useExtEditor
+            metadataUuid
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('createMetadataError'),

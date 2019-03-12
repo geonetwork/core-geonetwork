@@ -201,23 +201,18 @@
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges,
-            isTemplate, isChild, tab, metadataUuid, useExtEditor, hasCategoryOfSource) {
+            isTemplate, isChild, tab, metadataUuid, hasCategoryOfSource) {
           return this.copy(id, groupId, withFullPrivileges,
               isTemplate, isChild, metadataUuid, hasCategoryOfSource)
               .success(function(id) {
-                // Sextant / use ExtJS editor for all but not MedSea
-                if (useExtEditor) {
-                  window.location.replace('../../apps/sextant/?edit=' + id);
-                } else {
-                  var path = '/metadata/' + id;
+                var path = '/metadata/' + id;
 
-                  if (tab) {
-                    path += '/tab/' + tab;
-                  }
-                  $location.path(path)
-                      .search('justcreated')
-                      .search('redirectUrl', 'catalog.edit');;
+                if (tab) {
+                  path += '/tab/' + tab;
                 }
+                $location.path(path)
+                    .search('justcreated')
+                    .search('redirectUrl', 'catalog.edit');
               });
         },
 
@@ -808,19 +803,6 @@
           this.credits = angular.isArray(this.credit) ? this.credit.join(', ') :
               this.credit;
           return this.credits;
-        }
-      },
-      isUsingAngularEditor: function() {
-        if (this["geonet:info"].schema === 'dublin-core') {
-          return true;
-        } else if (angular.isUndefined(this.standardName)) {
-          return false;
-        } else {
-          return this["geonet:info"].schema === 'iso19115-3' ||
-              (this['geonet:info'].schema === 'iso19139' &&
-              (this.standardName.indexOf('EMODNET -') >= 0 ||
-              this.standardName.
-              indexOf('ISO 19115:2003/19139 - SEXTANT') >= 0));
         }
       },
       getBoxAsPolygon: function(i) {
