@@ -92,7 +92,7 @@
         <!-- Custom header for http://portal.emodnet-bathymetry.eu/
         Taken from https://sextant-test.ifremer.fr/www/API-Sextant/emodnet_bathymetry/12_RegionForTest_CTC.html#/map
         -->
-        <xsl:if test="$view = 'emodnetHydrography'">
+        <xsl:if test="$css = 'emodnet-bathymetry-portal'">
           <div style="height: 8rem; width: 100%; background-image: url(/geonetwork/images/emodnetheader.jpg); background-size: auto 8rem; line-height: 8rem; user-select: none; margin-bottom: 10px;">
             <a class=""
                style="vertical-align: top; background-image: url(/geonetwork/images/emodnet.png); background-size: auto 7rem; background-repeat: no-repeat; background-position: center; text-indent: -9999px; width: 12rem; height: 8rem; display: inline-block; font-size: 1em;"
@@ -284,8 +284,8 @@
 
       <xsl:if test="$css = 'sextant'">
         <!-- Avoid self closing tag. -->
-        <script src="../../static/lib.js">;</script>
-        <script src="../../static/gn_search_sextant.js">;</script>
+        <script src="{$nodeUrl}../static/lib.js">;</script>
+        <script src="{$nodeUrl}../static/gn_search_sextant.js">;</script>
         <script type="text/javascript">
         var module = angular.module('gn_search');
         </script>

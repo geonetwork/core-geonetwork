@@ -94,9 +94,13 @@
 
   module.controller('GnFormatterViewer',
       ['$scope', '$http', '$sce', '$routeParams', '$location',
-        'Metadata', 'gnMdFormatter',
+        'Metadata', 'gnMdFormatter', 'gnViewerSettings',
        function($scope, $http, $sce, $routeParams, $location,
-                Metadata, gnMdFormatter) {
+                Metadata, gnMdFormatter, gnViewerSettings) {
+        // Cosmetic / To avoid JS errors in formatter mode.
+        // This would require a better fix to be able to init map from a formatter
+        // use URL parameters instead of JS calls.
+        gnViewerSettings.resultviewFns = {};
 
          var formatter = $routeParams.formatter;
          var mdId = $routeParams.mdId;
