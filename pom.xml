@@ -1282,8 +1282,9 @@
     <db.name>gn</db.name>
     <db.username>www-data</db.username>
     <db.password>www-data</db.password>
-    <db.pool.maxActive>10</db.pool.maxActive>
-
+    <db.pool.maxActive>30</db.pool.maxActive>
+    <db.pool.maxIdle>10</db.pool.maxIdle>
+    <db.pool.initialSize>10</db.pool.initialSize>
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->

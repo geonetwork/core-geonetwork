@@ -126,7 +126,6 @@ public class ApiUtils {
     }
     public static AbstractMetadata getRecord(String uuidOrInternalId)
         throws Exception {
-		Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ")");
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;

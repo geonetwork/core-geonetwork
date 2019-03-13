@@ -6,7 +6,8 @@ When another editor tries to edit a published metadata, it uses the same draft
     Then I click on link having text "itest-metadata"
     And I wait 2 seconds for element having css ".gn-view-approved .see-draft-not-approved" to display
     Then I click on element having css ".gn-view-approved .see-draft-not-approved"
-    Then I click on element having css "a.gn-md-edit-btn"
+    And I wait 3 seconds for element having css ".gn-view-not-approved .gn-md-edit-btn" to display
+    Then I click on element having css ".gn-view-not-approved .gn-md-edit-btn"
     And I wait 10 seconds for element having css "div.gn-title" to display
     Then I clear input field having css "div.gn-title input"
     Then I enter "itest-second Version" into input field having css "div.gn-title input"
@@ -15,10 +16,13 @@ When another editor tries to edit a published metadata, it uses the same draft
         
   Scenario: Check metadata has been modified (new value)
     Given I navigate to "{endPointToTest}/srv/eng/catalog.search#/search?resultType=details&sortBy=relevance&from=1&to=20&fast=index&_content_type=json&any=itest"
-    Then I click on link having text "itest-metadata"
+    And I wait 3 seconds for element having css "div.gn-md-title" to display
+    Then I click on element having css "div.gn-md-title a[title='itest-metadata']"
     And I wait 2 seconds for element having css ".gn-view-approved .see-draft-not-approved" to display
     Then I click on element having css ".gn-view-approved .see-draft-not-approved"
     And I wait 2 seconds for element having css ".gn-view-not-approved .see-draft-approved" to display
+    #Not supported
+    #Then element having text "itest-second Version" should be present
     Then I click on element having css ".gn-view-not-approved .see-draft-approved"
     And I wait 2 seconds for element having css ".gn-view-approved .see-draft-not-approved" to display
                 
@@ -27,6 +31,7 @@ When another editor tries to edit a published metadata, it uses the same draft
 
   Scenario: Check metadata view as anonymous (old value)
     Given I navigate to "{endPointToTest}/srv/eng/catalog.search#/search?resultType=details&sortBy=relevance&from=1&to=20&fast=index&_content_type=json&any=itest"
-    Then I click on link having text "itest-metadata"
+    And I wait 3 seconds for element having css "div.gn-md-title" to display
+    Then I click on element having css "div.gn-md-title a[title='itest-metadata']"
     And I wait 10 seconds for element having css "div.gn-md-view" to display
     Then element having css ".see-draft" should not be present

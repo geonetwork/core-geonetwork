@@ -484,7 +484,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
+            repository.deleteAllByMetadataId(Integer.parseInt(record.id));
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();

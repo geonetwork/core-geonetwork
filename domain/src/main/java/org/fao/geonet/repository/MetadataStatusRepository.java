@@ -23,23 +23,26 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.StatusValueType;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Data Access object for accessing {@link MetadataStatus} entities.
  *
  * @author Jesse
  */
-public interface MetadataStatusRepository extends GeonetRepository<MetadataStatus, MetadataStatusId>, MetadataStatusRepositoryCustom,
-    JpaSpecificationExecutor<MetadataStatus> {
+public interface MetadataStatusRepository extends GeonetRepository<MetadataStatus, MetadataStatusId>, 
+	MetadataStatusRepositoryCustom,
+	JpaSpecificationExecutor<MetadataStatus> {
     /**
      * Find all the MetadataStatus objects by the associated metadata id.
      *
@@ -49,6 +52,30 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
      */
     @Nonnull
     List<MetadataStatus> findAllById_MetadataId(int metadataId, Sort sort);
+    
+    /**
+     * Delete all the entities that are related to the indicated metadata.
+     *
+     * @param metadataId the id of the metadata.
+     * @return the number of rows deleted.
+     */
+
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query(value="DELETE FROM MetadataStatus s WHERE s.id.metadataId = ?1")
+    int deleteAllById_MetadataId(Integer metadataId);
+    
+    /**
+     * Delete all the entities that are related to the indicated user.
+     *
+     * @param userId the id of the user.
+     * @return the number of rows deleted.
+     */
+
+    @Modifying(clearAutomatically=true)
+    @Transactional
+    @Query(value="DELETE FROM MetadataStatus s WHERE s.id.userId = ?1")
+    int deleteAllById_UserId(Integer userId);
 
 
 }

@@ -154,4 +154,10 @@ public class MetadataStatusId implements Serializable {
             return false;
         return true;
     }
+
+	@Override
+	public String toString() {
+		return "MetadataStatusId [" + (_changedate != null ? "_changedate=" + _changedate + ", " : "") + "_metadataId="
+				+ _metadataId + ", _statusId=" + _statusId + ", _userId=" + _userId + "]";
+	}
 }

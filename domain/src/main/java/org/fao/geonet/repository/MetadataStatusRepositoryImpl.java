@@ -23,6 +23,20 @@
 
 package org.fao.geonet.repository;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
@@ -32,22 +46,6 @@ import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.StatusValue_;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.List;
 
 /**
  * Data Access object for accessing
@@ -59,29 +57,6 @@ public class MetadataStatusRepositoryImpl implements MetadataStatusRepositoryCus
 
     @PersistenceContext
     EntityManager _entityManager;
-
-    @Override
-    @Transactional
-    public int deleteAllById_MetadataId(final int metadataId) {
-        String entityType = MetadataStatus.class.getSimpleName();
-        String metadataIdPropName = MetadataStatusId_.metadataId.getName();
-        Query query = _entityManager
-                .createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
-        final int deleted = query.executeUpdate();
-        _entityManager.flush();
-        _entityManager.clear();
-        return deleted;
-    }
-
-    @Override
-    public int deleteAllById_UserId(final int userId) {
-        String entityType = MetadataStatus.class.getSimpleName();
-        String userIdPropName = MetadataStatusId_.userId.getName();
-        Query query = _entityManager
-                .createQuery("DELETE FROM " + entityType + " WHERE " + userIdPropName + " = " + userId);
-        final int deleted = query.executeUpdate();
-        return deleted;
-    }
 
     @Nonnull
     @Override

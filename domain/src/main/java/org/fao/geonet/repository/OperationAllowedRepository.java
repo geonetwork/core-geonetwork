@@ -23,14 +23,17 @@
 
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.List;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Data Access object for finding and saving {@link OperationAllowed} entities.
@@ -80,4 +83,42 @@ public interface OperationAllowedRepository extends GeonetRepository<OperationAl
      */
     @Nullable
     OperationAllowed findOneById_GroupIdAndId_MetadataIdAndId_OperationId(int groupId, int metadataId, int operationId);
+   
+
+    /**
+     * Delete all the {@link OperationAllowed} with the given id in the id component selected by the
+     * metadata.
+     *
+     * @param id          metadataid
+     * @return the number of entities deleted.
+     */
+    @Transactional
+    @Modifying(clearAutomatically=true)
+    @Query("DELETE FROM OperationAllowed where id.metadataId = ?1")
+    public int deleteAllByMetadataId(int id);
+
+    /**
+     * Delete all the {@link OperationAllowed} with the given id in the id component selected by the
+     * operation.
+     *
+     * @param id          operation
+     * @return the number of entities deleted.
+     */
+    @Transactional
+    @Modifying(clearAutomatically=true)
+    @Query("DELETE FROM OperationAllowed where id.operationId = ?1")
+    public int deleteAllByOperationId(int id);
+
+    /**
+     * Delete all the {@link OperationAllowed} with the given id in the id component selected by the
+     * group.
+     *
+     * @param id          group
+     * @return the number of entities deleted.
+     */
+    @Transactional
+    @Modifying(clearAutomatically=true)
+    @Query("DELETE FROM OperationAllowed where id.groupId = ?1")
+    public int deleteAllByGroupId(int id);
+
 }

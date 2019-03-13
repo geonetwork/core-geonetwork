@@ -42,6 +42,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections.CollectionUtils;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.HarvesterSetting_;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
@@ -90,6 +91,7 @@ public class HarvesterSettingRepositoryOverridesImpl extends GeonetRepositoryImp
      * @param settingId the id of the entity to delete
      */
     @Transactional
+    @Modifying(clearAutomatically=true)
     public void delete(final int settingId) {
         final List<Integer> toRemove = Lists.newArrayList(settingId);
         int i = 0;
@@ -106,9 +108,6 @@ public class HarvesterSettingRepositoryOverridesImpl extends GeonetRepositoryImp
         delete.where(root.get(HarvesterSetting_.id).in(toRemove));
 
         _entityManager.createQuery(delete).executeUpdate();
-
-        _entityManager.flush();
-        _entityManager.clear();
     }
 
 

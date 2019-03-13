@@ -493,7 +493,7 @@ public class GroupsApi {
                 OperationAllowedId_.metadataId);
 
             if (reindex.size() > 0 && force) {
-                operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, groupIdentifier);
+                operationAllowedRepo.deleteAllByGroupId(groupIdentifier);
 
                 //--- reindex affected metadata
                 DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);

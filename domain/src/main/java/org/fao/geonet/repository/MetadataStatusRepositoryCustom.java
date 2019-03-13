@@ -23,36 +23,21 @@
 
 package org.fao.geonet.repository;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValueType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Custom repository methods for the MetadataValidationRepository User: Jesse
  * Date: 9/5/13 Time: 10:17 PM
  */
 public interface MetadataStatusRepositoryCustom {
-    /**
-     * Delete all the entities that are related to the indicated metadata.
-     *
-     * @param metadataId the id of the metadata.
-     * @return the number of rows deleted.
-     */
-    int deleteAllById_MetadataId(int metadataId);
-
-    /**
-     * Delete all the entities that are related to the indicated user.
-     * 
-     * @param userId the id of the user.
-     * @return the number of rows deleted.
-     */
-    int deleteAllById_UserId(int userId);
-
     /**
      * Find all the MetadataStatus objects corresponding to a type by the associated
      * metadata id.

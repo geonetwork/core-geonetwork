@@ -82,11 +82,19 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
      */
     @Override
     public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
+        deleteMetadataOper(metadataId, skipAllReservedGroup);
+    }
+    
+    /**
+     * Removes all operations stored for a metadata.
+     */
+    @Override
+    public void deleteMetadataOper(String metadataId, boolean skipAllReservedGroup) throws Exception {
         if (skipAllReservedGroup) {
             int[] exclude = new int[] { ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId() };
             opAllowedRepo.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), exclude);
         } else {
-            opAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
+            opAllowedRepo.deleteAllByMetadataId(Integer.parseInt(metadataId));
         }
     }
 

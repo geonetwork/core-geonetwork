@@ -35,6 +35,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
@@ -60,7 +61,7 @@ public class DraftCreated implements ApplicationListener<MetadataDraftAdd> {
 	public void onApplicationEvent(MetadataDraftAdd event) {
 	}
 
-	@TransactionalEventListener
+	@TransactionalEventListener(phase=TransactionPhase.AFTER_COMPLETION)
 	public void doAfterCommit(MetadataDraftAdd event) {
 		Log.trace(Geonet.DATA_MANAGER, "Reindexing non drafted versions of uuid " + event.getMd().getUuid());
 		try {

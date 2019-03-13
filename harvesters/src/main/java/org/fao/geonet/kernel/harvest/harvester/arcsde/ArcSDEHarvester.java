@@ -388,7 +388,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+        operationAllowedRepository.deleteAllByMetadataId(Integer.parseInt(id));
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();

@@ -35,7 +35,11 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import jeeves.server.context.ServiceContext;
 
@@ -60,7 +64,14 @@ public class ApprovePublishedRecord implements ApplicationListener<MetadataPubli
 	private StatusValueRepository statusValueRepository;
 
 	@Override
+	@Transactional
 	public void onApplicationEvent(MetadataPublished event) {
+	}
+
+	@TransactionalEventListener(fallbackExecution = true)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, readOnly=false)
+	@Modifying(clearAutomatically=true)
+	public void doAfterCommit(MetadataPublished event) {
 
 		Log.debug(Geonet.DATA_MANAGER, "Metadata with id " + event.getMd().getId() + " published.");
 

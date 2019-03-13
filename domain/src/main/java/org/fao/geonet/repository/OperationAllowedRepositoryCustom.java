@@ -23,17 +23,17 @@
 
 package org.fao.geonet.repository;
 
-import com.google.common.base.Optional;
-
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.springframework.data.jpa.domain.Specification;
+import java.util.List;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.persistence.metamodel.SingularAttribute;
 
-import java.util.List;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.springframework.data.jpa.domain.Specification;
+
+import com.google.common.base.Optional;
 
 /**
  * Custom (Non spring-data) Query methods for {@link OperationAllowed} entities.
@@ -82,16 +82,4 @@ public interface OperationAllowedRepositoryCustom {
      */
     @Nonnegative
     int deleteAllByMetadataIdExceptGroupId(int metadataId, int[] groupId);
-
-    /**
-     * Delete all the {@link OperationAllowed} with the given id in the id component selected by the
-     * idAttribute.
-     *
-     * @param idAttribute The attribute of {@link OperationAllowedId} to match against the provided
-     *                    id.
-     * @param id          the id to use as the key for selecting which entities to delete.
-     * @return the number of entities deleted.
-     */
-    @Nonnegative
-    int deleteAllByIdAttribute(@Nonnull SingularAttribute<OperationAllowedId, Integer> idAttribute, int id);
 }
