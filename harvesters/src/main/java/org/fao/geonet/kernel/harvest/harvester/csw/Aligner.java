@@ -205,7 +205,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 if (id == null) {
                     //record doesn't exist (so it doesn't belong to this harvester)
                     log.info("Adding record with uuid " + ri.uuid);
-                    addMetadata(ri, getOwnerId(params), getOwnerGroupId(params), ri.uuid);
+                    addMetadata(ri);
                 } else if (localUuids.getID(ri.uuid) == null) {
                     //Record does not belong to this harvester
                     result.datasetUuidExist++;
@@ -218,7 +218,7 @@ public class Aligner extends BaseAligner<CswParams> {
                             break;
                         case RANDOM:
                             log.debug("Generating random uuid for remote record with uuid " + ri.uuid);
-                            addMetadata(ri, getOwnerId(params), getOwnerGroupId(params), UUID.randomUUID().toString());
+                            addMetadata(ri);
                             break;
                         case SKIP:
                             log.debug("Skipping record with uuid " + ri.uuid);
@@ -249,7 +249,7 @@ public class Aligner extends BaseAligner<CswParams> {
     }
 
 
-    private void addMetadata(RecordInfo ri, Integer ownerId, Integer groupId, String uuid) throws Exception {
+    private void addMetadata(RecordInfo ri) throws Exception {
         if (cancelMonitor.get()) {
             return;
         }
@@ -285,12 +285,9 @@ public class Aligner extends BaseAligner<CswParams> {
         //
         // insert metadata
         //
-         ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
-       
-
         AbstractMetadata metadata = new Metadata();
-        metadata.setUuid(uuid);
-        ownerId = getOwner();
+        metadata.setUuid(mdUuid);
+        int ownerId = getOwner();
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
