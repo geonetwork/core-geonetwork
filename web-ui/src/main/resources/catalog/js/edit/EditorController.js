@@ -131,6 +131,8 @@
       $scope.unsupportedSchema = false;
       $scope.gnOnlinesrc = gnOnlinesrc;
       $scope.redirectUrl = null;
+      // Enable workflow functions
+      $scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
       /**
        * Animation duration for slide up/down

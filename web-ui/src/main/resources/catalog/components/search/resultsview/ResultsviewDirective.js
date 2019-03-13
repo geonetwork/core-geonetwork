@@ -74,8 +74,9 @@
     'gnOwsCapabilities',
     'gnSearchSettings',
     'gnMetadataActions',
+    'gnConfig',
     function($compile, gnMap, gnOwsCapabilities, gnSearchSettings,
-             gnMetadataActions) {
+             gnMetadataActions, gnConfig) {
 
       return {
         restrict: 'A',
@@ -112,6 +113,8 @@
               style: gnSearchSettings.olStyles.mdExtent
             });
           }
+
+          scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
           scope.$watchCollection('searchResults.records', function(rec) {
 

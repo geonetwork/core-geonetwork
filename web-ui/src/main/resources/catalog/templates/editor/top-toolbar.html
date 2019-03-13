@@ -85,7 +85,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <li role="menuitem" data-ng-if="user.isEditorForGroup(gnCurrentEdit.metadata.groupOwner) && gnCurrentEdit.metadata.mdStatus == 1">
+        <li role="menuitem" data-ng-if="user.isEditorForGroup(gnCurrentEdit.metadata.groupOwner) && gnCurrentEdit.metadata.mdStatus == 1 && isMdWorkflowEnable">
           <a href=""
              title="{{'saveAndSubmit' | translate }}"
              data-gn-click-and-spin="close(true, false)">
