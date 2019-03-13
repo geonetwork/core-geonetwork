@@ -467,6 +467,12 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
 	protected String createDraft(ServiceContext context, String templateId, String groupOwner, String source, int owner,
 			String parentUuid, String isTemplate, String uuid) throws Exception {
+		
+		Log.trace(Geonet.DATA_MANAGER, "createDraft(" + templateId + "," +  
+													groupOwner + "," +  source + "," +  
+													owner + "," +  parentUuid + "," +  
+													isTemplate + "," +  uuid + ")");
+		
 		Metadata templateMetadata = getMetadataRepository().findOne(templateId);
 		if (templateMetadata == null) {
 			throw new IllegalArgumentException("Template id not found : " + templateId);
@@ -509,7 +515,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 					.getId();
 
 			// Remove all default privileges:
-			metadataOperations.deleteMetadataOper(context, String.valueOf(finalId), false);
+			metadataOperations.deleteMetadataOper(String.valueOf(finalId), false);
 
 			// Copy privileges from original metadata
 			for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) {
@@ -517,12 +523,11 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 				// Only interested in editing and reviewing privileges
 				// No one else should be able to see it
 				if (op.getId().getOperationId() == ReservedOperation.editing.getId()) {
-					// except for reserved groups
-					Group g = groupRepository.findOne(op.getId().getGroupId());
-					if (!g.isReserved()) {
-						metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
-								op.getId().getOperationId());
-					}
+					Log.trace(Geonet.DATA_MANAGER, "Assign operation: " + op);
+					metadataOperations.forceSetOperation(context, finalId, op.getId().getGroupId(),
+							op.getId().getOperationId());
+				} else {
+					Log.trace(Geonet.DATA_MANAGER, "Skipping operation: " + op);
 				}
 			}
 

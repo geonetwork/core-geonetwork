@@ -25,28 +25,10 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.List;
 
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.domain.MetadataFileUpload_;
-import org.fao.geonet.events.md.MetadataDraftRemove;
 import org.fao.geonet.events.md.MetadataRemove;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.datamanager.IMetadataOperations;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.PathSpec;
-import org.fao.geonet.repository.UserSavedSelectionRepository;
-import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +37,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-
-import jeeves.server.context.ServiceContext;
 
 /**
  * 
@@ -75,35 +55,13 @@ public class DraftCleanup implements ApplicationListener<MetadataRemove> {
 	private MetadataDraftRepository metadataDraftRepository;
 
 	@Autowired
-	private SearchManager searchManager;
-
-	@Autowired
-	private XmlSerializer xmlSerializer;
-
-	@Autowired
-	private IMetadataOperations metadataOperations;
-
-	@Autowired
-	private MetadataFileUploadRepository metadataFileUploadRepository;
-
-	@Autowired
-	private MetadataRatingByIpRepository metadataRatingByIpRepository;
-
-	@Autowired
-	private MetadataValidationRepository metadataValidationRepository;
-
-	@Autowired
-	private MetadataStatusRepository metadataStatusRepository;
-
-	@Autowired
-	private UserSavedSelectionRepository userSavedSelectionRepository;
+	private DraftUtilities draftUtilities;
 
 	@Override
 	public void onApplicationEvent(MetadataRemove event) {
 	}
 
-	@TransactionalEventListener(phase=TransactionPhase.AFTER_COMMIT)
-	@Transactional(value=TxType.REQUIRES_NEW)
+	@TransactionalEventListener(phase=TransactionPhase.BEFORE_COMMIT)
 	public void doAfterCommit(MetadataRemove event) {
 		Log.trace(Geonet.DATA_MANAGER, "A metadata has been removed. Cleanup associated drafts of " + event.getMd());
 		try {
@@ -111,51 +69,12 @@ public class DraftCleanup implements ApplicationListener<MetadataRemove> {
 					.findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
 
 			for (MetadataDraft md : toRemove) {
-				remove(md);
+				draftUtilities.removeDraft(md);
 			}
 		} catch (Throwable e) {
 			Log.error(Geonet.DATA_MANAGER, "Couldn't clean up associated drafts of " + event.getMd(), e);
 		}
 
 		Log.trace(Geonet.DATA_MANAGER, "Finished cleaning up of " + event.getMd());
-	}
-
-	private void remove(MetadataDraft metadata) {
-		
-		if(!metadataDraftRepository.exists(metadata.getId())) {
-			//We are being called after removing everything related to this record.
-			//Nothing to do here
-			return;
-		}
-		
-		Log.trace(Geonet.DATA_MANAGER, "Removing draft " + metadata);
-
-		try {
-			ServiceContext context = ServiceContext.get();
-
-			// Remove related data
-			metadataOperations.deleteMetadataOper(context, String.valueOf(metadata.getId()), false);
-			metadataRatingByIpRepository.deleteAllById_MetadataId(metadata.getId());
-			metadataValidationRepository.deleteAllById_MetadataId(metadata.getId());
-			metadataStatusRepository.deleteAllById_MetadataId(metadata.getId());
-			userSavedSelectionRepository.deleteAllByUuid(metadata.getUuid());
-
-			// Logical delete for metadata file uploads
-			PathSpec<MetadataFileUpload, String> deletedDatePathSpec = new PathSpec<MetadataFileUpload, String>() {
-				@Override
-				public javax.persistence.criteria.Path<String> getPath(Root<MetadataFileUpload> root) {
-					return root.get(MetadataFileUpload_.deletedDate);
-				}
-			};
-			metadataFileUploadRepository.createBatchUpdateQuery(deletedDatePathSpec, new ISODate().toString(),
-					MetadataFileUploadSpecs.isNotDeletedForMetadata(metadata.getId()));
-
-			// --- remove metadata
-			xmlSerializer.delete(String.valueOf(metadata.getId()), context);
-
-			searchManager.delete(metadata.getId() + "");
-		} catch (Exception e) {
-			Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + metadata, e);
-		}
 	}
 }

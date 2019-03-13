@@ -2,12 +2,14 @@ package org.fao.geonet.listener.metadata.draft;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -15,8 +17,10 @@ import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -51,6 +55,9 @@ public class DraftUtilities {
 
 	@Autowired
 	private MetadataDraftRepository metadataDraftRepository;
+
+	@Autowired
+	private MetadataRatingByIpRepository metadataRatingByIpRepository;
 
 	/**
 	 * Replace the contents of the record with the ones on the draft, if exists, and
@@ -88,6 +95,27 @@ public class DraftUtilities {
 			metadataValidationRepository.save(mv);
 		}
 
+		// Reassign metadata workflow statuses
+		List<MetadataStatus> statuses = metadataStatusRepository.findAllById_MetadataId(draft.getId(),
+				SortUtils.createSort(MetadataStatus_.id, MetadataStatusId_.metadataId));
+		for (MetadataStatus old : statuses) {
+			MetadataStatus st = new MetadataStatus();
+			st.setChangeMessage(old.getChangeMessage());
+			st.setCloseDate(old.getCloseDate());
+			st.setCurrentState(old.getCurrentState());
+			st.setOwner(old.getOwner());
+			st.setPreviousState(old.getPreviousState());
+			st.setStatusValue(old.getStatusValue());
+			MetadataStatusId id = new MetadataStatusId();
+			id.setChangeDate(old.getId().getChangeDate());
+			id.setStatusId(old.getId().getStatusId());
+			id.setUserId(old.getId().getUserId());
+			id.setMetadataId(md.getId());
+			st.setId(id);
+			metadataStatusRepository.save(st);
+			metadataStatusRepository.delete(old);
+		}
+
 		// Reassign file uploads
 		List<MetadataFileUpload> fileUploads = metadataFileUploadRepository
 				.findAll(MetadataFileUploadSpecs.hasId(draft.getId()));
@@ -101,16 +129,13 @@ public class DraftUtilities {
 			Element xmlData = draft.getXmlData(false);
 			String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
 
-			removeDraft(draft);
-
-			if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-				Log.trace(Geonet.DATA_MANAGER, "Updating record " + md.getId() + " with ");
-				Log.trace(Geonet.DATA_MANAGER, (new org.jdom.output.XMLOutputter()).outputString(xmlData));
-			}
+			removeDraft((MetadataDraft) draft);
+			
 
 			// Copy contents
 			Log.trace(Geonet.DATA_MANAGER, "Update record with id " + md.getId());
-			md = metadataManager.updateMetadata(context, String.valueOf(md.getId()), xmlData, true, true, true,
+			md = metadataManager.updateMetadata(context, String.valueOf(md.getId()), 
+					xmlData, false, false, true,
 					context.getLanguage(), changeDate, true);
 
 			Log.info(Geonet.DATA_MANAGER, "Record updated with draft contents: " + md.getId());
@@ -121,25 +146,29 @@ public class DraftUtilities {
 		return md;
 	}
 
-	/**
-	 * Completely remove a draft associated to the UUID of the metadata.
-	 * 
-	 * @param md
-	 * @throws Exception
-	 */
-	public void removeDraft(AbstractMetadata md) throws Exception {
-		AbstractMetadata draft = metadataDraftRepository.findOneByUuid(md.getUuid());
+	public void removeDraft(MetadataDraft draft) {
 
-		if (draft != null) {
-			ServiceContext context = ServiceContext.get();
+		Integer id = draft.getId();
+		if (!metadataDraftRepository.exists(id)) {
+			// We are being called after removing everything related to this record.
+			// Nothing to do here
+			return;
+		}
 
-			Log.debug(Geonet.DATA_MANAGER, "Remove draft with id " + draft.getId());
-			// Remove draft
-			metadataOperations.deleteMetadataOper(context, String.valueOf(draft.getId()), false);
-			metadataStatusRepository.deleteAllById_MetadataId(draft.getId());
-			xmlSerializer.delete(String.valueOf(draft.getId()), context);
+		Log.trace(Geonet.DATA_MANAGER, "Removing draft " + draft);
 
-			searchManager.delete(draft.getId() + "");
+		try {
+			// Remove related data
+			metadataOperations.deleteMetadataOper(String.valueOf(id), false);
+			metadataRatingByIpRepository.deleteAllById_MetadataId(id);
+			metadataValidationRepository.deleteAllById_MetadataId(id);
+			metadataStatusRepository.deleteAllById_MetadataId(id);
+
+			// --- remove metadata
+			xmlSerializer.delete(String.valueOf(id), ServiceContext.get());
+			searchManager.delete(id + "");
+		} catch (Exception e) {
+			Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + draft, e);
 		}
 	}
 }

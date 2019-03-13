@@ -23,8 +23,6 @@
 
 package org.fao.geonet.listener.metadata.draft;
 
-import java.util.Arrays;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
@@ -34,7 +32,6 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.events.md.MetadataStatusChanged;
-import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -42,6 +39,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
@@ -66,16 +64,13 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 	private IMetadataStatus metadataStatus;
 
 	@Autowired
-	private IMetadataIndexer metadataIndexer;
-
-	@Autowired
 	private DraftUtilities draftUtilities;
 
 	@Override
 	public void onApplicationEvent(MetadataStatusChanged event) {
 	}
 
-	@TransactionalEventListener
+	@TransactionalEventListener(phase=TransactionPhase.BEFORE_COMMIT)
 	public void doAfterCommit(MetadataStatusChanged event) {
 		try {
 			Log.trace(Geonet.DATA_MANAGER, "Status changed for metadata with id " + event.getMd().getId());
@@ -107,8 +102,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 				try {
 					Log.trace(Geonet.DATA_MANAGER, "Replacing contents of approved record (ID=" + event.getMd().getId()
 							+ ") with draft, if exists.");
-					AbstractMetadata md = approveWithDraft(event);
-					validate(md);
+					approveWithDraft(event);
 				} catch (Exception e) {
 					Log.error(Geonet.DATA_MANAGER, "Error upgrading status", e);
 
@@ -121,14 +115,13 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 	}
 
 	private void removeDraft(AbstractMetadata md) throws Exception {
-		draftUtilities.removeDraft(md);
-	}
-
-	private void validate(AbstractMetadata md) {
-		try {
-			metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(md.getId())));
-		} catch (Exception e) {
-			Log.error(Geonet.DATA_MANAGER, "Error validating record with id " + md.getId(), e);
+		
+		if(!(md instanceof MetadataDraft)) {
+			md = metadataDraftRepository.findOneByUuid(md.getUuid());
+		}
+		
+		if (md != null) {
+			draftUtilities.removeDraft((MetadataDraft) md);
 		}
 	}
 
@@ -159,6 +152,7 @@ public class ApproveRecord implements ApplicationListener<MetadataStatusChanged>
 		}
 
 		if (draft != null) {
+			Log.trace(Geonet.DATA_MANAGER, "Approving record " + md.getId() + " which has a draft " + draft.getId());
 			md = draftUtilities.replaceMetadataWithDraft(md, draft);
 		}
 

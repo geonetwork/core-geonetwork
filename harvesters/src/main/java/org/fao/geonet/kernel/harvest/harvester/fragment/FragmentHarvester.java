@@ -576,7 +576,7 @@ public class FragmentHarvester extends BaseAligner {
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = metadataRepository.findOne(iId);
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-        repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, iId);
+        repository.deleteAllByMetadataId(iId);
 
         if (isSubtemplate) {
           // Note: we use fragmentAllPrivs here because subtemplates need to be 

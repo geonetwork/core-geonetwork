@@ -23,11 +23,14 @@
 
 package org.fao.geonet.repository;
 
-import org.springframework.data.repository.query.Param;
+import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import java.util.Collection;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Custom methods for interacting with HarvestHistory repository.
@@ -36,19 +39,27 @@ import java.util.Collection;
  */
 public interface HarvestHistoryRepositoryCustom {
 
-    /**
-     * Delete all Harvest history instances whose id is in the collection of ids.
-     *
-     * @param ids the ids of the history elements to delete
-     * @return number or entities deleted
-     */
-    int deleteAllById(Collection<Integer> ids);
+	/**
+	 * Delete all Harvest history instances whose id is in the collection of ids.
+	 *
+	 * @param ids
+	 *            the ids of the history elements to delete
+	 * @return number or entities deleted
+	 */
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	@Query(value = "DELETE FROM HarvestHistory h where h.id in (?1)")
+	int deleteAllById(Collection<Integer> ids);
 
-    /**
-     * Set the deleted flag to true in all history entities for the given uuid.
-     *
-     * @param harvesterUuid the harvester uuid.
-     * @return number or entities modified
-     */
-    int markAllAsDeleted(@Param("uuid") @Nonnull String harvesterUuid);
+	/**
+	 * Set the deleted flag to true in all history entities for the given uuid.
+	 *
+	 * @param harvesterUuid
+	 *            the harvester uuid.
+	 * @return number or entities modified
+	 */
+	@Transactional
+	@Query(value = "UPDATE HarvestHistory SET deleted_JpaWorkaround = 'y'" + "WHERE harvesterUuid in (:uuid)")
+	@Modifying(clearAutomatically = true)
+	int markAllAsDeleted(@Param("uuid") @Nonnull String harvesterUuid);
 }

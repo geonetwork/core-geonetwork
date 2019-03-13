@@ -494,7 +494,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             //--- web interface so we have to re-set both
 
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+            repository.deleteAllByMetadataId(Integer.parseInt(id));
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();

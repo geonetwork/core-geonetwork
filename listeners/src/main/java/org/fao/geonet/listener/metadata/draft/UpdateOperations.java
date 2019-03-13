@@ -42,6 +42,7 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import jeeves.server.context.ServiceContext;
@@ -75,7 +76,7 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
 	public void onApplicationEvent(MetadataShare event) {
 	}
 
-	@TransactionalEventListener
+	@TransactionalEventListener(phase=TransactionPhase.BEFORE_COMMIT)
 	public void doAfterCommit(MetadataShare event) {
 
 		try {
@@ -85,7 +86,6 @@ public class UpdateOperations implements ApplicationListener<MetadataShare> {
 			AbstractMetadata md = metadataUtils.findOne(event.getRecord());
 
 			if (md == null) {
-				// This is why we require a new transaction above
 				// The metadata is still being created, no need to check for draft.
 				// If we try to update now, it could lead us to concurrency issues
 				return;
