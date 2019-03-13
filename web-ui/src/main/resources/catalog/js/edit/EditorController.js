@@ -131,8 +131,6 @@
       $scope.unsupportedSchema = false;
       $scope.gnOnlinesrc = gnOnlinesrc;
       $scope.redirectUrl = null;
-      // Enable workflow functions
-      $scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
 
       /**
        * Animation duration for slide up/down
@@ -162,6 +160,10 @@
         promises.push(gnConfigService.load());
         $q.all(promises).then(function(c) {
           // Config loaded
+
+          // Enable workflow functions
+          $scope.isMdWorkflowEnable = gnConfig['metadata.workflow.enable'];
+
           if ($routeParams.id) {
             // Check requested metadata exists
             gnSearchManagerService.gnSearch({
