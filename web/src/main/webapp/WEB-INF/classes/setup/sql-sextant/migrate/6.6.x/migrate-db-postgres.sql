@@ -78,11 +78,46 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'fre','Fiche impo
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'fre','Demande de création de DOI');
 
 
+DELETE FROM schematroncriteria
+ WHERE concat(group_name, group_schematronid) IN (
+   SElECT concat(name, schematronid) FROM schematroncriteriagroup sg
+     WHERE schematronid IN (
+       SElECT id FROM Schematron WHERE filename = 'schematron-rules-inspire.disabled.xsl'));
+
+DELETE FROM schematroncriteriagroup
+ WHERE schematronid IN (SElECT id FROM Schematron WHERE filename = 'schematron-rules-inspire.disabled.xsl');
+
+DELETE FROM schematrondes
+ WHERE iddes IN (SElECT id FROM Schematron WHERE filename = 'schematron-rules-inspire.disabled.xsl');
+
+DELETE FROM Schematron WHERE filename = 'schematron-rules-inspire.disabled.xsl';
 
 
 
+DELETE FROM schematroncriteria
+ WHERE concat(group_name, group_schematronid) IN (
+   SElECT concat(name, schematronid) FROM schematroncriteriagroup sg
+     WHERE schematronid IN (
+       SElECT id FROM Schematron WHERE schemaname IN ('iso19139.sextant', 'iso19139.emodnet.chemistry', 'iso19139.emodnet.hydrography', 'iso19139.myocean')));
+
+DELETE FROM schematroncriteriagroup
+ WHERE schematronid IN (SElECT id FROM Schematron WHERE schemaname IN ('iso19139.sextant', 'iso19139.emodnet.chemistry', 'iso19139.emodnet.hydrography', 'iso19139.myocean'));
+
+DELETE FROM schematrondes
+ WHERE iddes IN (SElECT id FROM Schematron WHERE schemaname IN ('iso19139.sextant', 'iso19139.emodnet.chemistry', 'iso19139.emodnet.hydrography', 'iso19139.myocean'));
+
+DELETE FROM schematron
+  WHERE schemaname IN ('iso19139.sextant', 'iso19139.emodnet.chemistry', 'iso19139.emodnet.hydrography', 'iso19139.myocean');
 
 
+UPDATE Schematron SET filename = 'schematron-rules-url-check.xsl' WHERE filename = 'schematron-rules-url-check.report_only.xsl';
+UPDATE Schematron SET filename = 'schematron-rules-inspire-sds.xsl' WHERE filename = 'schematron-rules-inspire-sds.disabled.xsl';
+UPDATE Schematron SET filename = 'schematron-rules-inspire-strict.xsl' WHERE filename = 'schematron-rules-inspire-strict.disabled.xsl';
+UPDATE Schematron SET filename = 'schematron-rules-inspire.xsl' WHERE filename = 'schematron-rules-inspire-disabled.xsl';
+
+
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', 'false', 2, 9170, 'n');
 
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/vcs/enable', 'false', 2, 9161, 'n');
