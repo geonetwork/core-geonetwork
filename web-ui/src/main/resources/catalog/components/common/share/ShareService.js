@@ -180,10 +180,10 @@
           }
 
           $http.put(url)
-            .success(function(data) {
-              defer.resolve(data);
-            }).error(function(data) {
-            defer.reject(data);
+            .then(function(response) {
+              defer.resolve(response);
+            }, function(response) {
+              defer.reject(response);
           });
 
           return defer.promise;
