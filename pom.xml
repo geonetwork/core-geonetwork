@@ -465,6 +465,16 @@
         <groupId>avalon-framework</groupId>
         <artifactId>avalon-framework-api</artifactId>
         <version>4.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-javamail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jms</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.avalon.framework</groupId>
