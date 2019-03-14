@@ -75,7 +75,7 @@
     'gnSearchSettings',
     'gnMetadataActions',
     'gnConfig',
-    'gnConfigService'
+    'gnConfigService',
     function($compile, gnMap, gnOwsCapabilities, gnSearchSettings,
              gnMetadataActions, gnConfig, gnConfigService) {
 
