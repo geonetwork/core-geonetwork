@@ -28,11 +28,13 @@
 
   goog.require('gn_catalog_service');
   goog.require('gn_utility');
+  goog.require('gn_login_service');
 
   var module = angular.module('gn_login_controller', [
     'gn_utility',
     'gn_catalog_service',
-    'vcRecaptcha'
+    'vcRecaptcha',
+    'gn_login_service'
   ]);
 
   /**
@@ -42,11 +44,11 @@
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
        'gnUtilityService', 'gnConfig', 'gnGlobalSettings',
-       'vcRecaptchaService', '$q',
+       'vcRecaptchaService', '$q', 'gnLoginService',
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
                gnUtilityService, gnConfig, gnGlobalSettings,
-               vcRecaptchaService, $q) {
+               vcRecaptchaService, $q, gnLoginService) {
           $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
@@ -188,6 +190,8 @@
                   window.location.href = redirectTo;
            });
          };
+
+         $scope.signin = gnLoginService.signin;
 
          initForm();
 

@@ -37,12 +37,13 @@ goog.require('gn_saved_selections');
 goog.require('gn_search_manager');
 goog.require('gn_session_service');
 goog.require('gn_alert');
+goog.require('gn_login_service');
 
 
   var module = angular.module('gn_cat_controller',
       ['gn_search_manager', 'gn_session_service',
         'gn_admin_menu', 'gn_saved_selections',
-        'gn_external_viewer', 'gn_history', 'gn_alert']);
+        'gn_external_viewer', 'gn_history', 'gn_alert', 'gn_login_service']);
 
 
   module.constant('gnSearchSettings', {});
@@ -419,13 +420,13 @@ goog.require('gn_alert');
     'gnGlobalSettings', '$location', 'gnUtilityService',
     'gnSessionService', 'gnLangs', 'gnAdminMenu',
     'gnViewerSettings', 'gnSearchSettings', '$cookies',
-    'gnExternalViewer', 'gnAlertService',
+    'gnExternalViewer', 'gnAlertService', 'gnLoginService',
     function($scope, $http, $q, $rootScope, $translate,
              gnSearchManagerService, gnConfigService, gnConfig,
              gnGlobalSettings, $location, gnUtilityService,
              gnSessionService, gnLangs, gnAdminMenu,
              gnViewerSettings, gnSearchSettings, $cookies,
-             gnExternalViewer, gnAlertService) {
+             gnExternalViewer, gnAlertService, gnLoginService) {
       $scope.version = '0.0.1';
 
 
@@ -736,6 +737,9 @@ goog.require('gn_alert');
       $http.get('../../warninghealthcheck')
         .success(healthCheckStatus)
         .error(healthCheckStatus);
+
+      $scope.signin = gnLoginService.signin;
+      $scope.signout = gnLoginService.signout;
     }]);
 
 })();

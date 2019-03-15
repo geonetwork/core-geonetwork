@@ -7,7 +7,7 @@
         </div>
         <div class="panel-body">
           <p data-translate="">loginText</p>
-          <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
+          <form class="form-horizontal" name="gnSigninForm" id="gnSigninForm" action="{{formAction}}"
                 method="post" role="form" data-ng-if="::user" data-ng-show="!shibbolethEnabled">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
   
@@ -52,13 +52,12 @@
                           <input type="checkbox"/><span translate>rememberMe</span>
                       </label>
                   </div>-->
-  
-            <button type="submit"
+            <a data-ng-click="signin('gnSigninForm', signinUsername, signinPassword)"
                     class="btn btn-primary btn-block"
                     data-ng-disabled="!gnSigninForm.$valid">
               <i class="fa fa-fw fa-sign-in"/>
               <span data-translate="">signIn</span>
-            </button>
+            </a>
           </form>
   
           <p class="text-danger"

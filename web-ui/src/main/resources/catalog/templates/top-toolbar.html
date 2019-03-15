@@ -188,8 +188,8 @@
           </li>
           <li role="separator" class="divider hidden-xs"></li>
           <li role="menuitem">
-            <a href="{{gnCfg.mods.signout.appUrl}}"
-               title="{{'signout' | translate}}">
+            <a data-ng-click="signout(gnCfg.mods.signout.appUrl)"
+                   title="{{'signout' | translate}}">
               <i class="fa fa-sign-out"></i>&nbsp;
               {{'signout' | translate}}
             </a>
@@ -208,7 +208,7 @@
         </a>
         <ul class="dropdown-menu" role="menu">
           <li role="menuitem">
-            <form name="gnSigninForm" class="navbar-form flex-row"
+            <form name="gnSigninForm" id="gnSigninForm" class="navbar-form flex-row"
               action="{{signInFormAction}}" method="post" role="form">
               <input type="hidden" name="_csrf" value="{{csrf}}"/>
               <div class="form-group form-group-sm">
@@ -236,11 +236,11 @@
                 </div>
               </div>
               <div class="flex-spacer hidden-xs"></div>
-              <button type="submit" class="btn btn-primary btn-sm pull-right"
-                      aria-label="{{'signIn' | translate}}"
-                      data-ng-disabled="!gnSigninForm.$valid">
-                <i class="fa fa-sign-in"></i>
-              </button>
+              <a data-ng-click="signin('gnSigninForm', signinUsername, signinPassword)"
+                 class="btn btn-primary btn-sm pull-right"
+                 data-ng-disabled="!gnSigninForm.$valid">
+                <i class="fa fa-fw fa-sign-in"/>
+              </a>
             </form>
           </li>
         </ul>
