@@ -38,6 +38,7 @@
         {{source.name}} ({{('source-' + source.type) | translate}})
         <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right"
+                  data-ng-disabled="!gnSourceForm.$valid"
                   data-ng-click="updateSource()">
             <i class="fa fa-floppy-o"></i>&nbsp;
             <span data-translate="">save</span>
@@ -53,25 +54,28 @@
       <div class="panel-body">
 
         <div data-ng-show="source.type === 'subportal'">
-          <label data-translate="">sourceUuid</label>
-          <input type="text"
-                 class="form-control"
-                 data-ng-model="source.uuid"/>
-          <p class="help-block" data-translate="">sourceUuid-help</p>
+          <form name="gnSourceForm">
+            <label data-translate="" class="gn-required">sourceUuid</label>
+            <input type="text"
+                   class="form-control"
+                   data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
+                   data-ng-model="source.uuid"/>
+            <p class="help-block" data-translate="">sourceUuid-help</p>
 
-          <label data-translate="">sourceName</label>
-          <input type="text"
-                 class="form-control"
-                 data-ng-model="source.name"/>
-          <p class="help-block" data-translate="">sourceName-help</p>
+            <label data-translate="">sourceName</label>
+            <input type="text"
+                   class="form-control"
+                   data-ng-pattern="/^[A-Za-z0-9\-_]+$/"
+                   data-ng-model="source.name"/>
+            <p class="help-block" data-translate="">sourceName-help</p>
 
 
-          <label data-translate="">sourceFilter</label>
-          <input type="text"
-                 class="form-control"
-                 data-ng-model="source.filter"/>
-          <p class="help-block" data-translate="">sourceFilter-help</p>
-
+            <label data-translate="">sourceFilter</label>
+            <input type="text"
+                   class="form-control"
+                   data-ng-model="source.filter"/>
+            <p class="help-block" data-translate="">sourceFilter-help</p>
+          </form>
 
           <div>
             <label data-translate="">sourceLogo</label>
@@ -96,8 +100,8 @@
                 <div class="form-group" gn-logo-picker="source.logo"></div>
               </div>
             </div>
-            <!--Display logo upload input-->
 
+            <!--Display logo upload input-->
             <form id="gn-group-edit" name="gnGroupEdit"
                   method="POST"
                   data-file-upload="logoUploadOptions" role="form">
