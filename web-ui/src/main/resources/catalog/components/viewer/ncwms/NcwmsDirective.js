@@ -333,16 +333,17 @@
             scope.layer.set('legend',
               gnNcWms.updateLegendUrl(scope.layer.get('legend'),
                 angular.extend({
-                  PALETTE: scope.params.STYLES
+                  PALETTE: scope.params.STYLES,
+                  style: scope.params.STYLES
                 }, scope.params)));
           };
 
           scope.isLayerNcwms = function() {
             return gnNcWms.isLayerNcwms(scope.layer);
-          }
+          };
           scope.isLayerOceanotron = function() {
             return gnNcWms.isLayerOceanotron(scope.layer);
-          }
+          };
 
           // handle layer change in the directive
           scope.$watch('layer', function(layer) {

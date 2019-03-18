@@ -304,6 +304,18 @@
 
         var parts = legendUrl.split('?');
 
+        // in case semicolons are used as separators, replace with ampersands; example url:
+        // http://sdn.oceanbrowser.net/web-vis/Python/web/wms?request=GetLegendGraphic;width=100;layer=Mediterranean%20Sea/Temperature.19002013.4Danl.nc%2ATemperature_L2;format=image/png;style=contour;height=300
+        if (parts.length > 1) {
+          var semicolonCount = (parts[1].match(/;/g) || []).length;
+          var ampersandCount = (parts[1].match(/&/g) || []).length;
+
+          // clearly semicolons are used as separators in this case
+          if (semicolonCount > ampersandCount) {
+            parts[1] = parts[1].replace(/;/g, '&');
+          }
+        }
+
         var p = parts.length > 1 ?
             gnUrlUtils.parseKeyValue(parts[1]) : {};
         angular.extend(p, params);
