@@ -90,5 +90,6 @@
   "emodnetOrgType-Government": "Gouvernment / Administration",
   "emodnetOrgType-Business": "Entreprise / Société privée",
   "emodnetOrgType-NGO": "ONG / Société civile",
-  "emodnetOrgType-Other": "Autre"
+  "emodnetOrgType-Other": "Autre",
+  "profileGraph": "Profil"
 }
