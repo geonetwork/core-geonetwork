@@ -14,14 +14,12 @@
             <div class="col-sm-6 col-md-6 col-lg-5">
               <div class="input-group gn-form-any">
 
-              <span class="input-group-addon">
-                <label>
-                  <input type="checkbox" data-ng-model="onlyMyRecord.is"
-                         data-ng-change="toggleOnlyMyRecord(triggerSearch);">
-                  <span data-translate="">onlyMyRecord</span>
-                </label>
-              </span>
-
+                <span class="input-group-addon">
+                  <label>
+                    <input type="checkbox" data-ng-model="onlyMyRecord.is">
+                    <span data-translate="" class="hidden-xs">onlyMyRecord</span>
+                  </label>
+                </span>
                 <input type="text"
                        class="form-control"
                        id="gn-any-field"
@@ -41,7 +39,7 @@
                     <i class="fa fa-search"></i>
                   </button>
                   <button type="button"
-                          data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.defaultParams);"
+                          data-ng-click="setOnlyMyRecord();resetSearch(defaultSearchObj.defaultParams);"
                           title="{{'ClearTitle' | translate}}"
                           class="btn btn-default">
                     <i class="fa fa-times"></i>
