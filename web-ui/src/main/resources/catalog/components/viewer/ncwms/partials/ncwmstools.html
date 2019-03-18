@@ -110,7 +110,7 @@
       <label class="col-sm-4" for="ncwmsstyles">Styles</label>
       <div class="col-sm-8">
         <select class="form-control input-sm" id="ncwmsstyles" ng-model="palette.value" ng-change="updateStyle()">
-          <option ng-repeat="(pal, style) in palettes" value="{{pal}}">{{pal}}</option>
+          <option ng-repeat="(key, value) in palettes" value="{{key}}">{{key}}</option>
         </select>
       </div>
     </div>

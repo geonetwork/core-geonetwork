@@ -212,8 +212,16 @@
 
             // styles: init array & set default value
             scope.palettes = gnNcWms.parseStyles(layer);
+            var defaultStyle = layerMetadata.defaultPalette;
+            if (!defaultStyle) {
+              Object.keys(scope.palettes).forEach(function (key) {
+                if (scope.palettes[key] == scope.params.STYLES) {
+                  defaultStyle = key;
+                }
+              });
+            }
             scope.palette = {
-              value: layerMetadata.defaultPalette || ''
+              value: defaultStyle || ''
             };
 
             // elevation (zaxis)
