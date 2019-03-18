@@ -442,6 +442,7 @@
     "mdStatus-4": "Submitted",
     "mdStatus-5": "Rejected",
     "mdStatusTitle-1": "Cancel approval submission",
+    "mdStatusTitle-1b": "Rollback to draft",
     "mdStatusTitle-2": "Approve metadata",
     "mdStatusTitle-3": "Retire metadata",
     "mdStatusTitle-4": "Submit for review",

@@ -217,6 +217,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
         HashSet<String> approvedCompatible = new HashSet<>();
         approvedCompatible.add(StatusValue.Status.SUBMITTED);
         approvedCompatible.add(StatusValue.Status.APPROVED);
+        approvedCompatible.add(StatusValue.Status.DRAFT);
 
         HashSet<String> retiredCompatible = new HashSet<>();
         retiredCompatible.add(StatusValue.Status.DRAFT);
@@ -243,6 +244,8 @@ public class BaseMetadataStatus implements IMetadataStatus {
 
         HashSet<String> draftCompatible = new HashSet<>();
         draftCompatible.add(StatusValue.Status.DRAFT);
+        draftCompatible.add(StatusValue.Status.APPROVED);
+        draftCompatible.add(StatusValue.Status.RETIRED);
 
         if(draftCompatible.contains(currentState)) {
             return true;
