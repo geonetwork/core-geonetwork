@@ -427,6 +427,12 @@
         return $q.resolve();
       };
 
+      this.isLayerAdvancedWms = function(layer) {
+        return layer.get('advancedType') === LAYERTYPE_WMS ||
+          layer.get('advancedType') === LAYERTYPE_WMS_NCWMS ||
+          layer.get('advancedType') === LAYERTYPE_WMS_OCEANOTRON;
+      };
+
       this.isLayerNcwms = function(layer) {
         return layer.get('advancedType') === LAYERTYPE_WMS_NCWMS ||
         layer.get('advancedType') === LAYERTYPE_WMS_OCEANOTRON;

@@ -148,7 +148,7 @@
       }
     }).then(function(response) {
       // Sextant specific
-      if (this.ncwmsService.isLayerNcwms(layer)) {
+      if (this.ncwmsService.isLayerAdvancedWms(layer)) {
         var doc = ol.xml.parse(response.data);
         var props = {};
         ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
@@ -157,6 +157,8 @@
             props[v] = ol.xml.getAllTextContent(node[0], true);
           }
         });
+        this.features = (props.value && props.value != 'none') ?
+          [new ol.Feature(props)] : [];
       } else if(infoFormat == 'application/json') {
         var jsonf = new ol.format.GeoJSON();
         var features = [];
