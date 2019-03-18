@@ -867,10 +867,8 @@
               }
 
               if (!requestedStyle && this.containsStyles(getCapLayer)) {
-                legendUrl = (getCapLayer.Style[getCapLayer.
-                    Style.length - 1].LegendURL) ?
-                    getCapLayer.Style[getCapLayer.
-                        Style.length - 1].LegendURL[0] : undefined;
+                legendUrl = (getCapLayer.Style[0].LegendURL) ?
+                    getCapLayer.Style[0].LegendURL[0] : undefined;
               }
 
               if (legendUrl) {
