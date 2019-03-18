@@ -90,7 +90,8 @@ goog.require('gn_alert');
         },
         'home': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.search#/home'
+          'appUrl': '../../srv/{{lang}}/catalog.search#/home',
+          'showSocialBarInFooter': true
         },
         'search': {
           'enabled': true,
@@ -429,19 +430,19 @@ goog.require('gn_alert');
       $scope.version = '0.0.1';
 
 
-      //Update Links for social media
+      // Links for social media
       $scope.socialMediaLink = $location.absUrl();
-      $scope.$on('$locationChangeSuccess', function(event) {
-        $scope.socialMediaLink = $location.absUrl();
-        $scope.showSocialMediaLink =
-            ($scope.socialMediaLink.indexOf('/metadata/') != -1);
-      });
       $scope.getPermalink = gnUtilityService.getPermalink;
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
       $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
       $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
+
+      $scope.getSocialLinksVisible = function() {
+        var onMdView =  $location.absUrl().indexOf('/metadata/') > -1;
+        return !onMdView && gnGlobalSettings.gnCfg.mods.home.showSocialBarInFooter;
+      };
 
       function detectNode(detector) {
         if (detector.regexp) {
