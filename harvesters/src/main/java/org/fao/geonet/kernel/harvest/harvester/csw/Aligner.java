@@ -195,7 +195,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 if (id == null) {
                     //record doesn't exist (so it doesn't belong to this harvester)
                     log.debug("Adding record with uuid " + ri.uuid);
-                    addMetadata(ri, getOwnerId(params), getOwnerGroupId(params), ri.uuid);
+                    addMetadata(ri, ri.uuid);
                 } else if (localUuids.getID(ri.uuid) == null) {
                     //Record does not belong to this harvester
                     result.datasetUuidExist++;
@@ -208,7 +208,7 @@ public class Aligner extends BaseAligner<CswParams> {
                             break;
                         case RANDOM:
                             log.debug("Generating random uuid for remote record with uuid " + ri.uuid);
-                            addMetadata(ri, getOwnerId(params), getOwnerGroupId(params), UUID.randomUUID().toString());
+                            addMetadata(ri, UUID.randomUUID().toString());
                             break;
                         case SKIP:
                             log.debug("Skipping record with uuid " + ri.uuid);
