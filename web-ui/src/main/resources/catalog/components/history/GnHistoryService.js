@@ -46,6 +46,9 @@
             '/close?closeDate=' + (optionalDateOrNow || moment().format('YYYY-MM-DDTHH:mm:ss')));
         };
 
+        this.restoreHistoryElement = function(statusId) {
+          return $http.post('../api/records/status/' + statusId + '/restore');
+        };
 
         function buildFilter(filter) {
           var filters = [];

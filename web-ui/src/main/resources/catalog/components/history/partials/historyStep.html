@@ -51,6 +51,36 @@
       <img class="img-circle"
            data-ng-src="//gravatar.com/avatar/{{h.authorEmail | md5}}?s=18"/>
       {{h.authorName}}
+
+      <div class="btn-group btn-group-xs pull-right timeline-btn-group" role="group">
+        <a class="btn btn-default"
+           target="_blank"
+           data-ng-href="../api/records/status/{{h.idSerialized}}/before"
+           data-ng-if="h.statusValue.type === 'event' &&
+                        (h.statusValue.id === 51 || h.statusValue.id === 60)">
+          <i class="fa fa-fw fa-search"
+            title="{{'View' | translate}}"></i>
+          <span data-translate="">View</span>
+        </a>
+
+        <span class="btn btn-default"
+           data-gn-click-and-spin="restoreHistoryElement(h.idSerialized)"
+           data-ng-if="h.statusValue.type === 'event' &&
+          (h.statusValue.id === 51 || h.statusValue.id === 60)">
+          <i class="fa fa-fw fa-magic"
+            title="{{'restore' | translate}}"></i>
+          <span data-translate="">restore</span>
+        </span>
+
+        <span class="btn btn-default"
+           data-gn-click-and-spin="restoreHistoryElement(h.idSerialized)"
+           data-ng-if="h.statusValue.type === 'event' &&
+          (h.statusValue.id === 63)">
+          <i class="fa fa-fw fa-share"
+            title="{{'restore' | translate}}"></i>
+          <span data-translate="">rollback</span>
+        </span>
+      </div>
     </div>
     <div class="timeline-body" data-ng-show="h.closeDate == null">
 

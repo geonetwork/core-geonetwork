@@ -535,6 +535,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'spa','Status cha
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'spa','Record updated by process {{h.item1}}.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'spa','Record deleted.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'spa','Record imported.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'spa','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'spa','DOI creation requested.');
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'spa','Preferred records');

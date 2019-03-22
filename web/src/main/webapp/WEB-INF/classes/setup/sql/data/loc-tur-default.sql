@@ -538,6 +538,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'tur','Status cha
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'tur','Record updated by process {{h.item1}}.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'tur','Record deleted.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'tur','Record imported.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'tur','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'tur','DOI creation requested.');
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'tur','Preferred records');

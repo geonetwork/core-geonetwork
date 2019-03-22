@@ -38,12 +38,14 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.api.records.model.MetadataStatusResponse;
@@ -62,9 +64,11 @@ import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
+import org.fao.geonet.events.history.RecordRestoredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
@@ -75,6 +79,9 @@ import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
@@ -98,6 +105,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
@@ -124,7 +132,7 @@ public class MetadataWorkflowApi {
 
     @Autowired
     AccessManager accessManager;
-    
+
     @Autowired
     SettingManager settingManager;
 
@@ -292,7 +300,7 @@ public class MetadataWorkflowApi {
             @ApiParam(value = "User identifier", required = true) @PathVariable int userId,
             @ApiParam(value = "Change date", required = true) @PathVariable String changeDate,
             @ApiParam(value = "Close date", required = true) @RequestParam String closeDate, HttpServletRequest request)
-            throws Exception {
+                    throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         MetadataStatus metadataStatus = metadataStatusRepository
@@ -362,9 +370,9 @@ public class MetadataWorkflowApi {
                 || (owner != null && owner.length > 0) || (record != null && record.length > 0)) {
             metadataStatuses = metadataStatusRepository.searchStatus(
                     type != null && type.length > 0 ? Arrays.asList(type) : null,
-                    author != null && author.length > 0 ? Arrays.asList(author) : null,
-                    owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
-                    record != null && record.length > 0 ? Arrays.asList(record) : null, dateFrom, dateTo, pageRequest);
+                            author != null && author.length > 0 ? Arrays.asList(author) : null,
+                                    owner != null && owner.length > 0 ? Arrays.asList(owner) : null,
+                                            record != null && record.length > 0 ? Arrays.asList(record) : null, dateFrom, dateTo, pageRequest);
         } else {
             metadataStatuses = metadataStatusRepository.findAll(pageRequest).getContent();
         }
@@ -399,6 +407,127 @@ public class MetadataWorkflowApi {
             metadataStatus.setOwner(parameter.getOwner());
         }
         return metadataStatus;
+    }
+
+    // The restore function currently supports these states
+    static final Integer[] supportedStatuses = {
+            Integer.parseInt(StatusValue.Events.RECORDUPDATED),
+            Integer.parseInt(StatusValue.Events.RECORDPROCESSINGCHANGE),
+            Integer.parseInt(StatusValue.Events.RECORDRESTORED)};
+
+    @ApiOperation(
+            value = "Get saved content from the status record",
+            notes = "",
+            nickname = "showStatusBefore")
+    @RequestMapping(
+            value = "/status/{serializedId}/before",
+            method = RequestMethod.GET,
+            produces = {
+                    MediaType.APPLICATION_XML_VALUE
+            })
+
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Record found."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String showStatusBefore(
+            @ApiParam(
+                    value = "Record status id",
+                    required = true)
+            @PathVariable
+            String serializedId,
+            HttpServletRequest request
+            )
+                    throws Exception {
+        MetadataStatusId metadataStatusId = MetadataStatusResponse.convertSerializedStringInMetadataStatusId(serializedId);
+
+        MetadataStatusRepository metadataStatusRepository =
+                ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
+
+        MetadataStatus status = metadataStatusRepository.findOne(metadataStatusId);
+
+        if(!StatusValueType.event.equals(status.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, metadataStatusId.getStatusId())) {
+            throw new NotAllowedException("The recover for this element is not supported");
+        }
+
+        String metadataId = metadataStatusId.getMetadataId() + "";
+
+        try {
+            ApiUtils.canViewRecord(metadataId, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
+
+        return status.getPreviousState();
+    }
+
+
+    @ApiOperation(
+            value = "Restore saved content from a status record",
+            notes = "",
+            nickname = "restoreAtStatusSave")
+    @RequestMapping(
+            value = "/status/{serializedId}/restore",
+            method = RequestMethod.POST
+            )
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Record restored."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void restoreAtStatusSave(
+            @ApiParam(
+                    value = "Record status id",
+                    required = true)
+            @PathVariable
+            String serializedId,
+            HttpServletRequest request
+            )
+                    throws Exception {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        MetadataStatusId metadataStatusId = MetadataStatusResponse.convertSerializedStringInMetadataStatusId(serializedId);
+        IMetadataManager dataMan = applicationContext.getBean(IMetadataManager.class);
+
+        MetadataStatusRepository metadataStatusRepository =
+                ApplicationContextHolder.get().getBean(MetadataStatusRepository.class);
+
+        MetadataStatus status = metadataStatusRepository.findOne(metadataStatusId);
+
+        if(!StatusValueType.event.equals(status.getStatusValue().getType()) || !ArrayUtils.contains(supportedStatuses, metadataStatusId.getStatusId())) {
+            throw new NotAllowedException("The recover for this element is not supported");
+        }
+
+        String metadataId = metadataStatusId.getMetadataId() + "";
+
+        AbstractMetadata metadata = null;
+        try {
+            metadata = ApiUtils.canEditRecord(metadataId, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT);
+        }
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ServiceContext context = ApiUtils.createServiceContext(request, locale.getISO3Language());
+
+        String xmlBefore = metadata.getData();
+        Element md = Xml.loadString(status.getPreviousState(), false);
+        dataMan.updateMetadata(context, metadataId, md, false, true, true, context.getLanguage(), null, true);
+
+        if(metadataStatusId.getStatusId() != Integer.parseInt(StatusValue.Events.RECORDRESTORED)) {
+            // Create a new event
+            String xmlAfter = status.getPreviousState();
+            UserSession session = ApiUtils.getUserSession(request.getSession());
+            new RecordRestoredEvent(Long.parseLong(metadataId), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
+        } else {
+            // Remove restore event
+            metadataStatusRepository.delete(status);
+        }
     }
 
     /**

@@ -26,6 +26,7 @@ UPDATE Settings SET internal='n' WHERE name='system/server/securePort';
 
 UPDATE metadata SET data = replace(data, '<gmd:version gco:nilReason="missing">', '<gmd:version gco:nilReason="unknown">') WHERE  data LIKE '%<gmd:version gco:nilReason="missing">%';
 
+
 UPDATE Settings SET value='3.7.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
