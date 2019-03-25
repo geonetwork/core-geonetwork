@@ -854,8 +854,11 @@
               <value>5000000</value>
             </systemProperty>
           </systemProperties>
+          <httpConnector>
+            <port>${jetty.port}</port>
+          </httpConnector>
           <stopKey>JETTY_TOP</stopKey>
-          <stopPort>8090</stopPort>
+          <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
       </plugin>
     </plugins>
