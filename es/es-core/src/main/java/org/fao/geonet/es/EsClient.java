@@ -265,7 +265,7 @@ public class EsClient implements InitializingBean {
                     JsonObject token = tokens.get(0).getAsJsonObject();
                     String type = token.get("type").getAsString();
                     if ("SYNONYM".equals(type) || "word".equals(type)) {
-                        analyzedValue = token.get("token").getAsString();
+                        return token.get("token").getAsString();
                     }
                 }
                 return "";
