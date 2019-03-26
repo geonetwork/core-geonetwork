@@ -110,7 +110,8 @@
             ref: '@'
           },
           link: function(scope, element, attrs) {
-            scope.value = parseFloat(attrs['gnMeasure'], 10) || null;
+            var value = parseFloat(attrs['gnMeasure'], 10);
+            scope.value = !isNaN(value)?value:null;
 
             // Load the config from the textarea containing the helpers
             scope.config =
