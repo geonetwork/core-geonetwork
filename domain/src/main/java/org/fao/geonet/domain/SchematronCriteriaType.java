@@ -26,13 +26,18 @@
  */
 package org.fao.geonet.domain;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +69,36 @@ public enum SchematronCriteriaType {
             return applicationContext.getBean(MetadataRepository.class).count(finalSpec) > 0;
         }
     }),
+
+    /**
+     * A criteria where the user highest profile value must match one of the profile ids values.
+     * Multiple ids can be comma separated.
+     */
+    USER_MAIN_PROFILE(new SchematronCriteriaEvaluator() {
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
+                               List<Namespace> metadataNamespaces) {
+
+
+            String[] values = value.split(",");
+            List<String> profiles = Arrays.asList(values);
+
+            final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                final Object principal = authentication.getPrincipal();
+                if (principal instanceof UserDetails) {
+                    final UserDetails userDetails = (UserDetails) principal;
+                    UserRepository userRepo = applicationContext.getBean(UserRepository.class);
+                    User user = userRepo.findOneByUsername(userDetails.getUsername());
+                    if (profiles.contains(user.getProfile().name())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }),
+
     /**
      * An always true criteria.
      */
