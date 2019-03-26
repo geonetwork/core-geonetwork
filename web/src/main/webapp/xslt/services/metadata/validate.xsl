@@ -126,13 +126,7 @@
     <xsl:variable name="errors" select="count(.//svrl:failed-assert)"/>
     <xsl:variable name="successes" select="count(.//svrl:successful-report)"/>
     <xsl:variable name="schematronVerificationError" select="./geonet:schematronVerificationError"/>
-
-    <xsl:message>
-      ===============
-      schematronVerificationError:
-      <xsl:copy-of select="$schematronVerificationError"/>
-    </xsl:message>
-
+    
     <report>
       <id>
         <xsl:value-of select="$rulename"/>
