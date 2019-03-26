@@ -127,32 +127,38 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                 Iterator reports = schemaTronReport.getDescendants(ReportFinder);
                 while (reports.hasNext()) {
                     Element report = (Element) reports.next();
+                    Element schematronVerificationError = report.getChild("schematronVerificationError", Edit.NAMESPACE);
 
-                    Iterator errors = report.getDescendants(ErrorFinder);
-                    while (errors.hasNext()) {
-                        Element err = (Element) errors.next();
 
-                        StringBuilder msg = new StringBuilder();
-                        String reportType;
-                        if (err.getName().equals("failed-assert")) {
-                            reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
-                            reportType = reportType == null ? "No name for rule" : reportType;
+                    if (schematronVerificationError != null) {
+                        errorReport.append("schematronVerificationError: " + schematronVerificationError.getTextTrim());
+                    } else {
+                        Iterator errors = report.getDescendants(ErrorFinder);
+                        while (errors.hasNext()) {
+                            Element err = (Element) errors.next();
 
-                            Iterator descendants = err.getDescendants();
-                            while (descendants.hasNext()) {
-                                Object node = descendants.next();
-                                if (node instanceof Element) {
-                                    String textTrim = ((Element) node).getTextTrim();
-                                    msg.append(textTrim).append(" \n");
+                            StringBuilder msg = new StringBuilder();
+                            String reportType;
+                            if (err.getName().equals("failed-assert")) {
+                                reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
+                                reportType = reportType == null ? "No name for rule" : reportType;
+
+                                Iterator descendants = err.getDescendants();
+                                while (descendants.hasNext()) {
+                                    Object node = descendants.next();
+                                    if (node instanceof Element) {
+                                        String textTrim = ((Element) node).getTextTrim();
+                                        msg.append(textTrim).append(" \n");
+                                    }
                                 }
+                            } else {
+                                reportType = "Xsd Error";
+                                msg.append(err.getChildText("message", Edit.NAMESPACE));
                             }
-                        } else {
-                            reportType = "Xsd Error";
-                            msg.append(err.getChildText("message", Edit.NAMESPACE));
-                        }
 
-                        if (msg.length() > 0) {
-                            errorReport.append(reportType).append(':').append(msg);
+                            if (msg.length() > 0) {
+                                errorReport.append(reportType).append(':').append(msg);
+                            }
                         }
                     }
                 }
