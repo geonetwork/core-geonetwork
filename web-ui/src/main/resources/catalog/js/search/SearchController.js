@@ -30,12 +30,14 @@
   goog.require('gn_catalog_service');
   goog.require('gn_searchsuggestion_service');
   goog.require('gn_static_pages');
+  goog.require('gn_usersearches');
 
   var module = angular.module('gn_search_controller', [
     'ui.bootstrap.typeahead',
     'gn_searchsuggestion_service',
     'gn_catalog_service',
-    'gn_static_pages'
+    'gn_static_pages',
+    'gn_usersearches'
   ]);
 
   /**
@@ -68,6 +70,12 @@
       if (statusSystemRating == 'advanced') {
         $scope.isUserFeedbackEnabled = true;
       }
+
+      $scope.isUserSearchesEnabled = gnConfig['system.usersearches.enabled'];
+      $scope.displayFeaturedSearchesPanel = gnConfig['system.usersearches.displayFeaturedSearchesPanel'];
+
+
+      $scope.ise  = false;
 
       /** Facets configuration */
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
