@@ -126,7 +126,6 @@ public class DefaultStatusActions implements StatusActions {
         if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
-            unsetAllOperations(id);
             dm.setStatus(context, id, Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(), changeMessage);
         }
     }
@@ -161,10 +160,6 @@ public class DefaultStatusActions implements StatusActions {
                 continue;
             }
 
-            // --- Apply changes based on status change
-            // TODO: Would be good to report what has been done ?
-            applyRulesForStatusChange(status);
-
             // --- set status, indexing is assumed to take place later
             metadataStatusManager.setStatusExt(status);
 
@@ -179,26 +174,6 @@ public class DefaultStatusActions implements StatusActions {
         }
 
         return unchanged;
-    }
-
-
-    /**
-     * This apply specific rules depending on status change.
-     * The default rules are:
-     * <ul>
-     *     <li>DISABLED When approved, the record is automatically published.</li>
-     *     <li>When draft or rejected, unpublish the record.</li>
-     * </ul>
-     * @param status
-     * @throws Exception
-     */
-    private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
-        String statusId = status.getId().getStatusId() + "";
-        if (statusId.equals(StatusValue.Status.APPROVED)) {
-            // setAllOperations(mid);
-        } else if (statusId.equals(StatusValue.Status.DRAFT)) {
-            unsetAllOperations(status.getId().getMetadataId());
-        }
     }
 
     /**
@@ -313,19 +288,6 @@ public class DefaultStatusActions implements StatusActions {
             }
         }
         return users;
-    }
-
-    /**
-     * Unset all operations on 'All' Group. Used when status changes from approved to something
-     * else.
-     *
-     * @param mdId The metadata id to unset privileges on
-     */
-    private void unsetAllOperations(int mdId) throws Exception {
-        int allGroup = 1;
-        for (ReservedOperation op : ReservedOperation.values()) {
-            dm.forceUnsetOperation(context, mdId, allGroup, op.getId());
-        }
     }
 
     /**

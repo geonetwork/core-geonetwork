@@ -86,7 +86,15 @@
 
       <div class="btn-group pull-right" role="group">
         <a class="btn btn-default gn-md-edit-btn"
-          data-ng-show="user.canEditRecord(mdView.current.record) && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
+          data-ng-show="user.canEditRecord(mdView.current.record) && mdView.current.record.mdStatus == 2 && (user.isReviewerOrMore() || !isMdWorkflowEnable)"
+          data-gn-confirm-click="{{'cofirmEditApproved' | translate}}"
+          data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
+          title="{{'edit' | translate}}">
+          <i class="fa fa-fw fa-pencil"></i>
+          <span data-translate="" class="hidden-sm hidden-xs">edit</span>
+        </a>
+        <a class="btn btn-default gn-md-edit-btn"
+          data-ng-show="user.canEditRecord(mdView.current.record) && mdView.current.record.mdStatus != 2 && (user.isReviewerOrMore() || mdView.current.record.mdStatus != 4 || !isMdWorkflowEnable)"
           data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}?redirectUrl=catalog.search%23%2Fmetadata%2F{{mdView.current.record.getUuid()}}"
           title="{{'edit' | translate}}">
           <i class="fa fa-fw fa-pencil"></i>
@@ -109,7 +117,7 @@
           {{mdView.current.record.title || mdView.current.record.defaultTitle}}
           <span class="text-muted badge"
                 data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
-                data-ng-if="md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
+                data-ng-if="user.isEditorOrMore() && md.mdStatus<50 && isMdWorkflowEnable">{{('mdStatus-' + md.mdStatus) | translate}}</span>
         </h1>
 
 

@@ -82,9 +82,9 @@
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
-           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 4)">
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 4, 14)">
           <i class="fa fa-fw fa-file-o"></i>&nbsp;
-          <span data-translate="">mdStatusTitle-4</span>
+          <span data-translate="">mdStatusTitle-14</span>
         </a>
       </li>
       <li role="menuitem"
@@ -93,21 +93,21 @@
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
-           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1)">
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1, 31)">
           <i class="fa fa-fw fa-file-o"></i>&nbsp;
-          <span data-translate="">mdStatusTitle-1b</span>
+          <span data-translate="">mdStatusTitle-31</span>
         </a>
       </li>
       <!-- user = editor, status = 4, statusToSelect = 1 -->
       <li role="menuitem"
-          data-ng-if="user.canEditRecord(md) && (user.isAdmin() || user.isEditorForGroup(md.groupOwner)) && md.mdStatus == 4  && isMdWorkflowEnable && md.isWorkflowEnabled()"
+          data-ng-if="user.canEditRecord(md) && !user.isReviewerForGroup(md.groupOwner) && user.isEditorForGroup(md.groupOwner) && md.mdStatus == 4  && isMdWorkflowEnable && md.isWorkflowEnabled()"
           data-ng-class="((allowPublishInvalidMd() === true) || 
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
-           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1)">
+           data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1, 41)">
           <i class="fa fa-fw fa-undo"></i>&nbsp;
-          <span data-translate="">mdStatusTitle-1</span>
+          <span data-translate="">mdStatusTitle-41</span>
         </a>
       </li>
       <!-- user = reviewer, status = 4, statusToSelect = 2 -->
@@ -117,9 +117,9 @@
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
-            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 2)">
+            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 2, 42)">
           <i class="fa fa-fw fa-thumbs-o-up"></i>&nbsp;
-          <span data-translate="">mdStatusTitle-2</span>
+          <span data-translate="">mdStatusTitle-42</span>
         </a>
       </li>
       <!-- user = reviewer, status = 4, statusToSelect = 5 -->
@@ -129,9 +129,9 @@
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
-            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1)">
+            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 1, 411)">
           <i class="fa fa-fw fa-thumbs-o-down"></i>&nbsp;
-          <span data-translate="">mdStatusTitle-5</span>
+          <span data-translate="">mdStatusTitle-411</span>
         </a>
       </li>
       <!-- user = reviewer, status = 4, statusToSelect = 3 -->
@@ -141,9 +141,9 @@
             ((allowPublishInvalidMd() === false) &&
             (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
         <a data-ng-href=""
-            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 3)">
+            data-ng-click="mdService.openUpdateStatusPanel(getScope(), 'workflow', null, 3, 33)">
           <i class="fa fa-fw fa-archive"></i>&nbsp;
-          <span data-translate="">mdStatusTitle-3</span>
+          <span data-translate="">mdStatusTitle-33</span>
         </a>
       </li>
       <li data-ng-if="isMdWorkflowEnable && user.canEditRecord(md) && !md.isWorkflowEnabled()">
