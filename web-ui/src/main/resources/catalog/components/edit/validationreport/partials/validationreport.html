@@ -1,7 +1,7 @@
 <div id="gn-editor-validation-panel" class="panel panel-default" data-ng-class="getClass()">
   <div class="panel-heading"
        data-gn-slide-toggle="">
-    <i class="fa" data-ng-class="getClass('icon')"></i>&nbsp;
+    <i class="fa fa-fw" data-ng-class="getClass('icon')"></i>&nbsp;
     <span data-translate="">validationReport</span>
 
     <button type="button" class="btn btn-default pull-right btn-xs gn-btn-fix"
@@ -46,7 +46,7 @@
         <div data-gn-slide-toggle="" class="panel-heading clearfix">
           <div class="col-md-9">
             <h2 class="gn-schematron-title"><span data-ng-if="type.schematronVerificationError">
-              <i class="fa fa-exclamation-triangle text-danger"></i>&nbsp;</span>{{(type.label || type.id) | translate}}</h2>
+              <i class="fa fa-exclamation-triangle fa-fw text-danger"></i>&nbsp;</span>{{(type.label || type.id) | translate}}</h2>
           </div>
           <div class="col-md-3 gn-nopadding-right" data-ng-if="!type.schematronVerificationError">
 
@@ -65,7 +65,7 @@
           </div>
           <div class="col-md-3 gn-nopadding-right" data-ng-if="type.schematronVerificationError">
             <span class="label pull-right label-danger" data-translate="">
-              runServiceError
+              validationServiceError
             </span>
           </div>
         </div>
@@ -73,6 +73,7 @@
           <ul class="list-group">
             <li class="list-group-item text-danger">
               <p>{{type.schematronVerificationError}}</p>
+              <p data-translate="">validationServiceErrorDetail</p>
             </li>
           </ul>
         </div>

@@ -298,6 +298,8 @@
     "validate-inspire-help": "Check record against inspire validation rules",
     "validationReport": "Validation",
     "runValidation": "Run validation check",
+    "validationServiceError": "Server error",
+    "validationServiceErrorDetail": "Please check server's log files for more information.",
     "fixedOnTop": "Always on top",
     "whoCanAccess": "Who has access",
     "wmsServiceUrl": "Service URL",
