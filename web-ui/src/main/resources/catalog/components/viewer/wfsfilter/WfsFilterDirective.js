@@ -422,13 +422,7 @@
                 geometry: scope.filterGeometry
               }, aggs).
                   then(function(resp) {
-                    indexObject.pushState();
-                    scope.fields = resp.facets;
-                    
-	            resp.indexData.aggregations &&
-                        setFeatureExtent(resp.indexData.aggregations);
-
-                    scope.count = resp.count;
+                    searchResponseHandler(resp);
                     angular.forEach(scope.fields, function(f) {
                       if (expandedFields.indexOf(f.name) >= 0) {
                         f.expanded = true;
@@ -460,8 +454,8 @@
           function setFeatureExtent(agg) {
             scope.autoZoomToExtent = true;
             if (scope.autoZoomToExtent
-              && agg.bbox_xmin && agg.bbox_ymin
-              && agg.bbox_xmax && agg.bbox_ymax) {
+              && agg.bbox_xmin.value && agg.bbox_ymin.value
+              && agg.bbox_xmax.value && agg.bbox_ymax.value) {
               var extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
                 agg.bbox_xmax.value, agg.bbox_ymax.value];
               scope.featureExtent = ol.extent.applyTransform(extent,
@@ -514,13 +508,53 @@
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).
                 then(function(resp) {
-                  indexObject.pushState();
-                  scope.fields = resp.facets;
-                  scope.count = resp.count;
-                  resp.indexData.aggregations &&
-                    setFeatureExtent(resp.indexData.aggregations);
+              searchResponseHandler(resp);
             });
           };
+
+          function searchResponseHandler(resp) {
+            indexObject.pushState();
+            scope.count = resp.count;
+            scope.fields = resp.facets;
+            scope.sortAggregation();
+            resp.indexData.aggregations &&
+            setFeatureExtent(resp.indexData.aggregations);
+          };
+
+          /**
+           * Each aggregations are sorted based as defined in the application profil config
+           * and the query is ordered based on this config.
+           *
+           * The values of each aggregations are sorted, checked first.
+           */
+          scope.sortAggregation = function() {
+            // Disable sorting of aggregations by alpha order and based on expansion
+            // Order comes from application profile
+            // scope.fields.sort(function (a, b) {
+            //   var aChecked = !!scope.output[a.name];
+            //   var bChecked = !!scope.output[b.name];
+            //   var aLabel = a.label;
+            //   var bLabel = b.label;
+            //   if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+            //     return aLabel.localeCompare(bLabel);
+            //   }
+            //   return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+            // });
+
+            scope.fields.forEach(function (facette) {
+              facette.values.sort(function (a, b) {
+                var aChecked = scope.isFacetSelected(facette.name, a.value);
+                var bChecked = scope.isFacetSelected(facette.name, b.value);
+                if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+                  if (gnSearchSettings.facetOrdering === 'alphabetical') {
+                    return a.value.localeCompare(b.value);
+                  }
+                  return b.count - a.count;
+                }
+                return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+              })
+            })
+          }
 
           /**
            * alter form values & resend a search in case there are initial
@@ -554,6 +588,7 @@
             }, aggs).then(function(resp) {
               indexObject.pushState();
               scope.fields = resp.facets;
+              scope.sortAggregation();
               scope.count = resp.count;
 
               // look for date graph fields; call onUpdateDate to refresh them
