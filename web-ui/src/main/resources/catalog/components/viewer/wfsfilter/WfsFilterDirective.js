@@ -464,8 +464,16 @@
             if (scope.autoZoomToExtent
               && agg.bbox_xmin.value && agg.bbox_ymin.value
               && agg.bbox_xmax.value && agg.bbox_ymax.value) {
-              var extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
-                agg.bbox_xmax.value, agg.bbox_ymax.value];
+              var isPoint = agg.bbox_xmin.value === agg.bbox_xmax.value
+                            && agg.bbox_ymin.value === agg.bbox_ymax.value,
+                  radius = .05,
+                  extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
+                            agg.bbox_xmax.value, agg.bbox_ymax.value];
+
+              if (isPoint) {
+                var point = new ol.geom.Point([agg.bbox_xmin.value, agg.bbox_ymin.value]);
+                extent = new ol.extent.buffer(point.getExtent(), radius);
+              }
               scope.featureExtent = ol.extent.applyTransform(extent,
                 ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
             }
