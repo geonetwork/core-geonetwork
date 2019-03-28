@@ -415,6 +415,8 @@
               };
             });
 
+            addBboxAggregation(aggs);
+
             //indexObject is only available if Elastic is configured
             if (indexObject) {
               indexObject.searchWithFacets({
@@ -424,6 +426,9 @@
                   then(function(resp) {
                     indexObject.pushState();
                     scope.sortFacette();
+                    resp.indexData.aggregations &&
+                      scope.zoomToResults(resp.indexData.aggregations);
+
                     scope.count = resp.count;
                     angular.forEach(scope.fields, function(f) {
                       if (expandedFields.indexOf(f.name) >= 0) {
@@ -433,6 +438,40 @@
                   });
             }
           };
+
+
+          // Compute bbox of returned object
+          // At some point we may be able to use geo_bounds aggregation
+          // when it is supported for geo_shape type
+          // See https://github.com/elastic/elasticsearch/issues/7574
+          // Eg.
+          // "viewport" : {
+          //   "geo_bounds" : {
+          //     "field" : "location",
+          //     "wrap_longitude" : true
+          //   }
+          // }
+          function addBboxAggregation(aggs) {
+            aggs['bbox_xmin'] = {'min': {'field': 'bbox_xmin'}};
+            aggs['bbox_ymin'] = {'min': {'field': 'bbox_ymin'}};
+            aggs['bbox_xmax'] = {'max': {'field': 'bbox_xmax'}};
+            aggs['bbox_ymax'] = {'max': {'field': 'bbox_ymax'}};
+          };
+
+          scope.zoomToResults = function (agg) {
+            scope.autoZoomToExtent = true;
+            if (scope.autoZoomToExtent
+                && agg.bbox_xmin && agg.bbox_ymin
+                && agg.bbox_xmax && agg.bbox_ymax) {
+              var extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
+                            agg.bbox_xmax.value, agg.bbox_ymax.value];
+              extent = ol.extent.applyTransform(extent,
+                        ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
+              scope.map.getView().fit(extent, scope.map.getSize());
+            }
+          };
+
+
           scope.accentify = function(str) {
             var searchStr = str.toLocaleLowerCase()
             var accents = {
@@ -485,13 +524,18 @@
             // reset text search in facets
             scope.facetFilters = {};
 
+            var aggs = {};
+            addBboxAggregation(aggs);
+
             // load all facet and fill ui structure for the list
-            return indexObject.searchWithFacets({}).
+            return indexObject.searchWithFacets({}, aggs).
                 then(function(resp) {
                   indexObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
-                });
+                  resp.indexData.aggregations &&
+                    scope.zoomToResults(resp.indexData.aggregations);
+            });
           };
 
           /**
@@ -550,11 +594,14 @@
                   initialFilters.geometry[0][1];
             }
 
+            var aggs = {};
+            addBboxAggregation(aggs);
+
             // resend a search with initial filters to alter the facets
             return indexObject.searchWithFacets({
               params: initialFilters.qParams,
               geometry: initialFilters.geometry
-            }).then(function(resp) {
+            }, aggs).then(function(resp) {
               indexObject.pushState();
               scope.sortFacette();
               scope.count = resp.count;
