@@ -165,6 +165,9 @@
           var indexObject, extentFilter;
           scope.filterGeometry = undefined;
 
+          // Extent of current features matching the filter.
+          scope.featureExtent = undefined;
+
           /**
            * Init the directive when the scope.layer has changed.
            * If the layer is given through the isolate scope object, the init
@@ -426,8 +429,9 @@
                   then(function(resp) {
                     indexObject.pushState();
                     scope.sortFacette();
+
                     resp.indexData.aggregations &&
-                      scope.zoomToResults(resp.indexData.aggregations);
+                        setFeatureExtent(resp.indexData.aggregations);
 
                     scope.count = resp.count;
                     angular.forEach(scope.fields, function(f) {
@@ -458,18 +462,27 @@
             aggs['bbox_ymax'] = {'max': {'field': 'bbox_ymax'}};
           };
 
-          scope.zoomToResults = function (agg) {
+          function setFeatureExtent(agg) {
             scope.autoZoomToExtent = true;
             if (scope.autoZoomToExtent
-                && agg.bbox_xmin && agg.bbox_ymin
-                && agg.bbox_xmax && agg.bbox_ymax) {
+              && agg.bbox_xmin && agg.bbox_ymin
+              && agg.bbox_xmax && agg.bbox_ymax) {
               var extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
-                            agg.bbox_xmax.value, agg.bbox_ymax.value];
-              extent = ol.extent.applyTransform(extent,
-                        ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
-              scope.map.getView().fit(extent, scope.map.getSize());
+                agg.bbox_xmax.value, agg.bbox_ymax.value];
+              scope.featureExtent = ol.extent.applyTransform(extent,
+                ol.proj.getTransform("EPSG:4326", scope.map.getView().getProjection()));
             }
           };
+
+          scope.zoomToResults = function () {
+            scope.map.getView().fit(scope.featureExtent, scope.map.getSize());
+          };
+
+          scope.$watch('featureExtent', function(n, o) {
+            if (n && n !== o) {
+              scope.zoomToResults();
+            }
+          });
 
 
           scope.accentify = function(str) {
@@ -534,7 +547,7 @@
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   resp.indexData.aggregations &&
-                    scope.zoomToResults(resp.indexData.aggregations);
+                    setFeatureExtent(resp.indexData.aggregations);
             });
           };
 
@@ -632,6 +645,8 @@
             // save this filter state for future comparison
             scope.previousFilterState.params = angular.merge({}, scope.output);
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
+
+            scope.zoomToResults();
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output,
