@@ -432,6 +432,12 @@
                       field.isTree ? FACET_TREE_ROWS : ROWS
             }
           };
+          // if (!field.isDateTime) {
+          if (field.idxName.match(/^ft_.*_s$/)) {
+            // ignore empty strings
+            // include/exclude settings as they can only be applied to string fields
+            facetParams[field.idxName].terms['exclude'] = '';
+          }
         }
       }
       else {
