@@ -426,11 +426,11 @@
     </init-param>
     <init-param>
       <param-name>username</param-name>
-      <param-value>${es.username}</param-value>
+      <param-value>${es.ro.username}</param-value>
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>${es.password}</param-value>
+      <param-value>${es.ro.password}</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>
@@ -455,11 +455,11 @@
     </init-param>
     <init-param>
       <param-name>username</param-name>
-      <param-value>${es.username}</param-value>
+      <param-value>${es.ro.username}</param-value>
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>${es.password}</param-value>
+      <param-value>${es.ro.password}</param-value>
     </init-param>
     <init-param>
       <param-name>log</param-name>

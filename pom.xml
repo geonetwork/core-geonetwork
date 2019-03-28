@@ -1384,8 +1384,13 @@
     <es.version.sha512>23c610a8cd33d4229e8b79b0dc5e1f106e5f186d45c83e9994bb15708d2ce4e763fcb7c9be0f652ebdf12905be7f4ced14e1d8e18f6240dfe5ccb4a064239f86</es.version.sha512>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
+    <!-- A user with read/write privileges -->
     <es.username>admin</es.username>
     <es.password>admin</es.password>
+    <!-- A user with readonly privileges
+    to be used from the client side and through the proxy -->
+    <es.ro.username>${es.username}</es.ro.username>
+    <es.ro.password>${es.username}</es.ro.password>
 
     <es.url>http://${es.host}:${es.port}</es.url>
     <es.index.features>geo-features</es.index.features>
