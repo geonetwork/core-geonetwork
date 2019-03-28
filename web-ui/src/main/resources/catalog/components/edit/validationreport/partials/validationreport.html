@@ -1,7 +1,7 @@
 <div id="gn-editor-validation-panel" class="panel panel-default" data-ng-class="getClass()">
   <div class="panel-heading"
        data-gn-slide-toggle="">
-    <i class="fa" data-ng-class="getClass('icon')"></i>&nbsp;
+    <i class="fa fa-fw" data-ng-class="getClass('icon')"></i>&nbsp;
     <span data-translate="">validationReport</span>
 
     <button type="button" class="btn btn-default pull-right btn-xs gn-btn-fix"
@@ -45,9 +45,11 @@
            data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
         <div data-gn-slide-toggle="" class="panel-heading clearfix">
           <div class="col-md-9">
-            <h2 class="gn-schematron-title">{{(type.label || type.id) | translate}}</h2>
+            <h2 class="gn-schematron-title"><span data-ng-if="type.schematronVerificationError">
+              <i class="fa fa-exclamation-triangle fa-fw text-danger"></i>&nbsp;</span>{{(type.label || type.id) | translate}}</h2>
           </div>
-          <div class="col-md-3 gn-nopadding-right">
+          <div class="col-md-3 gn-nopadding-right" data-ng-if="!type.schematronVerificationError">
+
             <span class="label pull-right"
                   data-ng-class="labelImportanceClass(type)"
                   data-ng-if="type.total === '?'">
@@ -61,8 +63,21 @@
                   data-ng-class="labelImportanceClass(type)"
                   data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>
           </div>
+          <div class="col-md-3 gn-nopadding-right" data-ng-if="type.schematronVerificationError">
+            <span class="label pull-right label-danger" data-translate="">
+              validationServiceError
+            </span>
+          </div>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" data-ng-if="type.schematronVerificationError">
+          <ul class="list-group">
+            <li class="list-group-item text-danger">
+              <p>{{type.schematronVerificationError}}</p>
+              <p data-translate="">validationServiceErrorDetail</p>
+            </li>
+          </ul>
+        </div>
+        <div class="panel-body" data-ng-if="!type.schematronVerificationError">
           <ul class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
             <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
                 title="{{rule.details}}"
