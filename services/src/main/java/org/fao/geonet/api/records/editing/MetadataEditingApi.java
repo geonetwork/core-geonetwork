@@ -277,6 +277,7 @@ public class MetadataEditingApi {
 //        boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
         boolean isEditor = session.getProfile().equals(Profile.Editor);
         boolean isReviewer = session.getProfile().equals(Profile.Reviewer);
+        boolean isAdmin = session.getProfile().equals(Profile.Administrator);;
 
         // Checks when workflow enabled if the user is allowed
         boolean isEnabledWorkflow = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -360,7 +361,7 @@ public class MetadataEditingApi {
             if(isEnabledWorkflow) {
                 if(status.equals(StatusValue.Status.SUBMITTED)) {
                     // Only editors can submit a record
-                    if(isEditor) {
+                    if(isEditor || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.SUBMITTED);
                         statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(), changeToStatus);
                     } else {
@@ -371,7 +372,7 @@ public class MetadataEditingApi {
                 }
                 if(status.equals(StatusValue.Status.APPROVED)) {
                     // Only reviewers can approve
-                    if(isReviewer) {
+                    if(isReviewer || isAdmin) {
                         Integer changeToStatus = Integer.parseInt(StatusValue.Status.APPROVED);
                         statusRepository.changeCurrentStatus(session.getUserIdAsInt(), metadata.getId(), changeToStatus);
                     } else {
