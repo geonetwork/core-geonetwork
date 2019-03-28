@@ -54,6 +54,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.BoundingBox;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -312,6 +313,15 @@ public class EsWFSFeatureIndexer {
                             } else {
                                 report.setPointOnlyForGeomsFalse();
                             }
+
+                            // Populate bbox coordinates to be able to compute
+                            // global bbox of search results
+                            final BoundingBox bbox = feature.getBounds();
+                            rootNode.put("bbox_xmin", bbox.getMinX());
+                            rootNode.put("bbox_ymin", bbox.getMinY());
+                            rootNode.put("bbox_xmax", bbox.getMaxX());
+                            rootNode.put("bbox_ymax", bbox.getMaxY());
+
                         } else {
                             String value = attributeValue.toString();
                             rootNode.put(getDocumentFieldName(attributeName),

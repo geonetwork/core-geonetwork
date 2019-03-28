@@ -494,6 +494,7 @@
     var fields = [];
     for (var fieldId in response.aggregations) {
       if (fieldId.indexOf('_stats') > 0) break;
+      if (fieldId.indexOf('bbox_') === 0) continue;
       var respAgg = response.aggregations[fieldId];
       var reqAgg = requestParam.aggs[fieldId];
 
