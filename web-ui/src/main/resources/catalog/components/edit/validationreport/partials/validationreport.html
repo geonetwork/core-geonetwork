@@ -42,9 +42,10 @@
            data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
         <div class="row">
           <div class="col-md-9">
-            <h4 class="gn-schematron-title">{{(type.label || type.id) | translate}}</h4>
+            <h4 class="gn-schematron-title"><span data-ng-if="type.schematronVerificationError">
+              <i class="fa fa-exclamation-triangle fa-fw text-danger"></i>&nbsp;</span>{{(type.label || type.id) | translate}}</h4>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3" data-ng-if="!type.schematronVerificationError">
             <span class="label pull-right"
                   data-ng-class="labelImportanceClass(type)"
                   data-ng-if="type.total === '?'">
@@ -58,8 +59,19 @@
                   data-ng-class="labelImportanceClass(type)"
                   data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>
           </div>
+          <div class="col-md-3" data-ng-if="type.schematronVerificationError">
+            <span class="label pull-right label-danger" data-translate="">
+              validationServiceError
+            </span>
+          </div>
         </div>
-        <div class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
+        <div class="list-group" data-ng-if="type.schematronVerificationError">
+            <li class="list-group-item text-danger">
+              <p>{{type.schematronVerificationError}}</p>
+              <p data-translate="">validationServiceErrorDetail</p>
+            </li>
+        </div>
+        <div class="list-group" data-ng-if="!type.schematronVerificationError" data-ng-repeat="pattern in type.patterns.pattern">
           <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
               title="{{rule.details}}"
               data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
