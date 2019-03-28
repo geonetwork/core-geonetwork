@@ -427,13 +427,7 @@
                 geometry: scope.filterGeometry
               }, aggs).
                   then(function(resp) {
-                    indexObject.pushState();
-                    scope.sortFacette();
-
-                    resp.indexData.aggregations &&
-                        setFeatureExtent(resp.indexData.aggregations);
-
-                    scope.count = resp.count;
+                    searchResponseHandler(resp);
                     angular.forEach(scope.fields, function(f) {
                       if (expandedFields.indexOf(f.name) >= 0) {
                         f.expanded = true;
@@ -465,8 +459,8 @@
           function setFeatureExtent(agg) {
             scope.autoZoomToExtent = true;
             if (scope.autoZoomToExtent
-              && agg.bbox_xmin && agg.bbox_ymin
-              && agg.bbox_xmax && agg.bbox_ymax) {
+              && agg.bbox_xmin.value && agg.bbox_ymin.value
+              && agg.bbox_xmax.value && agg.bbox_ymax.value) {
               var extent = [agg.bbox_xmin.value, agg.bbox_ymin.value,
                 agg.bbox_xmax.value, agg.bbox_ymax.value];
               scope.featureExtent = ol.extent.applyTransform(extent,
@@ -543,33 +537,39 @@
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}, aggs).
                 then(function(resp) {
-                  indexObject.pushState();
-                  scope.fields = resp.facets;
-                  scope.count = resp.count;
-                  resp.indexData.aggregations &&
-                    setFeatureExtent(resp.indexData.aggregations);
+              searchResponseHandler(resp);
             });
           };
 
+          function searchResponseHandler(resp) {
+            indexObject.pushState();
+            scope.count = resp.count;
+            scope.fields = resp.facets;
+            scope.sortAggregation();
+            resp.indexData.aggregations &&
+            setFeatureExtent(resp.indexData.aggregations);
+          };
+
           /**
-           * the facette and sorted based on if they are selected
-           * and then based on localcompare
+           * Each aggregations are sorted based as defined in the application profil config
+           * and the query is ordered based on this config.
+           *
            * The values of each facette are also sorted the same way
            */
-          scope.sortFacette = function() {
-            // sort facette
-            scope.fields.sort(function (a, b) {
-              var aChecked = !!scope.output[a.name];
-              var bChecked = !!scope.output[b.name];
-              var aLabel = a.label;
-              var bLabel = b.label;
-              if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
-                return aLabel.localeCompare(bLabel);
-              }
-              return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+          scope.sortAggregation = function() {
+            // Disable sorting of aggregations by alpha order and based on expansion
+            // Order comes from application profile
+            // scope.fields.sort(function (a, b) {
+            //   var aChecked = !!scope.output[a.name];
+            //   var bChecked = !!scope.output[b.name];
+            //   var aLabel = a.label;
+            //   var bLabel = b.label;
+            //   if ((aChecked && bChecked) || (!aChecked && !bChecked)) {
+            //     return aLabel.localeCompare(bLabel);
+            //   }
+            //   return (aChecked === bChecked) ? 0 : aChecked ? -1 : 1;
+            // });
 
-            })
-            // sort items in facette
             scope.fields.forEach(function (facette) {
               facette.values.sort(function (a, b) {
                 var aChecked = scope.isFacetSelected(facette.name, a.value);
@@ -616,7 +616,7 @@
               geometry: initialFilters.geometry
             }, aggs).then(function(resp) {
               indexObject.pushState();
-              scope.sortFacette();
+              scope.sortAggregation();
               scope.count = resp.count;
 
               // look for date graph fields; call onUpdateDate to refresh them
