@@ -205,7 +205,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 if (id == null) {
                     //record doesn't exist (so it doesn't belong to this harvester)
                     log.info("Adding record with uuid " + ri.uuid);
-                    addMetadata(ri, getOwnerId(params), getOwnerGroupId(params), ri.uuid);
+                        addMetadata(ri, getOwnerId(params), getOwnerGroupId(params), ri.uuid);
                 } else if (localUuids.getID(ri.uuid) == null) {
                     //Record does not belong to this harvester
                     result.datasetUuidExist++;
@@ -285,9 +285,6 @@ public class Aligner extends BaseAligner<CswParams> {
         //
         // insert metadata
         //
-         ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
-       
-
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         ownerId = getOwner();
