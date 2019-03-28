@@ -47,19 +47,10 @@
           gnUserSearchesService.loadFeaturedUserSearches().then(
             function(featuredSearchesCollection) {
               scope.featuredSearches = featuredSearchesCollection.data;
-
-              angular.forEach(scope.featuredSearches, function(search) {
-                if (search[scope.lang]) {
-                  search.title = search.names[scope.lang];
-                } else {
-                  search.title = search.names['eng'];
-                }
-              });
             }, function() {
               // TODO: Log error
             }
           );
-
 
           scope.search = function(url) {
             $location.path('/search').search(url);
@@ -68,4 +59,277 @@
       };
     }]);
 
+
+  /**
+   * Directive to display the user searches panel in the search page.
+   *
+   */
+  module.directive('gnUserSearchesPanel', [
+    'gnUserSearchesService', 'gnConfigService', 'gnConfig',
+    'gnUtilityService', 'gnAlertService', 'gnLangs',
+    '$http', '$translate', '$location',
+    function(gnUserSearchesService, gnConfigService, gnConfig,
+             gnUtilityService, gnAlertService, gnLangs,
+             $http, $translate, $location) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          user: '=gnUserSearchesPanel'
+        },
+        templateUrl:
+          '../../catalog/components/usersearches/partials/usersearchespanel.html',
+        link: function postLink(scope, element, attrs) {
+          scope.lang = gnLangs.current;
+          scope.isUserSearchesEnabled = gnConfig['system.usersearches.enabled'];
+
+          scope.userSearches = null;
+          scope.currentSearch = null;
+
+          scope.$watch('user', function(n, o) {
+            if (n !== o || scope.userSearches === null) {
+              scope.userSearches = null;
+
+              scope.loadUserSearches();
+            }
+          });
+
+          scope.loadUserSearches = function() {
+            gnUserSearchesService.loadUserSearches().then(
+              function(featuredSearchesCollection) {
+                scope.userSearches = featuredSearchesCollection.data;
+              }, function() {
+                // TODO: Log error
+              }
+            );
+          };
+
+          scope.isUserSearchPanelEnabled = function() {
+            return scope.isUserSearchesEnabled &&
+              (scope.user) && (scope.user.id !== undefined);
+          };
+
+          scope.canManageUserSearches = function() {
+            return (scope.user) && (scope.user.isAdministratorOrMore());
+          };
+
+          scope.search = function(url) {
+            $location.path('/search').search(url);
+          };
+
+          scope.editUserSearch = function(search) {
+            console.log("editUserSearch: " + search);
+
+            scope.openSaveUserSearchPanel(search);
+          };
+
+          scope.removeUserSearch = function(search) {
+            return gnUserSearchesService.removeUserSearch(search).then(
+              function() {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('userSearchremoved'),
+                  type: 'success'
+                });
+
+                scope.loadUserSearches();
+              }, function(reason) {
+                gnAlertService.addAlert({
+                  msg: reason.data,
+                  type: 'danger'
+                });
+              });
+          };
+
+          scope.openSaveUserSearchPanel = function(search) {
+            scope.currentSearch = search;
+
+            gnUtilityService.openModal({
+              title: 'savesearch',
+              content: '<div gn-save-user-search="currentSearch" data-user="user"></div>',
+              className: 'gn-savesearch-popup',
+              onCloseCallback: function() {
+                scope.loadUserSearches()
+              }
+            }, scope, 'UserSearchUpdated');
+          };
+
+
+          scope.openAdminUserSearchPanel = function() {
+
+            gnUtilityService.openModal({
+              title: 'savesearch',
+              content: '<div gn-user-search-manager=""></div>',
+              className: 'gn-searchmanager-popup',
+              onCloseCallback: function() {
+                scope.loadUserSearches()
+              }
+            }, scope, 'UserSearchUpdated');
+          };
+
+
+        }
+      };
+    }]);
+
+
+  /**
+   * Directive for the user search create/update panel.
+   *
+   */
+  module.directive('gnSaveUserSearch', [
+    'gnUserSearchesService', 'gnConfigService', 'gnConfig', 'gnLangs', 'gnGlobalSettings',
+    '$http', '$translate', '$location', '$httpParamSerializer',
+    function(gnUserSearchesService, gnConfigService, gnConfig, gnLangs, gnGlobalSettings,
+             $http, $translate, $location, $httpParamSerializer) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          userSearch: '=gnSaveUserSearch',
+          user: '='
+        },
+        templateUrl:
+          '../../catalog/components/usersearches/partials/saveusersearch.html',
+        link: function postLink(scope, element, attrs) {
+          scope.lang = gnLangs.current;
+          scope.updateSearchUrl = false;
+
+          scope.availableLangs = gnGlobalSettings.gnCfg.mods.header.languages;
+          scope.langList = angular.copy(scope.availableLangs);
+          angular.forEach(scope.langList, function(lang2, lang3) {
+            scope.langList[lang3] = '#' + lang2;
+          });
+          scope.currentLangShown = scope.lang;
+
+          var retrieveSearchParameters = function() {
+            var searchParams = angular.copy($location.search());
+
+            delete searchParams.from;
+            delete searchParams.to;
+            delete searchParams.fast;
+            delete searchParams._content_type;
+
+            return $httpParamSerializer(searchParams);;
+          };
+
+
+          if (!scope.userSearch) {
+            scope.userSearch = {
+              url: retrieveSearchParameters(),
+              id: 0,
+              creatorId: scope.user.id,
+              names: {}
+            };
+
+            scope.editMode = false;
+          } else {
+            scope.editMode = true;
+          }
+
+
+          scope.isAdministratorUser = function() {
+            return (scope.user) && (scope.user.isAdministratorOrMore());
+          };
+
+
+          scope.updateUrl = function() {
+            scope.userSearch.url = retrieveSearchParameters();
+          };
+
+
+          scope.saveUserSearch = function() {
+            var userSearch = angular.copy(scope.userSearch);
+            delete userSearch.title;
+
+            return gnUserSearchesService.saveUserSearch(userSearch).then(
+              function(response) {
+                scope.$emit('UserSearchUpdated', true);
+                scope.$emit('StatusUpdated', {
+                  msg: 'UserSearchUpdated',
+                  timeout: 0,
+                  type: 'success'});
+
+              }, function(response) {
+                scope.$emit('StatusUpdated', {
+                  title: 'UserSearchUpdatedError',
+                  error: response.data,
+                  timeout: 0,
+                  type: 'danger'});
+              });
+          };
+
+        }
+      };
+    }]);
+
+
+  /**
+   * Directive for the user searches manager.
+   *
+   */
+  module.directive('gnUserSearchManager', [
+    'gnUserSearchesService', 'gnConfigService', 'gnConfig',
+    'gnUtilityService', 'gnAlertService', 'gnLangs',
+    '$http', '$translate',
+    function(gnUserSearchesService, gnConfigService, gnConfig,
+             gnUtilityService, gnAlertService, gnLangs,
+             $http, $translate) {
+      return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+
+        },
+        templateUrl:
+          '../../catalog/components/usersearches/partials/usersearchesmanager.html',
+        link: function postLink(scope, element, attrs) {
+          scope.lang = gnLangs.current;
+
+          scope.loadAllUserSearches = function() {
+            gnUserSearchesService.loadAllUserSearches().then(
+              function(featuredSearchesCollection) {
+                scope.userSearches = featuredSearchesCollection.data;
+
+                scope.userSearches = _.sortBy(scope.userSearches, 'creator');
+              }, function() {
+                // TODO: Log error
+              }
+            );
+          };
+
+          scope.removeUserSearch = function(search) {
+            return gnUserSearchesService.removeUserSearch(search).then(
+              function() {
+                gnAlertService.addAlert({
+                  msg: $translate.instant('userSearchremoved'),
+                  type: 'success'
+                });
+
+                scope.loadAllUserSearches();
+              }, function(reason) {
+                gnAlertService.addAlert({
+                  msg: reason.data,
+                  type: 'danger'
+                });
+              });
+          };
+
+          scope.editUserSearch = function(search) {
+            scope.currentSearch = search;
+
+            gnUtilityService.openModal({
+              title: 'savesearch',
+              content: '<div gn-save-user-search="currentSearch" data-user="user"></div>',
+              className: 'gn-savesearch-popup',
+              onCloseCallback: function() {
+                scope.loadAllUserSearches()
+              }
+            }, scope, 'UserSearchUpdated');
+          };
+
+
+          scope.loadAllUserSearches();
+        }
+      };
+    }]);
 })();

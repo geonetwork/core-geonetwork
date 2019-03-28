@@ -74,30 +74,49 @@ public class UserSearchesApi {
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public List<UserSearchDto> getUserCustomSearches(
-        @ApiParam(
-            value = "Featured search flag."
-        )
-        @RequestParam(required = false) Boolean featured,
         @ApiIgnore
             HttpSession httpSession
     ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
-        Profile profile = session.getProfile();
 
+        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
+
+        List<UserSearch> userSearchesList =
+            userSearchRepository.findAllByCreator(session.getPrincipal());
+
+        List<UserSearchDto> customSearchDtoList = new ArrayList<>();
+        userSearchesList.forEach(u -> customSearchDtoList.add(UserSearchDto.from(u)));
+
+        return customSearchDtoList;
+    }
+
+
+    @ApiOperation(
+        value = "Get user custom searches for all users",
+        notes = "",
+        nickname = "getAllUserCustomSearches")
+    @RequestMapping(
+        value = "/all",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('Administrator')")
+    @ResponseBody
+    public List<UserSearchDto> getAllUserCustomSearches(
+        @ApiParam(
+            value = "Featured search flag."
+        )
+        @RequestParam(required = false) Boolean featured) {
         UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
 
         List<UserSearch> userSearchesList;
 
-        if (profile == Profile.Administrator) {
-            if (featured == null) {
-                userSearchesList = userSearchRepository.findAll();
-            } else if (featured == Boolean.TRUE) {
-                userSearchesList =  userSearchRepository.findAllByFeatured(true);
-            } else {
-                userSearchesList = userSearchRepository.findAllByFeatured(false);
-            }
+        if (featured == null) {
+            userSearchesList = userSearchRepository.findAll();
+        } else if (featured == Boolean.TRUE) {
+            userSearchesList =  userSearchRepository.findAllByFeatured(true);
         } else {
-            userSearchesList =  userSearchRepository.findAllByCreator(session.getPrincipal());
+            userSearchesList = userSearchRepository.findAllByFeatured(false);
         }
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();

@@ -1,0 +1,44 @@
+<div class="panel panel-default"
+     data-ng-show="isUserSearchPanelEnabled()">
+  <div class="panel-heading"
+       data-gn-slide-toggle="">
+    <i class="fa fa-search"/>&nbsp;
+    <span data-translate="">userSearches</span>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <button type="button" class="btn btn-default"
+              data-ng-click="openSaveUserSearchPanel()">Save search</button>
+
+      <button type="button" class="btn btn-default"
+              data-ng-click="openAdminUserSearchPanel()"
+              data-ng-show="canManageUserSearches()">Manage</button>
+    </div>
+
+    <ul class="list-group">
+      <li class="list-group-item" data-ng-repeat="search in userSearches">
+        <div class="row">
+          <div class="col-md-10">
+            <span class="fa fa-star"
+                  data-ng-show="canManageUserSearches() && search.featured"
+                  title="{{ 'featuredsearch' | translate }}"></span>
+
+            <a data-ng-href="#/search?{{search.url}}">
+              {{search.names[lang] || search.names['eng'] || ('featuredSearch' | translate)}}
+            </a>
+          </div>
+
+          <div class="col-md-2">
+            <a href="" class="fa fa-edit"
+               data-ng-click="editUserSearch(search)"></a>
+
+            <a href="" class="fa fa-remove"
+               data-gn-click-and-spin="removeUserSearch(search)"
+               data-gn-confirm-click="{{'deleteRecordConfirm'}}"
+               title="{{'delete' | translate}}"></a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

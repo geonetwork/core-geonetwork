@@ -465,5 +465,7 @@
   "filterDataDescription": "Select a layer on the map to begin filtering associated WFS features (if any). Features must first have been indexed by an administrator.",
   "WPSDescription": "Enter a WPS endpoint URL to begin using the process through a dynamic form. Recently used WPS processes are shown in the second tab.",
   "noLayersFound": "No layers found",
-  "featuredUserSearches": "Featured searches"
+  "featuredUserSearches": "Featured searches",
+  "userSearches": "User searches",
+  "allLanguage": "All"
 }

@@ -30,9 +30,25 @@
   module.service('gnUserSearchesService', [
     '$http', '$q',
     function($http, $q) {
-      this.loadFeaturedUserSearches = function () {
+      this.loadFeaturedUserSearches = function() {
         return $http.get('../api/usersearches/featured');
       };
+
+      this.loadUserSearches = function () {
+        return $http.get('../api/usersearches');
+      };
+
+      this.loadAllUserSearches = function () {
+        return $http.get('../api/usersearches/all');
+      };
+
+      this.saveUserSearch = function(userSearch) {
+        return $http.put('../api/usersearches', userSearch);
+      };
+
+      this.removeUserSearch = function(userSearch) {
+        return $http.delete('../api/usersearches/' + userSearch.id);
+      }
     }]);
 
 })();

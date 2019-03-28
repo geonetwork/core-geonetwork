@@ -31,6 +31,7 @@ import org.fao.geonet.repository.UserRepository;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -133,8 +134,8 @@ public class UserSearchDto implements Serializable {
 
         try {
             userSearch.setCreationDate(ISO_DATE_FORMAT.parse(this.getCreationDate()));
-        } catch (ParseException ex) {
-            // TODO: handle
+        } catch (Exception ex) {
+            userSearch.setCreationDate(new Date());
         }
 
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);

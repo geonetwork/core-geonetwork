@@ -1,0 +1,28 @@
+<div>
+  <ul class="list-group">
+    <li class="list-group-item" data-ng-repeat="search in userSearches">
+      <div class="row">
+        <div class="col-md-8">
+            <span class="fa fa-star"
+                  data-ng-show="search.featured"
+                  title="{{ 'featuredsearch' | translate }}"></span>
+          {{search.names[lang] || search.names['eng'] || ('featuredSearch' | translate)}}
+        </div>
+
+        <div class="col-md-2">
+          {{search.creator}}
+        </div>
+
+        <div class="col-md-2">
+          <a href="" class="fa fa-edit"
+             data-ng-click="editUserSearch(search)"></a>
+
+          <a href="" class="fa fa-remove"
+             data-gn-click-and-spin="removeUserSearch(search)"
+             data-gn-confirm-click="{{'deleteRecordConfirm'}}"
+             title="{{'delete' | translate}}"></a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

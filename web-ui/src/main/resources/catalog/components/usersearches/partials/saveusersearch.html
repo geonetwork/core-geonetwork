@@ -1,0 +1,55 @@
+<div>
+  <h5>Saves the current search filter.</h5>
+
+  <div class="form-group">
+    <label class="control-label" translate>Name</label>
+    <div gn-multilingual-field="{{langList}}"
+         main-language="{{currentLangShown}}">
+      <input ng-repeat="(lang3, lang2) in availableLangs" type="text"
+             name="name" class="form-control" lang="{{lang2}}"
+             ng-model="userSearch.names[lang3]"/>
+    </div>
+  </div>
+
+  <div class="form-group" data-ng-show="isAdministratorUser()">
+    <label for="featured">Featured</label>
+    <input type="checkbox" id="featured"
+           data-ng-model="userSearch.featured" />
+  </div>
+
+  <div class="form-group" data-ng-show="isAdministratorUser() && userSearch.featured">
+    <label for="logo">Logo</label>
+    <input type="text" id="logo" class="form-control"
+           data-ng-model="userSearch.logo" />
+  </div>
+
+  <div class="form-group">
+      <label for="searchUrl">Search url</label>
+      <input type="text" id="searchUrl" class="form-control" readonly="readonly"
+             data-ng-model="userSearch.url" />
+  </div>
+
+  <div data-ng-show="editMode">
+    <button type="button" data-ng-click="updateUrl()" class="btn btn-primary btn-small">
+      Update
+    </button>
+  </div>
+
+ <!-- <div class="form-group" data-ng-show="editMode">
+    <label for="updateUrl">Update search url</label>
+    <input type="checkbox" id="updateUrl" class="form-control"
+           data-ng-model="updateSearchUrl" />
+  </div>-->
+
+  <div class="btn-toolbar"><!-- TODO: Check pull-right -->
+    <div data-gn-need-help="user-guide/publishing/index.html"
+         data-icon-only="true"></div>
+    <button type="button" class="btn btn-primary"
+            id="gn-share-btn-replace"
+            data-gn-click-and-spin="saveUserSearch(true)">
+      <i class="fa fa-eraser"></i>&nbsp;
+      <span data-translate="">saveUserSearch</span>
+    </button>
+  </div>
+</div>
+
