@@ -402,20 +402,23 @@
               var filter = scope.facetFilters[facetName];
               if (!filter) { return; }
 
-              // make the filter case insensitive, ie : abc => [aA][bB][cC]
-              // only alpha regex
-              var lettersRegexOnly = /^[A-Za-z\u00C0-\u017F]+$/;
-              filter = filter.replace(/./g, function (match) {
-                var upperMatch = scope.accentify(match).toUpperCase();
-                var lowerMatch = scope.accentify(match).toLowerCase();
-                return lettersRegexOnly.test(match) ? '[' + lowerMatch + upperMatch + ']': match;
-              });
+              // Regex filter can only be apply to string type.
+              if (facetName.match(/^ft_.*_s$/)) {
+                // make the filter case insensitive, ie : abc => [aA][bB][cC]
+                // only alpha regex
+                var lettersRegexOnly = /^[A-Za-z\u00C0-\u017F]+$/;
+                filter = filter.replace(/./g, function (match) {
+                  var upperMatch = scope.accentify(match).toUpperCase();
+                  var lowerMatch = scope.accentify(match).toLowerCase();
+                  return lettersRegexOnly.test(match) ? '[' + lowerMatch + upperMatch + ']': match;
+                });
 
-              aggs[facetName] = {
-                terms: {
-                  include: '.*' + filter + '.*'
-                }
-              };
+                aggs[facetName] = {
+                  terms: {
+                    include: '.*' + filter + '.*'
+                  }
+                };
+              }
             });
 
             addBboxAggregation(aggs);
@@ -554,7 +557,7 @@
            * Each aggregations are sorted based as defined in the application profil config
            * and the query is ordered based on this config.
            *
-           * The values of each facette are also sorted the same way
+           * The values of each aggregations are sorted, checked first.
            */
           scope.sortAggregation = function() {
             // Disable sorting of aggregations by alpha order and based on expansion
