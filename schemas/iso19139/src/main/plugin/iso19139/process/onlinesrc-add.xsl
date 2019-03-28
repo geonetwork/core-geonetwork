@@ -41,6 +41,10 @@ Insert is made in first transferOptions found.
   <xsl:param name="function"/>
   <xsl:param name="applicationProfile"/>
 
+  <!-- Used by Copernicus marine to add GetCapabilities -->
+  <xsl:param name="serviceName"/>
+  <xsl:param name="serviceDescr"/>
+
   <!-- Add an optional uuidref attribute to the onLine element created. -->
   <xsl:param name="uuidref"/>
 
@@ -167,6 +171,42 @@ Insert is made in first transferOptions found.
 
 
     <xsl:if test="$url">
+
+
+      <xsl:variable name="isMyOcean"
+                    select="count(//gmd:MD_Metadata/gmd:metadataStandardName/*[text() = 'ISO 19139, MyOcean profile']) = 1"/>
+      <xsl:variable name="addOGCWMSCapabilities"
+                    select="starts-with($protocol, 'OGC:WMS')"/>
+
+      <xsl:if test="$isMyOcean and $addOGCWMSCapabilities">
+        <gmd:onLine>
+          <gmd:CI_OnlineResource>
+            <gmd:linkage>
+              <gmd:URL>
+                <xsl:value-of select="$url"/>
+              </gmd:URL>
+            </gmd:linkage>
+            <gmd:protocol>
+              <gco:CharacterString>OGC:WMS:getCapabilities</gco:CharacterString>
+            </gmd:protocol>
+            <gmd:name>
+              <gco:CharacterString>
+                <xsl:value-of select="$serviceName"/>
+              </gco:CharacterString>
+            </gmd:name>
+            <gmd:description>
+              <gco:CharacterString>
+                <xsl:value-of select="$serviceDescr"/>
+              </gco:CharacterString>
+            </gmd:description>
+            <gmd:function>
+              <gmd:CI_OnLineFunctionCode
+                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+            </gmd:function>
+          </gmd:CI_OnlineResource>
+        </gmd:onLine>
+      </xsl:if>
+
       <!-- In case the protocol is an OGC protocol
       the name parameter may contains a list of layers
       separated by comma.
