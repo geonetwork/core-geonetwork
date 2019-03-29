@@ -40,6 +40,8 @@ public class InterceptsUserUpdate {
 
 	@TransactionalEventListener(phase=TransactionPhase.BEFORE_COMMIT)
 	public void doAfterCommit(UserUpdated event) {
-		throw new RuntimeException("Users can't be updated to this readonly instance.");
+		if(event.getUser().getId() != 1) {
+			throw new RuntimeException("Users can't be updated to this readonly instance.");
+		}
 	}
 }
