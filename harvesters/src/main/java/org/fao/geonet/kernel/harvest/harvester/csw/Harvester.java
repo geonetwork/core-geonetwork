@@ -389,13 +389,6 @@ class Harvester implements IHarvester<HarvestResult> {
                 break;
             }
 
-            // Another way to escape from an infinite loop
-
-            if (returnedCount == 0) {
-                log.warning("Forcing harvest end since numberOfRecordsReturned = 0");
-                break;
-            }
-
             // Start position of next record.
             // Note that some servers may return less records than requested (it's ok for CSW protocol)
             start += returnedCount;
