@@ -29,6 +29,6 @@
   goog.require('gn_multilingual_field_directive');
 
   var module = angular.module('gn_usersearches',
-      ['gn_usersearches_directive', 'gn_usersearches_service', 'gn_multilingual_field_directive']);
+      ['gn_usersearches_directive', 'gn_usersearches_service', 'gn_multilingual_field_directive', 'bsTable']);
 
 })();

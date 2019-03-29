@@ -467,5 +467,13 @@
   "noLayersFound": "No layers found",
   "featuredUserSearches": "Featured searches",
   "userSearches": "User searches",
-  "allLanguage": "All"
+  "allLanguage": "All",
+  "userSearch": "User search",
+  "createUserSearch": "Create",
+  "manageUserSearches": "Manage",
+  "manageUserSearchesTitle": "Manage user searches",
+  "deleteUserSearchConfirm": "Do you really want to remove the search?",
+  "userSearchTblSearchName": "Search name",
+  "userSearchTblCreator": "Creator",
+  "userSearchTblCreationDate": "Creation date"
 }

@@ -7,12 +7,12 @@
   </div>
   <div class="panel-body">
     <div class="row">
-      <button type="button" class="btn btn-default"
-              data-ng-click="openSaveUserSearchPanel()">Save search</button>
+      <button type="button" class="btn btn-default btn-sm"
+              data-ng-click="openSaveUserSearchPanel()"><span data-translate="">createUserSearch</span></button>
 
-      <button type="button" class="btn btn-default"
+      <button type="button" class="btn btn-default btn-sm"
               data-ng-click="openAdminUserSearchPanel()"
-              data-ng-show="canManageUserSearches()">Manage</button>
+              data-ng-show="canManageUserSearches()"><span data-translate="">manageUserSearches</span>
     </div>
 
     <ul class="list-group">
@@ -34,7 +34,7 @@
 
             <a href="" class="fa fa-remove"
                data-gn-click-and-spin="removeUserSearch(search)"
-               data-gn-confirm-click="{{'deleteRecordConfirm'}}"
+               data-gn-confirm-click="{{'deleteUserSearchConfirm'}}"
                title="{{'delete' | translate}}"></a>
           </div>
         </div>
