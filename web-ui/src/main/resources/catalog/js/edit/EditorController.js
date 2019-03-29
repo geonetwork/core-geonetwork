@@ -267,6 +267,7 @@
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
                   formLoadExtraFn: formLoadExtraFunctions,
+                  codelistFilter: '',
                   working: false
                 });
 
