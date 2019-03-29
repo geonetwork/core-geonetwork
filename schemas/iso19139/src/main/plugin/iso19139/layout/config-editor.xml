@@ -347,6 +347,7 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name>gmd:distance</name>
+      <name>gmd:geometricObjectCount</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
       <name>srv:serviceTypeVersion</name>
