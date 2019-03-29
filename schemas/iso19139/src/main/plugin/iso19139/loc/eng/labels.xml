@@ -2025,6 +2025,22 @@
     <description>Identification of, and means of communication with, person(s) and
       organization(s) associated with the process step</description>
   </element>
+  <element name="gmd:protocol" id="398.0" alias="protocol"
+           displayIf="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/*/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+    <label>Protocol</label>
+    <description>Connection protocol to be used</description>
+    <helper>
+      <option value="WWW:FTP">FTP</option>
+      <option value="WWW:MAIL">Mail</option>
+      <option value="WWW:LINK">Web link</option>
+      <option value="OGC:WMS">Web Map Service (OGC)</option>
+      <option value="OGC:WCS">Web Coverage Service (OGC)</option>
+      <option value="OGC:SOS:getCapabilities">Sensor Observation Service - getCapabilities (OGC)</option>
+      <option value="WWW:OPENDAP">OPeNDAP</option>
+      <option value="MYO:MOTU-SUB">MOTU (SUB)</option>
+      <option value="MYO:MOTU-DGF">MOTU (DGF)</option>
+    </helper>
+  </element>
   <element name="gmd:protocol" id="398.0" alias="protocol">
     <label>Protocol</label>
     <description>Connection protocol to be used</description>
