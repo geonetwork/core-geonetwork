@@ -949,6 +949,16 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>slave</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource</groupId>
+          <artifactId>slave</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
   </profiles>
 
   <properties>
