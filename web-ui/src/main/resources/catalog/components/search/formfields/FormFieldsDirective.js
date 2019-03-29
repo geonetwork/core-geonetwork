@@ -618,6 +618,14 @@
                     }
                   });
 
+              scope.codelistFilter = '';
+              scope.$watch('gnCurrentEdit.codelistFilter',
+                function(n, o) {
+                  if (n && n !== o) {
+                    scope.codelistFilter = n;
+                    init();
+                  }
+                });
               var init = function() {
                 var schema = attrs['schema'] ||
                     gnCurrentEdit.schema || 'iso19139';
@@ -625,14 +633,14 @@
 
                 scope.type = attrs['schemaInfoCombo'];
                 if (scope.type == 'codelist') {
-                  gnSchemaManagerService.getCodelist(config).then(
+                  gnSchemaManagerService.getCodelist(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = angular.copy(data.entry);
                         addBlankValueAndSetDefault();
                       });
                 }
                 else if (scope.type == 'element') {
-                  gnSchemaManagerService.getElementInfo(config).then(
+                  gnSchemaManagerService.getElementInfo(config, scope.codelistFilter).then(
                       function(data) {
                         scope.infos = data.helper ? data.helper.option : null;
                         addBlankValueAndSetDefault();
