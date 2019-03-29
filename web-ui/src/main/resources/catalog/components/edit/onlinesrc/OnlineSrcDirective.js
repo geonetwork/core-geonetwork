@@ -210,6 +210,7 @@
               scope.lang = scope.$parent.lang;
               scope.readonly = attrs['readonly'] || false;
               scope.relations = {};
+              scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
 
               /**
                * Calls service 'relations.get' to load
@@ -1047,6 +1048,7 @@
 
                 gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
                   scope.isEditing = angular.isDefined(linkToEdit);
+                  scope.codelistFilter = scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
