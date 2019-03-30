@@ -256,7 +256,12 @@
                } else if (element.is('legend')) {
                  element.contents().first().after(tooltipIconCompiled);
                } else if (isDatePicker) {
-                 element.closest(".gn-field").find("div.gn-control").append(tooltipIconCompiled);
+                // first check if it is in a template (inside a class="row"
+                var control = element.closest(".gn-multi-field .row").find("div.gn-control");
+                if (control.length == 0) {
+                  control = element.closest(".gn-field").find("div.gn-control").first();
+                }
+                control.append(tooltipIconCompiled);
                } else if (element.is('label')) {
                  if (tooltipAfterLabel) {
                    element.parent().children('div')
