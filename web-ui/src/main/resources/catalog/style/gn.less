@@ -302,7 +302,25 @@ div.gn-scroll-spy {
     }
   }
 }
+.gn-share-grid {
+  width: 100%;
+  height: 75%;
+  overflow-x: hidden;
+  overflow-y: auto;
 
+  table {
+    /* The col section define column width */
+    table-layout: fixed;
+
+    th, td {
+      font-size: 70%;
+    }
+    /* Group name often contains long upper case value */
+    td {
+      word-break: break-all;
+    }
+  }
+}
 .gn-popup {
   display: none;
   overflow: hidden;

@@ -52,8 +52,9 @@
       return {
         restrict: 'A',
         replace: false,
+        // specific sextant
         templateUrl: '../../catalog/components/common/share/partials/' +
-            'panel.html',
+            'panel-sextant.html',
         scope: {
           id: '=gnShare',
           batch: '@gnShareBatch',
