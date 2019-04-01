@@ -148,7 +148,7 @@
               ($(e.target).parents('.dropdown-menu')[0] !=
                 element.find('.dropdown-menu')[0])) {
               scope.$apply(function() {
-                $(':focus').blur();
+                element.find(':focus').blur();
                 scope.collapsed = true;
               });
             }
