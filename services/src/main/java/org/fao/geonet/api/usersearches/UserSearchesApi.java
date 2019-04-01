@@ -25,15 +25,20 @@ package org.fao.geonet.api.usersearches;
 
 import io.swagger.annotations.*;
 import jeeves.server.UserSession;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.usersearches.model.PaginatedUserSearchResponse;
 import org.fao.geonet.api.usersearches.model.UserSearchDto;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
+import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserSearchRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -92,7 +97,7 @@ public class UserSearchesApi {
 
 
     @ApiOperation(
-        value = "Get user custom searches for all users",
+        value = "Get user custom searches for all users (no paginated)",
         notes = "",
         nickname = "getAllUserCustomSearches")
     @RequestMapping(
@@ -123,6 +128,66 @@ public class UserSearchesApi {
         userSearchesList.forEach(u -> customSearchDtoList.add(UserSearchDto.from(u)));
 
         return customSearchDtoList;
+    }
+
+    @ApiOperation(
+        value = "Get user custom searches for all users (paginated)",
+        notes = "",
+        nickname = "getAllUserCustomSearchesPaginated")
+    @RequestMapping(
+        value = "/allpaginated",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('Administrator')")
+    @ResponseBody
+    public PaginatedUserSearchResponse getAllUserCustomSearchesPage(
+        @ApiParam(
+            value = "Featured search flag."
+        )
+        @RequestParam(required = false) Boolean featured,
+        @ApiParam(value = "From page",
+            required = false)
+        @RequestParam(required = false, defaultValue = "0")
+            Integer offset,
+        @ApiParam(value = "Number of records to return",
+            required = false)
+        @RequestParam(required = false, defaultValue = "10")
+            Integer limit
+    ) {
+        UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
+
+        PaginatedUserSearchResponse response = new PaginatedUserSearchResponse();
+
+        List<UserSearch> userSearchesList;
+
+        Sort sortBy = SortUtils.createSort(Sort.Direction.DESC,
+            UserSearch_.creationDate);
+
+        int page = (offset / limit);
+        final PageRequest pageRequest = new PageRequest(page, limit, sortBy);
+
+        long count = 0;
+
+        if (featured == null) {
+
+            userSearchesList = userSearchRepository.findAll(pageRequest).getContent();
+            count = userSearchRepository.count();
+        } else if (featured == Boolean.TRUE) {
+            userSearchesList =  userSearchRepository.findAllByFeatured(true);
+            count = userSearchRepository.countByFeatured(true);
+        } else {
+            userSearchesList = userSearchRepository.findAllByFeatured(false);
+            count = userSearchRepository.countByFeatured(false);
+        }
+
+        List<UserSearchDto> customSearchDtoList = new ArrayList<>();
+        userSearchesList.forEach(u -> customSearchDtoList.add(UserSearchDto.from(u)));
+
+        response.setRows(customSearchDtoList);
+        response.setTotal(count);
+
+        return response;
     }
 
 

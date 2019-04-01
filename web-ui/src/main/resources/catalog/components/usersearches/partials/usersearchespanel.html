@@ -12,11 +12,17 @@
 
       <button type="button" class="btn btn-default btn-sm"
               data-ng-click="openAdminUserSearchPanel()"
-              data-ng-show="canManageUserSearches()"><span data-translate="">manageUserSearches</span>
+              data-ng-show="canManageUserSearches()"><span data-translate="">manageUserSearches</span></button>
     </div>
 
+    <input class="form-control"
+           data-ng-show="userSearches.length > 10"
+           data-ng-model="userSearchesSearch.$" autofocus=""
+           placeholder="{{'filter' | translate}}"/>
+
+
     <ul class="list-group">
-      <li class="list-group-item" data-ng-repeat="search in userSearches">
+      <li class="list-group-item" data-ng-repeat="search in userSearchesPageItems()">
         <div class="row">
           <div class="col-md-10">
             <span class="fa fa-star"
@@ -40,5 +46,11 @@
         </div>
       </li>
     </ul>
+
+    <span data-gn-pagination-list=""
+          data-get-items-function-name="userSearchesPageItems"
+          data-first-page-function-name="userSearchesFirstPage"
+          data-items="userSearches | filter:userSearchesSearch | orderBy:'label'"
+          data-cache="userSearches"/>
   </div>
 </div>

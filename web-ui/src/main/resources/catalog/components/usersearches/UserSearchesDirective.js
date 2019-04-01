@@ -86,6 +86,10 @@
           scope.userSearches = null;
           scope.currentSearch = null;
 
+          scope.userSearchesSearch = '';
+
+
+
           scope.$watch('user', function(n, o) {
             if (n !== o || scope.userSearches === null) {
               scope.userSearches = null;
@@ -98,6 +102,12 @@
             gnUserSearchesService.loadUserSearches().then(
               function(featuredSearchesCollection) {
                 scope.userSearches = featuredSearchesCollection.data;
+
+                angular.forEach(scope.userSearches, function(search) {
+                  search.label = search.names[scope.lang] || search.names['eng'] || $filter('translate')('featuredSearch');
+                });
+
+
               }, function() {
                 // TODO: Log error
               }
@@ -163,7 +173,7 @@
               onCloseCallback: function() {
                 scope.loadUserSearches()
               }
-            }, scope, 'UserSearchUpdated');
+            }, scope, 'UserSearchesManagementClose');
           };
 
 
@@ -296,79 +306,8 @@
             return search;
           };
 
-          scope.bsTableControl = {
-            options: {
-              locale: 'en',
-              data:  scope.userSearches,
-              rowStyle: function (row, index) {
-                return { classes: 'none' };
-              },
-              onPostBody: function (data) {
-                console.log("Loaded data bootstrap-table")
-                $compile(scope.tableEl.contents())(scope);
-                return true;
-              },
-              cache: false,
-              striped: true,
-              pagination: true,
-              pageSize: 10,
-              pageList: [5, 10, 25, 50, 100, 200],
-              search: true,
-              minimumCountColumns: 2,
-              clickToSelect: false,
-              columns: [ {
-                field: 'label',
-                title: $filter('translate')('userSearchTblSearchName'),
-                valign: 'bottom',
-                sortable: true,
-                formatter: function(value, row, index) {
-                  if (row.featured) {
-                    return '<span class="fa fa-star" title="' + $filter('translate')('featuredsearch') + '"></span>&nbsp;' + row.label;
-                  } else {
-                    return row.label;
-                  }
-                }
-              }, {
-                field: 'creator',
-                title: $filter('translate')('userSearchTblCreator'),
-                valign: 'middle',
-                sortable: true
-              }, {
-                field: 'creationDate',
-                title:  $filter('translate')('userSearchTblCreationDate'),
-                align: 'center',
-                valign: 'middle',
-                sortable: true
-              }, {
-                title: '',
-                width: 75,
-                formatter: function(value, row, index) {
-                  return '<a class="btn btn-default btn-xs" data-ng-click="editUserSearch('+ row.id + ')">' +
-                    '<span class="fa fa-pencil"></span></a>&nbsp; ' +
-                    '<a class="btn btn-default btn-xs" data-gn-confirm-click="{{\'deleteUserSearchConfirm\'}}"  ' +
-                    'title="{{\'delete\' | translate}}" data-gn-click-and-spin="removeUserSearch(' + row.id + ' )">' +
-                    '<span class="fa fa-trash"></span></a>';
-                }
-              }]
-            }
-          };
-
-
-          scope.loadAllUserSearches = function() {
-            gnUserSearchesService.loadAllUserSearches().then(
-              function(featuredSearchesCollection) {
-                scope.userSearches = featuredSearchesCollection.data;
-
-                scope.userSearches = _.sortBy(scope.userSearches, 'creator');
-                angular.forEach(scope.userSearches, function(search) {
-                  search.label = search.names[scope.lang] || search.names['eng'] || $filter('translate')('featuredSearch');
-                });
-
-                $('#tbl-user-searches-manager').bootstrapTable('load', scope.userSearches);
-              }, function() {
-                // TODO: Log error
-              }
-            );
+          var refreshTable = function() {
+            $('#tbl-user-searches-manager').bootstrapTable('refresh');
           };
 
           scope.removeUserSearch = function(searchId) {
@@ -381,7 +320,7 @@
                   type: 'success'
                 });
 
-                scope.loadAllUserSearches();
+                refreshTable();
               }, function(reason) {
                 gnAlertService.addAlert({
                   msg: reason.data,
@@ -398,15 +337,79 @@
               content: '<div gn-save-user-search="currentSearch" data-user="user"></div>',
               className: 'gn-savesearch-popup',
               onCloseCallback: function() {
-                scope.loadAllUserSearches()
+                refreshTable();
               }
             }, scope, 'UserSearchUpdated');
           };
 
 
-          scope.loadAllUserSearches();
+          scope.bsTableControl = {
+            options: {
+              locale: 'en',
+              url: '../api/usersearches/allpaginated',
+              responseHandler: function (result) {
+                scope.userSearches = angular.copy(result.rows);
 
+                // Calculate the label to display
+                angular.forEach(result.rows, function(search) {
+                  search.label = search.names[scope.lang] || 
+                    search.names['eng'] || $filter('translate')('featuredSearch');
+                });
 
+                return result;
+              },
+              rowStyle: function (row, index) {
+                return { classes: 'none' };
+              },
+              onPostBody: function (data) {
+                $compile(scope.tableEl.contents())(scope);
+                return true;
+              },
+              cache: false,
+              striped: true,
+              sidePagination: 'server',
+              pagination: true,
+              pageSize: scope.pageSize,
+              pageList: [5, 10, 25, 50, 100, 200],
+              search: false,
+              minimumCountColumns: 2,
+              clickToSelect: false,
+              columns: [ {
+                field: 'label',
+                title: $filter('translate')('userSearchTblSearchName'),
+                valign: 'bottom',
+                sortable: false,
+                formatter: function(value, row, index) {
+                  if (row.featured) {
+                    return '<span class="fa fa-star" title="' + $filter('translate')('featuredsearch') + '"></span>&nbsp;' + row.label;
+                  } else {
+                    return row.label;
+                  }
+                }
+              }, {
+                field: 'creator',
+                title: $filter('translate')('userSearchTblCreator'),
+                valign: 'middle',
+                sortable: false
+              }, {
+                field: 'creationDate',
+                title:  $filter('translate')('userSearchTblCreationDate'),
+                align: 'center',
+                valign: 'middle',
+                sortable: false
+              }, {
+                title: '',
+                width: 75,
+                formatter: function(value, row, index) {
+                  return '<a class="btn btn-default btn-xs" data-ng-click="editUserSearch('+ row.id + ')">' +
+                    '<span class="fa fa-pencil"></span></a>&nbsp; ' +
+                    '<a class="btn btn-default btn-xs" data-gn-confirm-click="{{\'deleteUserSearchConfirm\' | translate }}"  ' +
+                    'title="{{\'delete\' | translate}}" data-gn-click-and-spin="removeUserSearch(' + row.id + ' )">' +
+                    '<span class="fa fa-trash"></span></a>';
+                }
+              }]
+            }
+          };
         }
       };
     }]);

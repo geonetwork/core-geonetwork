@@ -37,4 +37,6 @@ public interface UserSearchRepository extends GeonetRepository<UserSearch, Integ
 
 
     List<UserSearch> findAllByFeatured(Boolean featured);
+
+    long countByFeatured(Boolean featured);
 }

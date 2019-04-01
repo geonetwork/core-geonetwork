@@ -475,5 +475,6 @@
   "deleteUserSearchConfirm": "Do you really want to remove the search?",
   "userSearchTblSearchName": "Search name",
   "userSearchTblCreator": "Creator",
-  "userSearchTblCreationDate": "Creation date"
+  "userSearchTblCreationDate": "Creation date",
+  "userSearchremoved": "User search removed"
 }
