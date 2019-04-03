@@ -24,10 +24,13 @@
 package org.fao.geonet.api.standards;
 
 import io.swagger.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
@@ -35,6 +38,7 @@ import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.schema.labels.Codelists;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -48,14 +52,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -310,5 +309,60 @@ public class StandardsApi implements ApplicationContextAware {
             schema, parent, xpath, isoType, displayIf, context);
 
         return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
+    }
+
+
+    @ApiOperation(value = "Get editor associated resources panel configuration",
+        nickname = "getEditorAssociatedPanelConfiguration")
+    @RequestMapping(value = "/{schema}/editor/associatedpanel/config/default.json",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ResponseBody
+    public String getEditorAssociatedPanelConfiguration(
+        @ApiParam(value = "Schema identifier",
+            required = true,
+            example = "iso19139")
+        @PathVariable String schema
+    ) throws Exception {
+
+        String schemaToCheck = schema;
+
+        // Store processed schemas to avoid loops
+        Set<String> schemasProcessed = new HashSet<>();
+
+        while (StringUtils.isNotEmpty(schemaToCheck) &&
+            !schemasProcessed.contains(schemaToCheck)) {
+
+            schemasProcessed.add(schemaToCheck);
+
+            MetadataSchema metadataSchema = schemaManager.getSchema(schemaToCheck);
+
+            Path schemaDir = metadataSchema.getSchemaDir();
+
+            Path configFile = schemaDir.resolve("config").
+                resolve("associated-panel").
+                resolve("default.json");
+
+            if (Files.exists(configFile)) {
+                String jsonConfig = new String(Files.readAllBytes(configFile));
+
+                // Parse JSON file to check is valid
+                new JSONObject(jsonConfig);
+
+                return jsonConfig;
+            } else {
+                // Use the file from dependent schema if available
+                schemaToCheck = metadataSchema.getDependsOn();
+            }
+        }
+
+
+        throw new ResourceNotFoundException(String.format(
+            "Associated panel configuration for schema '%s' not found.",
+            schema));
+
+
     }
 }

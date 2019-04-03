@@ -1,0 +1,42 @@
+{
+  "config": {
+    "display": "radio",
+    "types": [{
+      "label": "addOnlinesrc",
+      "sources": {
+        "filestore": true
+      },
+      "icon": "fa gn-icon-onlinesrc",
+      "process": "onlinesrc-add",
+      "fields": {
+        "protocol": {
+          "value": "WWW:LINK-1.0-http--link",
+          "isMultilingual": false,
+          "required": true
+        },
+        "url": {"isMultilingual": false},
+        "name": {},
+        "desc": {},
+        "function": {"isMultilingual": false},
+        "applicationProfile": {"isMultilingual": false}
+      }
+    }, {
+      "label": "addThumbnail",
+      "sources": {
+        "filestore": true,
+        "thumbnailMaker": true
+      },
+      "icon": "fa gn-icon-thumbnail",
+      "fileStoreFilter": "*.{jpg,JPG,png,PNG,gif,GIF}",
+      "process": "thumbnail-add",
+      "fields": {
+        "url": {
+          "param": "thumbnail_url",
+          "isMultilingual": false
+        },
+        "name": {"param": "thumbnail_desc"}
+      }
+    }],
+    "multilingualFields": ["name", "desc"]
+  }
+}
