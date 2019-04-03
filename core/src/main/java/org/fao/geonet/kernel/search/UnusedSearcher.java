@@ -191,6 +191,11 @@ class UnusedSearcher extends MetaSearcher {
         Element elCategories = new Element("categories");
         elSummary.addContent(elCategories);
     }
+    
+    
+    public long getVersionToken() {
+    	return -1;
+    };    
 }
 
 //==============================================================================

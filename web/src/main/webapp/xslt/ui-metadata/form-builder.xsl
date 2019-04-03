@@ -163,6 +163,7 @@
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>
                 <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                <xsl:with-param name="isRequired" select="$isRequired"/>
               </xsl:call-template>
             </xsl:if>
           </div>
@@ -290,6 +291,7 @@
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>
                 <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                <xsl:with-param name="isRequired" select="$isRequired"/>
               </xsl:call-template>
             </xsl:if>
           </div>
@@ -556,143 +558,147 @@
               </xsl:if>
               <!-- For each template field create an input.
               The directive takes care of setting values. -->
-              <xsl:for-each select="$template/values/key">
-                <xsl:variable name="valueLabelKey" select="@label"/>
-                <xsl:variable name="keyRequired" select="@required"/>
-                <xsl:variable name="helper"
-                              select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/helper else ''"/>
-                <xsl:variable name="codelist"
-                              select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/codelist else ''"/>
-                <xsl:variable name="readonly"
-                              select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/readonly else ''"/>
-
-                <!-- Only display label if more than one key to match -->
-                <xsl:if test="count($template/values/key) > 1">
-                  <label for="{$id}_{@label}">
-                    <!-- if key has an attr required="true"-->
-                    <xsl:if test="$keyRequired">
-                      <xsl:attribute name="class" select="'gn-required'"/>
-                    </xsl:if>
-                    <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
-                  </label>
-                </xsl:if>
-
-                <xsl:choose>
-                  <xsl:when test="@use = 'textarea'">
-                    <textarea class="form-control"
-                              data-gn-field-tooltip="{$schema}|{@tooltip}"
-                              id="{$id}_{@label}">
-                      <xsl:if test="$readonly = 'true'">
-                        <xsl:attribute name="disabled"/>
-                      </xsl:if>
-                    </textarea>
-                  </xsl:when>
-                  <xsl:when test="$codelist != ''">
-                    <select class="form-control input-sm"
-                            data-gn-field-tooltip="{$schema}|{@tooltip}"
-                            id="{$id}_{@label}">
-                      <xsl:if test="$readonly = 'true'">
-                        <xsl:attribute name="disabled"/>
-                      </xsl:if>
-                      <option></option>
-
-                      <xsl:for-each select="$codelist/entry">
-                        <xsl:sort select="if ($codelist/@sort = 'fixed') then position() else label"/>
-                        <option value="{code}" title="{normalize-space(description)}">
-                          <xsl:value-of select="label"/>
-                        </option>
-                      </xsl:for-each>
-                    </select>
-                  </xsl:when>
-                  <xsl:when test="@use = 'checkbox'">
-                    <span class="pull-left">
-                      <input type="checkbox"
-                             data-gn-field-tooltip="{$schema}|{@tooltip}"
-                             id="{$id}_{@label}">
-                        <xsl:if test="$readonly = 'true'">
-                          <xsl:attribute name="disabled"/>
+              <div class="gn-multi-field">
+                <xsl:for-each select="$template/values/key">
+                <div class="row">
+                  <xsl:variable name="valueLabelKey" select="@label"/>
+                  <xsl:variable name="keyRequired" select="@required"/>
+                  <xsl:variable name="helper"
+                                select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/helper else ''"/>
+                  <xsl:variable name="codelist"
+                                select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/codelist else ''"/>
+                  <xsl:variable name="readonly"
+                                select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/readonly else ''"/>
+                  <div class="col-sm-11 gn-field">
+                    <!-- Only display label if more than one key to match -->
+                    <xsl:if test="count($template/values/key) > 1">
+                      <label for="{$id}_{@label}">
+                        <!-- if key has an attr required="true"-->
+                        <xsl:if test="$keyRequired">
+                          <xsl:attribute name="class" select="'gn-required'"/>
                         </xsl:if>
-                      </input>
-                      &#160;
-                    </span>
-                  </xsl:when>
-                  <!-- A directive -->
-                  <xsl:when test="@use = 'data-gn-language-picker'">
-                    <input class="form-control"
-                           value="{value}"
-                           data-gn-field-tooltip="{$schema}|{@tooltip}"
-                           data-gn-language-picker=""
-                           id="{$id}_{@label}"/>
-                  </xsl:when>
-                  <xsl:when test="starts-with(@use, 'gn-')">
-                    <input class="form-control"
-                           type="hidden"
-                           value="{value}"
-                           id="{$id}_{@label}"/>
+                        <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
+                      </label>
+                    </xsl:if>
 
-                    <div data-gn-field-tooltip="{$schema}|{@tooltip}"
-                         data-id="#{$id}_{@label}">
-                      <xsl:attribute name="data-{@use}">
-                        <xsl:value-of
-                          select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''"/>
-                      </xsl:attribute>
-                      <xsl:for-each select="directiveAttributes/attribute::*">
-                        <xsl:variable name="directiveAttributeName" select="name()"/>
+                    <xsl:choose>
+                      <xsl:when test="@use = 'textarea'">
+                        <textarea class="form-control"
+                                  data-gn-field-tooltip="{$schema}|{@tooltip}"
+                                  id="{$id}_{@label}">
+                          <xsl:if test="$readonly = 'true'">
+                            <xsl:attribute name="disabled"/>
+                          </xsl:if>
+                        </textarea>
+                      </xsl:when>
+                      <xsl:when test="$codelist != ''">
+                        <select class="form-control input-sm"
+                                data-gn-field-tooltip="{$schema}|{@tooltip}"
+                                id="{$id}_{@label}">
+                          <xsl:if test="$readonly = 'true'">
+                            <xsl:attribute name="disabled"/>
+                          </xsl:if>
+                          <option></option>
 
-                        <xsl:attribute name="{$directiveAttributeName}">
-                          <xsl:choose>
-                            <xsl:when test="$keyValues and
-                                            count($keyValues/field[@name = $valueLabelKey]/
-                              directiveAttributes[@name = $directiveAttributeName]) > 0">
-                              <xsl:value-of select="$keyValues/field[@name = $valueLabelKey]/
-                              directiveAttributes[@name = $directiveAttributeName]/text()"/>
-                            </xsl:when>
-                            <xsl:when test="starts-with(., 'eval#')">
-                              <!-- Empty value for XPath to evaluate. -->
-                            </xsl:when>
-                            <xsl:otherwise>
-                              <xsl:value-of select="."/>
-                            </xsl:otherwise>
-                          </xsl:choose>
-                        </xsl:attribute>
-                      </xsl:for-each>
-                    </div>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:variable name="keyIndex" select="position()"/>
-                    <input class="form-control"
-                           type="{if (@use) then @use else 'text'}"
-                           value="{if ($keyValues) then $keyValues/field[$keyIndex]/value/text() else ''}"
-                           id="{$id}_{@label}"
-                           data-gn-field-tooltip="{$schema}|{@tooltip}">
-                      <xsl:if test="$helper">
-                        <!-- hide the form field if helper is available, the
-                          value is set by the directive which provide customized
-                          forms -->
-                        <xsl:attribute name="class" select="'hidden'"/>
-                      </xsl:if>
-                      <xsl:if test="$readonly = 'true'">
-                        <xsl:attribute name="disabled"/>
-                      </xsl:if>
-                    </input>
-                  </xsl:otherwise>
-                </xsl:choose>
+                          <xsl:for-each select="$codelist/entry">
+                            <xsl:sort select="if ($codelist/@sort = 'fixed') then position() else label"/>
+                            <option value="{code}" title="{normalize-space(description)}">
+                              <xsl:value-of select="label"/>
+                            </option>
+                          </xsl:for-each>
+                        </select>
+                      </xsl:when>
+                      <xsl:when test="@use = 'checkbox'">
+                        <span class="pull-left">
+                          <input type="checkbox"
+                                data-gn-field-tooltip="{$schema}|{@tooltip}"
+                                id="{$id}_{@label}">
+                            <xsl:if test="$readonly = 'true'">
+                              <xsl:attribute name="disabled"/>
+                            </xsl:if>
+                          </input>
+                          &#160;
+                        </span>
+                      </xsl:when>
+                      <!-- A directive -->
+                      <xsl:when test="@use = 'data-gn-language-picker'">
+                        <input class="form-control"
+                              value="{value}"
+                              data-gn-field-tooltip="{$schema}|{@tooltip}"
+                              data-gn-language-picker=""
+                              id="{$id}_{@label}"/>
+                      </xsl:when>
+                      <xsl:when test="starts-with(@use, 'gn-')">
+                        <input class="form-control"
+                              type="hidden"
+                              value="{value}"
+                              id="{$id}_{@label}"/>
 
-                <xsl:if test="$helper">
-                  <xsl:variable name="elementName" select="concat($id, '_', @label)"/>
-                  <xsl:call-template name="render-form-field-helper">
-                    <xsl:with-param name="elementRef" select="$elementName"/>
-                    <xsl:with-param name="relatedElement" select="if ($helper/@rel)
-                      then concat($elementName, '_', substring-after($helper/@rel, ':'))
-                      else ''"/>
-                    <xsl:with-param name="dataType" select="'text'"/>
-                    <xsl:with-param name="listOfValues" select="$helper"/>
-                    <xsl:with-param name="tooltip" select="concat($schema, '|', @tooltip)"/>
-                  </xsl:call-template>
-                </xsl:if>
+                        <div data-gn-field-tooltip="{$schema}|{@tooltip}"
+                            data-id="#{$id}_{@label}">
+                          <xsl:attribute name="data-{@use}">
+                            <xsl:value-of
+                              select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''"/>
+                          </xsl:attribute>
+                          <xsl:for-each select="directiveAttributes/attribute::*">
+                            <xsl:variable name="directiveAttributeName" select="name()"/>
 
-              </xsl:for-each>
+                            <xsl:attribute name="{$directiveAttributeName}">
+                              <xsl:choose>
+                                <xsl:when test="$keyValues and
+                                                count($keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]) > 0">
+                                  <xsl:value-of select="$keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]/text()"/>
+                                </xsl:when>
+                                <xsl:when test="starts-with(., 'eval#')">
+                                  <!-- Empty value for XPath to evaluate. -->
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="."/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </xsl:attribute>
+                          </xsl:for-each>
+                        </div>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:variable name="keyIndex" select="position()"/>
+                        <input class="form-control"
+                              type="{if (@use) then @use else 'text'}"
+                              value="{if ($keyValues) then $keyValues/field[$keyIndex]/value/text() else ''}"
+                              id="{$id}_{@label}"
+                              data-gn-field-tooltip="{$schema}|{@tooltip}">
+                          <xsl:if test="$helper">
+                            <!-- hide the form field if helper is available, the
+                              value is set by the directive which provide customized
+                              forms -->
+                            <xsl:attribute name="class" select="'hidden'"/>
+                          </xsl:if>
+                          <xsl:if test="$readonly = 'true'">
+                            <xsl:attribute name="disabled"/>
+                          </xsl:if>
+                        </input>
+                      </xsl:otherwise>
+                    </xsl:choose>
 
+                    <xsl:if test="$helper">
+                      <xsl:variable name="elementName" select="concat($id, '_', @label)"/>
+                      <xsl:call-template name="render-form-field-helper">
+                        <xsl:with-param name="elementRef" select="$elementName"/>
+                        <xsl:with-param name="relatedElement" select="if ($helper/@rel)
+                          then concat($elementName, '_', substring-after($helper/@rel, ':'))
+                          else ''"/>
+                        <xsl:with-param name="dataType" select="'text'"/>
+                        <xsl:with-param name="listOfValues" select="$helper"/>
+                        <xsl:with-param name="tooltip" select="concat($schema, '|', @tooltip)"/>
+                      </xsl:call-template>
+                    </xsl:if>
+                  </div>
+                  <div class="col-sm-1 gn-control"></div>
+                </div>
+                </xsl:for-each>
+              </div>
               <xsl:if test="not($isExisting)">
                 <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
               </xsl:if>
@@ -788,7 +794,7 @@
                     select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
       <xsl:variable name="parentName"
                     select="name(ancestor::*[not(contains(name(), 'CHOICE_ELEMENT'))][1])"/>
-      <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
+      <xsl:variable name="isRequired" select="$childEditInfo/@min = 1"/>
 
       <!-- This element is replaced by the content received when clicking add -->
       <div
@@ -1292,15 +1298,17 @@
   <xsl:template name="render-form-field-control-remove">
     <xsl:param name="editInfo"/>
     <xsl:param name="parentEditInfo" required="no"/>
+    <xsl:param name="isRequired" required="no"/>
     <xsl:if
-      test="($parentEditInfo and
-                     ($parentEditInfo/@del = 'true' or
-                     $parentEditInfo/@min != 1)
-                   ) or
-                   (not($parentEditInfo) and ($editInfo and
-                   ($editInfo/@del = 'true' or
-                   $editInfo/@min != 1)
-                   ))">
+      test="(($parentEditInfo and (
+              $parentEditInfo/@del = 'true' or
+              $parentEditInfo/@min != 1)
+            ) or (
+              not($parentEditInfo) and $editInfo and (
+                $editInfo/@del = 'true' or
+                $editInfo/@min != 1
+              )
+            )) and not($isRequired and ($editInfo and $editInfo/@max and $editInfo/@max = 1) and ($parentEditInfo and $parentEditInfo/@max and $parentEditInfo/@max = 1))">
 
       <xsl:variable name="elementToRemove" select="if ($parentEditInfo) then
         $parentEditInfo else $editInfo"/>
@@ -1577,6 +1585,9 @@
                   <xsl:attribute name="class" select="'gn-table-label'"/>
                 </xsl:if>
 
+                <xsl:variable name="ref"
+                              select="*/gn:element/@ref"/>
+
                 <!-- TODO: Add move up/down control? -->
                 <xsl:choose>
                   <xsl:when test="@remove">
@@ -1595,6 +1606,12 @@
                     <!-- Empty col -->
                   </xsl:when>
                   <xsl:otherwise>
+
+                    <!-- Children of an element having an XLink using the directory
+                                is in readonly mode. -->
+                    <xsl:variable name="isReadonlyDueToXlink"
+                                  select="count($metadata//*[gn:element/@ref = $ref]/ancestor-or-self::node()[contains(@xlink:href, 'api/registries/entries')]) > 0"/>
+
                     <xsl:choose>
                       <xsl:when test="@type">
                         <xsl:variable name="name"
@@ -1606,6 +1623,9 @@
                           <xsl:when test="@type = 'select'">
                             <select class="form-control"
                                       name="{$name}">
+                              <xsl:if test="$isReadonlyDueToXlink">
+                                <xsl:attribute name="disabled" select="'disabled'"/>
+                              </xsl:if>
                               <xsl:variable name="value"
                                             select="*/text()"/>
                               <option></option>
@@ -1646,6 +1666,9 @@
                               </xsl:if>
                               <xsl:if test="@step">
                                 <xsl:attribute name="step" select="@step"/>
+                              </xsl:if>
+                              <xsl:if test="$isReadonlyDueToXlink">
+                                <xsl:attribute name="disabled" select="'disabled'"/>
                               </xsl:if>
                               <xsl:if test="@pattern">
                                 <xsl:attribute name="pattern" select="@pattern"/>

@@ -96,11 +96,7 @@
                                          if ($width != '')
                                          then $width
                                          else '600'
-                                         }&amp;background={
-                                         if ($background != '')
-                                         then $background
-                                         else 'osm'
-                                         }&amp;geomsrs=EPSG:4326&amp;geom={$geometry}"/>
+                                         }&amp;background=settings&amp;geomsrs=EPSG:4326&amp;geom={$geometry}"/>
     </xsl:if>
 
   </xsl:function>

@@ -346,13 +346,13 @@
           var layerUrl = layer.get('url');
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
             var mSize = (ol.extent.getWidth(proj.getExtent()) /
-                tileGrid.getTileSize()) /
+                tileGrid.getTileSize(z)) /
                 tileGrid.getResolutions()[z];
                 matrixIds[z] = {
                   identifier: tileGrid.getMatrixIds()[z],
                   resolution: tileGrid.getResolutions()[z],
-                  tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
-                  topLeftCorner: tileGrid.getOrigin(),
+                  tileSize: [tileGrid.getTileSize(z), tileGrid.getTileSize(z)],
+                  topLeftCorner: tileGrid.getOrigin(z),
                   matrixSize: [mSize, mSize]
                 };
           }

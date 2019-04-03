@@ -16,8 +16,7 @@
 
                 <span class="input-group-addon">
                   <label>
-                    <input type="checkbox" data-ng-model="onlyMyRecord.is"
-                          data-ng-change="toggleOnlyMyRecord(triggerSearch);">
+                    <input type="checkbox" data-ng-model="onlyMyRecord.is">
                     <span data-translate="" class="hidden-xs">onlyMyRecord</span>
                   </label>
                 </span>
@@ -39,7 +38,7 @@
                     <i class="fa fa-search"></i>
                   </button>
                   <button type="button"
-                          data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.defaultParams);"
+                          data-ng-click="setOnlyMyRecord();resetSearch(defaultSearchObj.defaultParams);"
                           title="{{'ClearTitle' | translate}}"
                           class="btn btn-default">
                     <i class="fa fa-times"></i>
@@ -130,7 +129,5 @@
         </div>
       </div>
     </div>
-  </div>
-  <div data-ng-include="'../../catalog/templates/info.html'">
   </div>
 </div>

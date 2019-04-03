@@ -74,6 +74,7 @@
           <row>
             <xsl:for-each select="col">
               <col>
+                
                 <xsl:if test="@del != ''">
                   <xsl:attribute name="remove" select="'true'"/>
 

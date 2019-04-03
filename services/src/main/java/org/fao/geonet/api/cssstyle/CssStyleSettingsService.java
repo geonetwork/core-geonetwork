@@ -100,8 +100,7 @@ public class CssStyleSettingsService {
             saveLessVariablesOnDB(cleanedVariables);
             saveLessVariablesInDataFolder(cleanedVariables);
             return new ResponseEntity<String>(HttpStatus.CREATED);
-        } catch (final JSONException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
         } catch (final Exception e) {
             e.printStackTrace();
             throw e;

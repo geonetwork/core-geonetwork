@@ -212,4 +212,7 @@
   <sds-section-custodian>Vastuutaho</sds-section-custodian>
   <sds-addOperation>Lisää toiminto</sds-addOperation>
 
+  <trueValue>Yes</trueValue>
+  <falseValue>No</falseValue>
+  <nilValue>Undefined</nilValue>
 </strings>

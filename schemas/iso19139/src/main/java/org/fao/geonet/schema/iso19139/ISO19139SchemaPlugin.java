@@ -266,6 +266,7 @@ public class ISO19139SchemaPlugin
         }
 
         // Remove unused lang entries
+        // eg. the directory entry contains more languages than requested.
         List<Element> translationNodes = (List<Element>)Xml.selectNodes(element, "*//node()[@locale]");
         for(Element el : translationNodes) {
             // Remove all translations if there is no or only one language requested
@@ -282,6 +283,31 @@ public class ISO19139SchemaPlugin
                 el.detach();
             }
         }
+
+        // Sort all children elements translation
+        // according to the language list.
+        // When a directory entry is added as an xlink, the URL
+        // contains an ordered list of language and this ordre must
+        // be preserved in order to display fields in the editor in the same
+        // order as other element in the record.
+        if (langs.size() > 1) {
+            List<Element> elementList = (List<Element>)Xml.selectNodes(element,
+                                        ".//*[gmd:PT_FreeText]",
+                                               Arrays.asList(ISO19139Namespaces.GMD));
+            for(Element el : elementList) {
+                final Element ptFreeText = el.getChild("PT_FreeText", GMD);
+                List<Element> orderedTextGroup = new ArrayList<>();
+                for (String l : langs) {
+                    List<Element> node = (List<Element>) Xml.selectNodes(ptFreeText, "gmd:textGroup[*/@locale='" + l + "']", Arrays.asList(ISO19139Namespaces.GMD));
+                    if (node != null && node.size() == 1) {
+                        orderedTextGroup.add((Element) node.get(0).clone());
+                    }
+                }
+                ptFreeText.removeContent();
+                ptFreeText.addContent(orderedTextGroup);
+            }
+        }
+
 
         return element;
     }
