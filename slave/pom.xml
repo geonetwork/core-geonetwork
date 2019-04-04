@@ -31,7 +31,7 @@
     <version>3.7.0-SNAPSHOT</version>
   </parent>
 
-  <name>GeoNetwork Events</name>
+  <name>GeoNetwork Slave</name>
   <packaging>jar</packaging>
   <artifactId>slave</artifactId>
   <description>Converts the instance on a slave instance</description>
