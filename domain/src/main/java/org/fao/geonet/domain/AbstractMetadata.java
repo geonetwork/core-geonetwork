@@ -342,4 +342,28 @@ public abstract class AbstractMetadata extends GeonetEntity {
 		return builder.toString();
 	}
 
+	@Override
+	@Transient
+	public AbstractMetadata clone() {
+		AbstractMetadata clone = new TransientMetadata();
+
+		//clone.setData(this.getData());
+		clone.setId(this.getId());
+		clone.setUuid(this.getUuid());
+		if(this.getDataInfo() != null) {
+			clone.setDataInfo(this.getDataInfo().clone());
+		}
+		if (this.getHarvestInfo() != null) {
+			clone.setHarvestInfo(this.getHarvestInfo().clone());
+		}
+		if(this.getSourceInfo() != null) {
+			clone.setSourceInfo(this.getSourceInfo().clone());
+		}
+
+		return clone;
+	}
+
+	private class TransientMetadata extends AbstractMetadata {
+
+	}
 }

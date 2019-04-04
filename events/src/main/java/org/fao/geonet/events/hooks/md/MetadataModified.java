@@ -61,12 +61,12 @@ public class MetadataModified implements GeonetworkEntityListener<Metadata>,
      */
     @Override
     public void handleEvent(PersistentEventType type, Metadata entity) {
-        if (type == PersistentEventType.PostPersist) {
+        if (type == PersistentEventType.PrePersist) {
             this.eventPublisher.publishEvent(new MetadataAdd(entity));
-        } else if (type == PersistentEventType.PostUpdate) {
+        } else if (type == PersistentEventType.PreUpdate) {
             this.eventPublisher.publishEvent(new MetadataUpdate(entity));
-        } else if (type == PersistentEventType.PostRemove) {
-            this.eventPublisher.publishEvent(new MetadataRemove(entity));
+        } else if (type == PersistentEventType.PreRemove) {
+            this.eventPublisher.publishEvent(new MetadataRemove(entity.clone()));
         }
     }
 
