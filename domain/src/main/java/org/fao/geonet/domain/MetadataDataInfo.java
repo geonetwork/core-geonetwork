@@ -398,4 +398,24 @@ public class MetadataDataInfo implements Serializable {
 				+ (_displayOrder != null ? "_displayOrder=" + _displayOrder + ", " : "") + "_rating=" + _rating
 				+ ", _popularity=" + _popularity + "]";
 	}
+
+	public MetadataDataInfo clone() {
+		MetadataDataInfo clon = new MetadataDataInfo();
+		if (this.getChangeDate() != null) {
+			clon.setChangeDate(this.getChangeDate().clone());
+		}
+		if (this.getCreateDate() != null) {
+			clon.setCreateDate(this.getCreateDate().clone());
+		}
+		clon.setDisplayOrder(this.getDisplayOrder());
+		clon.setDoctype(this.getDoctype());
+		clon.setExtra(this.getExtra());
+		clon.setPopularity(this.getPopularity());
+		clon.setRating(this.getRating());
+		clon.setRoot(this.getRoot());
+		clon.setSchemaId(this.getSchemaId());
+		clon.setType(this.getType());
+
+		return clon;
+	}
 }

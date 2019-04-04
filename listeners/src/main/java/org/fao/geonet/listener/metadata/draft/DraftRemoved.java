@@ -24,6 +24,10 @@
 package org.fao.geonet.listener.metadata.draft;
 
 import java.util.Arrays;
+import java.util.List;
+
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -33,7 +37,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -49,7 +52,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
  *
  */
 @Component
-public class DraftRemoved implements ApplicationListener<MetadataDraftRemove> {
+public class DraftRemoved {
 
 	@Autowired
 	private IMetadataUtils metadataUtils;
@@ -57,16 +60,12 @@ public class DraftRemoved implements ApplicationListener<MetadataDraftRemove> {
 	@Autowired
 	private IMetadataIndexer metadataIndexer;
 
-	@Override
-	public void onApplicationEvent(MetadataDraftRemove event) {
-	}
-
-	@TransactionalEventListener(phase=TransactionPhase.AFTER_COMPLETION)
+	@TransactionalEventListener(phase=TransactionPhase.AFTER_COMPLETION, fallbackExecution=true)
 	public void doAfterCommit(MetadataDraftRemove event) {
 		Log.trace(Geonet.DATA_MANAGER, "Reindexing non drafted versions of uuid " + event.getMd().getUuid());
 
 		try {
-			for (AbstractMetadata md : metadataUtils.findAllByUuid(event.getMd().getUuid())) {
+			for (AbstractMetadata md : getRecords(event)) {
 				if (!(md instanceof MetadataDraft)) {
 					Log.trace(Geonet.DATA_MANAGER, "Reindexing " + md.getId());
 					try {
@@ -79,6 +78,11 @@ public class DraftRemoved implements ApplicationListener<MetadataDraftRemove> {
 		} catch (Throwable e) {
 			Log.error(Geonet.DATA_MANAGER, "Couldn't reindex the non drafted versions of " + event.getMd(), e);
 		}
+	}
+
+	@Transactional(value=TxType.REQUIRES_NEW)
+	private List<? extends AbstractMetadata> getRecords(MetadataDraftRemove event) {
+		return metadataUtils.findAllByUuid(event.getMd().getUuid());
 	}
 
 }

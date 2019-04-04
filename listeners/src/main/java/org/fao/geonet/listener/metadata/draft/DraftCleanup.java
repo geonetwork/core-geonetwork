@@ -32,10 +32,10 @@ import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
@@ -49,7 +49,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
  *
  */
 @Component
-public class DraftCleanup implements ApplicationListener<MetadataRemove> {
+public class DraftCleanup {
 
 	@Autowired
 	private MetadataDraftRepository metadataDraftRepository;
@@ -57,13 +57,11 @@ public class DraftCleanup implements ApplicationListener<MetadataRemove> {
 	@Autowired
 	private DraftUtilities draftUtilities;
 
-	@Override
-	public void onApplicationEvent(MetadataRemove event) {
-	}
-
-	@TransactionalEventListener(phase=TransactionPhase.BEFORE_COMMIT)
+	@TransactionalEventListener
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void doAfterCommit(MetadataRemove event) {
-		Log.trace(Geonet.DATA_MANAGER, "A metadata has been removed. Cleanup associated drafts of " + event.getMd());
+		Log.trace(Geonet.DATA_MANAGER,
+				"A metadata has been removed. Cleanup associated drafts of " + event.getSource());
 		try {
 			List<MetadataDraft> toRemove = metadataDraftRepository
 					.findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
@@ -72,9 +70,9 @@ public class DraftCleanup implements ApplicationListener<MetadataRemove> {
 				draftUtilities.removeDraft(md);
 			}
 		} catch (Throwable e) {
-			Log.error(Geonet.DATA_MANAGER, "Couldn't clean up associated drafts of " + event.getMd(), e);
+			Log.error(Geonet.DATA_MANAGER, "Couldn't clean up associated drafts of " + event.getSource(), e);
 		}
 
-		Log.trace(Geonet.DATA_MANAGER, "Finished cleaning up of " + event.getMd());
+		Log.trace(Geonet.DATA_MANAGER, "Finished cleaning up of " + event.getSource());
 	}
 }

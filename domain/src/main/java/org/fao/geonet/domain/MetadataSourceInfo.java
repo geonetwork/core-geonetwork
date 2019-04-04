@@ -139,4 +139,15 @@ public class MetadataSourceInfo {
 				+ (_groupOwner != null ? "_groupOwner=" + _groupOwner + ", " : "")
 				+ (_owner != null ? "_owner=" + _owner : "") + "]";
 	}
+	
+	@Override
+	protected MetadataSourceInfo clone() {
+		MetadataSourceInfo clon = new MetadataSourceInfo();
+		
+		clon.setGroupOwner(this.getGroupOwner());
+		clon.setOwner(this.getOwner());
+		clon.setSourceId(this.getSourceId());
+		
+		return clon;
+	}
 }

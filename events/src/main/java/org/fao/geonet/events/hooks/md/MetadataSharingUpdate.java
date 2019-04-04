@@ -59,11 +59,11 @@ public class MetadataSharingUpdate implements GeonetworkEntityListener<Operation
      */
     @Override
     public void handleEvent(PersistentEventType type, OperationAllowed entity) {
-        if (type == PersistentEventType.PostPersist) {
+        if (type == PersistentEventType.PrePersist) {
             this.eventPublisher.publishEvent(new MetadataShare(entity, MetadataShare.Type.ADD));
-        } else if (type == PersistentEventType.PostUpdate) {
+        } else if (type == PersistentEventType.PreUpdate) {
             this.eventPublisher.publishEvent(new MetadataShare(entity, MetadataShare.Type.UPDATE));
-        } else if (type == PersistentEventType.PostRemove) {
+        } else if (type == PersistentEventType.PreRemove) {
             this.eventPublisher.publishEvent(new MetadataShare(entity, MetadataShare.Type.REMOVE));
         }
     }

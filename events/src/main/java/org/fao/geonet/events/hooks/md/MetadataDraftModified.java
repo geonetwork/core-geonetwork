@@ -62,11 +62,11 @@ public class MetadataDraftModified
      */
     @Override
     public void handleEvent(PersistentEventType type, MetadataDraft entity) {
-        if (type == PersistentEventType.PostPersist) {
+        if (type == PersistentEventType.PrePersist) {
             this.eventPublisher.publishEvent(new MetadataDraftAdd(entity));
-        } else if (type == PersistentEventType.PostUpdate) {
+        } else if (type == PersistentEventType.PreUpdate) {
             this.eventPublisher.publishEvent(new MetadataDraftUpdate(entity));
-        } else if (type == PersistentEventType.PostRemove) {
+        } else if (type == PersistentEventType.PreRemove) {
             this.eventPublisher.publishEvent(new MetadataDraftRemove(entity));
         }
     }
