@@ -77,11 +77,10 @@
               <xsl:if test="string($format)"><xsl:value-of select="$format"/>/
               </xsl:if>
             </xsl:variable>
-            <loc><xsl:value-of select="/root/gui/env/server/protocol"/>://<xsl:value-of
-              select="/root/gui/env/server/host"/>:<xsl:value-of
-              select="/root/gui/env/server/port"/><xsl:value-of select="/root/gui/url"/>/sitemap/<xsl:value-of
-              select="$formatParam"/><xsl:value-of select="$pStart"/>/<xsl:value-of
-              select="/root/gui/language"/>
+            <loc>
+              <xsl:value-of select="$siteURL"/><xsl:value-of select="/root/gui/url"/>/sitemap/<xsl:value-of
+                select="$formatParam"/><xsl:value-of select="$pStart"/>/<xsl:value-of
+                select="/root/gui/language"/>
             </loc>
             <lastmod>
               <xsl:value-of select="$changeDate"/>
