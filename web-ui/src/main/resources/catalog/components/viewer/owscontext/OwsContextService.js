@@ -155,9 +155,7 @@
         var loadPromise = map.get('sizePromise');
         if (loadPromise) {
           loadPromise.then(function() {
-            $timeout(function () {
-              map.getView().fit(extent, map.getSize(), { nearest: true });
-            }, 300);
+            map.getView().fit(extent, map.getSize(), { nearest: true });
           })
         }
         else {

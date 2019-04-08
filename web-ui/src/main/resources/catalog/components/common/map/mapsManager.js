@@ -295,9 +295,11 @@
                 ol.extent.getHeight(config.extent)) {
               if (type !== this.SEARCH_MAP) {
                 // Because search map is fit by result md bbox
-                map.get('sizePromise').then(function() {
-                  map.getView().fit(config.extent, map.getSize(), { nearest: true });
+                var newPromise = map.get('sizePromise').then(function () {
+                  map.getView().fit(config.extent, map.getSize(), {nearest: true});
                 });
+
+                map.set('sizePromise', newPromise);
               }
             }
 
