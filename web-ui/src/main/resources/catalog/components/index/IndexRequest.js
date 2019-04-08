@@ -1019,15 +1019,15 @@
         fieldsQ.push('+*' + v + '*');
       });
     }
+    if (this.initialParams.filter) {
+      fieldsQ.push(this.initialParams.filter);
+    }
 
     // Search for all if no filter defined
     if (fieldsQ.length === 0) {
       fieldsQ.push('*:*');
     }
 
-    if (this.initialParams.filter != '') {
-      fieldsQ.push(this.initialParams.filter);
-    }
 
     var filter = fieldsQ.join(' ');
     qParam += filter;
