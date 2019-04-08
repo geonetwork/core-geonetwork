@@ -39,9 +39,9 @@
   if(typeof sxtSettings != 'undefined') {
     var catModule = angular.module('gn_cat_controller');
     catModule.config(['gnGlobalSettings', 'gnLangs',
-      function(gnGlobalSettings, gnLangs) {
+      function (gnGlobalSettings, gnLangs) {
 
-        if(typeof sxtSettings != 'undefined') {
+        if (typeof sxtSettings != 'undefined') {
           gnGlobalSettings.gnCfg.mods.search.resultTemplate =
             '../../catalog/views/sextant/templates/mdview/grid.html';
           gnGlobalSettings.gnCfg.langDetector = sxtSettings.langDetector;
@@ -52,20 +52,47 @@
     // init gn_config
     var cfgModule = angular.module('gn_config', []);
     cfgModule.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
-      function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
         gnGlobalSettings.init({}, null, gnViewerSettings, gnSearchSettings);
       }
     ]);
 
-    // api css loading
+    // avoid FOUC (flash of unstyled content)
+    $('.gn').css({
+      'overflow': 'hidden',
+      'position': 'relative'
+    });
+
+    // api css loading: add a <link> element to the correct stylesheet
+    // also add a preload link to inform the browser of the priority of the css
+    // when the css is loaded, hide the loading screen & restore the general overflow attribute
     var theme = sxtSettings.theme || 'default';
+    var stylesheetUrl = sxtGnUrl + '../static/api-' + theme + '.css';
+
+    var preloadLink = document.createElement("link");
+    preloadLink.href = stylesheetUrl;
+    preloadLink.rel = "preload";
+    preloadLink.as = "style";
+
     var link = document.createElement("link");
-    link.href = sxtGnUrl + '../static/api-' + theme + '.css';
+    link.href = stylesheetUrl;
     link.rel = "stylesheet";
     link.media = "screen";
-    document.querySelector('head').appendChild(link);
-  }
+    link.addEventListener('load', function() {
+      // clear loading screen and restore main frame overflow
+      // use timeout to make this work with FF
+      setTimeout(function() {
+        $('.gn .sxt-loading').remove();
+        $('.gn').css({
+          'overflow': 'auto'
+        });
+      }, 500);
+    });
 
+    var head = document.querySelector('head');
+    head.appendChild(preloadLink);
+    head.appendChild(link);
+  }
 
   module.value('sxtGlobals', {
     keywords: {}
@@ -645,22 +672,5 @@
       }
     }
   }]);
-
-  // avoid FOUC (flash of unstyled content)
-  $('.gn').css({
-    'overflow': 'hidden',
-    'position': 'relative'
-  });
-
-  // clear loading screen and restore main frame overflow
-  // use timeout to make this work with FF
-  $(window).load(function() {
-    setTimeout(function() {
-      $('.gn .sxt-loading').remove();
-      $('.gn').css({
-        'overflow': 'auto'
-      });
-    }, 500)
-  });
 
 })();
