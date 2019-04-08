@@ -60,7 +60,7 @@
           for this criteria. For contact, source catalog, an extra panel
           is added with some details about this resource. -->
           <xsl:if test="count($parameters) = 1">
-            <div class="text-center">
+            <div class="clearfix">
               <xsl:variable name="parameterName"
                             select="$parameters[1]/name()"/>
               <xsl:variable name="parameterLabel"
@@ -68,39 +68,41 @@
 
               <xsl:variable name="parameterValue"
                             select="$parameters[1]/text()"/>
-              <b>
-                <xsl:value-of select="$parameterLabel"/>
-              </b>
+              <div class="gn-margin-bottom">
+                <strong><xsl:value-of select="$parameterLabel"/></strong>
+              </div>
               <!-- Illustration -->
-              <xsl:choose>
-                <xsl:when test="$parameterName = '_groupPublished'">
-                  <img  class="gn-logo-lg"
-                        src="{nodeUrl}../images/harvesting/{$parameterValue}.png"/>
-                </xsl:when>
-                <xsl:when test="$parameterName = '_source'">
-                  <img  class="gn-logo-lg"
-                        src="{nodeUrl}../images/logos/{$parameterValue}.png"/>
-                </xsl:when>
-                <xsl:when test="$parameterName = 'responsiblePartyEmail'">
-                  <img src="//gravatar.com/avatar/{util:md5Hex($parameterValue)}?s=200"/>
-                  <h2>
-                    <xsl:value-of select="$parameterValue"/>
-                  </h2>
-                </xsl:when>
-                <xsl:when test="$parameterName = 'topicCat' or $parameterName = 'type'">
-                  <span class="">
-                    <i class="fa fa-3x gn-icon gn-icon-{$parameterValue}">&#160;</i>
-                  </span>
-                  <h2>
-                    <xsl:value-of select="$parameterValue"/>
-                  </h2>
-                </xsl:when>
-                <xsl:otherwise>
-                  <h2>
-                    <xsl:value-of select="$parameterValue"/>
-                  </h2>
-                </xsl:otherwise>
-              </xsl:choose>
+              <div class="pull-left">
+                <xsl:choose>
+                  <xsl:when test="$parameterName = '_groupPublished'">
+                    <img  class="gn-logo-lg"
+                          src="{nodeUrl}../images/harvesting/{$parameterValue}.png"/>
+                  </xsl:when>
+                  <xsl:when test="$parameterName = '_source'">
+                    <img  class="gn-logo-lg"
+                          src="{nodeUrl}../images/logos/{$parameterValue}.png"/>
+                  </xsl:when>
+                  <xsl:when test="$parameterName = 'responsiblePartyEmail'">
+                    <img src="//gravatar.com/avatar/{util:md5Hex($parameterValue)}?s=200"/>
+                    <h2>
+                      <xsl:value-of select="$parameterValue"/>
+                    </h2>
+                  </xsl:when>
+                  <xsl:when test="$parameterName = 'topicCat' or $parameterName = 'type'">
+                    <span class="">
+                      <i class="fa fa-3x gn-icon gn-icon-{$parameterValue}">&#160;</i>
+                    </span>
+                    <h2>
+                      <xsl:value-of select="$parameterValue"/>
+                    </h2>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <h2>
+                      <xsl:value-of select="$parameterValue"/>
+                    </h2>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </div>
               <span class="badge">
                 <xsl:value-of select="concat($count, ' ', $t/records)"/>
               </span>
@@ -148,7 +150,7 @@
         
           <xsl:for-each select="/root/search/response[@from]">
 
-            <div class="row" style="padding-bottom:20px">
+            <div class="row gn-pages">
               <div class="col-xs-12">
                 <xsl:value-of select="$t/from"/>
                 <b>
@@ -209,8 +211,10 @@
                   <div class="clearfix">
                     <div class="gn-md-thumbnail pull-left">
                       <xsl:for-each select="image[1]">
-                        <img class="gn-img-thumbnail" itemprop="thumbnailUrl"
-                              src="{tokenize(., '\|')[2]}"></img>
+                        <img class="gn-img-thumbnail"
+                             itemprop="thumbnailUrl"
+                             alt="{thumbnail}"
+                             src="{tokenize(., '\|')[2]}"></img>
                       </xsl:for-each>
                     </div>
                     <p itemprop="description">

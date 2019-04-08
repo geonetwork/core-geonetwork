@@ -393,27 +393,26 @@
 
     <div class="gn-contact" itemscope="itemscope"
            itemtype="http://schema.org/Organization">
-	<!-- schema.org:  provider,         provider,   copyrightHolder,  -,        publisher,   sourceOrganization,  provider,       producer,              provider,  publisher, author       (creator, contributor, funder, sponsor, translator)
-	     iso19139:     resourceProvider, custodian,  owner,            user,     distributor, originator,          pointOfContact, principalInvestigator, processor, publisher, author
-	-->
-	<xsl:attribute name="itemprop">
-	<xsl:choose>
-	  <xsl:when test="$role='resourceProvider'">provider</xsl:when>
-	  <xsl:when test="$role='custodian'">provider</xsl:when>
-	  <xsl:when test="$role='owner'">copyrightHolder</xsl:when>
-	  <xsl:when test="$role='user'">user</xsl:when>
-	  <xsl:when test="$role='distributor'">publisher</xsl:when>
-	  <xsl:when test="$role='originator'">sourceOrganization</xsl:when>
-	  <xsl:when test="$role='pointOfContact'">provider</xsl:when>
-	  <xsl:when test="$role='principalInvestigator'">producer</xsl:when>
-	  <xsl:when test="$role='processor'">provider</xsl:when>
-	  <xsl:when test="$role='publisher'">publisher</xsl:when>
-	  <xsl:when test="$role='author'">author</xsl:when>
-	  <xsl:otherwise>provider</xsl:otherwise>
-	</xsl:choose>
-	</xsl:attribute>
+      <!-- schema.org:  provider,         provider,   copyrightHolder,  -,        publisher,   sourceOrganization,  provider,       producer,              provider,  publisher, author       (creator, contributor, funder, sponsor, translator)
+          iso19139:     resourceProvider, custodian,  owner,            user,     distributor, originator,          pointOfContact, principalInvestigator, processor, publisher, author
+      -->
+      <xsl:attribute name="itemprop">
+      <xsl:choose>
+        <xsl:when test="$role='resourceProvider'">provider</xsl:when>
+        <xsl:when test="$role='custodian'">provider</xsl:when>
+        <xsl:when test="$role='owner'">copyrightHolder</xsl:when>
+        <xsl:when test="$role='user'">user</xsl:when>
+        <xsl:when test="$role='distributor'">publisher</xsl:when>
+        <xsl:when test="$role='originator'">sourceOrganization</xsl:when>
+        <xsl:when test="$role='pointOfContact'">provider</xsl:when>
+        <xsl:when test="$role='principalInvestigator'">producer</xsl:when>
+        <xsl:when test="$role='processor'">provider</xsl:when>
+        <xsl:when test="$role='publisher'">publisher</xsl:when>
+        <xsl:when test="$role='author'">author</xsl:when>
+        <xsl:otherwise>provider</xsl:otherwise>
+      </xsl:choose>
+      </xsl:attribute>
 
-    <div class="gn-contact">
       <h2>
         <i class="fa fa-envelope"><xsl:comment select="'email'"/></i>
         <xsl:apply-templates mode="render-value"
@@ -532,7 +531,7 @@
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
         <a class="btn btn-default" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
-          <i class="fa fa-file-code-o fa-2x"><xsl:comment select="'file'"/></i>
+          <i class="fa fa-file-code-o"><xsl:comment select="'file'"/></i>
           <span><xsl:value-of select="$schemaStrings/metadataInXML"/></span>
         </a>
       </dd>
