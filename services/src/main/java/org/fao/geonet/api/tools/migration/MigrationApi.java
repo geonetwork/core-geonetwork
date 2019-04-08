@@ -81,6 +81,7 @@ public class MigrationApi {
             if (DatabaseMigrationTask.class.isAssignableFrom(clazz)) {
                 DatabaseMigrationTask task =
                     (DatabaseMigrationTask) clazz.newInstance();
+                task.setContext(appContext);
                 task.update(connection);
             } else if (ContextAwareTask.class.isAssignableFrom(clazz)) {
                 ContextAwareTask task = (ContextAwareTask) clazz.newInstance();
