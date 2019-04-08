@@ -178,44 +178,47 @@
 		],
 
 
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*">
-    "publisher": {
-      <!-- TODO: Id could also be website if set -->
-      <xsl:variable name="id"
-                    select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()[1]"/>
-      "@id":"<xsl:value-of select="$id"/>",
-      "@type":"Organization"
-      <xsl:for-each select="gmd:organisationName">
-        ,"name": <xsl:apply-templates mode="toJsonLDLocalized"
-                                     select="."/>
-      </xsl:for-each>
-      <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
-        ,"email": <xsl:apply-templates mode="toJsonLDLocalized"
-                                     select="."/>
-      </xsl:for-each>
+    "publisher": [
+      <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*">
+        {
+        <!-- TODO: Id could also be website if set -->
+        <xsl:variable name="id"
+                      select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/*/text()[1]"/>
+        "@id":"<xsl:value-of select="$id"/>",
+        "@type":"Organization"
+        <xsl:for-each select="gmd:organisationName">
+          ,"name": <xsl:apply-templates mode="toJsonLDLocalized"
+                                       select="."/>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
+          ,"email": <xsl:apply-templates mode="toJsonLDLocalized"
+                                       select="."/>
+        </xsl:for-each>
 
-      <!-- TODO: only if children available -->
-      ,"contactPoint": {
-        "@type" : "PostalAddress"
-        <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:country">
-          ,"addressCountry": <xsl:apply-templates mode="toJsonLDLocalized"
-                                                 select="."/>
-        </xsl:for-each>
-        <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:city">
-          ,"addressLocality": <xsl:apply-templates mode="toJsonLDLocalized"
-                                                 select="."/>
-        </xsl:for-each>
-        <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:postalCode">
-          ,"postalCode": <xsl:apply-templates mode="toJsonLDLocalized"
-                                                 select="."/>
-        </xsl:for-each>
-        <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint">
-          ,"streetAddress": <xsl:apply-templates mode="toJsonLDLocalized"
-                                                 select="."/>
-        </xsl:for-each>
-      }
-		},
-    </xsl:for-each>
+        <!-- TODO: only if children available -->
+        ,"contactPoint": {
+          "@type" : "PostalAddress"
+          <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:country">
+            ,"addressCountry": <xsl:apply-templates mode="toJsonLDLocalized"
+                                                   select="."/>
+          </xsl:for-each>
+          <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:city">
+            ,"addressLocality": <xsl:apply-templates mode="toJsonLDLocalized"
+                                                   select="."/>
+          </xsl:for-each>
+          <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:postalCode">
+            ,"postalCode": <xsl:apply-templates mode="toJsonLDLocalized"
+                                                   select="."/>
+          </xsl:for-each>
+          <xsl:for-each select="gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint">
+            ,"streetAddress": <xsl:apply-templates mode="toJsonLDLocalized"
+                                                   select="."/>
+          </xsl:for-each>
+          }
+        }
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+    ],
 
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*/text()">
       "datePublished": "<xsl:value-of select="."/>",
@@ -234,14 +237,20 @@
         "contentUrl":"<xsl:value-of select="gmd:linkage/gmd:URL/text()"/>",
         "encodingFormat":"<xsl:value-of select="gmd:protocol/gco:CharacterString/text()"/>"
         }
+        <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
     ],
     </xsl:for-each>
 
-    <xsl:for-each select="gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name[. != '']">
-      "encodingFormat": <xsl:apply-templates mode="toJsonLDLocalized"
-                                            select="."/>,
-    </xsl:for-each>
+    <xsl:if test="count(gmd:distributionInfo/*/gmd:distributionFormat) > 0">
+      "encodingFormat": [
+      <xsl:for-each select="gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name[. != '']">
+        <xsl:apply-templates mode="toJsonLDLocalized"
+                             select="."/>
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+      ],
+    </xsl:if>
 
 
 
@@ -250,7 +259,7 @@
       "@type":"Place"
       <xsl:for-each select="gmd:description[count(.//text() != '') > 0]">
       ,"description": <xsl:apply-templates mode="toJsonLDLocalized"
-                                          select="."/>
+                                           select="."/>
       </xsl:for-each>
 
 
