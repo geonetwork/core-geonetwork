@@ -24,6 +24,7 @@
   <xsl:template mode="getOverviews" match="*"/>
   <xsl:template mode="getMetadataThumbnail" match="*"/>
   <xsl:template mode="getMetadataHeader" match="*"/>
+  <xsl:template mode="getJsonLD" match="*"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->

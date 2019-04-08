@@ -54,9 +54,9 @@
     <xsl:param name="type" as="xs:string"/>
     <xsl:param name="prefix" as="xs:string"/>
 
-    <xsl:variable name="map">
+    <xsl:variable name="map" as="node()+">
       <entry key="dataset" value="Dataset"/>
-      <entry key="series" value="DataCatalog"/>
+      <entry key="series" value="Dataset"/>
       <entry key="service" value="WebAPI"/>
       <entry key="application" value="SoftwareApplication"/>
       <entry key="collectionHardware" value="Thing"/>
@@ -70,7 +70,7 @@
     </xsl:variable>
 
     <xsl:variable name="match"
-                  select="$map/entry[@key = $type]/@value"/>
+                  select="$map[@key = $type]/@value"/>
 
     <xsl:variable name="prefixedBy"
                   select="if ($prefix = '') then 'http://schema.org/' else $prefix"/>
