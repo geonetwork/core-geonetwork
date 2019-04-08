@@ -1024,7 +1024,7 @@
         fieldsQ.push('+*' + v + '*');
       });
     }
-    if (this.initialParams.filter != '') {
+    if (this.initialParams.filter) {
       fieldsQ.push(this.initialParams.filter);
     }
 
