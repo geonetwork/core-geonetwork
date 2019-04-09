@@ -90,7 +90,7 @@ goog.require('gn_alert');
         },
         'home': {
           'enabled': true,
-          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home'
+          'appUrl': '../../{{node}}/{{lang}}/catalog.search#/home',
           'showSocialBarInFooter': true
         },
         'search': {
