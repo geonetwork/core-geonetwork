@@ -476,5 +476,13 @@
   "userSearchTblSearchName": "Search name",
   "userSearchTblCreator": "Creator",
   "userSearchTblCreationDate": "Creation date",
-  "userSearchremoved": "User search removed"
+  "userSearchRemoved": "User search removed",
+  "userSearchSaveHeader": "Saves the current search filter.",
+  "userSearchName": "Name",
+  "userSearchFeatured": "Featured",
+  "userSearchFeaturedDisplayIn": "Display featured in",
+  "userSearchLogo": "Logo url",
+  "userSearchUrl": "Search url",
+  "userSearchUpdateUrl": "Update",
+  "userSearchFeaturedDisplayInHomePage": "Home page1"
 }

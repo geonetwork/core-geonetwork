@@ -45,7 +45,8 @@ public class UserSearchRepositoryTest extends AbstractSpringDataTest {
 
     public static UserSearch newUserSearch(AtomicInteger inc) {
         String val = String.format("%04d", inc.incrementAndGet());
-        UserSearch userSearch = new UserSearch().setUrl("http://search/id" + val).setCreationDate(new Date()).setFeatured(true);
+        UserSearch userSearch = new UserSearch().setUrl("http://search/id" + val)
+            .setCreationDate(new Date()).setFeaturedType(UserSearchFeaturedType.HOME);
         return userSearch;
     }
 
@@ -71,6 +72,34 @@ public class UserSearchRepositoryTest extends AbstractSpringDataTest {
         assertEquals(2, userSearches.size());
 
         userSearches = userSearchRepository.findAllByCreator(user2);
+        assertEquals(1, userSearches.size());
+    }
+
+
+    @Test
+    public void testFindByFeaturedType() {
+        User user1 = userRepository.save(UserRepositoryTest.newUser(_inc));
+        User user2 = userRepository.save(UserRepositoryTest.newUser(_inc));
+
+        UserSearch userSearch = newUserSearch();
+        userSearch.setCreator(user1);
+        userSearch.setFeaturedType(UserSearchFeaturedType.HOME);
+        userSearchRepository.save(userSearch);
+
+        UserSearch userSearch2 = newUserSearch();
+        userSearch2.setCreator(user1);
+        userSearch.setFeaturedType(UserSearchFeaturedType.HOME);
+        userSearchRepository.save(userSearch2);
+
+        UserSearch userSearch3 = newUserSearch();
+        userSearch3.setCreator(user2);
+        userSearch.setFeaturedType(UserSearchFeaturedType.EDITOR_BOARD);
+        userSearchRepository.save(userSearch3);
+
+        List<UserSearch> userSearches = userSearchRepository.findAllByFeaturedType(UserSearchFeaturedType.HOME);
+        assertEquals(2, userSearches.size());
+
+        userSearches = userSearchRepository.findAllByFeaturedType(UserSearchFeaturedType.EDITOR_BOARD);
         assertEquals(1, userSearches.size());
     }
 

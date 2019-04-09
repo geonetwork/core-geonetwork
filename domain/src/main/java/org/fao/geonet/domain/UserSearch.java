@@ -22,7 +22,7 @@
  */
 package org.fao.geonet.domain;
 
-import org.fao.geonet.domain.converter.BooleanToYNConverter;
+import org.fao.geonet.domain.converter.UserSearchFeaturedTypeConverter;
 import org.fao.geonet.entitylistener.UserSearchEntityListenerManager;
 
 import javax.annotation.Nullable;
@@ -47,7 +47,7 @@ public class UserSearch extends Localized implements Serializable {
 
     private int id;
     private String url;
-    private boolean isFeatured = false;
+    private UserSearchFeaturedType featuredType;
     private Date creationDate;
     private User creator;
     private String logo;
@@ -66,10 +66,15 @@ public class UserSearch extends Localized implements Serializable {
         return url;
     }
 
-    @Column(name = "isfeatured", nullable = false, length = 1, columnDefinition="CHAR(1) DEFAULT 'n'")
-    @Convert(converter = BooleanToYNConverter.class)
+    @Column
+    @Convert(converter = UserSearchFeaturedTypeConverter.class)
+    public UserSearchFeaturedType getFeaturedType() {
+        return featuredType;
+    }
+
+    @Transient
     public boolean isFeatured() {
-        return isFeatured;
+        return (featuredType != null);
     }
 
     @Column
@@ -105,8 +110,8 @@ public class UserSearch extends Localized implements Serializable {
     }
 
 
-    public UserSearch setFeatured(Boolean isFeatured) {
-        this.isFeatured = isFeatured;
+    public UserSearch setFeaturedType(UserSearchFeaturedType featuredType) {
+        this.featuredType = featuredType;
         return this;
     }
 
@@ -146,7 +151,7 @@ public class UserSearch extends Localized implements Serializable {
         UserSearch that = (UserSearch) o;
         return id == that.id &&
             url.equals(that.url) &&
-            isFeatured == that.isFeatured &&
+            featuredType == that.featuredType &&
             creationDate.equals(that.creationDate) &&
             creator.equals(that.creator) &&
             Objects.equals(logo, that.logo);
@@ -154,7 +159,7 @@ public class UserSearch extends Localized implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, url, isFeatured, creationDate, creator, logo);
+        return Objects.hash(id, url, featuredType, creationDate, creator, logo);
     }
 
     @Override

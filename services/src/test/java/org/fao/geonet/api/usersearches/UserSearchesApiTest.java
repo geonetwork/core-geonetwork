@@ -113,7 +113,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void createUserSearch() throws Exception {
         UserSearchDto userSearch = new UserSearchDto();
-        userSearch.setFeatured(true);
+        userSearch.setFeaturedType(UserSearchFeaturedType.HOME.asString());
         userSearch.setUrl("http://customsearch");
         userSearch.setLogo("logo.png");
         userSearch.setCreationDate(UserSearchDto.ISO_DATE_FORMAT.format(new Date()));
@@ -201,7 +201,7 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
         UserSearch userSearch2 = new UserSearch();
         userSearch2.setCreator(testUserAdministrator);
         userSearch2.setCreationDate(new Date());
-        userSearch2.setFeatured(true);
+        userSearch2.setFeaturedType(UserSearchFeaturedType.HOME);
         userSearch2.setUrl("http://customsearch2");
         userSearchRepository.save(userSearch2);
 

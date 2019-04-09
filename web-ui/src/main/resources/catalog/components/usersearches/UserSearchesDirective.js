@@ -39,12 +39,20 @@
       return {
         restrict: 'A',
         replace: true,
+        scope: {
+          type: '=gnFeaturedUserSearchesHome'
+        },
         templateUrl:
         '../../catalog/components/usersearches/partials/featuredusersearcheshome.html',
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
 
-          gnUserSearchesService.loadFeaturedUserSearches().then(
+          // Default value use featured searchs defined for home page
+          if (!scope.type) {
+            scope.type = 'h';
+          }
+
+          gnUserSearchesService.loadFeaturedUserSearches(scope.type).then(
             function(featuredSearchesCollection) {
               scope.featuredSearches = featuredSearchesCollection.data;
             }, function() {
@@ -134,7 +142,7 @@
             return gnUserSearchesService.removeUserSearch(search).then(
               function() {
                 gnAlertService.addAlert({
-                  msg: $translate.instant('userSearchremoved'),
+                  msg: $translate.instant('userSearchRemoved'),
                   type: 'success'
                 });
 
@@ -166,7 +174,7 @@
 
             gnUtilityService.openModal({
               title: 'manageUserSearchesTitle',
-              content: '<div gn-user-search-manager=""></div>',
+              content: '<div gn-user-search-manager="user"></div>',
               className: 'gn-searchmanager-popup',
               onCloseCallback: function() {
                 scope.loadUserSearches()
@@ -226,6 +234,7 @@
               url: retrieveSearchParameters(),
               id: 0,
               creatorId: scope.user.id,
+              featuredType: "",
               names: {}
             };
 
@@ -235,8 +244,17 @@
           }
 
 
-          scope.isAdministratorUser = function() {
-            return (scope.user) && (scope.user.isAdministratorOrMore());
+          /**
+           * Checks if the user can set the feature type info in a search:
+           *  - The user is has Administrator profile.
+           *  - The search has been created by the same user.
+           *
+           * @returns {*}
+           */
+          scope.canSetFeatureTypeInSearch = function() {
+            return (scope.user) &&
+              (scope.user.isAdministratorOrMore()) &&
+              (scope.user.id == scope.userSearch.creatorId);
           };
 
 
@@ -244,6 +262,19 @@
             scope.userSearch.url = retrieveSearchParameters();
           };
 
+
+          scope.toggleFeaturedType = function() {
+            if (scope.userSearch.featuredType === '') {
+              // Default value
+              scope.userSearch.featuredType = 'h';
+            } else {
+              scope.userSearch.featuredType = '';
+            }
+          };
+
+          scope.isFeaturedSearch  = function() {
+            return (scope.userSearch.featuredType !== '');
+          };
 
           scope.saveUserSearch = function() {
             var userSearch = angular.copy(scope.userSearch);
@@ -286,7 +317,7 @@
         restrict: 'A',
         replace: true,
         scope: {
-
+          user: '=gnUserSearchManager'
         },
         templateUrl:
           '../../catalog/components/usersearches/partials/usersearchesmanager.html',
@@ -314,7 +345,7 @@
             return gnUserSearchesService.removeUserSearch(search).then(
               function() {
                 gnAlertService.addAlert({
-                  msg: $translate.instant('userSearchremoved'),
+                  msg: $translate.instant('userSearchRemoved'),
                   type: 'success'
                 });
 
@@ -378,7 +409,7 @@
                 valign: 'bottom',
                 sortable: false,
                 formatter: function(value, row, index) {
-                  if (row.featured) {
+                  if (row.featuredType !== '') {
                     return '<span class="fa fa-star" title="' + $filter('translate')('featuredsearch') + '"></span>&nbsp;' + row.label;
                   } else {
                     return row.label;

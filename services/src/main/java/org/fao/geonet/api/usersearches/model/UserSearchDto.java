@@ -23,13 +23,14 @@
 
 package org.fao.geonet.api.usersearches.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSearch;
+import org.fao.geonet.domain.UserSearchFeaturedType;
 import org.fao.geonet.repository.UserRepository;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class UserSearchDto implements Serializable {
 
     private int id;
     private String url;
-    private boolean featured;
+    private String featuredType = "";
     private String creationDate;
     private int creatorId;
     private String creator;
@@ -71,12 +72,12 @@ public class UserSearchDto implements Serializable {
         this.url = url;
     }
 
-    public boolean isFeatured() {
-        return featured;
+    public String getFeaturedType() {
+        return featuredType;
     }
 
-    public void setFeatured(boolean featured) {
-        this.featured = featured;
+    public void setFeaturedType(String featuredType) {
+        this.featuredType = featuredType;
     }
 
     public String getCreationDate() {
@@ -130,7 +131,14 @@ public class UserSearchDto implements Serializable {
         userSearch.setId(this.getId());
         userSearch.setUrl(this.getUrl());
         userSearch.setLogo(this.getLogo());
-        userSearch.setFeatured(this.isFeatured());
+
+        try {
+            if (StringUtils.isNotEmpty(this.getFeaturedType()) &&
+                (this.getFeaturedType().length() == 1))
+            userSearch.setFeaturedType(UserSearchFeaturedType.byChar(this.getFeaturedType().charAt(0)));
+        } catch (IllegalArgumentException ex) {
+            // Ignore
+        }
 
         try {
             userSearch.setCreationDate(ISO_DATE_FORMAT.parse(this.getCreationDate()));
@@ -156,10 +164,11 @@ public class UserSearchDto implements Serializable {
         dto.setId(userSearch.getId());
         dto.setUrl(userSearch.getUrl());
         dto.setLogo(userSearch.getLogo());
-        dto.setFeatured(userSearch.isFeatured());
+        if (userSearch.getFeaturedType() != null) {
+            dto.setFeaturedType(userSearch.getFeaturedType().asString());
+        }
         dto.setCreatorId(userSearch.getCreator().getId());
         dto.setCreator(userSearch.getCreator().getUsername());
-        dto.setFeatured(userSearch.isFeatured());
 
         dto.setCreationDate(ISO_DATE_FORMAT.format(userSearch.getCreationDate()));
 
@@ -175,7 +184,7 @@ public class UserSearchDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         UserSearchDto that = (UserSearchDto) o;
         return id == that.id &&
-            featured == that.featured &&
+            featuredType == that.featuredType &&
             creatorId == that.creatorId &&
             url.equals(that.url) &&
             creationDate.equals(that.creationDate) &&
@@ -186,6 +195,6 @@ public class UserSearchDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, url, featured, creationDate, creatorId, creator, logo, names);
+        return Objects.hash(id, url, featuredType, creationDate, creatorId, creator, logo, names);
     }
 }

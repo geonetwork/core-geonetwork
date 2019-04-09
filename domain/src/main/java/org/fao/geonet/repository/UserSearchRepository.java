@@ -24,6 +24,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSearch;
+import org.fao.geonet.domain.UserSearchFeaturedType;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface UserSearchRepository extends GeonetRepository<UserSearch, Integ
     List<UserSearch> findAllByCreator(User creator);
 
 
-    List<UserSearch> findAllByFeatured(Boolean featured);
+    List<UserSearch> findAllByFeaturedType(UserSearchFeaturedType featuredType);
 
-    long countByFeatured(Boolean featured);
+    long countByFeaturedType(UserSearchFeaturedType featuredType);
 }

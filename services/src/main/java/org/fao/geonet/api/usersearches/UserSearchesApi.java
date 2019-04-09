@@ -25,7 +25,6 @@ package org.fao.geonet.api.usersearches;
 
 import io.swagger.annotations.*;
 import jeeves.server.UserSession;
-import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -34,6 +33,7 @@ import org.fao.geonet.api.usersearches.model.PaginatedUserSearchResponse;
 import org.fao.geonet.api.usersearches.model.UserSearchDto;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.converter.UserSearchFeaturedTypeConverter;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserSearchRepository;
@@ -44,6 +44,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.annotations.ApiIgnore;
@@ -67,6 +68,11 @@ public class UserSearchesApi {
     public static final String API_PARAM_USERSEARCH_IDENTIFIER = "User search identifier";
     public static final String MSG_USERSEARCH_WITH_IDENTIFIER_NOT_FOUND = "User search with identifier '%d' not found";
 
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(UserSearchFeaturedType.class, new UserSearchFeaturedTypeConverter());
+    }
 
     @ApiOperation(
         value = "Get user custom searches",
@@ -109,19 +115,17 @@ public class UserSearchesApi {
     @ResponseBody
     public List<UserSearchDto> getAllUserCustomSearches(
         @ApiParam(
-            value = "Featured search flag."
+            value = "Featured type search."
         )
-        @RequestParam(required = false) Boolean featured) {
+        @RequestParam(required = false) UserSearchFeaturedType featuredType) {
         UserSearchRepository userSearchRepository = ApplicationContextHolder.get().getBean(UserSearchRepository.class);
 
         List<UserSearch> userSearchesList;
 
-        if (featured == null) {
+        if (featuredType == null) {
             userSearchesList = userSearchRepository.findAll();
-        } else if (featured == Boolean.TRUE) {
-            userSearchesList =  userSearchRepository.findAllByFeatured(true);
         } else {
-            userSearchesList = userSearchRepository.findAllByFeatured(false);
+            userSearchesList =  userSearchRepository.findAllByFeaturedType(featuredType);
         }
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();
@@ -143,9 +147,9 @@ public class UserSearchesApi {
     @ResponseBody
     public PaginatedUserSearchResponse getAllUserCustomSearchesPage(
         @ApiParam(
-            value = "Featured search flag."
+            value = "Featured  type search."
         )
-        @RequestParam(required = false) Boolean featured,
+        @RequestParam(required = false) UserSearchFeaturedType featuredType,
         @ApiParam(value = "From page",
             required = false)
         @RequestParam(required = false, defaultValue = "0")
@@ -169,16 +173,13 @@ public class UserSearchesApi {
 
         long count = 0;
 
-        if (featured == null) {
+        if (featuredType == null) {
 
             userSearchesList = userSearchRepository.findAll(pageRequest).getContent();
             count = userSearchRepository.count();
-        } else if (featured == Boolean.TRUE) {
-            userSearchesList =  userSearchRepository.findAllByFeatured(true);
-            count = userSearchRepository.countByFeatured(true);
         } else {
-            userSearchesList = userSearchRepository.findAllByFeatured(false);
-            count = userSearchRepository.countByFeatured(false);
+            userSearchesList =  userSearchRepository.findAllByFeaturedType(featuredType);
+            count = userSearchRepository.countByFeaturedType(featuredType);
         }
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();
@@ -201,11 +202,21 @@ public class UserSearchesApi {
         method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<UserSearchDto> getFeaturedUserCustomSearches() {
+    public List<UserSearchDto> getFeaturedUserCustomSearches(
+        @ApiParam(value = "Number of records to return",
+            required = false)
+        @RequestParam(required = false)
+            UserSearchFeaturedType type
+    ) {
         UserSearchRepository userSearchRepository =
             ApplicationContextHolder.get().getBean(UserSearchRepository.class);
 
-        List<UserSearch>  userSearchesList = userSearchRepository.findAllByFeatured(true);
+        if (type == null) {
+            // Default value
+            type = UserSearchFeaturedType.HOME;
+        }
+
+        List<UserSearch>  userSearchesList = userSearchRepository.findAllByFeaturedType(type);
 
         List<UserSearchDto> customSearchDtoList = new ArrayList<>();
         userSearchesList.forEach(u -> customSearchDtoList.add(UserSearchDto.from(u)));
@@ -287,7 +298,7 @@ public class UserSearchesApi {
 
         // Featured user searches can be created only by Administrator
         if (!myProfile.equals(Profile.Administrator)) {
-            userSearch.setFeatured(false);
+            userSearch.setFeaturedType(null);
         }
 
         userSearch = userSearchRepository.save(userSearch);
@@ -348,7 +359,7 @@ public class UserSearchesApi {
             } else {
                 if (userSearch.getCreator().getId() == session.getUserIdAsInt()) {
                     // Featured user searches can be created only by Administrator
-                    userSearch.setFeatured(false);
+                    userSearch.setFeaturedType(null);
 
                     userSearchRepository.save(userSearch);
                 } else {

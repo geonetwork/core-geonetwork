@@ -26,7 +26,7 @@
         <div class="row">
           <div class="col-md-10">
             <span class="fa fa-star"
-                  data-ng-show="canManageUserSearches() && search.featured"
+                  data-ng-show="canManageUserSearches() && search.featuredType !== ''"
                   title="{{ 'featuredsearch' | translate }}"></span>
 
             <a data-ng-href="#/search?{{search.url}}">

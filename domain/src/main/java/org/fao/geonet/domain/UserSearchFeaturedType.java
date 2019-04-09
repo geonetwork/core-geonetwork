@@ -21,34 +21,33 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_usersearches_service');
+package org.fao.geonet.domain;
 
-  var module = angular.module('gn_usersearches_service', []);
+import java.util.stream.Stream;
 
+public enum UserSearchFeaturedType {
+    HOME('h'),
 
-  module.service('gnUserSearchesService', [
-    '$http', '$q',
-    function($http, $q) {
-      this.loadFeaturedUserSearches = function(type) {
-        return $http.get('../api/usersearches/featured?type=' + type);
-      };
+    EDITOR_BOARD('e');
 
-      this.loadUserSearches = function () {
-        return $http.get('../api/usersearches');
-      };
+    public char asChar() {
+        return value;
+    }
 
-      this.loadAllUserSearches = function () {
-        return $http.get('../api/usersearches/all');
-      };
+    public String asString() {
+        return value + "";
+    }
 
-      this.saveUserSearch = function(userSearch) {
-        return $http.put('../api/usersearches', userSearch);
-      };
+    private final Character value;
 
-      this.removeUserSearch = function(userSearch) {
-        return $http.delete('../api/usersearches/' + userSearch.id);
-      }
-    }]);
+    UserSearchFeaturedType(char value) {
+        this.value = value;
+    }
 
-})();
+    public static UserSearchFeaturedType byChar(Character featuredTypeValue) {
+        return Stream.of( values() )
+            .filter( featuredType -> featuredType.value.equals( featuredTypeValue ) )
+            .findAny()
+            .orElse( null );
+    }
+}

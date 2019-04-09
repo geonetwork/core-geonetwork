@@ -1,38 +1,48 @@
 <div>
-  <h5>Saves the current search filter.</h5>
+  <h5 data-translate="">userSearchSaveHeader</h5>
 
   <div class="form-group">
-    <label class="control-label" translate>Name</label>
+    <label class="control-label" data-translate="">userSearchName</label>
     <div gn-multilingual-field="{{langList}}"
          main-language="{{currentLangShown}}">
-      <input ng-repeat="(lang3, lang2) in availableLangs" type="text"
+      <input data-ng-repeat="(lang3, lang2) in availableLangs" type="text"
              name="name" class="form-control" lang="{{lang2}}"
-             ng-model="userSearch.names[lang3]"/>
+             data-ng-model="userSearch.names[lang3]"/>
     </div>
   </div>
 
-  <div class="form-group" data-ng-show="isAdministratorUser()">
-    <label for="featured">Featured</label>
-    <input type="checkbox" id="featured"
-           data-ng-model="userSearch.featured" />
+  <div class="form-group" data-ng-show="canSetFeatureTypeInSearch()">
+    <label for="featured" data-translate="">userSearchFeatured</label>
+    <input type="checkbox" id="featured" data-ng-checked="isFeaturedSearch()"
+           data-ng-click="toggleFeaturedType()" />
   </div>
 
-  <div class="form-group" data-ng-show="isAdministratorUser() && userSearch.featured">
-    <label for="logo">Logo</label>
+
+  <div class="form-group" data-ng-show="canSetFeatureTypeInSearch() && isFeaturedSearch()">
+    <label for="featured" data-translate="">userSearchFeaturedDisplayIn</label>
+
+    <select class="form-control" id="featuredType"
+            data-ng-model="userSearch.featuredType">
+      <option value="h" data-translate="">userSearchFeaturedDisplayInHomePage</option>
+    </select>
+  </div>
+
+  <div class="form-group" data-ng-show="canSetFeatureTypeInSearch() && isFeaturedSearch()">
+    <label for="logo" data-translate="">userSearchLogo</label>
     <input type="text" id="logo" class="form-control"
            data-ng-model="userSearch.logo" />
   </div>
 
   <div class="form-group">
-      <label for="searchUrl">Search url</label>
-      <input type="text" id="searchUrl" class="form-control" readonly="readonly"
-             data-ng-model="userSearch.url" />
+    <label for="searchUrl" data-translate="">userSearchUrl</label>
+    <input type="text" id="searchUrl" class="form-control" readonly="readonly"
+           data-ng-model="userSearch.url" />
   </div>
 
   <div data-ng-show="editMode">
-    <button type="button" data-ng-click="updateUrl()" class="btn btn-primary btn-small">
-      Update
-    </button>
+    <button type="button" data-ng-click="updateUrl()"
+            class="btn btn-primary btn-small"
+            data-translate="">userSearchUpdateUrl</button>
   </div>
 
  <!-- <div class="form-group" data-ng-show="editMode">
