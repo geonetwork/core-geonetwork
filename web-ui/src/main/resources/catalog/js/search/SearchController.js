@@ -51,9 +51,10 @@
     'suggestService',
     'gnAlertService',
     'gnSearchSettings',
+    'gnGlobalSettings',
     'gnConfig',
-    function($scope, $q, $http, suggestService,
-             gnAlertService, gnSearchSettings, gnConfig) {
+    function($scope, $q, $http, suggestService, gnAlertService,
+             gnSearchSettings, gnGlobalSettings, gnConfig) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -71,9 +72,9 @@
         $scope.isUserFeedbackEnabled = true;
       }
 
-      $scope.isUserSearchesEnabled = gnConfig['system.usersearches.enabled'];
-      $scope.displayFeaturedSearchesPanel = gnConfig['system.usersearches.displayFeaturedSearchesPanel'];
-
+      $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.usersearches.enabled;
+      $scope.displayFeaturedSearchesPanel =
+        gnGlobalSettings.gnCfg.mods.usersearches.displayFeaturedSearchesPanel;
 
       $scope.ise  = false;
 

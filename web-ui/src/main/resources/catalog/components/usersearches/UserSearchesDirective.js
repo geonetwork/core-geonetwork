@@ -66,10 +66,10 @@
    */
   module.directive('gnUserSearchesPanel', [
     'gnUserSearchesService', 'gnConfigService', 'gnConfig',
-    'gnUtilityService', 'gnAlertService', 'gnLangs',
+    'gnUtilityService', 'gnAlertService', 'gnLangs', 'gnGlobalSettings',
     '$http', '$translate', '$location',
     function(gnUserSearchesService, gnConfigService, gnConfig,
-             gnUtilityService, gnAlertService, gnLangs,
+             gnUtilityService, gnAlertService, gnLangs, gnGlobalSettings,
              $http, $translate, $location) {
       return {
         restrict: 'A',
@@ -81,14 +81,13 @@
           '../../catalog/components/usersearches/partials/usersearchespanel.html',
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
-          scope.isUserSearchesEnabled = gnConfig['system.usersearches.enabled'];
+          scope.isUserSearchesEnabled =
+            gnGlobalSettings.gnCfg.mods.usersearches.enabled;
 
           scope.userSearches = null;
           scope.currentSearch = null;
 
           scope.userSearchesSearch = '';
-
-
 
           scope.$watch('user', function(n, o) {
             if (n !== o || scope.userSearches === null) {
