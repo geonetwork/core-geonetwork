@@ -127,8 +127,6 @@
           };
 
           scope.editUserSearch = function(search) {
-            console.log("editUserSearch: " + search);
-
             scope.openSaveUserSearchPanel(search);
           };
 
@@ -150,7 +148,8 @@
           };
 
           scope.openSaveUserSearchPanel = function(search) {
-            scope.currentSearch = search;
+            scope.currentSearch = angular.copy(search);;
+            delete scope.currentSearch.label;
 
             gnUtilityService.openModal({
               title: 'userSearch',
