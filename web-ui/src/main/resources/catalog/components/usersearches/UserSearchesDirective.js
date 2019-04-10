@@ -39,18 +39,11 @@
       return {
         restrict: 'A',
         replace: true,
-        scope: {
-          type: '=gnFeaturedUserSearchesHome'
-        },
         templateUrl:
         '../../catalog/components/usersearches/partials/featuredusersearcheshome.html',
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
-
-          // Default value use featured searchs defined for home page
-          if (!scope.type) {
-            scope.type = 'h';
-          }
+          scope.type = 'h';
 
           gnUserSearchesService.loadFeaturedUserSearches(scope.type).then(
             function(featuredSearchesCollection) {
@@ -127,7 +120,10 @@
           };
 
           scope.canManageUserSearches = function() {
-            return (scope.user) && (scope.user.isAdministratorOrMore());
+            // Check user is available, initialized and is administrator
+            return (scope.user) &&
+              (!_.isEmpty(scope.user)) &&
+              (scope.user.isAdministrator());
           };
 
           scope.search = function(url) {
