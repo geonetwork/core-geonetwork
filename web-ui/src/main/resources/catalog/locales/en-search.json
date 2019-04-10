@@ -484,5 +484,7 @@
   "userSearchLogo": "Logo url",
   "userSearchUrl": "Search url",
   "userSearchUpdateUrl": "Update",
-  "userSearchFeaturedDisplayInHomePage": "Home page1"
+  "userSearchFeaturedDisplayInHomePage": "Home page",
+  "userSearchUpdated": "User search saved",
+  "userSearchUpdatedError": "Error saving user search"
 }

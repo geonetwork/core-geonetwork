@@ -250,7 +250,7 @@
            * @returns {*}
            */
           scope.canSetFeatureTypeInSearch = function() {
-            return (scope.user) &&
+            return (scope.user) && (scope.userSearch) &&
               (scope.user.isAdministratorOrMore()) &&
               (scope.user.id == scope.userSearch.creatorId);
           };
@@ -271,7 +271,7 @@
           };
 
           scope.isFeaturedSearch  = function() {
-            return (scope.userSearch.featuredType !== '');
+            return (scope.userSearch) && (scope.userSearch.featuredType !== '');
           };
 
           scope.saveUserSearch = function() {
@@ -282,13 +282,13 @@
               function(response) {
                 scope.$emit('UserSearchUpdated', true);
                 scope.$emit('StatusUpdated', {
-                  msg: 'UserSearchUpdated',
+                  msg: $translate.instant('userSearchUpdated'),
                   timeout: 0,
                   type: 'success'});
 
               }, function(response) {
                 scope.$emit('StatusUpdated', {
-                  title: 'UserSearchUpdatedError',
+                  title: $translate.instant('userSearchUpdatedError'),
                   error: response.data,
                   timeout: 0,
                   type: 'danger'});
