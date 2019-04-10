@@ -138,6 +138,30 @@
                }
              }
              return defer.promise;
+           },
+           /**
+            * Load metadata editor associated panel configuration
+            * for a schema.
+            */
+           getEditorAssociationPanelConfig: function(schema, config) {
+             var defer = $q.defer();
+             var cacheKey = schema + '-associatedpanel-' + config;
+             var fromCache = infoCache.get(cacheKey);
+             if (fromCache) {
+               defer.resolve(fromCache);
+             } else {
+               $http.get('../api/standards/' + schema +
+                 '/editor/associatedpanel/config/' +
+                 (config || 'default') + '.json',
+                 { cache: false }).
+               then(function(response) {
+                 infoCache.put(cacheKey, response.data);
+                 defer.resolve(response.data);
+               }, function(response) {
+                 defer.reject(response.data);
+               });
+             }
+             return defer.promise;
            }
          };
        }]);
