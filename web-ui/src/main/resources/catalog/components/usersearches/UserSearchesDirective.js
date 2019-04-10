@@ -152,8 +152,10 @@
           };
 
           scope.openSaveUserSearchPanel = function(search) {
-            scope.currentSearch = angular.copy(search);;
-            delete scope.currentSearch.label;
+            scope.currentSearch = angular.copy(search);
+            if (scope.currentSearch) {
+              delete scope.currentSearch.label;
+            }
 
             gnUtilityService.openModal({
               title: 'userSearch',

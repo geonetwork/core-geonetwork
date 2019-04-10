@@ -1,5 +1,5 @@
 <div>
-  <h5 data-translate="">userSearchSaveHeader</h5>
+  <p data-translate="">userSearchSaveHeader</p>
 
   <div class="form-group">
     <label class="control-label" data-translate="">userSearchName</label>
@@ -39,11 +39,7 @@
            data-ng-model="userSearch.url" />
   </div>
 
-  <div data-ng-show="editMode">
-    <button type="button" data-ng-click="updateUrl()"
-            class="btn btn-primary btn-small"
-            data-translate="">userSearchUpdateUrl</button>
-  </div>
+
 
  <!-- <div class="form-group" data-ng-show="editMode">
     <label for="updateUrl">Update search url</label>
@@ -51,15 +47,25 @@
            data-ng-model="updateSearchUrl" />
   </div>-->
 
-  <div class="btn-toolbar"><!-- TODO: Check pull-right -->
+  <div class="gn-margin-top">
     <div data-gn-need-help="user-guide/publishing/index.html"
          data-icon-only="true"></div>
-    <button type="button" class="btn btn-primary"
-            id="gn-share-btn-replace"
-            data-gn-click-and-spin="saveUserSearch(true)">
-      <i class="fa fa-eraser"></i>&nbsp;
-      <span data-translate="">save</span>
-    </button>
+
+    <div class="btn-toolbar pull-right">
+      <span data-ng-show="editMode">
+        <button type="button"
+                data-ng-click="updateUrl()"
+                class="btn btn-default"
+                data-translate="">userSearchUpdateUrl</button>
+      </span>     
+      <button type="button"
+              class="btn btn-default"
+              id="gn-share-btn-replace"
+              data-gn-click-and-spin="saveUserSearch(true)">
+        <i class="fa fa-fw fa-save"></i>
+        <span data-translate="">save</span>
+      </button>
+    </div>
   </div>
 </div>
 

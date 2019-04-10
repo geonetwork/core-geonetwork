@@ -1,4 +1,4 @@
-<div class="panel panel-default"
+<div class="panel panel-default gn-search-user"
      data-ng-show="isUserSearchPanelEnabled()">
   <div class="panel-heading"
        data-gn-slide-toggle="">
@@ -6,14 +6,7 @@
     <span data-translate="">userSearches</span>
   </div>
   <div class="panel-body">
-    <div class="row">
-      <button type="button" class="btn btn-default btn-sm"
-              data-ng-click="openSaveUserSearchPanel()"><span data-translate="">createUserSearch</span></button>
 
-      <button type="button" class="btn btn-default btn-sm"
-              data-ng-click="openAdminUserSearchPanel()"
-              data-ng-show="canManageUserSearches()"><span data-translate="">manageUserSearches</span></button>
-    </div>
 
     <input class="form-control"
            data-ng-show="userSearches.length > 10"
@@ -22,9 +15,9 @@
 
 
     <ul class="list-group">
-      <li class="list-group-item" data-ng-repeat="search in userSearchesPageItems()">
-        <div class="row">
-          <div class="col-md-10">
+      <li class="list-group-item clearfix" data-ng-repeat="search in userSearchesPageItems()">
+        <!-- <div class="clearfix"> -->
+          <div class="pull-left">
             <span class="fa fa-star"
                   data-ng-show="canManageUserSearches() && search.featuredType !== ''"
                   title="{{ 'featuredsearch' | translate }}"></span>
@@ -34,16 +27,24 @@
             </a>
           </div>
 
-          <div class="col-md-2">
-            <a href="" class="fa fa-edit"
-               data-ng-click="editUserSearch(search)"></a>
-
-            <a href="" class="fa fa-remove"
+          <div class="btn-group pull-right" role="group">
+            <a href=""
+               class="btn btn-default btn-xs"
+               data-ng-click="editUserSearch(search)"
+               title="{{'edit' | translate}}"
+               aria-label="{{'edit' | translate}}">
+              <span class="fa fa-pencil"></span>
+            </a>
+            <a href=""
+               class="btn btn-default btn-xs"
                data-gn-click-and-spin="removeUserSearch(search)"
                data-gn-confirm-click="{{'deleteUserSearchConfirm'}}"
-               title="{{'delete' | translate}}"></a>
+               title="{{'delete' | translate}}"
+               aria-label="{{'delete' | translate}}">
+              <span class="fa fa-remove"></span>
+            </a>
           </div>
-        </div>
+        <!-- </div> -->
       </li>
     </ul>
 
@@ -52,5 +53,20 @@
           data-first-page-function-name="userSearchesFirstPage"
           data-items="userSearches | filter:userSearchesSearch | orderBy:'label'"
           data-cache="userSearches"/>
+
+          <div class="row">
+            <button type="button" class="btn btn-default btn-sm"
+                    data-ng-click="openSaveUserSearchPanel()">
+              <span class="fa fa-fw fa-plus"></span>
+              <span data-translate="">createUserSearch</span>
+            </button>
+      
+            <button type="button" class="btn btn-default btn-sm"
+                    data-ng-click="openAdminUserSearchPanel()"
+                    data-ng-show="canManageUserSearches()">
+              <span class="fa fa-fw fa-cog"></span>
+              <span data-translate="">manageUserSearches</span>
+            </button>
+          </div>
   </div>
 </div>
