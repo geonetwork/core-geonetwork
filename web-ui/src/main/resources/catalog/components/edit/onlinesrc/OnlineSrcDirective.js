@@ -209,6 +209,7 @@
               scope.allowEdits = true;
               scope.lang = scope.$parent.lang;
               scope.readonly = attrs['readonly'] || false;
+              scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
 
               /**
@@ -278,6 +279,7 @@
         'gnOnlinesrc',
         'gnOwsCapabilities',
         'gnWfsService',
+        'gnSchemaManagerService',
         'gnEditor',
         'gnCurrentEdit',
         'gnMap',
@@ -289,7 +291,7 @@
         '$http',
         '$filter',
         '$log',
-        function(gnOnlinesrc, gnOwsCapabilities, gnWfsService,
+        function(gnOnlinesrc, gnOwsCapabilities, gnWfsService, gnSchemaManagerService,
             gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
             $rootScope, $translate, $timeout, $http, $filter, $log) {
           return {
@@ -310,583 +312,6 @@
               post: function(scope, element, attrs) {
                 scope.popupid = attrs['gnPopupid'];
 
-                //{
-                //  // Optional / optGroup
-                //  group: 'onlineDiscover',
-                //  // Label
-                //    label: 'onlineDiscoverWMS',
-                //  // Optional / On select copy the label in desc field
-                //  copyLabel: 'desc',
-                //  // Optional / Icon
-                //  icon: 'fa gn-icon-onlinesrc',
-                //  // XSL process to run
-                //  process: 'onlinesrc-add',
-                //  // Optional / List of fields
-                //  // (URL only will be displayed if none)
-                //  fields: {
-                //  'url': {},
-                //  'protocol': {
-                //    // Fixed value
-                //    value: 'OGC:WMS',
-                //      // Hide field
-                //      hidden: true},
-                //  'name': {},
-                //  'desc': {
-                //    // Rename parameter for the XSL process
-                //    param: 'myParam'},
-                //  'function': {value: 'browsing', hidden: true}
-                //}
-                //}
-
-                var schemaConfig = {
-                  'dublin-core': {
-                    display: 'radio',
-                    types: [{
-                      label: 'addOnlinesrc',
-                      sources: {
-                        filestore: true,
-                        thumbnailMaker: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {}
-                      }
-                    }]
-                  },
-                  'iso19139': {
-                    display: 'radio',
-                    types: [{
-                      label: 'addOnlinesrc',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link',
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {isMultilingual: false},
-                        'applicationProfile': {isMultilingual: false}
-                      }
-                    }, {
-                      label: 'addThumbnail',
-                      sources: {
-                        filestore: true,
-                        thumbnailMaker: true
-                      },
-                      icon: 'fa gn-icon-thumbnail',
-                      fileStoreFilter: '*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF}',
-                      process: 'thumbnail-add',
-                      fields: {
-                        'url': {
-                          param: 'thumbnail_url',
-                          isMultilingual: false
-                        },
-                        'name': {param: 'thumbnail_desc'}
-                      }
-                    }],
-                    multilingualFields: ['name', 'desc']
-                  },
-                  'iso19115-3': {
-                    display: 'select',
-                    types: [{
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverThumbnail',
-                      sources: {
-                        filestore: true,
-                        thumbnailMaker: true
-                      },
-                      icon: 'fa gn-icon-thumbnail',
-                      fileStoreFilter: '*.{jpg,JPG,jpeg,JPEG,png,PNG,gif,GIF}',
-                      process: 'thumbnail-add',
-                      fields: {
-                        'url': {
-                          param: 'thumbnail_url',
-                          isMultilingual: false
-                        },
-                        'name': {param: 'thumbnail_desc'}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverInApp',
-                      copyLabel: 'name',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAnApplication',
-                          params: {
-                            type: 'application'
-                          }
-                        }
-                      },
-                      icon: 'fa gn-icon-map',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverWMS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WMS or WMS or view'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {value: 'OGC:WMS', hidden: true,
-                          isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverINSPIREView',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'view'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {value: 'OGC:WMS', hidden: true,
-                          isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false},
-                        'applicationProfile': {
-                          value: 'inspire-view', hidden: true,
-                          isMultilingual: false
-                        }
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverWMTS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WMTS or WMTS'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {value: 'OGC:WMTS', hidden: true,
-                          isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverArcGIS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'ESRI:REST'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {value: 'ESRI:REST', hidden: true,
-                          isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverKML',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false},
-                        'applicationProfile': {
-                          value: 'application/vnd.google-earth.kml+xml',
-                          hidden: true,
-                          isMultilingual: false
-                        }
-                      }
-                    }, {
-                      group: 'onlineDiscover',
-                      label: 'onlineDiscoverMap',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-map',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadFile',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadKML',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true,
-                          isMultilingual: false},
-                        'applicationProfile': {
-                          value: 'application/vnd.google-earth.kml+xml',
-                          hidden: true,
-                          isMultilingual: false
-                        }
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadWWW',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadWFS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WFS or WFS or download'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {value: 'OGC:WFS', hidden: true,
-                          isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadWCS',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'OGC:WCS or WCS'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {value: 'OGC:WCS', hidden: true,
-                          isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineDownload',
-                      label: 'onlineDownloadINSPIRE',
-                      copyLabel: 'desc',
-                      icon: 'fa gn-icon-onlinesrc',
-                      sources: {
-                        metadataStore: {
-                          label: 'searchAservice',
-                          params: {
-                            serviceType: 'download'
-                          }
-                        }
-                      },
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {value: 'OGC:WFS', hidden: true,
-                          isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'download', hidden: true,
-                          isMultilingual: false},
-                        'applicationProfile': {
-                          value: 'inspire-download', hidden: true,
-                          isMultilingual: false
-                        }
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseFcats',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'fcats-file-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'name': {},
-                        'desc': {}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseDQReport',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'dq-report-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'type': {param: 'type', value: 'qualityReport',
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseDQTOR',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'dq-report-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'type': {param: 'type', value: 'qualitySpecification',
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseDQProdReport',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa fa-table',
-                      process: 'dq-report-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'name': {},
-                        'desc': {},
-                        'type': {param: 'type', value: 'lineage',
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseLegendLYR',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      fileStoreFilter: '*.{lyr,LYR}',
-                      icon: 'fa fa-table',
-                      process: 'legend-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'name': {},
-                        'desc': {}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseStyleSLD',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      fileStoreFilter: '*.{sld,SLD}',
-                      icon: 'fa fa-table',
-                      process: 'legend-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'name': {},
-                        'desc': {}
-                      }
-                    }, {
-                      group: 'onlineUse',
-                      label: 'onlineUseStyleQML',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      fileStoreFilter: '*.{qml,QML}',
-                      icon: 'fa fa-table',
-                      process: 'legend-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'name': {},
-                        'desc': {}
-                      }
-                      //},{
-                      //  group: 'onlineUse',
-                      //  label: 'onlineUseLimitation',
-                      //  copyLabel: 'name',
-                      //  sources: {
-                      //    templatestore: true,
-                      //    filestore: true
-                      //  },
-                      //  icon: 'fa fa-table',
-                      //  process: 'use-limitation-add',
-                      //  fields: {
-                      //  }
-                      //},{
-                      //  group: 'onlineUse',
-                      //  label: 'onlineAccessLimitation',
-                      //  copyLabel: 'name',
-                      //  sources: {
-                      //    templatestore: true,
-                      //    filestore: true
-                      //  },
-                      //  icon: 'fa fa-table',
-                      //  process: 'use-limitation-add',
-                      //  fields: {
-                      //  }
-                    }, {
-                      group: 'onlineMore',
-                      label: 'onlineMoreWWW',
-                      copyLabel: 'name',
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'information', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }, {
-                      group: 'onlineMore',
-                      label: 'onlineMoreFile',
-                      copyLabel: 'name',
-                      sources: {
-                        filestore: true
-                      },
-                      icon: 'fa gn-icon-onlinesrc',
-                      process: 'onlinesrc-add',
-                      fields: {
-                        'url': {isMultilingual: false},
-                        'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true,
-                          isMultilingual: false
-                        },
-                        'name': {},
-                        'desc': {},
-                        'function': {value: 'information', hidden: true,
-                          isMultilingual: false}
-                      }
-                    }]
-                  }
-                };
                 scope.config = null;
                 scope.linkType = null;
 
@@ -1050,118 +475,113 @@
 
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
-                  scope.config = schemaConfig[scope.schema];
-                  if (scope.config === undefined &&
-                      scope.schema.indexOf('iso19139') === 0) {
-                    scope.config = schemaConfig['iso19139'];
-                  }
 
-                  if (gnCurrentEdit.mdOtherLanguages) {
-
-                    scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
-                    scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
-
-                    // not multilingual {"fre":"#"}
-                    if (Object.keys(scope.mdLangs).length > 1) {
-                      scope.isMdMultilingual = true;
-                      scope.mdLang = gnCurrentEdit.mdLanguage;
-
-                      for (var p in scope.mdLangs) {
-                        var v = scope.mdLangs[p];
-                        if (v.indexOf('#') === 0) {
-                          var l = v.substr(1);
-                          if (!l) {
-                            l = scope.mdLang;
-                          }
-                          scope.mdLangs[p] = l;
-                        }
-                      }
-                    } else {
-                      scope.isMdMultilingual = false;
-                    }
-                  }
-
-                  var typeConfig = linkToEdit ?
+                  var init = function() {
+                    var typeConfig = linkToEdit ?
                       getTypeConfig(linkToEdit) :
                       scope.config.types[0];
-                  scope.config.multilingualFields = [];
-                  angular.forEach(typeConfig.fields, function(f, k) {
-                    if (f.isMultilingual !== false) {
-                      scope.config.multilingualFields.push(k);
-                    }
-                  });
-
-                  initThumbnailMaker();
-                  resetForm();
-
-                  $(scope.popupid).modal('show');
-
-
-                  if (scope.isEditing) {
-                    // If the title object contains more than one value,
-                    // Then the record resource is multilingual (and
-                    // probably the record also).
-                    // scope.isMdMultilingual =
-                    //   Object.keys(linkToEdit.title).length > 1 ||
-                    //   Object.keys(linkToEdit.description).length > 1;
-
-
-                    // Create a key which will be sent to XSL processing
-                    // for finding which element to edit.
-                    var keyName = $filter('gnLocalized')(linkToEdit.title);
-                    var keyUrl = $filter('gnLocalized')(linkToEdit.url);
-                    if (scope.isMdMultilingual) {
-                      // Key in multilingual mode is
-                      // the title in the main language
-                      keyName = linkToEdit.title[scope.mdLang];
-                      keyUrl = linkToEdit.url[scope.mdLang];
-                      if (!keyName || ! keyUrl) {
-                        $log.warn(
-                            'Failed to compute key for updating the resource.');
-                      }
-                    }
-                    scope.editingKey = [keyUrl, linkToEdit.protocol,
-                      keyName].join('');
-
-                    scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
-
-                    // For multilingual record, build
-                    // name and desc based on loc IDs
-                    // and no iso3letter code.
-                    // If OGC, only take into account, the first element
-                    var fields = {
-                      name: 'title',
-                      desc: 'description',
-                      url: 'url'
-                    };
-
-                    angular.forEach(fields, function(value, field) {
-                      if (scope.isFieldMultilingual(field)) {
-                        var e = {};
-                        $.each(scope.mdLangs, function(key, v) {
-                          e[v] =
-                              (linkToEdit[fields[field]] &&
-                              linkToEdit[fields[field]][key]) || '';
-                        });
-                        fields[field] = e;
-                      }
-                      else {
-                        fields[field] =
-                            $filter('gnLocalized')(linkToEdit[fields[field]]);
+                    scope.config.multilingualFields = [];
+                    angular.forEach(typeConfig.fields, function(f, k) {
+                      if (f.isMultilingual !== false) {
+                        scope.config.multilingualFields.push(k);
                       }
                     });
 
-                    scope.params = {
-                      linkType: typeConfig,
-                      url: fields.url,
-                      protocol: linkToEdit.protocol,
-                      name: fields.name,
-                      desc: fields.desc,
-                      applicationProfile: linkToEdit.applicationProfile,
-                      function: linkToEdit.function,
-                      selectedLayers: []
-                      };
+                    if (gnCurrentEdit.mdOtherLanguages) {
+                      scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
+                      scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
+
+                      // not multilingual {"fre":"#"}
+                      if (Object.keys(scope.mdLangs).length > 1) {
+                        scope.isMdMultilingual = true;
+                        scope.mdLang = gnCurrentEdit.mdLanguage;
+
+                        for (var p in scope.mdLangs) {
+                          var v = scope.mdLangs[p];
+                          if (v.indexOf('#') === 0) {
+                            var l = v.substr(1);
+                            if (!l) {
+                              l = scope.mdLang;
+                            }
+                            scope.mdLangs[p] = l;
+                          }
+                        }
                       } else {
+                        scope.isMdMultilingual = false;
+                      }
+                    }
+
+                    initThumbnailMaker();
+                    resetForm();
+
+                    $(scope.popupid).modal('show');
+
+
+                    if (scope.isEditing) {
+                      // If the title object contains more than one value,
+                      // Then the record resource is multilingual (and
+                      // probably the record also).
+                      // scope.isMdMultilingual =
+                      //   Object.keys(linkToEdit.title).length > 1 ||
+                      //   Object.keys(linkToEdit.description).length > 1;
+
+
+                      // Create a key which will be sent to XSL processing
+                      // for finding which element to edit.
+                      var keyName = $filter('gnLocalized')(linkToEdit.title);
+                      var keyUrl = $filter('gnLocalized')(linkToEdit.url);
+                      if (scope.isMdMultilingual) {
+                        // Key in multilingual mode is
+                        // the title in the main language
+                        keyName = linkToEdit.title[scope.mdLang];
+                        keyUrl = linkToEdit.url[scope.mdLang];
+                        if (!keyName || ! keyUrl) {
+                          $log.warn(
+                            'Failed to compute key for updating the resource.');
+                        }
+                      }
+                      scope.editingKey = [keyUrl, linkToEdit.protocol,
+                        keyName].join('');
+
+                      scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
+
+                      // For multilingual record, build
+                      // name and desc based on loc IDs
+                      // and no iso3letter code.
+                      // If OGC, only take into account, the first element
+                      var fields = {
+                        name: 'title',
+                        desc: 'description',
+                        url: 'url'
+                      };
+
+                      angular.forEach(fields, function(value, field) {
+                        if (scope.isFieldMultilingual(field)) {
+                          var e = {};
+                          $.each(scope.mdLangs, function(key, v) {
+                            e[v] =
+                              (linkToEdit[fields[field]] &&
+                                linkToEdit[fields[field]][key]) || '';
+                          });
+                          fields[field] = e;
+                        }
+                        else {
+                          fields[field] =
+                            $filter('gnLocalized')(linkToEdit[fields[field]]);
+                        }
+                      });
+
+                      scope.params = {
+                        linkType: typeConfig,
+                        url: fields.url,
+                        protocol: linkToEdit.protocol,
+                        name: fields.name,
+                        desc: fields.desc,
+                        applicationProfile: linkToEdit.applicationProfile,
+                        function: linkToEdit.function,
+                        selectedLayers: []
+                      };
+                    } else {
                       scope.editingKey= null;
                       scope.params.linkType= scope.config.types[0];
                       scope.params.protocol= null;
@@ -1169,7 +589,29 @@
                       scope.params.desc= '';
                       initMultilingualFields();
                     }
+                  };
+                  function loadConfigAndInit(withInit) {
+                    gnSchemaManagerService.getEditorAssociationPanelConfig(
+                      gnCurrentEdit.schema,
+                      gnCurrentEdit.associatedPanelConfigId).then(function (r) {
+                      scope.config = r.config;
+
+                      if (withInit) {
+                        init();
+                      }
+                    });
+                  };
+
+                  scope.$watch('gnCurrentEdit.associatedPanelConfigId',
+                    function(n, o) {
+                      if (n && n !== o) {
+                        loadConfigAndInit(false);
+                      }
                   });
+
+                  loadConfigAndInit(true);
+
+                });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
                 scope.mode = 'url';
