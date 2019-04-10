@@ -41,9 +41,6 @@
   <!-- Used for json escape string -->
   <xsl:import href="common/index-utils.xsl"/>
 
-  <!-- Used for type mapping (also used for schema.org in XSL formatter ) -->
-  <!--<xsl:import href="common/functions-schema-org.xsl"/>-->
-
 
   <!-- Convert a hierarchy level into corresponding
   schema.org class. If no match, return http://schema.org/Thing
@@ -150,14 +147,26 @@
     <!-- TODO: availableLanguage -->
     "name": <xsl:apply-templates mode="toJsonLDLocalized"
                                  select="gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>,
+
+    <!-- An alias for the item. -->
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:alternateTitle">
+      "alternateName": <xsl:apply-templates mode="toJsonLDLocalized"
+                                                  select="."/>,
+    </xsl:for-each>
+
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='creation']/*/gmd:date/*/text()">
 		  "dateCreated": "<xsl:value-of select="."/>",
     </xsl:for-each>
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='revision']/*/gmd:date/*/text()">
 		"dateModified": "<xsl:value-of select="."/>",
     </xsl:for-each>
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*/gmd:fileName/*[. != '']">
+		"thumbnailUrl": "<xsl:value-of select="."/>",
+    </xsl:for-each>
+
 		"description": <xsl:apply-templates mode="toJsonLDLocalized"
                                         select="gmd:identificationInfo/*/gmd:abstract"/>,
+
     <!-- TODO: Add citation as defined in DOI landing pages -->
     <!-- TODO: Add identifier, DOI if available or URL or text -->
 
@@ -178,6 +187,11 @@
 		],
 
 
+    <!--
+    TODO: Dispatch in author, contributor, copyrightHolder, editor, funder,
+    producer, provider, sponsor
+    TODO: sourceOrganization
+    -->
     "publisher": [
       <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact/*">
         {
@@ -218,19 +232,25 @@
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
-    ],
+    ]
 
     <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:dateType/*/@codeListValue='publication']/*/gmd:date/*/text()">
-      "datePublished": "<xsl:value-of select="."/>",
+      ,"datePublished": "<xsl:value-of select="."/>"
     </xsl:for-each>
 
 
+    <!--
+    The overall rating, based on a collection of reviews or ratings, of the item.
+    "aggregateRating": TODO
+    -->
 
     <!--
+    A downloadable form of this dataset, at a specific location, in a specific format.
+
     See https://schema.org/DataDownload
     -->
     <xsl:for-each select="gmd:distributionInfo">
-    "distribution": [
+    ,"distribution": [
       <xsl:for-each select=".//gmd:onLine/*[gmd:linkage/gmd:URL != '']">
         {
         "@type":"DataDownload",
@@ -239,23 +259,23 @@
         }
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
-    ],
+    ]
     </xsl:for-each>
 
     <xsl:if test="count(gmd:distributionInfo/*/gmd:distributionFormat) > 0">
-      "encodingFormat": [
+      ,"encodingFormat": [
       <xsl:for-each select="gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name[. != '']">
         <xsl:apply-templates mode="toJsonLDLocalized"
                              select="."/>
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
-      ],
+      ]
     </xsl:if>
 
 
 
     <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*[gmd:geographicElement]">
-    "spatialCoverage": {
+    ,"spatialCoverage": {
       "@type":"Place"
       <xsl:for-each select="gmd:description[count(.//text() != '') > 0]">
       ,"description": <xsl:apply-templates mode="toJsonLDLocalized"
@@ -274,15 +294,15 @@
                                           ), ' ')"/>"
         }
       </xsl:for-each>
-    },
+    }
     </xsl:for-each>
 
 
     <xsl:for-each select="gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent">
-      "temporalCoverage": "<xsl:value-of select="concat(
+      ,"temporalCoverage": "<xsl:value-of select="concat(
                                                   gml:TimePeriod/gml:beginPosition, '/',
                                                   gml:TimePeriod/gml:endPosition
-      )"/>",
+      )"/>"
       <!-- TODO: handle
       "temporalCoverage" : "2013-12-19/.."
       "temporalCoverage" : "2008"
@@ -290,11 +310,12 @@
     </xsl:for-each>
 
     <xsl:for-each select="gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation">
-      "license": <xsl:apply-templates mode="toJsonLDLocalized"
+      ,"license": <xsl:apply-templates mode="toJsonLDLocalized"
                                       select="."/>
     </xsl:for-each>
 
     <!-- TODO: When a dataset derives from or aggregates several originals, use the isBasedOn property. -->
+    <!-- TODO: hasPart -->
 	}
 	</xsl:template>
 
