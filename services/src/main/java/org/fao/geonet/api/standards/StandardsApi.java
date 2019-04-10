@@ -23,12 +23,14 @@
 
 package org.fao.geonet.api.standards;
 
+import com.itextpdf.text.Meta;
 import io.swagger.annotations.*;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
@@ -38,6 +40,7 @@ import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.schema.labels.Codelists;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -314,7 +317,7 @@ public class StandardsApi implements ApplicationContextAware {
 
     @ApiOperation(value = "Get editor associated resources panel configuration",
         nickname = "getEditorAssociatedPanelConfiguration")
-    @RequestMapping(value = "/{schema}/editor/associatedpanel/config/default.json",
+    @RequestMapping(value = "/{schema}/editor/associatedpanel/config/{name:[a-zA-Z]+}.json",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
@@ -324,45 +327,50 @@ public class StandardsApi implements ApplicationContextAware {
         @ApiParam(value = "Schema identifier",
             required = true,
             example = "iso19139")
-        @PathVariable String schema
+        @PathVariable String schema,
+        @ApiParam(value = "Configuration identifier",
+            required = true,
+            defaultValue = "default",
+            example = "default")
+        @PathVariable String name
     ) throws Exception {
-
-        String schemaToCheck = schema;
-
         // Store processed schemas to avoid loops
         Set<String> schemasProcessed = new HashSet<>();
 
-        while (StringUtils.isNotEmpty(schemaToCheck) &&
-            !schemasProcessed.contains(schemaToCheck)) {
+        while (StringUtils.isNotEmpty(schema) &&
+            !schemasProcessed.contains(schema)) {
 
-            schemasProcessed.add(schemaToCheck);
+            schemasProcessed.add(schema);
 
-            MetadataSchema metadataSchema = schemaManager.getSchema(schemaToCheck);
+            MetadataSchema metadataSchema = schemaManager.getSchema(schema);
 
             Path schemaDir = metadataSchema.getSchemaDir();
 
             Path configFile = schemaDir.resolve("config").
                 resolve("associated-panel").
-                resolve("default.json");
+                resolve(name + ".json");
 
             if (Files.exists(configFile)) {
-                String jsonConfig = new String(Files.readAllBytes(configFile));
+                try {
+                    String jsonConfig = new String(Files.readAllBytes(configFile));
 
-                // Parse JSON file to check is valid
-                new JSONObject(jsonConfig);
-
-                return jsonConfig;
+                    // Parse JSON file to check is valid
+                    new JSONObject(jsonConfig);
+                    return jsonConfig;
+                } catch (Exception e) {
+                    throw new WebApplicationException(String.format(
+                        "Associated panel configuration '%s' for schema '%s' is invalid. Error is: %s",
+                        name, metadataSchema.getName(), e.getMessage()));
+                }
             } else {
                 // Use the file from dependent schema if available
-                schemaToCheck = metadataSchema.getDependsOn();
+                schema = metadataSchema.getDependsOn();
             }
         }
 
-
         throw new ResourceNotFoundException(String.format(
-            "Associated panel configuration for schema '%s' not found.",
-            schema));
-
+        "Associated panel '%s' configuration not found for schema and its dependency '%s'.",
+            name, schemasProcessed.toString()));
 
     }
 }

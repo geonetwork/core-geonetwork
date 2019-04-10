@@ -602,7 +602,7 @@ public class MetadataSchema {
     }
 
     public void setDependsOn(String depends) {
-        this.dependsOn = dependsOn;
+        this.dependsOn = depends;
     }
 
     public Map<String, String> getTitles() {

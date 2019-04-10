@@ -209,6 +209,7 @@
               scope.allowEdits = true;
               scope.lang = scope.$parent.lang;
               scope.readonly = attrs['readonly'] || false;
+              scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
 
               /**
@@ -589,13 +590,27 @@
                       initMultilingualFields();
                     }
                   };
+                  function loadConfigAndInit(withInit) {
+                    gnSchemaManagerService.getEditorAssociationPanelConfig(
+                      gnCurrentEdit.schema,
+                      gnCurrentEdit.associatedPanelConfigId).then(function (r) {
+                      scope.config = r.config;
 
-                  gnSchemaManagerService.getEditorAssociationPanelConfig(gnCurrentEdit.schema).
-                  then(function(response) {
-                    scope.config = response.data.config;
+                      if (withInit) {
+                        init();
+                      }
+                    });
+                  };
 
-                    init();
+                  scope.$watch('gnCurrentEdit.associatedPanelConfigId',
+                    function(n, o) {
+                      if (n && n !== o) {
+                        loadConfigAndInit(false);
+                      }
                   });
+
+                  loadConfigAndInit(true);
+
                 });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
