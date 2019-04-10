@@ -33,11 +33,23 @@
            data-ng-model="userSearch.logo" />
   </div>
 
-  <div class="form-group">
+  <div class="form-group" data-ng-show="editMode">
     <label for="searchUrl" data-translate="">userSearchUrl</label>
-    <input type="text" id="searchUrl" class="form-control" readonly="readonly"
-           data-ng-model="userSearch.url" />
+
+    <div class="input-group">
+      <input type="text" id="searchUrl" class="form-control" readonly="readonly"
+             data-ng-model="userSearch.url" />
+
+      <span class="input-group-btn">
+          <button type="button"
+                  data-ng-click="updateUrl()"
+                  class="btn btn-default"
+                  data-translate="">userSearchUpdateUrl</button>
+    </span>
   </div>
+
+</div>
+
 
 
 
@@ -52,12 +64,6 @@
          data-icon-only="true"></div>
 
     <div class="btn-toolbar pull-right">
-      <span data-ng-show="editMode">
-        <button type="button"
-                data-ng-click="updateUrl()"
-                class="btn btn-default"
-                data-translate="">userSearchUpdateUrl</button>
-      </span>     
       <button type="button"
               class="btn btn-default"
               id="gn-share-btn-replace"
