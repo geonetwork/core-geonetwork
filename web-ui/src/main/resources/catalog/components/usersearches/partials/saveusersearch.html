@@ -6,7 +6,7 @@
     <div gn-multilingual-field="{{langList}}"
          main-language="{{currentLangShown}}">
       <input data-ng-repeat="(lang3, lang2) in availableLangs" type="text"
-             name="name" class="form-control" lang="{{lang2}}"
+             name="name" class="form-control" lang="{{lang2}}" maxlength="255"
              data-ng-model="userSearch.names[lang3]"/>
     </div>
   </div>
@@ -30,7 +30,7 @@
   <div class="form-group" data-ng-show="canSetFeatureTypeInSearch() && isFeaturedSearch()">
     <label for="logo" data-translate="">userSearchLogo</label>
     <input type="text" id="logo" class="form-control"
-           data-ng-model="userSearch.logo" />
+           data-ng-model="userSearch.logo" maxlength="255" />
   </div>
 
   <div class="form-group" data-ng-show="editMode">
