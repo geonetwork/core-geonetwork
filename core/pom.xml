@@ -235,7 +235,7 @@
       <artifactId>pcj</artifactId>
     </dependency>
     <dependency>
-      <groupId>batik</groupId>
+      <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
@@ -391,6 +391,10 @@
         <exclusion>
           <groupId>com.vividsolutions</groupId>
           <artifactId>jts</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.xmlgraphics</groupId>
+          <artifactId>batik-transcoder</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
