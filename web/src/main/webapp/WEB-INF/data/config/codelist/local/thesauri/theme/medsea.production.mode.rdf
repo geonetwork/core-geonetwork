@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/production-mode">
+    <dc:title>Production mode</dc:title>
+    <dc:description></dc:description>
+    <dcterms:issued>2014-08-11</dcterms:issued>
+    <dcterms:modified>2014-08-11</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/production-mode#delayed">
+    <skos:prefLabel xml:lang="en">Delayed</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Delayed</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/production-mode#real-time">
+    <skos:prefLabel xml:lang="en">Real-time</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Real-time</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+</rdf:RDF>

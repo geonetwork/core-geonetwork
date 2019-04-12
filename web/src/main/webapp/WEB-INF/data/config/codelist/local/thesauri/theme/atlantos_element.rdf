@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/AtlantOS Element">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>AtlantOS Element</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#492b26a7-0a79-4335-a026-b1be94fb37b7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#764bcc19-e22e-41c3-b826-4c915f86b6d3">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#492b26a7-0a79-4335-a026-b1be94fb37b7">
+	<ns5:BoundedBy rdf:nodeID="node1bteuolhix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bteuolhix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#764bcc19-e22e-41c3-b826-4c915f86b6d3">
+	<ns2:prefLabel xml:lang="en">Products</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Products</ns2:prefLabel>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#54e0dd2e-1e05-437f-b6a4-7428dd89b004">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#764bcc19-e22e-41c3-b826-4c915f86b6d3">
+	<ns5:BoundedBy rdf:nodeID="node1bteuolhix2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bteuolhix2">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#54e0dd2e-1e05-437f-b6a4-7428dd89b004">
+	<ns2:prefLabel xml:lang="en">Networks</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Networks</ns2:prefLabel>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#327a8234-4825-4467-823e-2fe95d3a7cfc">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#54e0dd2e-1e05-437f-b6a4-7428dd89b004">
+	<ns5:BoundedBy rdf:nodeID="node1bteuolhix3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bteuolhix3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#327a8234-4825-4467-823e-2fe95d3a7cfc">
+	<ns2:prefLabel xml:lang="en">Monitoring</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="fr">Monitoring</ns2:prefLabel>
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bteuolhix4">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#327a8234-4825-4467-823e-2fe95d3a7cfc">
+	<ns5:BoundedBy rdf:nodeID="node1bteuolhix4"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://sextant.ifremer.fr/atlantos_element#492b26a7-0a79-4335-a026-b1be94fb37b7">
+	<ns2:prefLabel xml:lang="fr">Integrators</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">Integrators</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+</rdf:RDF>

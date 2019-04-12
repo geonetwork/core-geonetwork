@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Cersat - Metadata convention">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Cersat - Metadata convention</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#9897e935-a744-437b-94d5-53eb8a987a2b">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.4</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkeuo77x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkeuo77x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#0169f18f-8a72-461f-862a-fc38f3abf65e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.5</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkeutu9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkeutu9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2cb5c897-25a9-4566-aff5-0d09c5d54c69">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/NetCDF CF/CF-1.6</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkev2sbx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkev2sbx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3a93a2b6-1c54-46d1-a779-eda9bfde59ba">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/NetCDF GDS/GDS v1.0</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkf2d8cx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkf2d8cx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f79cf81e-3acd-4ac1-bb6f-3085e5b331cd">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/NetCDF GDS/GDS v2.0</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkf2jf9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkf2jf9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

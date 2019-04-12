@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Cersat - Parameter">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Cersat - Parameter</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#960dcf67-7d62-472a-8e42-39d717e7c492">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Aerosols</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g4adjx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g4adjx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1ca10631-8285-4c1d-a88f-e94fd7793d01">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Atmospheric Chemistry</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g4hcbx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g4hcbx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#49149245-f242-4a57-87d2-e81a7648e458">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Atmospheric Surface Pressure</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g4lg9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g4lg9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#30692a24-a5df-4346-ab1a-39c468afb6f5">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Atmospheric Surface Specific Humidity</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g4qdhx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g4qdhx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#74a73ea9-aaae-4bc5-bf1d-a224d1fa1c50">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Atmospheric Temperature</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g4u8ox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g4u8ox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#335f8073-1612-4962-bcb7-8e3ae27c8676">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Atmospheric Water Vapour</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g52ggx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g52ggx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c2fbfc4e-f081-4084-9230-e6b9f7bf00f0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Ocean Temperature</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g56mjx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g56mjx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2d3cbe74-40eb-48c3-aea0-61a094a677bd">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Ocean Waves</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g5b81x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g5b81x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#7c1f574d-9cb9-4312-ab74-92741050d81e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Ocean Winds</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g5euux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g5euux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1e6f3011-68b4-4b76-b2ba-1bba4120e525">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Ocean currents</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g5kbgx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g5kbgx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4ea416f9-850b-4a18-815f-8f33469b77c9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Precipitation</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g5od8x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g5od8x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#fbf5dc06-c76b-4ad0-9ecd-c3400b536715">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Radiative Flux</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g5sogx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g5sogx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c72070b9-b212-4461-9c77-3e7da11c63a7">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Relative Humdity</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g62ehx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g62ehx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#cb2f419f-5c99-4a23-93eb-294be815ad07">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Salinity/Density</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g66brx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g66brx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#9d81b136-c329-4397-87a3-2116c493d9e0">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Sea Ice</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g69spx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g69spx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#37cda35e-f442-48dc-b399-b17b4e3ae6f6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Sea State</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g6hlqx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g6hlqx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c890de30-b6c6-45e8-9cf7-c99e6ef7e4c9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Sea Surface Specific Humidity</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g6m10x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g6m10x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ac6d234d-4f3d-4fe3-bb40-68b758e0789c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Sea Surface Topography</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g6q61x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g6q61x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#8967da9d-e691-4504-830a-d454ba1ecebe">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Turbulent Flux</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1bj0g6uk2x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1bj0g6uk2x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

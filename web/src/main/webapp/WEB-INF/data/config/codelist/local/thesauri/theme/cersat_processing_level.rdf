@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Cersat - Processing level">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Cersat - Processing level</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b5372023-cfa5-4784-b663-3507b7e6e711">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L1/L1A</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkaqvnnx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkaqvnnx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c46d0821-9d61-4a75-90f2-67e97fec49fe">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L1/L1B</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkar5nhx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkar5nhx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#dcd2c26e-a9e6-4d2b-8d9a-330d66e508ce">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L1/L1C</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkarbk2x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkarbk2x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b7d28706-135a-42b2-a74e-466a18f3ee44">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L2/L2A</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkarnfhx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkarnfhx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#876c81b4-e9fe-4946-9f39-b515b406e317">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L2/L2B</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkaruf0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkaruf0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#7c81f5a8-dde0-42a2-8474-fa772a496486">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L2/L2S</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkas4rmx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkas4rmx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ce7f4284-3561-45a5-9a2c-0390867e06ea">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L2/L2P</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkasbdox1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkasbdox1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#f84dc96c-ab31-4c27-9b71-9b791bbb839d">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L3/L3U</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkasmi0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkasmi0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#9c056918-104d-4a23-b219-a6130a4d0453">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L3/L3C</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkasv36x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkasv36x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#1b801680-4e33-4e81-b288-2a4861949062">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L3/L3S</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkat3bix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkat3bix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#20489178-bd56-41f4-829a-a19e45996457">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">/L4</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmkf59hix1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmkf59hix1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<dc:title>Service extent</dc:title>
+	<dc:description></dc:description>
+	<dcterms:issued>2015-01-29</dcterms:issued>
+	<dcterms:modified>2015-01-29</dcterms:modified>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#private">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#eu-service">
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#private">
+	<skos:definition xml:lang="en"></skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#eu-service">
+	<skos:scopeNote xml:lang="fr">undefined</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#private">
+	<skos:definition xml:lang="fr"></skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-intl">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#private">
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-intl">
+	<skos:definition xml:lang="en"></skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-not-eu">
+	<skos:scopeNote xml:lang="fr">undefined</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-intl">
+	<skos:definition xml:lang="fr"></skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-not-eu">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<skos:prefLabel xml:lang="en">Public national but not EU service</skos:prefLabel>
+	<skos:definition xml:lang="en"></skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#private">
+	<skos:scopeNote xml:lang="fr">undefined</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-not-eu">
+	<skos:definition xml:lang="fr"></skos:definition>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#eu-service">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-intl">
+	<skos:prefLabel xml:lang="en">Public national or international (non EU) services</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#eu-service">
+	<skos:definition xml:lang="en"></skos:definition>
+	<skos:definition xml:lang="fr"></skos:definition>
+	<skos:prefLabel xml:lang="fr">EU services</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#private">
+	<skos:prefLabel xml:lang="fr">Private or limited access service</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-intl">
+	<skos:scopeNote xml:lang="en">undefined</skos:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#eu-service">
+	<skos:prefLabel xml:lang="en">EU services</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#private">
+	<skos:prefLabel xml:lang="en">Private or limited access service</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-not-eu">
+	<skos:prefLabel xml:lang="fr">Public national but not EU service</skos:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/service-extent#public-intl">
+	<skos:prefLabel xml:lang="fr">Public national or international (non EU) services</skos:prefLabel>
+	<skos:scopeNote xml:lang="fr">undefined</skos:scopeNote>
+</rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns4="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Type de jeux de donnée - ODATIS">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Type de jeux de donnée - ODATIS</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#ce73db96-24b9-4ba1-86f8-4b7e45fa20a3">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Observations in-situ/Campagnes</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Campagnes</ns2:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1cptup1v3x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cptup1v3x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#296cbeef-84cc-4c04-a43a-c9938a67a7f8">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Observations in-situ/Réseaux</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Réseaux</ns2:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1cptup1v3x2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cptup1v3x2">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#79d31496-5683-42d1-bdd0-19d9a9847431">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="fr">/Télédétection</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Télédétection</ns2:scopeNote>
+	<ns4:BoundedBy rdf:nodeID="node1cptup1v3x3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cptup1v3x3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85c5fda1-1907-47c1-a7c2-fa5ec1695b5e">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
+	<ns4:BoundedBy rdf:nodeID="node1cptup1v3x4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cptup1v3x4">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c673d80-ffca-4e90-b427-75916c9e88b9">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c673d80-ffca-4e90-b427-75916c9e88b9">
+	<ns4:BoundedBy rdf:nodeID="node1cptup1v3x5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cptup1v3x5">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85c5fda1-1907-47c1-a7c2-fa5ec1695b5e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cptup1v3x7">
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85c5fda1-1907-47c1-a7c2-fa5ec1695b5e">
+	<ns4:BoundedBy rdf:nodeID="node1cptup1v3x6"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cptup1v3x6">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns4:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
+	<ns4:BoundedBy rdf:nodeID="node1cptup1v3x7"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#85c5fda1-1907-47c1-a7c2-fa5ec1695b5e">
+	<ns2:scopeNote xml:lang="fr">Données de type modèle</ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">/Données dérivées/Données de type modèle</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#10e0b1dd-92f9-4d02-8907-55a83c52113f">
+	<ns2:scopeNote xml:lang="fr">Indicateurs</ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">/Données dérivées/Indicateurs</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fe33aa4f-a653-4f3f-a40d-f179f358dd0c">
+	<ns2:scopeNote xml:lang="fr">Produits composites</ns2:scopeNote>
+	<ns2:prefLabel xml:lang="fr">/Données dérivées/Produits composites</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#3c673d80-ffca-4e90-b427-75916c9e88b9">
+	<ns2:prefLabel xml:lang="fr">/Données dérivées/Références statiques</ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en"></ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr">Références statiques</ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+</rdf:RDF>

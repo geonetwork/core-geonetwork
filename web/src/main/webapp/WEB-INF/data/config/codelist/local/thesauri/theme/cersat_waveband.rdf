@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4dbe7ec7-015b-4bbd-8703-7fc9777e7296">
+	<ns2:scopeNote xml:lang="en">test uv</ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cmk9vnogx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmk9vnogx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Cersat - Waveband">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Cersat - Waveband</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmk9vnogx1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka04nux1">
+	<ns5:upperCorner> </ns5:upperCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#8ff9922c-4ee9-428f-9066-8ce3135ea6f6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka04nux1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4dbe7ec7-015b-4bbd-8703-7fc9777e7296">
+	<ns2:prefLabel xml:lang="en">UV (~0.01 µm  -  ~0.40 µm)</ns2:prefLabel>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#8ff9922c-4ee9-428f-9066-8ce3135ea6f6">
+	<ns5:BoundedBy rdf:nodeID="node1cmka04nux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka04nux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#4dbe7ec7-015b-4bbd-8703-7fc9777e7296">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#8ff9922c-4ee9-428f-9066-8ce3135ea6f6">
+	<ns2:prefLabel xml:lang="fr"></ns2:prefLabel>
+	<ns2:prefLabel xml:lang="en">VIS (~0.40 µm - ~0.75 µm)</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="fr"></ns2:scopeNote>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#91e0f65d-d7db-4d00-a518-13d43f7ed190">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">NIR (~0.75 µm - ~1.3 µm)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka3k3lx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka3k3lx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#09a6a991-2cd1-426c-9ee0-3479eff00641">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">SWIR (~1.3 µm - ~3.0 µm)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka5sn1x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka5sn1x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#31f77843-f530-4974-92dc-7bd043f3d308">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">MWIR (~3.0 µm - ~6.0 µm)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka63ltx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka63ltx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#7a98108a-2dc1-4cfb-b111-5c33e3b63565">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">TIR (~6.0 µm - ~15.0 µm)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka6o2jx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka6o2jx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#abd0466c-ac9e-49c0-bc76-e812d044c5fe">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">FIR (~15.0 µm - ~0.1 cm)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka6vhpx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka6vhpx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#851bb519-2a33-4db2-956b-960d31c1ed46">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">MW (~1.0 cm - ~100 cm)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka75vcx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka75vcx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2513cbbf-a012-4bbb-956e-41c53bc36a07">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Ka-Band (26.5 to 40 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka7dg0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka7dg0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2ad20ec2-2066-4878-a6f1-eeed1e18bea6">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">K-Band (18 to 26.5 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka7jb0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka7jb0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3b9f3be5-ead3-4a24-a62c-00e8d3dfbc90">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Ku-Band (12.5 to 18 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka7p8kx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka7p8kx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#d2f88055-5abd-4ea7-aa68-e56e8498367a">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">X-Band (12.5 - 8 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka80lex1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka80lex1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#3987259e-eee6-47ec-b8cd-d1a2ebcbdc6e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">C-Band (8 - 4 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka8678x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka8678x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#7e131c67-be24-4dd0-a8c3-9d5f7eb3bfa8">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">S-Band (4 - 2 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka8bodx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka8bodx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#66a85acd-e854-4008-9c38-9b36c12a5025">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">L-Band (2 - 1 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka8gh0x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka8gh0x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c762ade6-0765-456f-825d-940872213c30">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">P-Band (0.999 - 0.2998 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka8m6tx1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka8m6tx1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c3ad03f6-d640-413e-b13b-79b5b367a308">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">W-Band (94 GHz)</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cmka8ra9x1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cmka8ra9x1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>

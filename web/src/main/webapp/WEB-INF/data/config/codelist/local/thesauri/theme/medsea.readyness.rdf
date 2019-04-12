@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/readyness">
+    <dc:title>Readyness</dc:title>
+    <dc:description />
+    <dcterms:issued>2015-03-20</dcterms:issued>
+    <dcterms:modified>2015-03-20</dcterms:modified>
+  </skos:ConceptScheme>
+
+
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/readyness#not-proprietary-well-described">
+    <skos:prefLabel xml:lang="en">Not proprietary and content well described (eg auto descriptive standard format, documentation)</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:prefLabel xml:lang="fr">Not proprietary and content well described (eg auto descriptive standard format, documentation)</skos:prefLabel>
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/readyness#proprietary-well-described">
+    <skos:prefLabel xml:lang="en">Proprietary but well described</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:prefLabel xml:lang="fr">Proprietary but well described</skos:prefLabel>
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/readyness#not-proprietary-not-well-described">
+    <skos:prefLabel xml:lang="en">Not proprietary but not well described</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:prefLabel xml:lang="fr">Not proprietary but not well described</skos:prefLabel>
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/readyness#proprietary-not-well-described">
+    <skos:prefLabel xml:lang="en">Proprietary and not well described</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:prefLabel xml:lang="fr">Proprietary and not well described</skos:prefLabel>
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/readyness#not-documented">
+    <skos:prefLabel xml:lang="en">Not documented</skos:prefLabel>
+    <skos:definition xml:lang="en" />
+    <skos:prefLabel xml:lang="fr">Not documented</skos:prefLabel>
+    <skos:definition xml:lang="fr" />
+  </skos:Concept>
+</rdf:RDF>
+

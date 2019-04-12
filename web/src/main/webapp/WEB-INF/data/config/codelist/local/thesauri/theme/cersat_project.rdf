@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:ns3="http://purl.org/dc/elements/1.1/"
+	xmlns:ns5="http://www.opengis.net/gml#"
+	xmlns:ns2="http://www.w3.org/2004/02/skos/core#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdf:Description rdf:nodeID="node1cpbrbknux1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b8eae279-4747-4eb9-bfde-d1e69b658554">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#682046a3-d1e6-415a-b408-6e0c8fde0d31">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">MPC sentinel-1</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux2"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux2">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux3">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#c85ffb23-4f7e-40fa-99be-18e8f4590c06">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Medspiration</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux4"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux4">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b8eae279-4747-4eb9-bfde-d1e69b658554">
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux5"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux5">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#ebe2f58d-6bba-417b-8ff6-2a34ee3e9857">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">MyOcean</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux6"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux6">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://geonetwork-opensource.org/Cersat - Project">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#ConceptScheme"/>
+	<ns3:title>Cersat - Project</ns3:title>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux6">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#7b2fa30e-ebe2-4a76-bca6-6ce13e85eccc">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">OSI SAF</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux7"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b82068d1-7eb7-4782-89ab-9fb7027fa2c2">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">Altiberg</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux8"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux8">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux7">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux5">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#2b67b1fe-7c34-4107-b8e6-fc7a5124f89c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">OceanFlux</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux9"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux9">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux1">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#29d178de-9548-4340-b6c4-8da4cfaff0ef">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#32ffb489-0bd6-4d82-9e6b-6bbb040893ea">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">OceanHeatFlux</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux10"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux10">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#29d178de-9548-4340-b6c4-8da4cfaff0ef">
+	<ns2:prefLabel xml:lang="en">Acidification</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#fc76dad8-0358-4dee-8b8f-717071ec854f">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">SMOS</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#525b50f1-4beb-401c-aa9e-18ee4488d86c">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">ESA CCI SST</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux11"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux11">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#fc76dad8-0358-4dee-8b8f-717071ec854f">
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux12"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux12">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#075ee07e-56cb-444b-adfa-72b3ba8c110e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">GHRSST</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux13"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux13">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#54ad8fd7-d011-4c01-8036-1a469dbb1f8e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">GlobCurrent</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux14"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux14">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux12">
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#29d178de-9548-4340-b6c4-8da4cfaff0ef">
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux1"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#59f48ada-f514-4b6a-b27a-0de8b7c39c42">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">GlobWave</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+	<ns5:BoundedBy rdf:nodeID="node1cpbrbknux3"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cpbrbknux3">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://www.mysite.org/thesaurus#b8eae279-4747-4eb9-bfde-d1e69b658554">
+	<ns2:prefLabel xml:lang="en">SMOS Storm</ns2:prefLabel>
+	<ns2:scopeNote xml:lang="en"></ns2:scopeNote>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://custom.shared.obj.ch/concept#fab7016d-bd2d-42f3-a6f3-5f5642ffca0e">
+	<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+	<ns2:prefLabel xml:lang="en">CFOSAT</ns2:prefLabel>
+	<ns5:BoundedBy rdf:nodeID="node1cprheuoax1"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node1cprheuoax1">
+	<rdf:type rdf:resource="http://www.opengis.net/gml#Envelope"/>
+	<ns5:lowerCorner> </ns5:lowerCorner>
+	<ns5:upperCorner> </ns5:upperCorner>
+	<ns5:srsName rdf:resource="http://www.opengis.net/gml/srs/epsg.xml#epsg:4326"/>
+</rdf:Description>
+
+</rdf:RDF>
