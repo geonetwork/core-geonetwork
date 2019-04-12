@@ -78,9 +78,6 @@
   </xsl:function>
 
 
-	<xsl:output method="text"/>
-
-
   <!-- Define the root element of the resources
       and a catalogue id. -->
   <!--<xsl:param name="baseUrl"
@@ -104,9 +101,6 @@
   <xsl:param name="lang"
              select="''"/>
 
-
-  <xsl:variable name="metadata"
-                select="//gmd:MD_Metadata"/>
 
   <!-- TODO: Convert language code eng > en_US ? -->
   <xsl:variable name="defaultLanguage"
