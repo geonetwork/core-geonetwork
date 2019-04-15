@@ -34,28 +34,21 @@
       </div>
     </div>
 
-    <div class="jobs-list" ng-if="!loading && !error">
-      <div ng-repeat="job in jobs" class="row">
-        <div class="panel panel-default col-md-12">
-          <dl class="dl-horizontal panel-body">
-            <dt translate>wfsurl</dt>
-            <dd><a href="{{job.url}}">{{job.url}}</a> - <a href="{{job.url | asGetCapabilities:'WFS'}}">GetCapabilities</a></dd>
-
-            <dt translate>status</dt>
-            <dd><span class="label" ng-class="'label-' + getLabelClass(job.status)">{{job.status}}</span></dd>
-
-            <dt translate>wfsIndexingFeatureType</dt>
-            <dd>{{job.featureType}}</dd>
-
-            <dt translate>featureCount</dt>
-            <dd>{{job.featureCount}}</dd>
-
-            <dt translate>wfsIndexingMetadataUuid</dt>
-            <dd><code>{{job.mdUuid}}</code></dd>
-
-            <div ng-if="job.mdUuid">
-              <dt translate>wfsIndexingMetadata</dt>
-              <dd>
+    <div class="jobs-list row" ng-if="!loading && !error">
+      <table class="table">
+        <thead>
+          <tr>
+            <th translate>wfsIndexingMetadata</th>
+            <th translate>wfsurl</th>
+            <th translate>featureCount</th>
+            <th translate>endDate</th>
+            <th translate>status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="job in jobs">
+            <td>
+              <div ng-if="job.mdUuid">
                 <span ng-if="job.md.error">
                   <span translate>{{job.md.error}}</span>
                 </span>
@@ -63,16 +56,26 @@
                   <a href="catalog.search#/metadata/{{job.md.getUuid()}}" translate>{{job.md.title}}</a>
                 </span>
                 <i ng-if="!job.md" class="fa fa-spinner fa-spin"/>
-              </dd>
-            </div>
+              </div>
+              <code>{{job.mdUuid}}</code>
+            </td>
 
-            <div ng-if="job.error" class="text-danger">
-              <dt translate>wfsIndexingError</dt>
-              <dd>{{job.error}}</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
+            <td>
+              <a href="{{job.url}}">{{job.url}}</a> - <a href="{{job.url | asGetCapabilities:'WFS'}}">GetCapabilities</a><br>
+              <span translate>wfsIndexingFeatureType</span>: <code>{{job.featureType}}</code>
+            </td>
+
+            <td>{{job.featureCount}}</td>
+
+            <td>{{job.endDate | date:'dd-M-yyyy H:mm'}}</td>
+
+            <td>
+              <span class="label" ng-class="'label-' + getLabelClass(job.status)">{{job.status}}</span>
+              <div ng-if="job.error" class="text-danger">{{job.error}}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

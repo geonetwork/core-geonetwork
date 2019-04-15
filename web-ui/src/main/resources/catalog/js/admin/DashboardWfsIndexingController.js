@@ -27,8 +27,6 @@
   var module = angular.module('gn_dashboard_wfs_indexing_controller',
       []);
 
-  var INDEX_URL = '';
-
   module.controller('GnDashboardWfsIndexingController', [
     '$scope', '$location', '$http', 'gnMetadataManager', 'gnHttp',
     function($scope, $location, $http, gnMetadataManager, gnHttp) {
@@ -69,7 +67,8 @@
                 featureCount: source.totalRecords_i || 0,
                 status: source.endDate_dt === undefined ? 'ongoing' : source.status_s,
                 mdUuid: source.parent,
-                error: source.error_ss
+                error: source.error_ss,
+                endDate: source.endDate_dt ? moment(source.endDate_dt).format('LLLL') : null
               };
             });
 
@@ -78,7 +77,7 @@
                 if (!md['geonet:info']) {
                   job.md = {
                     error: 'wfsIndexingMetadataNotFound'
-                  }
+                  };
                   return;
                 }
                 job.md = md;
