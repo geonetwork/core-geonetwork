@@ -93,7 +93,7 @@
     head.appendChild(preloadLink);
     head.appendChild(link);
   } else {
-    removeLoadingScreen();
+    window.addEventListener('load', removeLoadingScreen);
   }
 
   module.value('sxtGlobals', {
