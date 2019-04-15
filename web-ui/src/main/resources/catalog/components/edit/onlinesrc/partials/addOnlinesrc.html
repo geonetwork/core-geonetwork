@@ -51,7 +51,7 @@
             <!-- Function Combo -->
             <div id="gn-addonlinesrc-function-row"
                  class="form-group"
-                 data-ng-show="key === 'function' &&
+                 data-ng-if="key === 'function' &&
                              !params.linkType.fields.function.hidden">
               <label id="gn-addonlinesrc-function-label"
                      class="col-sm-2 control-label">
@@ -69,7 +69,7 @@
             <!-- Protocol Combo -->
             <div id="gn-addonlinesrc-protocol-row"
                  class="form-group"
-                 data-ng-show="key === 'protocol' &&
+                 data-ng-if="key === 'protocol' &&
                              !params.linkType.fields.protocol.hidden">
               <label id="gn-addonlinesrc-protocol-label"
                      class="col-sm-2 control-label">
@@ -85,7 +85,7 @@
             </div>
 
             <!-- URL text field -->
-            <div data-ng-show="key === 'url'">
+            <div data-ng-if="key === 'url'">
               <div id="gn-addonlinesrc-url-row"
                    class="form-group gn-required"
                    data-ng-class="{'has-error' : !isFieldMultilingual('url') ? !gnAddLink.url.$valid : false}">
@@ -162,7 +162,7 @@
             <!-- Name text Field -->
             <div id="gn-addonlinesrc-name-row"
                  class="form-group"
-                 data-ng-show="key === 'name' &&
+                 data-ng-if="key === 'name' &&
                              !params.linkType.fields.name.hidden">
               <label id="gn-addonlinesrc-name-label"
                      for="gn-addonlinesrc-name-single-input"
@@ -194,7 +194,7 @@
             <!-- Description Text area -->
             <div id="gn-addonlinesrc-description-row"
                  class="form-group"
-                 data-ng-show="key === 'desc' &&
+                 data-ng-if="key === 'desc' &&
                              !params.linkType.fields.desc.hidden">
               <label id="gn-addonlinesrc-description-label"
                      for="gn-addonlinesrc-description-single-textarea"
@@ -231,7 +231,7 @@
             <!-- application profile text field -->
             <div id="gn-addonlinesrc-profile-row"
                  class="form-group"
-                 data-ng-show="key === 'applicationProfile' &&
+                 data-ng-if="key === 'applicationProfile' &&
                              !params.linkType.fields.applicationProfile.hidden">
               <label id="gn-addonlinesrc-profile-label"
                      for="gn-addonlinesrc-profile-input"
