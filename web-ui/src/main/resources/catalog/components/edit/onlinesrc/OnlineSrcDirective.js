@@ -1049,9 +1049,10 @@
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
                   scope.config = schemaConfig[scope.schema];
+                  // GN 3.8.x will use the API for standard for this
                   if (scope.config === undefined &&
-                      scope.schema.indexOf('iso19139') === 0) {
-                    scope.config = schemaConfig['iso19139'];
+                      scope.schema.indexOf('.') !== -1) {
+                    scope.config = schemaConfig[scope.schema.split('.')[0]];
                   }
 
                   if (gnCurrentEdit.mdOtherLanguages) {
