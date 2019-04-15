@@ -29,7 +29,7 @@
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 version="2.0"
                 exclude-result-prefixes="#all">
-
+ <!-- tr is defined at  core-geonetwork/services/src/main/java/org/fao/geonet/api/records/formatters/SchemaLocalizations.java -->
   <!-- Load the editor configuration to be able
   to render the different views -->
   <xsl:variable name="configuration"
@@ -72,7 +72,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:node-label(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="."/>
