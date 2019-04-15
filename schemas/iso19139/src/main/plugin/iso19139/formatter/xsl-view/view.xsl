@@ -47,7 +47,7 @@
   3 levels of priority are defined: 100, 50, none
 
   -->
-
+ <!-- tr is defined at  core-geonetwork/services/src/main/java/org/fao/geonet/api/records/formatters/SchemaLocalizations.java -->
 
   <!-- Load the editor configuration to be able
   to render the different views -->
@@ -247,7 +247,7 @@
         <dt>
           <xsl:value-of select="if ($fieldName)
                                   then $fieldName
-                                  else tr:node-label(tr:create($schema), name(), null)"/>
+                                  else tr:nodeLabel(tr:create($schema), name(), null)"/>
         </dt>
         <dd>
           <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
@@ -266,7 +266,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:node-label(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="."/>
@@ -300,7 +300,7 @@
 
     <div class="entry name">
       <h2>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
         <xsl:apply-templates mode="render-value"
                              select="@*"/>
       </h2>
@@ -484,7 +484,7 @@
                 priority="100">
     <dl>
       <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="*"/>
@@ -506,7 +506,7 @@
         itemscope="itemscope"
         itemtype="http://schema.org/DataDownload">
       <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <xsl:variable name="linkUrl"
@@ -549,7 +549,7 @@
                 priority="100">
     <dl class="gn-code">
       <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
 
@@ -641,7 +641,7 @@
                 priority="100">
     <dl class="gn-format">
       <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <ul>
@@ -674,7 +674,7 @@
                 priority="100">
     <dl class="gn-date">
       <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
         <xsl:if test="*/gmd:dateType/*[@codeListValue != '']">
           (<xsl:apply-templates mode="render-value"
                                 select="*/gmd:dateType/*/@codeListValue"/>)
@@ -694,7 +694,7 @@
                 priority="100">
     <dl class="gn-date">
       <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <ul>
@@ -728,7 +728,7 @@
     <xsl:if test="$isFirstOfItsKind">
       <dl class="gn-md-associated-resources">
         <dt>
-          <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+          <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
         </dt>
         <dd>
           <ul>
