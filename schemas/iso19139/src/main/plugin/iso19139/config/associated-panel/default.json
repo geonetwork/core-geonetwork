@@ -14,7 +14,10 @@
           "isMultilingual": false,
           "required": true
         },
-        "url": {"isMultilingual": false},
+        "url": {
+          "isMultilingual": false,
+          "required": true
+        },
         "name": {},
         "desc": {},
         "function": {"isMultilingual": false},
@@ -32,7 +35,8 @@
       "fields": {
         "url": {
           "param": "thumbnail_url",
-          "isMultilingual": false
+          "isMultilingual": false,
+          "required": true
         },
         "name": {"param": "thumbnail_desc"}
       }
