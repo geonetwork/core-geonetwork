@@ -25,6 +25,7 @@ package org.fao.geonet.web;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 
 import javax.servlet.Filter;
@@ -86,10 +87,10 @@ public class CORSResponseFilter
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+        SettingManager settingManager =
+            ApplicationContextHolder.get().getBean(SettingManager.class);
 
         if (isUsingDb) {
-            SettingManager settingManager =
-                ApplicationContextHolder.get().getBean(SettingManager.class);
             String allowedHosts = settingManager.getValue(SYSTEM_CORS_ALLOWEDHOSTS);
             if (allowedHosts != null) {
                 if (allowedHosts.equals("*")) {
@@ -106,8 +107,10 @@ public class CORSResponseFilter
             if (clientOriginUrl != null) {
                 try {
                     String clientOriginHost = new java.net.URI(clientOriginUrl).getHost();
+                    String myHost = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
                     if (addHeaderForAllHosts ||
-                        allowedRemoteHosts.indexOf(clientOriginHost) != -1) {
+                        allowedRemoteHosts.indexOf(clientOriginHost) != -1 ||
+                        clientOriginHost.equals(myHost)) {
                         //httpResponse.setHeader("Access-Control-Allow-Origin", clientOriginUrl);
                         httpResponse.setHeader("Access-Control-Allow-Origin", "*");
                         httpResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
