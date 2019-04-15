@@ -730,13 +730,21 @@
 
             var options = layerOptions || {};
 
+            var loadFunction;
+            if (options.useProxy && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+              loadFunction = function (image, src) {
+                image.getImage().src = gnGlobalSettings.proxyUrl + encodeURIComponent(src);
+              };
+            }
+
             var source, olLayer;
             if (gnViewerSettings.singleTileWMS) {
               var config = {
                 params: layerParams,
                 url: options.url,
                 projection: layerOptions.projection,
-                ratio: getImageSourceRatio(map, 2048)
+                ratio: getImageSourceRatio(map, 2048),
+                imageLoadFunction: loadFunction
               };
               source = new ol.source.ImageWMS(
                   gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
@@ -747,7 +755,8 @@
                 params: layerParams,
                 url: options.url,
                 projection: layerOptions.projection,
-                gutter: 15
+                gutter: 15,
+                tileLoadFunction: loadFunction
               };
               source = new ol.source.TileWMS(
                   gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
@@ -761,12 +770,6 @@
               source.set('olcs.proxy', function(url) {
                 return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
               });
-            }
-
-            if(layerParams.useProxy
-                && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-              options.url = gnGlobalSettings.proxyUrl
-                              + encodeURIComponent(options.url);
             }
 
             var layerOptions = {
@@ -967,11 +970,6 @@
               if (url.slice(-1) === '?') {
                 url = url.substring(0, url.length-1);
               }
-
-              if(getCapLayer.useProxy
-                  && url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-                url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-              }
               var layer = this.createOlWMS(map, layerParam, {
                 url: url,
                 label: getCapLayer.Title,
@@ -988,7 +986,8 @@
                     getCapLayer.MinScaleDenominator),
                 maxResolution: this.getResolutionFromScale(
                     map.getView().getProjection(),
-                    getCapLayer.MaxScaleDenominator)
+                    getCapLayer.MaxScaleDenominator),
+                useProxy: getCapLayer.useProxy
               });
 
               if (angular.isArray(getCapLayer.Dimension)) {
