@@ -446,17 +446,25 @@ public final class XslUtil {
             String iso2LangCode = null;
 
             try {
+				final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
+                /*if the language  is 2 characters long...*/
                 if (iso3LangCode.length() == 2) {
                     iso2LangCode = iso3LangCode;
-                } else {
-                    final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
+                    /*Catch language entries longer than 3 characters with a semicolon*/
+                } else if (iso3LangCode.length() > 3 && (iso3LangCode.indexOf(';')!=-1)){
+					iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode.substring(0,3));
+                    /** This final else works properly for languages with exactly three characters, so
+                    * an exception will occur if gmd:language has more than 3 characters but
+                    * does not have a semicolon.
+                    */
+				} else {
                     iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
                 }
             } catch (Exception ex) {
                 Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
 
             }
-
+            /* Triggers when the language can't be matched to a code */
             if (iso2LangCode == null) {
                 Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
                 return iso3LangCode.substring(0, 2);
