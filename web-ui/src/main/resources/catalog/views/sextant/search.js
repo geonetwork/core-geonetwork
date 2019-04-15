@@ -36,6 +36,15 @@
 
   $(document.body).append($('<div class="g"></div>'));
 
+  function removeLoadingScreen() {
+    setTimeout(function() {
+      $('.gn .sxt-loading').remove();
+      $('.gn').css({
+        'overflow': 'auto'
+      });
+    }, 500);
+  }
+
   if(typeof sxtSettings != 'undefined') {
     var catModule = angular.module('gn_cat_controller');
     catModule.config(['gnGlobalSettings', 'gnLangs',
@@ -78,20 +87,13 @@
     link.href = stylesheetUrl;
     link.rel = "stylesheet";
     link.media = "screen";
-    link.addEventListener('load', function() {
-      // clear loading screen and restore main frame overflow
-      // use timeout to make this work with FF
-      setTimeout(function() {
-        $('.gn .sxt-loading').remove();
-        $('.gn').css({
-          'overflow': 'auto'
-        });
-      }, 500);
-    });
+    link.addEventListener('load', removeLoadingScreen);
 
     var head = document.querySelector('head');
     head.appendChild(preloadLink);
     head.appendChild(link);
+  } else {
+    removeLoadingScreen();
   }
 
   module.value('sxtGlobals', {
