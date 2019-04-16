@@ -32,6 +32,7 @@
             <span data-translate="">listOfCategories</span>
             <a data-ng-repeat="cat in ::md.category"
                title="{{('cat-' + cat) | translate}}"
+               aria-label="{{('cat-' + cat) | translate}}"
                data-ng-href="#/search?_cat={{cat}}">
               <i class="fa">
                 <span class="fa gn-icon-{{cat}}"></span>
@@ -44,8 +45,10 @@
               </i>
             </a>
             <a data-ng-repeat="t in md.topicCat"
-               data-ng-href="#/search?topicCat={{t}}">
-              <i class="fa" title="{{t | translate}}">
+               data-ng-href="#/search?topicCat={{t}}"
+               title="{{t | translate}}"
+               aria-label="{{t | translate}}">
+              <i class="fa" >
                 <span class="fa gn-icon-{{t}}"></span>
               </i>
             </a>
@@ -55,7 +58,8 @@
           >
             <!-- Icon for types -->
             <a data-ng-href="#/metadata/{{md.getUuid()}}"
-               title="{{md.title || md.defaultTitle}}">
+               title="{{md.title || md.defaultTitle}}"
+               aria-label="{{md.title || md.defaultTitle}}">
               <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
               {{md.title || md.defaultTitle}}</a>
           </h1>
