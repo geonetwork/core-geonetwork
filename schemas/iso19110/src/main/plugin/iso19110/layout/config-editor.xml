@@ -65,6 +65,9 @@
   <!-- View configuration -->
   <views>
     <view name="default">
+      <sidePanel>
+        <directive data-gn-suggestion-list=""/>
+      </sidePanel>
       <tab id="default" default="true" mode="flat">
         <section name="gfc:FC_FeatureCatalogue">
           <!-- Preserve gmx:* in editor for backward compatibility. -->
