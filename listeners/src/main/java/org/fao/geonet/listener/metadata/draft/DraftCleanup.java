@@ -39,40 +39,38 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
- * 
  * If an approved metadata gets removed, remove all draft associated to it.
- * 
+ * <p>
  * This doesn't need to be disabled if no draft is used, as it only removes
  * drafts.
- * 
- * @author delawen
  *
+ * @author delawen
  */
 @Component
 public class DraftCleanup {
 
-	@Autowired
-	private MetadataDraftRepository metadataDraftRepository;
+    @Autowired
+    private MetadataDraftRepository metadataDraftRepository;
 
-	@Autowired
-	private DraftUtilities draftUtilities;
+    @Autowired
+    private DraftUtilities draftUtilities;
 
-	@TransactionalEventListener
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void doAfterCommit(MetadataRemove event) {
-		Log.trace(Geonet.DATA_MANAGER,
-				"A metadata has been removed. Cleanup associated drafts of " + event.getSource());
-		try {
-			List<MetadataDraft> toRemove = metadataDraftRepository
-					.findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
+    @TransactionalEventListener
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void doAfterCommit(MetadataRemove event) {
+        Log.trace(Geonet.DATA_MANAGER,
+            "A metadata has been removed. Cleanup associated drafts of " + event.getSource());
+        try {
+            List<MetadataDraft> toRemove = metadataDraftRepository
+                .findAll((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(event.getMd().getUuid()));
 
-			for (MetadataDraft md : toRemove) {
-				draftUtilities.removeDraft(md);
-			}
-		} catch (Throwable e) {
-			Log.error(Geonet.DATA_MANAGER, "Couldn't clean up associated drafts of " + event.getSource(), e);
-		}
+            for (MetadataDraft md : toRemove) {
+                draftUtilities.removeDraft(md);
+            }
+        } catch (Throwable e) {
+            Log.error(Geonet.DATA_MANAGER, "Couldn't clean up associated drafts of " + event.getSource(), e);
+        }
 
-		Log.trace(Geonet.DATA_MANAGER, "Finished cleaning up of " + event.getSource());
-	}
+        Log.trace(Geonet.DATA_MANAGER, "Finished cleaning up of " + event.getSource());
+    }
 }

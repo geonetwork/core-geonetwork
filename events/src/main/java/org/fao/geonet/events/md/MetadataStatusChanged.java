@@ -33,31 +33,31 @@ import org.fao.geonet.domain.StatusValue;
  */
 public class MetadataStatusChanged extends MetadataEvent {
 
-	private static final long serialVersionUID = 324534556246220509L;
-	private StatusValue status;
-	private String message;
-	private Integer user;
+    private static final long serialVersionUID = 324534556246220509L;
+    private StatusValue status;
+    private String message;
+    private Integer user;
 
-	public MetadataStatusChanged(AbstractMetadata abstractMetadata, StatusValue status, String message, Integer user) {
-		super(abstractMetadata);
-		if (status == null) {
-			throw new IllegalArgumentException("Status can't be null");
-		}
-		this.status = status;
-		this.message = message;
-		this.user = user;
-	}
+    public MetadataStatusChanged(AbstractMetadata abstractMetadata, StatusValue status, String message, Integer user) {
+        super(abstractMetadata);
+        if (status == null) {
+            throw new IllegalArgumentException("Status can't be null");
+        }
+        this.status = status;
+        this.message = message;
+        this.user = user;
+    }
 
-	public StatusValue getStatus() {
-		return status;
-	}
+    public StatusValue getStatus() {
+        return status;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public Integer getUser() {
-		return user;
-	}
+    public Integer getUser() {
+        return user;
+    }
 
 }

@@ -1,3 +1,26 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager.base;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -40,7 +63,7 @@ import com.google.common.base.Optional;
 
 import jeeves.server.context.ServiceContext;
 
-public class BaseMetadataOperations implements IMetadataOperations, ApplicationEventPublisherAware  {
+public class BaseMetadataOperations implements IMetadataOperations, ApplicationEventPublisherAware {
 
     @Autowired
     private IMetadataUtils metadataUtils;
@@ -53,11 +76,11 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     @Autowired
     @Lazy
     private SettingManager settingManager;
-    @Autowired(required=false)
+    @Autowired(required = false)
     private SvnManager svnManager;
 
     private ApplicationEventPublisher eventPublisher;
-    
+
     /**
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
      */
@@ -84,14 +107,14 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
         deleteMetadataOper(metadataId, skipAllReservedGroup);
     }
-    
+
     /**
      * Removes all operations stored for a metadata.
      */
     @Override
     public void deleteMetadataOper(String metadataId, boolean skipAllReservedGroup) throws Exception {
         if (skipAllReservedGroup) {
-            int[] exclude = new int[] { ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId() };
+            int[] exclude = new int[]{ReservedGroup.all.getId(), ReservedGroup.intranet.getId(), ReservedGroup.guest.getId()};
             opAllowedRepo.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), exclude);
         } else {
             opAllowedRepo.deleteAllByMetadataId(Integer.parseInt(metadataId));
@@ -116,15 +139,15 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
 
     /**
      * Set metadata privileges.
-     *
+     * <p>
      * Administrator can set operation for any groups.
-     *
+     * <p>
      * For reserved group (ie. Internet, Intranet & Guest), user MUST be reviewer of one group. For other group, if "Only set privileges to
      * user's groups" is set in catalog configuration user MUST be a member of the group.
      *
-     * @param mdId The metadata identifier
+     * @param mdId  The metadata identifier
      * @param grpId The group identifier
-     * @param opId The operation identifier
+     * @param opId  The operation identifier
      * @return true if the operation was set.
      */
     @Override
@@ -142,29 +165,29 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     /**
      * Set metadata privileges.
      *
-     * @param mdId The metadata identifier
+     * @param mdId  The metadata identifier
      * @param grpId The group identifier
-     * @param opId The operation identifier
+     * @param opId  The operation identifier
      * @return true if the operation was set.
      */
     @Override
     public boolean forceSetOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
         Optional<OperationAllowed> opAllowed = _getOperationAllowedToAdd(context, mdId, grpId, opId, false);
 
-        if(opAllowed.isPresent()) {
-    		Log.trace(Geonet.DATA_MANAGER, "Operation is allowed");
-	        opAllowedRepo.save(opAllowed.get());
-	        svnManager.setHistory(mdId + "", context);
-	        
-	        //If it is published/unpublished, throw event
-	        if(opId == ReservedOperation.view.getId() 
-	                && grpId == ReservedGroup.all.getId()) {
-	    		Log.trace(Geonet.DATA_MANAGER, "This is a publish event");
-	            this.eventPublisher.publishEvent(new MetadataPublished(
-	                    metadataUtils.findOne(Integer.valueOf(mdId))));
-	        }
-	        
-	        return true;
+        if (opAllowed.isPresent()) {
+            Log.trace(Geonet.DATA_MANAGER, "Operation is allowed");
+            opAllowedRepo.save(opAllowed.get());
+            svnManager.setHistory(mdId + "", context);
+
+            //If it is published/unpublished, throw event
+            if (opId == ReservedOperation.view.getId()
+                && grpId == ReservedGroup.all.getId()) {
+                Log.trace(Geonet.DATA_MANAGER, "This is a publish event");
+                this.eventPublisher.publishEvent(new MetadataPublished(
+                    metadataUtils.findOne(Integer.valueOf(mdId))));
+            }
+
+            return true;
         }
 
         return false;
@@ -180,26 +203,26 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
      */
     @Override
     public Optional<OperationAllowed> getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
-            final int opId) {
+                                                               final int opId) {
         return _getOperationAllowedToAdd(context, mdId, grpId, opId, true);
     }
 
     private Optional<OperationAllowed> _getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
-            final int opId, boolean shouldCheckPermission) {
-		Log.trace(Geonet.DATA_MANAGER, "_getOperationAllowedToAdd(" + mdId + ", " 
-				+ grpId + ", " + opId + ", " + shouldCheckPermission + ")");
+                                                                 final int opId, boolean shouldCheckPermission) {
+        Log.trace(Geonet.DATA_MANAGER, "_getOperationAllowedToAdd(" + mdId + ", "
+            + grpId + ", " + opId + ", " + shouldCheckPermission + ")");
         final OperationAllowed operationAllowed = opAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
         if (operationAllowed == null && shouldCheckPermission) {
-    		Log.trace(Geonet.DATA_MANAGER, "Checking if the operation is allowed, the operation is not yet present");
+            Log.trace(Geonet.DATA_MANAGER, "Checking if the operation is allowed, the operation is not yet present");
             checkOperationPermission(context, grpId, userGroupRepo);
         }
 
         if (operationAllowed == null) {
-    		Log.trace(Geonet.DATA_MANAGER, "Returning operation to add");
+            Log.trace(Geonet.DATA_MANAGER, "Returning operation to add");
             return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId)));
         } else {
-    		Log.trace(Geonet.DATA_MANAGER, "Operation is already available");
+            Log.trace(Geonet.DATA_MANAGER, "Operation is already available");
             return Optional.absent();
         }
     }
@@ -216,12 +239,12 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
                 if (ReservedGroup.isReserved(grpId)) {
 
                     Specification<UserGroup> hasUserIdAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
-                            .and(UserGroupSpecs.hasUserId(userId));
+                        .and(UserGroupSpecs.hasUserId(userId));
                     List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
 
                     if (groupIds.isEmpty()) {
                         throw new ServiceNotAllowedEx(
-                                "User can't set operation for group " + grpId + " because the user in not a " + "Reviewer of any group.");
+                            "User can't set operation for group " + grpId + " because the user in not a " + "Reviewer of any group.");
                     }
                 } else {
                     String userGroupsOnly = settingManager.getValue(Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY);
@@ -230,7 +253,7 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
 
                         if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
                             throw new ServiceNotAllowedEx(
-                                    "User can't set operation for group " + grpId + " because the user in not" + " member of this group.");
+                                "User can't set operation for group " + grpId + " because the user in not" + " member of this group.");
                         }
                     }
                 }
@@ -239,7 +262,6 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     }
 
     /**
-     *
      * @param context
      * @param mdId
      * @param grpId
@@ -252,7 +274,6 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     }
 
     /**
-     *
      * @param context
      * @param mdId
      * @param grpId
@@ -271,9 +292,9 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     // --------------------------------------------------------------------------
 
     /**
-     * @param mdId metadata id
+     * @param mdId    metadata id
      * @param groupId group id
-     * @param operId operation id
+     * @param operId  operation id
      */
     @Override
     public void unsetOperation(ServiceContext context, int mdId, int groupId, int operId) throws Exception {
@@ -293,13 +314,13 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
             if (svnManager != null) {
                 svnManager.setHistory(mdId + "", context);
             }
-            
+
             //If it is published/unpublished, throw event
-            if(operId == ReservedOperation.view.getId() 
-                    && groupId == ReservedGroup.all.getId()) {
+            if (operId == ReservedOperation.view.getId()
+                && groupId == ReservedGroup.all.getId()) {
 
                 this.eventPublisher.publishEvent(new MetadataUnpublished(
-                        metadataUtils.findOne(Integer.valueOf(mdId))));
+                    metadataUtils.findOne(Integer.valueOf(mdId))));
             }
 
         }
@@ -308,10 +329,10 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     /**
      * Sets VIEW and NOTIFY privileges for a metadata to a group.
      *
-     * @param context service context
-     * @param id metadata id
-     * @param groupId group id
-     * @param fullRightsForGroup 
+     * @param context            service context
+     * @param id                 metadata id
+     * @param groupId            group id
+     * @param fullRightsForGroup
      * @throws Exception hmmm
      */
     @Override
@@ -349,5 +370,5 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     @Override
     public Collection<OperationAllowed> getAllOperations(int id) {
         return opAllowedRepo.findAllById_MetadataId(id);
-  }
+    }
 }

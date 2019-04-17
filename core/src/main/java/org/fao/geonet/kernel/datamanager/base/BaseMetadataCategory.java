@@ -1,3 +1,26 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager.base;
 
 import java.util.Collection;
@@ -38,16 +61,16 @@ public class BaseMetadataCategory implements IMetadataCategory {
 
     /**
      * Adds a category to a metadata. Metadata is not reindexed.
-     * 
+     *
      * @return if the category was assigned
      */
     @Override
     public boolean setCategory(ServiceContext context, String mdId, String categId) throws Exception {
 
-    	if(!getMetadataRepository().exists(Integer.valueOf(mdId))) {
-    		return false;
-    	}
-    	
+        if (!getMetadataRepository().exists(Integer.valueOf(mdId))) {
+            return false;
+        }
+
         final MetadataCategory newCategory = metadataCategoryRepository.findOne(Integer.valueOf(categId));
         final boolean[] changed = new boolean[1];
         getMetadataRepository().update(Integer.valueOf(mdId), new Updater<Metadata>() {
@@ -62,14 +85,13 @@ public class BaseMetadataCategory implements IMetadataCategory {
             if (getSvnManager() != null) {
                 getSvnManager().setHistory(mdId, context);
             }
-            
+
             return true;
         }
         return false;
     }
 
     /**
-     *
      * @param mdId
      * @param categId
      * @return
@@ -87,11 +109,10 @@ public class BaseMetadataCategory implements IMetadataCategory {
     }
 
     /**
-     *
      * @param mdId
      * @param categId
-     * @throws Exception
      * @return if the category was deassigned
+     * @throws Exception
      */
     @Override
     public boolean unsetCategory(final ServiceContext context, final String mdId, final int categId) throws Exception {
@@ -115,12 +136,11 @@ public class BaseMetadataCategory implements IMetadataCategory {
                 getSvnManager().setHistory(mdId + "", context);
             }
         }
-        
+
         return changed;
     }
 
     /**
-     *
      * @param mdId
      * @return
      * @throws Exception
@@ -144,11 +164,11 @@ public class BaseMetadataCategory implements IMetadataCategory {
         return metadataUtils;
 
     }
-    
+
     protected MetadataCategoryRepository getMetadataCategoryRepository() {
         return metadataCategoryRepository;
     }
-    
+
     protected MetadataRepository getMetadataRepository() {
         return metadataRepository;
     }

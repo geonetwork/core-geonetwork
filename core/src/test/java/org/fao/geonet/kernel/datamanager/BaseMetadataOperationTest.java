@@ -22,9 +22,7 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
@@ -42,116 +40,116 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jeeves.server.context.ServiceContext;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link BaseMetadataOperations}.
- * 
+ *
  * @author delawen María Arias de Reyna
- * 
  */
 public class BaseMetadataOperationTest extends AbstractCoreIntegrationTest {
 
-	@Autowired
-	private BaseMetadataOperations metadataOperation;
+    @Autowired
+    private BaseMetadataOperations metadataOperation;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private UserGroupRepository userGroupRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
 
-	@Autowired
-	private GroupRepository groupRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
-	@Autowired
-	private MetadataRepository metadataRepository;
+    @Autowired
+    private MetadataRepository metadataRepository;
 
-	private User user;
-	private Group group;
-	private Group groupOwner;
-	private Metadata md;
+    private User user;
+    private Group group;
+    private Group groupOwner;
+    private Metadata md;
 
-	@Before
-	public void init() {
-		user = new User();
-		user.setUsername("testuser");
-		user.setProfile(Profile.Reviewer);
-		user.setName("test");
-		user.setEnabled(true);
-		user = userRepository.save(user);
+    @Before
+    public void init() {
+        user = new User();
+        user.setUsername("testuser");
+        user.setProfile(Profile.Reviewer);
+        user.setName("test");
+        user.setEnabled(true);
+        user = userRepository.save(user);
 
-		group = new Group();
-		group.setName("test-group");
-		group = groupRepository.save(group);
+        group = new Group();
+        group.setName("test-group");
+        group = groupRepository.save(group);
 
-		groupOwner = new Group();
-		groupOwner.setName("test-group-owner");
-		groupOwner = groupRepository.save(groupOwner);
+        groupOwner = new Group();
+        groupOwner.setName("test-group-owner");
+        groupOwner = groupRepository.save(groupOwner);
 
-		UserGroup userGroup = new UserGroup();
-		userGroup.setGroup(group);
-		userGroup.setUser(user);
-		userGroup.setProfile(Profile.Reviewer);
-		userGroupRepository.save(userGroup);
+        UserGroup userGroup = new UserGroup();
+        userGroup.setGroup(group);
+        userGroup.setUser(user);
+        userGroup.setProfile(Profile.Reviewer);
+        userGroupRepository.save(userGroup);
 
-		md = new Metadata();
-		md.setUuid("test-metadata");
-		md.setData("<xml></xml>");
-		md.getSourceInfo().setGroupOwner(groupOwner.getId());
-		md.getSourceInfo().setOwner(1);
-		md.getSourceInfo().setSourceId("test-faking");
-		md.getDataInfo().setSchemaId("isoFake");
-		metadataRepository.save(md);
-	}
+        md = new Metadata();
+        md.setUuid("test-metadata");
+        md.setData("<xml></xml>");
+        md.getSourceInfo().setGroupOwner(groupOwner.getId());
+        md.getSourceInfo().setOwner(1);
+        md.getSourceInfo().setSourceId("test-faking");
+        md.getDataInfo().setSchemaId("isoFake");
+        metadataRepository.save(md);
+    }
 
-	@Test
-	public void test() throws Exception {
-		ServiceContext context = createServiceContext();
+    @Test
+    public void test() throws Exception {
+        ServiceContext context = createServiceContext();
 
-		assertTrue(metadataOperation.getAllOperations(md.getId()).isEmpty());
-		assertTrue(metadataOperation.existsUser(context, user.getId()));
+        assertTrue(metadataOperation.getAllOperations(md.getId()).isEmpty());
+        assertTrue(metadataOperation.existsUser(context, user.getId()));
 
-		assertTrue(metadataOperation
-				.getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.view.getId())
-				.isPresent());
-		assertTrue(metadataOperation
-				.getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.editing.getId())
-				.isPresent());
+        assertTrue(metadataOperation
+            .getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.view.getId())
+            .isPresent());
+        assertTrue(metadataOperation
+            .getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.editing.getId())
+            .isPresent());
 
-		assertTrue(metadataOperation.setOperation(context, md.getId(), group.getId(),
-				ReservedOperation.view.getId()));
+        assertTrue(metadataOperation.setOperation(context, md.getId(), group.getId(),
+            ReservedOperation.view.getId()));
 
-		assertTrue(metadataOperation.setOperation(context, md.getId(), group.getId(),
-				ReservedOperation.editing.getId()));
-		
-		assertFalse(metadataOperation
-				.getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.view.getId())
-				.isPresent());
-		assertFalse(metadataOperation
-				.getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.editing.getId())
-				.isPresent());
+        assertTrue(metadataOperation.setOperation(context, md.getId(), group.getId(),
+            ReservedOperation.editing.getId()));
 
-		assertTrue(metadataOperation.existsUser(context, user.getId()));
+        assertFalse(metadataOperation
+            .getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.view.getId())
+            .isPresent());
+        assertFalse(metadataOperation
+            .getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.editing.getId())
+            .isPresent());
 
-		metadataOperation.unsetOperation(context, md.getId(), group.getId(), ReservedOperation.view.getId());
-		metadataOperation.unsetOperation(context, md.getId(), group.getId(), ReservedOperation.editing.getId());
+        assertTrue(metadataOperation.existsUser(context, user.getId()));
 
-		assertTrue(metadataOperation
-				.getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.view.getId())
-				.isPresent());
-		assertTrue(metadataOperation
-				.getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.editing.getId())
-				.isPresent());
+        metadataOperation.unsetOperation(context, md.getId(), group.getId(), ReservedOperation.view.getId());
+        metadataOperation.unsetOperation(context, md.getId(), group.getId(), ReservedOperation.editing.getId());
 
-	}
-	
+        assertTrue(metadataOperation
+            .getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.view.getId())
+            .isPresent());
+        assertTrue(metadataOperation
+            .getOperationAllowedToAdd(context, md.getId(), group.getId(), ReservedOperation.editing.getId())
+            .isPresent());
 
-	@After
-	public void cleanup() {
-		metadataRepository.delete(md);
-		groupRepository.delete(group);
-		groupRepository.delete(groupOwner);
-		userRepository.delete(user);
-	}
+    }
+
+
+    @After
+    public void cleanup() {
+        metadataRepository.delete(md);
+        groupRepository.delete(group);
+        groupRepository.delete(groupOwner);
+        userRepository.delete(user);
+    }
 }
