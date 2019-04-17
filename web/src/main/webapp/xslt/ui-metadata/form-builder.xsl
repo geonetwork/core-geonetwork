@@ -1558,6 +1558,9 @@
                   <xsl:attribute name="class" select="@class"/>
                 </xsl:if>
                 <div class="th-inner ">
+                  <xsl:if test="@required">
+                    <xsl:attribute name="class" select="'th-inner gn-required'"/>
+                  </xsl:if>
                   <xsl:value-of select="."/>
                 </div>
               </th>

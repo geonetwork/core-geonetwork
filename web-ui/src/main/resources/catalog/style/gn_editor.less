@@ -504,6 +504,18 @@ form.gn-editor {
   }
 
 
+  .th-inner.gn-required {
+    &:after {
+      content: "*";
+      font-size: 1.8em;
+      margin: -7px 0 0 7px;
+      position: absolute;
+      color: #a94442;
+      font-weight: normal;
+    }
+  }
+
+
   .form-horizontal .form-group {
       margin-left: 0px;
       margin-right: 0px;

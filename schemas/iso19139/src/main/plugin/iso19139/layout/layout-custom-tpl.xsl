@@ -182,9 +182,11 @@
       <xsl:if test="not($isEmbeddedMode) or ($isEmbeddedMode and $isFirstOfItsKind)">
         <header>
           <col>
+            <xsl:copy-of select="@*"/>
             <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'uuidref', $labels, '', $isoType, $xpath)/label"/>
           </col>
           <col>
+            <xsl:copy-of select="@*"/>
             <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'xlink:href', $labels, '', $isoType, $xpath)/label"/>
           </col>
         </header>
