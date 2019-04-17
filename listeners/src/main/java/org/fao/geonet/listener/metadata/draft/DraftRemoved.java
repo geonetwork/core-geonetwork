@@ -42,47 +42,45 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
- * 
  * If an approved metadata gets removed, remove all draft associated to it.
- * 
+ * <p>
  * This doesn't need to be disabled if no draft is used, as it only removes
  * drafts.
- * 
- * @author delawen
  *
+ * @author delawen
  */
 @Component
 public class DraftRemoved {
 
-	@Autowired
-	private IMetadataUtils metadataUtils;
+    @Autowired
+    private IMetadataUtils metadataUtils;
 
-	@Autowired
-	private IMetadataIndexer metadataIndexer;
+    @Autowired
+    private IMetadataIndexer metadataIndexer;
 
-	@TransactionalEventListener(phase=TransactionPhase.AFTER_COMPLETION, fallbackExecution=true)
-	public void doAfterCommit(MetadataDraftRemove event) {
-		Log.trace(Geonet.DATA_MANAGER, "Reindexing non drafted versions of uuid " + event.getMd().getUuid());
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMPLETION, fallbackExecution = true)
+    public void doAfterCommit(MetadataDraftRemove event) {
+        Log.trace(Geonet.DATA_MANAGER, "Reindexing non drafted versions of uuid " + event.getMd().getUuid());
 
-		try {
-			for (AbstractMetadata md : getRecords(event)) {
-				if (!(md instanceof MetadataDraft)) {
-					Log.trace(Geonet.DATA_MANAGER, "Reindexing " + md.getId());
-					try {
-						metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(md.getId())));
-					} catch (Exception e) {
-						Log.error(Geonet.DATA_MANAGER, e, e);
-					}
-				}
-			}
-		} catch (Throwable e) {
-			Log.error(Geonet.DATA_MANAGER, "Couldn't reindex the non drafted versions of " + event.getMd(), e);
-		}
-	}
+        try {
+            for (AbstractMetadata md : getRecords(event)) {
+                if (!(md instanceof MetadataDraft)) {
+                    Log.trace(Geonet.DATA_MANAGER, "Reindexing " + md.getId());
+                    try {
+                        metadataIndexer.indexMetadata(Arrays.asList(String.valueOf(md.getId())));
+                    } catch (Exception e) {
+                        Log.error(Geonet.DATA_MANAGER, e, e);
+                    }
+                }
+            }
+        } catch (Throwable e) {
+            Log.error(Geonet.DATA_MANAGER, "Couldn't reindex the non drafted versions of " + event.getMd(), e);
+        }
+    }
 
-	@Transactional(value=TxType.REQUIRES_NEW)
-	private List<? extends AbstractMetadata> getRecords(MetadataDraftRemove event) {
-		return metadataUtils.findAllByUuid(event.getMd().getUuid());
-	}
+    @Transactional(value = TxType.REQUIRES_NEW)
+    private List<? extends AbstractMetadata> getRecords(MetadataDraftRemove event) {
+        return metadataUtils.findAllByUuid(event.getMd().getUuid());
+    }
 
 }
