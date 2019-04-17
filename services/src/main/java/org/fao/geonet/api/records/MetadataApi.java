@@ -170,11 +170,11 @@ public class MetadataApi {
             || accept.contains("application/pdf")) {
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
-                || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
             return "forward:" + (metadataUuid + "/formatters/xml");
         } else if (accept.contains("application/zip")
-                || accept.contains(MEF_V1_ACCEPT_TYPE)
-                || accept.contains(MEF_V2_ACCEPT_TYPE)) {
+            || accept.contains(MEF_V1_ACCEPT_TYPE)
+            || accept.contains(MEF_V2_ACCEPT_TYPE)) {
             return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
             // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
@@ -228,7 +228,7 @@ public class MetadataApi {
         @RequestParam(required = false, defaultValue = "false")
             boolean attachment,
         @ApiParam(value = "Download the approved version",
-            required = false, defaultValue="true")
+            required = false, defaultValue = "true")
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
         @RequestHeader(
@@ -249,8 +249,7 @@ public class MetadataApi {
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
@@ -273,18 +272,18 @@ public class MetadataApi {
 
 
         boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
-        
+
         String mdId = String.valueOf(metadata.getId());
-        
+
         //Here we just care if we need the approved version explicitly.
         //ApiUtils.canViewRecord already filtered draft for non editors.
-        if(approved) {
-        	mdId = String.valueOf(mdRepository.findOneByUuid(metadata.getUuid()).getId());
+        if (approved) {
+            mdId = String.valueOf(mdRepository.findOneByUuid(metadata.getUuid()).getId());
         }
-        
-        Element xml  = withInfo ?
-            dataManager.getMetadata(context, mdId, forEditing, 
-            		withValidationErrors, keepXlinkAttributes) :
+
+        Element xml = withInfo ?
+            dataManager.getMetadata(context, mdId, forEditing,
+                withValidationErrors, keepXlinkAttributes) :
             dataManager.getMetadataNoInfo(context, mdId + "");
 
         if (addSchemaLocation) {
@@ -306,7 +305,7 @@ public class MetadataApi {
 
         boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
 
-        String mode = (attachment)?"attachment":"inline";
+        String mode = (attachment) ? "attachment" : "inline";
         response.setHeader("Content-Disposition", String.format(
             mode + "; filename=\"%s.%s\"",
             metadata.getUuid(),
@@ -377,7 +376,7 @@ public class MetadataApi {
             defaultValue = "true")
             boolean addSchemaLocation,
         @ApiParam(value = "Download the approved version",
-        	required = false)
+            required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean approved,
         @RequestHeader(
@@ -408,15 +407,15 @@ public class MetadataApi {
         if (version == MEFLib.Version.V1) {
             // This parameter is deprecated in v2.
             boolean skipUUID = false;
-            
+
             Integer id = -1;
-            
-            if(approved) {
-            	id = mdRepo.findOneByUuid(metadataUuid).getId();
+
+            if (approved) {
+                id = mdRepo.findOneByUuid(metadataUuid).getId();
             } else {
-            	id = mdUtils.findOneByUuid(metadataUuid).getId();
+                id = mdUtils.findOneByUuid(metadataUuid).getId();
             }
-            
+
             file = MEFLib.doExport(
                 context, id, format.toString(),
                 skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
@@ -513,7 +512,7 @@ public class MetadataApi {
         HttpServletRequest request) throws Exception {
 
         AbstractMetadata md;
-        try{
+        try {
             md = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
@@ -558,7 +557,7 @@ public class MetadataApi {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public FeatureResponse getFeatureCatalog (
+    public FeatureResponse getFeatureCatalog(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -605,9 +604,9 @@ public class MetadataApi {
     private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
         return fcat != null
             && fcat.getItem() != null
-            && fcat.getItem().size()>0
-            && fcat.getItem().get(0).getFeatureType()!=null
-            && fcat.getItem().get(0).getFeatureType().getAttributeTable()!=null
-            && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement()!=null;
+            && fcat.getItem().size() > 0
+            && fcat.getItem().get(0).getFeatureType() != null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable() != null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement() != null;
     }
 }
