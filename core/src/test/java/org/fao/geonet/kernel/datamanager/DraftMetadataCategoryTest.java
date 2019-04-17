@@ -22,9 +22,7 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -38,73 +36,74 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import jeeves.server.context.ServiceContext;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link DraftMetadataCategory}.
- * 
+ *
  * @author delawen María Arias de Reyna
- * 
  */
-@ContextConfiguration(inheritLocations = true, locations = { "classpath:draft-test-context.xml" })
+@ContextConfiguration(inheritLocations = true, locations = {"classpath:draft-test-context.xml"})
 public class DraftMetadataCategoryTest extends AbstractCoreIntegrationTest {
 
-	@Autowired
-	private BaseMetadataCategory metadataCategory;
+    @Autowired
+    private BaseMetadataCategory metadataCategory;
 
-	@Autowired
-	private MetadataCategoryRepository metadataCategoryRepository;
+    @Autowired
+    private MetadataCategoryRepository metadataCategoryRepository;
 
-	@Autowired
-	private MetadataDraftRepository metadataRepository;
+    @Autowired
+    private MetadataDraftRepository metadataRepository;
 
-	private MetadataDraft md;
-	private MetadataCategory mdc;
+    private MetadataDraft md;
+    private MetadataCategory mdc;
 
-	@Before
-	public void init() {
-		md = new MetadataDraft();
-		populate(md);
-		metadataRepository.save(md);
-	}
+    @Before
+    public void init() {
+        md = new MetadataDraft();
+        populate(md);
+        metadataRepository.save(md);
+    }
 
-	/**
-	 *  On draft metadata, categories don't work.
-	 * @throws Exception
-	 */
-	@Test
-	public void test() throws Exception {
+    /**
+     * On draft metadata, categories don't work.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void test() throws Exception {
 
-		assertTrue(metadataRepository.exists(md.getId()));
+        assertTrue(metadataRepository.exists(md.getId()));
 
-		assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
+        assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
 
-		assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
+        assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
 
-		ServiceContext context = createServiceContext();
+        ServiceContext context = createServiceContext();
 
-		assertFalse(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
+        assertFalse(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
 
-		assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
-		assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
+        assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
+        assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
 
-		metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId());
-	}
+        metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId());
+    }
 
-	@After
-	public void cleanup() {
-		metadataRepository.delete(md);
-	}
+    @After
+    public void cleanup() {
+        metadataRepository.delete(md);
+    }
 
-	private void populate(AbstractMetadata md) {
-		md.setUuid("test-metadata");
-		md.setData("<xml></xml>");
-		md.getSourceInfo().setGroupOwner(1);
-		md.getSourceInfo().setOwner(1);
-		md.getSourceInfo().setSourceId("test-faking");
-		md.getDataInfo().setSchemaId("isoFake");
+    private void populate(AbstractMetadata md) {
+        md.setUuid("test-metadata");
+        md.setData("<xml></xml>");
+        md.getSourceInfo().setGroupOwner(1);
+        md.getSourceInfo().setOwner(1);
+        md.getSourceInfo().setSourceId("test-faking");
+        md.getDataInfo().setSchemaId("isoFake");
 
-		mdc = metadataCategoryRepository.findAll().get(0);
-	}
+        mdc = metadataCategoryRepository.findAll().get(0);
+    }
 
 }
