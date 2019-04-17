@@ -22,9 +22,6 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -39,71 +36,73 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * Tests for {@link BaseMetadataValidator}.
- * 
+ *
  * @author delawen María Arias de Reyna
- * 
  */
 public class BaseMetadataValidatorTest extends AbstractCoreIntegrationTest {
 
-	@Autowired
-	private IMetadataManager metadataManager;
+    @Autowired
+    private IMetadataManager metadataManager;
 
-	@Autowired
-	private IMetadataValidator metadataValidator;
-	@Autowired
-	private GroupRepository groupRepository;
+    @Autowired
+    private IMetadataValidator metadataValidator;
+    @Autowired
+    private GroupRepository groupRepository;
 
-	private Group group;
-	private AbstractMetadata md;
+    private Group group;
+    private AbstractMetadata md;
 
-	@Before
-	public void init() {
+    @Before
+    public void init() {
 
-		for (Group g : groupRepository.findAll()) {
-			if (!g.isReserved()) {
-				group = g;
-				break;
-			}
-		}
+        for (Group g : groupRepository.findAll()) {
+            if (!g.isReserved()) {
+                group = g;
+                break;
+            }
+        }
 
-		try {
-			md = metadataManager.save(createMetadata());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            md = metadataManager.save(createMetadata());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Should behave like the same function on {@link BaseMetadataManagerTest}
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testCreate() throws Exception {
-		metadataValidator.doValidate(md, "eng");
-	}
+    /**
+     * Should behave like the same function on {@link BaseMetadataManagerTest}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testCreate() throws Exception {
+        metadataValidator.doValidate(md, "eng");
+    }
 
-	private AbstractMetadata createMetadata() throws IOException {
-		AbstractMetadata md = new Metadata();
-		md.setUuid("test-metadata");
-		try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
-			md.setData(IOUtils.toString(is));
-		}
-		md.getSourceInfo().setGroupOwner(group.getId());
-		md.getSourceInfo().setOwner(1);
-		md.getSourceInfo().setSourceId("test-faking");
-		md.getDataInfo().setSchemaId("iso19139");
-		md.getDataInfo().setType(MetadataType.TEMPLATE);
-		return md;
-	}
+    private AbstractMetadata createMetadata() throws IOException {
+        AbstractMetadata md = new Metadata();
+        md.setUuid("test-metadata");
+        try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
+            md.setData(IOUtils.toString(is));
+        }
+        md.getSourceInfo().setGroupOwner(group.getId());
+        md.getSourceInfo().setOwner(1);
+        md.getSourceInfo().setSourceId("test-faking");
+        md.getDataInfo().setSchemaId("iso19139");
+        md.getDataInfo().setType(MetadataType.TEMPLATE);
+        return md;
+    }
 
-	@After
-	public void cleanup() {
+    @After
+    public void cleanup() {
 
-		metadataManager.delete(md.getId());
+        metadataManager.delete(md.getId());
 
-	}
+    }
 
 }

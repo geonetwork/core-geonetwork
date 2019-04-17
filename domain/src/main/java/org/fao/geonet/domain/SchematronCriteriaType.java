@@ -70,7 +70,7 @@ public enum SchematronCriteriaType {
             final Specification<Metadata> correctId = (Specification<Metadata>)MetadataSpecs.hasMetadataId(metadataId);
             final Specifications<Metadata> finalSpec = Specifications.where(correctId).and(correctOwner);
             return applicationContext.getBean(MetadataRepository.class).count(finalSpec)
-            		+ applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
+                    + applicationContext.getBean(MetadataDraftRepository.class).count(finalSpecDraft) > 0;
         }
     }),
 

@@ -22,19 +22,7 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -61,156 +49,162 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import jeeves.server.context.ServiceContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link DraftMetadataUtils}.
- * 
+ *
  * @author delawen María Arias de Reyna
- * 
  */
-@ContextConfiguration(inheritLocations = true, locations = { "classpath:draft-test-context.xml" })
+@ContextConfiguration(inheritLocations = true, locations = {"classpath:draft-test-context.xml"})
 public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
 
-	private static final String UUID = "test-metadata" + Math.random();
+    private static final String UUID = "test-metadata" + Math.random();
 
-	@Autowired
-	private IMetadataManager metadataManager;
+    @Autowired
+    private IMetadataManager metadataManager;
 
-	@Autowired
-	private IMetadataUtils metadataUtils;
+    @Autowired
+    private IMetadataUtils metadataUtils;
 
-	@Autowired
-	private IMetadataStatus metadataStatus;
+    @Autowired
+    private IMetadataStatus metadataStatus;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private GroupRepository groupRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
-	@Autowired
-	private UserGroupRepository userGroupRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
 
-	private User user;
-	private Group group;
-	private AbstractMetadata md;
+    private User user;
+    private Group group;
+    private AbstractMetadata md;
 
-	@Before
-	public void init() throws IOException {
-		user = new User();
-		user.setUsername(UUID);
-		user.setProfile(Profile.Reviewer);
-		user.setName(UUID);
-		user.setEnabled(true);
-		user = userRepository.save(user);
+    @Before
+    public void init() throws IOException {
+        user = new User();
+        user.setUsername(UUID);
+        user.setProfile(Profile.Reviewer);
+        user.setName(UUID);
+        user.setEnabled(true);
+        user = userRepository.save(user);
 
-		group = new Group();
-		group.setName(UUID);
-		group = groupRepository.save(group);
+        group = new Group();
+        group.setName(UUID);
+        group = groupRepository.save(group);
 
-		UserGroup userGroup = new UserGroup();
-		userGroup.setGroup(group);
-		userGroup.setUser(user);
-		userGroup.setProfile(Profile.Reviewer);
-		userGroupRepository.save(userGroup);
+        UserGroup userGroup = new UserGroup();
+        userGroup.setGroup(group);
+        userGroup.setUser(user);
+        userGroup.setProfile(Profile.Reviewer);
+        userGroupRepository.save(userGroup);
 
-		md = metadataManager.save(createMetadata());
-	}
+        md = metadataManager.save(createMetadata());
+    }
 
-	@Test
-	public void usingDraftUtilities() {
-		assertTrue(metadataManager instanceof DraftMetadataManager);
-		assertTrue(metadataUtils instanceof DraftMetadataUtils);
-	}
+    @Test
+    public void usingDraftUtilities() {
+        assertTrue(metadataManager instanceof DraftMetadataManager);
+        assertTrue(metadataUtils instanceof DraftMetadataUtils);
+    }
 
-	@Test
-	public void testEditing() throws Exception {
+    @Test
+    public void testEditing() throws Exception {
 
-		ServiceContext context = createServiceContext();
-		loginAs(user);
+        ServiceContext context = createServiceContext();
+        loginAs(user);
 
-		assertTrue(metadataUtils.findOne(md.getId()) instanceof Metadata);
+        assertTrue(metadataUtils.findOne(md.getId()) instanceof Metadata);
 
-		HashSet<Integer> set = new HashSet<Integer>();
-		set.add(md.getId());
-		Iterable<? extends AbstractMetadata> mds = metadataUtils.findAll(set);
-		Iterator<? extends AbstractMetadata> it = mds.iterator();
-		
-		assertTrue(it.hasNext());
-		it.next();
-		assertFalse(it.hasNext());
+        HashSet<Integer> set = new HashSet<Integer>();
+        set.add(md.getId());
+        Iterable<? extends AbstractMetadata> mds = metadataUtils.findAll(set);
+        Iterator<? extends AbstractMetadata> it = mds.iterator();
 
-		Integer id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
+        assertTrue(it.hasNext());
+        it.next();
+        assertFalse(it.hasNext());
 
-		assertNotNull(id);
+        Integer id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
 
-		metadataStatus.setStatus(context, id, Integer.valueOf(StatusValue.Status.APPROVED), new ISODate(),
-				"Approve record");
-		id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
+        assertNotNull(id);
 
-		assertTrue(id != md.getId());
-		assertTrue(metadataUtils.findOne(id) instanceof MetadataDraft);
+        metadataStatus.setStatus(context, id, Integer.valueOf(StatusValue.Status.APPROVED), new ISODate(),
+            "Approve record");
+        id = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
 
-		metadataUtils.cancelEditingSession(context, id.toString());
+        assertTrue(id != md.getId());
+        assertTrue(metadataUtils.findOne(id) instanceof MetadataDraft);
 
-		Integer id2 = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
+        metadataUtils.cancelEditingSession(context, id.toString());
 
-		assertNotNull(id2);
-		assertEquals(id, id2);
+        Integer id2 = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
 
-		metadataUtils.endEditingSession(id.toString(), context.getUserSession());
+        assertNotNull(id2);
+        assertEquals(id, id2);
 
-		id2 = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
+        metadataUtils.endEditingSession(id.toString(), context.getUserSession());
 
-		assertNotNull(id2);
-		assertEquals(id, id2);
+        id2 = metadataUtils.startEditingSession(context, String.valueOf(md.getId()));
 
-		metadataUtils.endEditingSession(id.toString(), context.getUserSession());
+        assertNotNull(id2);
+        assertEquals(id, id2);
 
-		assertTrue(metadataUtils.findOneByUuid(UUID) instanceof MetadataDraft);
+        metadataUtils.endEditingSession(id.toString(), context.getUserSession());
 
-	}
+        assertTrue(metadataUtils.findOneByUuid(UUID) instanceof MetadataDraft);
 
-	private Metadata createMetadata() throws IOException {
-		Metadata md = new Metadata();
-		md.setUuid(UUID);
-		try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
-			md.setData(IOUtils.toString(is));
-		}
-		md.getSourceInfo().setGroupOwner(group.getId());
-		md.getSourceInfo().setOwner(user.getId());
-		md.getSourceInfo().setSourceId("test-faking");
-		md.getDataInfo().setSchemaId("iso19139");
-		md.getDataInfo().setType(MetadataType.TEMPLATE);
-		return md;
-	}
+    }
 
-	@Test
-	public void auxiliaryFunctions() throws Exception {
-		assertNull(metadataUtils.getMetadataId("-1"));
-		assertTrue(Integer.valueOf(metadataUtils.getMetadataId(md.getUuid())) == md.getId());
+    private Metadata createMetadata() throws IOException {
+        Metadata md = new Metadata();
+        md.setUuid(UUID);
+        try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
+            md.setData(IOUtils.toString(is));
+        }
+        md.getSourceInfo().setGroupOwner(group.getId());
+        md.getSourceInfo().setOwner(user.getId());
+        md.getSourceInfo().setSourceId("test-faking");
+        md.getDataInfo().setSchemaId("iso19139");
+        md.getDataInfo().setType(MetadataType.TEMPLATE);
+        return md;
+    }
 
-		Map<Integer, MetadataSourceInfo> res = metadataUtils.findAllSourceInfo(MetadataSpecs.hasMetadataId(md.getId()));
-		assertNotNull(res);
-		assertFalse(res.isEmpty());
-	}
+    @Test
+    public void auxiliaryFunctions() throws Exception {
+        assertNull(metadataUtils.getMetadataId("-1"));
+        assertTrue(Integer.valueOf(metadataUtils.getMetadataId(md.getUuid())) == md.getId());
 
-	@Test
-	public void getMetadataIdNotExist() throws Exception {
-		assertNull(metadataUtils.getMetadataId("-1"));
-	}
+        Map<Integer, MetadataSourceInfo> res = metadataUtils.findAllSourceInfo(MetadataSpecs.hasMetadataId(md.getId()));
+        assertNotNull(res);
+        assertFalse(res.isEmpty());
+    }
 
-	@After
-	public void cleanup() {
+    @Test
+    public void getMetadataIdNotExist() throws Exception {
+        assertNull(metadataUtils.getMetadataId("-1"));
+    }
 
-		List<? extends AbstractMetadata> metadata = metadataUtils.findAllByUuid(UUID);
-		for (AbstractMetadata md : metadata) {
-			metadataManager.delete(md.getId());
-		}
+    @After
+    public void cleanup() {
 
-		userRepository.delete(user.getId());
-		groupRepository.delete(group.getId());
-	}
+        List<? extends AbstractMetadata> metadata = metadataUtils.findAllByUuid(UUID);
+        for (AbstractMetadata md : metadata) {
+            metadataManager.delete(md.getId());
+        }
+
+        userRepository.delete(user.getId());
+        groupRepository.delete(group.getId());
+    }
 
 }

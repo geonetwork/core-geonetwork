@@ -124,16 +124,17 @@ public class ApiUtils {
         }
         return id;
     }
+
     public static AbstractMetadata getRecord(String uuidOrInternalId)
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;
-               
-    	metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+
+        metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
 
         if (metadata == null) {
-    		Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
+            Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
             try {
                 metadata = metadataRepository.findOne(uuidOrInternalId);
             } catch (InvalidDataAccessApiUsageException e) {
@@ -142,21 +143,21 @@ public class ApiUtils {
                     uuidOrInternalId));
             }
             if (metadata == null) {
-            	Log.trace(Geonet.DATA_MANAGER, "Record identified by " + uuidOrInternalId + " not found.");
+                Log.trace(Geonet.DATA_MANAGER, "Record identified by " + uuidOrInternalId + " not found.");
                 throw new ResourceNotFoundException(String.format(
                     "Record with UUID '%s' not found in this catalog",
                     uuidOrInternalId));
             }
-        } 
-            
-		Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
-        
-		return metadata;
+        }
+
+        Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+
+        return metadata;
     }
 
     /**
      * Return the Jeeves user session.
-     *
+     * <p>
      * If session is null, it's probably a bot due to {@link AllRequestsInterceptor#createSessionForAllButNotCrawlers(HttpServletRequest)}.
      * In such case return an exception.
      */
@@ -232,7 +233,7 @@ public class ApiUtils {
     }
 
     /**
-     * Check if the current user can reivew this record.
+     * Check if the current user can review this record.
      */
     static public AbstractMetadata canReviewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
@@ -244,9 +245,9 @@ public class ApiUtils {
         }
         return metadata;
     }
-    
+
     /**
-     * Check if the current user can reivew this record.
+     * Check if the current user can change status of this record.
      */
     static public AbstractMetadata canChangeStatusRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
@@ -274,7 +275,6 @@ public class ApiUtils {
     }
 
     /**
-     *
      * @param img
      * @param outFile
      * @throws IOException

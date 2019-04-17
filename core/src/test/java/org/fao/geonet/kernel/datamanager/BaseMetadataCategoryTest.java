@@ -22,10 +22,7 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
@@ -38,88 +35,87 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jeeves.server.context.ServiceContext;
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link BaseMetadataCategory}.
- * 
+ *
  * @author delawen María Arias de Reyna
- * 
  */
 public class BaseMetadataCategoryTest extends AbstractCoreIntegrationTest {
 
-	@Autowired
-	private IMetadataCategory metadataCategory;
-	
-	@Autowired
-	private MetadataCategoryRepository metadataCategoryRepository;
+    @Autowired
+    private IMetadataCategory metadataCategory;
 
-	@Autowired
-	private MetadataRepository metadataRepository;
-	
-	private Metadata md;
-	private MetadataCategory mdc;
-	
-	@Before
-	public void init() {
-		md = new Metadata();
-		populate(md);
-		metadataRepository.save(md);		
-	}
+    @Autowired
+    private MetadataCategoryRepository metadataCategoryRepository;
 
-	@Test
-	public void test() throws Exception {
+    @Autowired
+    private MetadataRepository metadataRepository;
 
-		assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
+    private Metadata md;
+    private MetadataCategory mdc;
 
-		assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
-		
-		ServiceContext context = createServiceContext();
+    @Before
+    public void init() {
+        md = new Metadata();
+        populate(md);
+        metadataRepository.save(md);
+    }
 
-		assertTrue(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
-		
-		assertTrue(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
-		assertFalse(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
-		assertEquals(md.getCategories().size(), 1);
+    @Test
+    public void test() throws Exception {
 
-		metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId());
-		
-		assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
-	}
-	
-	@Test
-	public void testCornerCases() throws Exception {
-		
-		ServiceContext context = createServiceContext();
-		assertTrue(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
-		assertFalse(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
+        assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
 
-		assertTrue(metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId()));
-		assertFalse(metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId()));
+        assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
 
-		assertFalse(metadataCategory.setCategory(context, String.valueOf(Integer.MAX_VALUE), String.valueOf(mdc.getId())));
-		assertFalse(metadataCategory.unsetCategory(context, String.valueOf(Integer.MAX_VALUE), mdc.getId()));
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void whenNoMetadata() throws Exception {
-		metadataCategory.getCategories("-20");
-	}
-	
-	@After
-	public void cleanup() {
-		metadataRepository.delete(md);
-	}
+        ServiceContext context = createServiceContext();
 
-	private void populate(AbstractMetadata md) {
-		md.setUuid("test-metadata");
-		md.setData("<xml></xml>");
-		md.getSourceInfo().setGroupOwner(1);
-		md.getSourceInfo().setOwner(1);
-		md.getSourceInfo().setSourceId("test-faking");
-		md.getDataInfo().setSchemaId("isoFake");
-		
-		mdc = metadataCategoryRepository.findAll().get(0);
-	}
+        assertTrue(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
+
+        assertTrue(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
+        assertFalse(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
+        assertEquals(md.getCategories().size(), 1);
+
+        metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId());
+
+        assertFalse(metadataCategory.isCategorySet(String.valueOf(md.getId()), mdc.getId()));
+    }
+
+    @Test
+    public void testCornerCases() throws Exception {
+
+        ServiceContext context = createServiceContext();
+        assertTrue(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
+        assertFalse(metadataCategory.setCategory(context, String.valueOf(md.getId()), String.valueOf(mdc.getId())));
+
+        assertTrue(metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId()));
+        assertFalse(metadataCategory.unsetCategory(context, String.valueOf(md.getId()), mdc.getId()));
+
+        assertFalse(metadataCategory.setCategory(context, String.valueOf(Integer.MAX_VALUE), String.valueOf(mdc.getId())));
+        assertFalse(metadataCategory.unsetCategory(context, String.valueOf(Integer.MAX_VALUE), mdc.getId()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void whenNoMetadata() throws Exception {
+        metadataCategory.getCategories("-20");
+    }
+
+    @After
+    public void cleanup() {
+        metadataRepository.delete(md);
+    }
+
+    private void populate(AbstractMetadata md) {
+        md.setUuid("test-metadata");
+        md.setData("<xml></xml>");
+        md.getSourceInfo().setGroupOwner(1);
+        md.getSourceInfo().setOwner(1);
+        md.getSourceInfo().setSourceId("test-faking");
+        md.getDataInfo().setSchemaId("isoFake");
+
+        mdc = metadataCategoryRepository.findAll().get(0);
+    }
 
 }

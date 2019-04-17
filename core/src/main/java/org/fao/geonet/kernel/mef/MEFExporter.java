@@ -23,16 +23,7 @@
 
 package org.fao.geonet.kernel.mef;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
@@ -47,110 +38,114 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
-import jeeves.server.context.ServiceContext;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
 /**
  * Export MEF file
  */
 class MEFExporter {
-	/**
-	 * Create a metadata folder according to MEF {@link Version} 1 specification and
-	 * return file path.
-	 * <p>
-	 * Template or subtemplate could not be exported in MEF format. Use XML export
-	 * instead.
-	 *
-	 * @param uuid
-	 *            UUID of the metadata record to export.
-	 * @param format
-	 *            {@link org.fao.geonet.kernel.mef.MEFLib.Format}
-	 * @return the path of the generated MEF file.
-	 */
-	public static Path doExport(ServiceContext context, String uuid, Format format, boolean skipUUID,
-			boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation,
-			boolean approved) throws Exception {
+    /**
+     * Create a metadata folder according to MEF {@link Version} 1 specification and
+     * return file path.
+     * <p>
+     * Template or subtemplate could not be exported in MEF format. Use XML export
+     * instead.
+     *
+     * @param uuid   UUID of the metadata record to export.
+     * @param format {@link org.fao.geonet.kernel.mef.MEFLib.Format}
+     * @return the path of the generated MEF file.
+     */
+    public static Path doExport(ServiceContext context, String uuid, Format format, boolean skipUUID,
+                                boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation,
+                                boolean approved) throws Exception {
 
         //Search by ID, not by UUID
-        Integer id = 
-        		context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId();
+        Integer id =
+            context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId();
 
         //Here we just care if we need the approved version explicitly.
         //IMetadataUtils already filtered draft for non editors.
-        if(approved) {
-        	id = Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(uuid));
+        if (approved) {
+            id = Integer.valueOf(context.getBean(IMetadataUtils.class).getMetadataId(uuid));
         }
-        
-		return doExport(context, id, format, skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
-	}
 
-	/**
-	 * Create a metadata folder according to MEF {@link Version} 1 specification and
-	 * return file path.
-	 * <p>
-	 * Template or subtemplate could not be exported in MEF format. Use XML export
-	 * instead.
-	 *
-	 * @param id
-	 *            unique ID of the metadata record to export.
-	 * @param format
-	 *            {@link org.fao.geonet.kernel.mef.MEFLib.Format}
-	 * @return the path of the generated MEF file.
-	 */
-	public static Path doExport(ServiceContext context, Integer id, Format format, boolean skipUUID,
-			boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
-		Pair<AbstractMetadata, String> recordAndMetadata = MEFLib.retrieveMetadata(context, id, resolveXlink,
-				removeXlinkAttribute, addSchemaLocation);
-		return export(context, id, format, skipUUID, recordAndMetadata);
-	}
+        return doExport(context, id, format, skipUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+    }
 
-	private static Path export(ServiceContext context, Integer id, Format format, boolean skipUUID,
-			Pair<AbstractMetadata, String> recordAndMetadata)
-			throws Exception, IOException, UnsupportedEncodingException, URISyntaxException {
-		AbstractMetadata record = recordAndMetadata.one();
-		String xmlDocumentAsString = recordAndMetadata.two();
+    /**
+     * Create a metadata folder according to MEF {@link Version} 1 specification and
+     * return file path.
+     * <p>
+     * Template or subtemplate could not be exported in MEF format. Use XML export
+     * instead.
+     *
+     * @param id     unique ID of the metadata record to export.
+     * @param format {@link org.fao.geonet.kernel.mef.MEFLib.Format}
+     * @return the path of the generated MEF file.
+     */
+    public static Path doExport(ServiceContext context, Integer id, Format format, boolean skipUUID,
+                                boolean resolveXlink, boolean removeXlinkAttribute, boolean addSchemaLocation) throws Exception {
+        Pair<AbstractMetadata, String> recordAndMetadata = MEFLib.retrieveMetadata(context, id, resolveXlink,
+            removeXlinkAttribute, addSchemaLocation);
+        return export(context, id, format, skipUUID, recordAndMetadata);
+    }
 
-		if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
-				|| record.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-			throw new Exception("Cannot export sub template");
-		}
+    private static Path export(ServiceContext context, Integer id, Format format, boolean skipUUID,
+                               Pair<AbstractMetadata, String> recordAndMetadata)
+        throws Exception, IOException, UnsupportedEncodingException, URISyntaxException {
+        AbstractMetadata record = recordAndMetadata.one();
+        String xmlDocumentAsString = recordAndMetadata.two();
 
-		Path file = Files.createTempFile("mef-", ".mef");
-		Path pubDir = Lib.resource.getDir(context, "public", record.getId());
-		Path priDir = Lib.resource.getDir(context, "private", record.getId());
+        if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
+            || record.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            throw new Exception("Cannot export sub template");
+        }
 
-		try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
-			// --- save metadata
-			byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
-			Files.write(zipFs.getPath(FILE_METADATA), binData);
+        Path file = Files.createTempFile("mef-", ".mef");
+        Path pubDir = Lib.resource.getDir(context, "public", record.getId());
+        Path priDir = Lib.resource.getDir(context, "private", record.getId());
 
-			// --- save info file
-			binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir, skipUUID)
-					.getBytes(Constants.ENCODING);
-			Files.write(zipFs.getPath(FILE_INFO), binData);
+        try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
+            // --- save metadata
+            byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
+            Files.write(zipFs.getPath(FILE_METADATA), binData);
 
-			if (format == Format.PARTIAL || format == Format.FULL) {
-				if (Files.exists(pubDir) && !IO.isEmptyDir(pubDir)) {
-					IO.copyDirectoryOrFile(pubDir, zipFs.getPath(pubDir.getFileName().toString()), false);
-				}
-			}
+            // --- save info file
+            binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir, skipUUID)
+                .getBytes(Constants.ENCODING);
+            Files.write(zipFs.getPath(FILE_INFO), binData);
 
-			if (format == Format.FULL) {
-				try {
-					Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-					if (Files.exists(priDir) && !IO.isEmptyDir(priDir)) {
-						IO.copyDirectoryOrFile(priDir, zipFs.getPath(priDir.getFileName().toString()), false);
-					}
+            if (format == Format.PARTIAL || format == Format.FULL) {
+                if (Files.exists(pubDir) && !IO.isEmptyDir(pubDir)) {
+                    IO.copyDirectoryOrFile(pubDir, zipFs.getPath(pubDir.getFileName().toString()), false);
+                }
+            }
 
-				} catch (Exception e) {
-					// Current user could not download private data
-					Log.warning(Geonet.MEF,
-							"Error encounteres while trying to import private resources of MEF file. MEF ID: " + id, e);
+            if (format == Format.FULL) {
+                try {
+                    Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
+                    if (Files.exists(priDir) && !IO.isEmptyDir(priDir)) {
+                        IO.copyDirectoryOrFile(priDir, zipFs.getPath(priDir.getFileName().toString()), false);
+                    }
 
-				}
-			}
-		}
-		return file;
-	}
+                } catch (Exception e) {
+                    // Current user could not download private data
+                    Log.warning(Geonet.MEF,
+                        "Error encounteres while trying to import private resources of MEF file. MEF ID: " + id, e);
+
+                }
+            }
+        }
+        return file;
+    }
 }
 
 // =============================================================================

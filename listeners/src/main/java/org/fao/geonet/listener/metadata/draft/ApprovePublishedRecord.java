@@ -44,69 +44,67 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import jeeves.server.context.ServiceContext;
 
 /**
- * 
  * When a record with workflow enabled gets published, status will automatically
  * change to approved
- * 
- * @author delawen
  *
+ * @author delawen
  */
 @Component
 public class ApprovePublishedRecord implements ApplicationListener<MetadataPublished> {
 
-	@Autowired
-	private IMetadataStatus metadataStatus;
+    @Autowired
+    private IMetadataStatus metadataStatus;
 
-	@Autowired
-	private DraftUtilities draftUtilities;
+    @Autowired
+    private DraftUtilities draftUtilities;
 
-	@Autowired
-	private StatusValueRepository statusValueRepository;
+    @Autowired
+    private StatusValueRepository statusValueRepository;
 
-	@Override
-	@Transactional
-	public void onApplicationEvent(MetadataPublished event) {
-	}
+    @Override
+    @Transactional
+    public void onApplicationEvent(MetadataPublished event) {
+    }
 
-	@TransactionalEventListener(fallbackExecution = true)
-	@Transactional(propagation=Propagation.REQUIRES_NEW, readOnly=false)
-	@Modifying(clearAutomatically=true)
-	public void doAfterCommit(MetadataPublished event) {
+    @TransactionalEventListener(fallbackExecution = true)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false)
+    @Modifying(clearAutomatically = true)
+    public void doAfterCommit(MetadataPublished event) {
 
-		Log.debug(Geonet.DATA_MANAGER, "Metadata with id " + event.getMd().getId() + " published.");
+        Log.debug(Geonet.DATA_MANAGER, "Metadata with id " + event.getMd().getId() + " published.");
 
-		try {
-			// Only do something if the workflow is enabled
-			MetadataStatus previousStatus = metadataStatus.getStatus(event.getMd().getId());
-			if (previousStatus != null) {
-				draftUtilities.replaceMetadataWithDraft(event.getMd());
-				if (!Integer.valueOf(StatusValue.Status.APPROVED).equals(previousStatus.getId().getStatusId())) {
-					changeToApproved(event.getMd(), previousStatus);
-				}
-			}
-		} catch (Exception e) {
-			Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow of " + event.getMd(), e);
-		}
-	}
+        try {
+            // Only do something if the workflow is enabled
+            MetadataStatus previousStatus = metadataStatus.getStatus(event.getMd().getId());
+            if (previousStatus != null) {
+                draftUtilities.replaceMetadataWithDraft(event.getMd());
+                if (!Integer.valueOf(StatusValue.Status.APPROVED).equals(previousStatus.getId().getStatusId())) {
+                    changeToApproved(event.getMd(), previousStatus);
+                }
+            }
+        } catch (Exception e) {
+            Log.error(Geonet.DATA_MANAGER, "Error upgrading workflow of " + event.getMd(), e);
+        }
+    }
 
-	private void changeToApproved(AbstractMetadata md, MetadataStatus previousStatus)
-			throws NumberFormatException, Exception {
-		// This status should be associated to original record, not draft
-		MetadataStatus status = new MetadataStatus();
-		status.setChangeMessage("Record published.");
-		status.setPreviousState(previousStatus.getCurrentState());
-		status.setStatusValue(statusValueRepository.findOne(Integer.valueOf(StatusValue.Status.APPROVED)));
+    private void changeToApproved(AbstractMetadata md, MetadataStatus previousStatus)
+        throws NumberFormatException, Exception {
+        // This status should be associated to original record, not draft
+        MetadataStatus status = new MetadataStatus();
+        status.setChangeMessage("Record published.");
+        status.setPreviousState(previousStatus.getCurrentState());
+        status.setStatusValue(statusValueRepository.findOne(Integer.valueOf(StatusValue.Status.APPROVED)));
 
-		MetadataStatusId mdStatusId = new MetadataStatusId();
-		mdStatusId.setStatusId(Integer.valueOf(StatusValue.Status.APPROVED));
-		mdStatusId.setMetadataId(md.getId());
-		mdStatusId.setChangeDate(new ISODate());
-		mdStatusId.setUserId(ServiceContext.get().getUserSession().getUserIdAsInt());
-		status.setId(mdStatusId);
+        MetadataStatusId mdStatusId = new MetadataStatusId();
+        mdStatusId.setStatusId(Integer.valueOf(StatusValue.Status.APPROVED));
+        mdStatusId.setMetadataId(md.getId());
+        mdStatusId.setChangeDate(new ISODate());
+        mdStatusId.setUserId(ServiceContext.get().getUserSession().getUserIdAsInt());
+        status.setId(mdStatusId);
 
-		metadataStatus.setStatusExt(status);
+        metadataStatus.setStatusExt(status);
 
-		Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + md.getId() + " automatically approved due to publishing.");
-	}
+        Log.trace(Geonet.DATA_MANAGER, "Metadata with id " + md.getId() + " automatically approved due to publishing.");
+    }
 
 }

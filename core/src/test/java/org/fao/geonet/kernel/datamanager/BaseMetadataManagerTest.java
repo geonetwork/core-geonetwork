@@ -22,15 +22,7 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -49,124 +41,127 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jeeves.server.context.ServiceContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link BaseMetadataManager} and {@link BaseMetadataUtils}.
- * 
+ *
  * @author delawen María Arias de Reyna
- * 
  */
 public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
 
-	@Autowired
-	private BaseMetadataManager metadataManager;
+    @Autowired
+    private BaseMetadataManager metadataManager;
 
-	@Autowired
-	private BaseMetadataUtils metadataUtils;
+    @Autowired
+    private BaseMetadataUtils metadataUtils;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private GroupRepository groupRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
-	private User user;
-	private Group group;
-	private AbstractMetadata md;
+    private User user;
+    private Group group;
+    private AbstractMetadata md;
 
-	@Before
-	public void init() {
+    @Before
+    public void init() {
 
-		user = userRepository.findAll().get(0);
+        user = userRepository.findAll().get(0);
 
-		for (Group g : groupRepository.findAll()) {
-			if (!g.isReserved()) {
-				group = g;
-				break;
-			}
-		}
+        for (Group g : groupRepository.findAll()) {
+            if (!g.isReserved()) {
+                group = g;
+                break;
+            }
+        }
 
-	}
+    }
 
-	@Test
-	public void testSave() throws Exception {
-		assertTrue(metadataUtils.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
-		md = metadataManager.save(createMetadata());
-		assertNotNull(md);
-		assertNotNull(metadataUtils.findOne(md.getId()));
-		metadataManager.delete(md.getId());
-	}
+    @Test
+    public void testSave() throws Exception {
+        assertTrue(metadataUtils.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
+        md = metadataManager.save(createMetadata());
+        assertNotNull(md);
+        assertNotNull(metadataUtils.findOne(md.getId()));
+        metadataManager.delete(md.getId());
+    }
 
-	@Test
-	public void testCreate() throws Exception {
-		ServiceContext context = createServiceContext();
-		loginAsAdmin(context);
+    @Test
+    public void testCreate() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
 
-		md = metadataManager.save(createMetadata());
+        md = metadataManager.save(createMetadata());
 
-		List<? extends AbstractMetadata> templates = metadataUtils
-				.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE));
+        List<? extends AbstractMetadata> templates = metadataUtils
+            .findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE));
 
-		assertFalse(templates.isEmpty());
+        assertFalse(templates.isEmpty());
 
-		String id = metadataManager.createMetadata(context, String.valueOf(templates.get(0).getId()),
-				String.valueOf(group.getId()), "test", user.getId(), null, MetadataType.METADATA.codeString, true);
+        String id = metadataManager.createMetadata(context, String.valueOf(templates.get(0).getId()),
+            String.valueOf(group.getId()), "test", user.getId(), null, MetadataType.METADATA.codeString, true);
 
-		assertNotNull(id);
-		assertTrue(metadataUtils.exists(md.getId()));
-		assertTrue(metadataUtils.existsMetadata(md.getId()));
-		assertTrue(metadataUtils.existsMetadataUuid(md.getUuid()));
+        assertNotNull(id);
+        assertTrue(metadataUtils.exists(md.getId()));
+        assertTrue(metadataUtils.existsMetadata(md.getId()));
+        assertTrue(metadataUtils.existsMetadataUuid(md.getUuid()));
 
-		assertNotNull(metadataUtils.findOne(id));
-		
-		metadataManager.delete(Integer.valueOf(id));
+        assertNotNull(metadataUtils.findOne(id));
 
-		assertNull(metadataUtils.findOne(id));
-		
-		metadataManager.delete(md.getId());
-		
-		assertNull(metadataUtils.findOne(md.getId()));
-		assertFalse(metadataUtils.exists(md.getId()));
-		assertFalse(metadataUtils.existsMetadata(md.getId()));
-		assertFalse(metadataUtils.existsMetadataUuid(md.getUuid()));
-	}
-	
-	@Test
-	public void testSpecifications() throws Exception {
+        metadataManager.delete(Integer.valueOf(id));
 
-		assertTrue(metadataUtils
-				.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
-		
-		md = metadataManager.save(createMetadata());
-		
-		assertFalse(metadataUtils
-				.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
-		
-		assertFalse(metadataUtils
-				.findAllIdsBy(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
-		
-		assertFalse(metadataUtils
-				.findAll(MetadataSpecs.hasMetadataId(md.getId())).isEmpty());	
-	}
+        assertNull(metadataUtils.findOne(id));
 
-	private AbstractMetadata createMetadata() throws IOException {
-		AbstractMetadata md = new Metadata();
-		md.setUuid("test-metadata");
-		try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
-			md.setData(IOUtils.toString(is));
-		}
-		md.getSourceInfo().setGroupOwner(group.getId());
-		md.getSourceInfo().setOwner(1);
-		md.getSourceInfo().setSourceId("test-faking");
-		md.getDataInfo().setSchemaId("iso19139");
-		md.getDataInfo().setType(MetadataType.TEMPLATE);
-		return md;
-	}
+        metadataManager.delete(md.getId());
 
-	@After
-	public void cleanup() {
-		
-	}
+        assertNull(metadataUtils.findOne(md.getId()));
+        assertFalse(metadataUtils.exists(md.getId()));
+        assertFalse(metadataUtils.existsMetadata(md.getId()));
+        assertFalse(metadataUtils.existsMetadataUuid(md.getUuid()));
+    }
+
+    @Test
+    public void testSpecifications() throws Exception {
+
+        assertTrue(metadataUtils
+            .findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
+
+        md = metadataManager.save(createMetadata());
+
+        assertFalse(metadataUtils
+            .findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
+
+        assertFalse(metadataUtils
+            .findAllIdsBy(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
+
+        assertFalse(metadataUtils
+            .findAll(MetadataSpecs.hasMetadataId(md.getId())).isEmpty());
+    }
+
+    private AbstractMetadata createMetadata() throws IOException {
+        AbstractMetadata md = new Metadata();
+        md.setUuid("test-metadata");
+        try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
+            md.setData(IOUtils.toString(is));
+        }
+        md.getSourceInfo().setGroupOwner(group.getId());
+        md.getSourceInfo().setOwner(1);
+        md.getSourceInfo().setSourceId("test-faking");
+        md.getDataInfo().setSchemaId("iso19139");
+        md.getDataInfo().setType(MetadataType.TEMPLATE);
+        return md;
+    }
+
+    @After
+    public void cleanup() {
+
+    }
 
 }
