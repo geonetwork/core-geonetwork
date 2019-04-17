@@ -398,7 +398,7 @@
               pagination: true,
               pageSize: scope.pageSize,
               pageList: [5, 10, 25, 50, 100, 200],
-              search: false,
+              search: true,
               minimumCountColumns: 2,
               clickToSelect: false,
               columns: [ {

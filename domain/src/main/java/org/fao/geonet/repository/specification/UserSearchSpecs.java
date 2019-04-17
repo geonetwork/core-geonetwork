@@ -20,27 +20,42 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserSearch;
-import org.fao.geonet.domain.UserSearchFeaturedType;
-import org.springframework.data.domain.Pageable;
+package org.fao.geonet.repository.specification;
+
+import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
+import javax.persistence.criteria.*;
+
 
 /**
- *  Data Access object for the {@link UserSearch} entities.
+ * Specifications for querying {@link org.fao.geonet.repository.UserSearchRepository}.
+ *
  */
-public interface UserSearchRepository extends GeonetRepository<UserSearch, Integer>, JpaSpecificationExecutor<UserSearch> {
+public final class UserSearchSpecs {
+    private UserSearchSpecs() {
+        // no instantiation
+    }
 
-    List<UserSearch> findAllByCreator(User creator);
+    public static Specification<UserSearch> containsTextInCreatorOrTranslations(String text) {
+        if (!text.contains("%")) {
+            text = "%" + text + "%";
+        }
+        final String finalText = text;
 
-    List<UserSearch> findAllByFeaturedType(UserSearchFeaturedType featuredType);
+        return new Specification<UserSearch>() {
+            @Override
+            public Predicate toPredicate(Root<UserSearch> root, CriteriaQuery<?> cq, CriteriaBuilder builder) {
 
-    List<UserSearch> findAllByFeaturedType(UserSearchFeaturedType featuredType, Specification<UserSearch> spec, Pageable pageable);
+                MapJoin<UserSearch, String, String> mapRoot = root.joinMap("labelTranslations");
 
-    long countByFeaturedType(UserSearchFeaturedType featuredType);
+                Path<String> creatorPath = root.get(UserSearch_.creator).get(User_.username);
+
+                return  builder.or(builder.like(creatorPath, finalText),
+                    builder.like(mapRoot.value(), finalText));
+            }
+        };
+    }
+
 }

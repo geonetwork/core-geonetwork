@@ -25,6 +25,7 @@ package org.fao.geonet.api.usersearches;
 
 import io.swagger.annotations.*;
 import jeeves.server.UserSession;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
@@ -37,8 +38,10 @@ import org.fao.geonet.domain.converter.UserSearchFeaturedTypeConverter;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserSearchRepository;
+import org.fao.geonet.repository.specification.UserSearchSpecs;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -150,6 +153,8 @@ public class UserSearchesApi {
             value = "Featured  type search."
         )
         @RequestParam(required = false) UserSearchFeaturedType featuredType,
+        @RequestParam(required = false, defaultValue = "")
+            String search,
         @ApiParam(value = "From page",
             required = false)
         @RequestParam(required = false, defaultValue = "0")
@@ -171,14 +176,20 @@ public class UserSearchesApi {
         int page = (offset / limit);
         final PageRequest pageRequest = new PageRequest(page, limit, sortBy);
 
+        Specification<UserSearch> searchSpec = null;
+        if (StringUtils.isNotEmpty(search)) {
+            searchSpec =
+                UserSearchSpecs.containsTextInCreatorOrTranslations(search);
+        }
+
         long count = 0;
 
         if (featuredType == null) {
-
-            userSearchesList = userSearchRepository.findAll(pageRequest).getContent();
+            userSearchesList = userSearchRepository.findAll(searchSpec, pageRequest).getContent();
             count = userSearchRepository.count();
         } else {
-            userSearchesList =  userSearchRepository.findAllByFeaturedType(featuredType);
+            userSearchesList =
+                userSearchRepository.findAllByFeaturedType(featuredType, searchSpec, pageRequest);
             count = userSearchRepository.countByFeaturedType(featuredType);
         }
 
