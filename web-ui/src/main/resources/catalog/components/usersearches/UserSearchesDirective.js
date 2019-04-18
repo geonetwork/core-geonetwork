@@ -397,7 +397,7 @@
               sidePagination: 'server',
               pagination: true,
               pageSize: scope.pageSize,
-              pageList: [5, 10, 25, 50, 100, 200],
+              pageList: [5, 10, 50, 100, 200],
               search: true,
               minimumCountColumns: 2,
               clickToSelect: false,
@@ -406,12 +406,11 @@
                 title: $filter('translate')('userSearchTblSearchName'),
                 valign: 'bottom',
                 sortable: false,
-                formatter: function(value, row, index) {
-                  if (row.featuredType !== '') {
-                    return '<span class="fa fa-star" title="' + $filter('translate')('featuredsearch') + '"></span>&nbsp;' + row.label;
-                  } else {
-                    return row.label;
-                  }
+                formatter: function(value, row,) {
+                  return '<span class="fa '
+                    + (row.featuredType !== '' ? 'fa-star': '')
+                    + ' fa-fw" title="' + $filter('translate')('featuredsearch')
+                    + '"></span>' + row.label;
                 }
               }, {
                 field: 'creator',
@@ -428,11 +427,16 @@
                 title: '',
                 width: 75,
                 formatter: function(value, row, index) {
-                  return '<a class="btn btn-default btn-xs" data-ng-click="editUserSearch('+ row.id + ')">' +
-                    '<span class="fa fa-pencil"></span></a>&nbsp; ' +
-                    '<a class="btn btn-default btn-xs" data-gn-confirm-click="{{\'deleteUserSearchConfirm\' | translate }}"  ' +
-                    'title="{{\'delete\' | translate}}" data-gn-click-and-spin="removeUserSearch(' + row.id + ' )">' +
-                    '<span class="fa fa-trash"></span></a>';
+                  return '<div class="btn-group pull-right" role="group">' +
+                    '  <a class="btn btn-default btn-xs" data-ng-click="editUserSearch('+ row.id + ')">' +
+                    '    <span class="fa fa-pencil"></span>' +
+                    '  </a>' +
+                    '  <a class="btn btn-default btn-xs" data-gn-confirm-click="{{\'deleteUserSearchConfirm\' | translate }}"  ' +
+                    'title="{{\'delete\' | translate}}" ' +
+                    'data-gn-click-and-spin="removeUserSearch(' + row.id + ' )">' +
+                    '    <span class="fa fa-times text-danger"></span>' +
+                    '  </a>' +
+                    '</div>';
                 }
               }]
             }
