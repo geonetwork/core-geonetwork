@@ -83,6 +83,8 @@
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
             minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
+              minimize="false"/>
     <jsSource webappPath="/catalog/lib/zip/zip.js"/>
     <jsSource webappPath="/catalog/lib/zip/include.js"/>
     <jsSource webappPath="/catalog/lib/base64.js"/>
@@ -152,6 +154,8 @@
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table-locale-all.min.js"
+              minimize="false"/>
+    <jsSource webappPath="/catalog/lib/bootstrap-table/dist/extensions/angular/bootstrap-table-angular.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/tableExport/tableExport.min.js" minimize="false"/>

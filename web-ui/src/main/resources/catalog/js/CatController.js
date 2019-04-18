@@ -253,6 +253,10 @@ goog.require('gn_alert');
         'page': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/page'
+        },
+        'usersearches': {
+          'enabled': false,
+          'displayFeaturedSearchesPanel': false
         }
       }
     };
