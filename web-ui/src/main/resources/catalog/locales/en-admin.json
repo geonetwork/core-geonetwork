@@ -1362,5 +1362,9 @@
     "hopCount": "Hop count",
     "hopCountHelp": "Control the maximum number of message hops (default to 2) before the search is terminated in a distributed search.",
     "ui-showSocialBarInFooter": "Show Socialbar",
-    "ui-showSocialBarInFooter-help": "Show the button bar with all the social buttons (facebook, twitter, etc.) in the footer of GeoNetwork"
+    "ui-showSocialBarInFooter-help": "Show the button bar with all the social buttons (facebook, twitter, etc.) in the footer of GeoNetwork",
+    "ui-fluidLayout": "Fluid container for Home and Search",
+    "ui-fluidLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
+    "ui-fluidEditorLayout": "Fluid container for the Editor",
+    "ui-fluidEditorLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container"
 }
