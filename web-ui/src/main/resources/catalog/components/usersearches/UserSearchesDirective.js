@@ -406,7 +406,7 @@
                 title: $filter('translate')('userSearchTblSearchName'),
                 valign: 'bottom',
                 sortable: false,
-                formatter: function(value, row,) {
+                formatter: function(value, row) {
                   return '<span class="fa '
                     + (row.featuredType !== '' ? 'fa-star': '')
                     + ' fa-fw" title="' + $filter('translate')('featuredsearch')
