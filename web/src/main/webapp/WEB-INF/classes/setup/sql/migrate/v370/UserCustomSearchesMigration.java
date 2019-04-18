@@ -43,9 +43,9 @@ public class UserCustomSearchesMigration extends JsonDatabaseMigration {
     @Override
     protected Map<String, String> setUpNewSettingValues() {
         Map<String, String> fieldsToUpdate = new HashMap<>(1);
-        fieldsToUpdate.put("/mods/usersearches/enabled",
+        fieldsToUpdate.put("/mods/search/usersearches/enabled",
             "false");
-        fieldsToUpdate.put("/mods/usersearches/displayFeaturedSearchesPanel",
+        fieldsToUpdate.put("/mods/search/usersearches/displayFeaturedSearchesPanel",
             "false");
         return fieldsToUpdate;
     }
