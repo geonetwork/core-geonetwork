@@ -72,9 +72,9 @@
         $scope.isUserFeedbackEnabled = true;
       }
 
-      $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.usersearches.enabled;
+      $scope.isUserSearchesEnabled = gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
       $scope.displayFeaturedSearchesPanel =
-        gnGlobalSettings.gnCfg.mods.usersearches.displayFeaturedSearchesPanel;
+        gnGlobalSettings.gnCfg.mods.search.usersearches.displayFeaturedSearchesPanel;
 
       $scope.ise  = false;
 

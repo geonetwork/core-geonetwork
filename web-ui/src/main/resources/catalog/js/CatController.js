@@ -159,7 +159,11 @@ goog.require('gn_alert');
             'layers': ['OGC'],
             'maps': ['ows']
           },
-          'isFilterTagsDisplayedInSearch': false
+          'isFilterTagsDisplayedInSearch': false,
+          'usersearches': {
+            'enabled': false,
+            'displayFeaturedSearchesPanel': false
+          }
         },
         'map': {
           'enabled': true,
@@ -253,10 +257,6 @@ goog.require('gn_alert');
         'page': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/page'
-        },
-        'usersearches': {
-          'enabled': false,
-          'displayFeaturedSearchesPanel': false
         }
       }
     };

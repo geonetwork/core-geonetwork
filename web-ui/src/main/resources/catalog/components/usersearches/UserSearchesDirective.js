@@ -83,7 +83,7 @@
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           scope.isUserSearchesEnabled =
-            gnGlobalSettings.gnCfg.mods.usersearches.enabled;
+            gnGlobalSettings.gnCfg.mods.search.usersearches.enabled;
 
           scope.userSearches = null;
           scope.currentSearch = null;
