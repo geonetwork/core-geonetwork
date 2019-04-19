@@ -812,7 +812,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
     }
 
-    private class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
+    public class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
         private final Key key;
         private final NativeWebRequest request;
         private final ServiceContext serviceContext;
