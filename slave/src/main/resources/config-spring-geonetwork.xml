@@ -41,12 +41,16 @@
 		</constructor-arg>
 	</bean>
 
-	<bean
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
-				<value>classpath:slave.properties</value>
+				<value>classpath*:slave.properties</value>
+				<value>/WEB-INF/slave.properties</value>
 			</list>
 		</property>
 	</bean>
+
 </beans>
