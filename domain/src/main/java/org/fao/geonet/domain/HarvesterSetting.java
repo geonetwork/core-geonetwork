@@ -111,7 +111,7 @@ public class HarvesterSetting extends GeonetEntity {
     /**
      * Get the parent setting object. This is a nullable property.
      */
-    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "parentid")
     @OnDelete(action=OnDeleteAction.CASCADE)
     public
