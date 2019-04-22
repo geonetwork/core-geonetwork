@@ -779,15 +779,9 @@ public class BaseMetadataManager implements IMetadataManager {
 
 			final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
-			String uuid = null;
+            String uuid = findUuid(metadataXml, schema, metadata);
 
-			if (schemaManager.getSchema(schema).isReadwriteUUID()
-					&& metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-					&& metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-				uuid = metadataUtils.extractUUID(schema, metadataXml);
-			}
-
-			metadataXml = updateFixedInfo(schema, Optional.of(intId), uuid, metadataXml, parentUuid,
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), uuid, metadataXml, parentUuid,
 					(updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
 		}
 
@@ -797,14 +791,9 @@ public class BaseMetadataManager implements IMetadataManager {
 		// Notifies the metadata change to metatada notifier service
 		final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
-		String uuid = null;
-		if (schemaManager.getSchema(schema).isReadwriteUUID()
-				&& metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-				&& metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-			uuid = metadataUtils.extractUUID(schema, metadataXml);
-		}
+        String uuid = findUuid(metadataXml, schema, metadata);
 
-		metadataUtils.checkMetadataWithSameUuidExist(uuid, metadata.getId());
+        metadataUtils.checkMetadataWithSameUuidExist(uuid, metadata.getId());
 
 		// --- write metadata to dbms
 		getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
@@ -838,7 +827,18 @@ public class BaseMetadataManager implements IMetadataManager {
 		return metadataUtils.findOne(metadataId);
 	}
 
-	/**
+    private String findUuid(Element metadataXml, String schema, AbstractMetadata metadata) throws Exception {
+        String uuid = null;
+
+        if (schemaManager.getSchema(schema).isReadwriteUUID()
+            && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            uuid = metadataUtils.extractUUID(schema, metadataXml);
+        }
+        return uuid;
+    }
+
+    /**
 	 * buildInfoElem contains similar portion of code with indexMetadata
 	 */
 	private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
