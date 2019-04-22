@@ -369,56 +369,70 @@
          data-ng-class="{'hidden' : selectedStep !== 3}">
 
       <div class="panel-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6" data-ng-hide="changes.length > 0">
+              <p class="alert alert-warning"
+                 data-translate="">noChangesToApply</p>
+            </div>
+            <div class="col-sm-6" data-ng-show="changes.length > 0">
+              <h4 data-translate="">changesToApply</h4>
+              <ul>
+                <li data-ng-repeat="change in changes"
+                    title="{{change.value}}"
+                    data-ng-class="">
+                  {{change.field | translate}}
+                  <span data-ng-show="change.insertMode">
+                    ({{change.insertMode | translate}})
+                  </span>:
+                  {{change.value | limitTo:40}}
+                </li>
+              </ul>
+            </div>
+            <div class="col-sm-6"
+                 data-ng-hide="selectedRecords.metadata.length > 0">
+              <p class="alert alert-warning"
+                 data-ng-show="selectedRecordsCount == 0"
+                 data-translate="">selectRecordsToEdit</p>
+              <p class="alert alert-warning"
+                 data-ng-show="tooManyRecordInSelForSearch"
+                 data-translate=""
+                 data-translate-values="{count: selectedRecordsCount}">tooManyRecordInSelForSearch</p>
+            </div>
+            <div class="col-sm-6"
+                 data-ng-show="selectedRecords.metadata.length > 0">
+              <h4 data-translate="">aboutToUpdateTheFollowing</h4>
+              <ul>
+                <li data-ng-repeat="record in selectedRecords.metadata">
+                  <a data-ng-href="catalog.search#/metadata/{{record['geonet:info'].uuid}}">{{record.title || record.defaultTitle}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <input type="checkbox" id="updateDateStamp" data-ng-model="extraParams.updateDateStamp" >
+              <label for="updateDateStamp" data-translate="">updateDateStamp</label>
+            </div>
+          </div>
+          <div class="row gn-margin-bottom">
+            <div class="col-md-12">
+              <button class="btn btn-primary"
+                      data-ng-disabled="changes.length < 1"
+                      data-gn-click-and-spin="applyChanges()">
+                <i class="fa fa-save"/>
+                <span data-translate="">save</span>
+              </button>
+            </div>
+          </div>
 
-        <div class="row">
-          <div class="col-sm-6" data-ng-hide="changes.length > 0">
-            <p class="alert alert-warning"
-               data-translate="">noChangesToApply</p>
-          </div>
-          <div class="col-sm-6" data-ng-show="changes.length > 0">
-            <h4 data-translate="">changesToApply</h4>
-            <ul>
-              <li data-ng-repeat="change in changes"
-                  title="{{change.value}}"
-                  data-ng-class="">
-                {{change.field | translate}}
-                <span data-ng-show="change.insertMode">
-                  ({{change.insertMode | translate}})
-                </span>:
-                {{change.value | limitTo:40}}
-              </li>
-            </ul>
-          </div>
-          <div class="col-sm-6"
-               data-ng-hide="selectedRecords.metadata.length > 0">
-            <p class="alert alert-warning"
-               data-ng-show="selectedRecordsCount == 0"
-               data-translate="">selectRecordsToEdit</p>
-            <p class="alert alert-warning"
-               data-ng-show="tooManyRecordInSelForSearch"
-               data-translate=""
-               data-translate-values="{count: selectedRecordsCount}">tooManyRecordInSelForSearch</p>
-          </div>
-          <div class="col-sm-6"
-               data-ng-show="selectedRecords.metadata.length > 0">
-            <h4 data-translate="">aboutToUpdateTheFollowing</h4>
-            <ul>
-              <li data-ng-repeat="record in selectedRecords.metadata">
-                <a data-ng-href="catalog.search#/metadata/{{record['geonet:info'].uuid}}">{{record.title || record.defaultTitle}}</a>
-              </li>
-            </ul>
+
+          <div class="row" data-ng-show="processReport">
+            <div class="col-md-11">
+              <div data-gn-batch-report="processReport"></div>
+            </div>
           </div>
         </div>
-
-        <button class="btn btn-default"
-                data-ng-disabled="changes.length < 1"
-                data-gn-click-and-spin="applyChanges()">
-          <i class="fa fa-save"/>
-          <span data-translate="">save</span>
-        </button>
-
-        <div data-ng-show="processReport"
-             data-gn-batch-report="processReport"/>
       </div>
     </div>
   </div>
