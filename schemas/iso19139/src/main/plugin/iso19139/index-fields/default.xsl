@@ -688,7 +688,7 @@
       </xsl:for-each>
 
       <!-- index online protocol -->
-      <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+      <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions|gmd:distributor/*/gmd:distributorTransferOptions/*">
         <xsl:variable name="tPosition" select="position()"></xsl:variable>
         <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']">
           <xsl:variable name="download_check">

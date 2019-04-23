@@ -151,7 +151,7 @@
       </xsl:apply-templates>
 
       <xsl:apply-templates mode="index"
-                           select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
+                           select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
         <xsl:with-param name="langId" select="$poundLangId"/>
       </xsl:apply-templates>
     </Document>
@@ -638,7 +638,7 @@
         <Field name="format" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
-      <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+      <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions|gmd:distributor/*/gmd:distributorTransferOptions/*">
         <xsl:variable name="tPosition" select="position()"></xsl:variable>
 
         <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource">
