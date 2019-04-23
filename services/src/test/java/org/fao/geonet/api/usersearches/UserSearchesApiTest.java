@@ -26,6 +26,7 @@ package org.fao.geonet.api.usersearches;
 import com.google.gson.Gson;
 import org.fao.geonet.api.usersearches.model.UserSearchDto;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSearchRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Assert;
@@ -60,6 +61,8 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private UserSearchRepository userSearchRepository;
 
+    @Autowired
+    private UserRepository userRepository;
 
     @Before
     public void setUp() {
@@ -189,21 +192,22 @@ public class UserSearchesApiTest extends AbstractServiceIntegrationTest {
         userSearch1.setUrl("http://customsearch1");
         userSearchRepository.save(userSearch1);
 
-
         // Administrator
-        User testUserAdministrator = new User();
-        testUserAdministrator.setUsername("testuser-admin");
-        testUserAdministrator.setProfile(Profile.Administrator);
-        testUserAdministrator.setEnabled(true);
-        testUserAdministrator.getEmailAddresses().add("test@mail.com");
-        _userRepo.save(testUserAdministrator);
+        User admin = userRepository.findOneByUsername("admin");
 
         UserSearch userSearch2 = new UserSearch();
-        userSearch2.setCreator(testUserAdministrator);
+        userSearch2.setCreator(admin);
         userSearch2.setCreationDate(new Date());
         userSearch2.setFeaturedType(UserSearchFeaturedType.HOME);
         userSearch2.setUrl("http://customsearch2");
         userSearchRepository.save(userSearch2);
+
+
+        UserSearch userSearch3 = new UserSearch();
+        userSearch3.setCreator(admin);
+        userSearch3.setCreationDate(new Date());
+        userSearch3.setUrl("http://customsearch3");
+        userSearchRepository.save(userSearch3);
 
     }
 }
