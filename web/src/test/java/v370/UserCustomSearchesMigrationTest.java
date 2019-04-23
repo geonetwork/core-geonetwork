@@ -108,6 +108,7 @@ public class UserCustomSearchesMigrationTest {
             "\"ger\":\"ge\",\"kor\":\"ko\",\"spa\":\"es\",\"cze\":\"cz\",\"cat\":\"ca\",\"fin\":\"fi\",\"ice\":\"is\"," +
             "\"rus\":\"ru\",\"chi\":\"zh\"}},\"home\":{\"enabled\":true," +
             "\"appUrl\":\"../../srv/{{lang}}/catalog.search#/home\"},\"search\":{\"enabled\":true," +
+            "\"usersearches\":{\"enabled\":false, \"displayFeaturedSearchesPanel\":false}," +
             "\"appUrl\":\"../../srv/{{lang}}/catalog.search#/search\",\"hitsperpageValues\":[10,50,100]," +
             "\"paginationInfo\":{\"hitsPerPage\":20},\"defaultSearchString\":\"\",\"facetsSummaryType\":" +
             "\"details\",\"facetConfig\":[],\"facetTabField\":\"\",\"filters\":{},\"sortbyValues\":[{" +
@@ -139,8 +140,7 @@ public class UserCustomSearchesMigrationTest {
             "\"createPageTpl\": \"../../catalog/templates/editor/new-metadata-horizontal.html\"},\"admin\":" +
             "{\"enabled\":true,\"appUrl\":\"../../srv/{{lang}}/admin.console\"},\"signin\":" +
             "{\"enabled\":true,\"appUrl\":\"../../srv/{{lang}}/catalog.signin\"}," +
-            "\"signout\":{\"appUrl\":\"../../signout\"}," +
-            "\"usersearches\":{\"enabled\":false, \"displayFeaturedSearchesPanel\":false}}}";
+            "\"signout\":{\"appUrl\":\"../../signout\"}}}";
 
         objectMapper = new ObjectMapper();
         testInstance = new UserCustomSearchesMigration();
