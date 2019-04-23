@@ -151,7 +151,7 @@
       </xsl:apply-templates>
 
       <xsl:apply-templates mode="index"
-                           select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
+                           select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
         <xsl:with-param name="langId" select="$poundLangId"/>
       </xsl:apply-templates>
     </Document>
@@ -159,7 +159,6 @@
 
   <xsl:template mode="index" match="*|@*">
     <xsl:param name="langId"/>
-
     <xsl:apply-templates mode="index" select="*|@*">
       <xsl:with-param name="langId" select="$langId"/>
     </xsl:apply-templates>
