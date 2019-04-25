@@ -382,5 +382,6 @@
     "accessManagerTitle": "Access rights by records",
     "accessManagerChooseGroups": "Choose one or more groups",
     "accessManagerChooseOperations": "Choose one or more operation types",
-    "status-no-status": "Workflow not active"
+    "status-no-status": "Workflow not active",
+    "draft": "Working copy"
 }
