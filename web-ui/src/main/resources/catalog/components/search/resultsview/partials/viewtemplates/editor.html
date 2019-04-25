@@ -31,6 +31,11 @@
             <span class="pull-right text-muted"
                   data-ng-class="{'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4}"
                   data-ng-if="md.mdStatus<50">{{('status-' + md.mdStatus) | translate}}</span>
+                  
+                              <span class="pull-right text-muted"
+                  data-ng-class="text-warning"
+                  data-ng-if="!md.mdStatus"
+                  data-ng-translate="">{{'status-no-status' | translate}}</span>
           </div>
         </div>
         <div class="col-lg-4 col-md-4">
