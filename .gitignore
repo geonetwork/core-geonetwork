@@ -78,3 +78,7 @@ schemas/*/doc/*/*.rst
 *.old
 web-ui-docs/package-lock.json
 release/jetty/*
+/docker/m2repo_gn/*
+!/docker/m2repo_gn/.gitkeep
+/docker/id_rsa*
+/volume_*

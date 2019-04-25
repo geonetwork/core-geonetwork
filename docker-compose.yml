@@ -1,0 +1,98 @@
+version: "3.7"
+services:
+  dbmaster:
+    environment:
+      - POSTGRES_USER=geonetwork
+      - POSTGRES_PASSWORD=********
+      - POSTGRES_DB=geonetwork
+    image: mdillon/postgis:9.6
+    logging:
+      driver: "json-file" 
+      options:
+        max-size: "10m" 
+        max-file: "10" 
+    networks:
+      gn:
+    restart: always
+    volumes:
+      - ./volume_db_master/:/var/lib/postgresql/data/
+  dbslave:
+    environment:
+      - POSTGRES_USER=geonetwork
+      - POSTGRES_PASSWORD=********
+      - POSTGRES_DB=geonetwork
+    image: mdillon/postgis:9.6
+    logging:
+      driver: "json-file" 
+      options:
+        max-size: "10m" 
+        max-file: "10" 
+    networks:
+      gn:
+    restart: always
+    volumes:
+      - ./volume_db_slave/:/var/lib/postgresql/data/
+  geonetworkmaster:
+    build:
+      args:
+        GIT_CLONE: ${GIT_CLONE}
+        HTTP_PROXY: ${HTTP_PROXY}
+        HTTPS_PROXY: ${HTTPS_PROXY}
+        MASTER_OR_SLAVE:
+        MAVEN_OPTS: ${MAVEN_OPTS}
+        NO_PROXY: ${NO_PROXY}
+      context: ./docker/
+    depends_on:
+      - dbmaster
+    env_file: .env  # must be in the same folder as docker-compose.yml!!!
+    environment:
+      - JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -server -Xms512m -Xmx6g -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:+UseConcMarkSweepGC"
+      - DATA_DIR=/var/lib/geonetwork_data
+      - POSTGRES_DB_USERNAME=geonetwork
+      - POSTGRES_DB_PASSWORD=********
+      - POSTGRES_DB_HOST=dbmaster
+    logging:
+      driver: "json-file" 
+      options:
+        max-size: "10m" 
+        max-file: "10" 
+    networks:
+      gn:
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - ./volume_geonetwork_master/:/var/lib/geonetwork_data/
+  geonetworkslave:
+    build:
+      args:
+        GIT_CLONE: ${GIT_CLONE}
+        HTTP_PROXY: ${HTTP_PROXY}
+        HTTPS_PROXY: ${HTTPS_PROXY}
+        MASTER_OR_SLAVE: -P slave
+        MAVEN_OPTS: ${MAVEN_OPTS}
+        NO_PROXY: ${NO_PROXY}
+      context: ./docker/
+    depends_on:
+      - dbslave
+    env_file: .env  # must be in the same folder as docker-compose.yml!!!
+    environment:
+      - JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -server -Xms512m -Xmx6g -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:+UseConcMarkSweepGC"
+      - DATA_DIR=/var/lib/geonetwork_data
+      - POSTGRES_DB_USERNAME=geonetwork
+      - POSTGRES_DB_PASSWORD=********
+      - POSTGRES_DB_HOST=dbslave
+    logging:
+      driver: "json-file" 
+      options:
+        max-size: "10m" 
+        max-file: "10" 
+    networks:
+      gn:
+    ports:
+      - 4567:8080
+    restart: always
+    volumes:
+      - ./volume_geonetwork_slave/:/var/lib/geonetwork_data/
+networks:
+  gn:
