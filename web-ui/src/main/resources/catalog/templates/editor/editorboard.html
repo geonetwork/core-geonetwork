@@ -1,18 +1,19 @@
 <div class="gn-editor-board"
      data-ng-controller="GnSearchController">
   <div class="row" data-ng-controller="GnEditorBoardSearchController">
-    <div class="col-sm-12"
-         data-ng-search-form=""
-         data-runSearch="true"
-         data-wait-for-user="true" >
+    <div data-ng-class="fluidEditorLayout ? 'container-fluid' : 'container'">
+      <div class="col-sm-12"
+          data-ng-search-form=""
+          data-runSearch="true"
+          data-wait-for-user="true" >
 
-      <div class="gn-sub-bar">
-        <form class="form-horizontal"
-              role="form">
-          <input type="hidden" name="_csrf" value="{{csrf}}"/>
-          <div class="row gn-top-search">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
-              <div class="input-group gn-form-any">
+        <div class="gn-sub-bar">
+          <form class="form-horizontal"
+                role="form">
+            <input type="hidden" name="_csrf" value="{{csrf}}"/>
+            <div class="row gn-top-search">
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
+                <div class="input-group gn-form-any">
 
                 <span class="input-group-addon">
                   <label>
@@ -45,87 +46,88 @@
                   </button>
                 </div>
 
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7 text-right">
+                <a href="#/create" class="btn btn-primary">
+                  <i class="fa fa-fw fa-plus"/><span data-translate="">addRecord</span>
+                </a>
+                <a href="#/import" class="btn btn-default">
+                  <i class="fa fa-fw fa-upload"/><span class="hidden-xs hidden-sm" data-translate="">ImportRecord</span>
+                </a>
+                <a href="#/directory" class="btn btn-default"
+                  ng-if="user.isEditorOrMore()">
+                  <i class="fa fa-fw fa-bookmark"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">directoryManager</span>
+                </a>
+                <a href="#/batchedit" class="btn btn-default"
+                  ng-if="user.isEditorOrMore()">
+                  <i class="fa fa-fw fa-pencil"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
+                </a>
+                <a href="#/accessManager" class="btn btn-default"
+                  ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
+                  <i class="fa fa-fw fa-lock"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">accessManager</span>
+                </a>
               </div>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7 text-right">
-              <a href="#/create" class="btn btn-primary">
-                <i class="fa fa-fw fa-plus"/><span data-translate="">addRecord</span>
-              </a>
-              <a href="#/import" class="btn btn-default">
-                <i class="fa fa-fw fa-upload"/><span class="hidden-xs hidden-sm" data-translate="">ImportRecord</span>
-              </a>
-              <a href="#/directory" class="btn btn-default"
-                 ng-if="user.isEditorOrMore()">
-                <i class="fa fa-fw fa-bookmark"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">directoryManager</span>
-              </a>
-              <a href="#/batchedit" class="btn btn-default"
-                 ng-if="user.isEditorOrMore()">
-                <i class="fa fa-fw fa-pencil"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">batchEditing</span>
-              </a>
-              <a href="#/accessManager" class="btn btn-default"
-                 ng-if="user.isAdministratorOrMore() && healthCheck.IndexHealthCheck === true">
-                <i class="fa fa-fw fa-lock"/><span class="hidden-xs hidden-sm hidden-md" data-translate="">accessManager</span>
-              </a>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div class="row">
-        <div class="gn-results-heading col-md-offset-3">
-          <div data-search-filter-tags data-use-location-parameters="false"
-               data-ng-show="isFilterTagsDisplayed"></div>
+          </form>
         </div>
-      </div>
 
-
-
-      <div class="row">
-        <div class="col-sm-3 col-md-3 gn-search-facet">
-
-          <!-- Hierachical facet mode -->
-          <div data-ng-show="searchResults.records.length > 0"
-               data-gn-facet-dimension-list="searchResults.dimension"
-               data-params="searchObj.params"
-               data-facet-type="facetsSummaryType"
-               data-current-facets="currentFacets">
+        <div class="row">
+          <div class="gn-results-heading col-md-offset-3">
+            <div data-search-filter-tags data-use-location-parameters="false"
+                data-ng-show="isFilterTagsDisplayed"></div>
           </div>
         </div>
-        <div class="col-sm-9 col-md-9">
 
-          <span class="loading fa fa-spinner fa-spin"
-                data-ng-show="searching"></span>
 
-          <div class="alert alert-warning" role="alert"
-               ng-if="!searching && searchResults.count == 0">
-            <i class="fa fa-frown-o"></i>
-            <span data-translate="">zarooResult</span>
-          </div>
 
-          <div class="row gn-margin-bottom"
-               data-ng-show="searchResults.records.length > 0">
-            <div class="col-xs-12 col-sm-5 col-md-3 relative gn-nopadding-left">
-              <div data-gn-selection-widget=""
-                   data-results="searchResults"></div>
-            </div>
-            <div class="col-xs-12 col-sm-7 col-md-5 gn-nopadding-left gn-nopadding-right text-right">
-              <div class="pull-right"
-                   data-gn-pagination="paginationInfo"
-                   data-hits-values="searchObj.hitsperpageValues"></div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 gn-nopadding-right text-right">
-              <div class="pull-right"
-                   data-sortby-combo=""
-                   data-params="searchObj.params"
-                   data-gn-sortby-values="searchObj.sortbyValues"></div>
-            </div>
-          </div>
-          <div class="row">
+        <div class="row">
+          <div class="col-sm-3 col-md-3 gn-search-facet">
+
+            <!-- Hierachical facet mode -->
             <div data-ng-show="searchResults.records.length > 0"
-                data-gn-results-container=""
-                data-search-results="searchResults"
-                data-template-url="resultTemplate"></div>
+                data-gn-facet-dimension-list="searchResults.dimension"
+                data-params="searchObj.params"
+                data-facet-type="facetsSummaryType"
+                data-current-facets="currentFacets">
             </div>
+          </div>
+          <div class="col-sm-9 col-md-9">
+
+            <span class="loading fa fa-spinner fa-spin"
+                  data-ng-show="searching"></span>
+
+            <div class="alert alert-warning" role="alert"
+                ng-if="!searching && searchResults.count == 0">
+              <i class="fa fa-frown-o"></i>
+              <span data-translate="">zarooResult</span>
+            </div>
+
+            <div class="row gn-margin-bottom"
+                data-ng-show="searchResults.records.length > 0">
+              <div class="col-xs-12 col-sm-5 col-md-3 relative gn-nopadding-left">
+                <div data-gn-selection-widget=""
+                    data-results="searchResults"></div>
+              </div>
+              <div class="col-xs-12 col-sm-7 col-md-5 gn-nopadding-left gn-nopadding-right text-right">
+                <div class="pull-right"
+                    data-gn-pagination="paginationInfo"
+                    data-hits-values="searchObj.hitsperpageValues"></div>
+              </div>
+              <div class="col-xs-12 col-sm-12 col-md-4 gn-nopadding-right text-right">
+                <div class="pull-right"
+                    data-sortby-combo=""
+                    data-params="searchObj.params"
+                    data-gn-sortby-values="searchObj.sortbyValues"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div data-ng-show="searchResults.records.length > 0"
+                  data-gn-results-container=""
+                  data-search-results="searchResults"
+                  data-template-url="resultTemplate"></div>
+              </div>
+          </div>
         </div>
       </div>
     </div>

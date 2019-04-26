@@ -125,7 +125,8 @@
     <xsl:variable name="rulename" select="string(@geonet:rule)"/>
     <xsl:variable name="errors" select="count(.//svrl:failed-assert)"/>
     <xsl:variable name="successes" select="count(.//svrl:successful-report)"/>
-
+    <xsl:variable name="schematronVerificationError" select="./geonet:schematronVerificationError"/>
+    
     <report>
       <id>
         <xsl:value-of select="$rulename"/>
@@ -150,6 +151,12 @@
           </xsl:otherwise>
         </xsl:choose>
       </label>
+      <!-- If the schematron failed to compile or during the validation it should have a `geonet:schematronVerificationError` element -->
+      <xsl:if test="$schematronVerificationError">
+        <schematronVerificationError>
+          <xsl:value-of select="$schematronVerificationError"/>
+        </schematronVerificationError>
+      </xsl:if>
       <error>
         <xsl:value-of select="$errors"/>
       </error>

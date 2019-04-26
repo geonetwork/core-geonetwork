@@ -331,7 +331,7 @@
     "moreSpecificConcept": "더 구체적인 개념",
     "associatedConcept": "연관 개념",
     "xsd": "스키마 유효성 검사",
-    "linkToXmlTab": "몇몇 오류는 <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML 편집기</a>를 사용하여 수정할 수 있습니다.",
+    "linkToXmlTab": "몇몇 오류는 <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML 편집기</a>를 사용하여 수정할 수 있습니다.",
     "directoryManagerSubtitle": "이 페이지는 템플릿 관리를 포함하여 연락처, 포맷 등 디렉토리 항목을 편집할 수 있습니다.",
     "directoryManagerSubtitleImport": "데이터베이스로 가져오려면 항목의 전체 XML 내용을 입력하십시오.",
     "directoryEntryTypes": "항목 유형",

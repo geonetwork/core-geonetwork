@@ -50,7 +50,6 @@
           data-watch="sectionsLevel1" data-depth="1"/>
       <div class="panel-heading">
         <span data-translate="">settings</span>
-
       </div>
       <div class="panel-body">
         <form id="gn-settings" name="gnSettings" class="form-horizontal">
@@ -58,7 +57,8 @@
                     id="gn-settings-spy-target">
             <h1>{{section1.name | translate}}</h1>
             <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'position'"
-                      id="{{section2.name.replace('/', '-')}}">
+                      id="{{section2.name.replace('/', '-')}}"
+                      data-ng-show="section2.name">
               <legend>{{section2.name | translate}}</legend>
               <!-- According to data type -->
               <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
