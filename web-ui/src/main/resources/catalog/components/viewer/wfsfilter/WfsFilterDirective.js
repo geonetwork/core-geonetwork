@@ -483,11 +483,11 @@
             scope.map.getView().fit(scope.featureExtent, scope.map.getSize());
           };
 
-          scope.$watch('featureExtent', function(n, o) {
-            if (n && n !== o) {
-              scope.zoomToResults();
-            }
-          });
+          // scope.$watch('featureExtent', function(n, o) {
+          //   if (n && n !== o) {
+          //     scope.zoomToResults();
+          //   }
+          // });
 
 
           scope.accentify = function(str) {
