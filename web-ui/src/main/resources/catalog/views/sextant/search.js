@@ -36,13 +36,16 @@
 
   $(document.body).append($('<div class="g"></div>'));
 
+  // this will loop until the loading screen has been removed
   function removeLoadingScreen() {
-    setTimeout(function() {
-      $('.gn .sxt-loading').remove();
-      $('.gn').css({
-        'overflow': 'auto'
-      });
-    }, 500);
+    if (!$('.gn .sxt-loading').length) {
+      setTimeout(removeLoadingScreen, 500);
+      return;
+    }
+    $('.gn .sxt-loading').remove();
+    $('.gn').css({
+      'overflow': 'auto'
+    });
   }
 
   if(typeof sxtSettings != 'undefined') {
