@@ -40,6 +40,7 @@
   function removeLoadingScreen() {
     if (!$('.gn .sxt-loading').length) {
       setTimeout(removeLoadingScreen, 500);
+      return;
     }
     $('.gn .sxt-loading').remove();
     $('.gn').css({
