@@ -75,6 +75,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -868,7 +869,15 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @Override
     public AbstractMetadata findOneByUuid(String uuid) {
-        return metadataRepository.findOneByUuid(uuid);
+    	AbstractMetadata metadata = null;
+        try {
+            metadata = metadataRepository.findOneByUuid(uuid);
+        } catch (IncorrectResultSizeDataAccessException e){
+            Log.warning(Geonet.GEONETWORK, String.format(
+                "More than one record found with UUID '%s'. Error is '%s'.",
+                uuid, e.getMessage()));
+        }
+        return metadata;
     }
 
     @Override
