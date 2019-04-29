@@ -241,7 +241,7 @@ public class ApiUtils {
         AccessManager accessManager = appContext.getBean(AccessManager.class);
         if (!accessManager.canReview(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
-                "You can't edit record with UUID %s", metadataUuid));
+                "You can't review or edit record with UUID %s", metadataUuid));
         }
         return metadata;
     }
@@ -255,7 +255,7 @@ public class ApiUtils {
         AccessManager accessManager = appContext.getBean(AccessManager.class);
         if (!accessManager.canChangeStatus(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
-                "You can't edit record with UUID %s", metadataUuid));
+                "You can't change status of record with UUID %s", metadataUuid));
         }
         return metadata;
     }
