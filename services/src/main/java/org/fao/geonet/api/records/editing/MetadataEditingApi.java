@@ -161,13 +161,6 @@ public class MetadataEditingApi {
             
             //Maybe we are redirected to another metadata?
             if(id2 != metadata.getId()) {
-//                StringBuilder sb = new StringBuilder();
-//                sb.append(request.getContextPath());
-//                sb.append(request.getServletPath());
-//                sb.append("/catalog.edit#").append(id2);
-//                sb.append("/editor/").append("?");
-//                sb.append(request.getQueryString());
-//                response.sendRedirect(sb.toString());
                 
             	StringBuilder sb = new StringBuilder("?");
             	
