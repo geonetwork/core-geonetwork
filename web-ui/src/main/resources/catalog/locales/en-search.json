@@ -466,5 +466,5 @@
   "WPSDescription": "Enter a WPS endpoint URL to begin using the process through a dynamic form. Recently used WPS processes are shown in the second tab.",
   "noLayersFound": "No layers found",
   "seeDraft": "This record has a draft version. Click here to see it.",
-  "seeNoDraft": "This record has a non drafted version. Click here to see it."
+  "seeNoDraft": "This record has an approved and published version. Click here to see it."
 }
