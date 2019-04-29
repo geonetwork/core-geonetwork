@@ -39,12 +39,13 @@
       return {
         restrict: 'A',
         replace: true,
-        templateUrl:
-        '../../catalog/components/usersearches/partials/featuredusersearcheshome.html',
+        templateUrl: function(elem, attrs) {
+          return '../../catalog/components/usersearches/partials/featuredusersearches' +
+            (attrs['mode'] || 'cards') + '.html';
+        },
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
-          scope.type = 'h';
-
+          scope.type = attrs['type'] || 'h';
           gnUserSearchesService.loadFeaturedUserSearches(scope.type).then(
             function(featuredSearchesCollection) {
               scope.featuredSearches = featuredSearchesCollection.data;
