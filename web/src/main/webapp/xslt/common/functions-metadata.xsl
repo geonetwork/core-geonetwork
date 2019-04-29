@@ -109,7 +109,7 @@
 
     <!-- Name in current schema -->
     <xsl:variable name="schemaLabel"
-                  select="$labels/element[@name=$escapedName and not(@context)]"/>
+                  select="($labels/element[@name=$escapedName and not(@context)])[1]"/>
 
     <xsl:choose>
       <xsl:when test="$schemaLabelWithContext">

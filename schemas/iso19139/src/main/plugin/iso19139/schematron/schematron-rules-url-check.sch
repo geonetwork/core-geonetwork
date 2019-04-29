@@ -13,7 +13,7 @@
     <sch:pattern>
         <sch:title>$loc/strings/invalidURLCheck</sch:title>
         <!-- Check specification names and status -->
-        <sch:rule context="//gmd:linkage//gmd:URL">
+        <sch:rule context="//gmd:linkage//gmd:URL[starts-with(text(), 'http')]">
 
             <sch:let name="isValidUrl" value="xslutil:validateURL(text())" />
             <sch:assert test="$isValidUrl = true()">

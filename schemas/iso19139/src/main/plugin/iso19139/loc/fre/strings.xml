@@ -532,5 +532,5 @@
   <cm-linkToUpstreamProduction>Link to upstream production</cm-linkToUpstreamProduction>
   <cm-linkToUpstreamValidation>Link to upstream validation</cm-linkToUpstreamValidation>
   <cm-linkToDocument>Link to document</cm-linkToDocument>
-
+  <cm-temportal-description>Description</cm-temportal-description>
 </strings>

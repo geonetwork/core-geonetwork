@@ -355,6 +355,7 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name>gmd:distance</name>
+      <name>gmd:geometricObjectCount</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
       <name>srv:serviceTypeVersion</name>
@@ -3299,6 +3300,12 @@
         <section name="cm-geoCoverage">
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
+
+          <!--
+          local.reference-geographical-area.myocean.reference-geographical-area
+          -->
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:type/*/@codeListValue='reference-geographical-area']"/>
+
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:spatialResolution/*/gmd:distance"/>
           <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[1]/*/gmd:resolution" name="cm-resy"/>
           <field xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/*/gmd:axisDimensionProperties[2]/*/gmd:resolution" name="cm-resx"/>
@@ -3488,10 +3495,6 @@
               </snippet>
             </template>
           </action>
-          <!--
-          local.reference-geographical-area.myocean.reference-geographical-area
-          -->
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[*/gmd:type/*/@codeListValue='reference-geographical-area']"/>
 
         </section>
         <section name="cm-verticalCoverage">
@@ -3506,10 +3509,53 @@
           </field>
         </section>
         <section name="cm-temporalCoverage">
+
+          <field name="temporalRangeSection"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="cm-temportal-description"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:description"><!-- TODO-CM -->
+                </key>
+                <key label="beginPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                >
+                  <directiveAttributes
+                    data-tag-name="gml:endPosition"
+                    data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        <gml:description>{{cm-temportal-description}}</gml:description>
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+          <!--
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod/*/gml:description"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//*[gml:beginPosition]"/>
-          <!-- indeterminatePosition checkbox TODO-->
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//*[gml:endPosition]"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//*[gml:endPosition]"/>-->
 
           <!-- Helper -->
 
@@ -3558,16 +3604,17 @@
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact[*/gmd:role/*/@codeListValue='distributor']" name="cm-orgDisseminationUnit"/>
 
 
-            <action name="cm-contact"
-                    type="add"
+
+            <action type="add"
+                    name="pointOfContact"
                     addDirective="data-gn-directory-entry-selector"
                     or="pointOfContact"
                     in="/gmd:MD_Metadata/gmd:identificationInfo/*">
               <directiveAttributes
-                data-template-add-action="false"
-                data-search-action="true"
-                data-popup-action="true"
+                data-template-add-action="true"
                 data-template-type="contact"
+                data-search-action="false"
+                data-popup-action="true"
                 data-display-if="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]"
                 data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
             </action>

@@ -129,6 +129,9 @@
                     <Field name="email" string="{.}" store="true" index="true"/>
                 </xsl:for-each>
 
+              <xsl:if test="$mail = ''">
+                  <Field name="emailMissing" string="true" store="true" index="true"/>
+              </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
 
