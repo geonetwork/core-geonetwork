@@ -163,19 +163,19 @@
               defer.reject();
               return $q.defer().promise;
             }
-            
+
             //Check if the layer has some projection restriction
             //If no restriction, just (try to) add it
-            if(layerInfo.projectionList && layerInfo.projectionList.length 
+            if(layerInfo.projectionList && layerInfo.projectionList.length
                 && layerInfo.projectionList.length > 0) {
               var addIt = false;
-              
+
               $.each(layerInfo.projectionList, function(i, p){
                 if(map.getView().getProjection().getCode() == p) {
                   addIt = true;
                 }
               });
-              
+
               if(!addIt) {
                 defer.reject();
                 return $q.defer().promise;
@@ -190,22 +190,22 @@
                 }));
                 break;
 
-              case 'tms':            
-                var prop = { 
+              case 'tms':
+                var prop = {
                   // Settings are usually encoded
                     url: decodeURI(layerInfo.url)
                 };
-                
+
                 if(layerInfo.projection) {
                   prop.projection = layerInfo.projection;
                 }
-                
+
                 if(layerInfo.attribution) {
                   prop.attributions = [
                     new ol.Attribution({"html": layerInfo.attribution})
                   ]
                 }
-                
+
                 defer.resolve(new ol.layer.Tile({
                   source: new ol.source.XYZ(prop),
                   title: layerInfo.title || 'TMS Layer'
@@ -251,11 +251,11 @@
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
                       }
-                      
+
                       if(layerInfo.attribution) {
                         layer.getSource().setAttributions(layerInfo.attribution);
                       }
-                      
+
                       defer.resolve(layer);
                     });
                 break;
@@ -274,11 +274,11 @@
                         layer.set('title', layerInfo.title);
                         layer.set('label', layerInfo.title);
                       }
-                      
+
                       if(layerInfo.attribution) {
                         layer.getSource().setAttributions(layerInfo.attribution);
                       }
-                      
+
                       defer.resolve(layer);
                     });
                 break;
@@ -689,13 +689,21 @@
 
             var options = layerOptions || {};
 
+            var loadFunction;
+            if (options.useProxy && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
+              loadFunction = function (image, src) {
+                image.getImage().src = gnGlobalSettings.proxyUrl + encodeURIComponent(src);
+              };
+            }
+
             var source, olLayer;
             if (gnViewerSettings.singleTileWMS) {
               var config = {
                 params: layerParams,
                 url: options.url,
                 projection: layerOptions.projection,
-                ratio: getImageSourceRatio(map, 2048)
+                ratio: getImageSourceRatio(map, 2048),
+                imageLoadFunction: loadFunction
               };
               source = new ol.source.ImageWMS(
                   gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
@@ -706,7 +714,8 @@
                 params: layerParams,
                 url: options.url,
                 projection: layerOptions.projection,
-                gutter: 15
+                gutter: 15,
+                tileLoadFunction: loadFunction
               };
               source = new ol.source.TileWMS(
                   gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
@@ -722,11 +731,6 @@
               });
             }
 
-            if(layerParams.useProxy
-                && options.url.indexOf(gnGlobalSettings.proxyUrl) != 0) {
-              options.url = gnGlobalSettings.proxyUrl
-                              + encodeURIComponent(options.url);
-            }
 
             var layerOptions = {
               url: options.url,
@@ -950,7 +954,8 @@
                     getCapLayer.MinScaleDenominator),
                 maxResolution: this.getResolutionFromScale(
                     map.getView().getProjection(),
-                    getCapLayer.MaxScaleDenominator)
+                    getCapLayer.MaxScaleDenominator),
+                useProxy: getCapLayer.useProxy
               });
 
               if (angular.isArray(getCapLayer.Dimension)) {

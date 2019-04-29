@@ -90,7 +90,7 @@
           <xsl:if test="$header">
             <xsl:call-template name="header"/>
           </xsl:if>
-          <div class="container">
+          <div class="">
             <xsl:copy-of select="$content"/>
           </div>
           <xsl:if test="$header">

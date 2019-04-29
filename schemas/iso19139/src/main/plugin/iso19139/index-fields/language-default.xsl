@@ -159,7 +159,6 @@
 
   <xsl:template mode="index" match="*|@*">
     <xsl:param name="langId"/>
-
     <xsl:apply-templates mode="index" select="*|@*">
       <xsl:with-param name="langId" select="$langId"/>
     </xsl:apply-templates>
