@@ -31,7 +31,7 @@
    * Directive to display featured user searches in the home page.
    *
    */
-  module.directive('gnFeaturedUserSearchesHome', [
+  module.directive('gnUserSearchesList', [
     'gnUserSearchesService', 'gnConfigService', 'gnConfig', 'gnLangs',
     '$http', '$translate', '$location',
     function(gnUserSearchesService, gnConfigService, gnConfig, gnLangs,
