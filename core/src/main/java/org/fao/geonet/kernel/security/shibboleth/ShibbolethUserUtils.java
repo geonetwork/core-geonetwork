@@ -20,8 +20,6 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
-import java.util.HashSet;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -40,7 +38,6 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.hsqldb.lib.Set;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -211,6 +208,14 @@ public class ShibbolethUserUtils {
 					profile = Profile.UserAdmin;
 				}
 				usergroup.setProfile(profile);
+				
+				if(profile.equals(Profile.Reviewer)) {
+					UserGroup ug = new UserGroup();
+					ug.setGroup(g);
+					ug.setUser(user);
+					ug.setProfile(Profile.Editor);
+					userGroupRepository.save(ug);
+				}
 			} else {
 				//Failback if no profile
 				usergroup.setProfile(Profile.Guest);
