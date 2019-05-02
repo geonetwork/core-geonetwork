@@ -173,7 +173,6 @@
             scope.loading = false;
             scope.capability = null;
             scope.serviceDesc = null;
-            scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
             scope.url = '';
           };
 
