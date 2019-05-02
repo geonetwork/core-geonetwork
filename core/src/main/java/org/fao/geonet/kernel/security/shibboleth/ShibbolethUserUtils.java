@@ -194,6 +194,12 @@ public class ShibbolethUserUtils {
 
 		for (String group : groups) {
 			Group g = groupRepository.findByName(group);
+			
+			if(g == null) {
+				g = new Group();
+				g.setName(group);
+				groupRepository.save(g);
+			}
 
 			UserGroup usergroup = new UserGroup();
 			usergroup.setGroup(g);
