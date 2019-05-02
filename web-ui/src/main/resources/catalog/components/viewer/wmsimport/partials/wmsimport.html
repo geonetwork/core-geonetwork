@@ -3,13 +3,13 @@
     <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div data-ng-show="catServicesList.length > 0 || servicesList.length > 0">
       <div class="dropdown">
-        <button class="btn btn-block btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+        <button data-ng-attr-id="addServiceChooseAServiceButton-{{format}}" class="btn btn-block btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
           <span data-ng-hide="serviceDesc"
                 title="{{'chooseAserviceHelp' | translate}}">{{'chooseAservice' | translate}}</span>
           <span data-ng-show="serviceDesc">{{serviceDesc.title}}</span>
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" role="listbox">
+        <ul class="dropdown-menu" role="listbox" aria-labelledby="addServiceChooseAServiceButton-{{format}}">
           <li data-ng-repeat="srv in servicesList | orderBy: 'name'">
             <a href="" data-ng-click="setUrl(srv)" title="{{srv.url}}">
               {{srv.name}} ({{srv.url}})
