@@ -209,6 +209,7 @@
         module.config(['gnGlobalSettings',
         function(gnGlobalSettings) {
         gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        gnGlobalSettings.shibbolethHideLogin = <xsl:value-of select="$shibbolethHideLogin and $shibbolethOn"/>;
         }]);
       </script>
     </xsl:if>

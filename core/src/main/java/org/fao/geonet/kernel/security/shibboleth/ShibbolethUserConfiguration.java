@@ -44,6 +44,8 @@ public class ShibbolethUserConfiguration {
     private boolean updateGroup;
     
     private String arraySeparator;
+    
+    private Boolean hideLogin;
 
     public String getUsernameKey() {
         return usernameKey;
@@ -144,6 +146,17 @@ public class ShibbolethUserConfiguration {
 			arraySeparator = ";";
 		}
 		this.arraySeparator = arraySeparator;
+	}
+
+	public Boolean getHideLogin() {
+		return hideLogin;
+	}
+
+	public void setHideLogin(Boolean hideLogin) {
+		if(hideLogin == null) {
+			hideLogin = true;
+		}
+		this.hideLogin = hideLogin;
 	}
 }
 

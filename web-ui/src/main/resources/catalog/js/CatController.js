@@ -281,6 +281,7 @@ goog.require('gn_alert');
       },
       current: null,
       shibbolethEnabled: false,
+      shibbolethHideLogin: true,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -502,6 +503,7 @@ goog.require('gn_alert');
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
       $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
+      $scope.shibbolethHideLogin = gnGlobalSettings.shibbolethHideLogin;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
 
