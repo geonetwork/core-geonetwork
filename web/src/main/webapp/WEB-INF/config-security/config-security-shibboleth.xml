@@ -62,6 +62,7 @@
     <property name="profileKey" value="${shibbolethConfiguration.profileKey}"/>
     <property name="groupKey" value="${shibbolethConfiguration.groupKey}"/>
     <property name="emailKey" value="${shibbolethConfiguration.emailKey}"/>
+    <property name="roleGroupKey" value="${shibbolethConfiguration.roleGroupKey}"/>
     
     <property name="defaultGroup" value="${shibbolethConfiguration.defaultGroup}"/>
 
@@ -69,6 +70,7 @@
     <property name="updateGroup" value="${shibbolethConfiguration.updateGroup}"/>
    
     <property name="arraySeparator" value="${shibbolethConfiguration.arraySeparator}"/>
+    <property name="roleGroupSeparator" value="${shibbolethConfiguration.roleGroupSeparator}"/>
  
 		<property name="hideLogin"
 			value="${shibbolethConfiguration.hideLogin}" />

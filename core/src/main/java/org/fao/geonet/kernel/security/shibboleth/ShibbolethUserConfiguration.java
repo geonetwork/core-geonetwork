@@ -37,6 +37,7 @@ public class ShibbolethUserConfiguration {
     private String profileKey;
     private String groupKey;
     private String emailKey;
+    private String roleGroupKey;
 
     private String defaultGroup;
 
@@ -44,6 +45,7 @@ public class ShibbolethUserConfiguration {
     private boolean updateGroup;
     
     private String arraySeparator;
+    private String roleGroupSeparator;
     
     private Boolean hideLogin;
 
@@ -157,6 +159,25 @@ public class ShibbolethUserConfiguration {
 			hideLogin = true;
 		}
 		this.hideLogin = hideLogin;
+	}
+
+	public String getRoleGroupKey() {
+		return roleGroupKey;
+	}
+
+	public void setRoleGroupKey(String roleGroupKey) {
+		this.roleGroupKey = roleGroupKey;
+	}
+
+	public String getRoleGroupSeparator() {
+		return roleGroupSeparator;
+	}
+
+	public void setRoleGroupSeparator(String roleGroupSeparator) {
+		if(StringUtils.isEmpty(arraySeparator)) {
+			arraySeparator = ",";
+		}
+		this.roleGroupSeparator = roleGroupSeparator;
 	}
 }
 
