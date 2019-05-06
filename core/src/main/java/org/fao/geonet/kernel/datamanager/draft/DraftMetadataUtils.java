@@ -448,20 +448,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     private String createDraft(ServiceContext context, String id, AbstractMetadata md)
         throws Exception, IOException, JDOMException {
         // We have to create the draft using the metadata information
-        String parentUuid = "";
-        String schemaIdentifier = metadataSchemaUtils.getMetadataSchema(id);
-        SchemaPlugin instance = SchemaManager.getSchemaPlugin(schemaIdentifier);
-        AssociatedResourcesSchemaPlugin schemaPlugin = null;
-        if (instance instanceof AssociatedResourcesSchemaPlugin) {
-            schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
-        }
-        if (schemaPlugin != null) {
-            Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md.getXmlData(false));
-            if (listOfUUIDs.size() > 0) {
-                // FIXME more than one parent? Is it even possible?
-                parentUuid = listOfUUIDs.iterator().next();
-            }
-        }
+        String parentUuid = null;
 
         String groupOwner = null;
         String source = null;
