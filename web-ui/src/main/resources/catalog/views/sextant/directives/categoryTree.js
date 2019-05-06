@@ -55,6 +55,7 @@
             'collection="member.nodes"></gn-categorytree-col>',
         controller: ['$scope', '$timeout', function($scope, $timeout) {
           this.updateSearch = function() {
+            $scope.lastClicked = true;
             $timeout($scope.triggerSearch, 100);
           }
         }],
@@ -115,6 +116,10 @@
           };
 
           scope.$watch('searchResults.facet', function(v) {
+            if (scope.lastClicked) {
+              scope.lastClicked = false;
+              return;
+            }
 
             if (v) {
 
