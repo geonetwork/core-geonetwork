@@ -430,7 +430,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
-     * @param context    import org.fao.geonet.domain.MetadataDraft;
+     * @param context    
      * @param metadataId
      * @throws Exception
      */
