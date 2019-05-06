@@ -491,6 +491,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
         }
         final MetadataDraft newMetadata = new MetadataDraft();
         newMetadata.setUuid(uuid);
+        newMetadata.setApprovedVersion(templateMetadata);
         newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
             .setType(MetadataType.lookup(isTemplate));
         if (groupOwner != null) {

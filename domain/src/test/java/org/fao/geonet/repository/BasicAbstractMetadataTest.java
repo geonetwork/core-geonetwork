@@ -67,8 +67,13 @@ public class BasicAbstractMetadataTest extends AbstractSpringDataTest {
     
     @Test
     public void testDraftWithRepositoryDAO() throws Exception {
+    	Metadata record = new Metadata();
+    	populate(record);
+    	_metadatarepo.save(record);
+    	
     	MetadataDraft md = new MetadataDraft();
         populate(md);
+        md.setApprovedVersion(record);
         _metadatadraftrepo.save(md);
         
         md = _metadatadraftrepo.findOneByUuid(md.getUuid());
@@ -80,6 +85,9 @@ public class BasicAbstractMetadataTest extends AbstractSpringDataTest {
         md = _metadatadraftrepo.findOneByUuid(md.getUuid());
         
         assertNull(md);
+        
+
+    	_metadatarepo.delete(record);
     }
 
 	private void populate(AbstractMetadata md) {

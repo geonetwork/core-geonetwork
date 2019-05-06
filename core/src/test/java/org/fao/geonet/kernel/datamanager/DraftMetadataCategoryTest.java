@@ -22,22 +22,25 @@
  */
 package org.fao.geonet.kernel.datamanager;
 
-import jeeves.server.context.ServiceContext;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Tests for {@link DraftMetadataCategory}.
@@ -54,16 +57,25 @@ public class DraftMetadataCategoryTest extends AbstractCoreIntegrationTest {
     private MetadataCategoryRepository metadataCategoryRepository;
 
     @Autowired
-    private MetadataDraftRepository metadataRepository;
+    private MetadataDraftRepository metadataDraftRepository;
+
+    @Autowired
+    private MetadataRepository metadataRepository;
 
     private MetadataDraft md;
+    private Metadata record;
     private MetadataCategory mdc;
 
     @Before
     public void init() {
+    	record = new Metadata();
+    	populate(record);
+    	metadataRepository.save(record);
+    	
         md = new MetadataDraft();
         populate(md);
-        metadataRepository.save(md);
+        md.setApprovedVersion(record);
+        metadataDraftRepository.save(md);
     }
 
     /**
@@ -74,7 +86,7 @@ public class DraftMetadataCategoryTest extends AbstractCoreIntegrationTest {
     @Test
     public void test() throws Exception {
 
-        assertTrue(metadataRepository.exists(md.getId()));
+        assertTrue(metadataDraftRepository.exists(md.getId()));
 
         assertTrue(metadataCategory.getCategories(String.valueOf(md.getId())).isEmpty());
 
@@ -92,7 +104,8 @@ public class DraftMetadataCategoryTest extends AbstractCoreIntegrationTest {
 
     @After
     public void cleanup() {
-        metadataRepository.delete(md);
+        metadataDraftRepository.delete(md);
+        metadataRepository.delete(record);
     }
 
     private void populate(AbstractMetadata md) {
