@@ -96,7 +96,13 @@ public class DraftMetadataManagerTest extends AbstractCoreIntegrationTest {
     public void testSave() throws Exception {
         assertTrue(metadataUtils.findAll(MetadataSpecs.hasType(MetadataType.TEMPLATE)).isEmpty());
 
-        md = metadataManager.save(createMetadataDraft());
+        Metadata record = createMetadata();
+        record = (Metadata) metadataManager.save(record);
+        
+        assertNotNull(record);
+        assertNotNull(record.getId());
+        
+        md = metadataManager.save(createMetadataDraft(record));
 
         assertNotNull(md);
         assertNotNull(metadataUtils.findOne(md.getId()));
@@ -109,7 +115,11 @@ public class DraftMetadataManagerTest extends AbstractCoreIntegrationTest {
         assertNull(metadataUtils.findOne(md.getId()));
         assertFalse(metadataUtils.exists(md.getId()));
         assertFalse(metadataUtils.existsMetadata(md.getId()));
+        
+        assertTrue(metadataUtils.existsMetadataUuid(md.getUuid()));
+        metadataManager.delete(record.getId());
         assertFalse(metadataUtils.existsMetadataUuid(md.getUuid()));
+      
     }
 
     /**
@@ -165,8 +175,8 @@ public class DraftMetadataManagerTest extends AbstractCoreIntegrationTest {
         assertFalse(metadataUtils.findAll(MetadataSpecs.hasMetadataId(md.getId())).isEmpty());
     }
 
-    private AbstractMetadata createMetadata() throws IOException {
-        AbstractMetadata md = new Metadata();
+    private Metadata createMetadata() throws IOException {
+    	Metadata md = new Metadata();
         md.setUuid("test-metadata");
         try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
             md.setData(IOUtils.toString(is));
@@ -180,9 +190,10 @@ public class DraftMetadataManagerTest extends AbstractCoreIntegrationTest {
     }
 
 
-    private AbstractMetadata createMetadataDraft() throws IOException {
-        AbstractMetadata md = new MetadataDraft();
+    private AbstractMetadata createMetadataDraft(Metadata record) throws IOException {
+    	MetadataDraft md = new MetadataDraft();
         md.setUuid("test-metadata");
+        md.setApprovedVersion(record);
         try (InputStream is = XmlSerializerIntegrationTest.class.getResourceAsStream("valid-metadata.iso19139.xml")) {
             md.setData(IOUtils.toString(is));
         }

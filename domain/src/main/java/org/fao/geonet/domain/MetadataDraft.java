@@ -23,15 +23,20 @@
 
 package org.fao.geonet.domain;
 
-import org.apache.lucene.document.Document;
-import org.fao.geonet.entitylistener.MetadataDraftEntityListenerManager;
+import java.io.Serializable;
 
+import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.io.Serializable;
+
+import org.apache.lucene.document.Document;
+import org.fao.geonet.entitylistener.MetadataDraftEntityListenerManager;
 
 /**
  * This is a normal {@link Metadata} but on its draft version.
@@ -46,15 +51,29 @@ import java.io.Serializable;
 @EntityListeners(MetadataDraftEntityListenerManager.class)
 public class MetadataDraft extends AbstractMetadata implements Serializable {
 
-    private static final long serialVersionUID = -1933627969445820867L;
-    public static final String TABLENAME = "MetadataDraft";
+	private static final long serialVersionUID = -1933627969445820867L;
+	public static final String TABLENAME = "MetadataDraft";
 
-    public MetadataDraft() {
-    }
+	public MetadataDraft() {
+	}
 
-    public static MetadataDraft createFromLuceneIndexDocument(Document doc) {
-        MetadataDraft metadata = new MetadataDraft();
-        transform(doc, metadata);
-        return metadata;
-    }
+	public static MetadataDraft createFromLuceneIndexDocument(Document doc) {
+		MetadataDraft metadata = new MetadataDraft();
+		transform(doc, metadata);
+		return metadata;
+	}
+
+	public Metadata approvedVersion;
+
+	@Nonnull
+    @JoinColumn(nullable=false, updatable=false, unique=true, insertable=true)
+    @OneToOne(fetch=FetchType.EAGER, optional=false, orphanRemoval=false)
+    public Metadata getApprovedVersion() {
+		return approvedVersion;
+	}
+
+	public void setApprovedVersion(Metadata approvedVersion) {
+		this.approvedVersion = approvedVersion;
+	}
+
 }
