@@ -10,7 +10,8 @@
 
   <span class="fa fa-fw text-primary"
      data-ng-class="ctrl.isSelected()  ? 'fa-check-square-o' : 'fa-square-o'"></span>
-  <span>{{::ctrl.node.value}}&nbsp;({{::ctrl.node.count | number:0}})</span>
+  <span>{{::ctrl.node.value}}</span>
+  <span ng-if="ctrl.node.count !== undefined">&nbsp;({{::ctrl.node.count | number:0}})</span>
 </div>
 
 <div ng-if="::ctrl.node.nodes && ctrl.isRoot" class="list-group">
