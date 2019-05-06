@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns="http://www.w3.org/2005/sparql-results#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:fn="http://www.w3.org/2005/xpath-functions"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dcterms="http://purl.org/dc/terms/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <skos:ConceptScheme rdf:about="http://sextant.ifremer.fr/thesaurus/cersat/compositing">
+    <dc:title>Cersat - Compositing</dc:title>
+    <dc:description/>
+    <dcterms:issued>2019-05-06</dcterms:issued>
+    <dcterms:modified>2015-05-06</dcterms:modified>
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://sextant.ifremer.fr/thesaurus/cersat/compositing/Uncollated">
+    <skos:prefLabel xml:lang="en">Uncollated
+    </skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Uncollated</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sextant.ifremer.fr/thesaurus/cersat/compositing/Collated ">
+    <skos:prefLabel xml:lang="en">Collated</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Collated</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sextant.ifremer.fr/thesaurus/cersat/compositing/Interpolated">
+    <skos:prefLabel xml:lang="en">Interpolated</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Interpolated</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://sextant.ifremer.fr/thesaurus/cersat/compositing/None">
+    <skos:prefLabel xml:lang="en">None</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">None</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>
