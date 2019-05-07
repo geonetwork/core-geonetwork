@@ -1218,6 +1218,7 @@
                    * Hide modal on success.
                    */
                   scope.linkTo = function(addOnlineSrcInDataset) {
+                    scope.onlineSrcLink = '';
                     if (scope.mode === 'service') {
                       return gnOnlinesrc.
                           linkToService(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
