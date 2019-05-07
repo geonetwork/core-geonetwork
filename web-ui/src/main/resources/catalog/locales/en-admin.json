@@ -1366,5 +1366,22 @@
     "ui-fluidLayout": "Fluid container for Home and Search",
     "ui-fluidLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
     "ui-fluidEditorLayout": "Fluid container for the Editor",
-    "ui-fluidEditorLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container"
+    "ui-fluidEditorLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
+    "metadata/pdfReport": "Metadata selection - pdf report",
+    "metadata/pdfReport/coverPdf": "Cover pdf",
+    "metadata/pdfReport/coverPdf-help": "URL of the cover pdf for the PDF report. If not defined, no cover page is added to the report.",
+    "metadata/pdfReport/introPdf": "Introduction pages pdf",
+    "metadata/pdfReport/introPdf-help": "URL of the pdf with the introduction pages for the PDF report. If not defined, no introduction pages are added to the report.",
+    "metadata/pdfReport/headerLeft": "Header text (left)",
+    "metadata/pdfReport/headerLeft-help": "The following template values are allowed: {date}, {siteInfo}.",
+    "metadata/pdfReport/headerRight": "Header text (right)",
+    "metadata/pdfReport/headerRight-help": "The following template values are allowed: {date}, {siteInfo}.",
+    "metadata/pdfReport/footerLeft": "Footer text (left)",
+    "metadata/pdfReport/footerLeft-help": "The following template values are allowed: {date}, {siteInfo}.",
+    "metadata/pdfReport/footerRight": "Footer text (right)",
+    "metadata/pdfReport/headerRight-help": "The following template values are allowed: {date}, {siteInfo}.",
+    "metadata/pdfReport/tocPage": "Add table of contents (TOC) page",
+    "metadata/pdfReport/pdfName": "Report file name",
+    "metadata/pdfReport/pdfName-help": "Report file name. The following template fields are allowed to be used: {year}, {month}, {day}, {date} and {datetime}. Template fields are replaced with the related date values. {date} uses 'yyyyMMdd' format and {datetime} uses 'yyyyMMddHHmmss' format."
+
 }
