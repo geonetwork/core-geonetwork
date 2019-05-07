@@ -127,6 +127,8 @@
 .gn-nojs {
   .gn-md-view {
     h1 {
+      margin: 15px 0 25px 0;
+      font-size: 22px;
       i {
         display: none;
       }
@@ -156,7 +158,6 @@
     } 
     h2 {
       font-size: 18px;
-      margin-bottom: 20px;
     }
     .gn-contact {
       padding: 8px;
@@ -186,13 +187,17 @@
         }
       }
     }
-    .view-header {
+    h2.view-header, h5.view-header {
       border-bottom: 0;
     }
     .entry {
       margin-left: 0 !important;
       padding-left: 0;
       border-left: 0;
+      h2 {
+        font-weight: 400;
+        margin: 15px 0;
+      }
     }
     .extent {
       display: inline-block;
@@ -207,10 +212,26 @@
       border-image: initial;
     }
     // tabs
+    .nav-tabs {
+      border: 0;
+      > li {
+        a {
+          border: 1px solid @nav-tabs-border-color;
+          border-radius: @border-radius-base;
+          margin: 0 5px 5px 0;
+        }
+      } 
+    }
     .tab-content {
-      .view-header {
-        display: none;
+      #gn-tab-default {
+        h1.view-header {
+          display: none;
+        }
       }
+      .tab-pane {
+        display: block;
+      }
+
     }
   }
 }

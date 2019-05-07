@@ -209,14 +209,14 @@
                  </div>
 
                   <div class="clearfix">
-                    <div class="gn-md-thumbnail pull-left">
-                      <xsl:for-each select="image[1]">
+                    <xsl:for-each select="image[1]">
+                      <div class="gn-md-thumbnail pull-left">
                         <img class="gn-img-thumbnail"
                              itemprop="thumbnailUrl"
                              alt="{thumbnail}"
-                             src="{tokenize(., '\|')[2]}"></img>
-                      </xsl:for-each>
-                    </div>
+                             src="{tokenize(., '\|')[2]}" />
+                      </div>
+                    </xsl:for-each>
                     <p itemprop="description">
                       <xsl:value-of select="abstract"/>
                     </p>
