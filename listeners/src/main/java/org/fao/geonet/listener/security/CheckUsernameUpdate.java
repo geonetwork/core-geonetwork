@@ -20,14 +20,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.listeners.security;
+package org.fao.geonet.listener.security;
 
-import org.fao.geonet.events.user.UserCreated;
+import org.fao.geonet.events.user.UserUpdated;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 /**
- * Check that the username is correctly scaped on creation.
+ * Check that the username is correctly scaped on update.
  * 
  * @author delawen
  * 
@@ -35,11 +35,11 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class CheckUsernameCreation extends CheckUsername
-        implements ApplicationListener<UserCreated> {
+public class CheckUsernameUpdate extends CheckUsername
+        implements ApplicationListener<UserUpdated> {
 
     @Override
-    public void onApplicationEvent(UserCreated event) {
+    public void onApplicationEvent(UserUpdated event) {
         check(event);
     }
 

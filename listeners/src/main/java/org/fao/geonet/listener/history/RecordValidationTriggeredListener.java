@@ -20,18 +20,19 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.listeners.history;
+package org.fao.geonet.listener.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecordDeletedListener extends GenericMetadataEventListener implements ApplicationListener<RecordDeletedEvent> {
+public class RecordValidationTriggeredListener extends GenericMetadataEventListener
+        implements ApplicationListener<RecordValidationTriggeredEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.RECORDDELETED;
+    private String eventType = StatusValue.Events.RECORDVALIDATIONTRIGGERED;
 
     @Override
     public String getChangeMessage() {
@@ -44,7 +45,7 @@ public class RecordDeletedListener extends GenericMetadataEventListener implemen
     }
 
     @Override
-    public void onApplicationEvent(RecordDeletedEvent event) {
-        // Delete event is not supported
+    public void onApplicationEvent(RecordValidationTriggeredEvent event) {
+        handleEvent(event);
     }
 }

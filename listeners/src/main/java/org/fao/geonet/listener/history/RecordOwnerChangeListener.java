@@ -20,19 +20,18 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.listeners.history;
+package org.fao.geonet.listener.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
+import org.fao.geonet.events.history.RecordOwnerChangeEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecordValidationTriggeredListener extends GenericMetadataEventListener
-        implements ApplicationListener<RecordValidationTriggeredEvent> {
+public class RecordOwnerChangeListener extends GenericMetadataEventListener implements ApplicationListener<RecordOwnerChangeEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.RECORDVALIDATIONTRIGGERED;
+    private String eventType = StatusValue.Events.RECORDOWNERCHANGE;
 
     @Override
     public String getChangeMessage() {
@@ -45,7 +44,7 @@ public class RecordValidationTriggeredListener extends GenericMetadataEventListe
     }
 
     @Override
-    public void onApplicationEvent(RecordValidationTriggeredEvent event) {
+    public void onApplicationEvent(RecordOwnerChangeEvent event) {
         handleEvent(event);
     }
 }

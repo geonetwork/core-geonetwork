@@ -20,18 +20,18 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-package org.fao.geonet.listeners.history;
+package org.fao.geonet.listener.history;
 
 import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.events.history.AttachmentAddedEvent;
+import org.fao.geonet.events.history.RecordCreateEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AttachmentAddedListener extends GenericMetadataEventListener implements ApplicationListener<AttachmentAddedEvent> {
+public class RecordCreatedListener extends GenericMetadataEventListener implements ApplicationListener<RecordCreateEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.ATTACHMENTADDED;
+    private String eventType = StatusValue.Events.RECORDCREATED;
 
     @Override
     public String getChangeMessage() {
@@ -44,7 +44,8 @@ public class AttachmentAddedListener extends GenericMetadataEventListener implem
     }
 
     @Override
-    public void onApplicationEvent(AttachmentAddedEvent event) {
+    public void onApplicationEvent(RecordCreateEvent event) {
         handleEvent(event);
     }
+
 }
