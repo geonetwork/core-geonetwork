@@ -440,22 +440,23 @@
 
         <div data-gn-userfeedback='mdView.current.record'
             data-gn-user={{user.username}}
-            data-ng-if="isUserFeedbackEnabled">
+            data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
         </div>
         <div class="gn-md-feedback-buttons clearfix">
           <div class="pull-left"
                   data-gn-userfeedbackfull='mdView.current.record'
                   data-gn-user={{user.username}}
-                  data-ng-if="isUserFeedbackEnabled">
+                  data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
           </div>
           <div class="pull-left"
                   data-gn-userfeedbacknew='mdView.current.record'
                   data-gn-user={{user.username}}
-                  data-ng-if="isUserFeedbackEnabled">
+                  data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
           </div>
 
         </div>
-        <div data-gn-md-feedback="mdView.current.record"></div>
+        <div data-gn-md-feedback="mdView.current.record"
+                  data-ng-if="mdView.current.record.draft != 'y'"></div>
 
         <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
           <h2>
@@ -573,7 +574,8 @@
           </p>
         </section>
 
-        <section class="gn-md-side-social" data-ng-show="isSocialbarEnabled">
+        <section class="gn-md-side-social" 
+          data-ng-show="isSocialbarEnabled && mdView.current.record.draft != 'y'">
           <h2>
             <i class="fa fa-fw fa-share-square-o"></i>
             <span data-translate="">shareOn</span>
@@ -608,7 +610,8 @@
             class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
         </section>
 
-        <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
+        <section data-ng-show="isRatingEnabled && mdView.current.record.draft != 'y'" 
+          class="gn-md-side-rating">
           <h2>
             <i class="fa fa-fw"></i>
             <span data-translate="">rate</span>
