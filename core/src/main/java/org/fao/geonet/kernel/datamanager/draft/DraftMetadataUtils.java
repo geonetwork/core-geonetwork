@@ -57,6 +57,7 @@ import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
@@ -432,7 +433,8 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             id = Integer.toString(metadataDraftRepository.findOneByUuid(md.getUuid()).getId());
 
             Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
-        } else if (metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
+        } else if ((context.getBean(IMetadataManager.class) instanceof DraftMetadataManager) &&
+        		metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
             id = createDraft(context, id, md);
 
             Log.trace(Geonet.DATA_MANAGER, "Creating draft with id " + id + " to edit.");

@@ -43,8 +43,10 @@ import org.fao.geonet.domain.User_;
 import org.fao.geonet.events.md.MetadataStatusChanged;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -138,7 +140,8 @@ public class DefaultStatusActions implements StatusActions {
             Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.onEdit(" + id
                 + ", " + minorEdit + ") with status " + dm.getCurrentStatus(id));
         }
-        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
+        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED) &&
+        		(context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
             unsetAllOperations(id);
