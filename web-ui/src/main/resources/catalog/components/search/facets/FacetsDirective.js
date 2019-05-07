@@ -206,8 +206,14 @@
                     $q.all(promises).then(function() {
                       scope.$watch('searchResults.facet', function(v) {
                         if (v && scope.facetConfig && scope.facetConfig.label) {
-                          var facets = v[scope.facetConfig.label];
+                          // SEXTANT SPECIFIC
+                          if (scope.lastClicked) {
+                            scope.lastClicked = false;
+                            return;
+                          }
+                          // END SEXTANT SPECIFIC
 
+                          var facets = v[scope.facetConfig.label];
                           if (scope.facetConfig.label == 'publishedForGroup') {
                             updateLabelFromInfo(facets, groups, scope.lang);
                             facets = $filter('orderBy')(facets, 'name');
@@ -277,6 +283,11 @@
               scope.updateSearch = function(value, e) {
                 var key = scope.facetConfig.key;
                 var search = scope.searchObj.params[key];
+
+                // SEXTANT SPECIFIC
+                // this is used to prevent updating the facet after the new search
+                scope.lastClicked = true;
+                // END SEXTANT SPECIFIC
 
                 // null, undefined or ''
                 if (!search) {
