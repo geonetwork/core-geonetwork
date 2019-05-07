@@ -980,6 +980,7 @@
     <helper displayIf="gco:CharacterString[contains(., 'temporal resolution: ')]" editorMode="suggestion">
       <option value="temporal resolution: irregular">Irregular</option>
       <option value="temporal resolution: instantaneous">Instantaneous</option>
+      <option value="temporal resolution: 15-minutes instantaneous">15-minutes instantaneous</option>
       <option value="temporal resolution: hourly mean">Hourly mean</option>
       <option value="temporal resolution: hourly mean, weekly mean, monthly mean">Hourly mean, weekly mean, monthly mean</option>
       <option value="temporal resolution: hourly instantaneous">Hourly instantaneous</option>
@@ -1000,7 +1001,9 @@
       <option value="temporal resolution: monthly mean">Monthly mean</option>
       <option value="temporal resolution: monthly mean, daily mean">Monthly mean, daily mean</option>
       <option value="temporal resolution: monthly mean, daily mean, hourly mean">Monthly mean, daily mean, hourly mean</option>
+      <option value="temporal resolution: Annual mean">Annual mean</option>
       <option value="temporal resolution: Pluri-annual mean">Pluri-annual mean</option>
+      <option value="temporal resolution: Pluri-annual climatology mean">Pluri-annual climatology mean</option>
     </helper>
   </element>
   <element name="gmd:dimension" id="242.0">
