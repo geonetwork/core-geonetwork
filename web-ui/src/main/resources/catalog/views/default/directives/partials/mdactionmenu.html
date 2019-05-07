@@ -92,9 +92,10 @@
       <li role="menuitem" class="divider"
           data-ng-if="user.isConnected() && tasks.length > 0 && hasVisibletasks">&nbsp;</li>
 
+
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-if="user.isEditorOrMore()"
+           data-ng-if="user.isEditorOrMore() && md.draft != 'y'"
            data-ng-click="mdService.duplicate(md)">
           <i class="fa fa-fw fa-copy"></i>&nbsp;
           <span data-translate="">duplicate</span>
