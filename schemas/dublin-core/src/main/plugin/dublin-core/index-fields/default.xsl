@@ -232,7 +232,7 @@
         <xsl:if test="count($keywordWithNoThesaurus) > 0">
           'otherKeywords': [
           <xsl:for-each select="$keywordWithNoThesaurus">
-            {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>}
+            {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>, 'link': ''}
             <xsl:if test="position() != last()">,</xsl:if>
           </xsl:for-each>
           ]
