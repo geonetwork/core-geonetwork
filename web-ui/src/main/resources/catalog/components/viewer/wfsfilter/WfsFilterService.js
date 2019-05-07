@@ -88,12 +88,12 @@
        * @param {string} name of the facet field
        * @param {*} value of the active filter
        * @param {string} type of the facet field (range, field etc..)
-       * @param {boolean} multiValued if true, field can hold several values;
-       * the output filter will be `like '*value*'` instead of `= 'value'`
        * @param {Object} fieldInfo field info taken from the application profile
+       * @param {string} tokenSeparator separator for tokenized fields; if defined, the field
+       * is considered tokenized & the output filter will be `like '*value*'` instead of `= 'value'`
        * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(name, value, type, multiValued, fieldInfo) {
+      var buildSldFilter = function(name, value, type, fieldInfo, tokenSeparator) {
         var filterFields = [];
 
         // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
@@ -157,9 +157,23 @@
           var filters = [];
 
           angular.forEach(value, function(v, k) {
+            if (tokenSeparator !== undefined) {
+              // handle 3 cases for a tokenized field: value is first, last or between both
+              filters.push({
+                filter_type: 'PropertyIsLike',
+                params: [k + tokenSeparator + '*']
+              }, {
+                filter_type: 'PropertyIsLike',
+                params: ['*' + tokenSeparator + k]
+              }, {
+                filter_type: 'PropertyIsLike',
+                params: ['*' + tokenSeparator + k + tokenSeparator + '*']
+              });
+            }
+
             filters.push({
-              filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
-              params: [multiValued ? '*' + k + '*' : k]
+              filter_type: 'PropertyIsEqualTo',
+              params: [k]
             });
           });
 
@@ -191,21 +205,18 @@
           var fieldName = fieldInfo ? fieldInfo[1] : attrName;
           var type = attrValue.type || 'terms';
           var appProfileField = appProfile && appProfile.fields &&
-            appProfile.fields.find(function(field) {
+            appProfile.fields.filter(function(field) {
               return field.name === fieldName;
-            });
+            })[0];
+          var tokenSeparator = appProfile && appProfile.tokenizedFields &&
+            appProfile.tokenizedFields[fieldName];
 
-          // multiple values
-          if (attrValue.values && Object.keys(attrValue.values).length) {
-            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.values, type, true, appProfileField));
-          }
+          var values = attrValue.values && Object.keys(attrValue.values).length ?
+            attrValue.values : attrValue.value;
 
-          // single value
-          else if (attrValue.value) {
-            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-                fieldName, attrValue.value, type, false, appProfileField));
-          }
+          Array.prototype.push.apply(sldConfig.filters,
+            buildSldFilter(fieldName, values, type, appProfileField, tokenSeparator)
+          );
         });
 
         return sldConfig;
@@ -267,6 +278,7 @@
             field.display = newField.display;
             // add a flag for tokenized fields
             field.isTokenized = tokenizedFields[field.name] != null;
+            field.tokenSeparator = tokenizedFields[field.name];
             field.suffix = newField.suffix
             field.hidden = newField.hidden
           }
