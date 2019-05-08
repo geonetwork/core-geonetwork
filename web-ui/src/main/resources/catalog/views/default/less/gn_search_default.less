@@ -311,3 +311,30 @@ li.list-group-item.gn-map-item {
     }
   }
 }
+
+// draft
+.see-draft-pill {
+  border: 1px solid @btn-default-border;
+  margin-top: 5px;
+  border-radius: 20px;
+  padding: 2px 0  4px 0;
+  display: block;
+  cursor: pointer;
+  color: @gray-dark;
+  &:hover {
+    color: @gray-darker;
+    text-decoration: none;
+  }
+  small small {
+    padding: 7px 2px 8px 8px;
+  }
+  label {
+    margin: 0 15px 0 10px;
+    font-weight: 400;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  @media (max-width: @screen-md-min) {
+    margin-bottom: 5px;
+  }
+}
