@@ -1366,5 +1366,7 @@
     "ui-fluidLayout": "Fluid container for Home and Search",
     "ui-fluidLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
     "ui-fluidEditorLayout": "Fluid container for the Editor",
-    "ui-fluidEditorLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container"
+    "ui-fluidEditorLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
+    "styleVariable-gnMenubarBackgroundHover": "Background color on hover",
+    "styleVariable-gnMenubarColorActive": "Color when active"
 }
