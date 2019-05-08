@@ -1069,6 +1069,8 @@
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.alertMsg = null;
                   scope.layerSelectionMode = 'multiple';
+                  scope.onlineSrcLink = '';
+                  scope.addOnlineSrcInDataset = true;
 
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
@@ -1076,15 +1078,23 @@
                     // parameters of the online resource form
                     scope.srcParams = {selectedLayers: []};
 
-                    var searchParams = {
-                      type: scope.mode
-                    };
+                    var searchParams = {};
+                    if (scope.mode === 'service') {
+                      searchParams.type = scope.mode;
+                    } else {
+                      // Any records which are not services
+                      // ie. dataset, series, ...
+                      searchParams['without-type'] = 'service';
+                    }
                     scope.$broadcast('resetSearch', searchParams);
                     scope.layers = [];
+
                     // Load service layers on load
                     if (scope.mode !== 'service') {
-                      // TODO: Check the appropriate WMS service
-                      // or list URLs if many
+                      // If linking a dataset and the service is a WMS
+                      // List all layers. The service WMS link can be added
+                      // as online source in the target dataset.
+                      // TODO: list all URLs if many
                       // TODO: If service URL is added, user need to reload
                       // editor to get URL or current record.
                       var links = [];
@@ -1092,15 +1102,25 @@
                           gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
                       links = links.concat(
                           gnCurrentEdit.metadata.getLinksByType('wms'));
-                      if (angular.isArray(links) && links.length === 1) {
-                        var serviceUrl = links[0].url;
-                        scope.loadCurrentLink(serviceUrl);
-                        scope.srcParams.url = serviceUrl;
+                      if (links.length > 0) {
+                        scope.onlineSrcLink = links[0].url;
+                        scope.loadCurrentLink(scope.onlineSrcLink);
+                        scope.srcParams.url = scope.onlineSrcLink;
                         scope.srcParams.protocol = links[0].protocol || '';
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
+
+                        scope.addOnlineSrcInDataset = true;
                       } else {
                         scope.alertMsg =
                             $translate.instant('linkToServiceWithoutURLError');
+
+                        // If no WMS found, suggest to add a link to the service landing page
+                        // Default is false.
+                        // Build a link to the service metadata record
+                        scope.onlineSrcLink = gnConfigService.getServiceURL() +
+                          "api/records/" + gnCurrentEdit.uuid;
+
+                        scope.addOnlineSrcInDataset = false;
                       }
                     }
                   });
@@ -1150,6 +1170,8 @@
                         var links = [];
                         scope.layers = [];
                         scope.srcParams.selectedLayers = [];
+
+                        // Search a WMS link in the service metadata record
                         // TODO: WFS ?
                         links = links.concat(md.getLinksByType('OGC:WMS'));
                         links = links.concat(md.getLinksByType('wms'));
@@ -1162,26 +1184,27 @@
                         scope.srcParams.source = gnCurrentEdit.metadata.source;
 
 
-                        if (angular.isArray(links) && links.length === 1) {
-                          scope.loadCurrentLink(links[0].url);
-                          scope.srcParams.url = links[0].url;
+                        if (links.length > 0) {
+                          scope.onlineSrcLink = links[0].url;
+                          scope.loadCurrentLink(scope.onlineSrcLink);
+                          scope.srcParams.protocol = links[0].protocol || 'OGC:WMS';
+                          scope.srcParams.url = scope.onlineSrcLink;
+                          scope.addOnlineSrcInDataset = true;
                         } else {
                           scope.srcParams.name = scope.currentMdTitle;
                           scope.srcParams.desc = scope.currentMdTitle;
                           scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
-                          scope.srcParams.url =  gnConfigService.getServiceURL() +
-                            "api/records/" +
-                            md.getUuid() + "/formatters/xml";
+                          scope.onlineSrcLink = gnConfigService.getServiceURL() +
+                            "api/records/" + md.getUuid();
+                          scope.srcParams.url = scope.onlineSrcLink;
+                          scope.addOnlineSrcInDataset = false;
                         }
-                      } else {
-                        // dataset
+                      } else if (scope.addOnlineSrcInDataset) {
                         scope.srcParams.uuidDS = md.getUuid();
                         scope.srcParams.name = gnCurrentEdit.mdTitle;
                         scope.srcParams.desc = gnCurrentEdit.mdTitle;
                         scope.srcParams.protocol = "WWW:LINK-1.0-http--link";
-                        scope.srcParams.url =  gnConfigService.getServiceURL() +
-                          "api/records/" +
-                          md.getUuid() + "/formatters/xml";
+                        scope.srcParams.url = scope.onlineSrcLink;
                         scope.srcParams.identifier = (md.identifier && md.identifier[0]) ? md.identifier[0] : '';
                         scope.srcParams.source = md.source;
                       }
@@ -1194,13 +1217,14 @@
                    *  - link a service to a dataset
                    * Hide modal on success.
                    */
-                  scope.linkTo = function() {
+                  scope.linkTo = function(addOnlineSrcInDataset) {
+                    scope.onlineSrcLink = '';
                     if (scope.mode === 'service') {
                       return gnOnlinesrc.
-                          linkToService(scope.srcParams, scope.popupid);
+                          linkToService(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
                     } else {
                       return gnOnlinesrc.
-                          linkToDataset(scope.srcParams, scope.popupid);
+                          linkToDataset(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
                     }
                   };
                 }

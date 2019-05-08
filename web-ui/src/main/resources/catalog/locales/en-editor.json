@@ -367,6 +367,7 @@
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
     "selectKeyword": "Add keywords",
     "saveLinkToSibling": "Save link to other resource",
+    "addTheFollowingLinkInDataset": "Add the following link to the dataset (as an online source in the distribution section):",
     "confirmCloseInvalidTitle": "Confirm editor close",
     "confirmCloseInvalidMetadata": "The current metadata has been found to be invalid. Closing the editor will cause it to be unpublished (this can be changed in the application settings).<br><br>Are you sure you want to proceed?",
     "hotkeyDirectory": "Manage directories (eg. contact)",
