@@ -1,4 +1,27 @@
 <div data-ng-controller="GnMdViewController" class="container">
+
+  <div data-ng-if="mdView.current.record.draft == 'e' || mdView.current.record.draft == 'y'"
+       data-ng-if="user.canEditRecord(mdView.current.record)"
+       class="bg-info see-draft-alert">
+    <!-- If draft exists, show a link -->
+    <a data-ng-if="mdView.current.record.draft == 'e'"
+      class="see-draft see-draft-not-approved"
+      title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
+      data-ng-href="#/metadraf/{{md.getUuid()}}"
+      data-ng-show="user.canEditRecord(mdView.current.record)">
+      {{'seeDraft' | translate}}
+    </a>
+    
+    <!-- If approved exists, show a link -->
+    <a data-ng-if="mdView.current.record.draft == 'y'"
+      class="see-draft see-draft-approved"
+      title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
+      data-ng-href="#/metadata/{{md.getUuid()}}"
+      data-ng-show="user.canEditRecord(mdView.current.record)">
+      {{'seeNoDraft' | translate}}
+    </a>
+  </div>
+  
   <div class="alert alert-warning"
        data-ng-hide="!mdView.loadDetailsFinished || mdView.current.record"
        data-translate=""
@@ -146,25 +169,6 @@
               data-title="{{'siblings' | translate}}">
           </div>
         </div>
-                
-        <!-- If draft exists, show a link -->
-        <a data-ng-if="mdView.current.record.draft == 'e'"
-            class="see-draft see-draft-not-approved"
-            title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-            data-ng-href="#/metadraf/{{md.getUuid()}}"
-            data-ng-show="user.canEditRecord(mdView.current.record)">
-           {{'seeDraft' | translate}}
-        </a>
-        
-        <!-- If approved exists, show a link -->
-        <a data-ng-if="mdView.current.record.draft == 'y'"
-            class="see-draft see-draft-approved"
-            title=" {{('status-' + mdView.current.record.mdStatus) | translate}}"
-            data-ng-href="#/metadata/{{md.getUuid()}}"
-            data-ng-show="user.canEditRecord(mdView.current.record)">
-           {{'seeNoDraft' | translate}}
-        </a>
-        
 
         <h2 data-translate="">aboutThisResource</h2>
         <table class="table table-striped">
@@ -441,23 +445,22 @@
 
         <div data-gn-userfeedback='mdView.current.record'
             data-gn-user={{user.username}}
-            data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+            data-ng-if="isUserFeedbackEnabled">
         </div>
         <div class="gn-md-feedback-buttons clearfix">
           <div class="pull-left"
                   data-gn-userfeedbackfull='mdView.current.record'
                   data-gn-user={{user.username}}
-                  data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+                  data-ng-if="isUserFeedbackEnabled">
           </div>
           <div class="pull-left"
                   data-gn-userfeedbacknew='mdView.current.record'
                   data-gn-user={{user.username}}
-                  data-ng-if="isUserFeedbackEnabled && mdView.current.record.draft != 'y'">
+                  data-ng-if="isUserFeedbackEnabled">
           </div>
 
         </div>
-        <div data-gn-md-feedback="mdView.current.record"
-                  data-ng-if="mdView.current.record.draft != 'y'"></div>
+        <div data-gn-md-feedback="mdView.current.record"></div>
 
         <section class="gn-md-side-extent" data-ng-if="mdView.current.record.geoBox.length > 0">
           <h2>
@@ -575,8 +578,7 @@
           </p>
         </section>
 
-        <section class="gn-md-side-social" 
-          data-ng-show="isSocialbarEnabled && mdView.current.record.draft != 'y'">
+        <section class="gn-md-side-social" data-ng-show="isSocialbarEnabled">
           <h2>
             <i class="fa fa-fw fa-share-square-o"></i>
             <span data-translate="">shareOn</span>
@@ -611,8 +613,7 @@
             class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
         </section>
 
-        <section data-ng-show="isRatingEnabled && mdView.current.record.draft != 'y'" 
-          class="gn-md-side-rating">
+        <section data-ng-show="isRatingEnabled" class="gn-md-side-rating">
           <h2>
             <i class="fa fa-fw"></i>
             <span data-translate="">rate</span>
