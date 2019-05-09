@@ -42,8 +42,6 @@ public class HumanizeDatesUiMigration extends JsonDatabaseMigration {
     @Override
     protected Map<String, String> setUpNewSettingValues() {
         Map<String, String> fieldsToUpdate = new HashMap<>(2);
-        fieldsToUpdate.put("/mods/global/enabled",
-            "true");
         fieldsToUpdate.put("/mods/global/humanizeDates",
             "true");
         return fieldsToUpdate;

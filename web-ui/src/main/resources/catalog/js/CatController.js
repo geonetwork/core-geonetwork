@@ -68,7 +68,6 @@ goog.require('gn_alert');
       },
       'mods': {
         'global': {
-          'enabled': true,
           'humanizeDates': true
         },
         'header': {

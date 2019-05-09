@@ -428,8 +428,7 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
-          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.enabled
-            && gnGlobalSettings.gnCfg.mods.global.humanizeDates;
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
               // Moment will properly parse YYYY, YYYY-MM,

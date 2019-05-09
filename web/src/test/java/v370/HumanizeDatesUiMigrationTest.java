@@ -104,7 +104,7 @@ public class HumanizeDatesUiMigrationTest {
         String updatedSetting = "{\"langDetector\":{\"fromHtmlTag\":false," +
             "\"regexp\":\"^/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+/([a-z]{3})/\",\"default\":\"eng\"}," +
             "\"nodeDetector\":{\"regexp\":\"^/[a-zA-Z0-9_-]+/([a-zA-Z0-9_-]+)/[a-z]{3}/\",\"default\":\"srv\"}," +
-            "\"mods\":{\"global\":{\"enabled\":true,\"humanizeDates\":true}," +
+            "\"mods\":{\"global\":{\"humanizeDates\":true}," +
             "\"header\":{\"enabled\":true,\"languages\":{\"eng\":\"en\",\"dut\":\"nl\",\"fre\":\"fr\"," +
             "\"ger\":\"ge\",\"kor\":\"ko\",\"spa\":\"es\",\"cze\":\"cz\",\"cat\":\"ca\",\"fin\":\"fi\",\"ice\":\"is\"," +
             "\"rus\":\"ru\",\"chi\":\"zh\"}},\"home\":{\"enabled\":true," +
@@ -153,7 +153,7 @@ public class HumanizeDatesUiMigrationTest {
     }
 
     @Test
-    public void testUpdate() throws SQLException {
+    public void testUpdate() {
         try {
             testInstance.update(connection);
             ArgumentCaptor<String> newJsonStringArgument = ArgumentCaptor.forClass(String.class);
