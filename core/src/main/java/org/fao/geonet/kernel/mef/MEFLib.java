@@ -185,16 +185,14 @@ public class MEFLib {
      * @return A pair composed of the domain object metadata AND the record to be exported (includes
      * Xlink resolution and filters depending on user session).
      */
-    static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, String uuid,
+    static Pair<AbstractMetadata, String> retrieveMetadata(ServiceContext context, AbstractMetadata metadata,
                                                    boolean resolveXlink,
                                                    boolean removeXlinkAttribute,
                                                    boolean addSchemaLocation)
         throws Exception {
 
-        final AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
-
         if (metadata == null) {
-            throw new MetadataNotFoundEx("uuid=" + uuid);
+            throw new MetadataNotFoundEx("");
         }
 
 

@@ -26,7 +26,6 @@ package org.fao.geonet.kernel.mef;
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
 import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.UUID;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
@@ -52,13 +51,11 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
@@ -68,10 +65,10 @@ import org.fao.geonet.kernel.search.NoFilterFilter;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Attribute;
 import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
@@ -136,19 +133,20 @@ class MEF2Exporter {
             html.addContent(body);
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
+                final String cleanUUID = cleanForCsv(uuid);
                 try {
                     IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
                     BooleanQuery query = new BooleanQuery();
                     
-                    //Search by ID, not by UUID
-                    String id = String.valueOf(
-                    		context.getBean(IMetadataUtils.class).findOneByUuid(uuid).getId());
-
+                    AbstractMetadata md = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+                    
                     //Here we just care if we need the approved version explicitly.
                     //IMetadataUtils already filtered draft for non editors.
+                    
                     if(approved) {
-                    	id = context.getBean(IMetadataUtils.class).getMetadataId(uuid);
+                    	md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
                     }
+                    String id = String.valueOf(md.getId());
                     
                     query.add(new BooleanClause(new TermQuery(new Term(LuceneIndexField.ID, id)), BooleanClause.Occur.MUST));
                     query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
@@ -181,8 +179,8 @@ class MEF2Exporter {
                     if (mdType == null) {
                         mdType = MetadataType.METADATA;
                     }
-                    csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-                        append(cleanForCsv(uuid)).append("\";\"").
+					csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
+                        append(cleanUUID).append("\";\"").
                         append(cleanForCsv(id)).append("\";\"").
                         append(mdType.toString()).append("\";\"").
                         append(cleanForCsv(isHarvested)).append("\";\"").
@@ -212,7 +210,7 @@ class MEF2Exporter {
                         ))
                     )));
                     csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-                    append(cleanForCsv(uuid)).append("\";\"").
+                    append(cleanUUID).append("\";\"").
                     append(cleanForCsv(id)).append("\";\"").
                     append(mdType.toString()).append("\";\"").
                     append(cleanForCsv(isHarvested)).append("\";\"").
@@ -241,7 +239,7 @@ class MEF2Exporter {
                                 )))
                         ))
                     )));
-                    createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
+                    createMetadataFolder(context, md, zipFs, skipUUID, stylePath,
                     format, resolveXlink, removeXlinkAttribute, addSchemaLocation);                } catch (Throwable t) {
                     if (skipError) {
                         Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
@@ -283,16 +281,16 @@ class MEF2Exporter {
      * @param zipFs Zip file to add new record
      */
     private static void createMetadataFolder(ServiceContext context,
-                                             String uuid, FileSystem zipFs, boolean skipUUID,
+                                             AbstractMetadata metadata, FileSystem zipFs, boolean skipUUID,
                                              Path stylePath, Format format, boolean resolveXlink,
                                              boolean removeXlinkAttribute,
                                              boolean addSchemaLocation) throws Exception {
 
-        final Path metadataRootDir = zipFs.getPath(uuid);
+        final Path metadataRootDir = zipFs.getPath(metadata.getUuid());
         Files.createDirectories(metadataRootDir);
 
         Pair<AbstractMetadata, String> recordAndMetadataForExport =
-            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+            MEFLib.retrieveMetadata(context, metadata, resolveXlink, removeXlinkAttribute, addSchemaLocation);
         AbstractMetadata record = recordAndMetadataForExport.one();
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
@@ -319,7 +317,7 @@ class MEF2Exporter {
         // --- save Feature Catalog
         String ftUUID = getFeatureCatalogID(context, record.getId());
         if (!ftUUID.equals("")) {
-            Pair<AbstractMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+            Pair<AbstractMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, record, resolveXlink, removeXlinkAttribute, addSchemaLocation);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
