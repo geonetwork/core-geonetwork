@@ -412,7 +412,7 @@
                 filter = filter.replace(/./g, function (match) {
                   var upperMatch = scope.accentify(match).toUpperCase();
                   var lowerMatch = scope.accentify(match).toLowerCase();
-                  return lettersRegexOnly.test(match) ? '[' + lowerMatch + upperMatch + ']': match;
+                  return lettersRegexOnly.test(match) ? '[' + lowerMatch + upperMatch + ']': "\\" + match; // escape special char
                 });
 
                 aggs[facetName] = {
