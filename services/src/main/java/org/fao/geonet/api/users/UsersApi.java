@@ -230,15 +230,10 @@ public class UsersApi {
         if (dataManager.isUserMetadataOwner(userIdentifier)) {
             MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
             final List<Metadata> allUserRecords = metadataRepository.findAll(MetadataSpecs.isOwnedByUser(userIdentifier));
-            List<String> message = new ArrayList<>();
-            for (Metadata record : allUserRecords) {
-                message.add(String.format("%s (type: %s)", record.getUuid(), record.getDataInfo().getType()));
-            }
             throw new IllegalArgumentException(
                 String.format(
-                    "Cannot delete a user that is also metadata owner of %d record(s). List of user's records: %s",
-                        allUserRecords.size(),
-                        String.join(", ", message)));
+                    "Cannot delete a user that is also metadata owner of %d record(s) (can be records, templates, subtemplates). Change owner of those records or remove them first.",
+                        allUserRecords.size()));
         }
 
         if (dataManager.isUserMetadataStatus(userIdentifier)) {
