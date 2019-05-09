@@ -255,7 +255,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * one or more validation reports are added to the corresponding element
      * trying to find the element based on the xpath returned by the ErrorHandler.
      */
-    private synchronized Element getXSDXmlReport(String schema, Element md, boolean forEditing) {
+    private Element getXSDXmlReport(String schema, Element md, boolean forEditing) {
         // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
         XmlErrorHandler errorHandler;
         if (forEditing) {
