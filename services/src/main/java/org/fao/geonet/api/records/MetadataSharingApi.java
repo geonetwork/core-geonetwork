@@ -653,6 +653,9 @@ public class MetadataSharingApi {
             required = true
         )
             Integer userIdentifier,
+       @ApiParam(value = "Use approved version or not", example = "true") 
+        @RequestParam(required = false, defaultValue = "false") 
+        Boolean approved,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession session,
@@ -677,7 +680,7 @@ public class MetadataSharingApi {
             for (String uuid : records) {
                 updateOwnership(groupIdentifier, userIdentifier,
                     report, dataManager, accessMan, metadataRepository,
-                    serviceContext, listOfUpdatedRecords, uuid, session);
+                    serviceContext, listOfUpdatedRecords, uuid, session, approved);
             }
             dataManager.flush();
             dataManager.indexMetadata(listOfUpdatedRecords);
@@ -730,6 +733,9 @@ public class MetadataSharingApi {
             required = true
         )
             Integer userIdentifier,
+        @ApiParam(value = "Use approved version or not", example = "true") 
+        @RequestParam(required = false, defaultValue = "false") 
+        	Boolean approved,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession session,
@@ -751,7 +757,7 @@ public class MetadataSharingApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
                 report, dataManager, accessMan, metadataRepository,
-                serviceContext, listOfUpdatedRecords, metadataUuid, session);
+                serviceContext, listOfUpdatedRecords, metadataUuid, session, approved);
             dataManager.flush();
             dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
@@ -773,7 +779,7 @@ public class MetadataSharingApi {
                                  MetadataRepository metadataRepository,
                                  ServiceContext serviceContext,
                                  List<String> listOfUpdatedRecords, String uuid, 
-                                 HttpSession session) throws Exception {
+                                 HttpSession session, Boolean approved) throws Exception {
         AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
@@ -816,7 +822,7 @@ public class MetadataSharingApi {
                 }
             }
             
-            Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid));
+            Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid, approved));
             ApplicationContext context = ApplicationContextHolder.get();
             if(!Objects.equals(groupIdentifier, sourceGrp)) {
               Group newGroup = context.getBean(GroupRepository.class).findOne(groupIdentifier);

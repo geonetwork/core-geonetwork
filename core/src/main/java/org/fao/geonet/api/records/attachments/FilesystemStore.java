@@ -156,6 +156,7 @@ public class FilesystemStore implements Store {
         return resourceList;
     }
     @Override
+    @Deprecated
     public Path getResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception {
     	return getResource(context, metadataUuid, resourceId, true);
     }
@@ -348,7 +349,7 @@ public class FilesystemStore implements Store {
     public String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
         canEdit(context, metadataUuid);
 
-        Path filePath = getResource(context, metadataUuid, resourceId);
+        Path filePath = getResource(context, metadataUuid, resourceId, approved);
 
         try {
             Files.deleteIfExists(filePath);
@@ -376,7 +377,7 @@ public class FilesystemStore implements Store {
         String metadataId = getAndCheckMetadataId(metadataUuid, approved);
 
         if (accessManager.canEdit(context, metadataId)) {
-            Path filePath = getResource(context, metadataUuid, resourceId);
+            Path filePath = getResource(context, metadataUuid, resourceId, approved);
 
             GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
             Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);

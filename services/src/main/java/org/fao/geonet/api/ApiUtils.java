@@ -54,6 +54,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
@@ -61,6 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Sets;
 
@@ -108,19 +110,25 @@ public class ApiUtils {
     /**
      * Search if a record match the UUID on its UUID or an internal identifier
      */
-    public static String getInternalId(String uuidOrInternalId)
+    public static String getInternalId(String uuidOrInternalId, Boolean approved)
         throws Exception {
-        String id;
-        DataManager dm = ApplicationContextHolder.get().getBean(DataManager.class);
 
-        id = dm.getMetadataId(uuidOrInternalId);
-        if (id == null) {
-            String checkingId = dm.getMetadataUuid(id);
-            if (checkingId == null) {
-                throw new ResourceNotFoundException(String.format(
-                    "Record with UUID '%s' not found in this catalog",
-                    uuidOrInternalId));
-            }
+    	IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+        String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
+        
+        if(StringUtils.isEmpty(id)) {
+        	//It wasn't a UUID
+        	id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
+        } else if(approved) {
+        	//It was a UUID, check if draft or approved version
+        	id = String.valueOf(ApplicationContextHolder.get().getBean(MetadataRepository.class)
+        			 				.findOneByUuid(uuidOrInternalId).getId());
+        }
+        
+        if (StringUtils.isEmpty(id)) {
+            throw new ResourceNotFoundException(String.format(
+                "Record with UUID '%s' not found in this catalog",
+                uuidOrInternalId));
         }
         return id;
     }

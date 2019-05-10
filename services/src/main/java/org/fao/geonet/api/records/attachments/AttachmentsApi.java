@@ -172,7 +172,7 @@ public class AttachmentsApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         store.delResource(context, metadataUuid, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
@@ -197,7 +197,7 @@ public class AttachmentsApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null && file != null && !file.isEmpty()) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
@@ -224,7 +224,7 @@ public class AttachmentsApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         MetadataResource resource = store.putResource(context, metadataUuid, url, visibility, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null && url != null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
@@ -292,7 +292,7 @@ public class AttachmentsApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         store.delResource(context, metadataUuid, resourceId, approved);
 
-        String metadataIdString = ApiUtils.getInternalId(metadataUuid);
+        String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
