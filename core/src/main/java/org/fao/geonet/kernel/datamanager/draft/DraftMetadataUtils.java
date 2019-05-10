@@ -500,7 +500,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 			xml = metadataManager.updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid,
 					UpdateDatestamp.NO, context);
 		}
-		final MetadataDraft newMetadata = new MetadataDraft();
+		MetadataDraft newMetadata = new MetadataDraft();
 		newMetadata.setUuid(uuid);
 		newMetadata.setApprovedVersion(templateMetadata);
 		newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
@@ -525,12 +525,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 			newMetadata.getCategories().add(mc);
 		}
 
-		cloneFiles(templateMetadata, newMetadata);
-
 		try {
-			Integer finalId = metadataManager
-					.insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES, false, true)
-					.getId();
+			newMetadata = (MetadataDraft) metadataManager.insertMetadata(context, newMetadata, xml, false, true, true,
+					UpdateDatestamp.YES, false, true);
+
+			Integer finalId = newMetadata.getId();
+
+			cloneFiles(templateMetadata, newMetadata);
 
 			// Remove all default privileges:
 			metadataOperations.deleteMetadataOper(String.valueOf(finalId), false);
@@ -602,9 +603,9 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 					}
 				}
 			};
-			
+
 			Path original_dir = Lib.resource.getDir(context, "public", original.getId());
-			if(Files.exists(original_dir)) {
+			if (Files.exists(original_dir)) {
 				Files.newDirectoryStream(original_dir).forEach(duplicate);
 			}
 			cloneStoreFileUploadRequests(original, dest);
@@ -620,7 +621,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 	 */
 	private void cloneStoreFileUploadRequests(AbstractMetadata original, AbstractMetadata copy) {
 		MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
-		
+
 		repo.deleteAll(MetadataFileUploadSpecs.hasMetadataId(copy.getId()));
 
 		for (MetadataFileUpload mfu : repo.findAll(MetadataFileUploadSpecs.hasMetadataId(original.getId()))) {
