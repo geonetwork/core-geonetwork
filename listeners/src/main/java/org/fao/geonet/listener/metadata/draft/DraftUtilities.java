@@ -14,6 +14,7 @@ import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
+import org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
@@ -58,6 +59,9 @@ public class DraftUtilities {
 
     @Autowired
     private MetadataRatingByIpRepository metadataRatingByIpRepository;
+    
+    @Autowired
+    private DraftMetadataUtils draftMetadataUtils;
 
     /**
      * Replace the contents of the record with the ones on the draft, if exists, and
@@ -117,8 +121,10 @@ public class DraftUtilities {
         }
 
         // Reassign file uploads
+        draftMetadataUtils.cloneFiles(draft, md);
+        metadataFileUploadRepository.deleteAll(MetadataFileUploadSpecs.hasMetadataId(md.getId()));
         List<MetadataFileUpload> fileUploads = metadataFileUploadRepository
-            .findAll(MetadataFileUploadSpecs.hasId(draft.getId()));
+            .findAll(MetadataFileUploadSpecs.hasMetadataId(draft.getId()));
         for (MetadataFileUpload fu : fileUploads) {
             fu.setMetadataId(md.getId());
             metadataFileUploadRepository.save(fu);
@@ -130,7 +136,6 @@ public class DraftUtilities {
             String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
 
             removeDraft((MetadataDraft) draft);
-
 
             // Copy contents
             Log.trace(Geonet.DATA_MANAGER, "Update record with id " + md.getId());
