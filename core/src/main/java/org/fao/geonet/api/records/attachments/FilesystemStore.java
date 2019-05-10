@@ -175,18 +175,15 @@ public class FilesystemStore implements Store {
         GeonetworkDataDirectory dataDirectory = _appContext.getBean(GeonetworkDataDirectory.class);
         String metadataId = getAndCheckMetadataId(metadataUuid, approved);
         Path metadataDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
-    	System.out.println("Metadata dir: " + metadataDir.toFile().getAbsolutePath());
 
         Path resourceFile = null;
 
         boolean canDownload = accessManager.canDownload(context, metadataId);
         for (MetadataResourceVisibility r : MetadataResourceVisibility.values()) {
-        	System.out.println("On " + r.toString());
             try (DirectoryStream<Path> directoryStream =
                      Files.newDirectoryStream(metadataDir.resolve(r.toString()),
                          resourceId)) {
                 for (Path path : directoryStream) {
-                	System.out.println("ResourceFile: " + path.toFile().getAbsolutePath());
                     if (Files.isRegularFile(path)) {
                         resourceFile = path;
                     }
@@ -195,7 +192,6 @@ public class FilesystemStore implements Store {
             }
         }
 
-        System.out.println("Resource file: " + resourceFile);
         
         if (resourceFile != null && Files.exists(resourceFile)) {
             if (resourceFile.getParent().getFileName().toString().equals(
