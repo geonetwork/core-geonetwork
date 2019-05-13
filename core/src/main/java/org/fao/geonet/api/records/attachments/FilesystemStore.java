@@ -92,9 +92,9 @@ public class FilesystemStore implements Store {
         AccessManager accessManager = _appContext.getBean(AccessManager.class);
         boolean canEdit = accessManager.canEdit(context, metadataId);
 
-        resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter));
+        resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter, approved));
         if (canEdit) {
-            resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter));
+            resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter, approved));
         }
 
         if (sort == Sort.name) {
@@ -105,6 +105,7 @@ public class FilesystemStore implements Store {
     }
 
     @Override
+    @Deprecated
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid,
                                                MetadataResourceVisibility visibility,
                                                String filter) throws Exception {	
