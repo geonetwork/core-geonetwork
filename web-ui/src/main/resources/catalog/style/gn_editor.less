@@ -708,6 +708,14 @@ form.gn-tab-accessibility {
     padding-left: 10px;
     padding-right: 5px;
     // background-color: #fbfcfb;
+    .row > div.col-md-10 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row > div.col-md-10:hover {
+      white-space: unset;
+    }
     .row > div {
       padding-left: 1px;
       padding-right: 1px;

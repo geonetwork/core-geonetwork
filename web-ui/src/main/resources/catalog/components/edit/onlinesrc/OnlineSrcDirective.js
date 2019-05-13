@@ -154,7 +154,6 @@
               }
 
             };
-            http://localhost:8080/geonetwork/srv/api/records/01788925-ea24-4a7e-ac0d-aa10f8210b8c/attachments/oldmaps.jpeg
             scope.$watch('gnCurrentEdit.uuid', function(n, o) {
               if (angular.isUndefined(scope.uuid) ||
                 n != o) {
@@ -246,8 +245,19 @@
 
               loadRelations();
 
+              scope.sortLinksOptions = ['protocol', 'lUrl', 'title'];
+              scope.sortLinksProperty = scope.sortLinksOptions[0];
+              scope.sortLinksReverse = true;
+
               scope.sortLinks = function(g) {
-                return $filter('gnLocalized')(g.title);
+                return $filter('gnLocalized')(g[scope.sortLinksProperty]) || g[scope.sortLinksProperty];
+              };
+
+                scope.sortLinksBy = function(p) {
+                scope.sortLinksReverse =
+                  (scope.sortLinksProperty !== null && scope.sortLinksProperty === p)
+                  ? !scope.sortLinksReverse : false;
+                scope.sortLinksProperty = p;
               };
             }
           };
