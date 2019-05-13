@@ -521,9 +521,11 @@
   <cm-nbOfVerticalLevels>Number of vertical levels</cm-nbOfVerticalLevels>
   <cm-contact>Contact</cm-contact>
   <cm-temporalResolution>Temporal resolution</cm-temporalResolution>
+  <cm-temporalResolution-add>Add temporal resolution</cm-temporalResolution-add>
   <cm-slidingWindow>Sliding window of updates</cm-slidingWindow>
   <cm-updateTime>Update time</cm-updateTime>
   <cm-updateFrequency>Update frequency</cm-updateFrequency>
+  <cm-updateFrequency-add>Add update frequency</cm-updateFrequency-add>
   <cm-crs>Coordinate reference system</cm-crs>
   <cm-addCrsEPSG4326>WGS 84 (EPSG 4326)</cm-addCrsEPSG4326>
   <cm-addCrsEPSG41001>WGS 84 / Simple Mercator (EPSG 41001)</cm-addCrsEPSG41001>
@@ -540,4 +542,12 @@
   <cm-linkToUpstreamValidation>Link to upstream validation</cm-linkToUpstreamValidation>
   <cm-linkToDocument>Link to document</cm-linkToDocument>
   <cm-temportal-description>Description</cm-temportal-description>
+  <cm-reference>Reference</cm-reference>
+  <cm-add-reference>Add reference</cm-add-reference>
+  <cm-format>Format</cm-format>
+  <cm-add-format>Add format</cm-add-format>
+  <cm-add-format-n64bo>NetCDF 64-bit offset</cm-add-format-n64bo>
+  <cm-add-format-n4cm>NetCDF 4 Classic model</cm-add-format-n4cm>
+  <cm-add-format-n4>NetCDF 4</cm-add-format-n4>
+  <cm-add-format-n3>NetCDF 3</cm-add-format-n3>
   </strings>

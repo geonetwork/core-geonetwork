@@ -1012,6 +1012,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:contentInfo"/>
         <section name="gmd:MD_Metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
@@ -3198,7 +3199,7 @@
       <sidePanel>
         <directive data-gn-overview-manager=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc|sibling"
+                   data-types="onlinesrc"
                    data-codelist-filter="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/*/gco:CharacterString, 'ISO 19139, MyOcean profile')]"/>
 
         <action type="associatedResource"
@@ -3230,6 +3231,50 @@
                  name="cm-externalShortName"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"
                  name="cm-abstract"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:aggregationInfo/*[gmd:initiativeType/*/@codeListValue = 'reference']/gmd:aggregateDataSetName/*/gmd:title"
+                 name="cm-reference"/>
+          <action type="add"
+                  btnLabel="cm-add-reference"
+                  or="aggregationInfo"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
+            <template>
+              <snippet>
+                <gmd:aggregationInfo>
+                  <gmd:MD_AggregateInformation>
+                    <gmd:aggregateDataSetName>
+                      <gmd:CI_Citation>
+                        <gmd:title>
+                          <gco:CharacterString></gco:CharacterString>
+                        </gmd:title>
+                        <gmd:date>
+                          <gmd:CI_Date>
+                            <gmd:date>
+                              <gco:Date>2019-05-08</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                                   codeListValue="creation"/>
+                            </gmd:dateType>
+                          </gmd:CI_Date>
+                        </gmd:date>
+                      </gmd:CI_Citation>
+                    </gmd:aggregateDataSetName>
+                    <gmd:associationType>
+                      <gmd:DS_AssociationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_AssociationTypeCode"
+                                                  codeListValue="crossReference"/>
+                    </gmd:associationType>
+                    <gmd:initiativeType>
+                      <gmd:DS_InitiativeTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DS_InitiativeTypeCode"
+                                                 codeListValue="reference"/>
+                    </gmd:initiativeType>
+                  </gmd:MD_AggregateInformation>
+                </gmd:aggregationInfo>
+              </snippet>
+            </template>
+          </action>
+
+
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue='creation']"
                  name="cm-creationDate"/>
@@ -3237,6 +3282,95 @@
                  name="cm-updateDate"/><!-- TODO:CM label override -->
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:edition"
                  name="cm-version"/>
+
+
+          <section name="cm-format">
+            <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name"
+                   name="cm-format"/>
+
+            <action type="add"
+                    btnLabel="cm-add-format-n3"
+                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
+                    or="distributionFormat"
+                    in="/gmd:MD_Metadata/gmd:distributionInfo/*">
+              <template>
+                <snippet>
+                  <gmd:distributionFormat>
+                    <gmd:MD_Format>
+                      <gmd:name>
+                        <gco:CharacterString>NetCDF-3</gco:CharacterString>
+                      </gmd:name>
+                      <gmd:version gco:nilReason="missing">
+                        <gco:CharacterString></gco:CharacterString>
+                      </gmd:version>
+                    </gmd:MD_Format>
+                  </gmd:distributionFormat>
+                </snippet>
+              </template>
+            </action>
+            <action type="add"
+                    btnLabel="cm-add-format-n4"
+                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
+                    or="distributionFormat"
+                    in="/gmd:MD_Metadata/gmd:distributionInfo/*">
+              <template>
+                <snippet>
+                  <gmd:distributionFormat>
+                    <gmd:MD_Format>
+                      <gmd:name>
+                        <gco:CharacterString>NetCDF-4</gco:CharacterString>
+                      </gmd:name>
+                      <gmd:version gco:nilReason="missing">
+                        <gco:CharacterString></gco:CharacterString>
+                      </gmd:version>
+                    </gmd:MD_Format>
+                  </gmd:distributionFormat>
+                </snippet>
+              </template>
+            </action>
+            <action type="add"
+                    btnLabel="cm-add-format-n4cm"
+                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
+                    or="distributionFormat"
+                    in="/gmd:MD_Metadata/gmd:distributionInfo/*">
+              <template>
+                <snippet>
+                  <gmd:distributionFormat>
+                    <gmd:MD_Format>
+                      <gmd:name>
+                        <gco:CharacterString>NetCDF-4</gco:CharacterString>
+                      </gmd:name>
+                      <gmd:version>
+                        <gco:CharacterString>Classic model</gco:CharacterString>
+                      </gmd:version>
+                    </gmd:MD_Format>
+                  </gmd:distributionFormat>
+                </snippet>
+              </template>
+            </action>
+            <action type="add"
+                    btnLabel="cm-add-format-n64bo"
+                    if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat[*/gmd:name != '']) = 0"
+                    or="distributionFormat"
+                    in="/gmd:MD_Metadata/gmd:distributionInfo/*">
+              <template>
+                <snippet>
+                  <gmd:distributionFormat>
+                    <gmd:MD_Format>
+                      <gmd:name>
+                        <gco:CharacterString>NetCDF</gco:CharacterString>
+                      </gmd:name>
+                      <gmd:version>
+                        <gco:CharacterString>64-bit offset</gco:CharacterString>
+                      </gmd:version>
+                    </gmd:MD_Format>
+                  </gmd:distributionFormat>
+                </snippet>
+              </template>
+            </action>
+          </section>
+
+
 
         </section>
         <section name="cm-quicklookAndKeywords">
@@ -3293,8 +3427,7 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:supplementalInformation"
                  name="cm-display-priority"
                  use="data-gn-field-with-prefix-or-suffix">
-            <directiveAttributes data-prefix="display priority: "
-                                 data-field-type="number"/>
+            <directiveAttributes data-prefix="display priority: "/>
           </field>
         </section>
         <section name="cm-geoCoverage">
@@ -3504,8 +3637,7 @@
           <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]"
                  name="cm-nbOfVerticalLevels"
                  use="data-gn-field-with-prefix-or-suffix">
-            <directiveAttributes data-prefix="vertical level number: "
-                                 data-field-type="number"/>
+            <directiveAttributes data-prefix="vertical level number: "/>
           </field>
         </section>
         <section name="cm-temporalCoverage">
@@ -3569,7 +3701,22 @@
           </field>-->
           <field xpath="/gmd:MD_Metadata/gmd:contentInfo/*/gmd:dimension/gmd:MD_RangeDimension/gmd:descriptor[contains(gco:CharacterString, 'temporal')]"
                  name="cm-temporalResolution"/>
-
+          <action type="add"
+                  btnLabel="cm-temporalResolution-add"
+                  or="dimension"
+                  in="/gmd:MD_Metadata/gmd:contentInfo/*">
+            <template>
+              <snippet>
+                <gmd:dimension>
+                  <gmd:MD_RangeDimension>
+                    <gmd:descriptor>
+                      <gco:CharacterString>temporal resolution: irregular</gco:CharacterString>
+                    </gmd:descriptor>
+                  </gmd:MD_RangeDimension>
+                </gmd:dimension>
+              </snippet>
+            </template>
+          </action>
           <!--
           local.temporal-scale.myocean.temporal-scale
           to-iso19139.myocean-keyword-with-anchor
@@ -3588,6 +3735,25 @@
           <section name="cm-processingSchedule">
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency"
                    name="cm-updateFrequency"/>
+
+            <action type="add"
+                    btnLabel="cm-updateFrequency-add"
+                    or="resourceMaintenance"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/*">
+              <template>
+                <snippet>
+                  <gmd:resourceMaintenance>
+                    <gmd:MD_MaintenanceInformation>
+                      <gmd:maintenanceAndUpdateFrequency>
+                        <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode"
+                                                         codeListValue=""/>
+                      </gmd:maintenanceAndUpdateFrequency>
+                    </gmd:MD_MaintenanceInformation>
+                  </gmd:resourceMaintenance>
+                </snippet>
+              </template>
+            </action>
+
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceNote"
                    name="cm-updateTime"/>
 

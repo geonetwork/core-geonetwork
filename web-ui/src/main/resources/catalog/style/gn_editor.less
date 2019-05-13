@@ -932,9 +932,10 @@ div.gn-individualName {
 }
 
 .gn-tab-eo-tab-description {
-  /* Hide negative period */
+  /* Hide negative period, hide bbox region selector */
   [data-gn-field-duration-div] > div > input[type="checkbox"],
-  [data-gn-field-duration-div] > div > label {
+  [data-gn-field-duration-div] > div > label,
+  .gn-drawmap-panel > div.row:first-of-type {
     display: none;
   }
 }
@@ -942,7 +943,8 @@ div.gn-individualName {
 
 .gn-tab-copernicus-marine {
   /* Hide the date type selector */
-  div.gn-date {
+  div.gn-date,
+  div[data-gn-date-picker] {
     div.col-sm-3 {
       width: 0px;
     }
@@ -959,6 +961,7 @@ div.gn-individualName {
   }
   /* Hide gazetteer search */
   div.gn-drawmap-panel {
+    div.row > div.gn-field,
     div.col-md-9 {
       display: none;
     }

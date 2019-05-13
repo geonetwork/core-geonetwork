@@ -982,25 +982,16 @@
       <option value="temporal resolution: instantaneous">Instantaneous</option>
       <option value="temporal resolution: 15-minutes instantaneous">15-minutes instantaneous</option>
       <option value="temporal resolution: hourly mean">Hourly mean</option>
-      <option value="temporal resolution: hourly mean, weekly mean, monthly mean">Hourly mean, weekly mean, monthly mean</option>
       <option value="temporal resolution: hourly instantaneous">Hourly instantaneous</option>
       <option value="temporal resolution: 3 hourly mean">3 hourly mean</option>
       <option value="temporal resolution: 3 hourly instantaneous">3 hourly instantaneous</option>
-      <option value="temporal resolution: 3 hourly instantaneous, daily mean">3 hourly instantaneous, daily mean</option>
       <option value="temporal resolution: 6 hourly mean">6 hourly mean</option>
-      <option value="temporal resolution: 6 hourly instantaneous, hourly instantaneous, daily mean, monthly mean">6 hourly instantaneous, hourly instantaneous, daily mean, monthly mean</option>
+      <option value="temporal resolution: 6 hourly instantaneous">6 hourly instantaneous</option>
       <option value="temporal resolution: daily mean">Daily mean</option>
       <option value="temporal resolution: daily instantaneous">Daily instantaneous</option>
-      <option value="temporal resolution: daily mean, hourly mean">Daily mean, hourly mean</option>
-      <option value="temporal resolution: daily mean, hourly instantaneous">Daily mean, hourly instantaneous</option>
-      <option value="temporal resolution: daily mean, monthly mean, seasonal mean">Daily mean, monthly mean, seasonal mean</option>
-      <option value="temporal resolution: daily mean, weekly mean">Daily mean, weekly mean</option>
-      <option value="temporal resolution: daily mean, weekly mean, monthly mean">Daily mean, weekly mean, monthly mean</option>
       <option value="temporal resolution: weekly mean">Weekly mean</option>
-      <option value="temporal resolution: weekly mean, monthly mean">Weekly mean, monthly mean</option>
       <option value="temporal resolution: monthly mean">Monthly mean</option>
-      <option value="temporal resolution: monthly mean, daily mean">Monthly mean, daily mean</option>
-      <option value="temporal resolution: monthly mean, daily mean, hourly mean">Monthly mean, daily mean, hourly mean</option>
+      <option value="temporal resolution: monthly mean">Seasonal mean</option>
       <option value="temporal resolution: Annual mean">Annual mean</option>
       <option value="temporal resolution: Pluri-annual mean">Pluri-annual mean</option>
       <option value="temporal resolution: Pluri-annual climatology mean">Pluri-annual climatology mean</option>
@@ -1508,6 +1499,12 @@
     <description>Name of the data transfer format(s)</description>
     <help>name of the data transfer format(s)</help>
     <condition>mandatory</condition>
+    <helper rel="gmd:version"
+            displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'ISO 19139, MyOcean profile')]">
+      <option value="">-</option>
+    </helper>
     <helper rel="gmd:version">
       <option value="Text">Text</option>
       <option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>

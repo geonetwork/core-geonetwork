@@ -413,6 +413,11 @@
       <label>Document</label>
       <description></description>
     </entry>
+    <entry>
+      <code>reference</code>
+      <label>Reference</label>
+      <description></description>
+    </entry>
   </codelist>
 
 	<!-- ==================================================== -->
