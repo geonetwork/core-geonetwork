@@ -149,7 +149,8 @@
           data-ng-show="::isCategoryEnable('onlinesrc') && relations.onlines && relations.onlines.length > 0">
         <li class="list-group-item" href=""
             data-ng-repeat="resource in relations.onlines | filter:sortLinksFilter | orderBy:sortLinks:sortLinksReverse">
-          <div class="row">
+          <div class="row"
+	       data-ng-show="relations.onlines.length > 1">
             <div class="col-md-1">
               <i class="fa fa-fw"
                  data-ng-class="onlinesrcService.getIconByProtocol(resource)"></i>
