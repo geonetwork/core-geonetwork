@@ -1710,4 +1710,6 @@
   <tag_label>Tags</tag_label>
   <map_label>Carte</map_label>
   <unknown>Unknown</unknown>
+
+  <pdfReportTocTitle>Contents</pdfReportTocTitle>
 </strings>
