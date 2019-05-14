@@ -829,8 +829,11 @@ public class MetadataSharingApi {
             ApplicationContext context = ApplicationContextHolder.get();
             if(!Objects.equals(groupIdentifier, sourceGrp)) {
               Group newGroup = groupRepository.findOne(groupIdentifier);
-              Group oldGroup = groupRepository.findOne(sourceGrp);
-              new RecordGroupOwnerChangeEvent(metadataId, ApiUtils.getUserSession(session).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
+              Group oldGroup = sourceGrp == null ? null : groupRepository.findOne(sourceGrp);
+              new RecordGroupOwnerChangeEvent(metadataId,
+                  ApiUtils.getUserSession(session).getUserIdAsInt(),
+                  sourceGrp == null ? null : ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
+                  ObjectJSONUtils.convertObjectInJsonObject(newGroup, RecordGroupOwnerChangeEvent.FIELD)).publish(context);
             }
             if(!Objects.equals(userIdentifier, sourceUsr)) {
               User newOwner = userRepository.findOne(userIdentifier);

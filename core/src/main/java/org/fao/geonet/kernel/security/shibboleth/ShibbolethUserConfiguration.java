@@ -20,12 +20,15 @@
 
 package org.fao.geonet.kernel.security.shibboleth;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Some basic configuration info for Shibboleth logins.
  *
  * Mainly header names mapping to attributes.
  *
  * @author ETj (etj at geo-solutions.it)
+ * @author María Arias de Reyna (delawen)
  */
 public class ShibbolethUserConfiguration {
     private String usernameKey;
@@ -39,6 +42,8 @@ public class ShibbolethUserConfiguration {
 
     private boolean updateProfile;
     private boolean updateGroup;
+    
+    private String arraySeparator;
 
     public String getUsernameKey() {
         return usernameKey;
@@ -53,7 +58,7 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setSurnameKey(String surnameKey) {
-        if (surnameKey == null) {
+		if(StringUtils.isEmpty(surnameKey)) {
             surnameKey = "";
         }
         this.surnameKey = surnameKey;
@@ -64,7 +69,7 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setFirstnameKey(String firstnameKey) {
-        if (firstnameKey == null) {
+		if(StringUtils.isEmpty(firstnameKey)) {
             firstnameKey = "";
         }
         this.firstnameKey = firstnameKey;
@@ -75,7 +80,7 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setProfileKey(String profileKey) {
-        if (profileKey == null) {
+		if(StringUtils.isEmpty(profileKey)) {
             profileKey = "";
         }
         this.profileKey = profileKey;
@@ -86,7 +91,7 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setGroupKey(String groupKey) {
-        if (groupKey == null) {
+		if(StringUtils.isEmpty(groupKey)) {
             groupKey = "";
         }
         this.groupKey = groupKey;
@@ -97,18 +102,12 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setDefaultGroup(String defaultGroup) {
-        if (defaultGroup == null) {
+		if(StringUtils.isEmpty(defaultGroup)) {
             defaultGroup = "";
         }
         this.defaultGroup = defaultGroup;
     }
-
-    /**
-     * Tell if the profile should be updated whenever the user login.
-     *
-     * This info is needed when the identificatian provider provides no real mean to tell the user
-     * profile.
-     */
+    
     public boolean isUpdateProfile() {
         return updateProfile;
     }
@@ -130,11 +129,22 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setEmailKey(String emailKey) {
-        if (emailKey == null) {
+		if(StringUtils.isEmpty(emailKey)) {
             emailKey = "";
         }
         this.emailKey = emailKey;
     }
+
+	public String getArraySeparator() {
+		return arraySeparator;
+	}
+
+	public void setArraySeparator(String arraySeparator) {
+		if(StringUtils.isEmpty(arraySeparator)) {
+			arraySeparator = ";";
+		}
+		this.arraySeparator = arraySeparator;
+	}
 }
 
 

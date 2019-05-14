@@ -67,6 +67,9 @@ goog.require('gn_alert');
         'default': '/geonetwork'
       },
       'mods': {
+        'global': {
+          'humanizeDates': true
+        },
         'header': {
           'enabled': true,
           'languages': {
