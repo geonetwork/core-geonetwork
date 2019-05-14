@@ -1754,4 +1754,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             this.presentationLanguage = presentationLanguage;
         }
     }
+    
+    /**
+     * <p> Gets the Lucene version token. Can be used as ETag. </p>
+     */    
+    public long getVersionToken() {
+    	return _versionToken;
+    };
 }

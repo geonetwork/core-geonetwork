@@ -232,4 +232,11 @@
   <trueValue>Yes</trueValue>
   <falseValue>No</falseValue>
   <nilValue>Undefined</nilValue>
+  <logo>logo</logo>
+  <overview>overview</overview>
+  <thumbnail>thumbnail</thumbnail>
+  <north>north</north>
+  <east>east</east>
+  <south>south</south>
+  <west>west</west>
 </strings>

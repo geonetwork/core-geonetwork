@@ -17,6 +17,17 @@
       color: @gn-menubar-color-hover;
     }
   }
+  .dropdown-menu {
+    > li {
+      > a {
+        padding: 8px 20px;
+      }
+    }
+    .dropdown-header {
+      color: @gray;
+      cursor: text !important;
+    }
+  }
   .gn-name.gn-truncate {
     @media (min-width: @screen-lg-min) {
       max-width: 230px;
@@ -170,5 +181,13 @@
 @media (max-width: @grid-float-breakpoint) {
   .navbar-nav {
     margin: 0;
+  }
+}
+
+// nojs styles
+.gn-nojs {
+  .gn-logo {
+    max-height: 28px;
+    margin: -8px 0px;
   }
 }

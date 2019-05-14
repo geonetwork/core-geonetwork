@@ -33,24 +33,48 @@
     Start FOP layout
   -->
   <xsl:template match="/root">
-    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
+             xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
       <xsl:call-template name="fop-master"/>
+
+      <!-- Cover page -->
+      <xsl:if test="string($env/metadata/pdfReport/coverPdf)">
+        <fox:external-document content-type="pdf" src="{$env/metadata/pdfReport/coverPdf}" />
+      </xsl:if>
+
+      <!-- TOC page -->
+      <xsl:if test="$env/metadata/pdfReport/tocPage = 'true'">
+        <fo:page-sequence master-reference="Intro" force-page-count="no-force">
+          <xsl:call-template name="fop-header"/>
+
+          <fo:flow flow-name="xsl-region-body">
+            <!-- TOC page -->
+            <xsl:if test="$env/metadata/pdfReport/tocPage = 'true'">
+              <xsl:call-template name="toc-page">
+                <xsl:with-param name="res" select="/root/response"/>
+              </xsl:call-template>
+            </xsl:if>
+          </fo:flow>
+        </fo:page-sequence>
+      </xsl:if>
+
+      <!-- Intro page -->
+      <xsl:if test="string($env/metadata/pdfReport/introPdf)">
+        <fox:external-document content-type="pdf" src="{$env/metadata/pdfReport/introPdf}" />
+      </xsl:if>
 
       <fo:page-sequence master-reference="simpleA4" initial-page-number="1">
 
+        <xsl:call-template name="fop-header"/>
         <xsl:call-template name="fop-footer"/>
 
         <fo:flow flow-name="xsl-region-body">
-
-          <!-- Banner level -->
-          <xsl:call-template name="banner"/>
-
 
           <fo:block font-size="{$font-size}">
 
             <fo:table width="100%" table-layout="fixed">
               <fo:table-column column-width="1.8cm"/>
-              <fo:table-column column-width="18.2cm"/>
+              <fo:table-column column-width="15.2cm"/>
               <fo:table-body>
                 <fo:table-row height="8mm">
                   <fo:table-cell display-align="center" number-columns-spanned="2">

@@ -1470,6 +1470,7 @@ public class SchemaManager {
 
         mds.setAppMinorVersionSupported(root.getChildText("appMinorVersionSupported", GEONET_SCHEMA_NS));
         mds.setAppMajorVersionSupported(root.getChildText("appMajorVersionSupported", GEONET_SCHEMA_NS));
+        mds.setDependsOn(root.getChildText("depends", GEONET_SCHEMA_NS));
     }
 
     private Map<String, String> getSchemaIdentMultilingualProperty(Element root, String propName) {

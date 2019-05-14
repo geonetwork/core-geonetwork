@@ -417,8 +417,8 @@
       };
     }]);
 
-  module.directive('gnHumanizeTime', [
-    function() {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -428,6 +428,7 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
               // Moment will properly parse YYYY, YYYY-MM,
@@ -445,9 +446,9 @@
                 var formattedDate = scope.format ?
                     date.format(scope.format) :
                     date.toString();
-                scope.value = scope.fromNow !== undefined ?
+                scope.value = scope.fromNow !== undefined && useFromNowSetting ?
                     fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined ?
+                scope.title = scope.fromNow !== undefined && useFromNowSetting ?
                     formattedDate : fromNow;
               }
             }

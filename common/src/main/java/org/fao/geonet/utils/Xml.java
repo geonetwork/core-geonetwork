@@ -516,7 +516,7 @@ public final class Xml {
 
         // Step 1: Construct a FopFactory
         // (reuse if you plan to render multiple documents!)
-        FopFactory fopFactory = FopFactory.newInstance();
+        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
 
         // Step 2: Set up output stream.
         // Note: Using BufferedOutputStream for performance reasons

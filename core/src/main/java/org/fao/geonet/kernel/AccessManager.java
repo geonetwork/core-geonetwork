@@ -366,7 +366,7 @@ public class AccessManager {
             return true;
         }
         int downloadId = ReservedOperation.download.getId();
-        Set<Operation> ops = getOperations(context, id, null);
+        Set<Operation> ops = getOperations(context, id, context.getIpAddress());
         for (Operation op : ops) {
             if (op.getId() == downloadId) {
                 return true;
@@ -380,7 +380,7 @@ public class AccessManager {
             return true;
         }
         int dynamicId = ReservedOperation.dynamic.getId();
-        Set<Operation> ops = getOperations(context, id, null);
+        Set<Operation> ops = getOperations(context, id, context.getIpAddress());
         for (Operation op : ops) {
             if (op.getId() == dynamicId) {
                 return true;

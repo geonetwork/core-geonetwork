@@ -1,0 +1,25 @@
+<div class="btn-group"
+     data-ng-show="featuredSearches.length > 0">
+  <button type="button"
+        class="btn btn-default btn-lg dropdown-toggle"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        title="{{'featuredUserSearches' | translate}}">
+  &nbsp;&nbsp;
+  <i class="fa fa-list fa-fw"></i>
+  <i class="fa fa-caret-down"></i>
+  <span class="sr-only" data-translate="">search</span>
+  </button>
+  <ul class="dropdown-menu">
+    <li data-ng-repeat="row in featuredSearches">
+      <a data-ng-click="search(row.url)">
+        {{row.names[lang] || row.names['eng'] || ('featuredSearch' | translate)}}
+
+        <img data-ng-if="row.logo"
+             data-ng-src="{{row.logo}}"
+             class="gn-source-logo"/>
+      </a>
+    </li>
+  </ul>
+</div>
