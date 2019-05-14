@@ -734,7 +734,7 @@ public class MetadataSharingApi {
         )
             Integer userIdentifier,
         @ApiParam(value = "Use approved version or not", example = "true") 
-        @RequestParam(required = false, defaultValue = "false") 
+        @RequestParam(required = false, defaultValue = "true") 
         	Boolean approved,
         @ApiIgnore
         @ApiParam(hidden = true)
