@@ -60,6 +60,20 @@ ul.gn-resultview li.list-group-item {
         }
       }
     }
+    .username-dropdown {
+      .dropdown-menu {
+        > li {
+          &.active {
+            > a {
+              background-color: @dropdown-bg;
+              &:hover {
+                background-color: lighten(@brand-primary, 46.7%);
+              }
+            }
+          }
+        }
+      }
+    }
   }
   [data-ng-controller="GnAdminController"] {
     .sidebar {
@@ -102,6 +116,10 @@ ul.gn-resultview li.list-group-item {
         width: calc(~"100% - @{gn-col-main-width}");
         margin-left: @gn-col-main-width;
         float: left;
+      }
+      .sidebar-col-sub-editor {
+        width: @gn-sidebar-width;
+        margin-left: 0;
       }
       .sidebar-col-full {
         width: @gn-sidebar-width;

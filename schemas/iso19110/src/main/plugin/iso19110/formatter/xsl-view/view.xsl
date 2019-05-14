@@ -34,7 +34,7 @@
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
-
+ <!-- tr is defined at  core-geonetwork/services/src/main/java/org/fao/geonet/api/records/formatters/SchemaLocalizations.java -->
   <!-- Load the editor configuration to be able
   to render the different views -->
   <xsl:variable name="configuration"
@@ -80,7 +80,7 @@
       <dt>
         <xsl:value-of select="if ($fieldName)
                                 then $fieldName
-                                else tr:node-label(tr:create($schema), name(), null)"/>
+                                else tr:nodeLabel(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
         <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
@@ -99,7 +99,7 @@
       *[$isFlatMode = false() and gmd:* and not(gco:CharacterString) and not(gmd:URL)]">
     <div class="entry name">
       <h3>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
+        <xsl:value-of select="tr:nodeLabel(tr:create($schema), name(), null)"/>
       </h3>
       <div class="target">
         <xsl:apply-templates mode="render-field" select="*"/>
@@ -183,7 +183,7 @@
   <!-- ... Codelists -->
   <xsl:template mode="render-value" match="@codeListValue">
     <xsl:variable name="id" select="."/>
-    <!--<xsl:value-of select="tr:node-label(tr:create($schema), .)"/>-->
+    <!--<xsl:value-of select="tr:nodeLabel(tr:create($schema), .)"/>-->
     <xsl:variable name="codelistTranslation"
                   select="$schemaCodelists//entry[code = $id]/label"/>
 

@@ -23,7 +23,9 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:gn="http://www.fao.org/geonetwork" xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0" extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -42,7 +44,7 @@
     <xsl:param name="evaluatedNode" as="node()"/>
 
     <xsl:variable name="nodeRef" select="$evaluatedNode/gn:element/@ref"/>
-    <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef]"/>
+    <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef][not(ancestor::svrl:*)]"/>
 
     <!--<xsl:message>#getOriginalNode ==================</xsl:message>
     <xsl:message><xsl:value-of select="$evaluatedNode/*/gn:element/@ref"/></xsl:message>

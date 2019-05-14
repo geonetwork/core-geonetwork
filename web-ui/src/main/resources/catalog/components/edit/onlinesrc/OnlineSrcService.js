@@ -400,34 +400,49 @@
          * @param {Object} params for the batch
          * @param {string} popupid id of the popup to close after process.
          */
-        linkToService: function(params, popupid) {
-          var qParams = setParams('dataset-add', params);
+        linkToService: function(params, popupid, addOnlineSrcInDataset) {
           var scope = this;
+
+          // Add link of the service in the dataset (optional)
+          var addDatasetToServiceFn = function(r) {
+            var qParams = setParams('dataset-add', params);
+            if (addOnlineSrcInDataset) {
+              return runProcess(scope, {
+                scopedName: qParams.name || '',
+                uuidref: qParams.uuidSrv,
+                uuid: qParams.uuidDS,
+                url: qParams.url,
+                source: qParams.identifier || '',
+                protocol: qParams.protocol,
+                process: qParams.process
+              }).then(function () {
+                closePopup(popupid);
+              });
+            } else {
+              refreshForm(this);
+              closePopup(popupid);
+            }
+          };
+
+
+          // Add link to the dataset in the service
+          var qParams = setParams('service-add', params);
           return gnBatchProcessing.runProcessMd({
-            scopedName: qParams.name,
+            scopedName: qParams.name || '',
             uuidref: qParams.uuidDS,
             uuid: qParams.uuidSrv,
             source: qParams.identifier || '',
             process: qParams.process
-          }, true).then(function() {
-            var qParams = setParams('service-add', params);
-            runProcess(scope, {
-              scopedName: qParams.name,
-              uuidref: qParams.uuidSrv,
-              uuid: qParams.uuidDS,
-              url: qParams.url,
-              source: qParams.identifier || '',
-              protocol: qParams.protocol,
-              process: qParams.process
-            }).then(function() {
-              closePopup(popupid);
-            });
-          }, function(error) {
+          }, true).then(addDatasetToServiceFn, function(error) {
+            // Current user may not be able to edit
+            // the targeted dataset. Notify user in this case
+            // that only the service will be updated.
             $rootScope.$broadcast('StatusUpdated', {
               title: $translate.instant('linkToServiceError'),
-              msg: error.statusText,
+              msg: $translate.instant('cantAddLinkToDataset'),
               timeout: 0,
               type: 'danger'});
+            addDatasetToServiceFn();
           });
         },
 
@@ -443,12 +458,10 @@
          * @param {Object} params for the batch
          * @param {string} popupid id of the popup to close after process.
          */
-        linkToDataset: function(params, popupid) {
+        linkToDataset: function(params, popupid, addOnlineSrcToDataset) {
           // Define if when linking a service with a dataset
           // a online source element should be added to the dataset
           // first or not.
-          var isAddingOnlineSrcToDataset = true;
-          var qParams = setParams('onlinesrc-add', params);
           var scope = this;
 
           var addDatasetToServiceFn = function() {
@@ -465,7 +478,8 @@
             });
           };
 
-          if (isAddingOnlineSrcToDataset) {
+          if (addOnlineSrcToDataset) {
+            var qParams = setParams('onlinesrc-add', params);
             return gnBatchProcessing.runProcessMd({
               name: qParams.name,
               desc: qParams.desc,

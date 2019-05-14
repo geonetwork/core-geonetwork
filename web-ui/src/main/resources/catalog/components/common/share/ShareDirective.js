@@ -212,7 +212,7 @@
 
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
-              return $translate.instant(g.group);
+              return $translate.instant('group-' + g.group);
             }
             else if (scope.sorter.predicate == 'p') {
               return g.userProfile;

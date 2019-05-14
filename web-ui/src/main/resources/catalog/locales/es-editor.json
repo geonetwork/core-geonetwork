@@ -331,7 +331,7 @@
     "moreSpecificConcept": "Conceptos más específicos",
     "associatedConcept": "Conceptos asociados",
     "xsd": "Validación del esquema",
-    "linkToXmlTab": "Algunos erroes se pueden solucionar usando el <a href=\"#/metadata/{{metadataId}}/tab/xml\">editor XML</a>.",
+    "linkToXmlTab": "Algunos erroes se pueden solucionar usando el <a href=\"#/metadata/{{metadataId}}?tab=xml\">editor XML</a>.",
     "directoryManagerSubtitle": "Esta pantalla te permite editar entradas del directorio como contactos, formatos, etc... incluyendo la administración de plantillas.",
     "directoryManagerSubtitleImport": "Introducir aquí el contenido XML completo de una entrada a importar a la base de datos.",
     "directoryEntryTypes": "Tipos de entradas",

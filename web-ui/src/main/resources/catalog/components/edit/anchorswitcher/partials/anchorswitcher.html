@@ -1,0 +1,32 @@
+<div class="">
+
+  <div class="gn-characterString gn-value"
+       data-ng-if="mode === 'characterString'">
+    <input type="hidden" data-ng-attr-name="{{elementRef + '_xlinkCOLONhref'}}" />
+    <div class="input-group">
+      <input class="form-control"
+             data-ng-model="textValue"
+             data-ng-attr-id="{{'gn-' + elementRef + '-charStringValue'}}"
+             data-ng-attr-name="{{elementRef}}"
+             data-ng-attr-value="{{textValue}}"
+      />
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-default" data-ng-click="setMode('anchor')">
+          <i class="fa fa-link">&nbsp;</i>
+        </button>
+      </span>
+    </div>
+  </div>
+  <div class="gn-characterString gn-value"
+       data-ng-if="mode === 'anchor'">
+    <input class="form-control"
+           data-ng-model="textValue"
+           data-ng-attr-id="{{'gn-' + elementRef + '-charStringValue'}}"
+           data-ng-attr-name="{{elementRef}}"
+           data-ng-attr-value="{{textValue}}"
+    />
+  </div>
+
+
+</div>
+

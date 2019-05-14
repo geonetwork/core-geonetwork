@@ -41,6 +41,9 @@
           <param name="range" value="1000" /> <!-\- too many causes problems -\->
         </call>-->
         <call name="siteURL" class=".guiservices.util.GetSiteURL"/>
+        <call name="documentFileName" class=".guiservices.util.GetSettingValue">
+          <param name="setting" value="metadata/pdfReport/pdfName"/>
+        </call>
       </output>
 
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
@@ -68,6 +71,9 @@
       <output sheet="../xslt/services/pdf/portal-present-fop.xsl" file="true"
               contentType="application/pdf">
         <call name="siteURL" class=".guiservices.util.GetSiteURL"/>
+        <call name="documentFileName" class=".guiservices.util.GetSettingValue">
+          <param name="setting" value="metadata/pdfReport/pdfName"/>
+        </call>
       </output>
       <error id="search-error" sheet="../xslt/common/error/error-xml.xsl" statusCode="500"/>
     </service>

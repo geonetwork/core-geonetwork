@@ -47,7 +47,9 @@
               .success(function(data) {
                 scope.stylesheets = data;
                 scope.stylesheets.unshift('');
-                scope.element = scope.stylesheets[0];
+                if (angular.isUndefined(scope.element) || angular.isObject(scope.element)) {
+                  scope.element = scope.stylesheets[0];
+                }
               });
         }
       };
