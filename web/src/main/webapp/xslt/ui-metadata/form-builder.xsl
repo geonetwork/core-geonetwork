@@ -629,6 +629,35 @@
                               data-gn-language-picker=""
                               id="{$id}_{@label}"/>
                       </xsl:when>
+                      <xsl:when test="@use = 'data-gn-keyword-picker'">
+                        <input class="form-control"
+                               value="{value}"
+                               data-gn-field-tooltip="{$schema}|{@tooltip}"
+                               data-gn-keyword-picker=""
+                               id="{$id}_{@label}">
+
+                          <xsl:for-each select="directiveAttributes/attribute::*">
+                            <xsl:variable name="directiveAttributeName" select="name()"/>
+
+                            <xsl:attribute name="{$directiveAttributeName}">
+                              <xsl:choose>
+                                <xsl:when test="$keyValues and
+                                                count($keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]) > 0">
+                                  <xsl:value-of select="$keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]/text()"/>
+                                </xsl:when>
+                                <xsl:when test="starts-with(., 'eval#')">
+                                  <!-- Empty value for XPath to evaluate. -->
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="."/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </xsl:attribute>
+                          </xsl:for-each>
+                        </input>
+                      </xsl:when>
                       <xsl:when test="starts-with(@use, 'gn-')">
                         <input class="form-control"
                               type="hidden"
