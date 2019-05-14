@@ -57,9 +57,8 @@ Mapping between :
         </gco:CharacterString>
       </fileIdentifier>
       <language>
-        <gco:CharacterString>
-          <xsl:value-of select="$lang"/>
-        </gco:CharacterString>
+        <LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
+                      codeListValue="{$lang}"/>
         <!-- English is default. Not available in GetCapabilities.
                 Selected by user from GUI -->
       </language>
