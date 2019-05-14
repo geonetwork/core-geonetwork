@@ -90,7 +90,7 @@ public class EditLib {
     private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
 
     private SchemaManager scm;
-    private Map<String, Integer> htVersions = new ConcurrentHashMap<String, Integer>();
+    private static final Map<String, Integer> htVersions = new ConcurrentHashMap<String, Integer>();
     
     public EditLib(SchemaManager scm) {
         this.scm = scm;
