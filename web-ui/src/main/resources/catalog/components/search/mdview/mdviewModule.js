@@ -126,8 +126,10 @@
         showApproved = $scope.mdView.current.record.draft != 'y';
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
-        if (f) {
-          $('#gn-metadata-display').find('*').remove();
+        if (f) {        
+          var gn_metadata_display = $('#gn-metadata-display', $('.gn-md-view:visible'));
+          
+          gn_metadata_display.find('*').remove();
           gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
             $http.get(url, {
               headers: {
@@ -144,7 +146,7 @@
                     var snippet = response.data.replace(
                         '<?xml version="1.0" encoding="UTF-8"?>', '');
 
-                    $('#gn-metadata-display').find('*').remove();
+                    gn_metadata_display.find('*').remove();
 
                     $scope.compileScope.$destroy();
 
@@ -152,14 +154,14 @@
                     $scope.compileScope = $scope.$new();
                     var content = $compile(snippet)($scope.compileScope);
 
-                    $('#gn-metadata-display').append(content);
+                    gn_metadata_display.append(content);
 
                     // activate the tabs in the full view
                     $scope.activateTabs();
                 }
               },
             function(data) {
-              $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
+                gn_metadata_display.append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
             });
           });
         };
