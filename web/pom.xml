@@ -221,7 +221,7 @@
       <artifactId>pcj</artifactId>
     </dependency>
     <dependency>
-      <groupId>batik</groupId>
+      <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
@@ -854,8 +854,11 @@
               <value>5000000</value>
             </systemProperty>
           </systemProperties>
+          <httpConnector>
+            <port>${jetty.port}</port>
+          </httpConnector>
           <stopKey>JETTY_TOP</stopKey>
-          <stopPort>8090</stopPort>
+          <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
       </plugin>
     </plugins>
@@ -949,6 +952,16 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>slave</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource</groupId>
+          <artifactId>slave</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
   </profiles>
 
   <properties>

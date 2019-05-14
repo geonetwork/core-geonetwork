@@ -35,7 +35,7 @@
 
 
   <ul class="nav nav-pills" data-ng-if="isTabMode">
-    <li data-ng-repeat="c in tabs.category | orderBy: 'label'"
+    <li data-ng-repeat="c in tabs.category"
         data-ng-init="path = buildPath(c);"
         role="presentation"
         data-ng-class="{'active': c.isSelected}">

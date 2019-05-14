@@ -348,6 +348,8 @@
           } else {
             $(this).hide();
           }
+          // check parent
+          $scope.filterParent($(this));
         });
       };
       $scope.resetFilter = function(formId) {
@@ -360,6 +362,47 @@
           // show the fieldsets
           $(formId + ' fieldset').show();
         });
+
+      };
+
+      // check the parent for visible children
+      $scope.filterParent = function(element) {
+
+        var doFilterMain = true;
+        // go back to the fieldset
+        var fieldsetParent = element.parent().parent();
+        // check for UI settings
+        if (fieldsetParent.prop('nodeName').toLowerCase() != 'fieldset') {
+          fieldsetParent = element.parent();
+          doFilterMain = false;
+        }
+        // reset
+        fieldsetParent.show();
+        fieldsetParent.parent().show();
+        // count visible elements
+        var counter = fieldsetParent.children('div').children(':visible').length;
+
+        if (counter > 0) {
+          fieldsetParent.show();
+        } else {
+          fieldsetParent.hide();
+        }
+        if (doFilterMain) {
+          $scope.filterMain(fieldsetParent);
+        }
+      };
+      
+      // filter the main parent (for Settings)
+      $scope.filterMain = function(element) {
+
+        var parentMain = element.parent();
+        var counter = parentMain.children('fieldset:visible').length;
+
+        if (counter > 0) {
+          parentMain.show();
+        } else {
+          parentMain.hide();
+        }
 
       };
 

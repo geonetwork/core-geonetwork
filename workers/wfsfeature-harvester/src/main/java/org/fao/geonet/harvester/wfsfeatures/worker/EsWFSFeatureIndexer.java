@@ -272,8 +272,13 @@ public class EsWFSFeatureIndexer {
                         if (attributeValue == null) {
 
                         } else if (tokenizedFields != null && tokenizedFields.get(attributeName) != null) {
+                            String rawValue = (String) attributeValue;
+                            String value = rawValue.startsWith(CDATA_START) ?
+                                rawValue.replaceFirst(CDATA_START_REGEX, "").substring(0, rawValue.length() - CDATA_END.length() - CDATA_START.length()) :
+                                rawValue;
+
                             String separator = tokenizedFields.get(attributeName);
-                            String[] tokens = ((String) attributeValue).split(separator);
+                            String[] tokens = value.split(separator);
                             ArrayNode arrayNode = jacksonMapper.createArrayNode();
                             for (String token : tokens) {
                                 arrayNode.add(token.trim());
