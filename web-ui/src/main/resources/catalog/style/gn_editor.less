@@ -943,11 +943,18 @@ div.gn-individualName {
   /* Hide negative period, hide bbox region selector */
   [data-gn-field-duration-div] > div > input[type="checkbox"],
   [data-gn-field-duration-div] > div > label,
+  fieldset.gn-MI_Instrument > div.gn-code,
+  fieldset.gn-MI_Platform > div.gn-description,
+  [data-gn-measure] div.col-xs-4,
   .gn-drawmap-panel > div.row:first-of-type {
     display: none;
   }
 }
-
+.gn-tab-eo-access-and-usage {
+  .gn-pointOfContact .gn-role {
+    display: none;
+  }
+}
 
 .gn-tab-copernicus-marine {
   /* Hide the date type selector */

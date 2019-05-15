@@ -212,6 +212,9 @@
                     md.standardName.match(/ISO 19139, MyOcean profile short/i)) {
                     return 'copernicus-marine-short';
                   } else if (md.standardName &&
+                    md.standardName.match(/ISO 19115-3 - CERSAT/i)) {
+                    return 'eo-tab-description';
+                  } else if (md.standardName &&
                     md.standardName.match(/ISO 19139, MyOcean profile/i)) {
                     return 'copernicus-marine';
                   } else if (md.standardName &&
@@ -240,7 +243,8 @@
                   // Example : open ISO19139 record having
                   // standardName containing medsea in advanced mode
                   'iso19139': firstTabDispatcher,
-                  'iso19115-3': firstTabDispatcher
+                  'iso19115-3': firstTabDispatcher,
+                  'iso19115-3.2018': firstTabDispatcher
                 };
                 if (schemaCustomConfig) {
                   var fn = schemaCustomConfig[$scope.mdSchema];
