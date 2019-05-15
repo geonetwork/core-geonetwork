@@ -1468,7 +1468,10 @@
     <xsl:param name="insertRef" select="''"/>
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    <button type="button" class="btn btn-default btn-xs"
+    <xsl:variable name="fieldName"
+                  select="concat(replace(@name, ':', 'COLON'), '_', $insertRef)"/>
+    <button type="button" class="btn btn-default btn-xs btn-attr"
+            id="gn-attr-add-button-{$fieldName}"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
       <i class="fa fa-plus fa-fw"/>
