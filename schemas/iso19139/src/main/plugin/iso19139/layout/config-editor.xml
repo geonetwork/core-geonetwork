@@ -3286,7 +3286,8 @@
 
           <section name="cm-format">
             <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributionFormat/*/gmd:name"
-                   name="cm-format"/>
+                   name="cm-format"
+                    del="../.."/>
 
             <action type="add"
                     btnLabel="cm-add-format-n3"
