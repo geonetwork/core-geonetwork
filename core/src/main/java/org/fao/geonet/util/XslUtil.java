@@ -29,16 +29,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,6 +52,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
@@ -68,6 +65,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -925,5 +923,37 @@ public final class XslUtil {
         ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
 
         return thesaurusManager.getThesauriDirectory().toString();
+    }
+
+
+    /**
+     * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.
+     * <p>
+     * Usage:
+     * <p>
+     * <xsl:stylesheet
+     * xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+     * ...
+     * xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     * <p>
+     * <xsl:variable name="thesauriDir" select="java:getIsoLanguageLabel('dut', 'eng')"/>
+     *
+     * @param code      Code of the IsoLanguage to retrieve the name.
+     * @param language  Language to retrieve the IsoLanguage name.
+     * @return
+     */
+    public static String getIsoLanguageLabel(String code, String language) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        IsoLanguageRepository isoLanguageRepository = applicationContext.getBean(IsoLanguageRepository.class);
+
+        List<IsoLanguage> languageValues = isoLanguageRepository.findAllByCode(code);
+
+        String languageLabel = code;
+
+        if (!languageValues.isEmpty()) {
+            languageLabel = languageValues.get(0).getLabelTranslations().get(language);
+        }
+
+        return languageLabel;
     }
 }
