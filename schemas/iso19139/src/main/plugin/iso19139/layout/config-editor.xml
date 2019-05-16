@@ -3199,7 +3199,7 @@
       <sidePanel>
         <directive data-gn-overview-manager=""/>
         <directive data-gn-onlinesrc-list=""
-                   data-types="onlinesrc"
+                   data-types="onlinesrc|sibling|associated"
                    data-codelist-filter="ancestor::node()[name()='gmd:MD_Metadata' and contains(gmd:metadataStandardName/*/gco:CharacterString, 'ISO 19139, MyOcean profile')]"/>
 
         <action type="associatedResource"
