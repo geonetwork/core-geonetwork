@@ -3233,7 +3233,8 @@
                  name="cm-abstract"/>
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:aggregationInfo/*[gmd:initiativeType/*/@codeListValue = 'reference']/gmd:aggregateDataSetName/*/gmd:title"
-                 name="cm-reference"/>
+                 name="cm-reference"
+                 del="../../../.."/>
           <action type="add"
                   btnLabel="cm-add-reference"
                   or="aggregationInfo"

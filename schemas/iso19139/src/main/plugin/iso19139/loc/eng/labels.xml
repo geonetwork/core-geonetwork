@@ -991,10 +991,10 @@
       <option value="temporal resolution: daily instantaneous">Daily instantaneous</option>
       <option value="temporal resolution: weekly mean">Weekly mean</option>
       <option value="temporal resolution: monthly mean">Monthly mean</option>
-      <option value="temporal resolution: monthly mean">Seasonal mean</option>
-      <option value="temporal resolution: Annual mean">Annual mean</option>
-      <option value="temporal resolution: Pluri-annual mean">Pluri-annual mean</option>
-      <option value="temporal resolution: Pluri-annual climatology mean">Pluri-annual climatology mean</option>
+      <option value="temporal resolution: seasonal mean">Seasonal mean</option>
+      <option value="temporal resolution: annual mean">Annual mean</option>
+      <option value="temporal resolution: pluri-annual mean">Pluri-annual mean</option>
+      <option value="temporal resolution: pluri-annual climatology mean">Pluri-annual climatology mean</option>
     </helper>
   </element>
   <element name="gmd:dimension" id="242.0">
