@@ -192,15 +192,18 @@
 
       var finalParams = angular.extend({}, hiddenParams, params);
       $scope.finalParams = finalParams;
-      gnSearchManagerService.gnSearch(
-                              finalParams, null,
-                              $scope.searchObj.internal).then(
-          function(data) {
+      // only run internal queries if necessary
+      if ($scope.searchObj.internal !== undefined ) {
+        gnSearchManagerService.gnSearch(
+          finalParams, null,
+          $scope.searchObj.internal).then(
+          function (data) {
             $scope.searchResults.records = [];
             for (var i = 0; i < data.metadata.length; i++) {
               $scope.searchResults.records.push(new Metadata(data.metadata[i]));
             }
           });
+      }
 
         finalParams.bucket = $scope.searchResults.selectionBucket || 'metadata';
 
