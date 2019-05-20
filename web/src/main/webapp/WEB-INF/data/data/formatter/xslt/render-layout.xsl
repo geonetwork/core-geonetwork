@@ -162,10 +162,10 @@
 
 
             <br/>
-
-
             <xsl:if test="$css != 'checkpoint' and
-                          $view != 'emodnetHydrography' and $view != 'sdn'">
+                          $view != 'emodnetHydrography' and
+                          $view != 'earthObservation' and
+                          $view != 'sdn'">
               <section>
                 <h4>
                   <i class="fa fa-fw fa-cog">&#160;</i>&#160;

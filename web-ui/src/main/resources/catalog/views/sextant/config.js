@@ -242,7 +242,7 @@
           } else if(md.getSchema() == 'dublin-core') {
             url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
           } else if(md.getSchema() == 'iso19115-3.2018') {
-            url = 'md.format.xml?root=div&header=false&xsl=xsl-view&uuid=' + uuid;
+            url = 'md.format.xml?root=div&header=false&xsl=xsl-view&view=earthObservation&uuid=' + uuid;
           } else if(md.getSchema() == 'iso19115-3') {
             var view;
             if(md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data') {
