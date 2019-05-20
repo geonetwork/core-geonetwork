@@ -202,7 +202,7 @@
     <div>Organisation responsable de la ressource trouvée</div>
   </report.M47>
   <alert.M47.info>
-    <div>Le nom et l'email de l'organisation responsable de la ressource sont manquants</div>
+    <div>Le nom de l'organisation et/ou l'email du contact sur la ressource sont manquants</div>
   </alert.M47.info>
   <report.M47.info>
     <div>Le nom et l'email de l'organisation responsable de la ressource sont définis pour :</div>
