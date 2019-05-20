@@ -1203,7 +1203,7 @@
                           scope.srcParams.url = scope.onlineSrcLink;
                           scope.addOnlineSrcInDataset = false;
                         }
-                      } else if (scope.addOnlineSrcInDataset) {
+                      } else {
                         scope.srcParams.uuidDS = md.getUuid();
                         scope.srcParams.name = gnCurrentEdit.mdTitle;
                         scope.srcParams.desc = gnCurrentEdit.mdTitle;
