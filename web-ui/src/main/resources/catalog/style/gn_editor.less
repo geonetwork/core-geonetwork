@@ -946,6 +946,7 @@ div.gn-individualName {
   fieldset.gn-MI_Instrument > div.gn-code,
   fieldset.gn-MI_Platform > div.gn-description,
   [data-gn-measure] div.col-xs-4,
+  .gn-description .col-xs-1,
   .gn-drawmap-panel > div.row:first-of-type {
     display: none;
   }
@@ -958,6 +959,11 @@ div.gn-individualName {
 .gn-tab-eo-tab-description,
 .gn-tab-eo-history,
 .gn-tab-eo-access-and-usage {
+  .gn-processStep .gn-level,
+  .gn-resourceSpecificUsage .gn-specificUsage,
+  .gn-resourceSpecificUsage .gn-userDeterminedLimitations,
+    /* Hide convention in issues */
+  .gn-identifiedIssues .gn-add-field,
   .gn-required > label:after {
     display: none;
   }

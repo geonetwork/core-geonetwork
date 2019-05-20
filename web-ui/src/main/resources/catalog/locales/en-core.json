@@ -455,5 +455,15 @@
     "indexingTaskRunning": "Indexing {{total}} records...",
     "indexingTaskFinished": "Indexing finished, {{total}} records processed",
     "indexingTaskFinishedWithErrors": "Indexing finished, {{total}} records processed with {{errors}} errors",
-    "indexingTaskCanceled": "Indexing canceled"
+    "indexingTaskCanceled": "Indexing canceled",
+    "localFilePath": "Local path",
+    "ftp": "FTP",
+    "thredds": "THREDDS",
+    "services": "Services",
+    "Opendap": "OPeNDAP",
+    "documents": "Documents",
+    "UserGuide": "User guide",
+    "ProcessingAndValidation": "Processing and validation",
+    "indexingTaskCanceled": "Indexing",
+    "directAccess": "Direct download"
 }
