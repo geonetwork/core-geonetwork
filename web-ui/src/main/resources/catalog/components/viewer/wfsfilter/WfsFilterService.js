@@ -168,13 +168,22 @@
               }, {
                 filter_type: 'PropertyIsLike',
                 params: ['*' + tokenSeparator + k + tokenSeparator + '*']
-              });
+              }, {
+                filter_type: 'PropertyIsLike',
+                params: ['^' + k + '$']
+              }
+              
+              
+              );
             }
-
-            filters.push({
+            
+            // ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike avec debut/fin de ligne
+            /*filters.push({
               filter_type: 'PropertyIsEqualTo',
               params: [k]
             });
+            */
+            
           });
 
           filterFields.push({
