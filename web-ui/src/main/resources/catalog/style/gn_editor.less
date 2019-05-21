@@ -949,6 +949,8 @@ div.gn-individualName {
   [data-gn-keyword-selector] .col-sm-1,
   .gn-edition .col-xs-1,
   legend.MD_Identifier,
+  legend.party,
+  legend.individual,
   .gn-description .col-xs-1,
   .gn-alternateTitle .col-xs-1,
   .gn-EX_GeographicBoundingBox legend a,
@@ -956,13 +958,21 @@ div.gn-individualName {
   .gn-drawmap-panel > div.row:first-of-type {
     display: none;
   }
-  fieldset.gn-MD_Identifier {
+  fieldset.gn-MD_Identifier,
+  fieldset.gn-party,
+  fieldset.gn-individual {
     border: none;
   }
 }
 .gn-tab-eo-access-and-usage {
+  legend.party,
+  legend.individual,
   .gn-pointOfContact .gn-role {
     display: none;
+  }
+  fieldset.gn-party,
+  fieldset.gn-individual {
+    border: none;
   }
 }
 .gn-tab-eo-tab-description,

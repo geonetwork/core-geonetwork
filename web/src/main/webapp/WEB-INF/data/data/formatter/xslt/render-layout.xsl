@@ -122,7 +122,9 @@
               </xsl:if>
 
 
-              <xsl:if test="$view != 'emodnetHydrography' and $view != 'sdn'">
+              <xsl:if test="$view != 'emodnetHydrography' and
+                            $view != 'earthObservation' and
+                            $view != 'sdn'">
                 <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
                 <div gn-related="md"
