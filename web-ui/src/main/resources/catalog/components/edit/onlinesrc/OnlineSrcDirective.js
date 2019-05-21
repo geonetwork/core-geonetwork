@@ -1151,11 +1151,24 @@
                           .then(function(capabilities) {
                             scope.layers = [];
                             scope.srcParams.selectedLayers = [];
-                            scope.layers.push(capabilities.Layer[0]);
-                            angular.forEach(scope.layers[0].Layer, function(l) {
-                              scope.layers.push(l);
-                              // TODO: We may have more than one level
-                            });
+                            if (capabilities.Layer) {
+                              scope.layers.push(capabilities.Layer[0]);
+                              angular.forEach(scope.layers[0].Layer, function(l) {
+                                scope.layers.push(l);
+                                // TODO: We may have more than one level
+                              });
+                            } else if (capabilities.featureTypeList) {
+                              angular.forEach(capabilities.featureTypeList.featureType, function(l) {
+                                var name = l.name.prefix + ":" + l.name.localPart;
+                                var layer = {
+                                  'Name': name,
+                                  'Title': l.title || name,
+                                  'abstract': l.abstract || ''
+                                };
+
+                                scope.layers.push(layer);
+                              });
+                            }
                           });
                     }
                   };
@@ -1178,10 +1191,7 @@
                         scope.layers = [];
                         scope.srcParams.selectedLayers = [];
 
-                        // Search a WMS link in the service metadata record
-                        // TODO: WFS ?
-                        links = links.concat(md.getLinksByType('OGC:WMS'));
-                        links = links.concat(md.getLinksByType('wms'));
+                        links = links.concat(md.getLinksByType('ogc', 'atom'));
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.identifier =
                           (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
