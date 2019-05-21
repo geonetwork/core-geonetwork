@@ -255,7 +255,7 @@
               view = 'checkpoint-dps'
             }
             url = view ?
-              'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' + view +
+              'md.format.xml?root=div&tabs=false&css=checkpoint&xsl=xsl-view&view=' + view +
               '&uuid=' + uuid :
               'md.format.xml?xsl=sxt_view&uuid=' + uuid;
           } else {
