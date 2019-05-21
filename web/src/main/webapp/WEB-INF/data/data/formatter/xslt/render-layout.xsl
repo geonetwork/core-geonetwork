@@ -122,15 +122,21 @@
               </xsl:if>
 
 
-              <xsl:if test="$view != 'emodnetHydrography' and
-                            $view != 'earthObservation' and
-                            $view != 'sdn'">
-                <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+              <xsl:choose>
+                <xsl:when test="$view = 'earthObservation' ">
+                  <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+                </xsl:when>
+                <xsl:when test="$view = 'emodnetHydrography' or
+                                $view = 'sdn'">
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
-                <div gn-related="md"
-                    data-user="user"
-                    data-types="onlines">&#160;</div>
-              </xsl:if>
+                  <div gn-related="md"
+                       data-user="user"
+                       data-types="onlines">&#160;</div>
+                </xsl:otherwise>
+              </xsl:choose>
 
               <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
