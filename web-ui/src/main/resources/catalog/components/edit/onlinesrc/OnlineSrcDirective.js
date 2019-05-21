@@ -592,6 +592,16 @@
                       scope.params.desc= '';
                       initMultilingualFields();
                     }
+                    if(scope.config.listLayerNamesOrTitles !== undefined) {
+                      scope.listLayerNamesOrTitles = scope.config.listLayerNamesOrTitles;
+                    } else {
+                      scope.listLayerNamesOrTitles = 'title';
+                    }
+                    if(scope.config.addInspireDescription !== undefined) {
+                      scope.addInspireDescription = scope.config.addInspireDescription;
+                    } else {
+                      scope.addInspireDescription = false;
+                    }
                   };
                   function loadConfigAndInit(withInit) {
                     gnSchemaManagerService.getEditorAssociationPanelConfig(
@@ -913,19 +923,29 @@
                     angular.forEach(scope.params.selectedLayers,
                         function(layer) {
                           names.push(layer.Name || layer.name);
-                          descs.push(layer.Title || layer.title);
+                          if(!scope.addInspireDescription) {
+                            descs.push(layer.Title || layer.title);
+                          }
                         });
 
                     if (scope.isMdMultilingual) {
                       var langCode = scope.mdLangs[scope.mdLang];
                       scope.params.name[langCode] = names.join(',');
-                      scope.params.desc[langCode] = descs.join(',');
+                      if(!scope.addInspireDescription) {
+                        scope.params.desc[langCode] = descs.join(',');
+                      }
                     }
                     else {
-                      angular.extend(scope.params, {
-                        name: names.join(','),
-                        desc: descs.join(',')
-                      });
+                      if(!scope.addInspireDescription) {
+                        angular.extend(scope.params, {
+                          name: names.join(','),
+                          desc: descs.join(',')
+                        });
+                      } else {
+                        angular.extend(scope.params, {
+                          name: names.join(',')
+                        });
+                      }
                     }
                   }
                 });

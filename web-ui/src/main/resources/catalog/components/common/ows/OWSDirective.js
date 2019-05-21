@@ -38,7 +38,9 @@
            scope: {
              selection: '=',
              layers: '=',
-             selectionMode: '=gnSelectionMode'
+             selectionMode: '=gnSelectionMode',
+             listLayerNamesOrTitles: '=gnListLayerNamesOrTitles',
+             addInspireDescription: '=gnAddInspireDescription'
            },
            link: function(scope, element, attrs) {
              // Manage layers selection

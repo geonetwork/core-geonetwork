@@ -115,7 +115,7 @@
 
           angular.forEach(params.selectedLayers, function(layer) {
             names.push(layer.Name || layer.name);
-            descs.push(layer.Title || layer.title);
+            descs.push(params.desc);
           });
 
           angular.extend(params, {

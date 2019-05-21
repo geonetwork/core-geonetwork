@@ -37,6 +37,8 @@
         "name": {"param": "thumbnail_desc"}
       }
     }],
-    "multilingualFields": ["name", "desc"]
+    "multilingualFields": ["name", "desc"],
+    "listLayerNamesOrTitles": "title",
+    "addInspireDescription": false
   }
 }
