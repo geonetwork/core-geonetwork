@@ -1,4 +1,4 @@
-<div data-ng-hide="isInitialized">
+<div data-ng-show="initOnDemand && !isInitialized">
    <button class="btn btn-default"
       title="{{'checkIfDataIsDownloadableFromWfsHelp' | translate}}"
       data-ng-click="init()">
@@ -20,7 +20,8 @@
 
     <select class="form-control"
             data-ng-if="mode == 'select'"
-            data-ng-model="downloadFormat">
+            data-ng-model="downloadFormat"
+            data-ng-change="downloadFormatChange(this)">
       <optgroup label="{{'downloadFeature'| translate}}">
         <option data-ng-repeat="f in formats | orderBy:f"
                 value="{{f}}#false">

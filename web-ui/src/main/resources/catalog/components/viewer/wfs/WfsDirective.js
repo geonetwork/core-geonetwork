@@ -46,10 +46,10 @@
         link: function(scope, element, attrs, ctrls) {
           scope.initOnDemand = attrs['initOnDemand'] == 'true' || false;
           scope.isWfsAvailable = scope.initOnDemand ? true : false;
-          scope.isInitialized = !scope.initOnDemand;
+          scope.isInitialized = false;
+          scope.downloadFormat = undefined;
 
           scope.init = function() {
-            scope.isInitialized = true;
             if (!scope.layer) {
               return;
             }
@@ -58,6 +58,9 @@
             if (!source || !(source instanceof ol.source.ImageWMS ||
                 source instanceof ol.source.TileWMS)) {
               return;
+              // TODO add WFS layer download support
+              // || (source instanceof ol.source.Vector &&
+              //   source.getFormat() instanceof ol.format.WFS)
             }
 
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
@@ -105,6 +108,7 @@
             if (scope.url && scope.url != '') {
               return gnWfsService.getCapabilities(gnGlobalSettings.getNonProxifiedUrl(scope.url))
                   .then(function(capabilities) {
+                    scope.isInitialized = true;
                     scope.isWfsAvailable = true;
                     scope.capabilities = capabilities;
                     scope.featureType =
@@ -115,16 +119,19 @@
                     }
                   }, function (r) {
                     console.warn(r);
+                    scope.isInitialized = true;
                     scope.isWfsAvailable = false;
                   });
             }
           };
 
-          scope.$watch('downloadFormat', function (n, o) {
-            if (n != o) {
-              scope.download(n.split('#')[0], n.split('#')[1] == 'true');
+          scope.downloadFormatChange = function (o) {
+            var df = o.downloadFormat;
+            if (df) {
+              scope.download(df.split('#')[0],
+                df.split('#')[1] == 'true');
             }
-          })
+          };
 
           if (!scope.initOnDemand){
             scope.init();
@@ -144,12 +151,11 @@
             'viewer/wfs/partials/download.html',
         link: function(scope, element, attrs, ctrls) {
           scope.initOnDemand = attrs['initOnDemand'] == 'true' || false;
-          scope.isWfsAvailable = scope.initOnDemand ? true : false;
-          scope.isInitialized = !scope.initOnDemand;
+          scope.isWfsAvailable = false;
+          scope.isInitialized = false;
           scope.mode = 'dropdown';
 
           scope.init = function() {
-            scope.isInitialized = true;
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
             scope.url = attrs['url'];
             scope.typename = attrs['typename'];
@@ -188,11 +194,16 @@
           scope.checkWFSUrl = function() {
             return gnWfsService.getCapabilities(scope.url)
                 .then(function(capabilities) {
+                  scope.isInitialized = true;
                   scope.isWfsAvailable = true;
                   scope.capabilities = capabilities;
                   scope.featureType =
                       gnWfsService.getTypeName(capabilities, scope.typename);
                   scope.formats = gnWfsService.getOutputFormat(capabilities);
+                }, function (r) {
+                  console.warn(r);
+                  scope.isInitialized = true;
+                  scope.isWfsAvailable = false;
                 });
           };
 
