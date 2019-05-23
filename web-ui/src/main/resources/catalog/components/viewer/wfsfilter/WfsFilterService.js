@@ -169,6 +169,7 @@
                 filter_type: 'PropertyIsLike',
                 params: ['*' + tokenSeparator + k + tokenSeparator + '*']
               }, {
+                // PropertyIsEqualTo ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike avec debut/fin de ligne
                 filter_type: 'PropertyIsLike',
                 params: ['^' + k + '$']
               }
@@ -176,13 +177,13 @@
               
               );
             }
+            else {
+                filters.push({
+                  filter_type: 'PropertyIsEqualTo',
+                  params: [k]
+                });
+            }
             
-            // ne fonctionne pas sur les CLOB, remplace par un PropertyIsLike avec debut/fin de ligne
-            /*filters.push({
-              filter_type: 'PropertyIsEqualTo',
-              params: [k]
-            });
-            */
             
           });
 
