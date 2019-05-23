@@ -963,6 +963,15 @@ div.gn-individualName {
   fieldset.gn-individual {
     border: none;
   }
+
+  /* Allow removal of projection desc */
+  .gn-eo-spatial-coverage .gn-description .col-xs-1 {
+    display: block;
+  }
+
+  [ngeo-map] {
+    height: 200px;
+  }
 }
 .gn-tab-eo-access-and-usage {
   legend.party,
@@ -975,6 +984,19 @@ div.gn-individualName {
     border: none;
   }
 }
+/*.gn-tab-eo-history {
+  legend.resourceSpecificUsage,
+  legend.processStep,
+  legend.identifiedIssues {
+    display: none;
+  }
+  fieldset.gn-resourceSpecificUsage,
+  fieldset.gn-processStep,
+  fieldset.gn-identifiedIssues {
+    border: none;
+  }
+}*/
+
 .gn-tab-eo-tab-description,
 .gn-tab-eo-history,
 .gn-tab-eo-access-and-usage {
