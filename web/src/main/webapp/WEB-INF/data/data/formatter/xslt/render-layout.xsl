@@ -334,6 +334,11 @@
           <xsl:attribute name="class" select="'tab-pane'"/>
         </xsl:if>
         <h1 class="view-header">
+          <!-- If in tab mode, do not repeat the tab name as header
+          as it is already displayed in the tab itself. -->
+          <xsl:if test="$tabs = 'true'">
+            <xsl:attribute name="class" select="'hidden'"/>
+          </xsl:if>
           <xsl:value-of select="$title"/>
         </h1>
         <xsl:choose>
