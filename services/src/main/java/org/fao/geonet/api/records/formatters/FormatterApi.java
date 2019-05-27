@@ -58,6 +58,7 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
@@ -273,6 +274,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(
             value = "mdpath",
             required = false) final String mdPath,
+        @ApiParam(
+            value = "Optional language ISO 3 letters code to override HTTP Accept-language header.",
+            required = false
+        )
+        @RequestParam(
+            value = "language",
+            required = false) final String iso3lang,
         @RequestParam(
             value = "output",
             required = false)
@@ -300,7 +308,11 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType = FormatType.xml;
         }
 
-        final String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        if (StringUtils.isNotEmpty(iso3lang)) {
+            language = LanguageUtils.locale2gnCode(iso3lang);
+        }
+
         final ServiceContext context = createServiceContext(
             language,
             formatType,

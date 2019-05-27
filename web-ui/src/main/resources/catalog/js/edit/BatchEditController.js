@@ -157,10 +157,11 @@
     '$location',
     '$http',
     '$compile',
+    '$httpParamSerializer',
     'gnSearchSettings',
     'gnCurrentEdit',
     'gnSchemaManagerService',
-    function($scope, $location, $http, $compile,
+    function($scope, $location, $http, $compile, $httpParamSerializer,
         gnSearchSettings, gnCurrentEdit, gnSchemaManagerService) {
 
       // Simple tab handling.
@@ -168,6 +169,7 @@
       $scope.setStep = function(step) {
         $scope.selectedStep = step;
       };
+      $scope.extraParams = {};
       $scope.$watch('selectedStep', function(newValue) {
         if (newValue === 2) {
           // Initialize map size when tab is rendered.
@@ -409,7 +411,12 @@
 
         // TODO: Apply changes to a mix of records is maybe not the best
         // XPath will be applied whatever the standard is.
-        return $http.put('../api/records/batchediting?bucket=be101',
+        var url = '../api/records/batchediting?'
+          + $httpParamSerializer({
+            'bucket': 'be101',
+            'updateDateStamp': $scope.extraParams.updateDateStamp
+          });
+        return $http.put(url,
             params
         ).success(function(data) {
           $scope.processReport = data;

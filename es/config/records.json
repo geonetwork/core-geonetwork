@@ -1078,6 +1078,18 @@
         "location": {
           "type": "geo_point"
         },
+        "bbox_xmin": {
+          "type": "double"
+        },
+        "bbox_xmax": {
+          "type": "double"
+        },
+        "bbox_ymin": {
+          "type": "double"
+        },
+        "bbox_ymax": {
+          "type": "double"
+        },
         "harvesterId": {
           "type": "keyword"
         },

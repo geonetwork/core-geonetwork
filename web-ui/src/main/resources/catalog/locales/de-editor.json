@@ -328,7 +328,7 @@
     "moreSpecificConcept": "More specific concepts",
     "associatedConcept": "Associated concepts",
     "xsd": "Schema validation",
-    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>.",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "Hier können Sie folgende Verzeichnisse verwalten: Kontakte, Formate und Ausdehnungen.",
     "directoryManagerSubtitleImport": "Enter here the full XML content of an entry to import it to the database.",
     "directoryEntryTypes": "Entry Types",

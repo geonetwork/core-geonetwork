@@ -107,6 +107,9 @@ public class MetadataSchema {
     private SchematronCriteriaGroupRepository criteriaGroupRepository;
     private SchemaPlugin schemaPlugin;
 
+    private String dependsOn;
+
+
     //---------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -592,6 +595,14 @@ public class MetadataSchema {
 
     public void setAppMajorVersionSupported(String appMajorVersionSupported) {
         this.appMajorVersionSupported = appMajorVersionSupported;
+    }
+
+    public String getDependsOn() {
+        return dependsOn;
+    }
+
+    public void setDependsOn(String depends) {
+        this.dependsOn = depends;
     }
 
     public Map<String, String> getTitles() {

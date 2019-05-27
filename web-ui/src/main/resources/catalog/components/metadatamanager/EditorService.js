@@ -37,15 +37,17 @@
   module.value('gnCurrentEdit', {});
 
   module.factory('gnEditor',
-      ['$q',
-       '$http',
-       '$translate',
-       '$compile',
-       'gnUrlUtils',
-       'gnXmlTemplates',
-       'gnHttp',
-       'gnCurrentEdit',
-       function($q, $http, $translate, $compile,
+      [
+        '$rootScope',
+        '$q',
+        '$http',
+        '$translate',
+        '$compile',
+        'gnUrlUtils',
+        'gnXmlTemplates',
+        'gnHttp',
+        'gnCurrentEdit',
+       function($rootScope, $q, $http, $translate, $compile,
                gnUrlUtils, gnXmlTemplates,
                gnHttp, gnCurrentEdit) {
 
@@ -328,7 +330,9 @@
              }
              else {
                var params = {id: gnCurrentEdit.id};
-
+               if (gnCurrentEdit.tab) {
+                 params.currTab = gnCurrentEdit.tab;
+               }
                // If a new session, ask the server to save the original
                // record and update session start time
                if (startNewSession) {
@@ -336,7 +340,7 @@
                  gnCurrentEdit.sessionStartTime = moment();
                }
                $http.get('../api/records/' + gnCurrentEdit.id + '/editor',
-               params).then(function(data) {
+                 {params: params}).then(function(data) {
                  refreshForm($(data.data));
                });
              }
@@ -561,10 +565,14 @@
              var defer = $q.defer();
              $http.delete('../api/records/' + gnCurrentEdit.id +
              '/editor/attributes?ref=' + ref.replace('COLON', ':'))
-              .success(function(data) {
+              .then(function(data) {
                var target = $('#gn-attr-' + ref);
                target.slideUp(duration, function() { $(this).remove();});
-             });
+               defer.resolve();
+               $rootScope.$broadcast('attributeRemoved', ref);
+             }, function(errorData) {
+                defer.reject(errorData);
+              });
              return defer.promise;
            },
            /**

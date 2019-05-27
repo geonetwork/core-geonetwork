@@ -235,6 +235,7 @@
                   id: $routeParams.id,
                   formId: '#gn-editor-' + $routeParams.id,
                   containerId: '#gn-editor-container-' + $routeParams.id,
+                  associatedPanelConfigId: 'default',
                   tab: $location.search()['tab'] || defaultTab,
                   displayAttributes: $location.search()['displayAttributes'] === 'true',
                   displayTooltips: $location.search()['displayTooltips'] === 'true',
@@ -243,6 +244,7 @@
                   formScope: $scope.$new(),
                   sessionStartTime: moment(),
                   formLoadExtraFn: formLoadExtraFunctions,
+                  codelistFilter: '',
                   working: false
                 });
 
