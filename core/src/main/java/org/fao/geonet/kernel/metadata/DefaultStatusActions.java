@@ -143,7 +143,11 @@ public class DefaultStatusActions implements StatusActions {
 
         // -- process the metadata records to set status
         for (MetadataStatus status : listOfStatus) {
-            String currentStatus = dm.getCurrentStatus(status.getId().getMetadataId());
+            MetadataStatus currentStatus = dm.getStatus(status.getId().getMetadataId());
+            String currentStatusId = (currentStatus != null)?
+                String.valueOf(currentStatus.getId().getStatusId()):"";
+
+
             String statusId = status.getId().getStatusId() + "";
             Set<Integer> listOfId = new HashSet<>(1);
             listOfId.add(status.getId().getMetadataId());
@@ -152,7 +156,7 @@ public class DefaultStatusActions implements StatusActions {
             // --- For the workflow, if the status is already set to value
             // of status then do nothing. This does not apply to task and event.
             if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
-               (statusId).equals(currentStatus)) {
+               (statusId).equals(currentStatusId)) {
                 if (context.isDebugEnabled())
                     context.debug(String.format("Metadata %s already has status %s ",
                         status.getId().getMetadataId(), status.getId().getStatusId()));
