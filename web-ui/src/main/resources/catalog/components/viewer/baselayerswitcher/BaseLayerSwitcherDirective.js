@@ -51,6 +51,7 @@
           map: '=gnBaselayerswitcherMap'
         },
         link: function(scope, element, attrs) {
+          scope.hasBackgroundLayer = false;
           scope.layers = gnViewerSettings.bgLayers;
           scope.dropup = angular.isDefined(attrs.dropup);
           var firstLayer = scope.map.getLayers().item(0);
@@ -67,6 +68,7 @@
             }
             layers.insertAt(0, layer);
             layer.set("currentBackground", true);
+            scope.hasBackgroundLayer = true;
             return false;
           };
 
@@ -93,7 +95,14 @@
                   scope.setBgLayer(scope.layers[i]);
                 }
           });
-
+          // specific sextant
+          // Force to select at least one background layer
+          scope.finished =  function() {
+            if (scope.hasBackgroundLayer === false) {
+              scope.setBgLayer(scope.layers[0])
+            }
+          };
+          // END specific sextant
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');
             gnOwsContextService.loadContextFromUrl(
