@@ -174,7 +174,10 @@
                 // save the state & path on the new node
                 // (path is used to track nodes uniquely)
                 // note: group position is set by the layer's `groupPosition` prop
-                groupPosition = layer.get('owc_groupPosition').toString();
+                if (layer.get('owc_groupPosition') != undefined) {
+                  groupPosition = layer.get('owc_groupPosition').toString();
+                }
+
                 newNode = {
                   name: group,
                   state: state,
@@ -192,11 +195,10 @@
               node.nodes.sort(sortNodeFn);
               addWpsLayers(layer, node.nodes);
 
-
+              // save the group position on the layer
+              // (for context consistency, i.e. if layer order is changed)
+              layer.set('owc_groupPosition', groupPosition);
             }
-            // save the group position on the layer
-            // (for context consistency, i.e. if layer order is changed)
-            layer.set('owc_groupPosition', groupPosition);
           };
 
           // on OWS Context loading, we don't want to build the tree on each
