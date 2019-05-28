@@ -157,6 +157,7 @@
 
           var createNode = function(layer, node, g, index, initGroupAsFolded) {
             var group = g[index];
+            var groupPosition;
             if (group) {
               var newNode = findChild(node, group);
               if (!newNode) {
@@ -173,9 +174,7 @@
                 // save the state & path on the new node
                 // (path is used to track nodes uniquely)
                 // note: group position is set by the layer's `groupPosition` prop
-                var groupPosition = layer.get('owc_groupPosition');
-                groupPosition = groupPosition.toString();
-
+                groupPosition = layer.get('owc_groupPosition').toString();
                 newNode = {
                   name: group,
                   state: state,
@@ -193,10 +192,11 @@
               node.nodes.sort(sortNodeFn);
               addWpsLayers(layer, node.nodes);
 
-              // save the group position on the layer
-              // (for context consistency, i.e. if layer order is changed)
-              layer.set('owc_groupPosition', node.groupPosition);
+
             }
+            // save the group position on the layer
+            // (for context consistency, i.e. if layer order is changed)
+            layer.set('owc_groupPosition', groupPosition);
           };
 
           // on OWS Context loading, we don't want to build the tree on each
