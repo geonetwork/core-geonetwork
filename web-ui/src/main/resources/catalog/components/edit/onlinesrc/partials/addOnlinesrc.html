@@ -57,13 +57,16 @@
                      class="col-sm-2 control-label">
                 <span data-translate="">onlineFunction</span>
               </label>
-              <div class="col-sm-10">
+              <div class="col-sm-9">
                 <div id="gn-addonlinesrc-function-list"
                      data-schema-info-combo="codelist"
                      data-init-on-load="true"
                      data-selected-info="params.function"
+                     data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.function.tooltip}}"
                      data-gn-schema-info="function" lang="lang"></div>
               </div>
+
+              <div class="col-sm-1 gn-control"></div>
             </div>
 
             <!-- Protocol Combo -->
@@ -75,13 +78,16 @@
                      class="col-sm-2 control-label">
                 <span data-translate="">protocol</span>
               </label>
-              <div class="col-sm-10">
+              <div class="col-sm-9">
                 <div id="gn-addonlinesrc-protocol-list"
                      data-schema-info-combo="element"
                      data-init-on-load="true"
                      data-selected-info="params.protocol"
+                     data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.protocol.tooltip}}"
                      data-gn-schema-info="protocol" lang="lang"></div>
               </div>
+
+              <div class="col-sm-1 gn-control"></div>
             </div>
 
             <!-- URL text field -->
@@ -95,7 +101,7 @@
                        data-translate="">url</label>
 
                 <div id="gn-addonlinesrc-url-list-multilingual-row"
-                     class="col-sm-10"
+                     class="col-sm-9"
                      data-ng-if="isFieldMultilingual('url')"
                      gn-multilingual-field="{{mdOtherLanguages}}"
                      current-language="ctrl.urlCurLang"
@@ -106,11 +112,12 @@
                          class="form-control input-sm"
                          lang="{{val}}"
                          ng-model-options="{debounce: 500}"
+                         data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                          data-ng-model="params.url[val]">
                 </div>
 
                 <div id="gn-addonlinesrc-url-list-single-row"
-                     class="col-sm-10" data-ng-if="!isFieldMultilingual('url')">
+                     class="col-sm-9" data-ng-if="!isFieldMultilingual('url')">
                   <div data-ng-class="{'input-group': OGCProtocol != null}">
                     <input data-ng-model="params.url"
                            data-ng-model-options="{debounce: 500}"
@@ -120,6 +127,7 @@
                            type="text"
                            data-ng-blur="loadCurrentLink()"
                            id="gn-addonlinesrc-url-list-single-input"
+                           data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
                            placeholder="http://">
                     <span class="input-group-btn" data-ng-show="OGCProtocol != null">
                     <!-- Refresh Grid Button -->
@@ -133,6 +141,8 @@
                   </span>
                   </div>
                 </div>
+
+                <div class="col-sm-1 gn-control"></div>
               </div>
 
               <div id="gn-addonlinesrc-overview-row"
@@ -169,16 +179,17 @@
                      class="col-sm-2 control-label"
                      data-translate="">onlineResourceName</label>
               <div id="gn-addonlinesrc-name-single-row"
-                   class="col-sm-10"
+                   class="col-sm-9"
                    data-ng-if="!isFieldMultilingual('name')">
                 <input id="gn-addonlinesrc-name-single-input"
                        ng-model="params.name"
                        name="name"
                        type="text"
+                       data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                        placeholder="Name">
               </div>
               <div id="gn-addonlinesrc-name-multilingual-row"
-                   class="col-sm-10"
+                   class="col-sm-9"
                    data-ng-if="isFieldMultilingual('name')"
                    data-gn-multilingual-field="{{mdOtherLanguages}}"
                    data-main-language="{{mdLang}}"
@@ -187,8 +198,11 @@
                        id="gn-addonlinesrc-name-multilingual-{{val}}"
                        class="form-control input-sm"
                        lang="{{val}}"
+                       data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
                        data-ng-model="params.name[val]">
               </div>
+
+              <div class="col-sm-1 gn-control"></div>
             </div>
 
             <!-- Description Text area -->
@@ -201,7 +215,7 @@
                      class="col-sm-2 control-label"
                      data-translate="">description</label>
               <div id="gn-addonlinesrc-description-single-row"
-                   class="col-sm-10"
+                   class="col-sm-9"
                    data-ng-if="!isFieldMultilingual('desc')">
               <textarea rows="3"
                         id="gn-addonlinesrc-description-single-textarea"
@@ -209,10 +223,11 @@
                         data-ng-model="params.desc"
                         class="form-control input-sm"
                         placeholder="description"
+                        data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                         name="description"/>
               </div>
               <div id="gn-addonlinesrc-description-multilingual-row"
-                   class="col-sm-10"
+                   class="col-sm-9"
                    data-ng-if="isFieldMultilingual('desc')"
                    gn-multilingual-field="{{mdOtherLanguages}}"
                    data-main-language="{{mdLang}}"
@@ -224,8 +239,11 @@
                         data-ng-model="params.desc[val]"
                         class="form-control input-sm"
                         placeholder="description"
+                        data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                         name="description"/>
               </div>
+
+              <div class="col-sm-1 gn-control"></div>
             </div>
 
             <!-- application profile text field -->
@@ -237,13 +255,16 @@
                      for="gn-addonlinesrc-profile-input"
                      class="col-sm-2 control-label"
                      data-translate="">applicationProfile</label>
-              <div class="col-sm-10">
+              <div class="col-sm-9">
                 <input data-ng-model="params.applicationProfile"
                        id="gn-addonlinesrc-profile-input"
                        name="applicationProfile"
                        class="form-control"
+                       data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.applicationProfile.tooltip}}"
                        type="text">
               </div>
+
+              <div class="col-sm-1 gn-control"></div>
             </div>
           </div>
 
