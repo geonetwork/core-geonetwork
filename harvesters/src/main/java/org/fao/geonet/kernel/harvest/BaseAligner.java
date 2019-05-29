@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -133,4 +134,16 @@ public abstract class BaseAligner<P extends AbstractParams> extends AbstractAlig
             }
         }
     }
+    
+    
+    /**
+     *  To check if the user/group associated with the harvester
+     *  is the current owner/group owner of the existing record
+     * @param recordToOverwrite
+     * @return true if the owner is the same
+     */
+    protected boolean canOverwriteRecord(Metadata recordToOverwrite) {
+        return Integer.compare(recordToOverwrite.getSourceInfo().getOwner(), getOwnerId(params)) == 0 && Integer.compare(recordToOverwrite.getSourceInfo().getGroupOwner(), getOwnerGroupId(params)) == 0;
+    }
+
 }

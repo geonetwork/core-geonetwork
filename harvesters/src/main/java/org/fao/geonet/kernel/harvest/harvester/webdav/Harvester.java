@@ -240,6 +240,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             case OVERRIDE:
                 Metadata existingMetadata = metadataRepository.findOneByUuid(uuid);
                 RecordInfo existingRecordInfo = new RecordInfo(existingMetadata);
+
                 updateMetadata(rf, existingRecordInfo, true);
                 log.info("Overriding record with uuid " + uuid);
                 result.updatedMetadata++;

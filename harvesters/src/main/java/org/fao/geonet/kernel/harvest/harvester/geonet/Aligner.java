@@ -229,25 +229,24 @@ public class Aligner extends BaseAligner<GeonetParams> {
 
                         switch (params.getOverrideUuid()) {
                             case OVERRIDE:
-                                updateMetadata(ri,
-                                    id,
-                                    localRating.equals(RatingsSetting.BASIC),
-                                    params.useChangeDateForUpdate(),
-                                    localUuids.getChangeDate(ri.uuid), true);
-                                log.info("Overriding record with uuid " + ri.uuid);
-                                result.updatedMetadata++;
-
-                                if (params.isIfRecordExistAppendPrivileges()) {
-                                    addPrivileges(id, params.getPrivileges(), localGroups, context);
-                                    result.privilegesAppendedOnExistingRecord++;
+                                Metadata existingMetadata = metadataRepository.findOneByUuid(ri.uuid);
+                                if (canOverwriteRecord(existingMetadata)) {
+                                    updateMetadata(ri, Integer.toString(existingMetadata.getId()),
+                                            localRating.equals(RatingsSetting.BASIC), params.useChangeDateForUpdate(),
+                                            localUuids.getChangeDate(ri.uuid), true);
+                                    log.info(String.format("Overriding record with uuid %s", ri.uuid));
+                                } else {
+                                    log.info(String.format("Skipping record with uuid %s because of different owner/group",
+                                            ri.uuid));
+                                    result.permissionDenied++;
                                 }
                                 break;
                             case RANDOM:
-                                log.info("Generating random uuid for remote record with uuid " + ri.uuid);
+                                log.info(String.format("Generating random uuid for remote record with uuid %s ", ri.uuid));
                                 addMetadata(ri, localRating.equals(RatingsSetting.BASIC), UUID.randomUUID().toString());
                                 break;
                             case SKIP:
-                                log.debug("Skipping record with uuid " + ri.uuid);
+                                log.debug(String.format("Skipping record with uuid %s", ri.uuid));
                                 result.uuidSkipped++;
                             default:
                                 break;

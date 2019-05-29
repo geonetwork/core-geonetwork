@@ -61,4 +61,5 @@ public class HarvestResult {
     public int thumbnailsFailed;        // = number of thumbnail creation which failed
     /** Number of metadata managed by other harvester. */
     public int managedByOtherHarvester;
+    public int permissionDenied;        // = the harvester does not belong to the current owner of metadata
 }

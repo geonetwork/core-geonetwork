@@ -954,6 +954,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             add(res, "subtemplatesUpdated", result.subtemplatesUpdated);
             add(res, "total", result.totalMetadata);
             add(res, "unchanged", result.unchangedMetadata);
+            add(res, "permissionDenied", result.permissionDenied);
             add(res, "unknownSchema", result.unknownSchema);
             add(res, "unretrievable", result.unretrievable);
             add(res, "updated", result.updatedMetadata);

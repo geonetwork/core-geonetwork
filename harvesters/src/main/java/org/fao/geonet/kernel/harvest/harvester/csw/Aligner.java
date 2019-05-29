@@ -1,24 +1,24 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
+//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===   and United Nations Environment Programme (UNEP)
 //===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
+//===   This program is free software; you can redistribute it and/or modify
+//===   it under the terms of the GNU General Public License as published by
+//===   the Free Software Foundation; either version 2 of the License, or (at
+//===   your option) any later version.
 //===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
+//===   This program is distributed in the hope that it will be useful, but
+//===   WITHOUT ANY WARRANTY; without even the implied warranty of
+//===   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===   General Public License for more details.
 //===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===   You should have received a copy of the GNU General Public License
+//===   along with this program; if not, write to the Free Software
+//===   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 //===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
+//===   Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===   Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
@@ -53,6 +53,7 @@ import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -88,6 +89,7 @@ public class Aligner extends BaseAligner<CswParams> {
     private IMetadataUtils metadataUtils;
     private IMetadataManager metadataManager;
     private IMetadataIndexer metadataIndexer;
+    private MetadataRepository metadataRepository;
 
     private HarvestResult result;
     private GetRecordByIdRequest request;
@@ -106,6 +108,7 @@ public class Aligner extends BaseAligner<CswParams> {
         metadataUtils = gc.getBean(IMetadataUtils.class);
         metadataManager = gc.getBean(IMetadataManager.class);
         metadataIndexer = gc.getBean(IMetadataIndexer.class);
+        metadataRepository = gc.getBean(MetadataRepository.class);
         result = new HarvestResult();
         result.unretrievable = 0;
         result.uuidSkipped = 0;
@@ -199,13 +202,14 @@ public class Aligner extends BaseAligner<CswParams> {
 
                     switch (params.getOverrideUuid()) {
                         case OVERRIDE:
-                            updateMetadata(ri, Integer.toString(metadataUtils.findOneByUuid(ri.uuid).getId()), true);
-                            log.debug("Overriding record with uuid " + ri.uuid);
-                            result.updatedMetadata++;
-
-                            if (params.isIfRecordExistAppendPrivileges()) {
-                                addPrivileges(id, params.getPrivileges(), localGroups, context);
-                                result.privilegesAppendedOnExistingRecord++;
+                            Metadata existingMetadata = metadataRepository.findOneByUuid(ri.uuid);
+                            if (canOverwriteRecord(existingMetadata)) {
+                                updateMetadata(ri, Integer.toString(existingMetadata.getId()), true);
+                                log.info(String.format("Overriding record with uuid %s", ri.uuid));
+                            } else {
+                                log.info(String.format("Skipping record with uuid %s because of different owner/group",
+                                        ri.uuid));
+                                result.permissionDenied++;
                             }
                             break;
                         case RANDOM:
