@@ -9,17 +9,15 @@ http://geonetwork-opensource.org/manuals/trunk/eng/users/index.html
 
 ## System Requirements
 
-GeoNetwork is a Java application that runs as a servlet so the Java Runtime
-Environment (JRE) must be installed in order to run it.
-You can get the JRE from http://openjdk.java.net/ or http://www.oracle.com/technetwork/java/javase/downloads and
-you have to download Java 8. GeoNetwork won’t run with Java 1.4, 1.5, 1.6, 7.
+GeoNetwork is a Java 8 application that runs as a servlet so the Java Development Kit
+(JDK) must be installed in order to build and run it.
+You can get a Java 8 JDK from your Linux distribution, [Oracle OpenJDK](http://openjdk.java.net/) or [AdoptOpenJDK](https://adoptopenjdk.net). Please keep in mind that ([Oracle JDK](http://www.oracle.com/technetwork/java/javase/downloads) Java 8 is no longer distributed for development, only testing purposes.
 
+GeoNetwork is developed with Java 8. GeoNetwork should not be developed with newer versions, and won’t run at all with Java 7, 1.6 or earlier releases. 
 
-Being written in Java, GeoNetwork can run on any
-platform that supports Java, so it can run on Windows, Linux and Mac OSX.
+Being written in Java, GeoNetwork can run on any platform that supports Java, so it can run on Windows, Linux and Mac OSX.
 
-
-Next, you need a servlet container. GeoNetwork comes with an embedded container (Jetty)
+Next, you need a servlet container. GeoNetwork comes with an embedded container ([Eclipse Jetty](https://www.eclipse.org/jetty/))
 which is fast and well suited for most applications. If you need a stronger one, you
 can install Tomcat from the Apache Software Foundation (http://tomcat.apache.org).
 It provides load balancing, fault tolerance and other production features. If you
@@ -35,15 +33,14 @@ two users. If you have heavier demands then you should use a professional, stand
 alone DBMS.
 
 
-GeoNetwork does not require a powerful machine. Good performance can be
-obtained even with 1GB of RAM. The suggested amount is 2GB. For hard disk
+GeoNetwork is not resource intensive and will not require a powerful machine. Good performance can be
+obtained with 1GB of RAM. The suggested amount is 2GB of RAM. For hard disk
 space, you have to consider the space required for the application itself
 (about 350 MB) and the space required for data, which can require 50 GB or
-more. A simple disk of 250 GB should be OK.  You also need some space
+more. A simple disk of 250 GB should be OK.  You also need some disk space
 for the search index which is located in ``GEONETWORK_DATA_DIR/index`` (by default GEONETWORK_DATA_DIR is ``INSTALL_DIR/web/geonetwork/WEB_INF/data``. However, even with a few thousand metadata records, the index is small so usually 500 MB of space is more than enough.
 
-The software is run in different ways depending on the servlet container you are
-using:
+The software is run in different ways depending on the servlet container you are using:
 
 * *Tomcat* - GeoNetwork is available as a WAR file which you can put into the Tomcat webapps directory. Tomcat will deploy the WAR file when it is started. You can then use the Tomcat manager web application to stop/start GeoNetwork. You can also use the startup.* and shutdown.* scripts located in the Tomcat bin directory (.* means .sh or .bat depending on your OS) but if you have other web applications in the tomcat container, then they will also be affected.
 * *Jetty* - If you use the provided container you can use the scripts in GeoNetwork’s bin directory. The scripts are startup.* and shutdown.* and you must be inside the bin directory to run them. You can use these scripts just after installation.
@@ -52,7 +49,7 @@ using:
 
 The following tools are required to be installed to setup a development environment for GeoNetwork:
 
-* **Java** - Developing with GeoNetwork requires Java Development Kit (JDK) 1.8 or greater.
+* **Java** - Developing with GeoNetwork requires Java Development Kit (JDK) 1.8.
 * **Maven** 3.1.0+ - GeoNetwork uses [Maven](http://maven.apache.org/) to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
 * **Git** - GeoNetwork source code is stored and versioned in [a Git repository on Github](https://github.com/geonetwork/core-geonetwork). Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
 * **Ant** - GeoNetwork uses [Ant](http://ant.apache.org/) to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
@@ -279,7 +276,7 @@ The Assembly Plugin configuration is in the release module (See bin.xml and zip-
 
 # Eclipse setup
 
-The easiest way to develop GeoNetwork within Eclipse is with the [m2e plugin](http://eclipse.org/m2e/),
+The easiest way to develop GeoNetwork within Eclipse is with [m2e plugin](http://eclipse.org/m2e/),
 which comes by default on many Eclipse installations.
 
 ## Import source code
