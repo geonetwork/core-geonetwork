@@ -11,7 +11,7 @@ http://geonetwork-opensource.org/manuals/trunk/eng/users/index.html
 
 GeoNetwork is a Java 8 application that runs as a servlet so the Java Development Kit
 (JDK) must be installed in order to build and run it.
-You can get a Java 8 JDK from your Linux distribution, [Oracle OpenJDK](http://openjdk.java.net/) or [AdoptOpenJDK](https://adoptopenjdk.net). Please keep in mind that ([Oracle JDK](http://www.oracle.com/technetwork/java/javase/downloads) Java 8 is no longer distributed for development, only testing purposes.
+You can get a Java 8 JDK from your Linux distribution, [Oracle OpenJDK](http://openjdk.java.net/) or [AdoptOpenJDK](https://adoptopenjdk.net). Please keep in mind that [Oracle JDK](http://www.oracle.com/technetwork/java/javase/downloads) Java 8 is no longer distributed for development, only testing purposes.
 
 GeoNetwork is developed with Java 8. GeoNetwork should not be developed with newer versions, and won’t run at all with Java 7, 1.6 or earlier releases. 
 
