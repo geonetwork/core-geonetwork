@@ -53,31 +53,30 @@ The following tools are required to be installed to setup a development environm
 * **Maven** 3.1.0+ - GeoNetwork uses [Maven](http://maven.apache.org/) to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
 * **Git** - GeoNetwork source code is stored and versioned in [a Git repository on Github](https://github.com/geonetwork/core-geonetwork). Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
 * **Ant** - GeoNetwork uses [Ant](http://ant.apache.org/) to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
-* **Sphinx** - To create the GeoNetwork documentation in a nice format [Sphinx](http://sphinx.pocoo.org/)  is used.
-* (Optional) **Python and closure** - See [web-ui module documentation](/web-ui/)
-_
+* **Sphinx** - To create the GeoNetwork documentation in a nice format [Sphinx](http://sphinx.pocoo.org/) is used.
+* (Optional) **Python and closure** - See [web-ui module documentation](/web-ui/) .
 
 # The quick way
 
 Get GeoNetwork running - the short path:
 
 ```
-git clone --recursive https://github.com/geonetwork/core-geonetwork.git
+git clone --depth 3 --recursive https://github.com/geonetwork/core-geonetwork.git
 cd core-geonetwork
 mvn clean install -DskipTests
 cd web
 mvn jetty:run
 ```
+
 Open your browser and check http://localhost:8080/geonetwork
 
 
 # How-to build ?
 ## Check out source code
 
-If you just want to quickly get the code the fastest way is to download the zip bundle: https://github.com/geonetwork/core-geonetwork/zipball/master
-or to clone the repository and build:
+Clone the repository and build:
 
-```
+```bash
 git clone --recursive https://github.com/geonetwork/core-geonetwork.git
 cd core-geonetwork
 mvn clean install -DskipTests
@@ -85,9 +84,11 @@ mvn clean install -DskipTests
 
 ### Submodules
 
-GeoNetwork use submodules. To properly init them use the ``--recursive`` option when cloning the repository or run the following:
+GeoNetwork use submodules, these were initiziled by the ``--recursive`` option when cloning the repository.
 
-```
+If you missed using ``--recursive`` run the following:
+
+```bash
 cd core-geonetwork
 git submodule init
 git submodule update
@@ -103,58 +104,85 @@ Some components (eg. WFS feature indexing) of the application rely on an Elastic
 mvn clean install -Pes
 ```
 
-### Pull requests and branches
+### Forks, Pull requests and branches
 
-However, it is recommended that if you want to contribute back to GeoNetwork you create a Github account, fork the GeoNetwork repository and work on your fork. This is a huge benefit because you can push your changes to your repository as much as you want and when a feature is complete you can make a 'Pull Request'.  Pull requests are the recommended method of contributing back to GeoNetwork because Github has code review tools and merges are much easier than trying to apply a patch attached to a ticket.
+If you want to contribute back to GeoNetwork you create a Github account, fork the GeoNetwork repository and work on your fork. This is a huge benefit because you can push your changes to your repository as much as you want and when a feature is complete you can make a 'Pull Request'.  Pull requests are the recommended method of contributing back to GeoNetwork because Github has code review tools and merges are much easier than trying to apply a patch attached to a ticket.
 
 The GeoNetwork Repository is at: https://github.com/geonetwork/core-geonetwork.
 
 Follow the instructions on the Github website to get started (make accounts, how to fork etc...) http://help.github.com/
 
-Once you have the repository forked or cloned locally you can begin to work.
+If you cloned the GeoNetwork Repository earlier, you set you can now set your fork up as a remote and begin to work.
 
-A clone contains all branches so you can list the branches with::
+Rename the GeoNetwork repository as ``upstream``:
 
-     $ git branch -a
+     git remote rename origin upstream
 
-Just look at last section (ignoring remotes/origin/).  To checkout a branch just::
+Add your fork as origin (the URL provided by GitHub CLONE or DOWNLOAD button):
 
-     $ git checkout 2.8.x
+     git remote add origin https://github.com/USERNAME/core-geonetwork.git
 
-Typically work is done on branches and merged back so when developing normally you will go change to the branch you want to work on, create a branch from there, work and then merge the changes back (or make a Pull Request on Github).  There are many great guides (See the links above) but here is a quick sequence illustrating how to make a change and commit the change.
+List remotes showing ``origin`` and ``upstream``:
+
+     git remote -v
+     
+To checkout a branch from upstream::
+
+     git checkout -t upstream/3.6.x
+
+### Pull request
+
+GeoNetwork uses a pull-request workflow allowing changes to be managed and reviewed. All work is done on branches and merged back. When developing start with the branch you want changed, create a new feature branch from there, make your changes on the feature branch, publish your feature branch to your GitHub repo, make a Pull Request asking your changes to be reviewed and merged.
+
+Occasionally core GeoNetwork developers will setup a feature branch on upstream to explore a specific topic. These shared feature-branch are subject to review when submited as a pull-request against ``master``.
+
+There are many great guides (See the links above) but here is a quick sequence illustrating how to make a change and commit the change.
 
 ```bash
      $ git checkout master
         # master is the 'trunk' and main development branch
         # the checkout command "checks out" the requested branch
+        
      $ git checkout -b myfeature
         # the -b requests that the branch be created
         # ``git branch`` will list all the branches you have checked out locally at some point
         # ``git branch -a`` will list all branches in repository (checked out or not)
+     
      # work work work
+     
      $ git status
         # See what files have been modified or added
+        
      $ git add <new or modified files>
         # Add all files to be committed ``git add -u`` will add all modified (but not untracked)
-     $ git commit
+        
+     $ git commit -m "<a short message describing change>"
         # Commit often.  it is VERY fast to commit
         # NOTE: doing a commit is a local operation.  It does not push the change to Github
+        
      # more work
      # another commit
+     
      $ git push origin myfeature
-        # this pushed your new branch to Github now you are ready to make a Pull Request to get the new feature added to GeoNetwork
+     
+        # this pushed your new branch to Github
+        # now you are ready to make a Pull Request to get the new feature added to GeoNetwork
+     
+     # revise pull request based on review feedback
+     # another commit
+     # another push to update pull request
+     # Success!!     
 ```
 
-GeoNetwork uses git submodules in order to keep track of externals dependencies. It is necessary to init and update them after a repository clone or a branch change::
+GeoNetwork uses git submodules in order to keep track of externals dependencies. It is necessary to init and update them after a branch change:
 
-     $ git submodule update --init
+     git submodule update --init
 
 ### Build GeoNetwork
 
-Once you checked out the code from Github repository, go inside the GeoNetwork’s root folder and execute the maven build command::
+Once you checked out the code from Github repository, go inside the GeoNetwork’s root folder and execute the maven build command:
 
-    $ mvn clean install
-
+    mvn clean install
 
 If the build is successful you'll get an output like::
 
@@ -186,7 +214,7 @@ If the build is successful you'll get an output like::
 ```
 
 
-and your local maven repository should contain the GeoNetwork artifacts created (``$HOME/.m2/repository/org/geonetwork-opensource``).
+Your local maven repository now contain the GeoNetwork artifacts created (``$HOME/.m2/repository/org/geonetwork-opensource``).
 
 *Note:* Many Maven build options are available. Please refer to the maven documentation for any other options, [Maven: The Complete Reference](http://www.sonatype.com/books/mvnref-book/reference/public-book.html).
 
@@ -194,15 +222,16 @@ For instance, you might like to use following options :
 
 ```bash
     -- Skip test
-    $ mvn install -Dmaven.test.skip=true
+    $ mvn install -DskipTests
 
     -- Offline use
     $ mvn install -o
+    
+    -- Build really fast with 2 threads per cpu core
+    $ mvn install -o -DskipTests -T 2C
 ```
 
 Please refer to the maven documentation for any other options, [Maven: The Complete Reference](http://www.sonatype.com/books/mvnref-book/reference/public-book.html)
-
-*Note 2:* There's ongoing work to fix failing tests, so for now (current [develop](https://github.com/geonetwork/core-geonetwork/commit/ba44ebab86119b34bf1d052f54bc3bb1aa9e0913) and 3.0.x branch) you should execute maven with `-DskipTests`
 
 ### Run embedded Jetty server
 
