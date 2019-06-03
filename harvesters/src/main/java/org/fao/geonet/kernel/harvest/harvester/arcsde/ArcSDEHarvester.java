@@ -22,20 +22,8 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import com.google.common.collect.Sets;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
@@ -55,7 +43,6 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -68,9 +55,18 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import com.google.common.collect.Sets;
-
-import jeeves.server.context.ServiceContext;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Harvester from ArcSDE. Requires the propietary ESRI libraries containing their API. Since those
@@ -81,17 +77,10 @@ import jeeves.server.context.ServiceContext;
  */
 public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
-    static final String ARCSDE_LOG_MODULE_NAME = Geonet.HARVESTER + ".arcsde";
-    //FIXME use custom class?
     private static final String ARC_TO_ISO19115_TRANSFORMER = "ArcCatalog8_to_ISO19115.xsl";
     private static final String ISO19115_TO_ISO19139_TRANSFORMER = "ISO19115-to-ISO19139.xsl";
 
     private ArcSDEParams params;
-
-    /**
-     * Contains a list of accumulated errors during the executing of this harvest.
-     */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
 
     @Override
     protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -334,7 +323,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                         idsForHarvestingResult.add(Integer.valueOf(id));
                     }
                 }
-            }catch(Throwable t) {
+            } catch(Throwable t) {
                 t.printStackTrace();
                 log.error("Unable to process record from arcsde (" + this.params.getName() + ")");
                 log.error("   Record failed. Error is: " + t.getMessage());
@@ -531,7 +520,5 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             e.printStackTrace();
             result.thumbnailsFailed++;
         }
-
     }
-
 }
