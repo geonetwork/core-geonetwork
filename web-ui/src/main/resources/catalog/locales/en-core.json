@@ -93,6 +93,7 @@
     "deleteSelectedRecordConfirm": "Do you really want to remove the {{selectedCount}} selected record(s) ?",
     "denominators": "Scale",
     "docNotFound": "<strong>Warning !</strong> Page <a href='{{page}}'>{{page}}</a> not found in documentation.",
+    "docPageNotFoundAtUrl": "Documentation page not available at URL:",
     "dut": "Nederlands",
     "east": "East",
     "addThoseCategories": "Add selected",
