@@ -40,14 +40,14 @@
                 title="{{info['system/site/name']}}">{{info['system/site/name']}}</span>
         </a>
       </li>
-      <li class="gn-menuitem-xs data-ng-if="gnCfg.mods.search.enabled">
+      <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.search.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
           title="{{'search' | translate}}">
           <i class="fa fa-fw fa-search hidden-sm"></i>
           <span translate>search</span>
         </a>
       </li>
-      <li class="gn-menuitem-xs data-ng-if="gnCfg.mods.map.enabled">
+      <li class="gn-menuitem-xs" data-ng-if="gnCfg.mods.map.enabled">
         <a data-gn-active-tb-item="{{isExternalViewerEnabled ? externalViewerUrl : gnCfg.mods.map.appUrl}}"
           title="{{'map' | translate}}">
           <i class="fa fa-fw fa-globe hidden-sm"></i>
