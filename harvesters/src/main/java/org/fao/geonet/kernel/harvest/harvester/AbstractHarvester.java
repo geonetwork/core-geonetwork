@@ -169,11 +169,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
     }
 
-    /**
-     * This method has to be public for CGLib proxy.
-     *
-     * @param context set the harvester's context.
-     */
     protected void setContext(ServiceContext context) {
         this.context = context;
         this.dataMan = context.getBean(DataManager.class);
