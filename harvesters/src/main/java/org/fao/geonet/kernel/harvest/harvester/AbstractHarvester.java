@@ -110,23 +110,50 @@ import jeeves.server.context.ServiceContext;
  *
  */
 public abstract class AbstractHarvester<T extends HarvestResult> {
-
-    private static final String SCHEDULER_ID = "abstractHarvester";
     public static final String HARVESTER_GROUP_NAME = "HARVESTER_GROUP_NAME";
-
-    protected final ReentrantLock lock = new ReentrantLock(false);
-
+    private static final String SCHEDULER_ID = "abstractHarvester";
     /**
      * Time to wait for not critical operations in seconds. Should be
      * short. If we cannot do it, just show an error and warn.
      */
-    protected Integer SHORT_WAIT = 2;
+    private static final Integer SHORT_WAIT = 2;
+    /**
+     * Time to wait for important operations in seconds. Patience, but don't block forever.
+     */
+    private static final Integer LONG_WAIT = 30;
+
+    protected final ReentrantLock lock = new ReentrantLock(false);
 
     /**
-     * Time to wait for important operations in seconds.
-     * Patience, but don't block forever.
+     * Should we cancel the harvester?
      */
-    protected Integer LONG_WAIT = 30;
+    protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
+
+    protected ServiceContext context;
+
+    protected HarvesterSettingsManager harvesterSettingsManager;
+    protected SettingManager settingManager;
+
+    protected DataManager dataMan;
+    protected IMetadataUtils metadataUtils;
+
+    protected AbstractParams params;
+    protected T result;
+
+    protected Logger log = Log.createLogger(Geonet.HARVESTER);
+
+    private Element loadedInfo;
+    private String id;
+    private volatile Status status;
+    /**
+     * Exception that aborted the harvesting
+     */
+    private Throwable error;
+    /**
+     * Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
+     */
+    private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<HarvestError>());
+    private volatile boolean running = false;
 
     public static AbstractHarvester<?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
         //--- raises an exception if type is null
@@ -1158,41 +1185,4 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
         return group.getEmail();
     }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //--------------------------------------------------------------------------
-    private String id;
-    private volatile Status status;
-    /**
-     * Exception that aborted the harvesting
-     */
-    private Throwable error;
-    /**
-     * Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
-     */
-    private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<HarvestError>());
-    private volatile boolean running = false;
-
-    /**
-     * Should we cancel the harvester?
-     */
-    protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
-
-
-    protected ServiceContext context;
-
-    protected HarvesterSettingsManager harvesterSettingsManager;
-    protected SettingManager settingManager;
-
-    protected DataManager dataMan;
-    protected IMetadataUtils metadataUtils;
-
-    protected AbstractParams params;
-    protected T result;
-    private Element loadedInfo;
-
-    protected Logger log = Log.createLogger(Geonet.HARVESTER);
 }
