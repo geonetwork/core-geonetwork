@@ -157,6 +157,7 @@
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
+            <xsl:attribute name="data-required" select="$isRequired"/>
           </span>
           <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
