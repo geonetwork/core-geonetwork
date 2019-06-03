@@ -45,8 +45,8 @@
    * display only an icon and no label.
    *
    */
-  module.directive('gnNeedHelp', ['gnGlobalSettings',
-    function(gnGlobalSettings) {
+  module.directive('gnNeedHelp', ['gnGlobalSettings', 'gnAlertService', '$http', '$q', '$translate',
+    function(gnGlobalSettings, gnAlertService, $http, $q, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -55,12 +55,29 @@
         link: function(scope, element, attrs) {
           scope.iconOnly = attrs.iconOnly === 'true';
           var helpBaseUrl = gnGlobalSettings.docUrl ||
-              'https://geonetwork-opensource.org/manuals/3.4.x/';
+              'https://geonetwork-opensource.org/manuals/3.6.x/';
+
+          var testAndOpen = function(url) {
+            var defer = $q.defer();
+            $http.head(url).then(function(data) {
+              window.open(url, 'gn-documentation');
+              defer.resolve(data);
+            }, function(data) {
+              gnAlertService.addAlert({
+                msg: $translate.instant('docPageNotFoundAtUrl') + ' ' + url,
+                type: 'warning'
+              });
+              defer.reject(data);
+            });
+            return defer.promise;
+          };
 
           scope.showHelp = function() {
             var page = attrs.gnNeedHelp;
             var helpPageUrl = helpBaseUrl + gnGlobalSettings.lang + '/' + page;
-            window.open(helpPageUrl, 'gn-documentation');
+            testAndOpen(helpPageUrl).then(function() {}, function() {
+              testAndOpen( helpBaseUrl + 'en/' + page)
+            });
             return true;
           };
         }
