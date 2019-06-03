@@ -44,21 +44,25 @@
             itemtype="http://schema.org/geoShape">
         <div class="input-group coord coord-north">
           <input type="text" class="form-control"
+                 aria-label="{$schemaStrings/north}"
                  value="{format-number($north, $numberFormat)}" readonly=""/>
           <span class="input-group-addon">N</span>
         </div>
         <div class="input-group coord coord-south">
           <input type="text" class="form-control"
+                 aria-label="{$schemaStrings/south}"
                  value="{format-number($south, $numberFormat)}" readonly=""/>
           <span class="input-group-addon">S</span>
         </div>
         <div class="input-group coord coord-east">
           <input type="text" class="form-control"
+                aria-label="{$schemaStrings/east}"
                  value="{format-number($east, $numberFormat)}" readonly=""/>
           <span class="input-group-addon">E</span>
         </div>
         <div class="input-group coord coord-west">
           <input type="text" class="form-control"
+                 aria-label="{$schemaStrings/west}"
                  value="{format-number($west, $numberFormat)}" readonly=""/>
           <span class="input-group-addon">W</span>
         </div>
@@ -85,6 +89,7 @@
                     select="util:getSettingValue('region/getmap/mapproj')"/>
 
       <img class="gn-img-extent"
+           alt="{$schemaStrings/thumbnail}"
            src="{$nodeUrl}/eng/region.getmap.png?mapsrs={if ($mapproj != '')
                                          then $mapproj
                                          else 'EPSG:3857'}&amp;width={

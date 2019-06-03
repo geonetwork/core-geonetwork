@@ -135,6 +135,12 @@
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>fop-pdf-images</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.jcs</groupId>
       <artifactId>jcs</artifactId>

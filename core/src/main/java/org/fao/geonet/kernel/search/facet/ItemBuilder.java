@@ -223,7 +223,7 @@ public class ItemBuilder {
         return new Comparator<CategorySummary>() {
             @Override
             public int compare(final CategorySummary e1, final CategorySummary e2) {
-                return e1.label.compareTo(e2.label);
+                return e1.label.compareToIgnoreCase(e2.label);
             }
         };
     }

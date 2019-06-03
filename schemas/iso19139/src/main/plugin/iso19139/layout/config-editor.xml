@@ -3148,6 +3148,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:contentInfo"/>
         <section name="gmd:MD_Metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>

@@ -1,4 +1,12 @@
 <span data-ng-switch="" data-on="config.layout" class="helper">
+  <div data-ng-switch-when="suggestion">
+    <input type="hidden" class="form-control"
+           data-gn-field-tooltip="{{tooltip}}"
+           data-ng-class="multilingualField == 'true' ? 'hidden' : ''"
+           data-ng-model="config.value"/>
+    <input type="text" id="tagsinput_{{ref}}"
+           class="form-control"></input>
+  </div>
   <div data-ng-switch-when="radio">
     <div class="radio row"
          data-ng-repeat="o in config.option">

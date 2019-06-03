@@ -211,6 +211,7 @@
               scope.readonly = attrs['readonly'] || false;
               scope.gnCurrentEdit.associatedPanelConfigId = attrs['configId'] || 'default';
               scope.relations = {};
+              scope.gnCurrentEdit.codelistFilter  = attrs['codelistFilter'];
 
               /**
                * Calls service 'relations.get' to load
@@ -472,6 +473,7 @@
 
                 gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
                   scope.isEditing = angular.isDefined(linkToEdit);
+                  scope.codelistFilter = scope.gnCurrentEdit && scope.gnCurrentEdit.codelistFilter;
 
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
@@ -482,7 +484,8 @@
                       scope.config.types[0];
                     scope.config.multilingualFields = [];
                     angular.forEach(typeConfig.fields, function(f, k) {
-                      if (f.isMultilingual !== false) {
+                    if (scope.isMdMultilingual &&
+                        f.isMultilingual !== false) {
                         scope.config.multilingualFields.push(k);
                       }
                     });
@@ -685,13 +688,12 @@
                  * @param {string} value of the attribute
                  */
                 function setParameterValue(pName, value) {
-                  var p = scope.params;
                   if (scope.isFieldMultilingual(pName)) {
                     $.each(scope.mdLangs, function(key, v) {
-                      p[pName][v] = value;
+                      scope.params[pName][v] = value;
                     });
                   } else {
-                    p[pName] = value;
+                    scope.params[pName] = value;
                   }
                 }
 
@@ -888,7 +890,7 @@
 
                   if (curUrl) {
                     scope.loadCurrentLink();
-                    scope.isImage = curUrl.match(/.*.(png|jpg|gif)$/i);
+                    scope.isImage = curUrl.match(/.*.(png|jpg|jpeg|gif)$/i);
                   }
 
                 };
@@ -959,10 +961,12 @@
                         }
                       });
                     }
+                    // Set a default label
                     if (!scope.isEditing &&
                         angular.isDefined(newValue.copyLabel)) {
-                      scope.params[newValue.copyLabel] =
-                          $translate(newValue.label);
+                      setParameterValue(
+                        newValue.copyLabel,
+                        $translate.instant(newValue.label));
                     }
 
                     if (newValue.sources && newValue.sources.thumbnailMaker) {
