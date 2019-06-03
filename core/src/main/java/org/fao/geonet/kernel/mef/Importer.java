@@ -65,6 +65,7 @@ import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
@@ -540,7 +541,7 @@ public class Importer {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
-
+        IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
 
         if (uuid == null || uuid.equals("")
             || uuidAction == MEFLib.UuidAction.GENERATEUUID) {
@@ -574,8 +575,8 @@ public class Importer {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                     }
-                    dm.deleteMetadata(context, dm.getMetadataId(uuid));
-                    dm.flush();
+                    metadataManager.deleteMetadata(context, dm.getMetadataId(uuid));
+                    metadataManager.flush();
                 }
                 // user does not hav privileges to replace the existing metadata
                 else {
@@ -596,7 +597,7 @@ public class Importer {
         int userid = context.getUserSession().getUserIdAsInt();
         String docType = null, category = null; boolean ufo = false, indexImmediate = false;
 
-        String metadataId = dm.insertMetadata(context, schema, md.get(index), uuid,
+        String metadataId = metadataManager.insertMetadata(context, schema, md.get(index), uuid,
             userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);
 
         dm.activateWorkflowIfConfigured(context, metadataId, groupId);

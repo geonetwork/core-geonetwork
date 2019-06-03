@@ -186,7 +186,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         CategoryMapper localCateg = new CategoryMapper(context);
         GroupMapper localGroups = new GroupMapper(context);
 
-        dataMan.flush();
+        metadataManager.flush();
 
 
         Path ArcToISO19115Transformer = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(ARC_TO_ISO19115_TRANSFORMER);
@@ -356,7 +356,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             }
             if (!idsResultHs.contains(existingId)) {
                 log.debug("  Removing: " + existingId);
-                dataMan.deleteMetadata(context, existingId.toString());
+                metadataManager.deleteMetadata(context, existingId.toString());
                 result.locallyRemoved++;
             }
         }
@@ -383,7 +383,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             changeDate = new ISODate().toString();
         }
 
-        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
             true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
@@ -393,7 +393,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         metadata.getMetadataCategories().clear();
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-        dataMan.flush();
+        metadataManager.flush();
 
         dataMan.indexMetadata(id, true, null);
     }
@@ -439,7 +439,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -522,7 +522,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             // Call the services
             s.execOnHarvest(par, context, dataMan);
 
-            dataMan.flush();
+            metadataManager.flush();
 
             result.thumbnails++;
 

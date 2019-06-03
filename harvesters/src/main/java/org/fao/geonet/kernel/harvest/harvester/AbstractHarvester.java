@@ -65,7 +65,9 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
@@ -135,6 +137,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     protected SettingManager settingManager;
 
     protected DataManager dataMan;
+    protected IMetadataManager metadataManager;
     protected IMetadataUtils metadataUtils;
 
     protected AbstractParams params;
@@ -175,6 +178,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         this.metadataUtils = context.getBean(IMetadataUtils.class);
         this.harvesterSettingsManager = context.getBean(HarvesterSettingsManager.class);
         this.settingManager = context.getBean(SettingManager.class);
+        this.metadataManager = context.getBean(IMetadataManager.class);
     }
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm");
@@ -296,7 +300,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 Set<String> sources = new HashSet<String>();
                 for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
                     sources.add(metadataUtils.findOne(id).getSourceInfo().getSourceId());
-                    dataMan.deleteMetadata(context, "" + id);
+                    metadataManager.deleteMetadata(context, "" + id);
                 }
                 
                 // Remove all sources related to the harvestUuid if they are not linked to any record anymore

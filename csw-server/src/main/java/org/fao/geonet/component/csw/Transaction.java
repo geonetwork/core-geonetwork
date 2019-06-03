@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -465,6 +466,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
+        IMetadataManager metadataManager = gc.getBean(IMetadataManager.class);
 
         if (context.getUserSession().getUserId() == null)
             throw new NoApplicableCodeEx("User not authenticated.");
@@ -492,7 +494,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 throw new NoApplicableCodeEx("User not allowed to delete metadata : " + id);
             }
 
-            dataMan.deleteMetadata(context, id);
+            metadataManager.deleteMetadata(context, id);
             deleted++;
         }
 

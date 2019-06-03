@@ -80,6 +80,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
@@ -160,7 +161,7 @@ public class MetadataInsertDeleteApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataManager metadataManager = appContext.getBean(IMetadataManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
@@ -171,7 +172,7 @@ public class MetadataInsertDeleteApi {
         IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
                 String.valueOf(metadata.getId())));
 
-        dataManager.deleteMetadata(context, metadata.getId() + "");
+        metadataManager.deleteMetadata(context, metadata.getId() + "");
 
         searchManager.forceIndexChanges();
     }
@@ -191,7 +192,7 @@ public class MetadataInsertDeleteApi {
             @ApiIgnore HttpSession session, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataManager metadataManager = appContext.getBean(IMetadataManager.class);
         AccessManager accessMan = appContext.getBean(AccessManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
@@ -214,7 +215,7 @@ public class MetadataInsertDeleteApi {
                 IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class),
                         String.valueOf(metadata.getId())));
 
-                dataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
 
                 report.incrementProcessedRecords();
                 report.addMetadataId(metadata.getId());

@@ -146,7 +146,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
                 }
                 if (!idsResultHs.contains(existingId)) {
                     log.debug("  Removing: " + existingId);
-                    dataMan.deleteMetadata(context, existingId.toString());
+                    metadataManager.deleteMetadata(context, existingId.toString());
                     result.locallyRemoved++;
                 }
             }
@@ -171,7 +171,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         String language = context.getLanguage();
 
-        final AbstractMetadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
+        final AbstractMetadata metadata = metadataManager.updateMetadata(context, id, xml, false, false, false, language, changeDate,
             true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
@@ -181,7 +181,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         metadata.getMetadataCategories().clear();
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-        dataMan.flush();
+        metadataManager.flush();
 
         dataMan.indexMetadata(id, true, null);
     }
@@ -209,13 +209,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context);
 
-        dataMan.flush();
+        metadataManager.flush();
 
         if (index) {
             dataMan.indexMetadata(id, true, null);

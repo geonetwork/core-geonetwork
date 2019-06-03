@@ -51,26 +51,10 @@ import java.util.UUID;
 
 public class Geonet20Harvester extends AbstractHarvester {
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
     private GeonetParams params;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Add
-    //---
-    //---------------------------------------------------------------------------
     private GeonetResult result;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Update
-    //---
-    //---------------------------------------------------------------------------
     private String servletName;
 
     //---------------------------------------------------------------------------
@@ -80,12 +64,6 @@ public class Geonet20Harvester extends AbstractHarvester {
         super.setParams(params);
         params.create(node);
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- addHarvestInfo
-    //---
-    //---------------------------------------------------------------------------
 
     protected String doAdd(Element node) throws BadInputEx, SQLException {
         params = new GeonetParams(dataMan);
@@ -107,18 +85,9 @@ public class Geonet20Harvester extends AbstractHarvester {
         return id;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- AddInfo
-    //---
-    //---------------------------------------------------------------------------
-
     protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-        //--- update variables
-
         GeonetParams copy = params.copy();
 
-        //--- update variables
         copy.update(node);
 
         String path = "harvesting/id:" + id;
@@ -138,12 +107,6 @@ public class Geonet20Harvester extends AbstractHarvester {
         super.setParams(params);
 
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- GetResult
-    //---
-    //---------------------------------------------------------------------------
 
     protected void storeNodeExtra(AbstractParams p, String path,
                                   String siteId, String optionsId) throws SQLException {
@@ -167,12 +130,6 @@ public class Geonet20Harvester extends AbstractHarvester {
         }
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Harvest
-    //---
-    //---------------------------------------------------------------------------
-
     public void addHarvestInfo(Element info, String id, String uuid) {
         super.addHarvestInfo(info, id, uuid);
 
@@ -181,12 +138,6 @@ public class Geonet20Harvester extends AbstractHarvester {
 
         info.addContent(new Element("smallThumbnail").setText(small));
     }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
     protected void doAddInfo(Element node) {
         //--- if the harvesting is not started yet, we don't have any info
@@ -215,8 +166,7 @@ public class Geonet20Harvester extends AbstractHarvester {
     }
 
     public Element getResult() {
-        return new Element("result"); // HarvestHistory not supported for this
-        // old harvester
+        return new Element("result"); // HarvestHistory not supported for this old harvester
     }
 
     public void doHarvest(Logger log) throws Exception {
@@ -252,8 +202,7 @@ public class Geonet20Harvester extends AbstractHarvester {
 
         result = new GeonetResult();
 
-        Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, context,
-            localCateg);
+        Aligner aligner = new Aligner(cancelMonitor, log, req, params, dataMan, metadataManager, context, localCateg);
 
         for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
@@ -284,7 +233,7 @@ public class Geonet20Harvester extends AbstractHarvester {
             req.setAddress("/" + params.getServletPath() + "/srv/en/" + Geonet.Service.XML_LOGOUT);
         }
 
-        dataMan.flush();
+        metadataManager.flush();
     }
 }
 
