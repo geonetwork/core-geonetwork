@@ -156,7 +156,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     private volatile boolean running = false;
 
     public static AbstractHarvester<?> create(String type, ServiceContext context) throws BadParameterEx, OperationAbortedEx {
-        //--- raises an exception if type is null
         if (type == null) {
             throw new BadParameterEx("type", null);
         }
@@ -192,8 +191,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
         final String harvesterName = this.getParams().getName().replaceAll("\\W+", "_");
-        log = Log.createLogger(harvesterName,
-                "geonetwork.harvester");
+        log = Log.createLogger(harvesterName,"geonetwork.harvester");
 
         String directory = log.getFileAppender();
         if (directory == null || directory.isEmpty()) {
@@ -226,13 +224,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     //---
     //--------------------------------------------------------------------------
 
-    /**
-     * TODO javadoc.
-     *
-     * @param node
-     * @throws BadInputEx
-     * @throws SQLException
-     */
     public void add(Element node) throws BadInputEx, SQLException {
         status = Status.INACTIVE;
         error = null;
@@ -245,7 +236,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         error = null;
         this.context = context;
 
-        //--- init harvester
         doInit(node, context);
 
         initInfo(context);
@@ -271,11 +261,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
     }
 
-    /**
-     * TODO Javadoc.
-     *
-     * @throws SchedulerException
-     */
     private void doSchedule() throws SchedulerException {
         Scheduler scheduler = getScheduler();
 
@@ -284,47 +269,24 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         scheduler.scheduleJob(jobDetail, trigger);
     }
 
-    /**
-     * TODO Javadoc.
-     *
-     * @throws SchedulerException
-     */
     private void doUnschedule() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
-    /**
-     * TODO Javadoc.
-     *
-     * @return
-     * @throws SchedulerException
-     */
     public static Scheduler getScheduler() throws SchedulerException {
         return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
     }
 
-    /**
-     * Called when the application is shutdown.
-     *
-     * @throws SchedulerException
-     */
     public void shutdown() throws SchedulerException {
         getScheduler().deleteJob(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
     }
 
-    /**
-     * TODO Javadoc.
-     *
-     * @throws SchedulerException
-     */
     public static void shutdownScheduler() throws SchedulerException {
         getScheduler().shutdown(false);
     }
 
     /**
      * Called when the harvesting entry is removed from the system. It is used to remove harvested metadata.
-     *
-     * @throws Exception
      */
     public void destroy() throws Exception {
         try {
@@ -370,10 +332,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * at the next time according to the harvesters schedule.
      *
      * @return return {@link OperResult#ALREADY_ACTIVE} if the harvester is already active or {@link OperResult#OK}
-     * @throws SQLException
-     * @throws SchedulerException
      */
-    public OperResult start() throws SQLException, SchedulerException {
+    public OperResult start() throws SchedulerException {
         try {
             if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
                 if (status != Status.INACTIVE) {
@@ -402,13 +362,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Set the harvester status to {@link Status#ACTIVE} and unschedule any scheduled jobs.
-     *
-     * @return {@link OperResult#ALREADY_INACTIVE} if the not currently enabled or {@link OperResult#OK}
-     * @throws SQLException
-     * @throws SchedulerException
-     * @param newStatus
      */
-    public OperResult stop(final Status newStatus) throws SQLException, SchedulerException {
+    public OperResult stop(final Status newStatus) throws SchedulerException {
         this.cancelMonitor.set(true);
 
         JobKey jobKey = jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME);
@@ -483,7 +438,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @return {@link OperResult#OK} or {@link OperResult#ALREADY_RUNNING} if harvester is currently running.
      */
-    public OperResult run() throws SQLException, SchedulerException {
+    public OperResult run() throws SchedulerException {
 
         try {
             if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
@@ -537,14 +492,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return OperResult.ERROR;
     }
 
-    /**
-     * TODO Javadoc.
-     *
-     * @param node
-     * @throws BadInputEx
-     * @throws SQLException
-     * @throws SchedulerException
-     */
     public void update(Element node) throws BadInputEx, SQLException, SchedulerException {
 
         try {
@@ -570,24 +517,16 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
     }
 
-    /**
-     * TODO Javadoc.
-     *
-     * @return
-     */
     public String getID() {
         return id;
     }
 
     /**
      * Adds harvesting result information to each harvesting entry.
-     *
-     * @param node
      */
     public void addInfo(Element node) {
         Element info = node.getChild("info");
 
-        //--- 'running'
         info.addContent(new Element("running").setText(running + ""));
 
         //--- harvester specific info
@@ -602,9 +541,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     /**
      * Adds harvesting information to each metadata element. Some sites can generate url for thumbnails.
      *
-     * @param info
-     * @param id
-     * @param uuid
      */
     public void addHarvestInfo(Element info, String id, String uuid) {
         info.addContent(new Element("type").setText(getType()));
@@ -618,30 +554,17 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return status;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Package methods (called by Executor)
-    //---
-    //---------------------------------------------------------------------------
-
     /**
      * Nested class to handle harvesting with fast indexing.
      */
     public class HarvestWithIndexProcessor extends MetadataIndexerProcessor {
         Logger logger;
 
-        /**
-         * @param dm
-         * @param logger
-         */
         public HarvestWithIndexProcessor(DataManager dm, Logger logger) {
             super(dm);
             this.logger = logger;
         }
 
-        /**
-         * @throws Exception
-         */
         @Override
         public void process() throws Exception {
             doHarvest(logger);
@@ -686,8 +609,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     /**
-     * Run the harvest process.
-     * This has to be protected or better for CGLib to proxy to it./
+     * Run the harvest process. This has to be protected or better for CGLib to proxy to it.
      */
     protected OperResult harvest() {
         OperResult operResult = OperResult.OK;
@@ -812,11 +734,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
 
     /**
-     * Convert {@link HarvestError} to an element that can be saved on the
-     * database.
-     *
-     * @param errors
-     * @return
+     * Convert {@link HarvestError} to an element that can be saved on the database.
      */
     private Element toElement(List<HarvestError> errors) {
         Element res = new Element("errors");
@@ -836,11 +754,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
         return res;
     }
-    //---------------------------------------------------------------------------
-    //---
-    //--- Abstract methods that must be overridden
-    //---
-    //---------------------------------------------------------------------------
 
     /**
      * Should be overriden to get a better insight on harvesting
@@ -848,15 +761,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * Returns the list of exceptions that ocurred during the harvesting but
      * didn't really stop and abort the harvest.
      *
-     * @return
      */
     public List<HarvestError> getErrors() {
        return Collections.synchronizedList(errors);
     }
 
-    /**
-     * @return
-     */
     public final String getType() {
         // FIXME: context is null when removing record
         // eg. http://localhost:8080/geonetwork/node1/eng/admin.harvester.clear@json?id=585
@@ -864,24 +773,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         return types[0];
     }
 
-    /**
-     * @return
-     */
     public AbstractParams getParams() {
         return params;
     }
 
-    /**
-     * @param entry
-     * @param context
-     * @throws BadInputEx
-     */
     protected abstract void doInit(Element entry, ServiceContext context) throws BadInputEx;
 
-    /**
-     * @throws SQLException
-     */
-    protected void doDestroy() throws SQLException {
+    protected void doDestroy() {
         removeIcon(getParams().getUuid());
 
         context.getBean(SourceRepository.class).delete(getParams().getUuid());
@@ -898,25 +796,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
     }
 
-    /**
-     * @param node
-     * @return
-     * @throws BadInputEx
-     * @throws SQLException
-     */
     protected abstract String doAdd(Element node) throws BadInputEx, SQLException;
 
-    /**
-     * @param id
-     * @param node
-     * @throws BadInputEx
-     * @throws SQLException
-     */
     protected abstract void doUpdate(String id, Element node) throws BadInputEx, SQLException;
 
-    /**
-     * @param node
-     */
     protected void doAddInfo(Element node) {
         //--- if the harvesting is not started yet, we don't have any info
 
@@ -933,9 +816,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Extend to do the actual harvesting.
-     *
-     * @param l
-     * @throws Exception
      */
     protected abstract void doHarvest(Logger l) throws Exception;
 
@@ -947,10 +827,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Invoked from doAdd and doUpdate in sub class implementations.
-     *
-     * @param params
-     * @param path
-     * @throws SQLException
      */
     protected void storeNode(AbstractParams params, String path) throws SQLException {
         String siteId = harvesterSettingsManager.add(path, "site", "");
@@ -967,17 +843,11 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
         harvesterSettingsManager.add(ID_PREFIX + siteId, "uuid", params.getUuid());
 
-        /**
-         * User who created or updated this node.
-         */
+        /** User who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerId", params.getOwnerId());
-        /**
-         * User selected by user who created or updated this node.
-         */
+        /** User selected by user who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerUser", params.getOwnerIdUser());
-        /**
-         * Group selected by user who created or updated this node.
-         */
+        /** Group selected by user who created or updated this node. */
         harvesterSettingsManager.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
 
         String useAccId = harvesterSettingsManager.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
@@ -1011,12 +881,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Override this method with an empty body to avoid privileges storage.
-     *
-     * @param params
-     * @param path
-     * @throws SQLException
      */
-    protected void storePrivileges(AbstractParams params, String path) throws SQLException {
+    protected void storePrivileges(AbstractParams params, String path) {
         String privId = harvesterSettingsManager.add(path, "privileges", "");
 
         for (Privileges p : params.getPrivileges()) {
@@ -1029,12 +895,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Override this method with an empty body to avoid categories storage.
-     *
-     * @param params
-     * @param path
-     * @throws SQLException
      */
-    protected void storeCategories(AbstractParams params, String path) throws SQLException {
+    protected void storeCategories(AbstractParams params, String path) {
         String categId = harvesterSettingsManager.add(path, "categories", "");
 
         for (String id : params.getCategories()) {
@@ -1044,22 +906,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Override this method to store harvesting node's specific settings.
-     *
-     * @param params
-     * @param path
-     * @param siteId
-     * @param optionsId
-     * @throws SQLException
      */
     protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
     }
 
-    /**
-     * @param values
-     * @param path
-     * @param el
-     * @param name
-     */
     protected void setValue(Map<String, Object> values, String path, Element el, String name) {
         if (el == null) {
             return;
@@ -1072,11 +922,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
     }
 
-    /**
-     * @param el
-     * @param name
-     * @param value
-     */
     protected void add(Element el, String name, int value) {
         el.addContent(new Element(name).setText(Integer.toString(value)));
     }
@@ -1087,8 +932,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Get the results of the last harvest.
-     *
-     * @return
      */
     public Element getResult() {
         Element res = new Element("result");
@@ -1131,9 +974,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Get the list of registered harvester
-     *
-     * @param context
-     * @return
      */
     public static String[] getHarvesterTypes(ServiceContext context) {
         return context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
@@ -1141,9 +981,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Get the list of not disabled registered harvesters
-     *
-     * @param context
-     * @return
      */
     public static String[] getNonDisabledHarvesterTypes(ServiceContext context) {
         String[] availableTypes = context.getApplicationContext().getBeanNamesForType(AbstractHarvester.class);
@@ -1175,11 +1012,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
 
     /**
      * Who should we notify by default?
-     *
-     * @return
-     * @throws Exception
      */
-    public String getOwnerEmail() throws Exception {
+    public String getOwnerEmail()  {
         String ownerId = getParams().getOwnerIdGroup();
 
         final Group group = context.getBean(GroupRepository.class).findOne(Integer.parseInt(ownerId));
