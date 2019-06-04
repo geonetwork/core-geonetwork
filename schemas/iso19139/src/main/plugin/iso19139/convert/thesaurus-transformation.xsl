@@ -229,7 +229,40 @@
       <!-- If no keyword, add one to avoid invalid metadata -->
       <xsl:if test="count(//keyword[thesaurus/key = $currentThesaurus]) = 0">
         <gmd:keyword gco:nilReason="missing">
-          <gco:CharacterString></gco:CharacterString>
+          <!-- Multilingual output if more than one requested language -->
+          <xsl:choose>
+            <xsl:when test="count($listOfLanguage) > 1">
+              <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
+
+              <xsl:if test="not($textgroupOnly)">
+                <gco:CharacterString />
+              </xsl:if>
+
+              <gmd:PT_FreeText>
+                <xsl:for-each select="$listOfLanguage">
+                  <xsl:variable name="lang" select="."/>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString
+                      locale="#{upper-case(util:twoCharLangCode($lang))}" />
+                  </gmd:textGroup>
+                </xsl:for-each>
+              </gmd:PT_FreeText>
+            </xsl:when>
+            <xsl:otherwise>
+
+              <!-- ... default mode -->
+              <xsl:choose>
+                <xsl:when test="$withAnchor">
+                  <!-- TODO multilingual Anchor ?
+                  -->
+                  <gmx:Anchor xlink:href="" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <gco:CharacterString />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:otherwise>
+          </xsl:choose>
         </gmd:keyword>
       </xsl:if>
 
