@@ -443,6 +443,11 @@ public class KeywordsApi {
                 requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
             }
         }
+
+        if (StringUtils.isNotEmpty(transformation)) {
+            requestParams.addContent(new Element("transformation", transformation));
+        }
+
         root.addContent(requestParams);
         root.addContent(descKeys);
         root.addContent(gui);
