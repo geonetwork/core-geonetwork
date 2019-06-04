@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -503,6 +504,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param id the metadata record internal identifier
      * @param validations the validation reports for each type of validation and schematron validation
      */
+    @Transactional
     private void saveValidationStatus(int id, List<MetadataValidation> validations) {
         try {
             validationRepository.deleteAllById_MetadataId(id);
