@@ -140,10 +140,20 @@
             <applicationProfile>
               <xsl:value-of select="gmd:applicationProfile/gco:CharacterString"/>
             </applicationProfile>
-            <description>
-              <xsl:apply-templates mode="get-iso19139-localized-string"
-                                   select="gmd:description"/>
-            </description>
+	        <description>
+		      <xsl:choose>
+			    <xsl:when test="gmd:description/gco:CharacterString!=''">
+				  <xsl:apply-templates
+					   mode="get-iso19139-localized-string" select="gmd:description" />
+			    </xsl:when>
+			    <xsl:otherwise>
+				  <value lang="{$mainLanguage}">
+				    <xsl:value-of
+					     select="gmd:description/gmx:Anchor/text()" />
+				  </value>
+			    </xsl:otherwise>
+		      </xsl:choose>
+	        </description>
             <protocol>
               <xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/>
             </protocol>

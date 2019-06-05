@@ -11,11 +11,29 @@
       <td class="add col-first">
         <div class="icon-zoom-in"></div>
       </td>
-      <td>
-        {{layer.Title}}
-          <span data-ng-if="layer.Name">
-            ({{layer.Name}})
-          </span>
+      <td data-ng-if="listLayerNamesOrTitles=='title'">
+        <span data-ng-if="layer.Title">
+          {{layer.Title}}
+        </span>
+        <span data-ng-if="layer.Name">
+          ({{layer.Name}})
+        </span>
+      </td>
+      <td data-ng-if="listLayerNamesOrTitles=='name'">
+        <span data-ng-if="layer.Name">
+          {{layer.Name}}
+        </span>
+        <span data-ng-if="layer.Title">
+          ({{layer.Title}})
+        </span>
+      </td>
+      <td data-ng-if="!listLayerNamesOrTitles">
+        <span data-ng-if="layer.Title">
+          {{layer.Title}}
+        </span>
+        <span data-ng-if="layer.Name">
+          ({{layer.Name}})
+        </span>
       </td>
     </tr>
     </tbody>
