@@ -444,10 +444,6 @@ public class KeywordsApi {
             }
         }
 
-        if (StringUtils.isNotEmpty(transformation)) {
-            requestParams.addContent(new Element("transformation", transformation));
-        }
-
         root.addContent(requestParams);
         root.addContent(descKeys);
         root.addContent(gui);
