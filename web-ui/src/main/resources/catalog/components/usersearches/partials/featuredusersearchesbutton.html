@@ -11,7 +11,7 @@
   <span class="sr-only" data-translate="">search</span>
   </button>
   <ul class="dropdown-menu">
-    <li data-ng-repeat="row in featuredSearches">
+    <li data-ng-repeat="row in featuredSearches | orderBy:sortByLabel">
       <a data-ng-click="search(row.url)">
         {{row.names[lang] || row.names['eng'] || ('featuredSearch' | translate)}}
 
