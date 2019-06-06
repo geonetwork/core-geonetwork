@@ -295,8 +295,13 @@
                       fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
                       process: 'thumbnail-add',
                       fields: {
-                        'url': {isMultilingual: false},
-                        'name': {param: 'desc'}
+                        'url': {
+                          param: 'thumbnail_url',
+                          isMultilingual: false
+                        },
+                        'name': {
+                          param: 'thumbnail_desc'
+                        }
                       }
                     }, {
                       group: 'onlineDiscover',
