@@ -222,6 +222,7 @@
 
               <xsl:copy-of select="geonet:add-thesaurus-info(
                                               $thesaurusKey,
+                                              false(),
                                               true(),
                                               $root/root/env/thesauri,
                                               true())"/>
