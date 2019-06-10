@@ -241,12 +241,13 @@
       </xsl:if>
 
       <xsl:copy-of
-        select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))"/>
+        select="geonet:add-thesaurus-info($currentThesaurus, $withAnchor, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))"/>
     </gmd:MD_Keywords>
   </xsl:template>
 
   <xsl:function name="geonet:add-thesaurus-info">
     <xsl:param name="currentThesaurus" as="xs:string"/>
+    <xsl:param name="withTitleAnchor" as="xs:boolean"/>
     <xsl:param name="withThesaurusAnchor" as="xs:boolean"/>
     <xsl:param name="thesauri" as="node()"/>
     <xsl:param name="thesaurusInfo" as="xs:boolean"/>
@@ -261,9 +262,18 @@
       <gmd:thesaurusName>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>
-              <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
-            </gco:CharacterString>
+            <xsl:choose>
+              <xsl:when test="$withTitleAnchor = true()">
+                <gmx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/defaultNamespace}">
+                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                </gmx:Anchor>
+              </xsl:when>
+              <xsl:otherwise>
+                <gco:CharacterString>
+                  <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
+                </gco:CharacterString>
+              </xsl:otherwise>
+            </xsl:choose>
           </gmd:title>
 
           <xsl:variable name="thesaurusDate"
