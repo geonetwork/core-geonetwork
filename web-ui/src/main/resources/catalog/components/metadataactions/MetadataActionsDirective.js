@@ -479,7 +479,7 @@
 
           scope.save = function() {
             if (!scope.selectedUserGroup) {
-              return
+              return;
             }
             var url = '../api/records/';
             if (bucket != 'null') {
