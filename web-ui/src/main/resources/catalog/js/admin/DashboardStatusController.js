@@ -168,11 +168,7 @@
       };
 
       $scope.downloadLog = function() {
-        $http.get('../api/site/logging/activity', null, {
-          headers: {
-            'Content-Type': 'application/zip'
-          }
-        });
+        window.location = '../api/site/logging/activity/zip';
       };
 
       $scope.indexRecordsWithErrors = function() {
