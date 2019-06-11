@@ -435,9 +435,9 @@
     "indexingTaskFinished": "인덱싱 완료, {{total}} 레코드를 처리했습니다",
     "indexingTaskFinishedWithErrors": "인덱싱 완료,  {{errors}} 오류가 발생한 {{total}} 레코드가 처리되었습니다.",
     "indexingTaskCanceled": "인덱싱 취소됨",
-    "metadataPublished": "Metadata published.",
-    "metadataPublishedError": "Error occurred while publishing metadata.",
-    "metadataUnpublished": "Metadata un-published.",
-    "metadataUnpublishedError": "Error occurred while un-publishing metadata.",
-    "categoriesUpdated": "Categories updated."
+    "metadataPublished": "메타데이터를 발행했습니다.",
+    "metadataPublishedError": "메타데이터를 발행하는 중 오류가 발생했습니다.",
+    "metadataUnpublished": "메타데이터 발행을 취소했습니다.",
+    "metadataUnpublishedError": "메타데이터 발행을 취소하는 중 오류가 발생했습니다.",
+    "categoriesUpdated": "카테고리를 갱신하였습니다."
 }
