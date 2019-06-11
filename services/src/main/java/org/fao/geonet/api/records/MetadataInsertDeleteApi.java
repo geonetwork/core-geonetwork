@@ -286,7 +286,7 @@ public class MetadataInsertDeleteApi {
                 throw new IllegalArgumentException(
                         String.format("XML fragment is invalid. Error is %s", ex.getMessage()));
             }
-            Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadString(xml, false), uuidProcessing, group,
+            Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group,
                     category, rejectIfInvalid, false, transformWith, schema, extra, request);
             report.addMetadataInfos(pair.one(), String.format("Metadata imported from XML with UUID '%s'", pair.two()));
 
