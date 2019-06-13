@@ -62,7 +62,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -238,7 +237,7 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() throws IOException {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
-                client.bulkRequest(index, indexType, listOfDocumentsToIndex);
+                client.bulkRequest(index, listOfDocumentsToIndex);
                 listOfDocumentsToIndex.clear();
             }
         }
@@ -432,7 +431,7 @@ public class EsSearchManager implements ISearchManager {
 
     public void clearIndex() throws Exception {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        client.deleteByQuery(index, indexType,
+        client.deleteByQuery(index,
             "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
     }
 
@@ -533,7 +532,7 @@ public class EsSearchManager implements ISearchManager {
 
     @Override
     public void delete(String txt) throws Exception {
-        client.deleteByQuery(index, indexType, txt);
+        client.deleteByQuery(index, txt);
 //        client.commit();
     }
 
