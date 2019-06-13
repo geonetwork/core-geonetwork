@@ -140,7 +140,7 @@ public class LoggingApi {
             int lines) {
         String lastActivity = null;
 
-        if (isAppenderLogFileLoaded(fileAppender)) {
+        if (isAppenderLogFileLoaded()) {
             lastActivity = FileUtil.readLastLines(new File(fileAppender.getFile()),
                 Math.min(lines, maxLines));
         } else {
@@ -161,7 +161,7 @@ public class LoggingApi {
         })
     @ResponseBody
     public void getLastActivityInAZip(HttpServletResponse response) throws IOException {
-        if (isAppenderLogFileLoaded(fileAppender)) {
+        if (isAppenderLogFileLoaded()) {
             File file = new File(fileAppender.getFile());
 
             // create ZIP FILE
@@ -208,14 +208,15 @@ public class LoggingApi {
     private static final int maxLines = 20000;
     private FileAppender fileAppender = null;
 
-    private boolean isAppenderLogFileLoaded(FileAppender fileAppender) {
+    private boolean isAppenderLogFileLoaded() {
         if (fileAppender == null || fileAppender.getFile() == null) {
-            this.fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
-
+            // First, try the fileappender from the logger named "geonetwork"
+            fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
+            // If still not found, try the one from the logger named "jeeves"
             if (fileAppender == null) {
-                this.fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
+                fileAppender = (FileAppender) Logger.getLogger(Log.JEEVES).getAppender(fileAppenderName);
             }
-
+            // Still null ? Give up
             if (fileAppender == null) {
                 Log.error(Geonet.GEONETWORK,
                     "Error when getting appender named 'fileAppender'. " +
@@ -224,6 +225,7 @@ public class LoggingApi {
                 return false;
             } else {
                 String logFileName = fileAppender.getFile();
+                // fileAppender found, but no file available ?
                 if (logFileName == null) {
                     Log.error(Geonet.GEONETWORK,
                         "Error when getting logger file for the " +

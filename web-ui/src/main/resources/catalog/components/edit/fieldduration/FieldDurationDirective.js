@@ -51,7 +51,8 @@
         scope: {
           value: '@gnFieldDurationDiv',
           label: '@label',
-          ref: '@ref'
+          ref: '@ref',
+          required: '@required'
         },
         templateUrl: '../../catalog/components/edit/fieldduration/partials/' +
             'fieldduration.html',

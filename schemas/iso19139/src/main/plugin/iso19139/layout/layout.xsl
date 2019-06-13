@@ -455,6 +455,7 @@
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -484,7 +485,8 @@
       <xsl:with-param name="name"
                       select="if ($isEditing) then concat(*/gn:element/@ref, '_codeListValue') else ''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="parentEditInfo"
+                      select="if ($refToDelete) then $refToDelete else gn:element"/>
       <xsl:with-param name="listOfValues"
                       select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists, .)"/>
       <xsl:with-param name="isFirst"

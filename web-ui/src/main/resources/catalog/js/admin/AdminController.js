@@ -330,13 +330,21 @@
       $scope.getTpl = function(pageMenu) {
         $scope.type = pageMenu.defaultTab;
         $.each(pageMenu.tabs, function(index, value) {
-          if ((angular.isUndefined($routeParams.dashboard) &&
-              value.type === $routeParams.tab) || (
-              angular.isDefined($routeParams.dashboard) &&
-              value.href.indexOf(
-              encodeURIComponent($routeParams.dashboard)) !== -1)
-          ) {
-            $scope.type = $routeParams.tab;
+          var isMatch = false;
+
+          if (angular.isUndefined($routeParams.dashboard)) {
+            // If no $routeParams.tab, check if the option is the default one,
+            // otherwise  compare the option with $routeParams.tab
+            isMatch = ($routeParams.tab === undefined &&
+              value.type === pageMenu.defaultTab) ||
+              (value.type === $routeParams.tab);
+          } else {
+            isMatch = value.href.indexOf(
+              encodeURIComponent($routeParams.dashboard)) !== -1;
+          }
+
+          if (isMatch) {
+            $scope.type = ($routeParams.tab !== undefined)?$routeParams.tab:pageMenu.defaultTab;
             $scope.href = value.href;
           }
         });

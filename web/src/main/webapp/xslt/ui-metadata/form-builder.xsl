@@ -157,6 +157,7 @@
 
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
+            <xsl:attribute name="data-required" select="$isRequired"/>
           </span>
           <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -628,6 +629,35 @@
                               data-gn-field-tooltip="{$schema}|{@tooltip}"
                               data-gn-language-picker=""
                               id="{$id}_{@label}"/>
+                      </xsl:when>
+                      <xsl:when test="@use = 'data-gn-keyword-picker'">
+                        <input class="form-control"
+                               value="{value}"
+                               data-gn-field-tooltip="{$schema}|{@tooltip}"
+                               data-gn-keyword-picker=""
+                               id="{$id}_{@label}">
+
+                          <xsl:for-each select="directiveAttributes/attribute::*">
+                            <xsl:variable name="directiveAttributeName" select="name()"/>
+
+                            <xsl:attribute name="{$directiveAttributeName}">
+                              <xsl:choose>
+                                <xsl:when test="$keyValues and
+                                                count($keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]) > 0">
+                                  <xsl:value-of select="$keyValues/field[@name = $valueLabelKey]/
+                                  directiveAttributes[@name = $directiveAttributeName]/text()"/>
+                                </xsl:when>
+                                <xsl:when test="starts-with(., 'eval#')">
+                                  <!-- Empty value for XPath to evaluate. -->
+                                </xsl:when>
+                                <xsl:otherwise>
+                                  <xsl:value-of select="."/>
+                                </xsl:otherwise>
+                              </xsl:choose>
+                            </xsl:attribute>
+                          </xsl:for-each>
+                        </input>
                       </xsl:when>
                       <xsl:when test="starts-with(@use, 'gn-')">
                         <input class="form-control"
@@ -1468,7 +1498,10 @@
     <xsl:param name="insertRef" select="''"/>
 
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    <button type="button" class="btn btn-default btn-xs"
+    <xsl:variable name="fieldName"
+                  select="concat(replace(@name, ':', 'COLON'), '_', $insertRef)"/>
+    <button type="button" class="btn btn-default btn-xs btn-attr"
+            id="gn-attr-add-button-{$fieldName}"
             data-gn-click-and-spin="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
             title="{$attributeLabel/description}">
       <i class="fa fa-plus fa-fw"/>

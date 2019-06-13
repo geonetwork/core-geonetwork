@@ -301,8 +301,11 @@
 
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
-                    scope.ownerGroup === '') && data && scope.groups[0]) {
-                    scope.ownerGroup = scope.groups[0].id;
+                    scope.ownerGroup === '' ||
+                    scope.ownerGroup === null) && data) {
+                    // Requires to be converted to string, otherwise
+                    // angularjs adds empty non valid option
+                    scope.ownerGroup = scope.groups[0].id + "";
                   }
                   if (optional) {
                     scope.groups.unshift({

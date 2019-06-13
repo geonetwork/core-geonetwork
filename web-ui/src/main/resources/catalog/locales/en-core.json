@@ -67,6 +67,7 @@
     "validStatus-1": "Valid",
     "validStatus-0": "Invalid",
     "validStatus--1": "Never validated",
+    "wfsNoOutputFormats": "No output format found in download service capability.",
     "fre": "Français",
     "roh": "Rumantsch",
     "ara": "عربي",

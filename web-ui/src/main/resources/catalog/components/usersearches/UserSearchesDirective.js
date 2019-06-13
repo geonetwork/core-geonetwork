@@ -46,6 +46,9 @@
         link: function postLink(scope, element, attrs) {
           scope.lang = gnLangs.current;
           scope.type = attrs['type'] || 'h';
+          scope.sortByLabel = function(i) {
+            return i.names[scope.lang];
+          };
           gnUserSearchesService.loadFeaturedUserSearches(scope.type).then(
             function(featuredSearchesCollection) {
               scope.featuredSearches = featuredSearchesCollection.data;

@@ -23,30 +23,17 @@
 
 package org.fao.geonet.util;
 
-import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import jeeves.component.ProfileManager;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
@@ -59,7 +46,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.UiSetting;
 import org.fao.geonet.domain.User;
@@ -71,9 +58,9 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UiSettingsRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -94,23 +81,32 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.client.ClientHttpResponse;
 import org.w3c.dom.Node;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import jeeves.component.ProfileManager;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
+import static org.fao.geonet.kernel.search.spatial.SpatialIndexWriter.parseGml;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SITE_ORGANIZATION;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -969,5 +965,37 @@ public final class XslUtil {
         ThesaurusManager thesaurusManager = applicationContext.getBean(ThesaurusManager.class);
 
         return thesaurusManager.getThesauriDirectory().toString();
+    }
+
+
+    /**
+     * Utility method to retrieve the name (label) for an iso language using it's code for a specific language.
+     * <p>
+     * Usage:
+     * <p>
+     * <xsl:stylesheet
+     * xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+     * ...
+     * xmlns:java="java:org.fao.geonet.util.XslUtil" ...>
+     * <p>
+     * <xsl:variable name="thesauriDir" select="java:getIsoLanguageLabel('dut', 'eng')"/>
+     *
+     * @param code      Code of the IsoLanguage to retrieve the name.
+     * @param language  Language to retrieve the IsoLanguage name.
+     * @return
+     */
+    public static String getIsoLanguageLabel(String code, String language) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        IsoLanguageRepository isoLanguageRepository = applicationContext.getBean(IsoLanguageRepository.class);
+
+        List<IsoLanguage> languageValues = isoLanguageRepository.findAllByCode(code);
+
+        String languageLabel = code;
+
+        if (!languageValues.isEmpty()) {
+            languageLabel = languageValues.get(0).getLabelTranslations().get(language);
+        }
+
+        return languageLabel;
     }
 }
