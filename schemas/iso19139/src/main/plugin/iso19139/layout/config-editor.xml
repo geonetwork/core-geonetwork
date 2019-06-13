@@ -801,6 +801,7 @@
                  use="data-gn-keyword-picker">
             <directiveAttributes
               data-thesaurus-key="external.theme.codelist_use_limitation"
+              data-display-definition="true"
               data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
           </field>
 
@@ -3738,9 +3739,9 @@
             <!--  Do not allow to remove the first maintenance
                   and update frequency grand parent
                   which also contains other elements elsewhere in the form -->
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance[1]/*/gmd:maintenanceAndUpdateFrequency"
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency[1]"
                    name="cm-updateFrequency"/>
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance[position() > 1]/*/gmd:maintenanceAndUpdateFrequency"
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency[position() > 1]"
                    name="cm-updateFrequency"
                    del="../.."/>
 
