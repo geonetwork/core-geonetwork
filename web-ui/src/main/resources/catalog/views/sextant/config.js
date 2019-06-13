@@ -235,10 +235,6 @@
                 url = 'md.format.xml?xsl=' + searchSettings.metadataFormatter +
                   '&uuid=' + uuid;
             }
-          } else if(md.getSchema() == 'iso19139.sdn-product') {
-            url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + uuid;
-          } else if(md.getSchema() == 'iso19139.emodnet.hydrography') {
-            url = 'md.format.xml?xsl=emodnet&uuid=' + uuid;
           } else if(md.getSchema() == 'dublin-core') {
             url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
           } else if(md.getSchema() == 'iso19115-3.2018') {
@@ -261,9 +257,9 @@
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
                 md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&view=emodnetHydrography&uuid=' + uuid;
+              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&tabs=false&view=emodnetHydrography&uuid=' + uuid;
             } else if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - SDN') {
-              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&css=sextant&view=sdn&uuid=' + uuid;
+              url = 'md.format.xml?root=div&header=false&xsl=xsl-view&tabs=false&css=sextant&view=sdn&uuid=' + uuid;
             } else {
               url = 'md.format.xml?xsl=sxt_view&uuid=' + uuid;
             }
