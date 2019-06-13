@@ -450,19 +450,20 @@
 
             // Layer name may be a list of comma separated layers
             layerList = layerName.split(',');
+            layersLoop:
             for (var j = 0; j < layerList.length; j ++) {
               var name = layerList[j];
-
               //non namespaced lowercase name
               nameNoNamespace = name.split(':')[
                   name.split(':').length - 1].toLowerCase();
 
+              capabilityLayers:
               for (var i = 0; i < layers.length; i++) {
                 //Add Info for Requests:
                 if (capObj.Request) {
                   layers[i].capRequest = capObj.Request;
                 }
-
+                
                 //check layername
                 var lId = layers[i].Identifier;
                 var capName = layers[i].Name ||
@@ -481,7 +482,7 @@
                     layers[i].version = capObj.version;
                   }
                   needles.push(layers[i]);
-                  continue;
+                  break capabilityLayers;
                 }
 
                 //check dataset identifer match
@@ -490,7 +491,7 @@
                     for (var c = 0; c < layers[i].Identifier.length; c++) {
                       if (layers[i].Identifier[c] == uuid) {
                         needles.push(layers[i]);
-                        continue;
+                        break capabilityLayers;
                       }
                     }
                   }
@@ -500,7 +501,7 @@
                       if (mdu && mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0) {
                         needles.push(layers[i]);
-                        continue;
+                        break capabilityLayers;
                       }
                     }
                   }
