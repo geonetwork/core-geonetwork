@@ -128,7 +128,8 @@
         </a>
       </h2>
 
-      <div class="row">
+      <div class="row"
+           data-ng-show="relations.onlines.length > 1">
         <span data-translate="">sortLinksBy</span>
         <a class="btn btn-link"
            data-ng-repeat="s in sortLinksOptions"
@@ -150,7 +151,7 @@
         <li class="list-group-item" href=""
             data-ng-repeat="resource in relations.onlines | filter:sortLinksFilter | orderBy:sortLinks:sortLinksReverse">
           <div class="row"
-	       data-ng-show="relations.onlines.length > 1">
+	       data-ng-show="relations.onlines.length > 0">
             <div class="col-md-1">
               <i class="fa fa-fw"
                  data-ng-class="onlinesrcService.getIconByProtocol(resource)"></i>
