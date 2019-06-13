@@ -127,30 +127,48 @@
           <span data-translate="">add</span>
         </a>
       </h2>
+
+      <div class="row"
+           data-ng-show="relations.onlines.length > 1">
+        <span data-translate="">sortLinksBy</span>
+        <a class="btn btn-link"
+           data-ng-repeat="s in sortLinksOptions"
+           data-ng-click="sortLinksBy(s)">
+          <span>{{('link-' + s) | translate}}</span>
+
+          <i class="fa"
+             data-ng-show="sortLinksProperty === s"
+             data-ng-class="{'fa-caret-down': !sortLinksReverse, 'fa-caret-up': sortLinksReverse}"></i>
+        </a>
+
+        <input type="text" class="form-control input-sm"
+               placeholder="{{'filter' | translate}}"
+               data-ng-show="relations.onlines.length > 9"
+               data-ng-model="sortLinksFilter">
+      </div>
       <ul class="list-group"
           data-ng-show="::isCategoryEnable('onlinesrc') && relations.onlines && relations.onlines.length > 0">
         <li class="list-group-item" href=""
-            data-ng-repeat="resource in relations.onlines | orderBy:sortLinks">
+            data-ng-repeat="resource in relations.onlines | filter:sortLinksFilter | orderBy:sortLinks:sortLinksReverse">
           <div class="row">
-            <!--Specific geocat: use lUrl instead of url-->
             <div class="col-md-1">
               <i class="fa fa-fw"
                  data-ng-class="onlinesrcService.getIconByProtocol(resource)"></i>
             </div>
-            <div class="col-md-10"
-                 title="{{resource.title | gnLocalized: lang}}">
+            <div class="col-md-10">
+              {{resource.protocol || ''}}<br/>
               <a data-ng-href="{{resource.lUrl}}"
+                 title="{{resource.lUrl}}"
                  data-ng-if="resource.lUrl.match('^http|ftp') !== null"
                  target="_blank">
-
-                <!-- For OGC resources, the description contains the label
-                and the title the layer name which in some cases eg. ESRI
-                is a number only. -->
-                {{(resource[resource.protocol && resource.protocol.indexOf('OGC') !== -1 ? 'description' : 'title'] | gnLocalized: lang) || resource.lUrl}}
+                {{resource.lUrl}}
               </a>
               <span data-ng-if="resource.lUrl.match('^http|ftp') === null">
-                {{(resource.title | gnLocalized: lang) || resource.lUrl}}
+                {{resource.lUrl}}
               </span>
+              <br/>
+              <strong>{{resource.title | gnLocalized: lang}}</strong><br/>
+              {{resource.description | gnLocalized: lang}}
             </div>
             <div class="col-md-1 text-right">
               <a href=""
@@ -174,6 +192,7 @@
           </div>
         </li>
       </ul>
+
 
       <!-- ******* List of datasets ******* -->
       <h2 class="onlinesrc-title"
