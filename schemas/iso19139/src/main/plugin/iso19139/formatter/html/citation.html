@@ -29,7 +29,9 @@
     {{editionInfo}}
   </div>
   <div class="row">
-    {{identifier}}
+    <div class="row" fmt-repeat="i in identifiers">
+    {{i}}
+    </div>
     {{presentationForm}}
     {{ISBN}}
     {{ISSN}}
