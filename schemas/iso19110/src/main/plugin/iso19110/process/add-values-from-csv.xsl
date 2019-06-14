@@ -37,15 +37,17 @@
 
   <!-- i18n information -->
   <xsl:variable name="csv-add-values-info-loc">
-    <msg id="a" xml:lang="eng">Add values from CSV for column</msg>
-    <msg id="a" xml:lang="fre">Add values from CSV for column</msg>
-    <msg id="a" xml:lang="dut">Add values from CSV for column</msg>
+    <msg id="a" xml:lang="eng">Add codelist values from CSV for column</msg>
+    <msg id="a" xml:lang="fre">Ajouter les valeurs à partir d'un fichier CSV pour la colonne </msg>
+    <msg id="a" xml:lang="dut">Add codelist values from CSV for column</msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->
   <xsl:param name="column" select="''"/>
   <xsl:param name="replaceListOfValues" select="'1'"/>
   <xsl:param name="listOfValuesAsCsv" select="''"/>
+  <xsl:param name="listOfValuesSeparator" select="';'"/>
+
 
 
   <xsl:template name="list-add-values-from-csv">
@@ -68,6 +70,7 @@
         <params>{
           "column":{"type":"string", "defaultValue":"<xsl:value-of select="gfc:memberName/*"/>"},
           "replaceListOfValues":{"type":"boolean", "defaultValue":"1"},
+          "listOfValuesSeparator":{"type":"string", "defaultValue":"<xsl:value-of select="$listOfValuesSeparator"/>"},
           "listOfValuesAsCsv":{"type":"textarea", "defaultValue":"LABEL;CODE;DEFINITION"}
           }</params>
       </suggestion>
@@ -79,9 +82,6 @@
       <xsl:apply-templates select="@*"/>
       <xsl:apply-templates select="*[name() != 'gfc:listedValue']"/>
 
-      <xsl:message><xsl:copy-of select="$column"/></xsl:message>
-      <xsl:message><xsl:copy-of select="$replaceListOfValues"/></xsl:message>
-      <xsl:message><xsl:copy-of select="$listOfValuesAsCsv"/></xsl:message>
       <xsl:choose>
         <xsl:when test="$replaceListOfValues != '1' and $listOfValuesAsCsv != ''">
           <xsl:call-template name="add-values-from-csv"/>
@@ -102,7 +102,7 @@
       <xsl:variable name="line"
                     select="."/>
       <xsl:variable name="columns"
-                    select="tokenize(string($line), ';')"/>
+                    select="tokenize(string($line), $listOfValuesSeparator)"/>
 
       <gfc:listedValue>
         <gfc:FC_ListedValue>

@@ -91,6 +91,10 @@
             xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:typeName"
             or="typeName"
             in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
+
+          <action type="suggest"
+                  process="add-columns-from-csv"/>
+
           <field
             xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:carrierOfCharacteristics"
             or="carrierOfCharacteristics"

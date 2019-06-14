@@ -38,13 +38,14 @@
   <!-- i18n information -->
   <xsl:variable name="csv-info-loc">
     <msg id="a" xml:lang="eng">Add columns from CSV</msg>
-    <msg id="a" xml:lang="fre">Add columns from CSV</msg>
+    <msg id="a" xml:lang="fre">Ajouter les colonnes à partir d'un fichier CSV</msg>
     <msg id="a" xml:lang="dut">Add columns from CSV</msg>
   </xsl:variable>
 
   <!-- Process parameters and variables-->
   <xsl:param name="replaceColumns" select="'1'"/>
   <xsl:param name="columnListAsCsv" select="''"/>
+  <xsl:param name="columnListSeparator" select="';'"/>
 
 
   <xsl:template name="list-add-columns-from-csv">
@@ -65,6 +66,7 @@
       <operational>true</operational>
       <params>{
         "replaceColumns":{"type":"boolean", "defaultValue":"1"},
+        "columnListSeparator":{"type":"string", "defaultValue":"<xsl:value-of select="$columnListSeparator"/>"},
         "columnListAsCsv":{"type":"textarea", "defaultValue":"SHORT_NAME;DESCRIPTION;TYPE;CARDINALITY_MIN;;CARDINALITY_MAX"}
       }</params>
     </suggestion>
@@ -87,7 +89,7 @@
         <xsl:variable name="line"
                       select="."/>
         <xsl:variable name="columns"
-                      select="tokenize(string($line), ';')"/>
+                      select="tokenize(string($line), $columnListSeparator)"/>
 
         <gfc:carrierOfCharacteristics>
           <gfc:FC_FeatureAttribute>

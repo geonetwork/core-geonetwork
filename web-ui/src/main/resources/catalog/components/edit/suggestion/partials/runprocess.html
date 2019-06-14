@@ -1,7 +1,7 @@
 <div>
   <div class="alert alert-info">{{currentSuggestion.name}}</div>
   <form class="form-horizontal" role="form">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+    <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="form-group" data-ng-repeat="(key,param) in processParams">
       <label
         data-ng-if="param.type == 'string' || param.type == 'textarea' || param.type == 'expression' || param.type == 'codelist'"
@@ -13,7 +13,8 @@
                data-ng-model="params[key]"/>
       </div>
       <div data-ng-if="param.type == 'textarea'" class="col-sm-8">
-        <textarea data-ng-class="form-control"
+        <textarea class="form-control"
+                  data-gn-autogrow=""
                   data-ng-model="params[key]"></textarea>
       </div>
       <div data-ng-if="param.type == 'expression'" class="col-sm-8">

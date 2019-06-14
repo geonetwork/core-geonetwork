@@ -1527,6 +1527,23 @@
     </div>
   </xsl:template>
 
+  <!-- Render suggest directive action -->
+  <xsl:template name="render-suggest-button">
+    <xsl:param name="process-name"/>
+    <xsl:param name="process-params"/>
+    <xsl:param name="btnClass" required="no"/>
+
+    <div class="row form-group gn-field gn-extra-field gn-process-{$process-name}">
+      <div class="col-xs-10 col-xs-offset-2">
+        <span data-gn-suggest-button="{$process-name}"
+              data-params="{$process-params}"
+              data-icon="{$btnClass}"
+              data-name="{normalize-space($strings/*[name() = $process-name])}"
+              data-help="{normalize-space($strings/*[name() = concat($process-name, 'Help')])}"/>
+      </div>
+    </div>
+  </xsl:template>
+
 
   <!-- Render associated resource action -->
   <xsl:template name="render-associated-resource-button">
