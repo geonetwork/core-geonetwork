@@ -30,15 +30,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
+import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -64,6 +63,41 @@ public class DraftMetadataManager extends BaseMetadataManager implements IMetada
         super.init(context, force);
     }
 
+
+    /**
+     * Removes a metadata.
+     */
+    @Override
+    public void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
+        AbstractMetadata findOne = metadataUtils.findOne(metadataId);
+
+        if (findOne != null) {
+            boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
+
+
+            if (findOne instanceof Metadata) {
+                // Check if exists draft version and don't allow to remove until draft is removed
+                long countDraft =  metadataDraftRepository.count((Specification<MetadataDraft>) MetadataSpecs.hasMetadataUuid(findOne.getUuid()));
+
+                if (countDraft > 0) {
+                    throw new Exception("The metadata " + metadataId + " has a draft version. Delete it first to remove the published version.");
+                }
+
+            }
+
+            deleteMetadataFromDB(context, metadataId);
+
+            // Notifies the metadata change to metatada notifier service
+            if (isMetadata) {
+                context.getBean(MetadataNotifierManager.class).deleteMetadata(metadataId, findOne.getUuid(), context);
+            }
+        }
+
+        // --- update search criteria
+        getSearchManager().delete(metadataId + "");
+        // _entityManager.flush();
+        // _entityManager.clear();
+    }
     /**
      * For update of owner info.
      */

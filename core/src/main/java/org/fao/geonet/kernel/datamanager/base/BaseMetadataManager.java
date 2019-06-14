@@ -154,7 +154,7 @@ public class BaseMetadataManager implements IMetadataManager {
     private static final Logger LOGGER_DATA_MANAGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
     @Autowired
-    private IMetadataUtils metadataUtils;
+    protected IMetadataUtils metadataUtils;
     @Autowired
     private IMetadataIndexer metadataIndexer;
     @Autowired
@@ -318,7 +318,7 @@ public class BaseMetadataManager implements IMetadataManager {
         }
     }
 
-    private SearchManager getSearchManager() {
+    protected SearchManager getSearchManager() {
         return searchManager;
     }
 
@@ -347,7 +347,7 @@ public class BaseMetadataManager implements IMetadataManager {
         return applicationContext == null ? _applicationContext : applicationContext;
     }
 
-    private void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
+    protected void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
         AbstractMetadata metadata = metadataUtils.findOne(Integer.valueOf(id));
         if (!settingManager.getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION)
             && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {

@@ -93,7 +93,7 @@
           // Data needs improvements
           // See https://github.com/geonetwork/core-geonetwork/issues/723
           gnAlertService.addAlert({
-            msg: reason.data,
+            msg: reason.data.description,
             type: 'danger'
           });
         });
@@ -123,7 +123,7 @@
       };
 
       $scope.format = function(f) {
-        showApproved = $scope.mdView.current.record.draft != 'y';
+        var showApproved = $scope.mdView.current.record.draft != 'y';
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
         if (f) {        
