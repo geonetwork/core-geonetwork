@@ -140,6 +140,10 @@
           <xsl:with-param name="parentEditInfo" select="$refToDelete"/>
         </xsl:call-template>
       </div>
+
+      <div class="col-sm-offset-2 col-sm-9">
+        <xsl:call-template name="get-errors"/>
+      </div>
     </div>
   </xsl:template>
 

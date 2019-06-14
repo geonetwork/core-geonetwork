@@ -245,8 +245,19 @@
 
               loadRelations();
 
+              scope.sortLinksOptions = ['protocol', 'lUrl', 'title'];
+              scope.sortLinksProperty = scope.sortLinksOptions[0];
+              scope.sortLinksReverse = true;
+
               scope.sortLinks = function(g) {
-                return $filter('gnLocalized')(g.title);
+                return $filter('gnLocalized')(g[scope.sortLinksProperty]) || g[scope.sortLinksProperty];
+              };
+
+                scope.sortLinksBy = function(p) {
+                scope.sortLinksReverse =
+                  (scope.sortLinksProperty !== null && scope.sortLinksProperty === p)
+                  ? !scope.sortLinksReverse : false;
+                scope.sortLinksProperty = p;
               };
             }
           };
@@ -1103,14 +1114,12 @@
                       // editor to get URL or current record.
                       var links = [];
                       links = links.concat(
-                          gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
-                      links = links.concat(
-                          gnCurrentEdit.metadata.getLinksByType('wms'));
+                          gnCurrentEdit.metadata.getLinksByType('ogc', 'atom'));
                       if (links.length > 0) {
                         scope.onlineSrcLink = links[0].url;
+                        scope.srcParams.protocol = links[0].protocol || '';
                         scope.loadCurrentLink(scope.onlineSrcLink);
                         scope.srcParams.url = scope.onlineSrcLink;
-                        scope.srcParams.protocol = links[0].protocol || '';
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
 
                         scope.addOnlineSrcInDataset = true;
@@ -1145,16 +1154,34 @@
                   scope.loadCurrentLink = function(url) {
                     scope.alertMsg = null;
 
-                    return gnOwsCapabilities.getWMSCapabilities(url)
-                        .then(function(capabilities) {
-                          scope.layers = [];
-                          scope.srcParams.selectedLayers = [];
-                          scope.layers.push(capabilities.Layer[0]);
-                          angular.forEach(scope.layers[0].Layer, function(l) {
-                            scope.layers.push(l);
-                            // TODO: We may have more than one level
+                    var serviceType = scope.srcParams.protocol.toLowerCase();
+                    if (serviceType.indexOf('ogc') !== -1) {
+                      return gnOwsCapabilities[
+                        serviceType.indexOf('wfs') !== -1 ?
+                          'getWFSCapabilities' : 'getWMSCapabilities'](url)
+                          .then(function(capabilities) {
+                            scope.layers = [];
+                            scope.srcParams.selectedLayers = [];
+                            if (capabilities.Layer) {
+                              scope.layers.push(capabilities.Layer[0]);
+                              angular.forEach(scope.layers[0].Layer, function(l) {
+                                scope.layers.push(l);
+                                // TODO: We may have more than one level
+                              });
+                            } else if (capabilities.featureTypeList) {
+                              angular.forEach(capabilities.featureTypeList.featureType, function(l) {
+                                var name = l.name.prefix + ":" + l.name.localPart;
+                                var layer = {
+                                  'Name': name,
+                                  'Title': l.title || name,
+                                  'abstract': l.abstract || ''
+                                };
+
+                                scope.layers.push(layer);
+                              });
+                            }
                           });
-                        });
+                    }
                   };
 
                   /**
@@ -1175,10 +1202,7 @@
                         scope.layers = [];
                         scope.srcParams.selectedLayers = [];
 
-                        // Search a WMS link in the service metadata record
-                        // TODO: WFS ?
-                        links = links.concat(md.getLinksByType('OGC:WMS'));
-                        links = links.concat(md.getLinksByType('wms'));
+                        links = links.concat(md.getLinksByType('ogc', 'atom'));
                         scope.srcParams.uuidSrv = md.getUuid();
                         scope.srcParams.identifier =
                           (gnCurrentEdit.metadata.identifier && gnCurrentEdit.metadata.identifier[0]) ?
@@ -1190,8 +1214,8 @@
 
                         if (links.length > 0) {
                           scope.onlineSrcLink = links[0].url;
-                          scope.loadCurrentLink(scope.onlineSrcLink);
                           scope.srcParams.protocol = links[0].protocol || 'OGC:WMS';
+                          scope.loadCurrentLink(scope.onlineSrcLink);
                           scope.srcParams.url = scope.onlineSrcLink;
                           scope.addOnlineSrcInDataset = true;
                         } else {
@@ -1203,7 +1227,7 @@
                           scope.srcParams.url = scope.onlineSrcLink;
                           scope.addOnlineSrcInDataset = false;
                         }
-                      } else if (scope.addOnlineSrcInDataset) {
+                      } else {
                         scope.srcParams.uuidDS = md.getUuid();
                         scope.srcParams.name = gnCurrentEdit.mdTitle;
                         scope.srcParams.desc = gnCurrentEdit.mdTitle;
@@ -1222,7 +1246,6 @@
                    * Hide modal on success.
                    */
                   scope.linkTo = function(addOnlineSrcInDataset) {
-                    scope.onlineSrcLink = '';
                     if (scope.mode === 'service') {
                       return gnOnlinesrc.
                           linkToService(scope.srcParams, scope.popupid, addOnlineSrcInDataset);
@@ -1236,6 +1259,7 @@
             }
           };
         }])
+
 
       /**
      * @ngdoc directive

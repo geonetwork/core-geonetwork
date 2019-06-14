@@ -64,6 +64,7 @@
   <xsl:include href="../../layout/evaluate.xsl"/>
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
   <xsl:include href="../../layout/utility-fn.xsl"/>
+  <xsl:include href="../../formatter/jsonld/iso19139-to-jsonld.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -152,6 +153,13 @@
         </xsl:call-template>
       </xsl:for-each>
     </div>
+
+    <xsl:if test="$withJsonLd = 'true'">
+      <script type="application/ld+json">
+        <xsl:apply-templates mode="getJsonLD"
+                             select="$metadata"/>
+      </script>
+    </xsl:if>
 
     <!-- Citation -->
     <blockquote>

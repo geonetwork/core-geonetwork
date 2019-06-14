@@ -557,6 +557,14 @@ form.gn-tab-inspire {
     padding-left: 10px;
     padding-right: 5px;
     // background-color: #fbfcfb;
+    .row > div.col-md-10 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row > div.col-md-10:hover {
+      white-space: unset;
+    }
     .row > div {
       padding-left: 1px;
       padding-right: 1px;
@@ -614,6 +622,12 @@ form.gn-tab-inspire {
         color: @gray-darker;
       }
     }
+  }
+}
+// margin for a validation block in a date row
+.gn-date {
+  .gn-validation-report {
+    margin-top: 10px;
   }
 }
 .onlinesrc-container, [gn-directory-entry-list-selector] {

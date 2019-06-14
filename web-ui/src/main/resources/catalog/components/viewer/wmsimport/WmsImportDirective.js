@@ -173,7 +173,6 @@
             scope.loading = false;
             scope.capability = null;
             scope.serviceDesc = null;
-            scope.servicesList = [];
             scope.url = '';
           };
 
