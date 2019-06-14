@@ -539,22 +539,12 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139.myocean</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19110</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-dublin-core</artifactId>
-      <version>${gn.schemas.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139.myocean.short</artifactId>
       <version>${gn.schemas.version}</version>
     </dependency>
     <dependency>
@@ -790,14 +780,6 @@
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
                 <resource>
-                  <directory>${project.basedir}/../schemas/iso19139.myocean/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139.myocean.short/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
                   <directory>${project.basedir}/../schemas/iso19110/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
@@ -841,9 +823,6 @@
                 <include>**/src/main/plugin/*</include>
               </includes>
               <targetPath>WEB-INF/data/config/schema_plugins</targetPath>
-            </resource>
-            <resource>
-              <directory>${project.basedir}/../web-client/src/main/resources</directory>
             </resource>
             <resource>
               <directory>${project.basedir}/../web-ui/src/main/resources</directory>
@@ -903,8 +882,7 @@
               <resourcesAsCSV>
                 ${project.basedir}/src/main/webapp,
                 ${rootProjectDir}/web-ui/src/main/resources/,
-                ${build.webapp.resources},
-                ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
+                ${build.webapp.resources}</resourcesAsCSV>
             </baseResource>
           </webApp>
           <systemProperties>
