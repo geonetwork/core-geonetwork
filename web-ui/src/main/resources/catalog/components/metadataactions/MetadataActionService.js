@@ -108,7 +108,14 @@ goog.require('gn_share');
        */
       var openPopup = function(o, scope, eventName) {
         // var popup = gnPopup.create(o, scope);
-        gnPopup.create(o, scope);
+        var popup = gnPopup.create(o, scope);
+        var myListener = $rootScope.$on(eventName,
+          function(e, o) {
+            $timeout(function() {
+              popup.close();
+            }, 0);
+            myListener();
+          });
       };
       // end specific Sextant
 
