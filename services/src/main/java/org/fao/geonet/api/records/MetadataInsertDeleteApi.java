@@ -194,7 +194,7 @@ public class MetadataInsertDeleteApi {
             MetadataUtils.backupRecord(metadata, context);
         }
 
-        IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(dataDirectory, String.valueOf(metadata.getId())));
+        IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(dataDirectory, metadata.getId()));
 
         dataManager.deleteMetadata(context, metadata.getId() + "");
 
