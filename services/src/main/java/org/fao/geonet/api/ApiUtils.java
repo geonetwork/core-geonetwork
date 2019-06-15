@@ -113,18 +113,18 @@ public class ApiUtils {
     public static String getInternalId(String uuidOrInternalId, Boolean approved)
         throws Exception {
 
-    	IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+        IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         String id = String.valueOf(metadataUtils.findOneByUuid(uuidOrInternalId).getId());
-        
+
         if(StringUtils.isEmpty(id)) {
-        	//It wasn't a UUID
-        	id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
+            //It wasn't a UUID
+            id = String.valueOf(metadataUtils.findOne(uuidOrInternalId).getId());
         } else if(approved) {
-        	//It was a UUID, check if draft or approved version
-        	id = String.valueOf(ApplicationContextHolder.get().getBean(MetadataRepository.class)
-        			 				.findOneByUuid(uuidOrInternalId).getId());
+            //It was a UUID, check if draft or approved version
+            id = String.valueOf(ApplicationContextHolder.get().getBean(MetadataRepository.class)
+                .findOneByUuid(uuidOrInternalId).getId());
         }
-        
+
         if (StringUtils.isEmpty(id)) {
             throw new ResourceNotFoundException(String.format(
                 "Record with UUID '%s' not found in this catalog",
@@ -133,34 +133,35 @@ public class ApiUtils {
         return id;
     }
 
-    public static AbstractMetadata getRecord(String uuidOrInternalId)
-        throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+
+    public static AbstractMetadata getRecord(String uuidOrInternalId) throws ResourceNotFoundException {
+        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
         AbstractMetadata metadata = null;
 
-        metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
-
-        if (metadata == null) {
-            Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
-            try {
-                metadata = metadataRepository.findOne(uuidOrInternalId);
-            } catch (InvalidDataAccessApiUsageException e) {
-                throw new ResourceNotFoundException(String.format(
-                    "Record with UUID '%s' not found in this catalog",
-                    uuidOrInternalId));
+        try {
+            metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+            if (metadata != null) {
+                Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+                return metadata;
             }
-            if (metadata == null) {
-                Log.trace(Geonet.DATA_MANAGER, "Record identified by " + uuidOrInternalId + " not found.");
-                throw new ResourceNotFoundException(String.format(
-                    "Record with UUID '%s' not found in this catalog",
-                    uuidOrInternalId));
-            }
+        } catch (IncorrectResultSizeDataAccessException e) {
+            Log.warning(Geonet.GEONETWORK, String.format(
+                "More than one record found with UUID '%s'. Error is '%s'.",
+                uuidOrInternalId, e.getMessage()));
         }
 
-        Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+        try {
+            Log.trace(Geonet.DATA_MANAGER, uuidOrInternalId + " not recognized as UUID. Trying ID.");
+            metadata = metadataRepository.findOne(uuidOrInternalId);
+            if (metadata != null) {
+                Log.trace(Geonet.DATA_MANAGER, "ApiUtils.getRecord(" + uuidOrInternalId + ") -> " + metadata);
+                return metadata;
+            }
+        }
+        catch (InvalidDataAccessApiUsageException e) {}
 
-        return metadata;
+        Log.trace(Geonet.DATA_MANAGER, "Record identified by " + uuidOrInternalId + " not found.");
+        throw new ResourceNotFoundException(String.format("Record with UUID '%s' not found in this catalog", uuidOrInternalId));
     }
 
     /**
