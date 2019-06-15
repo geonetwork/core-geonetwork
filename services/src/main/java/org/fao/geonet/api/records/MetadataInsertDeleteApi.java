@@ -243,6 +243,7 @@ public class MetadataInsertDeleteApi {
 
         searchManager.forceIndexChanges();
 
+        report.close();
         return report;
     }
 
