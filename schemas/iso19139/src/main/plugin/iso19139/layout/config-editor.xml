@@ -467,10 +467,8 @@
 
       <thesaurusList>
         <thesaurus key="external.theme.httpinspireeceuropaeutheme-theme"
-                   fieldset="false"
                    maxtags="1"/>
         <thesaurus key="local.theme.sextant-theme"
-                   fieldset="false"
                    maxtags="1"/>
       </thesaurusList>
 
@@ -1180,6 +1178,9 @@
                    transformations="to-iso19139-keyword"/>
         <thesaurus key="local.theme.emodnet-bathymetry.projectname"
                    fieldset="false" maxtags="1"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L11"
+                   fieldset="false"
                    transformations="to-iso19139-keyword"/>
       </thesaurusList>
 
