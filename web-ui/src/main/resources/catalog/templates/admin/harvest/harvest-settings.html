@@ -16,16 +16,15 @@
                placeholder="{{'filter' | translate}}"/>
 
         <div id="gn-harvest-select-saved-row" class="list-group" data-ng-hide="$parent.isLoadingHarvester">
-          <a href="" class="list-group-item"
+          <a href="" class="list-group-item gn-harvester-list-group"
              data-ng-repeat="h in pageItems()"
              data-ng-class="[h['@id'] === harvesterSelected['@id'] ? 'active' : '', h.error ? 'list-group-item-danger' : '']"
              data-ng-click="selectHarvester(h)"
              title="{{h.error ? ('selectForError' | translate) : (h.info.lastRun.length === 0 ? '' : ('lastRun' | translate) + (h.info.lastRun | gnFromNow))}}">
-            <!-- TODO : Add a tooltip with last run info -->
-
             <i data-ng-show="h.options.status === 'active'" class="fa fa-play"/>
-            <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause"/> {{h.site.name}}
-            ({{('harvester-' + h['@type']) | translate}}) <span class="badge">{{h.info.result.total}}</span>
+            <i data-ng-show="h.options.status === 'inactive'" class="fa fa-pause"/>
+            <span class="gn-harvester-name"> {{h.site.name}}
+            ({{('harvester-' + h['@type']) | translate}})</span> <span class="badge">{{h.info.result.total}}</span>
             <i data-ng-show="h.info.running" class="fa fa-spinner fa-spin"/>
           </a>
           <span data-gn-pagination-list=""
