@@ -1,0 +1,68 @@
+<div data-ng-controller="GnDashboardRecordLinksController">
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        <h1 translate>recordLinksDashboard</h1>
+        <p class="text-muted" translate>
+          recordLinksDashboardSubtitle
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 flex-row flex-end">
+      <button type="button" class="btn btn-primary" ng-click="loadLinks()">
+        <i class="fa fa-refresh"/>&nbsp;
+        <span translate>refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <div ng-if="loading" class="row">
+    <br/><br/><br/><br/>
+    <div class="flex-row flex-center">
+      <i class="fa fa-spinner fa-spin"/>
+    </div>
+  </div>
+
+  <div ng-if="error" class="row">
+    <div class="alert alert-danger" role="alert">
+      <i class="fa fa-exclamation-triangle fa-fw"/>
+      <span>{{error.description}}</span>
+    </div>
+  </div>
+
+  <div ng-if="!loading && !error">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th translate>url</th>
+          <th translate>lastCheck</th>
+          <th translate>associatedRecords</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="l in links">
+          <td>
+            <i class="fa fa-fw"
+               data-ng-class="{'fa-question': l.linkStatus.length === 0,
+                                 'fa-exclamation-triangle text-danger': l.linkStatus[0] && l.linkStatus[0].failing,
+                                 'fa-link text-success': l.linkStatus[0] && !l.linkStatus[0].failing}">&nbsp;</i>
+            <strong>{{l.url}}</strong>
+          </td>
+          <td data-gn-humanize-time="{{l.linkStatus[0].checkDate.dateAndTime}}">
+            {{l.linkStatus[0].checkDate.dateAndTime}}
+          </td>
+          <td>
+            <ul>
+              <li data-ng-repeat="r in l.records">
+                {{r.id.metadataId}}
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
