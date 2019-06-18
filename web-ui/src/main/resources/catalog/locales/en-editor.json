@@ -249,6 +249,8 @@
     "saveMetadataError": "Error while saving metadata. You should reload the editor.",
     "saveMetadataSuccess": "All changes saved.",
     "saveMetadata": "Save metadata",
+    "saveDraft": "Save draft",
+    "draftCanNoBeATemplateOrMinorEdit": "A draft cannot be a template and cannot use minor edit mode.",
     "saveTemplate": "Save template",
     "saveAsMetadata": "Save as metadata",
     "saveAsTemplate": "Save as template",
