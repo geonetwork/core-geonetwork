@@ -78,7 +78,7 @@
       </li>
 
       <li role="menuitem" class="divider"
-          data-ng-if="user.isConnected() && user.canEditRecord(md)"></li>
+          data-ng-if="user.isConnected() && user.canEditRecord(md) && md.draft != 'y'"></li>
 
 
       <li data-ng-repeat="t in tasks"
@@ -103,7 +103,7 @@
       </li>
       <li role="menuitem">
         <a data-ng-href=""
-           data-ng-if="user.isEditorOrMore()"
+           data-ng-if="user.isEditorOrMore() && md.draft != 'y'"
            data-ng-click="mdService.createChild(md)">
           <i class="fa fa-fw fa-sitemap"></i>&nbsp;
           <span data-translate="">createChild</span>
@@ -123,7 +123,7 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-      <li>
+      <li data-ng-class="{'disabled': md.draft === 'y'}">
         <a data-ng-href=""
            data-ng-click="mdService.getPermalink(md)">
           <i class="fa fa-fw fa-link"></i>&nbsp;
