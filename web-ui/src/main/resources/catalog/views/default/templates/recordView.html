@@ -101,10 +101,11 @@
           <a class="btn btn-default"
             data-ng-show="user.canEditRecord(mdView.current.record)"
             data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-            data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
-            title="{{'delete' | translate}}">
+            data-gn-confirm-click="{{(mdView.current.record.draft != 'y') ? 'deleteRecordConfirm' : 'deleteWorkingCopyRecordConfirm' | translate:mdView.current.record}}"
+            title="{{(mdView.current.record.draft != 'y') ? 'delete' : 'canceWorkingCopy' | translate}}">
             <i class="fa fa-fw fa-times"></i>
-            <span data-translate="" class="hidden-sm hidden-xs">delete</span>
+            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft == 'y'">canceWorkingCopy</span>
+            <span data-translate="" class="hidden-sm hidden-xs" data-ng-if="mdView.current.record.draft != 'y'">delete</span>
           </a>
         </div>
 
