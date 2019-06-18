@@ -428,44 +428,8 @@ public class AccessManager {
      * @param id The metadata internal identifier
      */
     public boolean hasEditPermission(final ServiceContext context, final String id) throws Exception {
-        UserSession us = context.getUserSession();
-        if (us == null || !us.isAuthenticated())
-            return false;
+        return hasEditingPermissionWithProfile(context, id, Profile.Editor);
 
-
-        OperationAllowedRepository opAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
-        List<OperationAllowed> allOpAlloweds = opAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
-            .editing)));
-        
-        if (allOpAlloweds.isEmpty()) {
-            //Add exception for Reviewers of any of the groups of the owner
-        	IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        	
-        	//Get all the groups of the owner
-            List<UserGroup> groups = userGroupRepository.findAll(
-            		UserGroupSpecs.hasUserId(metadataUtils.findOne(id).getSourceInfo().getOwner()));
-            List<Integer> groupIds = new ArrayList<Integer>();
-            for(UserGroup ug : groups) {
-            	groupIds.add(ug.getGroup().getId());
-            }
-        	
-            //Check if the user is reviewer on any of those groups
-        	Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasGroupIds(groupIds));
-        	if(userGroupRepository.findAll(spec).isEmpty()) {
-            	return false;
-            }
-        }
-
-        Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Editor)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
-
-        List<Integer> opAlloweds = new ArrayList<Integer>();
-        for (OperationAllowed opAllowed : allOpAlloweds) {
-            opAlloweds.add(opAllowed.getId().getGroupId());
-        }
-        spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
-
-        return (!userGroupRepository.findAll(spec).isEmpty());
     }
     
     /**
@@ -475,6 +439,17 @@ public class AccessManager {
      * @param id The metadata internal identifier
      */
     public boolean hasReviewPermission(final ServiceContext context, final String id) throws Exception {
+        return hasEditingPermissionWithProfile(context, id, Profile.Reviewer);
+    }
+
+
+    /**
+     * Check if current user has permission for the metadata according to the groups where the metadata is
+     * editable and specific user profile.
+     *
+     * @param id The metadata internal identifier
+     */
+    private boolean hasEditingPermissionWithProfile(final ServiceContext context, final String id, Profile profile) throws Exception {
         UserSession us = context.getUserSession();
         if (us == null || !us.isAuthenticated())
             return false;
@@ -484,26 +459,12 @@ public class AccessManager {
         UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
         List<OperationAllowed> allOpAlloweds = opAllowedRepository.findAll(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
             .editing)));
+
         if (allOpAlloweds.isEmpty()) {
-            //Add exception for Reviewers of any of the groups of the owner
-        	IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
-        	
-        	//Get all the groups of the owner
-            List<UserGroup> groups = userGroupRepository.findAll(
-            		UserGroupSpecs.hasUserId(metadataUtils.findOne(id).getSourceInfo().getOwner()));
-            List<Integer> groupIds = new ArrayList<Integer>();
-            for(UserGroup ug : groups) {
-            	groupIds.add(ug.getGroup().getId());
-            }
-        	
-            //Check if the user is reviewer on any of those groups
-        	Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasGroupIds(groupIds));
-        	if(userGroupRepository.findAll(spec).isEmpty()) {
-            	return false;
-            }
+            return false;
         }
 
-        Specifications spec = where(UserGroupSpecs.hasProfile(Profile.Reviewer)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
+        Specifications spec = where(UserGroupSpecs.hasProfile(profile)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
         List<Integer> opAlloweds = new ArrayList<Integer>();
         for (OperationAllowed opAllowed : allOpAlloweds) {
@@ -512,8 +473,9 @@ public class AccessManager {
         spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
 
         return (!userGroupRepository.findAll(spec).isEmpty());
-    } 
-    
+
+    }
+
     /**
      * Check if current user is reviewer of the owner group for this metadata
      *
