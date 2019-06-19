@@ -432,8 +432,6 @@ public class GroupsApi {
         @RequestBody
             Group group
     ) throws Exception {
-        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
-
         final Group existing = groupRepository.findOne(groupIdentifier);
         if (existing == null) {
             throw new ResourceNotFoundException(String.format(
