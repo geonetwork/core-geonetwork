@@ -29,6 +29,7 @@ import org.fao.geonet.entitylistener.OperationAllowedEntityListenerManager;
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -52,6 +53,8 @@ public class MetadataLink extends GeonetEntity {
     public static final String TABLE_NAME = "MetadataLink";
 
     private MetadataLinkId _id = new MetadataLinkId();
+
+    private String xpath;
 
     /**
      * Constructor for use by JPA.
@@ -108,5 +111,21 @@ public class MetadataLink extends GeonetEntity {
     @Override
     public int hashCode() {
         return _id != null ? _id.hashCode() : 0;
+    }
+
+
+    /**
+     * Optional xpath which points to where the link is in the metadata record.
+     * That suppose that the link is in one location only. To improve ?
+     *
+     * @return The xpath
+     */
+    @Column(nullable = true, length = 2000)
+    public String getXpath() {
+        return xpath;
+    }
+
+    public void setXpath(String xpath) {
+        this.xpath = xpath;
     }
 }

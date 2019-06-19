@@ -98,6 +98,20 @@ public abstract class SchemaPlugin implements CSWPlugin {
     }
 
     /**
+     Links to analyze in a metadata record
+     */
+    protected List<HttpLink> analyzedLinks;
+
+    public void setAnalyzedLinks(List<HttpLink> analyzedLinks) {
+        this.analyzedLinks = analyzedLinks;
+    }
+
+    public List<HttpLink> getAnalyzedLinks() {
+        return analyzedLinks;
+    }
+
+
+    /**
      * Processes the passed element. This base class just return the same element without modifications
      * but can be overridden in a schema plugin in order to modify an element
      * by one of its substitutes.

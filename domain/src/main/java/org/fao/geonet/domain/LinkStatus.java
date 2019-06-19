@@ -167,7 +167,7 @@ public class LinkStatus extends GeonetEntity {
     }
 
     /**
-     * eg. HTTP status != 2xx means that the link is ok.
+     * eg. HTTP status != 2xx means that the link is not working.
      *
      * @return
      */
