@@ -338,7 +338,7 @@
             indexData: r.data,
             records: r.data.hits.hits,
             facets: quiet ? undefined : this.createFacetData_(r.data, params),
-            count: r.data.hits.total
+            count: r.data.hits.total.value
           };
           if (!quiet) {
             this.sendEvent('search', angular.extend({}, resp, {

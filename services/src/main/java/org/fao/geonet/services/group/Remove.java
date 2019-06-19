@@ -74,7 +74,7 @@ public class Remove extends NotInReadOnlyModeService {
         Integer iId = Integer.valueOf(id);
         List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(iId), OperationAllowedId_.metadataId);
 
-        operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, iId);
+        operationAllowedRepo.deleteAllByGroupId(iId);
         userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(iId));
         groupRepo.delete(iId);
         //--- reindex affected metadata

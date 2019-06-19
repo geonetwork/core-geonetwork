@@ -23,14 +23,24 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -50,15 +60,17 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.mef.MEFLib.Version.Constants;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,22 +83,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
-import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
     "/{portal}/api/records",
@@ -98,7 +102,7 @@ import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_T
     description = API_CLASS_RECORD_OPS)
 @Controller("records")
 @ReadWriteController
-public class MetadataApi implements ApplicationContextAware {
+public class MetadataApi {
 
     @Autowired
     SchemaManager _schemaManager;
@@ -108,6 +112,12 @@ public class MetadataApi implements ApplicationContextAware {
 
     @Autowired
     DataManager dataManager;
+
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
@@ -178,11 +188,11 @@ public class MetadataApi implements ApplicationContextAware {
             || accept.contains("application/pdf")) {
             return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
-                || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
             return "forward:" + (metadataUuid + "/formatters/xml");
         } else if (accept.contains("application/zip")
-                || accept.contains(MEF_V1_ACCEPT_TYPE)
-                || accept.contains(MEF_V2_ACCEPT_TYPE)) {
+            || accept.contains(MEF_V1_ACCEPT_TYPE)
+            || accept.contains(MEF_V2_ACCEPT_TYPE)) {
             return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
             // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
@@ -235,6 +245,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false)
         @RequestParam(required = false, defaultValue = "false")
             boolean attachment,
+        @ApiParam(value = "Download the approved version",
+            required = false, defaultValue = "true")
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
@@ -244,15 +258,13 @@ public class MetadataApi implements ApplicationContextAware {
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (ResourceNotFoundException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
@@ -275,10 +287,19 @@ public class MetadataApi implements ApplicationContextAware {
 
 
         boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
-        Element xml  = withInfo ?
-            dataManager.getMetadata(context,
-            metadata.getId() + "", forEditing, withValidationErrors, keepXlinkAttributes) :
-            dataManager.getMetadataNoInfo(context, metadata.getId() + "");
+
+        String mdId = String.valueOf(metadata.getId());
+
+        //Here we just care if we need the approved version explicitly.
+        //ApiUtils.canViewRecord already filtered draft for non editors.
+        if (approved) {
+            mdId = String.valueOf(metadataRepository.findOneByUuid(metadata.getUuid()).getId());
+        }
+
+        Element xml = withInfo ?
+            dataManager.getMetadata(context, mdId, forEditing,
+                withValidationErrors, keepXlinkAttributes) :
+            dataManager.getMetadataNoInfo(context, mdId + "");
 
         if (addSchemaLocation) {
             Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
@@ -299,7 +320,7 @@ public class MetadataApi implements ApplicationContextAware {
 
         boolean isJson = acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE);
 
-        String mode = (attachment)?"attachment":"inline";
+        String mode = (attachment) ? "attachment" : "inline";
         response.setHeader("Content-Disposition", String.format(
             mode + "; filename=\"%s.%s\"",
             metadata.getUuid(),
@@ -369,6 +390,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false,
             defaultValue = "true")
             boolean addSchemaLocation,
+        @ApiParam(value = "Download the approved version",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = "application/x-gn-mef-2-zip"
@@ -378,8 +403,6 @@ public class MetadataApi implements ApplicationContextAware {
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
@@ -394,10 +417,20 @@ public class MetadataApi implements ApplicationContextAware {
         if (version == MEFLib.Version.V1) {
             // This parameter is deprecated in v2.
             boolean skipUUID = false;
+
+            Integer id = -1;
+
+            if (approved) {
+                id = metadataRepository.findOneByUuid(metadataUuid).getId();
+            } else {
+                id = metadataUtils.findOneByUuid(metadataUuid).getId();
+            }
+
             file = MEFLib.doExport(
-                context, metadataUuid, format.toString(),
+                context, id, format.toString(),
                 skipUUID, withXLinksResolved, withXLinkAttribute, addSchemaLocation
             );
+            response.setContentType(MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE);
         } else {
             Set<String> tmpUuid = new HashSet<String>();
             tmpUuid.add(metadataUuid);
@@ -436,14 +469,15 @@ public class MetadataApi implements ApplicationContextAware {
             Log.info(Geonet.MEF, "Building MEF2 file with " + tmpUuid.size()
                 + " records.");
 
-            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation);
+            file = MEFLib.doMEF2Export(context, tmpUuid, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved);
+
+            response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
         }
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format(
             "inline; filename=\"%s.zip\"",
             metadata.getUuid()
         ));
         response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
-        response.setContentType(acceptHeader);
         FileUtils.copyFile(file.toFile(), response.getOutputStream());
     }
 
@@ -488,7 +522,7 @@ public class MetadataApi implements ApplicationContextAware {
         HttpServletRequest request) throws Exception {
 
         AbstractMetadata md;
-        try{
+        try {
             md = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
@@ -532,7 +566,7 @@ public class MetadataApi implements ApplicationContextAware {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     @ResponseBody
-    public FeatureResponse getFeatureCatalog (
+    public FeatureResponse getFeatureCatalog(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -579,9 +613,9 @@ public class MetadataApi implements ApplicationContextAware {
     private boolean isIncludedAttributeTable(RelatedResponse.Fcat fcat) {
         return fcat != null
             && fcat.getItem() != null
-            && fcat.getItem().size()>0
-            && fcat.getItem().get(0).getFeatureType()!=null
-            && fcat.getItem().get(0).getFeatureType().getAttributeTable()!=null
-            && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement()!=null;
+            && fcat.getItem().size() > 0
+            && fcat.getItem().get(0).getFeatureType() != null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable() != null
+            && fcat.getItem().get(0).getFeatureType().getAttributeTable().getElement() != null;
     }
 }

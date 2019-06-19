@@ -203,7 +203,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final AbstractMetadata metadata = new Metadata();
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
-        metadata.getMetadataCategories().add(category);
+        metadata.getCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
@@ -212,8 +212,8 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
         AbstractMetadata newMetadata = _metadataRepository.findOne(newMetadataId);
-        assertEquals(1, newMetadata.getMetadataCategories().size());
-        assertEquals(category, newMetadata.getMetadataCategories().iterator().next());
+        assertEquals(1, newMetadata.getCategories().size());
+        assertEquals(category, newMetadata.getCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");
 
     }
@@ -271,7 +271,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(startIndexDocs + (2 * numDocsPerMd), numDocs(searchManager, lang));
         assertEquals(startMdCount + 2, _metadataRepository.count());
 
-        Specification<Metadata> spec = where(MetadataSpecs.hasMetadataId(md1)).or(MetadataSpecs.hasMetadataId(md2));
+        Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataId(md1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataId(md2));
         _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
         assertEquals(startMdCount, _metadataRepository.count());

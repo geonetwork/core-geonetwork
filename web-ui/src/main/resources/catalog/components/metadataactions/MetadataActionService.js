@@ -125,8 +125,12 @@
        * Export one metadata to RDF format.
        * @param {string} uuid
        */
-      this.metadataRDF = function(uuid) {
+      this.metadataRDF = function(uuid, approved) {
         var url = gnHttp.getService('mdGetRDF') + '?uuid=' + uuid;
+        
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
+        
         location.replace(url);
       };
 
@@ -135,12 +139,15 @@
        * one metadata, else export the whole selection.
        * @param {string} uuid
        */
-      this.metadataMEF = function(uuid, bucket) {
+      this.metadataMEF = function(uuid, bucket, approved) {
+        
         var url = gnHttp.getService('mdGetMEF') + '?version=2';
         url += angular.isDefined(uuid) ?
             '&uuid=' + uuid : '&format=full';
         url += angular.isDefined(bucket) ?
             '&bucket=' + bucket : '';
+        url += angular.isDefined(approved) ?
+            '&approved=' + approved : '';
 
         location.replace(url);
       };
@@ -288,10 +295,19 @@
        * @return {*}
        */
       this.publish = function(md, bucket, flag, scope) {
-        scope.$broadcast('operationOnSelectionStart');
         if (md) {
           flag = md.isPublished() ? 'off' : 'on';
+        } 
+
+        //Warn about possible workflow changes on batch changes 
+        // or when record is not approved 
+        if((!md || md.mdStatus != 2) && flag === 'on') {
+          if(!confirm($translate.instant('warnPublishDraft'))){
+            return;
+          }
         }
+        
+        scope.$broadcast('operationOnSelectionStart');
         var onOrOff = flag === 'on';
 
         return gnShareService.publish(

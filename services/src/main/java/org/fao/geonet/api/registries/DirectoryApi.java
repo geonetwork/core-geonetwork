@@ -65,6 +65,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.fao.geonet.utils.Xml;
 import org.geotools.GML;
@@ -282,6 +283,7 @@ public class DirectoryApi {
         // List of identifier to check for duplicates
         Set<Element> listOfEntries = new HashSet<>();
         Set<Integer> listOfEntriesInternalId = new HashSet<>();
+
         final int user = context.getUserSession().getUserIdAsInt();
         final String siteId = settingManager.getSiteId();
 

@@ -347,8 +347,7 @@ public class UserSelectionsApi {
 
         for (String u : uuid) {
             // Check record exist
-            AbstractMetadata md = metadataRepository.findOneByUuid(u);
-            if (md != null) {
+            if (metadataRepository.existsMetadataUuid(u)) {
                 UserSavedSelection e = new UserSavedSelection(selection, user, u);
                 try {
                     umsRepository.save(e);

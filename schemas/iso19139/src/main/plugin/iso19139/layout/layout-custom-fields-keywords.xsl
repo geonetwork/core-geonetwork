@@ -124,7 +124,7 @@
                           else $listOfThesaurus/thesaurus[title=$thesaurusTitle]"/>
 
     <xsl:choose>
-      <xsl:when test="$thesaurusConfig/@fieldset = 'false'">
+      <xsl:when test="($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false'">
         <xsl:apply-templates mode="mode-iso19139" select="*">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="labels" select="$labels"/>
@@ -253,7 +253,7 @@
         <div data-gn-keyword-selector="{$widgetMode}"
              data-metadata-id="{$metadataId}"
              data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
-             data-thesaurus-title="{if ($thesaurusConfig/@fieldset = 'false') then $thesaurusTitle else ''}"
+             data-thesaurus-title="{if (($isFlatMode and not($thesaurusConfig/@fieldset)) or $thesaurusConfig/@fieldset = 'false') then $thesaurusTitle else ''}"
              data-thesaurus-key="{$thesaurusKey}"
              data-keywords="{$keywords}"
              data-transformations="{$transformations}"

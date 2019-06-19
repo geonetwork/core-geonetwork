@@ -27,6 +27,8 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataStatus;
@@ -38,8 +40,13 @@ import org.fao.geonet.domain.StatusValueNotificationLevel;
 import org.fao.geonet.domain.StatusValueType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.events.md.MetadataStatusChanged;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -47,6 +54,8 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.text.MessageFormat;
@@ -68,6 +77,9 @@ public class DefaultStatusActions implements StatusActions {
     protected ServiceContext context;
     protected String language;
     protected DataManager dm;
+
+    @Autowired
+    protected IMetadataUtils metadataUtils;
     protected String siteUrl;
     protected String siteName;
     protected UserSession session;
@@ -90,6 +102,7 @@ public class DefaultStatusActions implements StatusActions {
         this.context = context;
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         this._statusValueRepository = applicationContext.getBean(StatusValueRepository.class);
+        this.metadataUtils = applicationContext.getBean(IMetadataUtils.class);
         this.language = context.getLanguage();
 
         SettingManager sm = applicationContext.getBean(SettingManager.class);
@@ -123,10 +136,16 @@ public class DefaultStatusActions implements StatusActions {
      * @param minorEdit If true then the edit was a minor edit.
      */
     public void onEdit(int id, boolean minorEdit) throws Exception {
-        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED)) {
+        if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+            Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.onEdit(" + id
+                + ", " + minorEdit + ") with status " + dm.getCurrentStatus(id));
+        }
+        if (!minorEdit && dm.getCurrentStatus(id).equals(StatusValue.Status.APPROVED) &&
+        		(context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)) {
             ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
             String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
             unsetAllOperations(id);
+            Log.trace(Geonet.DATA_MANAGER, "Set DRAFT to current record with id " + id);
             dm.setStatus(context, id, Integer.valueOf(StatusValue.Status.DRAFT), new ISODate(), changeMessage);
         }
     }
@@ -153,7 +172,7 @@ public class DefaultStatusActions implements StatusActions {
             // --- For the workflow, if the status is already set to value
             // of status then do nothing. This does not apply to task and event.
             if (status.getStatusValue().getType().equals(StatusValueType.workflow) &&
-               (statusId).equals(currentStatus)) {
+                (statusId).equals(currentStatus)) {
                 if (context.isDebugEnabled())
                     context.debug(String.format("Metadata %s already has status %s ",
                         status.getId().getMetadataId(), status.getId().getStatusId()));
@@ -176,6 +195,19 @@ public class DefaultStatusActions implements StatusActions {
                     "Failed to send notification on status change for metadata %s with status %s. Error is: %s",
                     status.getId().getMetadataId(), status.getId().getStatusId(), e.getMessage()));
             }
+
+            //Throw events
+            Log.trace(Geonet.DATA_MANAGER, "Throw workflow events.");
+            for (Integer mid : listOfId) {
+                if (!unchanged.contains(mid)) {
+                    Log.debug(Geonet.DATA_MANAGER, "  > Status changed for record (" + mid + ") to status " + status);
+                    context.getApplicationContext().publishEvent(new MetadataStatusChanged(
+                        metadataUtils.findOne(Integer.valueOf(mid)),
+                        status.getStatusValue(), status.getChangeMessage(),
+                        status.getId().getUserId()));
+                }
+            }
+
         }
 
         return unchanged;
@@ -186,16 +218,23 @@ public class DefaultStatusActions implements StatusActions {
      * This apply specific rules depending on status change.
      * The default rules are:
      * <ul>
-     *     <li>DISABLED When approved, the record is automatically published.</li>
-     *     <li>When draft or rejected, unpublish the record.</li>
+     * <li>DISABLED When approved, the record is automatically published.</li>
+     * <li>When draft or rejected, unpublish the record.</li>
      * </ul>
+     *
      * @param status
      * @throws Exception
      */
     private void applyRulesForStatusChange(MetadataStatus status) throws Exception {
         String statusId = status.getId().getStatusId() + "";
         if (statusId.equals(StatusValue.Status.APPROVED)) {
-            // setAllOperations(mid);
+            // setAllOperations(mid); - this is a short cut that could be enabled
+            AccessManager accessManager = context.getBean(AccessManager.class);
+            if (!accessManager.canReview(context, String.valueOf(status.getId().getMetadataId()))) {
+                throw new SecurityException(String.format(
+                    "You can't edit record with ID %s",
+                    String.valueOf(status.getId().getMetadataId())));
+            }
         } else if (statusId.equals(StatusValue.Status.DRAFT) ||
             statusId.equals(StatusValue.Status.REJECTED)) {
             unsetAllOperations(status.getId().getMetadataId());
@@ -205,6 +244,7 @@ public class DefaultStatusActions implements StatusActions {
     /**
      * Send email to a list of users. The list of users is defined based on
      * the notification level of the status. See {@link StatusValueNotificationLevel}.
+     *
      * @param userToNotify
      * @param status
      * @throws Exception
@@ -251,8 +291,8 @@ public class DefaultStatusActions implements StatusActions {
             owner == null ? "" : owner.getName() + " " + owner.getSurname(),
             siteUrl);
 
-        MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOne(status.getId().getMetadataId());
+        IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+        AbstractMetadata metadata = metadataRepository.findOne(status.getId().getMetadataId());
 
         subject = compileMessageWithIndexFields(subject, metadata.getUuid(), this.language);
         message = compileMessageWithIndexFields(message, metadata.getUuid(), this.language);
@@ -291,12 +331,14 @@ public class DefaultStatusActions implements StatusActions {
                     SortUtils.createSort(User_.name));
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
-                };
+                }
+                ;
             } else if (notificationLevel == StatusValueNotificationLevel.recordUserAuthor) {
                 Iterable<Metadata> records = this.context.getBean(MetadataRepository.class).findAll(listOfId);
                 for (Metadata r : records) {
                     users.add(userRepository.findOne(r.getSourceInfo().getOwner()));
-                };
+                }
+                ;
             } else if (notificationLevel.name().startsWith("catalogueProfile")) {
                 String profileId = notificationLevel.name().replace(
                     "catalogueProfile", "");
@@ -323,6 +365,8 @@ public class DefaultStatusActions implements StatusActions {
      * @param mdId The metadata id to unset privileges on
      */
     private void unsetAllOperations(int mdId) throws Exception {
+        Log.trace(Geonet.DATA_MANAGER, "DefaultStatusActions.unsetAllOperations(" + mdId + ")");
+
         int allGroup = 1;
         for (ReservedOperation op : ReservedOperation.values()) {
             dm.forceUnsetOperation(context, mdId, allGroup, op.getId());
@@ -333,10 +377,10 @@ public class DefaultStatusActions implements StatusActions {
      * Substitute lucene index field values in message.
      * Lucene field are identified using {{index:fieldName}} tag.
      *
-     * @param message   The message to work on
-     * @param uuid      The record UUID
-     * @param language  The language (define the index to look into)
-     * @return  The message with field substituted by values
+     * @param message  The message to work on
+     * @param uuid     The record UUID
+     * @param language The language (define the index to look into)
+     * @return The message with field substituted by values
      */
     public static String compileMessageWithIndexFields(String message, String uuid, String language) {
         // Search lucene field to replace
@@ -369,9 +413,9 @@ public class DefaultStatusActions implements StatusActions {
     /**
      * Send the email message about change of status on a group of metadata records.
      *
-     * @param sendTo        The recipient email address
-     * @param subject       Subject to be used for email notices
-     * @param message       Text of the mail
+     * @param sendTo  The recipient email address
+     * @param subject Subject to be used for email notices
+     * @param message Text of the mail
      */
     protected void sendEmail(String sendTo, String subject, String message) throws Exception {
 

@@ -1,3 +1,26 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager;
 
 import java.util.Map;
@@ -7,6 +30,7 @@ import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.repository.BatchUpdateQuery;
@@ -192,8 +216,8 @@ public interface IMetadataManager {
     EditLib getEditLib();
 
     /**
-     * Saves an IMetadata into the database. Useful to avoid using the MetadataRepository classes directly, who may not know how to handle
-     * IMetadata types
+     * Saves an AbstractMetadata into the database. Useful to avoid using the MetadataRepository classes directly, who may not know how to handle
+     * AbstractMetadata types
      * 
      * @param info
      */
@@ -236,5 +260,9 @@ public interface IMetadataManager {
      * @param <V> The type of the attribute
      * @return a {@link BatchUpdateQuery} object to allow for updating multiple objects in a single query.
      */
-    public void createBatchUpdateQuery(PathSpec<Metadata, String> servicesPath, String newUuid, Specification<Metadata> harvested);
+    public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
+            Specification<? extends AbstractMetadata> harvested);
+    
+
+	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs);
 }

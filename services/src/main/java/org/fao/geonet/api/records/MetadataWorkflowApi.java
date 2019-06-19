@@ -64,6 +64,7 @@ import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -129,6 +130,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     DataManager dataManager;
+
+    @Autowired
+    IMetadataIndexer metadataIndexer;
 
     @Autowired
     StatusActionsFactory statusActionFactory;
@@ -333,7 +337,7 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange);
 
         //--- reindex metadata
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
 

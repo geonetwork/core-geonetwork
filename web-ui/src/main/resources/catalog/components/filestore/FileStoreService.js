@@ -35,7 +35,8 @@
                                   metadataUuid + '/attachments', {
                params: {
                  filter: filter,
-                 _random: Math.floor(Math.random() * 10000)
+                 _random: Math.floor(Math.random() * 10000),
+                 approved: 'false'
                }
              });
            },

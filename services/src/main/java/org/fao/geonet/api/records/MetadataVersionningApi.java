@@ -152,17 +152,20 @@ public class MetadataVersionningApi {
             final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
             for (String uuid : records) {
-                AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
-                if (metadata == null) {
-                    report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
-                    report.addNotEditableMetadataId(metadata.getId());
-                } else {
-                    dataMan.versionMetadata(ApiUtils.createServiceContext(request),
-                        String.valueOf(metadata.getId()), metadata.getXmlData(false));
-                    report.incrementProcessedRecords();
-                }
+            	if(!metadataRepository.existsMetadataUuid(uuid)) {
+                    report.incrementNullRecords();            		
+            	} else {
+	                for(AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
+		                if (!accessMan.canEdit(
+		                    ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
+		                    report.addNotEditableMetadataId(metadata.getId());
+		                } else {
+		                    dataMan.versionMetadata(ApiUtils.createServiceContext(request),
+		                        String.valueOf(metadata.getId()), metadata.getXmlData(false));
+		                    report.incrementProcessedRecords();
+		                }
+	                }
+            	}
             }
         } catch (Exception exception) {
             report.addError(exception);

@@ -115,8 +115,9 @@ public class DataManager {
      * @param force Force reindexing all from scratch
      **/
     public void init(ServiceContext context, Boolean force) throws Exception {
-        this.metadataIndexer.init(context);
+        this.metadataIndexer.init(context, force);
         this.metadataManager.init(context, force);
+        this.metadataUtils.init(context, force);
 
         // FIXME this shouldn't login automatically ever!
         if (context.getUserSession() == null) {
