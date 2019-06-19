@@ -73,8 +73,9 @@
     <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
          data-ng-click="openRecord($index, md, searchResults.records)">
       <!-- Thumbnail -->
-      <div class="gn-md-thumbnail"
-            data-ng-class="{'gn-md-no-thumbnail': !md.getThumbnails().list[0].url}">
+      <div class="gn-md-thumbnail">
+        <div class="gn-md-no-thumbnail"
+             data-ng-if="!md.getThumbnails().list[0].url"></div>
         <img class="gn-img-thumbnail"
              alt="{{md.title || md.defaultTitle}}"
              data-ng-src="{{md.getThumbnails().list[0].url}}"
