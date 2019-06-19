@@ -1,6 +1,6 @@
 # Build Health
 
-[![Build Status](https://travis-ci.org/geonetwork/core-geonetwork.svg?branch=develop)](https://travis-ci.org/geonetwork/core-geonetwork)
+[![Build Status](https://travis-ci.org/geonetwork/core-geonetwork.svg?branch=master)](https://travis-ci.org/geonetwork/core-geonetwork)
 
 # Features
 
