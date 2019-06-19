@@ -344,6 +344,7 @@ public class MetadataUtils {
     }
 
     public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
+    	Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
         Path outDir = Lib.resource.getRemovedDir(metadata.getId());
         Path outFile;
         try {
@@ -358,7 +359,7 @@ public class MetadataUtils {
 
         Path file = null;
         try {
-            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false);
+            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false, true);
             Files.createDirectories(outDir);
             try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {

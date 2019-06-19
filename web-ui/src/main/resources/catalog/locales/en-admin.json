@@ -1370,6 +1370,8 @@
     "ui-fluidLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
     "ui-fluidEditorLayout": "Fluid container for the Editor",
     "ui-fluidEditorLayout-help": "If enabled, the layout of the application has a full width container, when disabled the layout has a fixed width and centered container",
+    "styleVariable-gnMenubarBackgroundHover": "Background color on hover",
+    "styleVariable-gnMenubarColorActive": "Color when active",
     "metadata/pdfReport": "Metadata selection - pdf report",
     "metadata/pdfReport/coverPdf": "Cover pdf",
     "metadata/pdfReport/coverPdf-help": "URL of the cover pdf for the PDF report. If not defined, no cover page is added to the report.",

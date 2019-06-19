@@ -97,7 +97,7 @@ public class MetadataReportsQueries {
      * Retrieves created metadata in the period specified, that is not available in ALL group.
      * Optionally filters metadata in groups.
      */
-    public List<Metadata> getInternalMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups,
+    public List<? extends AbstractMetadata> getInternalMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups,
                                               @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Metadata> cbQuery = cb.createQuery(Metadata.class);

@@ -51,6 +51,17 @@ public class MetadataFileUploadSpecs {
         };
     }
 
+    public static Specification<MetadataFileUpload> hasMetadataId(final int id) {
+        return new Specification<MetadataFileUpload>() {
+            @Override
+            public Predicate toPredicate(Root<MetadataFileUpload> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<Integer> updloadIdAttributePath = root.get(MetadataFileUpload_.metadataId);
+                Predicate pdloadIdEqualPredicate = cb.equal(updloadIdAttributePath, cb.literal(id));
+                return pdloadIdEqualPredicate;
+            }
+        };
+    }
+
     public static Specification<MetadataFileUpload> uploadDateBetweenAndByGroups(final ISODate uploadFrom,
                                                                                  final ISODate uploadTo,
                                                                                  final Collection<Integer> groups) {

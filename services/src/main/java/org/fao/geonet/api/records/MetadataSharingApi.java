@@ -53,8 +53,8 @@ import org.fao.geonet.api.records.model.GroupPrivilege;
 import org.fao.geonet.api.records.model.SharingParameter;
 import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -252,7 +252,7 @@ public class MetadataSharingApi {
             final ApplicationContext appContext = ApplicationContextHolder.get();
             final DataManager dataMan = appContext.getBean(DataManager.class);
             final AccessManager accessMan = appContext.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
 
             UserSession us = ApiUtils.getUserSession(session);
             boolean isAdmin = Profile.Administrator == us.getProfile();
@@ -653,6 +653,9 @@ public class MetadataSharingApi {
             required = true
         )
             Integer userIdentifier,
+       @ApiParam(value = "Use approved version or not", example = "true") 
+        @RequestParam(required = false, defaultValue = "false") 
+        Boolean approved,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession session,
@@ -669,7 +672,7 @@ public class MetadataSharingApi {
             final DataManager dataManager = context.getBean(DataManager.class);
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
@@ -677,7 +680,7 @@ public class MetadataSharingApi {
             for (String uuid : records) {
                 updateOwnership(groupIdentifier, userIdentifier,
                     report, dataManager, accessMan, metadataRepository,
-                    serviceContext, listOfUpdatedRecords, uuid, session);
+                    serviceContext, listOfUpdatedRecords, uuid, session, approved);
             }
             dataManager.flush();
             dataManager.indexMetadata(listOfUpdatedRecords);
@@ -730,6 +733,9 @@ public class MetadataSharingApi {
             required = true
         )
             Integer userIdentifier,
+        @ApiParam(value = "Use approved version or not", example = "true") 
+        @RequestParam(required = false, defaultValue = "true") 
+        	Boolean approved,
         @ApiIgnore
         @ApiParam(hidden = true)
             HttpSession session,
@@ -745,13 +751,13 @@ public class MetadataSharingApi {
             final ApplicationContext context = ApplicationContextHolder.get();
             final DataManager dataManager = context.getBean(DataManager.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
                 report, dataManager, accessMan, metadataRepository,
-                serviceContext, listOfUpdatedRecords, metadataUuid, session);
+                serviceContext, listOfUpdatedRecords, metadataUuid, session, approved);
             dataManager.flush();
             dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
@@ -770,10 +776,10 @@ public class MetadataSharingApi {
                                  MetadataProcessingReport report,
                                  DataManager dataManager,
                                  AccessManager accessMan,
-                                 IMetadataUtils metadataRepository,
+                                 MetadataRepository metadataRepository,
                                  ServiceContext serviceContext,
                                  List<String> listOfUpdatedRecords, String uuid, 
-                                 HttpSession session) throws Exception {
+                                 HttpSession session, Boolean approved) throws Exception {
         AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
@@ -816,7 +822,7 @@ public class MetadataSharingApi {
                 }
             }
             
-            Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid));
+            Long metadataId = Long.parseLong(ApiUtils.getInternalId(uuid, approved));
             ApplicationContext context = ApplicationContextHolder.get();
             if(!Objects.equals(groupIdentifier, sourceGrp)) {
               Group newGroup = context.getBean(GroupRepository.class).findOne(groupIdentifier);

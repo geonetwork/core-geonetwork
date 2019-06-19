@@ -35,9 +35,9 @@ import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
@@ -75,7 +75,7 @@ public class Delete extends BackupFileService {
         //-----------------------------------------------------------------------
         //--- check access
 
-        AbstractMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(id);
 
         if (metadata == null)
             throw new IllegalArgumentException("Metadata with identifier " + id + " not found.");
@@ -87,7 +87,7 @@ public class Delete extends BackupFileService {
         //--- backup metadata in 'removed' folder
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && backupFile)
-            backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false));
+            backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false, true));
 
         //-----------------------------------------------------------------------
         //--- remove the metadata directory including the public and private directories.

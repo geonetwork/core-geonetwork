@@ -24,13 +24,12 @@
 package org.fao.geonet.kernel.oaipmh.services;
 
 
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataId;
 
-import org.fao.geonet.kernel.oaipmh.Lib;
-import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.oaipmh.exceptions.CannotDisseminateFormatException;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.requests.ListRecordsRequest;
@@ -38,8 +37,9 @@ import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.ListRecordsResponse;
 import org.fao.oaipmh.responses.Record;
 import org.fao.oaipmh.util.SearchResult;
+import org.springframework.data.jpa.domain.Specification;
 
-import static org.fao.geonet.repository.specification.MetadataSpecs.*;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -97,7 +97,7 @@ public class ListRecords extends AbstractTokenLister {
         // be called several times for a list of MD records
         // and we do not want to stop because of one error
         try {
-            return GetRecord.buildRecordStat(context, hasMetadataId(id), prefix);
+            return GetRecord.buildRecordStat(context, (Specification<Metadata>)hasMetadataId(id), prefix);
         } catch (IdDoesNotExistException e) {
             return null;
         } catch (CannotDisseminateFormatException e2) {

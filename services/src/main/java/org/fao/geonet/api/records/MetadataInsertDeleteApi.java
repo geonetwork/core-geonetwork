@@ -80,6 +80,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
@@ -197,7 +198,7 @@ public class MetadataInsertDeleteApi {
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
-        final IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
+        final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
         for (String uuid : records) {
             AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
@@ -841,7 +842,7 @@ public class MetadataInsertDeleteApi {
         }
 
         if (extra != null) {
-            context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            context.getBean(IMetadataManager.class).update(iId, new Updater<Metadata>() {
                 @Override
                 public void apply(@Nonnull Metadata metadata) {
                     if (extra != null) {

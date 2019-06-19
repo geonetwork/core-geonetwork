@@ -126,7 +126,7 @@
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
-    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
+    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/> 
   </facets>
 
   <summaryTypes>

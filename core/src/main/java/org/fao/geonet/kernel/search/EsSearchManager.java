@@ -54,6 +54,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.IOException;
@@ -400,12 +401,12 @@ public class EsSearchManager implements ISearchManager {
                 for (Iterator<String> iter = sm.getSelection(bucket).iterator();
                      iter.hasNext(); ) {
                     String uuid = (String) iter.next();
-//                    String id = dataMan.getMetadataId(uuid);
-                    AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
-                    if (metadata != null) {
+                    for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
                         listOfIdsToIndex.add(metadata.getId() + "");
-                    } else {
-                        System.out.println(String.format(
+                    } 
+                    
+                    if(!metadataRepository.existsMetadataUuid(uuid)) {
+                        Log.warning(Geonet.INDEX_ENGINE, String.format(
                             "Selection contains uuid '%s' not found in database", uuid));
                     }
                 }
@@ -416,8 +417,8 @@ public class EsSearchManager implements ISearchManager {
             sendDocumentsToIndex();
         } else {
             final Specifications<Metadata> metadataSpec =
-                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
-                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
+                Specifications.where((Specification<Metadata>)MetadataSpecs.isType(MetadataType.METADATA))
+                    .or((Specification<Metadata>)MetadataSpecs.isType(MetadataType.TEMPLATE));
             final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
                 Specifications.where(metadataSpec)
             );

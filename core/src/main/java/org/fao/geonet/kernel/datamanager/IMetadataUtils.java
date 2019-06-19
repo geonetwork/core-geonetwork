@@ -1,17 +1,44 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.SimpleMetadata;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.jdom.Element;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -64,8 +91,9 @@ public interface IMetadataUtils {
      *
      * Note: Only the metadata record is stored in session. If the editing session upload new documents or thumbnails, those documents will
      * not be cancelled. This needs improvements.
+     * @return id of the record to edit
      */
-    void startEditingSession(ServiceContext context, String id) throws Exception;
+    Integer startEditingSession(ServiceContext context, String id) throws Exception;
 
     /**
      * Rollback to the record in the state it was when the editing session started (See
@@ -360,9 +388,20 @@ public interface IMetadataUtils {
      * Find the record with the UUID uuid
      *
      * @param firstMetadataId
+     * 
+     * @param uuid
      * @return
      */
-    public AbstractMetadata findOneByUuid(String firstMetadataId);
+    public AbstractMetadata findOneByUuid(String uuid);
+
+
+    /**
+     * Find all records with the UUID uuid
+     * 
+     * @param uuid
+     * @return
+     */
+    public List<? extends AbstractMetadata> findAllByUuid(String uuid);
 
     /**
      * Find the record that fits the specification
@@ -370,7 +409,7 @@ public interface IMetadataUtils {
      * @param spec
      * @return
      */
-    public AbstractMetadata findOne(Specification<Metadata> spec);
+    public AbstractMetadata findOne(Specification<? extends AbstractMetadata> spec);
 
     /**
      * Find the record that fits the id
@@ -399,12 +438,22 @@ public interface IMetadataUtils {
     public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet);
 
     /**
+     * Find all the metadata with the identifiers
+     * 
+     * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
+     * @param spec
+     * @param order
+     * @return
+     */
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> spec, Sort order);
+
+    /**
      * Returns all entities matching the given {@link Specification}.
      *
      * @param spec
      * @return
      */
-    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> hasHarvesterUuid);
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> spec);
 
     /**
      * Load only the basic info for a metadata. Used in harvesters, mostly.
@@ -472,4 +521,28 @@ public interface IMetadataUtils {
      * @return      An exception if another record is found, false otherwise
      */
     boolean checkMetadataWithSameUuidExist(String uuid, int id);
+
+    /**
+     * Find the list of Metadata Ids and changes dates for the metadata.
+     * <p>
+     * When constructing sort objects use the MetaModel objects:
+     * <ul>
+     * <li><code>new Sort(Metadata_.id.getName())</code></li>
+     * <li><code>new Sort(Sort.Direction.ASC, Metadata_.id.getName())</code></li>
+     * </ul>
+     * </p>
+     *
+     * @param pageable if non-null then control which subset of the results to return (and how to sort the results).
+     * @return List of &lt;MetadataId, changeDate&gt;
+     */
+    @Nonnull
+    Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(@Nonnull Pageable pageable);
+
+    /**
+     * Load the source info objects for all the metadata selected by the spec.
+     *
+     * @param spec the specification identifying the metadata of interest
+     * @return a map of metadataId -> SourceInfo
+     */
+    Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec);
 }

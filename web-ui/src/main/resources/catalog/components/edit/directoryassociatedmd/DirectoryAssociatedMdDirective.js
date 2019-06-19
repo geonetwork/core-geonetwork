@@ -26,9 +26,11 @@
 
 
   goog.require('gn_mdtypewidget');
+  goog.require('gn_draftvalidationwidget');
 
   var module = angular.module('gn_directoryassociatedmd_directive', [
-    'gn_mdtypewidget'
+    'gn_mdtypewidget',
+    'gn_draftvalidationwidget'
   ]);
 
   module.directive('gnDirectoryAssociatedMd', [

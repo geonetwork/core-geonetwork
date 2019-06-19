@@ -37,6 +37,8 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -228,12 +230,12 @@ public class UsersApi {
         // elsewhere in the GeoNetwork database - an exception is thrown if
         // this is the case
         if (dataManager.isUserMetadataOwner(userIdentifier)) {
-            MetadataRepository metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
-            final List<Metadata> allUserRecords = metadataRepository.findAll(MetadataSpecs.isOwnedByUser(userIdentifier));
+            IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
+            final long numUserRecords =  metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
             throw new IllegalArgumentException(
                 String.format(
                     "Cannot delete a user that is also metadata owner of %d record(s) (can be records, templates, subtemplates). Change owner of those records or remove them first.",
-                        allUserRecords.size()));
+                    numUserRecords));
         }
 
         if (dataManager.isUserMetadataStatus(userIdentifier)) {
