@@ -32,7 +32,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -44,7 +43,6 @@ import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
 import org.fao.geonet.repository.page.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -274,9 +272,6 @@ public class PagesAPI {
             @PathVariable(value = "section") final Page.PageSection section,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
-
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if (page == null) {
@@ -308,9 +303,6 @@ public class PagesAPI {
             @PathVariable(value = "section") final Page.PageSection section,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
-
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
         if (page == null) {
@@ -341,9 +333,6 @@ public class PagesAPI {
             @PathVariable(value = "pageId") final String pageId,
             @PathVariable(value = "status") final Page.PageStatus status,
             @ApiIgnore final HttpServletResponse response) throws ResourceNotFoundException {
-
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final PageRepository pageRepository = appContext.getBean(PageRepository.class);
 
         final Page page = pageRepository.findOne(new PageIdentity(language, pageId));
 
