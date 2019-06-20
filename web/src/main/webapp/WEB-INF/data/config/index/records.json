@@ -965,7 +965,11 @@
         "contact": {
           "match": "*contact*",
           "mapping": {
-            "type": "keyword"
+            "type": "nested",
+            "properties": {
+              "org": {"type": "keyword"},
+              "role": {"type": "keyword"}
+            }
           }
         }
       },

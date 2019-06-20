@@ -68,7 +68,7 @@ public class IndexFields {
     public static final String DIGITAL = "digital";
     public static final String DOC_TYPE = "docType";
     public static final String DOWNLOAD = "download";
-    public static final String DRAFT = "_draft";
+    public static final String DRAFT = "draft";
     public static final String DUMMY = "_dummy";
     public static final String EAST = "eastBL";
     public static final String GROUP_OWNER = "_groupOwner";

@@ -575,7 +575,7 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails',
+        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails', 'format',
         'creationDate', 'publicationDate', 'revisionDate'];
 
       // TODOES This should be defined as object in ES

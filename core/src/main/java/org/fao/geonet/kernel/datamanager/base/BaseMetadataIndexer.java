@@ -586,7 +586,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         // If we are not using draft utils, mark all as "no draft"
         // needed to be compatible with UI searches that check draft existence
         if (!DraftMetadataIndexer.class.isInstance(this)) {
-            moreFields.addElement(searchManager.makeField(Geonet.IndexFieldNames.DRAFT, "false"));
+            moreFields.addElement(searchManager.makeField(Geonet.IndexFieldNames.DRAFT, "n"));
         }
     }
 

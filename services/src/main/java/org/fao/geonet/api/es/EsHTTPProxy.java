@@ -162,6 +162,7 @@ public class EsHTTPProxy {
 
         final int viewId = ReservedOperation.view.getId();
 
+        // TODOES buildPortalFilter
         return String.format(filterTemplate, viewId, buildPermissionsFilter(context), buildDocTypeFilter(type));
 
     }

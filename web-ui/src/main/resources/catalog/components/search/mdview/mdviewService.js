@@ -163,10 +163,10 @@
                         {"terms": {"draft": ["n", "y", "e"]}}
                         ]
                     }
-                  }}).then(function(data) {
-                    if (r.data.hits.total > 0) {
+                  }}).then(function(r) {
+                    if (r.data.hits.total.value > 0) {
                       //If trying to show a draft that is not a draft, correct url:
-                      if(r.data.hits.total == 1 &&
+                      if(r.data.hits.total.value == 1 &&
                           window.location.hash.indexOf("/metadraf/") > 0) {
                         window.location.hash = 
                           window.location.hash.replace("/metadraf/", "/metadata/");

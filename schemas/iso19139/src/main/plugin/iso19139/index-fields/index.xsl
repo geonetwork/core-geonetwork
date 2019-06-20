@@ -863,10 +863,11 @@
         <xsl:value-of select="$organisationName"/>
       </xsl:element>
     </xsl:if>
-    <xsl:element name="contact{$fieldSuffix}">{
-      org:"<xsl:value-of
+    <xsl:element name="contact{$fieldSuffix}">
+      <xsl:attribute name="type" select="'object'"/>{
+      "org":"<xsl:value-of
         select="replace($organisationName, '&quot;', '\\&quot;')"/>",
-      role:"<xsl:value-of select="$role"/>"
+      "role":"<xsl:value-of select="$role"/>"
       }
     </xsl:element>
   </xsl:template>
