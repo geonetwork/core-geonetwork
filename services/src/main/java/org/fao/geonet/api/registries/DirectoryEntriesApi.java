@@ -87,6 +87,12 @@ public class DirectoryEntriesApi {
     @Autowired
     SchemaManager schemaManager;
 
+    @Autowired
+    IMetadataUtils metadataRepository;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
     private static final char SEPARATOR = '~';
 
     @ApiOperation(value = "Get a directory entry",
@@ -150,7 +156,6 @@ public class DirectoryEntriesApi {
         )
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
         final AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
 
         if (metadata == null) {
@@ -225,7 +230,6 @@ public class DirectoryEntriesApi {
             root.addContent(requestElt);
             root.addContent(tpl);
 
-            GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
             Path xslt = dataDirectory.getWebappDir()
                 .resolve("xslt/services/subtemplate/convert.xsl");
             return Xml.transform(root, xslt);

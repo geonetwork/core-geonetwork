@@ -36,7 +36,6 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -94,6 +93,9 @@ public class HarvestersApi {
 
     @Autowired
     private DataManager dataManager;
+
+    @Autowired
+    HarvestHistoryRepository historyRepository;
 
     @ApiOperation(
         value = "Assign harvester records to a new source",
@@ -171,7 +173,6 @@ public class HarvestersApi {
         final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
         final ISODate lastRunDate = new ISODate(lastRun);
 
-        HarvestHistoryRepository historyRepository = applicationContext.getBean(HarvestHistoryRepository.class);
         HarvestHistory history = new HarvestHistory();
         history.setDeleted(true);
         history.setElapsedTime((int) elapsedTime);
