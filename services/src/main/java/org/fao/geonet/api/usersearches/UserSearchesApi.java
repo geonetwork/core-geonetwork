@@ -58,8 +58,8 @@ import java.util.*;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/usersearches",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/usersearches",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/usersearches"
 })
 @Api(value = "usersearches",

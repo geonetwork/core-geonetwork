@@ -76,8 +76,8 @@ import io.swagger.annotations.ApiOperation;
  */
 
 @RequestMapping(value = {
-    "/api/tools/mail",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tools/mail",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tools/mail"
 })
 @Api(value = "tools",
@@ -88,6 +88,9 @@ public class MailApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    SettingManager settingManager;
 
     @ApiOperation(value = "Test mail configuration",
         notes = "Send an email to the catalog feedback email.",
@@ -101,20 +104,18 @@ public class MailApi {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
-        String to = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+        String to = settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(messages.getString(
             "mail_config_test_subject"),
-            sm.getSiteName(),
+            settingManager.getSiteName(),
             to);
         String message = String.format(messages.getString(
             "mail_config_test_message"),
-            sm.getNodeURL(),
-            sm.getNodeURL(),
-            sm.getNodeURL());
+            settingManager.getNodeURL(),
+            settingManager.getNodeURL(),
+            settingManager.getNodeURL());
         try {
-            MailUtil.testSendMail(to, subject, null, message, sm, to, "");
+            MailUtil.testSendMail(to, subject, null, message, settingManager, to, "");
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_config_test_success"), to), HttpStatus.CREATED);
         } catch (Exception ex) {

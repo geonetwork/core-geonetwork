@@ -43,6 +43,7 @@ import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,8 +69,8 @@ import springfox.documentation.annotations.ApiIgnore;
  * Select a list of elements stored in session.
  */
 @RequestMapping(value = {
-    "/api/userselections",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/userselections",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/userselections"
 })
 @Api(value = "userselections",
@@ -77,6 +78,21 @@ import springfox.documentation.annotations.ApiIgnore;
     description = "User selections related operations")
 @Controller("userselections")
 public class UserSelectionsApi {
+
+    @Autowired
+    SelectionRepository selectionRepository;
+
+    @Autowired
+    UserSavedSelectionRepository umsRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    LanguageRepository langRepository;
+
+    @Autowired
+    IMetadataUtils metadataRepository;
 
     @ApiOperation(value = "Get list of user selection sets",
         nickname = "getUserSelectionType")
@@ -93,7 +109,6 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        SelectionRepository selectionRepository =  ApplicationContextHolder.get().getBean(SelectionRepository.class);
         return selectionRepository.findAll();
     }
 
@@ -118,9 +133,6 @@ public class UserSelectionsApi {
             Selection selection
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SelectionRepository selectionRepository =  appContext.getBean(SelectionRepository.class);
-
         Selection existingSelection = selectionRepository.findOne(selection.getId());
         if (existingSelection != null) {
             throw new IllegalArgumentException(String.format(
@@ -136,7 +148,6 @@ public class UserSelectionsApi {
             ));
         }
         // Populate languages if not already set
-        LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
         java.util.List<Language> allLanguages = langRepository.findAll();
         Map<String, String> labelTranslations = selection.getLabelTranslations();
         for (Language l : allLanguages) {
@@ -177,9 +188,6 @@ public class UserSelectionsApi {
         @RequestBody
             Selection selection
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SelectionRepository selectionRepository =  appContext.getBean(SelectionRepository.class);
-
         Selection existingSelection = selectionRepository.findOne(selectionIdentifier);
         if (existingSelection != null) {
             selection.setId(selectionIdentifier);
@@ -225,10 +233,6 @@ public class UserSelectionsApi {
         @PathVariable
             Integer selectionIdentifier
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SelectionRepository selectionRepository =  appContext.getBean(SelectionRepository.class);
-        UserSavedSelectionRepository umsRepository =  appContext.getBean(UserSavedSelectionRepository.class);
-
         Selection selection = selectionRepository.findOne(selectionIdentifier);
         if (selection != null) {
             umsRepository.deleteAllBySelection(selectionIdentifier);
@@ -268,9 +272,6 @@ public class UserSelectionsApi {
         HttpSession httpSession
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SelectionRepository selectionRepository =  appContext.getBean(SelectionRepository.class);
-
         Selection selection = selectionRepository.findOne(selectionIdentifier);
         if (selection == null) {
             throw new ResourceNotFoundException(String.format(
@@ -279,7 +280,6 @@ public class UserSelectionsApi {
             ));
         }
 
-        UserRepository userRepository =  appContext.getBean(UserRepository.class);
         User user = userRepository.findOne(userIdentifier);
         if (user == null) {
             throw new ResourceNotFoundException(String.format(
@@ -289,7 +289,6 @@ public class UserSelectionsApi {
         }
 
         if (selection != null) {
-            UserSavedSelectionRepository umsRepository =  appContext.getBean(UserSavedSelectionRepository.class);
             return umsRepository.findMetadata(selectionIdentifier, userIdentifier);
         }
         return null;
@@ -330,9 +329,6 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SelectionRepository selectionRepository =  appContext.getBean(SelectionRepository.class);
-
         Selection selection = selectionRepository.findOne(selectionIdentifier);
         if (selection == null) {
             throw new ResourceNotFoundException(String.format(
@@ -341,7 +337,6 @@ public class UserSelectionsApi {
             ));
         }
 
-        UserRepository userRepository =  appContext.getBean(UserRepository.class);
         User user = userRepository.findOne(userIdentifier);
         if (user == null) {
             throw new ResourceNotFoundException(String.format(
@@ -350,11 +345,9 @@ public class UserSelectionsApi {
             ));
         }
 
-        UserSavedSelectionRepository umsRepository =  appContext.getBean(UserSavedSelectionRepository.class);
-        IMetadataUtils metadataUtils = appContext.getBean(IMetadataUtils.class);
         for (String u : uuid) {
             // Check record exist
-            if (metadataUtils.existsMetadataUuid(u)) {
+            if (metadataRepository.existsMetadataUuid(u)) {
                 UserSavedSelection e = new UserSavedSelection(selection, user, u);
                 try {
                     umsRepository.save(e);
@@ -402,9 +395,6 @@ public class UserSelectionsApi {
             HttpSession httpSession
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SelectionRepository selectionRepository =  appContext.getBean(SelectionRepository.class);
-
         Selection selection = selectionRepository.findOne(selectionIdentifier);
         if (selection == null) {
             throw new ResourceNotFoundException(String.format(
@@ -413,7 +403,6 @@ public class UserSelectionsApi {
             ));
         }
 
-        UserRepository userRepository =  appContext.getBean(UserRepository.class);
         User user = userRepository.findOne(userIdentifier);
         if (user == null) {
             throw new ResourceNotFoundException(String.format(
@@ -421,8 +410,6 @@ public class UserSelectionsApi {
                 selectionIdentifier
             ));
         }
-
-        UserSavedSelectionRepository umsRepository =  appContext.getBean(UserSavedSelectionRepository.class);
 
         if (uuid == null || uuid.length == 0) {
             umsRepository.deleteAllBySelectionAndUser(selectionIdentifier, userIdentifier);

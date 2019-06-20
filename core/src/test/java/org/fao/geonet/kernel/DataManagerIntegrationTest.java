@@ -49,6 +49,7 @@ import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
@@ -196,7 +197,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
 
         final SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
-        Source source = sourceRepository.save(new Source().setLocal(true).setName("GN").setUuid("sourceuuid"));
+        Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
 
         final Element sampleMetadataXml = super.getSampleMetadataXml();
         final AbstractMetadata metadata = new Metadata();

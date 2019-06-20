@@ -59,8 +59,8 @@ import java.util.Locale;
  */
 
 @RequestMapping(value = {
-    "/api/regions",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/regions",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/regions"
 })
 @Api(value = "regions",

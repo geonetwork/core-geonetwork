@@ -199,8 +199,8 @@ public class DraftMetadataUtilsTest extends AbstractCoreIntegrationTest {
     public void cleanup() throws Exception {
         
         while(metadataUtils.existsMetadataUuid(UUID)) {
-        	AbstractMetadata md = metadataUtils.findOneByUuid(UUID);
-        	metadataManager.delete(md.getId());
+            AbstractMetadata md = metadataUtils.findOneByUuid(UUID);
+            metadataManager.delete(md.getId());
         }
 
         userRepository.delete(user.getId());

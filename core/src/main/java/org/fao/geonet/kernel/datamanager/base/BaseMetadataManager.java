@@ -224,29 +224,11 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-        metadataUtils = context.getBean(IMetadataUtils.class);
-        metadataIndexer = context.getBean(IMetadataIndexer.class);
-        metadataStatusRepository = context.getBean(MetadataStatusRepository.class);
-        metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
-        metadataRepository = context.getBean(MetadataRepository.class);
-        metadataValidator = context.getBean(IMetadataValidator.class);
-        metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        searchManager = context.getBean(SearchManager.class);
-        metadataRatingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
-        metadataFileUploadRepository = context.getBean(MetadataFileUploadRepository.class);
-        groupRepository = context.getBean(GroupRepository.class);
-        xmlSerializer = context.getBean(XmlSerializer.class);
-        settingManager = context.getBean(SettingManager.class);
-        metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
         try {
             harvestInfoProvider = context.getBean(HarvestInfoProvider.class);
         } catch (Exception e) {
             // If it doesn't exist, that's fine
         }
-        userRepository = context.getBean(UserRepository.class);
-        schemaManager = context.getBean(SchemaManager.class);
-        thesaurusManager = context.getBean(ThesaurusManager.class);
-        accessManager = context.getBean(AccessManager.class);
 
         // From DataManager:
 

@@ -199,8 +199,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     @RequestMapping(value = {
-        "/api/records/{metadataUuid}/formatters/{formatterId}",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}",
+        "/{portal}/api/" + API.VERSION_0_1 +
             "/records/{metadataUuid}/formatters/{formatterId}"
     },
         method = RequestMethod.GET,

@@ -42,16 +42,6 @@ import jeeves.server.context.ServiceContext;
  *
  */
 public interface IMetadataValidator {
-
-    /**
-     * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
-     * @param context
-     * @param force
-     * @throws Exception
-     */
-    public void init(ServiceContext context, Boolean force) throws Exception;
-
     /**
      * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx if xsd errors or
      * SchematronValidationErrorEx if schematron rules fails.

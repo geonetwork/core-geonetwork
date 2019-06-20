@@ -35,6 +35,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,8 +60,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
  * Handle DOI creation.
  */
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
@@ -70,6 +71,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 @ReadWriteController
 public class DoiApi {
 
+    @Autowired
+    private DoiManager doiManager;
 
     @ApiOperation(
         value = "Check that a record can be submitted to DataCite for DOI creation. " +
@@ -101,8 +104,6 @@ public class DoiApi {
         @ApiIgnore
             HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        final DoiManager doiManager = appContext.getBean(DoiManager.class);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
@@ -142,9 +143,6 @@ public class DoiApi {
         @ApiIgnore
             HttpSession session
     ) throws Exception {
-
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        final DoiManager doiManager = appContext.getBean(DoiManager.class);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
@@ -183,9 +181,6 @@ public class DoiApi {
         @ApiIgnore
             HttpSession session
     ) throws Exception {
-
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        final DoiManager doiManager = appContext.getBean(DoiManager.class);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 

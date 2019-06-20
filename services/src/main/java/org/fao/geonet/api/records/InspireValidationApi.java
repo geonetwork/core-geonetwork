@@ -92,8 +92,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-        "/api/records",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/records",
+        "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
@@ -102,6 +102,15 @@ tags = API_CLASS_RECORD_TAG)
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
 public class InspireValidationApi {
+
+    @Autowired
+    private SettingManager settingManager;
+
+    @Autowired
+    private SchemaManager schemaManager;
+
+    @Autowired
+    private DataManager dataManager;
 
     String supportedSchemaRegex = "(iso19139|iso19115-3).*";
 
@@ -149,7 +158,6 @@ public class InspireValidationApi {
             ) throws Exception {
 
         ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
         new RecordValidationTriggeredEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), null).publish(appContext);
@@ -203,8 +211,9 @@ public class InspireValidationApi {
 
             md.detach();
             ServiceContext context = ApiUtils.createServiceContext(request);
-            Attribute schemaLocAtt =  appContext.getBean(SchemaManager.class).getSchemaLocation(
+            Attribute schemaLocAtt =  schemaManager.getSchemaLocation(
                 "iso19139", context);
+
 
             if (schemaLocAtt != null) {
                 if (md.getAttribute(
@@ -277,8 +286,6 @@ public class InspireValidationApi {
             HttpSession session
             ) throws Exception {
 
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
 
         try {
@@ -302,8 +309,4 @@ public class InspireValidationApi {
         response.setStatus(HttpStatus.SC_CREATED);
         return new HashMap<>();
     }
-
-
-
-
 }

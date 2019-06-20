@@ -36,16 +36,6 @@ import jeeves.server.context.ServiceContext;
  *
  */
 public interface IMetadataCategory {
-
-    /**
-     * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
-     * @param context
-     * @param force
-     * @throws Exception
-     */
-    public void init(ServiceContext context, Boolean force) throws Exception;
-
     /**
      * Given a record id and a category id, returns if the record has that category assigned.
      * 

@@ -92,6 +92,7 @@ import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -123,8 +124,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @EnableWebMvc
 @Service
 @RequestMapping(value = {
-    "/api/registries/actions/entries",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/registries/actions/entries",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/registries/actions/entries"
 })
 @Api(value = "registries",
@@ -163,6 +164,20 @@ public class DirectoryApi {
         "Scan one or more records for element matching the XPath provided " +
             "and save them as directory entries (ie. subtemplate).<br/><br/>" +
             "Only records that the current user can edit are analyzed.";
+
+
+    @Autowired
+    DataManager dataManager;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    IMetadataUtils metadataRepository;
+
+    @Autowired
+    AccessManager accessManager;
+
 
     @ApiOperation(value = "Preview directory entries extracted from records",
         nickname = "previewExtractedEntries",
@@ -263,22 +278,20 @@ public class DirectoryApi {
         // Check which records to analyse
         final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
-        DataManager dataMan = context.getBean(DataManager.class);
-        AccessManager accessMan = context.getBean(AccessManager.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         // List of identifier to check for duplicates
         Set<Element> listOfEntries = new HashSet<>();
         Set<Integer> listOfEntriesInternalId = new HashSet<>();
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+
         final int user = context.getUserSession().getUserIdAsInt();
-        final String siteId = context.getBean(SettingManager.class).getSiteId();
+        final String siteId = settingManager.getSiteId();
 
         for (String recordUuid : setOfUuidsToEdit) {
             AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
                 report.incrementNullRecords();
-            } else if (!accessMan.canEdit(context, String.valueOf(record.getId()))) {
+            } else if (!accessManager.canEdit(context, String.valueOf(record.getId()))) {
                 report.addNotEditableMetadataId(record.getId());
             } else {
                 // Processing
@@ -313,8 +326,8 @@ public class DirectoryApi {
         }
 
         if (save) {
-            dataMan.flush();
-            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, listOfEntriesInternalId);
+            dataManager.flush();
+            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfEntriesInternalId);
             r.process();
             report.close();
             return new ResponseEntity<>((Object) report, HttpStatus.CREATED);
@@ -454,13 +467,9 @@ public class DirectoryApi {
         // Check which records to analyse
         final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
-        DataManager dataMan = context.getBean(DataManager.class);
-        AccessManager accessMan = context.getBean(AccessManager.class);
-
-        // List of identifier to check for duplicates
+       // List of identifier to check for duplicates
         Set<Element> listOfUpdatedRecord = new HashSet<>();
         Set<Integer> listOfRecordInternalId = new HashSet<>();
-        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         boolean validate = false, ufo = false, index = false;
@@ -469,7 +478,7 @@ public class DirectoryApi {
             AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
                 report.incrementNullRecords();
-            } else if (!accessMan.canEdit(context, String.valueOf(record.getId()))) {
+            } else if (!accessManager.canEdit(context, String.valueOf(record.getId()))) {
                 report.addNotEditableMetadataId(record.getId());
             } else {
                 // Processing
@@ -484,7 +493,7 @@ public class DirectoryApi {
                         // TODO: Only if there was a change
                         try {
                             // TODO: Should we update date stamp ?
-                            dataMan.updateMetadata(
+                            dataManager.updateMetadata(
                                 context, "" + record.getId(),
                                 collectResults.getUpdatedRecord(),
                                 validate, ufo, index, context.getLanguage(),
@@ -507,9 +516,9 @@ public class DirectoryApi {
         }
 
         if (save) {
-            dataMan.flush();
+            dataManager.flush();
             BatchOpsMetadataReindexer r =
-                new BatchOpsMetadataReindexer(dataMan, listOfRecordInternalId);
+                new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
             r.process();
             report.close();
             return new ResponseEntity<>((Object) report, HttpStatus.CREATED);
@@ -644,10 +653,8 @@ public class DirectoryApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        DataManager dm = applicationContext.getBean(DataManager.class);
-        SettingManager settingManager = applicationContext.getBean(SettingManager.class);
 
-        MetadataSchema metadataSchema = dm.getSchema(schema);
+        MetadataSchema metadataSchema = dataManager.getSchema(schema);
         Path xslProcessing = metadataSchema.getSchemaDir().resolve("process").resolve(process + ".xsl");
 
         File[] shapeFiles = unzipAndFilterShp(file);
@@ -717,7 +724,7 @@ public class DirectoryApi {
                 group,
                 false);
 
-            dm.flush();
+            dataManager.flush();
 
             Set<Integer> listOfRecordInternalId = new HashSet<>();
             listOfRecordInternalId.addAll(
@@ -729,7 +736,7 @@ public class DirectoryApi {
                 listOfRecordInternalId.size()
             ));
 
-            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, listOfRecordInternalId);
+            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataManager, listOfRecordInternalId);
             r.process();
 
             errors.forEach((k, v) ->

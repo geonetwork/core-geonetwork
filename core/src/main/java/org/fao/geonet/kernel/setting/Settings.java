@@ -125,6 +125,9 @@ public class Settings {
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
+    public static final String NODE = "node/id";
+    public static final String NODE_DEFAULT = "node/default";
+    public static final String NODE_NAME = "node/name";
 
     public static class GNSetting {
         private String name;

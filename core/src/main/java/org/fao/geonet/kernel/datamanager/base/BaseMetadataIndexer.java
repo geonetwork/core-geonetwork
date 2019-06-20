@@ -154,22 +154,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     }
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-        searchManager = context.getBean(SearchManager.class);
-        geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
-        statusRepository = context.getBean(MetadataStatusRepository.class);
-        metadataUtils = context.getBean(IMetadataUtils.class);
-        metadataManager = context.getBean(IMetadataManager.class);
-        userRepository = context.getBean(UserRepository.class);
-        operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-        groupRepository = context.getBean(GroupRepository.class);
-        metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
-        schemaManager = context.getBean(SchemaManager.class);
-        svnManager = context.getBean(SvnManager.class);
-        inspireAtomFeedRepository = context.getBean(InspireAtomFeedRepository.class);
-        xmlSerializer = context.getBean(XmlSerializer.class);
-        settingManager = context.getBean(SettingManager.class);
-        userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
-
         servContext = context;
     }
 

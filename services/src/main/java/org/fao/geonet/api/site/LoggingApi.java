@@ -29,14 +29,13 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.api.site.model.ListLogFilesResponse;
 import org.fao.geonet.util.FileUtil;
 import org.fao.geonet.utils.Log;
-import org.springframework.http.HttpMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,8 +61,8 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 
 
 @RequestMapping(value = {
-    "/api/site/logging",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/site/logging",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/site/logging"
 })
 @Api(value = API_CLASS_CATALOG_TAG,
@@ -73,6 +72,9 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 @PreAuthorize("hasRole('Administrator')")
 public class LoggingApi {
     private final String regexp = "log4j(-(.*?))?\\.xml";
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
 
     @ApiOperation(
         value = "Get log files",
@@ -89,8 +91,6 @@ public class LoggingApi {
     ) throws Exception {
         java.util.List<ListLogFilesResponse.LogFileResponse> logFileList =
             new ArrayList<>();
-        final GeonetworkDataDirectory dataDirectory =
-            ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
         String classesFolder = dataDirectory.getWebappDir() + "/WEB-INF/classes";
         File folder = new File(classesFolder);
 

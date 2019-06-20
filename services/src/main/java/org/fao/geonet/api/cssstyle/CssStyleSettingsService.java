@@ -72,7 +72,7 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * The Class CssStyleSettingsService.
  */
-@RequestMapping(value = { "/api/customstyle", "/api/" + API.VERSION_0_1 + "/customstyle" })
+@RequestMapping(value = { "/{portal}/api/customstyle", "/{portal}/api/" + API.VERSION_0_1 + "/customstyle" })
 @Api(value = "customstyle", tags = "customstyle", description = "Functionalities for custom styling")
 @Controller("stylesheet")
 public class CssStyleSettingsService {

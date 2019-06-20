@@ -93,8 +93,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
@@ -109,6 +109,24 @@ public class MetadataApi {
 
     @Autowired
     LanguageUtils languageUtils;
+
+    @Autowired
+    DataManager dataManager;
+
+    @Autowired
+    MetadataRepository metadataRepository;
+
+    @Autowired
+    IMetadataUtils metadataUtils;
+
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+
+    private ApplicationContext context;
+
+    public synchronized void setApplicationContext(ApplicationContext context) {
+        this.context = context;
+    }
 
 
     @ApiOperation(value = "Get a metadata record",
@@ -240,9 +258,6 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        DataManager dataManager = appContext.getBean(DataManager.class);
-        MetadataRepository mdRepository = appContext.getBean(MetadataRepository.class);
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
@@ -278,7 +293,7 @@ public class MetadataApi {
         //Here we just care if we need the approved version explicitly.
         //ApiUtils.canViewRecord already filtered draft for non editors.
         if (approved) {
-            mdId = String.valueOf(mdRepository.findOneByUuid(metadata.getUuid()).getId());
+            mdId = String.valueOf(metadataRepository.findOneByUuid(metadata.getUuid()).getId());
         }
 
         Element xml = withInfo ?
@@ -388,11 +403,6 @@ public class MetadataApi {
         HttpServletRequest request
     )
         throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
-        IMetadataUtils mdUtils = appContext.getBean(IMetadataUtils.class);
-        MetadataRepository mdRepo = appContext.getBean(MetadataRepository.class);
-
         AbstractMetadata metadata;
         try {
             metadata = ApiUtils.canViewRecord(metadataUuid, request);
@@ -411,9 +421,9 @@ public class MetadataApi {
             Integer id = -1;
 
             if (approved) {
-                id = mdRepo.findOneByUuid(metadataUuid).getId();
+                id = metadataRepository.findOneByUuid(metadataUuid).getId();
             } else {
-                id = mdUtils.findOneByUuid(metadataUuid).getId();
+                id = metadataUtils.findOneByUuid(metadataUuid).getId();
             }
 
             file = MEFLib.doExport(
@@ -478,7 +488,7 @@ public class MetadataApi {
         notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")
-    @RequestMapping(value = "/{metadataUuid}/related",
+    @RequestMapping(value = "/{metadataUuid:.+}/related",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE,
@@ -531,7 +541,6 @@ public class MetadataApi {
             )),
             MetadataUtils.getRelated(context, md.getId(), md.getUuid(), type, start, start + rows, true)
         ));
-        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);

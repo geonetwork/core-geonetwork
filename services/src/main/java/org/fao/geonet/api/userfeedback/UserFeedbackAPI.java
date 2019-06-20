@@ -86,12 +86,20 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * User Feedback REST API.
  */
-@RequestMapping(value = { "/api", "/api/" + API.VERSION_0_1 })
+@RequestMapping(value = { "/{portal}/api", "/{portal}/api/" + API.VERSION_0_1 })
 @Api(value = "userfeedback", tags = "userfeedback",
     description = "User feedback")
 @Controller("userfeedback")
 public class UserFeedbackAPI {
 
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    RatingCriteriaRepository criteriaRepository;
+
+    @Autowired
+    MetadataRepository metadataRepository;
 
     /**
      * Gets rating criteria
@@ -112,15 +120,12 @@ public class UserFeedbackAPI {
     public List<RatingCriteria> getRatingCriteria(
         @ApiIgnore final HttpServletResponse response
     ) {
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return null;
         } else {
-            RatingCriteriaRepository criteriaRepository = appContext.getBean(RatingCriteriaRepository.class);
             return criteriaRepository.findAll();
         }
     }
@@ -150,8 +155,6 @@ public class UserFeedbackAPI {
     final HttpServletRequest request)
             throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -192,8 +195,6 @@ public class UserFeedbackAPI {
         @ApiIgnore final HttpServletResponse response,
         @ApiIgnore final HttpSession httpSession) {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -258,8 +259,6 @@ public class UserFeedbackAPI {
           @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -388,8 +387,6 @@ public class UserFeedbackAPI {
         int size,
         HttpServletResponse response,
         HttpSession httpSession) {
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -461,8 +458,6 @@ public class UserFeedbackAPI {
         @ApiIgnore final HttpSession httpSession,
         @ApiIgnore final HttpServletRequest request) throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
@@ -587,19 +582,15 @@ public class UserFeedbackAPI {
         final String metadataEmail,
         @ApiIgnore final HttpServletRequest request
     ) throws IOException {
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
-        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
-
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        boolean recaptchaEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+        boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
 
         if (recaptchaEnabled) {
             boolean validRecaptcha = RecaptchaChecker.verify(recaptcha,
-                sm.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+                settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
             if (!validRecaptcha) {
                 return new ResponseEntity<>(
                     messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
@@ -608,8 +599,8 @@ public class UserFeedbackAPI {
 
 
 
-        String to = sm.getValue(SYSTEM_FEEDBACK_EMAIL);
-        String catalogueName = sm.getValue(SYSTEM_SITE_NAME_PATH);
+        String to = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
+        String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
 
         List<String> toAddress = new LinkedList<String>();
         toAddress.add(to);
@@ -630,8 +621,8 @@ public class UserFeedbackAPI {
             String.format(
                 messages.getString("user_feedback_text"),
                 name, org, function, email, phone, title, type, category, comments,
-                sm.getNodeURL(), metadataUuid),
-            sm);
+                settingManager.getNodeURL(), metadataUuid),
+            settingManager);
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -678,8 +669,6 @@ public class UserFeedbackAPI {
         @ApiIgnore final HttpSession httpSession)
             throws Exception {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final SettingManager settingManager = appContext.getBean(SettingManager.class);
         final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
         if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {

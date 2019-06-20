@@ -27,6 +27,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.repository.IsoLanguageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,8 +44,8 @@ import io.swagger.annotations.ApiOperation;
 import jeeves.server.context.ServiceContext;
 
 @RequestMapping(value = {
-    "/api/isolanguages",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/isolanguages",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/isolanguages"
 })
 @Api(value = "languages",
@@ -52,6 +53,10 @@ import jeeves.server.context.ServiceContext;
     description = "Languages operations")
 @Controller("isolanguages")
 public class IsoLanguagesApi {
+
+    @Autowired
+    private IsoLanguageRepository isoLanguageRepository;
+
     @ApiOperation(
         value = "Get ISO languages",
         notes = "ISO languages provides a list of all languages (eg. used for autocompletion in metadata editor).",
@@ -62,6 +67,6 @@ public class IsoLanguagesApi {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public List<IsoLanguage> getIsoLanguages() throws Exception {
-        return ApplicationContextHolder.get().getBean(IsoLanguageRepository.class).findAll();
+        return isoLanguageRepository.findAll();
     }
 }

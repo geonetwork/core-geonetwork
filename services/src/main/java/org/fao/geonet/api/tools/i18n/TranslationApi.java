@@ -90,8 +90,8 @@ import io.swagger.annotations.ApiOperation;
  */
 
 @RequestMapping(value = {
-    "/api/tools/i18n",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/tools/i18n",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/tools/i18n"
 })
 @Api(value = "tools",
@@ -107,6 +107,21 @@ public class TranslationApi implements ApplicationContextAware {
     SchemaManager schemaManager;
     @Autowired
     LanguageUtils languageUtils;
+    @Autowired
+    StatusValueRepository statusValueRepository;
+    @Autowired
+    MetadataCategoryRepository categoryRepository;
+    @Autowired
+    GroupRepository groupRepository;
+    @Autowired
+    OperationRepository operationRepository;
+    @Autowired
+    SourceRepository sourceRepository;
+    @Autowired
+    SchematronRepository schematronRepository;
+    @Autowired
+    IsoLanguageRepository isoLanguageRepository;
+
     private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
@@ -138,9 +153,7 @@ public class TranslationApi implements ApplicationContextAware {
         String language = languageUtils.locale2gnCode(locale.getISO3Language());
 
         if (type == null || type.contains("StatusValue")) {
-            StatusValueRepository repository =
-                applicationContext.getBean(StatusValueRepository.class);
-            List<StatusValue> valueList = repository.findAll();
+            List<StatusValue> valueList = statusValueRepository.findAll();
             Iterator<StatusValue> valueIterator = valueList.iterator();
             while (valueIterator.hasNext()) {
                 StatusValue entity = valueIterator.next();
@@ -149,8 +162,6 @@ public class TranslationApi implements ApplicationContextAware {
         }
 
         if (type == null || type.contains("MetadataCategory")) {
-            MetadataCategoryRepository categoryRepository =
-                applicationContext.getBean(MetadataCategoryRepository.class);
             List<MetadataCategory> metadataCategoryList = categoryRepository.findAll();
             Iterator<MetadataCategory> metadataCategoryIterator = metadataCategoryList.iterator();
             while (metadataCategoryIterator.hasNext()) {
@@ -160,8 +171,6 @@ public class TranslationApi implements ApplicationContextAware {
         }
 
         if (type == null || type.contains("Group")) {
-            GroupRepository groupRepository =
-                applicationContext.getBean(GroupRepository.class);
             List<Group> groupList = groupRepository.findAll();
             Iterator<Group> groupIterator = groupList.iterator();
             while (groupIterator.hasNext()) {
@@ -171,8 +180,6 @@ public class TranslationApi implements ApplicationContextAware {
         }
 
         if (type == null || type.contains("Operation")) {
-            OperationRepository operationRepository =
-                applicationContext.getBean(OperationRepository.class);
             List<Operation> operationList = operationRepository.findAll();
             Iterator<Operation> operationIterator = operationList.iterator();
             while (operationIterator.hasNext()) {
@@ -183,8 +190,6 @@ public class TranslationApi implements ApplicationContextAware {
         }
 
         if (type == null || type.contains("Source")) {
-            SourceRepository sourceRepository =
-                applicationContext.getBean(SourceRepository.class);
             List<Source> sourceList = sourceRepository.findAll();
             Iterator<Source> sourceIterator = sourceList.iterator();
             while (sourceIterator.hasNext()) {
@@ -194,8 +199,6 @@ public class TranslationApi implements ApplicationContextAware {
         }
 
         if (type == null || type.contains("Schematron")) {
-            SchematronRepository schematronRepository =
-                applicationContext.getBean(SchematronRepository.class);
             List<Schematron> schematronList = schematronRepository.findAll();
             Iterator<Schematron> schematronIterator = schematronList.iterator();
             while (schematronIterator.hasNext()) {
@@ -205,8 +208,6 @@ public class TranslationApi implements ApplicationContextAware {
         }
 
         if (type == null || type.contains("IsoLanguage")) {
-            IsoLanguageRepository isoLanguageRepository =
-                applicationContext.getBean(IsoLanguageRepository.class);
             List<IsoLanguage> isoLanguageList = isoLanguageRepository.findAll();
             Iterator<IsoLanguage> isoLanguageIterator = isoLanguageList.iterator();
             while (isoLanguageIterator.hasNext()) {

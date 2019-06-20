@@ -43,10 +43,9 @@ import jeeves.server.context.ServiceContext;
 public interface IMetadataIndexer {
 
     /**
-     * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
+     * This is a hopefully soon to be deprecated when no deps on context
      * 
      * @param context
-     * @param force
      * @throws Exception
      */
     public void init(ServiceContext context, Boolean force) throws Exception;

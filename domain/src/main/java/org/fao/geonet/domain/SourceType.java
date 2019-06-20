@@ -21,17 +21,26 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package jeeves.config.springutil;
-
-import org.springframework.security.core.AuthenticationException;
+package org.fao.geonet.domain;
 
 /**
- * Exception that indicates a user which was logged into one node is now visiting a different node.
- *
- * User: Jesse Date: 11/26/13 Time: 3:56 PM
+ * The type of source.
  */
-public class WrongNodeAuthenticationException extends AuthenticationException {
-    public WrongNodeAuthenticationException(String msg) {
-        super(msg);
-    }
+public enum SourceType {
+    /**
+     * Indicates the associated {@link Source} entity is the main GeoNetwork node.
+     */
+    portal,
+    /**
+     * Indicates the associated {@link Source} entity is a subset of the main GeoNetwork node.
+     */
+    subportal,
+    /**
+     * Indicates the associated {@link Source} entity is related to records imported from external node.
+     */
+    externalportal,
+    /**
+     * Indicates the associated {@link Source} entity is an harvested node.
+     */
+    harvester;
 }
