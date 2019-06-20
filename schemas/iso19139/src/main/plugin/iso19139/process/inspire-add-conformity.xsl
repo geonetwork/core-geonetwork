@@ -44,6 +44,8 @@
     <msg id="a" xml:lang="fre">thème(s) INSPIRE trouvé(s). Exécuter cette action pour ajouter une
       section conformité INSPIRE.
     </msg>
+    <msg id="a" xml:lang="dut">INSPIRE-thema(s) gevonden. Voer deze taak uit om de INSPIRE-conformiteit sectie toe te voegen.
+    </msg>
   </xsl:variable>
 
 

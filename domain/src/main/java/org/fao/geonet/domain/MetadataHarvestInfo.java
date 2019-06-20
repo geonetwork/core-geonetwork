@@ -160,4 +160,21 @@ public class MetadataHarvestInfo {
             return false;
         return true;
     }
+
+	@Override
+	public String toString() {
+		return "MetadataHarvestInfo [_harvested=" + _harvested + ", " + (_uuid != null ? "_uuid=" + _uuid + ", " : "")
+				+ (_uri != null ? "_uri=" + _uri : "") + "]";
+	}
+	
+	@Override
+	protected MetadataHarvestInfo clone() {
+		MetadataHarvestInfo clon = new MetadataHarvestInfo();
+		
+		clon.setHarvested(this.isHarvested());
+		clon.setUri(this.getUri());
+		clon.setUuid(this.getUuid());
+		
+		return clon;
+	}
 }

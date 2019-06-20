@@ -1,0 +1,75 @@
+<section>
+  <h2><i class="fa fa-fw fa-history"/><span data-translate="">history</span></h2>
+
+  <div class="row">
+    <div class="col-xs-4">
+
+      <label class="form-control"
+             data-ng-repeat="(k, v) in filter.types">
+        <i class="fa fa-fw"
+           data-ng-class="{
+            'fa-code-fork': k === 'workflow',
+            'fa-tasks': k === 'task',
+            'fa-edit': k === 'event'}"></i>
+        <input type="checkbox" data-ng-model="filter.types[k]"/>
+        <span>{{k + 'Type' | translate}}</span>
+      </label>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label data-translate="">filterStatusByAuthor</label>
+        <input class="form-control"
+               data-ng-model="filter.authorFilter"
+               data-gn-user-picker="filter.authorFilter"/>
+      </div>
+      <div class="form-group">
+        <label data-translate="">filterStatusByOwner</label>
+        <input class="form-control"
+               data-ng-model="filter.ownerFilter"
+               data-gn-user-picker="filter.ownerFilter"/>
+      </div>
+    </div>
+    <div class="col-xs-4">
+
+      <div class="form-group">
+        <label data-translate="">filterStatusByRecordId</label>
+        <input type="text"
+               class="form-control"
+               data-ng-model="filter.recordFilter"
+               data-typeahead="t.id as t.title for t in getSuggestions($viewValue)"
+               data-typeahead-loading="anyLoading"
+               data-typeahead-min-length="1"
+               data-typeahead-focus-first="false"
+               data-typeahead-wait-ms="300">
+
+      </div>
+
+      <div class="form-group">
+        <label data-translate="">filterStatusFromDate</label>
+        <input class="form-control"
+               type="date"
+               pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+               data-ng-model="filter.dateFromFilter"/>
+
+        <label data-translate="">filterStatusToDate</label>
+        <input class="form-control"
+               type="date"
+               pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+               data-ng-model="filter.dateToFilter"/>
+      </div>
+    </div>
+  </div>
+
+  <ul class="timeline timeline-1-col" >
+    <li data-ng-repeat="h in history"
+        data-gn-record-history-step="h"/>
+    <li class="timeline-inverted"
+        data-ng-show="hasMoreRecords">
+      <a data-ng-click="more()">
+        <i class="fa fa-fw fa-plus"></i>
+        <span data-translate="">more</span>
+      </a>
+    </li>
+  </ul>
+</section>

@@ -186,6 +186,10 @@
           <Field name="identifier" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
+        <xsl:for-each select="gmd:identifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString">
+        <!-- For local atom feed services -->
+          <Field name="identifierNamespace" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
 
         <xsl:for-each select="gmd:title/gco:CharacterString">
           <Field name="title" string="{string(.)}" store="true" index="true"/>
@@ -423,16 +427,6 @@
                       select="//gmd:MD_Keywords[
                                 not(gmd:thesaurusName) or gmd:thesaurusName/*/gmd:title/*/text() = '']/
                                   gmd:keyword[*/text() != '']"/>
-        <xsl:if test="count($keywordWithNoThesaurus) > 0">
-          'keywords': [
-          <xsl:for-each select="$keywordWithNoThesaurus/(gco:CharacterString|gmx:Anchor)">
-            {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
-            'link': '<xsl:value-of select="@xlink:href"/>'}
-            <xsl:if test="position() != last()">,</xsl:if>
-          </xsl:for-each>
-          ]
-          <xsl:if test="//gmd:MD_Keywords[gmd:thesaurusName]">,</xsl:if>
-        </xsl:if>
         <xsl:for-each-group select="//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/*/text() != '']"
                             group-by="gmd:thesaurusName/*/gmd:title/*/text()">
           '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
@@ -444,6 +438,16 @@
           ]
           <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each-group>
+        <xsl:if test="count($keywordWithNoThesaurus) > 0">
+          <xsl:if test="count(//gmd:MD_Keywords[gmd:thesaurusName/*/gmd:title/*/text() != '']) > 0">,</xsl:if>
+          'otherKeywords': [
+          <xsl:for-each select="$keywordWithNoThesaurus/(gco:CharacterString|gmx:Anchor)">
+            {'value': <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>,
+            'link': '<xsl:value-of select="@xlink:href"/>'}
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]
+        </xsl:if>
         }
       </xsl:variable>
 
@@ -676,6 +680,11 @@
       <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
         <Field name="format" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
+
+      <!-- For local atom feed services -->
+      <xsl:if test="count(gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue='download'])>0">
+        <Field name="has_atom" string="true" store="false" index="true"/>
+      </xsl:if>
 
       <!-- index online protocol -->
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">

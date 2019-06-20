@@ -23,12 +23,16 @@
 
 package org.fao.geonet.api.standards;
 
+import com.itextpdf.text.Meta;
 import io.swagger.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.editorconfig.BatchEditing;
@@ -36,6 +40,8 @@ import org.fao.geonet.kernel.schema.editorconfig.Editor;
 import org.fao.geonet.kernel.schema.labels.Codelists;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -49,14 +55,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -67,8 +68,8 @@ import jeeves.server.context.ServiceContext;
  */
 
 @RequestMapping(value = {
-    "/api/standards",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/standards",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/standards"
 })
 @Api(value = "standards",
@@ -212,6 +213,7 @@ public class StandardsApi implements ApplicationContextAware {
         )
         @PathVariable String codelist,
         @RequestParam(required = false) String parent,
+        @RequestParam(required = false) String displayIf,
         @RequestParam(required = false) String xpath,
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
@@ -222,7 +224,7 @@ public class StandardsApi implements ApplicationContextAware {
         context.setLanguage(language.getISO3Language());
 
         Element e = StandardsUtils.getCodelist(codelist, schemaManager,
-            schema, parent, xpath, isoType, context);
+            schema, parent, xpath, isoType, context, displayIf);
 
         List<Element> listOfEntry = e.getChildren("entry");
         for (Element entry : listOfEntry) {
@@ -249,8 +251,21 @@ public class StandardsApi implements ApplicationContextAware {
             value = "Codelist element name or alias"
         )
         @PathVariable String codelist,
+        @ApiParam(
+            value = "Parent name with namespace which may indicate a more precise label as defined in context attribute."
+        )
         @RequestParam(required = false) String parent,
+        @ApiParam(
+            value = "Display if condition as defined in the codelist.xml file. Allows to select a more precise codelist when more than one is defined for same name."
+        )
+        @RequestParam(required = false) String displayIf,
+        @ApiParam(
+            value = "XPath of the element to target which may indicate a more precise label as defined in context attribute."
+        )
         @RequestParam(required = false) String xpath,
+        @ApiParam(
+            value = "ISO type of the element to target which may indicate a more precise label as defined in context attribute. (Same as context. TODO: Deprecate ?)"
+        )
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
     ) throws Exception {
@@ -259,7 +274,7 @@ public class StandardsApi implements ApplicationContextAware {
         context.setLanguage(language.getISO3Language());
 
         Element e = StandardsUtils.getCodelist(codelist, schemaManager,
-            schema, parent, xpath, isoType, context);
+            schema, parent, xpath, isoType, context, displayIf);
 
         return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
     }
@@ -284,6 +299,7 @@ public class StandardsApi implements ApplicationContextAware {
         )
         @PathVariable String element,
         @RequestParam(required = false) String parent,
+        @RequestParam(required = false) String displayIf,
         @RequestParam(required = false) String xpath,
         @RequestParam(required = false) String isoType,
         HttpServletRequest request
@@ -293,8 +309,68 @@ public class StandardsApi implements ApplicationContextAware {
         context.setLanguage(language.getISO3Language());
 
         Element e = StandardsUtils.getLabel(element, schemaManager,
-            schema, parent, xpath, isoType, context);
+            schema, parent, xpath, isoType, displayIf, context);
 
         return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
+    }
+
+
+    @ApiOperation(value = "Get editor associated resources panel configuration",
+        nickname = "getEditorAssociatedPanelConfiguration")
+    @RequestMapping(value = "/{schema}/editor/associatedpanel/config/{name:[a-zA-Z]+}.json",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ResponseBody
+    public String getEditorAssociatedPanelConfiguration(
+        @ApiParam(value = "Schema identifier",
+            required = true,
+            example = "iso19139")
+        @PathVariable String schema,
+        @ApiParam(value = "Configuration identifier",
+            required = true,
+            defaultValue = "default",
+            example = "default")
+        @PathVariable String name
+    ) throws Exception {
+        // Store processed schemas to avoid loops
+        Set<String> schemasProcessed = new HashSet<>();
+
+        while (StringUtils.isNotEmpty(schema) &&
+            !schemasProcessed.contains(schema)) {
+
+            schemasProcessed.add(schema);
+
+            MetadataSchema metadataSchema = schemaManager.getSchema(schema);
+
+            Path schemaDir = metadataSchema.getSchemaDir();
+
+            Path configFile = schemaDir.resolve("config").
+                resolve("associated-panel").
+                resolve(name + ".json");
+
+            if (Files.exists(configFile)) {
+                try {
+                    String jsonConfig = new String(Files.readAllBytes(configFile));
+
+                    // Parse JSON file to check is valid
+                    new JSONObject(jsonConfig);
+                    return jsonConfig;
+                } catch (Exception e) {
+                    throw new WebApplicationException(String.format(
+                        "Associated panel configuration '%s' for schema '%s' is invalid. Error is: %s",
+                        name, metadataSchema.getName(), e.getMessage()));
+                }
+            } else {
+                // Use the file from dependent schema if available
+                schema = metadataSchema.getDependsOn();
+            }
+        }
+
+        throw new ResourceNotFoundException(String.format(
+        "Associated panel '%s' configuration not found for schema and its dependency '%s'.",
+            name, schemasProcessed.toString()));
+
     }
 }

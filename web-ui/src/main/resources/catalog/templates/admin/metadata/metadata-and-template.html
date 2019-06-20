@@ -3,17 +3,19 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">loadSchemaSamplesOrTemplates</div>
       <div class="panel-body">
-        <h2 data-translate="">listOfSchemas</h2>
 
         <div class="clearfix">
           <div class="btn-group pull-right">
-            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+            <button type="button"
+                    id="gn-schemas-selector"
+                    class="btn dropdown-toggle" data-toggle="dropdown">
               {{selectedSchemas.length}} <span data-translate="">selected</span><span class="caret"
             />
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a href="" data-ng-click="selectAllSchemas(true)" data-translate="">selectAll</a>
+                <a href="" id="gn-selectAllSchemas"
+                           data-ng-click="selectAllSchemas(true)" data-translate="">selectAll</a>
               </li>
               <li>
                 <a href="" data-ng-click="selectAllSchemas(false)" data-translate="">selectNone</a>
@@ -31,21 +33,23 @@
                  data-ng-class="isSchemaSelected(s.name) ? 'fa-check-square-o' : 'fa-square-o'"/>&nbsp
                  {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
             </h4>
-            <p> {{s.descriptions[iso2lang] || s.descriptions['en'] || ''}} </p>
-            <a data-ng-if="s.standardUrl" data-ng-href="{{s.standardUrl}}" data-translate="">moreStandardInfo</a>
           </li>
         </div>
 
         <div class="row">
           <div class="col-lg-12">
-            <button type="button" class="btn btn-primary btn-block"
+            <button type="button"
+                    id="gn-btn-loadTemplates"
+                    class="btn btn-primary btn-block"
                     data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
                     data-ng-click="loadTemplates()">
               <i class="fa gn-recordtype-y"/>&nbsp;
               <span data-translate="">loadTemplatesForSelectedSchema</span>
             </button>
             <br/>
-            <button type="button" class="btn btn-primary btn-block"
+            <button type="button"
+                    id="gn-btn-loadSamples"
+                    class="btn btn-primary btn-block"
                     data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
                     data-ng-click="loadSamples()">
               <i class="fa gn-recordtype-n"/>&nbsp;
@@ -53,7 +57,7 @@
             </button>
           </div>
 
-          <div data-gn-need-help="standards/index.html"></div>
+          <div data-gn-need-help="annexes/standards/index.html"></div>
         </div>
       </div>
     </div>
@@ -65,6 +69,7 @@
     </div>
 
     <div class="panel panel-default"
+         id="gn-samples-reportStatus"
          data-ng-show="loadReport"
          data-ng-class="loadReport.errors.length === 0 ?
                         'panel-success' : 'panel-warning'">
@@ -85,7 +90,8 @@
         </div>
       </div>
     </div>
-    <div class="panel panel-default" id="reportStatus"
+    <div class="panel panel-default"
+         id="gn-templates-reportStatus"
          data-ng-show="loadTplReport"
          data-ng-class="loadTplReport.errors.length === 0?
                         'panel-success' : 'panel-warning'">

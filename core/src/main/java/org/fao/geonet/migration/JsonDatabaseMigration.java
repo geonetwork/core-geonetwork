@@ -45,7 +45,7 @@ import java.util.Map;
 /**
  * Helper class for handling JSON strings.
  */
-public abstract class JsonDatabaseMigration implements DatabaseMigrationTask {
+public abstract class JsonDatabaseMigration extends DatabaseMigrationTask {
 
     @Override
     public void update(Connection connection) throws SQLException {
@@ -56,14 +56,16 @@ public abstract class JsonDatabaseMigration implements DatabaseMigrationTask {
 
             if (rs.next()) {
                 String currentSettingJson = rs.getString("value");
-                Map<String, String> fieldsToUpdate = setUpNewSettingValues();
+                if (StringUtils.isNotEmpty(currentSettingJson)) {
+                    Map<String, String> fieldsToUpdate = setUpNewSettingValues();
 
-                String newSettingJson = insertOrUpdateField(currentSettingJson, fieldsToUpdate);
-                try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE settings SET "
-                    + "value=? WHERE name=?")) {
-                    updateStatement.setString(1, newSettingJson);
-                    updateStatement.setString(2, getSettingName());
-                    updateStatement.executeUpdate();
+                    String newSettingJson = insertOrUpdateField(currentSettingJson, fieldsToUpdate);
+                    try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE settings SET "
+                        + "value=? WHERE name=?")) {
+                        updateStatement.setString(1, newSettingJson);
+                        updateStatement.setString(2, getSettingName());
+                        updateStatement.executeUpdate();
+                    }
                 }
             }
         } catch (IOException e) {

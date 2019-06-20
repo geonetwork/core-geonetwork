@@ -1,7 +1,7 @@
 <div class="gn-facet-list">
 
   <!--Collapse all button for first panel-->
-  <div class="btn-group width-100 flex-row flex-center" ng-hide="isTabMode">
+  <div class="btn-group width-100 flex-row flex-left" ng-hide="isTabMode">
     <button type="button" class="btn btn-default btn-sm gn-facet-toggle-btn"
       ng-click="expandAll()" title="{{'expandAllFacet' | translate}}">
       <i class="fa fa-plus-circle"/>
@@ -35,7 +35,7 @@
 
 
   <ul class="nav nav-pills" data-ng-if="isTabMode">
-    <li data-ng-repeat="c in tabs.category | orderBy: 'label'"
+    <li data-ng-repeat="c in tabs.category"
         data-ng-init="path = buildPath(c);"
         role="presentation"
         data-ng-class="{'active': c.isSelected}">

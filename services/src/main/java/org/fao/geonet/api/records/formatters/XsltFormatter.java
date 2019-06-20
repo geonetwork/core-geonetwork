@@ -134,7 +134,9 @@ public class XsltFormatter implements FormatterImpl {
             requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
         }
         Element transformed = Xml.transform(root, fparams.viewFile, requestParameters);
-        return Xml.getString(transformed);
+        return "textResponse".equals(transformed.getName()) ?
+            transformed.getTextNormalize() :
+            Xml.getString(transformed);
     }
 
     /**

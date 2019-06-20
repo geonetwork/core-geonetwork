@@ -96,6 +96,7 @@
 
           };
 
+          gnMapsManager.initProjections(viewerSettings.mapConfig.switcherProjectionList);
           var searchMap = gnMapsManager.createMap(gnMapsManager.SEARCH_MAP);
           var viewerMap = gnMapsManager.createMap(gnMapsManager.VIEWER_MAP);
 

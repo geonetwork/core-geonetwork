@@ -54,10 +54,7 @@
       function($scope, $location, gnSearchManagerService,
                gnFacetService, Metadata, gnSearchLocation, gnESClient,
                gnESService, gnAlertService) {
-    var defaultParams = {
-      fast: 'index',
-      _content_type: 'json'
-    };
+    var defaultParams = {};
     var self = this;
 
     var hiddenParams = $scope.searchObj.hiddenParams;
@@ -211,7 +208,7 @@
           return new Metadata(r._source);
         });
         $scope.searchResults.records = records;
-        $scope.searchResults.count = data.hits.total;
+        $scope.searchResults.count = data.hits.total.value;
         $scope.searchResults.facets = data.facets || {};  // TODOES: actually get facets from response
 
         // compute page number for pagination
@@ -227,7 +224,7 @@
 
           paging.resultsCount = $scope.searchResults.count;
           paging.to = Math.min(
-            data.hits.total,
+            $scope.searchResults.count,
               paging.currentPage * paging.hitsPerPage
               );
           paging.pages = Math.ceil(
@@ -353,9 +350,9 @@
       angular.extend($scope.searchObj.params, params);
     };
 
-    this.resetSearch = function(searchParams) {
+    this.resetSearch = function(searchParams, preserveGeometrySearch) {
 
-      $scope.$broadcast('beforeSearchReset');
+      $scope.$broadcast('beforeSearchReset', preserveGeometrySearch);
 
       if (searchParams) {
         $scope.searchObj.params = searchParams;
@@ -373,8 +370,8 @@
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
     };
-    $scope.$on('resetSearch', function(evt, searchParams) {
-      $scope.controller.resetSearch(searchParams);
+    $scope.$on('resetSearch', function(evt, searchParams, preserveGeometrySearch) {
+      $scope.controller.resetSearch(searchParams, preserveGeometrySearch);
     });
 
     $scope.$on('search', function() {
@@ -420,9 +417,9 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
-          scope.resetSearch = function(htmlElementOrDefaultSearch) {
+          scope.resetSearch = function(htmlElementOrDefaultSearch, preserveGeometrySearch) {
             if (angular.isObject(htmlElementOrDefaultSearch)) {
-              scope.controller.resetSearch(htmlElementOrDefaultSearch);
+              scope.controller.resetSearch(htmlElementOrDefaultSearch, preserveGeometrySearch);
             } else {
               scope.controller.resetSearch();
               $(htmlElementOrDefaultSearch).focus();
@@ -455,7 +452,7 @@
                   gnSearchLocation.getParams());
             }
 
-            if (attrs.waitForUser === true) {
+            if (attrs.waitForUser === "true") {
               var userUnwatch = scope.$watch('user.id', function(userNewVal) {
                 // Don't trigger the search until the user id has been loaded
                 // Unregister the watch once we have the user id.

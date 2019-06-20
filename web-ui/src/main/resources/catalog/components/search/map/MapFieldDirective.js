@@ -79,7 +79,9 @@
                    */
                   scope.setRelation = function(rel) {
                     scope.searchObj.params.relation = rel;
-                    scope.triggerSearch();
+                    if (!!scope.searchObj.params.geometry) {
+                      scope.triggerSearch();
+                    }
                   };
                 }
               };
@@ -172,14 +174,18 @@
               scope.$watch('interaction.active', function(v, o) {
                 if (!v && o) {
                   resetSpatialFilter();
-                  scope.triggerSearch();
+                  if (!!scope.searchObj.params.geometry) {
+                    scope.triggerSearch();
+                  }
                 }
               });
 
               // When search form is reset, remove the geom
-              scope.$on('beforeSearchReset', function() {
-                resetSpatialFilter();
-                scope.interaction.active = false;
+              scope.$on('beforeSearchReset', function(event, preserveGeometrySearch) {
+                if (!preserveGeometrySearch) {
+                  resetSpatialFilter();
+                  scope.interaction.active = false;
+                }
               });
             }
           };

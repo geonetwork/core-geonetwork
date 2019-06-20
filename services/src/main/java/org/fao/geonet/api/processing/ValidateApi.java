@@ -39,9 +39,11 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.events.history.RecordValidationTriggeredEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.jdom.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +68,8 @@ import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(
@@ -125,29 +127,30 @@ public class ValidateApi {
             DataManager dataMan = applicationContext.getBean(DataManager.class);
             AccessManager accessMan = applicationContext.getBean(AccessManager.class);
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+            IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
 
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
             final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
             for (String uuid : records) {
-                AbstractMetadata record = metadataRepository.findOneByUuid(uuid);
-                if (record == null) {
+                if (!metadataRepository.existsMetadataUuid(uuid)) {
                     report.incrementNullRecords();
-                } else if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
-                    report.addNotEditableMetadataId(record.getId());
-                } else {
-                    String idString = String.valueOf(record.getId());
-                    boolean isValid = dataMan.doValidate(record.getDataInfo().getSchemaId(),
-                        idString,
-                        new Document(record.getXmlData(false)),
-                        serviceContext.getLanguage());
-                    if (isValid) {
-                        report.addMetadataInfos(record.getId(), "Is valid");
+                }
+                for (AbstractMetadata record : metadataRepository.findAllByUuid(uuid)) {
+                    if (!accessMan.canEdit(serviceContext, String.valueOf(record.getId()))) {
+                        report.addNotEditableMetadataId(record.getId());
                     } else {
-                        report.addMetadataInfos(record.getId(), "Is invalid");
+                        boolean isValid = validator.doValidate(record, serviceContext.getLanguage());
+                        if (isValid) {
+                            report.addMetadataInfos(record.getId(), "Is valid");
+                            new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "1").publish(applicationContext);
+                        } else {
+                            report.addMetadataInfos(record.getId(), "Is invalid");
+                            new RecordValidationTriggeredEvent(record.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), "0").publish(applicationContext);
+                        }
+                        report.addMetadataId(record.getId());
+                        report.incrementProcessedRecords();
                     }
-                    report.addMetadataId(record.getId());
-                    report.incrementProcessedRecords();
                 }
             }
 

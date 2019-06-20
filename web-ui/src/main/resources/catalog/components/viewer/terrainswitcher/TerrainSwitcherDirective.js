@@ -45,7 +45,8 @@
           ol3d: '=gnTerrainSwitcher'
         },
         link: function(scope, element, attrs) {
-          scope.terrains = ['default', 'none'];
+          // scope.terrains = ['default', 'none'];
+          scope.terrains = ['none'];
           scope.currentTerrain = null;
           scope.dropup = angular.isDefined(attrs.dropup);
 
@@ -54,13 +55,19 @@
             scope.currentTerrain = terrain;
             if (scope.ol3d) {
               var scene = scope.ol3d.getCesiumScene();
-              if (terrain === 'default') {
-                scene.terrainProvider = new Cesium.CesiumTerrainProvider({
-                  url: '//assets.agi.com/stk-terrain/world'
-                });
-              } else {
-                scene.terrainProvider = new Cesium.EllipsoidTerrainProvider();
-              }
+              // https://github.com/geonetwork/core-geonetwork/issues/3317
+              // Since September 2018, terrain provider is not available anymore
+              // We have to move to ION services from Cesium which requires a token
+              // to get access to.
+              // Turn it off for now.
+              // if (terrain === 'default') {
+              //   scene.terrainProvider = new Cesium.CesiumTerrainProvider({
+              //     url: '//assets.agi.com/stk-terrain/world'
+              //     // url: Cesium.IonResource.fromAssetId(1)
+              //   });
+              // } else {
+              // }
+              scene.terrainProvider = new Cesium.EllipsoidTerrainProvider();
             }
             return false;
           };

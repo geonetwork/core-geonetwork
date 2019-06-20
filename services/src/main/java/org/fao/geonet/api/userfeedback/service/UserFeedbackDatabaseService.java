@@ -28,13 +28,13 @@ import java.util.List;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -94,10 +94,15 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
         userFeedbackRepository.delete(userFeedback);
 
         // Then update global metadata rating
+        List<UserFeedback> listFeedbacks = retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true);
         IMetadataUtils dataManager = appContext.getBean(IMetadataUtils.class);
-        UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
-            .getAverage(retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true));
-        dataManager.rateMetadata(metadata.getId(), ip, averageRating.getRatingAverages().get(AVERAGE_ID));
+        Integer average = 0;
+        if(listFeedbacks.size()>0) {
+            UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
+                    .getAverage(listFeedbacks);
+            average = averageRating.getRatingAverages().get(AVERAGE_ID);
+        }
+        dataManager.rateMetadata(metadata.getId(), ip, average);
     }
 
     /*
@@ -225,8 +230,8 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
             final User approver = userRepository.findOneByUsername(userFeedback.getApprover().getUsername());
             userFeedback.setApprover(approver);
         }
-        final Metadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
-        userFeedback.setMetadata(metadata);
+        final AbstractMetadata metadata = metadataRepository.findOneByUuid(userFeedback.getMetadata().getUuid());
+        userFeedback.setMetadata((Metadata)metadata);
 
         if (userFeedback.getCreationDate() == null) {
             userFeedback.setCreationDate(new ISODate(System.currentTimeMillis()).toDate());

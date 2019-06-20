@@ -35,8 +35,8 @@
             </div>
             <div class="col-md-6">
               <h4 data-translate>accessManagerChooseGroups</h4>
-              <ul>
-                <li data-ng-repeat="g in groups">
+              <ul style="max-height: 200px; overflow: auto;">
+                <li data-ng-repeat="g in groups | orderBy:'name'">
                   <label>
                     <input type="checkbox"
                            data-ng-model="g.selected"

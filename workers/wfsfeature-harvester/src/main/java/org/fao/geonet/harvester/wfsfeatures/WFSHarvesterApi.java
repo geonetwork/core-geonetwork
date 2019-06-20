@@ -50,8 +50,8 @@ import java.util.HashMap;
  */
 @Controller
 @RequestMapping(value = {
-        "/api/workers/data/wfs/actions",
-        "/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
+        "/{portal}/api/workers/data/wfs/actions",
+        "/{portal}/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
 })
 @Api(value = "workers",
         tags= "workers",
@@ -99,9 +99,7 @@ public class WFSHarvesterApi {
         String typeName) throws Exception {
 
         EsWFSFeatureIndexer indexer = ApplicationContextHolder.get().getBean(EsWFSFeatureIndexer.class);
-        indexer.deleteFeatures(serviceUrl, typeName,
-            Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME),
-            client);
+        indexer.deleteFeatures(serviceUrl, typeName, client);
 
         // TODO: Check user is authenticated ?
         JSONObject result = new JSONObject();

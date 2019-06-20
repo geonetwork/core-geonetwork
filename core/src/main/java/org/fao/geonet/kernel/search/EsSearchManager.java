@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import io.searchbox.client.JestResult;
+import io.searchbox.client.config.exception.CouldNotConnectException;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.Get;
 import io.searchbox.core.Search;
@@ -61,6 +62,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.FileNotFoundException;
@@ -69,7 +71,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -88,8 +89,22 @@ public class EsSearchManager implements ISearchManager {
     public static final String FIELDNAME = "name";
     public static final String FIELDSTRING = "string";
 
-    @Value("${es.index.records}")
+    @Value("${es.index.records:gn-records}")
     private String defaultIndex = "records";
+
+    @Value("${es.index.records.type:records}")
+    private String indexType = "records";
+
+    public String getIndex() {
+        return defaultIndex;
+    }
+
+    public String getIndexType() {
+        return indexType;
+    }
+    public void setIndexType(String indexType) {
+        this.indexType = indexType;
+    }
 
     @Autowired
     public EsClient client;
@@ -192,7 +207,7 @@ public class EsSearchManager implements ISearchManager {
         try {
             if (dropIndexFirst) {
                 try {
-                    DeleteIndex deleteIndex = new DeleteIndex.Builder(indexId).build();
+                    DeleteIndex deleteIndex = new DeleteIndex.Builder(indexName).build();
                     client.getClient().execute(deleteIndex);
                 } catch (Exception e) {
                     // index does not exist ?
@@ -200,37 +215,42 @@ public class EsSearchManager implements ISearchManager {
             }
 
             // Check index exist first
-            final IndicesExists request = new IndicesExists.Builder(indexId)
+            final IndicesExists request = new IndicesExists.Builder(indexName)
                 .build();
-            JestResult result = client.getClient().execute(request);
-            if (result.getResponseCode() == 200 && !dropIndexFirst) {
-                return;
-            }
-
-
-            if (result.getResponseCode() == 404) {
-                // Check version of the index - how ?
-
-                // Create it if not
-                Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexName + ".json");
-                if (Files.exists(indexConfiguration)) {
-
-                    CreateIndex createIndex = new CreateIndex.Builder(indexName)
-                        .settings(FileUtils.readFileToString(indexConfiguration.toFile()))
-                        .build();
-
-                    result = client.getClient().execute(createIndex);
-                    if (result.isSucceeded()) {
-
-                    } else {
-                        throw new IllegalStateException(result.getErrorMessage());
-                    }
-                } else {
-                    throw new FileNotFoundException(String.format(
-                        "Index configuration file '%s' not found in data directory for building index with name '%s'. Create one or copy the default one.",
-                        indexConfiguration.toAbsolutePath(),
-                        indexName));
+            try {
+                JestResult result = client.getClient().execute(request);
+                if (result.getResponseCode() == 200 && !dropIndexFirst) {
+                    return;
                 }
+
+
+                if (result.getResponseCode() == 404) {
+                    // Check version of the index - how ?
+
+                    // Create it if not
+                    Path indexConfiguration = dataDirectory.getConfigDir().resolve(INDEX_DIRECTORY).resolve(indexId + ".json");
+                    if (Files.exists(indexConfiguration)) {
+
+                        CreateIndex createIndex = new CreateIndex.Builder(indexName)
+                            .settings(FileUtils.readFileToString(indexConfiguration.toFile()))
+                            .build();
+
+                        result = client.getClient().execute(createIndex);
+                        if (result.isSucceeded()) {
+
+                        } else {
+                            throw new IllegalStateException(result.getErrorMessage());
+                        }
+                    } else {
+                        throw new FileNotFoundException(String.format(
+                            "Index configuration file '%s' not found in data directory for building index with name '%s'. Create one or copy the default one.",
+                            indexConfiguration.toAbsolutePath(),
+                            indexName));
+                    }
+                }
+            } catch (CouldNotConnectException cnce) {
+                LOGGER.error("Could not connect to index '{}'. Error is {}. Is the index server is up and running?",
+                    new Object[]{defaultIndex, cnce.getMessage()});
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -301,26 +321,24 @@ public class EsSearchManager implements ISearchManager {
                                 docWithErrorInfo.put(IndexFields.INDEXING_ERROR_FIELD, e.errorType);
                                 docWithErrorInfo.put(IndexFields.INDEXING_ERROR_MSG, e.errorReason);
                                 // TODO: Report the JSON which was causing the error ?
-                                System.out.println(String.format("Document with error #%s: %s", e.id, e.errorReason));
-                                System.out.println(failureDoc);
+
+                                LOGGER.error("Document with error #{}: {}.",
+                                    new Object[]{e.id, e.errorReason});
+                                LOGGER.error(failureDoc);
 
                                 try {
                                     listErrorOfDocumentsToIndex.put(e.id, mapper.writeValueAsString(docWithErrorInfo));
                                 } catch (JsonProcessingException e1) {
-                                    System.out.println(String.format(
-                                        "Generated document for the index is not properly formatted. Check document #%s, error is %s",
-                                        e.id, e1.getMessage()));
-                                    e1.printStackTrace();
+                                    LOGGER.error("Generated document for the index is not properly formatted. Check document #{}: {}.",
+                                        new Object[]{e.id, e1.getMessage()});
                                 }
                             }
                         });
 
                         BulkResult errorDocResult = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
                         if (!errorDocResult.isSucceeded()) {
-                            System.out.println(String.format(
-                                "Failed to save error documents %s",
-                                errorDocumentIds.toArray().toString()));
-                            // We can't do much more here
+                            LOGGER.error("Failed to save error documents {}.",
+                                new Object[]{errorDocumentIds.toArray().toString()});
                         }
                     }
                 } catch (IOException e) {
@@ -339,7 +357,12 @@ public class EsSearchManager implements ISearchManager {
             .add("hasxlinks")
             .add("hasInspireTheme")
             .add("hasOverview")
+            .add(IndexFields.HAS_ATOM)
+            .add(Geonet.IndexFieldNames.HASXLINKS)
             .add("isHarvested")
+            .add("isPublishedToAll")
+            .add("isTemplate")
+            .add("draft")
             .add("isValid")
             .add("isSchemaValid")
             .add("isAboveThreshold")
@@ -361,11 +384,6 @@ public class EsSearchManager implements ISearchManager {
 
         List<Element> records = xml.getChildren();
         Map<String, ObjectNode> listOfXcb = new HashMap<>();
-        Set<String> booleanFields = new HashSet();
-        booleanFields.add(IndexFields.HAS_ATOM);
-        booleanFields.add(Geonet.IndexFieldNames.HASXLINKS);
-        booleanFields.add("hasxlinks");
-        booleanFields.add("isHarvested");
 
 
         List<String> elementNames = new ArrayList();
@@ -474,11 +492,11 @@ public class EsSearchManager implements ISearchManager {
                 for (Iterator<String> iter = sm.getSelection(bucket).iterator();
                      iter.hasNext(); ) {
                     String uuid = (String) iter.next();
-//                    String id = dataMan.getMetadataId(uuid);
-                    AbstractMetadata metadata = metadataRepository.findOneByUuid(uuid);
-                    if (metadata != null) {
+                    for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
                         listOfIdsToIndex.add(metadata.getId() + "");
-                    } else {
+                    } 
+                    
+                    if(!metadataRepository.existsMetadataUuid(uuid)) {
                         LOGGER.warn("Selection contains uuid '{}' not found in database", uuid);
                     }
                 }
@@ -488,8 +506,8 @@ public class EsSearchManager implements ISearchManager {
             }
         } else {
             final Specifications<Metadata> metadataSpec =
-                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
-                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
+                Specifications.where((Specification<Metadata>)MetadataSpecs.isType(MetadataType.METADATA))
+                    .or((Specification<Metadata>)MetadataSpecs.isType(MetadataType.TEMPLATE));
             final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
                 Specifications.where(metadataSpec)
             );
@@ -528,7 +546,7 @@ public class EsSearchManager implements ISearchManager {
     @Override
     public Map<String, String> getDocsChangeDate() throws Exception {
         String query = "{\"query\": {\"filtered\": {\"query_string\": \"*:*\"}}}";
-        Search search = new Search.Builder(query).addIndex(defaultIndex).addType(defaultIndex).build();
+        Search search = new Search.Builder(query).addIndex(defaultIndex).build();
         // TODO: limit to needed field
 //        params.setFields(ID, Geonet.IndexFieldNames.DATABASE_CHANGE_DATE);
         SearchResult searchResult = client.getClient().execute(search);
@@ -636,7 +654,7 @@ public class EsSearchManager implements ISearchManager {
             "    }" +
             "  }" +
             "}", query);
-        Search search = new Search.Builder(searchQuery).addIndex(defaultIndex).addType(defaultIndex).build();
+        Search search = new Search.Builder(searchQuery).addIndex(defaultIndex).build();
         SearchResult searchResult = client.getClient().execute(search);
         return searchResult.getTotal();
     }

@@ -110,16 +110,4 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @return the user feedback
      */
     UserFeedback findByUuidAndStatus(String uuid, UserRatingStatus status);
-
-
-    /**
-     * Delete by metadata uuid.
-     *
-     * @param metadataId the metadata id
-     */
-    @Modifying
-    @Transactional
-    @Query("delete from GUF_UserFeedback where metadata_uuid = ?1")
-    void deleteByMetadata_Uuid(String metadataId);
-
 }

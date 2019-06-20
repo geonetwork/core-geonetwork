@@ -1,104 +1,46 @@
 <div class="container" data-ng-controller="GnLoginController" role="main">
-  <div class="col-lg-6">
+  <div class="col-lg-6 col-md-6 col-md-offset-3 col-lg-offset-3">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h1 data-translate="">needAnAccount</h1>
+        <h1 data-translate="">createAnAccount</h1>
       </div>
       <div class="panel-body">
-        <form class="form-horizontal" id="userinfo">
-         <input type="hidden" name="_csrf" value="{{csrf}}"/>
-          <div class="form-group">
-            <label class="control-label col-lg-4" data-translate="">email</label>
-            <div class="col-lg-8">
+        <p data-translate="">newAccountInfo</p>
+        <form class="form-horizontal clearfix" id="userinfo">
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
+          <fieldset class="pull-left">
+            <legend data-translate="">personal</legend>
+            <div class="form-group">
+              <label for="inputName" translate="">name</label>
+              <input type="text" class="form-control"
+                      aria-label="{{'name' | translate}}"
+                      data-ng-model="userInfo.name"
+                      id="inputName" name="name"/>
+            </div>
+            <div class="form-group">
+              <label for="inputUsername" translate="">surname</label>
+              <input type="text" class="form-control"
+                      aria-label="{{'surname' | translate}}"
+                      data-ng-model="userInfo.surname"
+                      id="inputUsername" name="surname"/>
+            </div>
+            <div class="form-group">
+              <label data-translate="">email</label>
               <input type="email" name="email"
-                     aria-label="{{'email' | translate}}"
-                     data-ng-model="userInfo.username"
-                     autofocus="" class="form-control"/>
+                      aria-label="{{'email' | translate}}"
+                      data-ng-model="userInfo.username"
+                      autofocus="" class="form-control"/>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-lg-4" for="inputName" translate="">name</label>
-            <div class="col-lg-8">
-              <input type="text" class="form-control"
-                     aria-label="{{'name' | translate}}"
-                     data-ng-model="userInfo.name"
-                     id="inputName" name="name"/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-lg-4" for="inputUsername" translate="">surname</label>
-            <div class="col-lg-8">
-              <input type="text" class="form-control"
-                     aria-label="{{'surname' | translate}}"
-                     data-ng-model="userInfo.surname"
-                     id="inputUsername" name="surname"/>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-lg-4" data-translate="">organisation</label>
-            <div class="col-lg-8">
+            <div class="form-group">
+              <label data-translate="">organisation</label>
               <input type="text" name="org"
-                     aria-label="{{'organisation' | translate}}"
-                     data-ng-model="userInfo.organisation"
-                     class="form-control"/>
-            </div>
-          </div>
-
-
-          <fieldset>
-            <legend data-translate="">address</legend>
-
-
-            <div class="form-group">
-              <label class="control-label col-lg-4" data-translate="">address</label>
-              <div class="col-lg-8">
-                <input type="text" name="address"
-                       aria-label="{{'address' | translate}}"
-                       data-ng-model="userInfo.address.address"
-                       class="form-control"/>
-              </div>
+                      aria-label="{{'organisation' | translate}}"
+                      data-ng-model="userInfo.organisation"
+                      class="form-control"/>
             </div>
             <div class="form-group">
-              <label class="control-label col-lg-4" data-translate="">zip</label>
-              <div class="col-lg-8">
-                <input type="text" name="zip" class="form-control"
-                       aria-label="{{'zip' | translate}}"
-                       data-ng-model="userInfo.address.zip"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-lg-4" data-translate="">state</label>
-              <div class="col-lg-8">
-                <input type="text" name="state" class="form-control"
-                       aria-label="{{'state' | translate}}"
-                       data-ng-model="userInfo.address.state"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-lg-4" data-translate="">city</label>
-              <div class="col-lg-8">
-                <input type="text" name="city" class="form-control"
-                       aria-label="{{'city' | translate}}"
-                       data-ng-model="userInfo.address.city"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-lg-4" data-translate=""
-                     data-ng-model="userInfo.address.country">country</label>
-              <div class="col-lg-8">
-                <!-- TODO : Add country list -->
-                <input type="text" name="country" class="form-control"
-                       aria-label="{{'country' | translate}}"/>
-              </div>
-            </div>
-          </fieldset>
-
-          <div class="form-group">
-            <label class="control-label col-lg-4" data-translate="">requestedProfile</label>
-            <div class="col-lg-8">
+              <label data-translate="">requestedProfile</label>
               <select name="profile"
                       data-ng-model="userInfo.profile"
                       aria-label="{{'requestedProfile' | translate}}"
@@ -106,7 +48,45 @@
                 <option data-ng-repeat="p in profiles" value="{{p}}">{{p | translate}}</option>
               </select>
             </div>
-          </div>
+          </fieldset>
+
+          <fieldset class="pull-right">
+            <legend data-translate="">address</legend>
+
+            <div class="form-group">
+              <label data-translate="">address</label>
+              <input type="text" name="address"
+                      aria-label="{{'address' | translate}}"
+                      data-ng-model="userInfo.address.address"
+                      class="form-control"/>
+            </div>
+            <div class="form-group">
+              <label data-translate="">zip</label>
+                <input type="text" name="zip" class="form-control"
+                       aria-label="{{'zip' | translate}}"
+                       data-ng-model="userInfo.address.zip"/>
+            </div>
+            <div class="form-group">
+              <label data-translate="">state</label>
+              <input type="text" name="state" class="form-control"
+                      aria-label="{{'state' | translate}}"
+                      data-ng-model="userInfo.address.state"/>
+            </div>
+            <div class="form-group">
+              <label data-translate="">city</label>
+              <input type="text" name="city" class="form-control"
+                      aria-label="{{'city' | translate}}"
+                      data-ng-model="userInfo.address.city"/>
+            </div>
+            <div class="form-group">
+              <label data-translate=""
+                     data-ng-model="userInfo.address.country">country</label>
+              <!-- TODO : Add country list -->
+              <input type="text" name="country" class="form-control"
+                      aria-label="{{'country' | translate}}"/>
+            </div>
+          </fieldset>
+
 
           <div class="form-group" data-ng-if="recaptchaEnabled">
             <div vc-recaptcha class="col-lg-8"
@@ -123,8 +103,5 @@
         </button>
       </div>
     </div>
-  </div>
-  <div class="col-lg-6">
-    <p data-translate="">newAccountInfo</p>
   </div>
 </div>

@@ -53,7 +53,13 @@ import org.springframework.context.ApplicationContext;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 // TODOES
 public class CatalogSearcher implements MetadataRecordSelector {
@@ -458,7 +464,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 //        Query cswCustomFilterQuery = null;
 //        Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
 //        if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
-//            cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, luceneConfig);
+//            cswCustomFilterQuery = parseLuceneQuery(cswServiceSpecificContraint, luceneConfig);
 //            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
 //        }
 //
@@ -513,7 +519,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 //
 //
 //        Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-//            maxRecords, _lang.presentationLanguage,
+//            maxRecords + startPosition - 1, _lang.presentationLanguage,
 //            luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
 //            reader, _query, wrapSpatialFilter(),
 //            _sort, taxonomyReader, buildSummary
@@ -572,7 +578,6 @@ public class CatalogSearcher implements MetadataRecordSelector {
 //        cFilter = new CachingWrapperFilter(cFilter);
 //        return cFilter;
 //    }
-
 
     /**
      * Process all spatial filters by replacing the region placeholders (filters with gml:id

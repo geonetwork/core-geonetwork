@@ -1,3 +1,26 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager.base;
 
 import com.google.common.base.Function;
@@ -8,19 +31,45 @@ import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationStatus;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.StatusValueType;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.IndexMetadataTask;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.SvnManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
@@ -43,7 +92,12 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,286 +106,268 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
 
-	Lock waitLoopLock = new ReentrantLock();
-	Lock indexingLock = new ReentrantLock();
+    Lock waitLoopLock = new ReentrantLock();
+    Lock indexingLock = new ReentrantLock();
 
-	@Autowired
+    @Autowired
 	private EsSearchManager searchManager;
-	@Autowired
-	private GeonetworkDataDirectory geonetworkDataDirectory;
-	@Autowired
-	private MetadataStatusRepository statusRepository;
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
+    @Autowired
+    private MetadataStatusRepository statusRepository;
 
-	private IMetadataUtils metadataUtils;
-	private IMetadataManager metadataManager;
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private OperationAllowedRepository operationAllowedRepository;
-	@Autowired
-	private GroupRepository groupRepository;
-	@Autowired
-	private MetadataValidationRepository metadataValidationRepository;
-	@Autowired
-	private SchemaManager schemaManager;
-	@Autowired(required = false)
-	private SvnManager svnManager;
-	@Autowired
-	private InspireAtomFeedRepository inspireAtomFeedRepository;
-	@Autowired(required = false)
-	private XmlSerializer xmlSerializer;
-	@Autowired
-	@Lazy
-	private SettingManager settingManager;
-	@Autowired
-	private UserFeedbackRepository userFeedbackRepository;
+    private IMetadataUtils metadataUtils;
+    private IMetadataManager metadataManager;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
+    @Autowired
+    private SchemaManager schemaManager;
+    @Autowired(required = false)
+    private SvnManager svnManager;
+    @Autowired
+    private InspireAtomFeedRepository inspireAtomFeedRepository;
+    @Autowired(required = false)
+    private XmlSerializer xmlSerializer;
+    @Autowired
+    @Lazy
+    private SettingManager settingManager;
+    @Autowired
+    private UserFeedbackRepository userFeedbackRepository;
 
-	// FIXME remove when get rid of Jeeves
-	private ServiceContext servContext;
+    // FIXME remove when get rid of Jeeves
+    private ServiceContext servContext;
 
-	private ApplicationEventPublisher publisher;
+    private ApplicationEventPublisher publisher;
 
-	public BaseMetadataIndexer() {
-	}
+    public BaseMetadataIndexer() {
+    }
 
-	public void init(ServiceContext context, Boolean force) throws Exception {
-		searchManager = context.getBean(EsSearchManager.class);
-		geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
-		statusRepository = context.getBean(MetadataStatusRepository.class);
-		metadataUtils = context.getBean(IMetadataUtils.class);
-		metadataManager = context.getBean(IMetadataManager.class);
-		userRepository = context.getBean(UserRepository.class);
-		operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
-		groupRepository = context.getBean(GroupRepository.class);
-		metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
-		schemaManager = context.getBean(SchemaManager.class);
-		svnManager = context.getBean(SvnManager.class);
-		inspireAtomFeedRepository = context.getBean(InspireAtomFeedRepository.class);
-		xmlSerializer = context.getBean(XmlSerializer.class);
-		settingManager = context.getBean(SettingManager.class);
-		userFeedbackRepository = context.getBean(UserFeedbackRepository.class);
+    public void init(ServiceContext context, Boolean force) throws Exception {
+        servContext = context;
+    }
 
-		servContext = context;
-	}
+    @Override
+    public void setMetadataUtils(IMetadataUtils metadataUtils) {
+        this.metadataUtils = metadataUtils;
+    }
 
-	@Override
-	public void setMetadataUtils(IMetadataUtils metadataUtils) {
-		this.metadataUtils = metadataUtils;
-	}
+    @Override
+    public void setMetadataManager(IMetadataManager metadataManager) {
+        this.metadataManager = metadataManager;
+    }
 
-	@Override
-	public void setMetadataManager(IMetadataManager metadataManager) {
-		this.metadataManager = metadataManager;
-	}
+    Set<String> waitForIndexing = new HashSet<String>();
+    Set<String> indexing = new HashSet<String>();
+    Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
 
-	Set<String> waitForIndexing = new HashSet<String>();
-	Set<String> indexing = new HashSet<String>();
-	Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
+    @Override
+    public void forceIndexChanges() throws IOException {
+        searchManager.forceIndexChanges();
+    }
 
-	@Override
-	public void forceIndexChanges() throws IOException {
-		searchManager.forceIndexChanges();
-	}
+    @Override
+    public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification)
+        throws Exception {
+        final List<Integer> idsOfMetadataToDelete = metadataUtils.findAllIdsBy(specification);
 
-	@Override
-	public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification)
-			throws Exception {
-		final List<Integer> idsOfMetadataToDelete = metadataUtils.findAllIdsBy(specification);
+        for (Integer id : idsOfMetadataToDelete) {
+            // --- remove metadata directory for each record
+            final Path metadataDataDir = geonetworkDataDirectory.getMetadataDataDir();
+            Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
+            IO.deleteFileOrDirectory(pb);
+        }
 
-		for (Integer id : idsOfMetadataToDelete) {
-			// --- remove metadata directory for each record
-			final Path metadataDataDir = geonetworkDataDirectory.getMetadataDataDir();
-			Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
-			IO.deleteFileOrDirectory(pb);
-		}
+        // Remove records from the index
+        searchManager.delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nonnull Integer input) {
+                return input.toString();
+            }
+        }));
 
-		// Remove records from the index
-		searchManager.delete(Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
-			@Nullable
-			@Override
-			public String apply(@Nonnull Integer input) {
-				return input.toString();
-			}
-		}));
+        // Remove records from the database
+        metadataManager.deleteAll(specification);
 
-		// Remove records from the database
-		metadataManager.deleteAll(specification);
+        return idsOfMetadataToDelete.size();
+    }
 
-		return idsOfMetadataToDelete.size();
-	}
+    @Override
+    /**
+     * Search for all records having XLinks (ie. indexed with _hasxlinks flag),
+     * clear the cache and reindex all records found.
+     */
+    public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
 
-	@Override
-	/**
-	 * Search for all records having XLinks (ie. indexed with _hasxlinks flag),
-	 * clear the cache and reindex all records found.
-	 */
-	public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
+        // get all metadata with XLinks
+        Set<Integer> toIndex = searchManager.getDocsWithXLinks();
 
-		// get all metadata with XLinks
-		Set<Integer> toIndex = searchManager.getDocsWithXLinks();
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
+        if (toIndex.size() > 0) {
+            // clean XLink Cache so that cache and index remain in sync
+            Processor.clearCache();
 
-		if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-			Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
-		if (toIndex.size() > 0) {
-			// clean XLink Cache so that cache and index remain in sync
-			Processor.clearCache();
+            ArrayList<String> stringIds = new ArrayList<String>();
+            for (Integer id : toIndex) {
+                stringIds.add(id.toString());
+            }
+            // execute indexing operation
+            batchIndexInThreadPool(context, stringIds);
+        }
+    }
 
-			ArrayList<String> stringIds = new ArrayList<String>();
-			for (Integer id : toIndex) {
-				stringIds.add(id.toString());
-			}
-			// execute indexing operation
-			batchIndexInThreadPool(context, stringIds);
-		}
-	}
+    /**
+     * Reindex all records in current selection.
+     */
+    @Override
+    public synchronized void rebuildIndexForSelection(final ServiceContext context, String bucket, boolean clearXlink)
+        throws Exception {
 
-	/**
-	 * Reindex all records in current selection.
-	 */
-	@Override
-	public synchronized void rebuildIndexForSelection(final ServiceContext context, String bucket, boolean clearXlink)
-			throws Exception {
+        // get all metadata ids from selection
+        ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
+        UserSession session = context.getUserSession();
+        SelectionManager sm = SelectionManager.getManager(session);
 
-		// get all metadata ids from selection
-		ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
-		UserSession session = context.getUserSession();
-		SelectionManager sm = SelectionManager.getManager(session);
+        synchronized (sm.getSelection(bucket)) {
+            for (Iterator<String> iter = sm.getSelection(bucket).iterator(); iter.hasNext(); ) {
+                String uuid = (String) iter.next();
+                String id = metadataUtils.getMetadataId(uuid);
+                if (id != null) {
+                    listOfIdsToIndex.add(id);
+                }
+            }
+        }
 
-		synchronized (sm.getSelection(bucket)) {
-			for (Iterator<String> iter = sm.getSelection(bucket).iterator(); iter.hasNext();) {
-				String uuid = (String) iter.next();
-				String id = metadataUtils.getMetadataId(uuid);
-				if (id != null) {
-					listOfIdsToIndex.add(id);
-				}
-			}
-		}
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            Log.debug(Geonet.DATA_MANAGER, "Will index " + listOfIdsToIndex.size() + " records from selection.");
+        }
 
-		if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-			Log.debug(Geonet.DATA_MANAGER, "Will index " + listOfIdsToIndex.size() + " records from selection.");
-		}
+        if (listOfIdsToIndex.size() > 0) {
+            // clean XLink Cache so that cache and index remain in sync
+            if (clearXlink) {
+                Processor.clearCache();
+            }
 
-		if (listOfIdsToIndex.size() > 0) {
-			// clean XLink Cache so that cache and index remain in sync
-			if (clearXlink) {
-				Processor.clearCache();
-			}
+            // execute indexing operation
+            batchIndexInThreadPool(context, listOfIdsToIndex);
+        }
+    }
 
-			// execute indexing operation
-			batchIndexInThreadPool(context, listOfIdsToIndex);
-		}
-	}
+    /**
+     * Index multiple metadata in a separate thread. Wait until the current
+     * transaction commits before starting threads (to make sure that all metadata
+     * are committed).
+     *
+     * @param context     context object
+     * @param metadataIds the metadata ids to index
+     */
+    @Override
+    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
 
-	/**
-	 * Index multiple metadata in a separate thread. Wait until the current
-	 * transaction commits before starting threads (to make sure that all metadata
-	 * are committed).
-	 *
-	 * @param context
-	 *            context object
-	 * @param metadataIds
-	 *            the metadata ids to index
-	 */
-	@Override
-	public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
+        TransactionStatus transactionStatus = null;
+        try {
+            transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+        } catch (NoTransactionException e) {
+            // not in a transaction so we can go ahead.
+        }
+        // split reindexing task according to number of processors we can assign
+        int threadCount = ThreadUtils.getNumberOfThreads();
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
-		TransactionStatus transactionStatus = null;
-		try {
-			transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-		} catch (NoTransactionException e) {
-			// not in a transaction so we can go ahead.
-		}
-		// split reindexing task according to number of processors we can assign
-		int threadCount = ThreadUtils.getNumberOfThreads();
-		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        int perThread;
+        if (metadataIds.size() < threadCount)
+            perThread = metadataIds.size();
+        else
+            perThread = metadataIds.size() / threadCount;
+        int index = 0;
+        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
+            Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
+        }
+        AtomicInteger numIndexedTracker = new AtomicInteger();
+        while (index < metadataIds.size()) {
+            int start = index;
+            int count = Math.min(perThread, metadataIds.size() - start);
+            int nbRecords = start + count;
 
-		int perThread;
-		if (metadataIds.size() < threadCount)
-			perThread = metadataIds.size();
-		else
-			perThread = metadataIds.size() / threadCount;
-		int index = 0;
-		if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-			Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
-			Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
-		}
-		AtomicInteger numIndexedTracker = new AtomicInteger();
-		while (index < metadataIds.size()) {
-			int start = index;
-			int count = Math.min(perThread, metadataIds.size() - start);
-			int nbRecords = start + count;
+            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
+            }
 
-			if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-				Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
-			}
+            List<?> subList = metadataIds.subList(start, nbRecords);
 
-			List<?> subList = metadataIds.subList(start, nbRecords);
+            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                Log.debug(Geonet.INDEX_ENGINE, subList.toString());
+            }
 
-			if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-				Log.debug(Geonet.INDEX_ENGINE, subList.toString());
-			}
+            // create threads to process this chunk of ids
+            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
+            executor.execute(worker);
+            index += count;
+        }
 
-			// create threads to process this chunk of ids
-			Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
-			executor.execute(worker);
-			index += count;
-		}
+        executor.shutdown();
+    }
 
-		executor.shutdown();
-	}
+    @Override
+    public boolean isIndexing() {
+        indexingLock.lock();
+        try {
+            return !indexing.isEmpty() || !batchIndex.isEmpty();
+        } finally {
+            indexingLock.unlock();
+        }
+    }
 
-	@Override
-	public boolean isIndexing() {
-		indexingLock.lock();
-		try {
-			return !indexing.isEmpty() || !batchIndex.isEmpty();
-		} finally {
-			indexingLock.unlock();
-		}
-	}
+    @Override
+    public void indexMetadata(final List<String> metadataIds) throws Exception {
+        for (String metadataId : metadataIds) {
+            indexMetadata(metadataId, false, null);
+        }
 
-	@Override
-	public void indexMetadata(final List<String> metadataIds) throws Exception {
-		for (String metadataId : metadataIds) {
-			indexMetadata(metadataId, false, null);
-		}
+        searchManager.forceIndexChanges();
+    }
 
-		searchManager.forceIndexChanges();
-	}
+    @Override
+    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, ISearchManager searchManager)
+        throws Exception {
+        waitLoopLock.lock();
+        try {
+            if (waitForIndexing.contains(metadataId)) {
+                return;
+            }
+            while (indexing.contains(metadataId)) {
+                try {
+                    waitForIndexing.add(metadataId);
+                    // don't index the same metadata 2x
+                    synchronized (this) {
+                        wait(200);
+                    }
+                } catch (InterruptedException e) {
+                    return;
+                } finally {
+                    waitForIndexing.remove(metadataId);
+                }
+            }
+            indexingLock.lock();
+            try {
+                indexing.add(metadataId);
+            } finally {
+                indexingLock.unlock();
+            }
+        } finally {
+            waitLoopLock.unlock();
+        }
+        AbstractMetadata fullMd;
 
-	@Override
-	public void indexMetadata(final String metadataId, boolean forceRefreshReaders, ISearchManager searchManager)
-			throws Exception {
-		waitLoopLock.lock();
-		try {
-			if (waitForIndexing.contains(metadataId)) {
-				return;
-			}
-			while (indexing.contains(metadataId)) {
-				try {
-					waitForIndexing.add(metadataId);
-					// don't index the same metadata 2x
-					synchronized (this) {
-						wait(200);
-					}
-				} catch (InterruptedException e) {
-					return;
-				} finally {
-					waitForIndexing.remove(metadataId);
-				}
-			}
-			indexingLock.lock();
-			try {
-				indexing.add(metadataId);
-			} finally {
-				indexingLock.unlock();
-			}
-		} finally {
-			waitLoopLock.unlock();
-		}
-		AbstractMetadata fullMd;
-
-		try {
+        try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = Integer.parseInt(metadataId);
 
@@ -369,11 +405,12 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             final Integer groupOwner = fullMd.getSourceInfo().getGroupOwner();
             final String popularity = String.valueOf(fullMd.getDataInfo().getPopularity());
             final String rating = String.valueOf(fullMd.getDataInfo().getRating());
-            final String displayOrder = fullMd.getDataInfo().getDisplayOrder() == null ? null : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
+            final String displayOrder = fullMd.getDataInfo().getDisplayOrder() == null ? null
+                : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); //DEBUG
-                Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); //DEBUG
+                Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); // DEBUG
+                Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); // DEBUG
             }
 
             moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.ROOT, root));
@@ -470,7 +507,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         }
                     }
                 }
-
             }
 
             if (isPublishedToAll) {
@@ -479,13 +515,14 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "n"));
             }
 
-            for (MetadataCategory category : fullMd.getMetadataCategories()) {
+            for (MetadataCategory category : fullMd.getCategories()) {
                 moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName()));
             }
 
             // get status
-            Sort statusSort = new Sort(Sort.Direction.DESC, MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
-            List<MetadataStatus> statuses = statusRepository.findAllById_MetadataId(id$, statusSort);
+            Sort statusSort = new Sort(Sort.Direction.DESC,
+                MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
+            List<MetadataStatus> statuses = statusRepository.findAllByIdAndByType(id$, StatusValueType.workflow, statusSort);
             if (!statuses.isEmpty()) {
                 MetadataStatus stat = statuses.get(0);
                 String status = String.valueOf(stat.getId().getStatusId());
@@ -514,49 +551,68 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 moreFields.add(searchManager.makeField(Geonet.IndexFieldNames.VALID, isValid));
             }
 
-            searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
+            //To inject extra fields from BaseMetadataIndexer inherited beans
+            addExtraFields(fullMd, moreFields);
+
+            searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
+                forceRefreshReaders);
 
         } catch (Exception x) {
-			Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
-					+ " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
-			fullMd = null;
-		} finally {
-			indexingLock.lock();
-			try {
-				indexing.remove(metadataId);
-			} finally {
-				indexingLock.unlock();
-			}
-		}
-		if (fullMd != null) {
-			this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));
-		}
-	}
+            Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId
+                + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
+            fullMd = null;
+        } finally {
+            indexingLock.lock();
+            try {
+                indexing.remove(metadataId);
+            } finally {
+                indexingLock.unlock();
+            }
+        }
+        if (fullMd != null) {
+            this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));
+        }
+    }
 
-	private XmlSerializer getXmlSerializer() {
-		return xmlSerializer;
-	}
 
-	/**
-	 *
-	 * @param context
-	 * @param id
-	 * @param md
-	 * @throws Exception
-	 */
-	@Override
-	public void versionMetadata(ServiceContext context, String id, Element md) throws Exception {
-		if (svnManager != null) {
-			svnManager.createMetadataDir(id, context, md);
-		}
-	}
+    /**
+     * Function to be overrided by children to add extra fields cleanly.
+     * Don't forget to call always super.addExtraFields, just in case
+     *
+     * @param fullMd
+     * @param moreFields
+     */
+    protected void addExtraFields(AbstractMetadata fullMd, Vector<Element> moreFields) {
+        // If we are not using draft utils, mark all as "no draft"
+        // needed to be compatible with UI searches that check draft existence
+        if (!DraftMetadataIndexer.class.isInstance(this)) {
+            moreFields.addElement(searchManager.makeField(Geonet.IndexFieldNames.DRAFT, "false"));
+        }
+    }
 
-	private ServiceContext getServiceContext() {
-		ServiceContext context = ServiceContext.get();
-		return context == null ? servContext : context;
-	}
+    private XmlSerializer getXmlSerializer() {
+        return xmlSerializer;
+    }
 
-	public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
-		this.publisher = publisher;
-	}
+    /**
+     * @param context
+     * @param id
+     * @param md
+     * @throws Exception
+     */
+    @Override
+    public void versionMetadata(ServiceContext context, String id, Element md) throws Exception {
+        if (svnManager != null) {
+            svnManager.createMetadataDir(id, context, md);
+        }
+    }
+
+    private ServiceContext getServiceContext() {
+        ServiceContext context = ServiceContext.get();
+        return context == null ? servContext : context;
+    }
+
+    public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
+    }
 }

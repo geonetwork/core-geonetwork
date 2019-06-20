@@ -1,5 +1,26 @@
 package methods;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -8,6 +29,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import env.BaseTest;
+
+import java.io.IOException;
 
 public class NavigateMethods extends SelectElementByType implements BaseTest {
     // SelectElementByType eleType= new SelectElementByType();
@@ -80,6 +103,105 @@ public class NavigateMethods extends SelectElementByType implements BaseTest {
      */
     public void navigateTo(String url) {
         BaseTest.driver.get(url);
+    }
+
+    private String xsrfToken = null;
+    private BasicCookieStore cookieStore = new BasicCookieStore();
+
+    /**
+     * Initialize the XSRF token
+     */
+    private void retrieveToken() {
+        if (xsrfToken == null) {
+            CloseableHttpClient httpClient =
+                HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+            HttpResponse httpResponse = null;
+            try {
+                HttpPost request = new HttpPost(endPointToTest + "/srv/eng/info?type=me");
+                request.addHeader("Accept", "application/json");
+                request.addHeader("Content-type", "application/json");
+                httpResponse = httpClient.execute(request);
+
+                Header cookieString = httpResponse.getHeaders("Set-Cookie")[0];
+                xsrfToken = cookieString.getElements()[0].getValue()
+                ;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
+     * Call API without authentication and return status code.
+     * @param url
+     * @return  The status code
+     */
+    public Integer apiCallStatus(String method, String url) {
+        return apiCallStatus(method, url, null, null);
+    }
+
+    /**
+     * Call API with authentication if credential provided.
+     * @param url
+     * @param username
+     * @param password
+     * @return  The status code
+     */
+    public Integer apiCallStatus(String method, String url, String username, String password) {
+        retrieveToken();
+        CloseableHttpClient httpClient;
+        if (StringUtils.isNotEmpty(username) &&
+            StringUtils.isNotEmpty(password)) {
+            CredentialsProvider provider = new BasicCredentialsProvider();
+            UsernamePasswordCredentials credentials
+                = new UsernamePasswordCredentials(username,password);
+            provider.setCredentials(AuthScope.ANY, credentials);
+
+            httpClient = HttpClientBuilder.create()
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultCredentialsProvider(provider)
+                .build();
+        } else {
+            httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        }
+
+        HttpRequestBase request;
+        if (method.equals("POST")) {
+            request = new HttpPost(url);
+        } else if (method.equals("PUT")) {
+            request = new HttpPut(url);
+        } else if (method.equals("DELETE")) {
+            request = new HttpDelete(url);
+        } else {
+            request = new HttpGet(url);
+        }
+        request.addHeader("X-XSRF-TOKEN", xsrfToken);
+        request.addHeader("Accept", "application/json");
+        request.addHeader("Content-type", "application/json");
+//        StringEntity entity = new StringEntity(jsonString);
+//        request.setEntity(entity);
+        try {
+            HttpResponse response = httpClient.execute(request);
+            final String content = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
+            return response.getStatusLine().getStatusCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Method to login as admin if null provided for user details
+     *
+     * @param username : String : Username
+     * @param password : String : Password
+     */
+    public void loginAs(String username, String password) {
+        BaseTest.driver.get(endPointToTest + "/srv/eng/catalog.signin");
+        BaseTest.driver.findElement(By.xpath("//*[@id='inputUsername']")).sendKeys(username == null ? adminUser : username);
+        BaseTest.driver.findElement(By.xpath("//*[@id='inputPassword']")).sendKeys(password == null ? adminPassword : password);
+        BaseTest.driver.findElement(By.cssSelector("form > button.btn-primary")).click();
     }
 
     /**

@@ -29,6 +29,7 @@ import com.google.common.base.Predicate;
 
 import com.fasterxml.classmate.TypeResolver;
 
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.UserSecurity;
 import org.jdom.Element;
 import org.joda.time.LocalDate;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -54,6 +56,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.regex;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
+@PropertySource("classpath:swagger.properties")
 @Configuration
 @ComponentScan(basePackages = {
     "org.fao.geonet.api",
@@ -97,7 +100,7 @@ public class SwaggerConfig {
 
     private Predicate<String> paths() {
         return or(
-            regex("/api/" + API.VERSION_0_1 + "/.*")
+            regex("/.*/api/" + API.VERSION_0_1 + "/.*")
         );
     }
 }

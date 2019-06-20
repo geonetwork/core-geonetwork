@@ -38,7 +38,7 @@
       var query_string;
 
       var excludeFields = ['_content_type', 'fast', 'from', 'to', 'bucket',
-        'sortBy', 'resultType', 'facet.q', 'any',
+        'sortBy', 'sortOrder', 'resultType', 'facet.q', 'any',
         'creationDateFrom', 'creationDateTo', 'dateFrom', 'dateTo'];
       var mappingFields = {
         title: 'resourceTitle',

@@ -35,7 +35,7 @@
       $scope.url = decodeURIComponent($location.search()['wfs-indexing']);
 
       // URL of the index service endpoint
-      $scope.indexUrl = gnHttp.getService('indexproxy') + '/_search';
+      $scope.indexUrl = gnHttp.getService('featureindexproxy') + '?_=_search';
 
       // list of wfs indexing jobs received from the index
       // null means loading
@@ -62,7 +62,7 @@
           try {
             $scope.jobs = result.data.hits.hits.map(function (hit) {
               var source = hit._source;
-              var infos = source.id.split('#');
+              var infos = decodeURIComponent(source.id).split('#');
               return {
                 url: infos[0],
                 featureType: infos[1],

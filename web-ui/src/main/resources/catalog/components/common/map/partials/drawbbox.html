@@ -17,37 +17,38 @@
     </div>
   </div>
 
-  <div class="form-group gn-field" data-ng-show="identifierRef !== undefined">
-    <label class="col-sm-3 control-label"
-           data-translate="">bboxIdentifier</label>
-    <div class="col-sm-8 gn-value">
-      <input class="form-control"
-             data-ng-model="identifier"
-             name="{{identifierRef}}"
-             ng-disabled="readOnly"/>
+  <div class="row">
+    <div class="form-group gn-field" data-ng-show="identifierRef !== undefined">
+      <label class="col-sm-3 control-label"
+            data-translate="">bboxIdentifier</label>
+      <div class="col-sm-8 gn-value">
+        <input class="form-control"
+              data-ng-model="identifier"
+              name="{{identifierRef}}"
+              ng-disabled="readOnly"/>
+      </div>
+      <div class="col-sm-1 gn-control">
+        <a class="btn pull-right" data-ng-click="identifier = ''">
+          <i class="fa fa-times text-danger"></i>
+        </a>
+      </div>
     </div>
-    <div class="col-sm-1 gn-control">
-      <a class="btn pull-right" data-ng-click="identifier = ''">
-        <i class="fa fa-times text-danger"></i>
-      </a>
+    <div class="form-group gn-field" data-ng-show="descriptionRef !== undefined">
+      <label class="col-sm-3 control-label"
+            data-translate="">bboxDescription</label>
+      <div class="col-sm-8 gn-value">
+        <input class="form-control"
+              data-ng-model="description"
+              name="{{descriptionRef}}"
+              ng-disabled="readOnly"/>
+      </div>
+      <div class="col-sm-1 gn-control">
+        <a class="btn pull-right" data-ng-click="description = ''">
+          <i class="fa fa-times text-danger"></i>
+        </a>
+      </div>
     </div>
   </div>
-  <div class="form-group gn-field" data-ng-show="descriptionRef !== undefined">
-    <label class="col-sm-3 control-label"
-           data-translate="">bboxDescription</label>
-    <div class="col-sm-8 gn-value">
-      <input class="form-control"
-             data-ng-model="description"
-             name="{{descriptionRef}}"
-             ng-disabled="readOnly"/>
-    </div>
-    <div class="col-sm-1 gn-control">
-      <a class="btn pull-right" data-ng-click="description = ''">
-        <i class="fa fa-times text-danger"></i>
-      </a>
-    </div>
-  </div>
-
   <!-- Hidden field that match xml metadata schema -->
   <div class="hidden">
     <input data-ng-model="extent.md[0]" name="{{hleftRef}}"/>
@@ -58,70 +59,72 @@
   </div>
 
   <!--Projection selector-->
-  <div class="btn-group">
-    <button type="button" class="btn btn-link dropdown-toggle"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-            title="{{'chooseAProj' | translate}}">
-      {{projs.formLabel}} <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-      <li data-ng-repeat="proj in projs.list">
-        <a href="" data-ng-click="projs.form = proj.code; projs.formLabel = proj.label">
-          {{proj.label}}
-        </a>
-      </li>
-    </ul>
+  <div class="row" data-ng-show="projs.list.length > 1">
+    <div class="btn-group">
+      <button type="button" class="btn btn-link dropdown-toggle"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+              title="{{'chooseAProj' | translate}}">
+        {{projs.formLabel}} <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li data-ng-repeat="proj in projs.list">
+          <a href="" data-ng-click="projs.form = proj.code; projs.formLabel = proj.label">
+            {{proj.label}}
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <!--Map and coordinates inputs-->
-  <table class="text-center">
-    <tr align="center" valign="middle">
-      <td align="left">
-      </td>
-      <td>
-        <div class="form-group">
-          <input
-            data-ng-model="extent.form[3]" type="number"
-            id="drawbbox-top" placeholder="{{'north' | translate}}"
-            data-ng-change="updateBbox(true)"
-            ng-disabled="readOnly"/>
-        </div>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr valign="middle" align="center">
-      <td class="col-left">
-        <div class="form-group">
-          <input data-ng-model="extent.form[0]" type="number"
-                 id="drawbbox-left" placeholder="{{'west' | translate}}"
+  <div class="text-center">
+    <div class="gn-editor-map">
+      <span>
+        <div class="input-group coord coord-north">
+          <input data-ng-model="extent.form[3]"
+                 type="number"
+                 id="drawbbox-top"
+                 placeholder="{{'north' | translate}}"
                  data-ng-change="updateBbox(true)"
                  ng-disabled="readOnly"/>
+          <span class="input-group-addon hidden-xs">N</span>
         </div>
-      </td>
-      <td class="col-middle">
-        <div ng-if="map" ngeo-map="map"></div>
-      </td>
-      <td class="col-right">
-        <div class="form-group">
-          <input
-            data-ng-model="extent.form[2]"
-            type="number" id="drawbbox-right"
-            placeholder="{{'east' | translate}}" data-ng-change="updateBbox(true)"
-            ng-disabled="readOnly"/>
+        <div class="input-group coord coord-south">
+          <input data-ng-model="extent.form[1]"
+                 type="number"
+                 id="drawbbox-bottom"
+                 placeholder="{{'south' | translate}}"
+                 data-ng-change="updateBbox(true)"
+                 ng-disabled="readOnly"/>
+          <span class="input-group-addon hidden-xs">S</span>
         </div>
-      </td>
-    </tr>
-    <tr align="center">
-      <td colspan="3">
-        <div class="form-group">
-          <input
-            data-ng-model="extent.form[1]" type="number"
-            id="drawbbox-bottom" placeholder="{{'south' | translate}}"
-            data-ng-change="updateBbox(true)"
-            ng-disabled="readOnly"/>
+        <div class="input-group coord coord-east">
+          <input data-ng-model="extent.form[2]"
+                 type="number"
+                 id="drawbbox-right"
+                 placeholder="{{'east' | translate}}"
+                 data-ng-change="updateBbox(true)"
+                 ng-disabled="readOnly"/>
+          <span class="input-group-addon hidden-xs">E</span>
         </div>
-      </td>
-    </tr>
-  </table>
+        <div class="input-group coord coord-west">
+          <input data-ng-model="extent.form[0]"
+                 type="number"
+                 id="drawbbox-left"
+                 placeholder="{{'west' | translate}}"
+                 data-ng-change="updateBbox(true)"
+                 ng-disabled="readOnly"/>
+          <span class="input-group-addon hidden-xs">W</span>
+        </div>
+      </span>
+      <table>
+        <tr>
+          <td>
+            <div ng-if="map" ngeo-map="map"></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+  </div>
 </div>

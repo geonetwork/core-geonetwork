@@ -1,35 +1,34 @@
 <form data-ng-keypress="updatingHarvester()">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <div class="row">
-    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
-
-    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-id" class="col-lg-6 gn-nopadding-left" data-gn-harvester-identification="harvesterSelected"/>
+    <div id="gn-harvest-settings-selected-schedule" class="col-lg-6 gn-nopadding-right" data-gn-harvester-schedule="harvesterSelected"/>
   </div>
 
-  <fieldset>
-    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+  <fieldset id="gn-harvest-settings-sde-basic-row">
+    <legend id="gn-harvest-settings-sde-basic-title"><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
       harvesterSelected['@type']) | translate}}
     </legend>
-    <div data-ng-class="harvesterSelected.site.server == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">arcsde-server</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.server"/>
+    <div id="gn-harvest-settings-sde-basic-server-row" data-ng-class="harvesterSelected.site.server == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-sde-basic-server-label" class="control-label" data-translate="">arcsde-server</label>
+      <input id="gn-harvest-settings-sde-basic-server-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.server"/>
       <p class="help-block" data-translate="">arcsde-serverHelp</p>
     </div>
-    <div data-ng-class="harvesterSelected.site.port == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">arcsde-port</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.port"/>
+    <div id="gn-harvest-settings-sde-basic-port-row" data-ng-class="harvesterSelected.site.port == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-sde-basic-port-label" class="control-label" data-translate="">arcsde-port</label>
+      <input id="gn-harvest-settings-sde-basic-port-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.port"/>
       <p class="help-block" data-translate="">arcsde-portHelp</p>
     </div>
-    <div data-ng-class="harvesterSelected.site.database == '' ? 'has-error' : ''">
-      <label class="control-label" data-translate="">arcsde-database</label>
-      <input type="text" class="form-control" data-ng-model="harvesterSelected.site.database"/>
+    <div id="gn-harvest-settings-sde-basic-database-row" data-ng-class="harvesterSelected.site.database == '' ? 'has-error' : ''">
+      <label id="gn-harvest-settings-sde-basic-database-label" class="control-label" data-translate="">arcsde-database</label>
+      <input id="gn-harvest-settings-sde-basic-database-input" type="text" class="form-control" data-ng-model="harvesterSelected.site.database"/>
       <p class="help-block" data-translate="">arcsde-databaseHelp</p>
     </div>
 
-    <div>
-      <label class="control-label" data-translate="">arcsde-version</label>
-      <select class="form-control" data-ng-model="harvesterSelected.site.version">
+    <div id="gn-harvest-settings-sde-basic-version-row">
+      <label id="gn-harvest-settings-sde-basic-version-label" class="control-label" data-translate="">arcsde-version</label>
+      <select id="gn-harvest-settings-sde-basic-version-list" class="form-control" data-ng-model="harvesterSelected.site.version">
         <option value="8">{{'arcsde-version-8' | translate}}</option>
         <option value="9">{{'arcsde-version-9' | translate}}</option>
       </select>
@@ -37,21 +36,23 @@
       <p class="help-block" data-translate="">arcsde-versionHelp</p>
     </div>
 
-    <div>
-      <label class="control-label" data-translate="">arcsde-connection</label>
+    <div id="gn-harvest-settings-sde-basic-connection-row">
+      <label id="gn-harvest-settings-sde-basic-connection-label" class="control-label" data-translate="">arcsde-connection</label>
       <p class="help-block" data-translate="">arcsde-connectionHelp</p>
 
-      <label class="control-label">
-        <input type="radio" data-ng-model="harvesterSelected.site.connectionType" value="ARCSDE">
+      <label id="gn-harvest-settings-sde-basic-connection-service-row" class="control-label">
+        <input id="gn-harvest-settings-sde-basic-connection-service-radio" type="radio" data-ng-model="harvesterSelected.site.connectionType" value="ARCSDE">
         <span data-translate="">arcsde-connection-sde</span></label>
       </label><br/>
-      <label  class="control-label">
-        <input type="radio" data-ng-model="harvesterSelected.site.connectionType" value="JDBC">
+      <label id="gn-harvest-settings-sde-basic-connection-database-row" class="control-label">
+        <input id="gn-harvest-settings-sde-basic-connection-database-radio" type="radio" data-ng-model="harvesterSelected.site.connectionType" value="JDBC">
         <span data-translate="">arcsde-connection-database</span></label>
       </label><br/>
 
-      <label class="control-label" data-translate="">arcsde-connection-database-type</label>
-      <select class="form-control" data-ng-model="harvesterSelected.site.databaseType"
+      <label id="gn-harvest-settings-sde-basic-connection-database-label" class="control-label" data-translate="">arcsde-connection-database-type</label>
+      <select id="gn-harvest-settings-sde-basic-connection-database-list"
+              class="form-control"
+              data-ng-model="harvesterSelected.site.databaseType"
               data-ng-disabled="harvesterSelected.site.connectionType != 'JDBC'">
         <option value="oracle">{{'arcsde-oracle' | translate}}</option>
         <option value="postgresql">{{'arcsde-postgres' | translate}}</option>
@@ -64,22 +65,19 @@
 
   </fieldset>
 
-
-  <fieldset>
-    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+  <fieldset id="gn-harvest-settings-sde-advanced-row">
+    <legend id="gn-harvest-settings-sde-advanced-title"><span data-translate="">harvesterAdvancedConfigurationFor</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
 
-
-    <div>
-      <label class="control-label">
+    <div id="gn-harvest-settings-sde-advanced-validate-row">
+      <label id="gn-harvest-settings-sde-advanced-validate-label" class="control-label">
         <span data-translate="">harvesterValidate</span>
       </label>
-      <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <div id="gn-harvest-settings-sde-advanced-validate-list" data-gn-harvester-validation="harvesterSelected.content.validate"/>
       <p class="help-block" data-translate="">harvesterValidateHelp</p>
     </div>
   </fieldset>
 
-
-  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div id="gn-harvest-settings-sde-privileges-row" data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

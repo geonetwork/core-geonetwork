@@ -22,21 +22,19 @@
  */
 package org.fao.geonet.arcgis;
 
-import org.apache.commons.dbcp.BasicDataSource;
-import org.fao.geonet.utils.Log;
-import org.springframework.jdbc.core.RowCallbackHandler;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.fao.geonet.utils.Log;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
  * Created by juanl on 17/02/2017.
@@ -148,8 +146,8 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
 
                     } else if (rs.getMetaData().getColumnType(colId) == Types.LONGNVARCHAR ||
                             rs.getMetaData().getColumnType(colId) == Types.LONGVARCHAR ||
-                            rs.getMetaData().getColumnType(colId) == Types.VARCHAR) {
-
+                            rs.getMetaData().getColumnType(colId) == Types.VARCHAR ||
+                            rs.getMetaData().getColumnType(colId) == Types.SQLXML) {
                         document = rs.getString(colId);
 
                     } else {

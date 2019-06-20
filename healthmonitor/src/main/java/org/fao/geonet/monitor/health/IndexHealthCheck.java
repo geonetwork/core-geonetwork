@@ -31,22 +31,25 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Checks to ensure that the Elasticsearch index is up and running.
  */
 public class IndexHealthCheck implements HealthCheckFactory {
+
+    @Autowired
+    EsSearchManager searchMan;
+
     public HealthCheck create(final ServiceContext context) {
         return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
-            protected Result check() throws Exception {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-
-                EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
-
+            protected Result check() {
                 try {
                     Search search = new Search.Builder("")
                         .addIndex(searchMan.getDefaultIndex())
+                        .addType(searchMan.getIndexType())
                         .build();
                     final SearchResult result = searchMan.getClient().getClient().execute(search);
 

@@ -32,8 +32,9 @@
   angular.module('gn_validation_report_directive', [
     'gn_utility'
   ])
-      .directive('gnValidationReport', ['gnValidation', 'gnCurrentEdit',
-        function(gnValidation, gnCurrentEdit) {
+      .directive('gnValidationReport', [
+        'gnValidation', 'gnCurrentEdit', '$location',
+        function(gnValidation, gnCurrentEdit, $location) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/validationreport/' +
@@ -83,6 +84,10 @@
                 }).finally(function() {
                   scope.loading = false;
                 });
+              };
+
+              scope.scrollTo = function(ref) {
+                $location.search('scrollTo', '#gn-el-' + ref.split('_')[1]);
               };
 
               scope.labelImportanceClass = function(type) {

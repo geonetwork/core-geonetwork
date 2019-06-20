@@ -25,7 +25,7 @@
 <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-    <sch:title xmlns="http://www.w3.org/2001/XMLSchema">Schematron validation / GeoNetwork recommendations</sch:title>
+    <sch:title xmlns="http://www.w3.org/2001/XMLSchema">GeoNetwork recommendations</sch:title>
     <sch:ns prefix="gml" uri="http://www.opengis.net/gml"/>
     <sch:ns prefix="gmd" uri="http://www.isotc211.org/2005/gmd"/>
     <sch:ns prefix="srv" uri="http://www.isotc211.org/2005/srv"/>

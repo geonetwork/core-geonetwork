@@ -1,4 +1,4 @@
-<div>
+<div id="gn-addonlinesrc-container">
   <div class="row gn-modal-content">
     <div class="col-md-6">
       <form id="gn-upload-onlinesrc"
@@ -6,10 +6,11 @@
             class="form-horizontal"
             role="form"
             method="POST">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+        <input type="hidden" name="_csrf" value="{{csrf}}"/>
         <div class="onlinesrc-container">
 
-          <div data-ng-show="config.types.length > 1 && config.display == 'radio'">
+          <div id="gn-addonlinesrc-radio-row"
+               data-ng-show="config.types.length > 1 && config.display == 'radio'">
             <label class="radio-inline"
                    data-ng-repeat="c in config.types">
               <input type="radio"
@@ -22,7 +23,8 @@
             </label>
           </div>
 
-          <div class="form-group"
+          <div id="gn-addonlinesrc-select-row"
+               class="form-group"
                data-ng-show="config.types.length > 1 && config.display == 'select'">
             <label class="col-sm-2 control-label">
               <span data-translate="">onlineChooseDocType</span>
@@ -36,199 +38,257 @@
           </div>
 
           <br/>
-          <div class="alert alert-info"
+          <div id="gn-addonlinesrc-alert-row"
+               class="alert alert-info"
                data-ng-show="(params.linkType.label + '-help') != ((params.linkType.label + '-help') | translate)">
             {{(params.linkType.label + '-help') | translate}}
           </div>
           <br/>
-          <!-- Function Combo -->
-          <div class="form-group"
-               data-ng-show="params.linkType.fields.function &&
+
+          <!-- Display the fields in the order defined in the configuration -->
+          <div ng-repeat="(key, value) in params.linkType.fields">
+
+            <!-- Function Combo -->
+            <div id="gn-addonlinesrc-function-row"
+                 class="form-group"
+                 data-ng-if="key === 'function' &&
                              !params.linkType.fields.function.hidden">
-            <label class="col-sm-2 control-label">
-              <span data-translate="">onlineFunction</span>
-            </label>
-            <div class="col-sm-10">
-              <div data-schema-info-combo="codelist"
-                   data-init-on-load="true"
-                   data-selected-info="params.function"
-                   data-gn-schema-info="function" lang="lang"></div>
-            </div>
-          </div>
-
-          <!-- Protocol Combo -->
-          <div class="form-group"
-               data-ng-show="params.linkType.fields.protocol &&
-                             !params.linkType.fields.protocol.hidden">
-            <label class="col-sm-2 control-label">
-              <span data-translate="">protocol</span>
-            </label>
-            <div class="col-sm-10">
-              <div data-schema-info-combo="element"
-                   data-init-on-load="true"
-                   data-selected-info="params.protocol"
-                   data-gn-schema-info="protocol" lang="lang"></div>
-            </div>
-          </div>
-
-          <!-- URL text field -->
-          <div class="form-group gn-required"
-               data-ng-class="{'has-error' : !isFieldMultilingual('url') ? !gnAddLink.url.$valid : false}">
-            <label for="onlinesrcUrl"
-                   class="col-sm-2 control-label"
-                   data-translate="">url</label>
-
-            <div class="col-sm-10"
-                 data-ng-if="isFieldMultilingual('url')"
-                 gn-multilingual-field="{{mdOtherLanguages}}"
-                 current-language="ctrl.urlCurLang"
-                 data-main-language="{{mdLang}}"
-                 expanded="false">
-              <input data-ng-repeat="(key, val) in mdLangs"
-                     class="form-control input-sm"
-                     lang="{{val}}"
-                     ng-model-options="{debounce: 500}"
-                     data-ng-model="params.url[val]">
-            </div>
-
-            <div class="col-sm-10" data-ng-if="!isFieldMultilingual('url')">
-              <div data-ng-class="{'input-group': OGCProtocol != null}">
-                <input data-ng-model="params.url"
-                       data-ng-model-options="{debounce: 500}"
-                       required=""
-                       name="url"
-                       class="form-control"
-                       type="text"
-                       data-ng-blur="loadCurrentLink()"
-                       id="onlinesrcUrl"
-                       placeholder="http://">
-                <span class="input-group-btn" data-ng-show="OGCProtocol != null">
-                  <!-- Refresh Grid Button -->
-                  <button type="button"
-                          class="btn btn-warning"
-                          title="{{'loadCapabilitiesLayers' | translate}}"
-                          data-gn-click-and-spin="loadCurrentLink(true)">
-                    <i class="fa fa-refresh"/>
-                  </button>
-                </span>
+              <label id="gn-addonlinesrc-function-label"
+                     class="col-sm-2 control-label">
+                <span data-translate="">onlineFunction</span>
+              </label>
+              <div class="col-sm-9">
+                <div id="gn-addonlinesrc-function-list"
+                     data-schema-info-combo="codelist"
+                     data-init-on-load="true"
+                     data-selected-info="params.function"
+                     data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.function.tooltip}}"
+                     data-gn-schema-info="function" lang="lang"></div>
               </div>
 
+              <div class="col-sm-1 gn-control"></div>
+            </div>
+
+            <!-- Protocol Combo -->
+            <div id="gn-addonlinesrc-protocol-row"
+                 class="form-group"
+                 data-ng-if="key === 'protocol' &&
+                             !params.linkType.fields.protocol.hidden">
+              <label id="gn-addonlinesrc-protocol-label"
+                     class="col-sm-2 control-label">
+                <span data-translate="">protocol</span>
+              </label>
+              <div class="col-sm-9">
+                <div id="gn-addonlinesrc-protocol-list"
+                     data-schema-info-combo="element"
+                     data-init-on-load="true"
+                     data-selected-info="params.protocol"
+                     data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.protocol.tooltip}}"
+                     data-gn-schema-info="protocol" lang="lang"></div>
+              </div>
+
+              <div class="col-sm-1 gn-control"></div>
+            </div>
+
+            <!-- URL text field -->
+            <div data-ng-if="key === 'url'">
+              <div id="gn-addonlinesrc-url-row"
+                   class="form-group gn-required"
+                   data-ng-class="{'has-error' : !isFieldMultilingual('url') ? !gnAddLink.url.$valid : false}">
+                <label id="gn-addonlinesrc-url-label"
+                       for="gn-addonlinesrc-url-list-single-input"
+                       class="col-sm-2 control-label"
+                       data-translate="">url</label>
+
+                <div id="gn-addonlinesrc-url-list-multilingual-row"
+                     class="col-sm-9"
+                     data-ng-if="isFieldMultilingual('url')"
+                     gn-multilingual-field="{{mdOtherLanguages}}"
+                     current-language="ctrl.urlCurLang"
+                     data-main-language="{{mdLang}}"
+                     expanded="false">
+                  <input data-ng-repeat="(key, val) in mdLangs"
+                         id="gn-addonlinesrc-url-{{val}}"
+                         class="form-control input-sm"
+                         lang="{{val}}"
+                         ng-model-options="{debounce: 500}"
+                         data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
+                         data-ng-model="params.url[val]">
+                </div>
+
+                <div id="gn-addonlinesrc-url-list-single-row"
+                     class="col-sm-9" data-ng-if="!isFieldMultilingual('url')">
+                  <div data-ng-class="{'input-group': OGCProtocol != null}">
+                    <input data-ng-model="params.url"
+                           data-ng-model-options="{debounce: 500}"
+                           required=""
+                           name="url"
+                           class="form-control"
+                           type="text"
+                           data-ng-blur="loadCurrentLink()"
+                           id="gn-addonlinesrc-url-list-single-input"
+                           data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.url.tooltip}}"
+                           placeholder="http://">
+                    <span class="input-group-btn" data-ng-show="OGCProtocol != null">
+                    <!-- Refresh Grid Button -->
+                    <button id="gn-addonlinesrc-url-list-single-button"
+                            type="button"
+                            class="btn btn-warning"
+                            title="{{'loadCapabilitiesLayers' | translate}}"
+                            data-gn-click-and-spin="loadCurrentLink(true)">
+                      <i class="fa fa-refresh"/>
+                    </button>
+                  </span>
+                  </div>
+                </div>
+
+                <div class="col-sm-1 gn-control"></div>
+              </div>
+
+              <div id="gn-addonlinesrc-overview-row"
+                   class="form-group"
+                   data-ng-if="isImage">
+                <label id="gn-addonlinesrc-overview-label"
+                       class="col-sm-2 control-label"
+                       data-translate="">overview</label>
+                <div class="col-sm-10">
+                  <img id="gn-addonlinesrc-overview-image"
+                       ng-src="{{isFieldMultilingual('url') ? params.url[ctrl.urlCurLang] : params.url}}"
+                       class="img-thumbnail">
+                </div>
+              </div>
+
+              <!-- Layers grid directive -->
+              <div data-gn-layers-grid
+                   id="gn-addonlinesrc-layers-row"
+                   data-ng-show="OGCProtocol != null"
+                   data-gn-selection-mode="isEditing ? 'single' : 'multiple'"
+                   data-layers="layers"
+                   data-selection="params.selectedLayers">
+              </div>
 
             </div>
-          </div>
 
+            <!-- Name text Field -->
+            <div id="gn-addonlinesrc-name-row"
+                 class="form-group"
+                 data-ng-if="key === 'name' &&
+                             !params.linkType.fields.name.hidden">
+              <label id="gn-addonlinesrc-name-label"
+                     for="gn-addonlinesrc-name-single-input"
+                     class="col-sm-2 control-label"
+                     data-translate="">onlineResourceName</label>
+              <div id="gn-addonlinesrc-name-single-row"
+                   class="col-sm-9"
+                   data-ng-if="!isFieldMultilingual('name')">
+                <input id="gn-addonlinesrc-name-single-input"
+                       ng-model="params.name"
+                       name="name"
+                       type="text"
+                       data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
+                       placeholder="Name">
+              </div>
+              <div id="gn-addonlinesrc-name-multilingual-row"
+                   class="col-sm-9"
+                   data-ng-if="isFieldMultilingual('name')"
+                   data-gn-multilingual-field="{{mdOtherLanguages}}"
+                   data-main-language="{{mdLang}}"
+                   expanded="false">
+                <input data-ng-repeat="(key, val) in mdLangs"
+                       id="gn-addonlinesrc-name-multilingual-{{val}}"
+                       class="form-control input-sm"
+                       lang="{{val}}"
+                       data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.name.tooltip}}"
+                       data-ng-model="params.name[val]">
+              </div>
 
-          <div class="form-group"
-               data-ng-if="isImage">
-            <label class="col-sm-2 control-label"
-                   data-translate="">overview</label>
-            <div class="col-sm-10">
-              <img ng-src="{{isFieldMultilingual('url') ? params.url[ctrl.urlCurLang] : params.url}}"
-                   class="img-thumbnail">
+              <div class="col-sm-1 gn-control"></div>
             </div>
-          </div>
 
-
-          <!-- Layers grid directive -->
-          <div data-gn-layers-grid
-               data-ng-show="OGCProtocol != null"
-               data-gn-selection-mode="isEditing ? 'single' : 'multiple'"
-               data-layers="layers"
-               data-selection="params.selectedLayers">
-          </div>
-
-          <!-- Name text Field -->
-          <div class="form-group"
-               data-ng-show="params.linkType.fields.name &&
-                             !params.linkType.fields.name.hidden && !(OGCProtocol && !isEditing)">
-            <label for="onlinesrcName"
-                   class="col-sm-2 control-label"
-                   data-translate="">onlineResourceName</label>
-            <div class="col-sm-10"
-                 data-ng-if="!isFieldMultilingual('name')">
-              <input ng-model="params.name"
-                     name="name"
-                     type="text"
-                     id="onlinesrcName"
-                     placeholder="Name">
-            </div>
-            <div class="col-sm-10"
-                 data-ng-if="isFieldMultilingual('name')"
-                 data-gn-multilingual-field="{{mdOtherLanguages}}"
-                 data-main-language="{{mdLang}}"
-                 expanded="false">
-              <input data-ng-repeat="(key, val) in mdLangs"
-                     class="form-control input-sm"
-                     lang="{{val}}"
-                     data-ng-model="params.name[val]">
-            </div>
-          </div>
-
-          <!-- Description Text area -->
-          <div class="form-group"
-               data-ng-show="params.linkType.fields.desc &&
-                             !params.linkType.fields.desc.hidden && !(OGCProtocol && !isEditing)">
-            <label for="onlinesrcDescr"
-                   class="col-sm-2 control-label"
-                   data-translate="">description</label>
-            <div class="col-sm-10"
-                 data-ng-if="!isFieldMultilingual('desc')">
+            <!-- Description Text area -->
+            <div id="gn-addonlinesrc-description-row"
+                 class="form-group"
+                 data-ng-if="key === 'desc' &&
+                             !params.linkType.fields.desc.hidden">
+              <label id="gn-addonlinesrc-description-label"
+                     for="gn-addonlinesrc-description-single-textarea"
+                     class="col-sm-2 control-label"
+                     data-translate="">description</label>
+              <div id="gn-addonlinesrc-description-single-row"
+                   class="col-sm-9"
+                   data-ng-if="!isFieldMultilingual('desc')">
               <textarea rows="3"
+                        id="gn-addonlinesrc-description-single-textarea"
                         data-gn-autogrow=""
                         data-ng-model="params.desc"
                         class="form-control input-sm"
-                        id="onlinesrcDescr"
                         placeholder="description"
+                        data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                         name="description"/>
-            </div>
-            <div class="col-sm-10"
-                 data-ng-if="isFieldMultilingual('desc')"
-                 gn-multilingual-field="{{mdOtherLanguages}}"
-                 data-main-language="{{mdLang}}"
-                 expanded="false">
+              </div>
+              <div id="gn-addonlinesrc-description-multilingual-row"
+                   class="col-sm-9"
+                   data-ng-if="isFieldMultilingual('desc')"
+                   gn-multilingual-field="{{mdOtherLanguages}}"
+                   data-main-language="{{mdLang}}"
+                   expanded="false">
               <textarea data-ng-repeat="(key, val) in mdLangs"
+                        id="gn-addonlinesrc-description-multilingual-{{val}}"
                         rows="3"
                         lang="{{val}}"
                         data-ng-model="params.desc[val]"
                         class="form-control input-sm"
                         placeholder="description"
+                        data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.desc.tooltip}}"
                         name="description"/>
+              </div>
+
+              <div class="col-sm-1 gn-control"></div>
             </div>
-          </div>
 
-
-          <!-- application profile text field -->
-          <div class="form-group"
-               data-ng-show="params.linkType.fields.applicationProfile &&
+            <!-- application profile text field -->
+            <div id="gn-addonlinesrc-profile-row"
+                 class="form-group"
+                 data-ng-if="key === 'applicationProfile' &&
                              !params.linkType.fields.applicationProfile.hidden">
-            <label for="applicationProfile"
-                   class="col-sm-2 control-label"
-                   data-translate="">applicationProfile</label>
-            <div class="col-sm-10">
-              <input data-ng-model="params.applicationProfile"
-                     name="applicationProfile"
-                     class="form-control"
-                     type="text"
-                     id="applicationProfile">
+              <label id="gn-addonlinesrc-profile-label"
+                     for="gn-addonlinesrc-profile-input"
+                     class="col-sm-2 control-label"
+                     data-translate="">applicationProfile</label>
+              <div class="col-sm-9">
+                <input data-ng-model="params.applicationProfile"
+                       id="gn-addonlinesrc-profile-input"
+                       name="applicationProfile"
+                       class="form-control"
+                       data-gn-field-tooltip="{{schema}}|{{params.linkType.fields.applicationProfile.tooltip}}"
+                       type="text">
+              </div>
+
+              <div class="col-sm-1 gn-control"></div>
             </div>
           </div>
+
         </div>
       </form>
     </div>
+
     <div class="col-md-6">
-      <div class="panel panel-default"
+      <div id="gn-addonlinesrc-file-panel"
+           class="panel panel-default"
            data-ng-show="params.linkType.sources.filestore">
         <div class="panel-heading"
              data-translate>fileStore
         </div>
         <div class="panel-body">
-          <div data-gn-file-store="gnCurrentEdit.uuid"
+          <div id="gn-addonlinesrc-file-input"
+               data-gn-file-store="gnCurrentEdit.uuid"
                data-select-callback="selectUploadedResource(selected)"
                data-filter="params.linkType.fileStoreFilter || ''"/>
         </div>
       </div>
 
-      <div class="panel panel-default"
+      <div id="gn-addonlinesrc-link-panel"
+           class="panel panel-default"
            data-ng-show="params.linkType.sources.metadataStore.label">
         <div class="panel-heading">
           {{params.linkType.sources.metadataStore.label | translate}}
@@ -276,38 +336,45 @@
         </div>
       </div>
 
-      <div class="panel panel-default"
+      <div id="gn-addonlinesrc-thumbnail-panel"
+           class="panel panel-default"
            data-ng-show="params.linkType.sources.thumbnailMaker">
         <div class="panel-heading"
              data-translate="">createAThumbnail
         </div>
         <div class="panel-body">
-          <div class="form-group gn-thumbnail-maker-panel">
-            <div class="alert alert-warning"
+          <div id="gn-addonlinesrc-thumbnail-map"
+               class="form-group gn-thumbnail-maker-panel">
+            <div id="gn-addonlinesrc-thumbnail-warning"
+                 class="alert alert-warning"
                  data-ng-show="layers == undefined"
                  data-translate="">noLayersForThumbnail
             </div>
             <div data-ng-hide="layers == undefined">
-            <textarea class="form-control hidden"
-                      name="config">{{jsonSpec}}</textarea>
+              <textarea id="gn-addonlinesrc-thumbnail-json"
+                        class="form-control hidden"
+                        name="config">{{jsonSpec}}</textarea>
               <input type="hidden" name="rotation" value="90"/>
               <div class="row">
                 <div class="col-xs-8">
                   <div id="{{mapId}}" class="map"></div>
                   <br/>
-                  <a class="btn btn-success btn-block"
+                  <a id="gn-addonlinesrc-thumbnail-button"
+                     class="btn btn-success btn-block"
                      data-gn-click-and-spin="generateThumbnail()"
                      title="{{'generateThumbnail-help' | translate}}">
                     <i class="fa fa-cog"></i>&nbsp;
                     <span data-translate="">generateThumbnail</a>
                 </div>
                 <div class="col-xs-4">
-                  <p class="help-block"
+                  <p id="gn-addonlinesrc-thumbnail-help"
+                     class="help-block"
                      data-translate="">thumbnailMaker-help</p>
-                  <div class="panel-body">
-                    <div data-ga-print=""
+                  <!-- <div class="panel-body"> -->
+                    <div id="gn-addonlinesrc-thumbnail-settings"
+                         data-ga-print=""
                          data-layout="Thumbnail"></div>
-                  </div>
+                  <!-- </div> -->
                 </div>
               </div>
             </div>
@@ -317,8 +384,9 @@
     </div>
   </div>
 
-  <div class="">
-    <button type="button"
+  <div id="gn-addonlinesrc-add-row">
+    <button id="gn-addonlinesrc-add-button"
+            type="button"
             class="btn navbar-btn"
             data-ng-class="gnAddLink.$valid && !isUrlOk ? 'btn-warning' : 'btn-success'"
             data-gn-click-and-spin="addOnlinesrc()">
@@ -331,10 +399,12 @@
         {{((isEditing ? 'update' : 'add') + 'LinkAnyway') | translate}}
       </span>
     </button>
-    <div data-gn-need-help="user-guide/associating-resources/linking-documents.html"
+    <div id="gn-addonlinesrc-add-help"
+         data-gn-need-help="user-guide/associating-resources/linking-documents.html"
          class="pull-right"></div>
     <br/>
-    <div class="alert alert-warning"
+    <div id="gn-addonlinesrc-add-alert"
+         class="alert alert-warning"
          data-ng-show="gnAddLink.$valid && !isUrlOk">
       <span data-translate="">areYouSureToAddALinkWithError</span>
       <a class="btn btn-link"

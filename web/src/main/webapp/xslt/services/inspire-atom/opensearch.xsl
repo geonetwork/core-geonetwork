@@ -24,9 +24,23 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
   <xsl:template match="/">
-    <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
-      xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/"
-      xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0">
+    <OpenSearchDescription xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
+                           xmlns="http://a9.com/-/spec/opensearch/1.1/">
+
+
+      <xsl:variable name="baseUrl">
+        <xsl:choose>
+          <xsl:when test="//server/port = 80">
+            <xsl:value-of select="concat(//server/protocol,'://',//server/host)" />
+          </xsl:when>
+          <xsl:when test="//server/port = 443">
+            <xsl:value-of select="concat(//server/protocol,'://',//server/host)" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="concat(//server/protocol,'://',//server/host,':',//server/port)" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
 
       <!--URL of this document-->
       <xsl:choose>
@@ -41,7 +55,7 @@
           <Url type="application/opensearchdescription+xml" rel="self">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat(//server/protocol,'://',//server/host,':',//server/port,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/OpenSearchDescription.xml')"/>
+                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/OpenSearchDescription.xml')"/>
             </xsl:attribute>
           </Url>
 
@@ -49,7 +63,7 @@
           <Url type="application/atom+xml" rel="results">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat(//server/protocol,'://',//server/host,':',//server/port,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/describe')"/>
+                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/describe')"/>
             </xsl:attribute>
           </Url>
 
@@ -57,16 +71,14 @@
           <Url type="application/xml" rel="results">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat(//server/protocol,'://',//server/host,':',//server/port,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/search?any={filter}')"/>
+                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/search?any={filter}')"/>
             </xsl:attribute>
           </Url>
 
-          <!--Describe Spatial Data Set Operation request URL template to be used
-              in order to retrieve the Description of Spatial Object Types in a Spatial
-              Dataset-->
-          <Url type="application/atom+xml" rel="describedby">
+          <Url type="text/html" rel="results">
             <xsl:attribute name="template">
-              <xsl:value-of select="concat(//server/protocol,'://',//server/host,':',//server/port,/root/gui/url,'/opensearch/', /root/gui/language, '/describe?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace}&amp;language={language}')"/>
+              <xsl:value-of
+                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/', /root/response/fileId,'/searchhtml?any={filter}')"/>
             </xsl:attribute>
           </Url>
         </xsl:when>
@@ -85,11 +97,31 @@
           <Url type="application/xml" rel="results">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat(//server/protocol,'://',//server/host,':',//server/port,/root/gui/url,'/opensearch/', /root/gui/language, '/search?any={filter}')"/>
+                select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/search?any={filter}')"/>
             </xsl:attribute>
           </Url>
         </xsl:otherwise>
       </xsl:choose>
+
+
+      <Url type="application/atom+xml" rel="describedby">
+        <xsl:attribute name="template">
+          <xsl:value-of
+            select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/describe?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code}', '&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace}', '&amp;language={language}')"/>
+        </xsl:attribute>
+      </Url>
+
+
+      <Url rel="results">
+        <xsl:attribute name="type">
+          <xsl:value-of select="/root/response/datasets/dataset[1]/file[1]/type"/>
+        </xsl:attribute>
+
+        <xsl:attribute name="template">
+          <xsl:value-of
+            select="concat($baseUrl,/root/gui/url,'/opensearch/', /root/gui/language, '/download?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code}', '&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace}&amp;crs={inspire_dls:crs}', '&amp;language={language}')"/>
+        </xsl:attribute>
+      </Url>
 
       <!-- Repeat the following for each data set, for each CRS of a dataset query example (regardless of the number of file formats -->
       <xsl:for-each select="/root/response/datasets/dataset">

@@ -57,6 +57,41 @@
 
   /**
    * @ngdoc directive
+   * @name gn_fields.directive:gnFieldWithPrefixOrSuffix
+   * @function
+   *
+   * @description
+   * A field which can hide a prefix or suffix
+   * added automatically to an existing value.
+   * The field type can also be constrained using fieldType attribute.
+   */
+  module.directive('gnFieldWithPrefixOrSuffix',
+    function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          // Using Jquery to parse attribute to preserve
+          // leading/trailing space which may have sense
+          var prefix = element.attr('data-prefix') || '';
+          var suffix = element.attr('data-suffix') || '';
+          var fieldType = attrs['fieldType'] || 'text';
+
+          // Create an input
+          var input = $('<input class="form-control" type="' + fieldType + '">');
+          // Copy the value without prefix/suffix
+          input.val(element.val()
+            .replace(prefix, '')
+            .replace(suffix, '')).change(function() {
+            element.val(prefix + input.val() + suffix);
+          });
+          element.after(input);
+          element.hide();
+        }
+      };
+    });
+
+  /**
+   * @ngdoc directive
    * @name gn_fields.directive:gnMeasure
    * @function
    *
@@ -75,7 +110,8 @@
             ref: '@'
           },
           link: function(scope, element, attrs) {
-            scope.value = parseFloat(attrs['gnMeasure'], 10) || null;
+            var value = parseFloat(attrs['gnMeasure'], 10);
+            scope.value = !isNaN(value)?value:null;
 
             // Load the config from the textarea containing the helpers
             scope.config =
@@ -152,17 +188,23 @@
              element.is('input') ||
              element.is('textarea') ||
              element.is('select');
+             var isDiv = element.is('div');
              var tooltipTarget = element;
              var iconMode = gnCurrentEdit.displayTooltipsMode === 'icon';
+             var isDatePicker = 'gnDatePicker' in attrs;
 
-
+             var createTooltipForDatePicker = function (el, tooltip) {
+               var controlColumn = el.closest(".gn-field").find("div.gn-control");
+               if(controlColumn.length > 0) {
+                 controlColumn.append(tooltip);
+               }
+             };
 
              // use a icon to click on for a tooltip
              if (iconMode) {
                var tooltipAfterLabel = false;
                var tooltipIconCompiled = $compile(iconTemplate)(scope);
                var asideCol;
-
 
                if (isField && element.attr('type') !== 'hidden') {
 
@@ -214,6 +256,13 @@
                  }
                } else if (element.is('legend')) {
                  element.contents().first().after(tooltipIconCompiled);
+               } else if (isDatePicker) {
+                // first check if it is in a template (inside a class="row"
+                var control = element.closest(".gn-multi-field .row").find("div.gn-control");
+                if (control.length == 0) {
+                  control = element.closest(".gn-field").find("div.gn-control").first();
+                }
+                control.append(tooltipIconCompiled);
                } else if (element.is('label')) {
                  if (tooltipAfterLabel) {
                    element.parent().children('div')
@@ -221,8 +270,9 @@
                  } else {
                    element.after(tooltipIconCompiled);
                  }
+               } else if (isDiv) {
+                 element.closest(".gn-field").find("div.gn-control").append(tooltipIconCompiled);
                }
-
 
                // close tooltips on click in editor container
                $('.gn-editor-container').on('mousedown', function(e) {
@@ -233,7 +283,6 @@
                  }
                });
 
-
                // replace element with tooltip
                tooltipTarget = tooltipIconCompiled;
              } else {
@@ -242,7 +291,6 @@
                });
              }
 
-
              var closeTooltips = function() {
                // Close all tooltips/popovers
                // (there still might be some open)
@@ -250,7 +298,6 @@
                // Less official way to hide
                $('.popover').hide();
              };
-
 
              var initTooltip = function(event) {
                if (!isInitialized && gnCurrentEdit.displayTooltips) {
@@ -314,7 +361,6 @@
                        '</div><div class="popover-inner">' + closeBtn +
                        '<h3 class="popover-title"></h3>' +
                        '<div class="popover-content"><p></p></div></div></div>',
-                       //                       trigger: 'click',
                        trigger: isField ? 'focus' : 'click'
                      });
 
@@ -327,7 +373,6 @@
 
                      if (iconMode) {
                        tooltipTarget.mouseleave(function() {
-                         tooltipTarget.popover('hide');
                          isInitialized = false;
                        });
                      }

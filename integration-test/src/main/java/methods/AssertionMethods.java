@@ -324,7 +324,7 @@ public class AssertionMethods extends SelectElementByType implements BaseTest {
      *
      * @param accessType : String : Locator type (id, name, class, xpath, css)
      * @param accessName : String : Locator value
-     * @param shouldBeChecked : Boolean : test case [true or false]
+     * @param shouldBeSelected : Boolean : test case [true or false]
      */
     public void isRadioButtonSelected(String accessType, String accessName, boolean shouldBeSelected) throws TestCaseFailed {
         final WebElement radioButton = BaseTest.wait

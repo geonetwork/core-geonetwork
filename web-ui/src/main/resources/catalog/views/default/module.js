@@ -52,7 +52,7 @@
         params: {
           sortBy: 'popularity',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
@@ -68,7 +68,7 @@
         params: {
           sortBy: 'changeDate',
           from: 1,
-          to: 9
+          to: 12
         }
       };
     }]);
@@ -140,6 +140,8 @@
       $scope.facetConfig = gnSearchSettings.facetConfig;
       $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
+      $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
+      $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
         $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
@@ -230,6 +232,14 @@
         }
       };
 
+      /**
+       * Toggle the list types on the homepage
+       * @param  {String} type Type of list selected
+       */
+      $scope.toggleListType = function(type) {
+        $scope.type = type;
+      };
+      
       $scope.infoTabs = {
         lastRecords: {
           title: 'lastRecords',
@@ -351,6 +361,7 @@
       setActiveTab();
       $scope.$on('$locationChangeSuccess', setActiveTab);
 
+      var sortConfig = gnSearchSettings.sortBy.split('#');
       angular.extend($scope.searchObj, {
         advancedMode: false,
         from: 1,
@@ -364,10 +375,16 @@
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         filters: gnSearchSettings.filters,
         defaultParams: {
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          'facet.q': '',
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         params: {
-          sortBy: gnSearchSettings.sortBy || 'relevance'
+          'facet.q': gnSearchSettings.defaultSearchString || '',
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: sortConfig[0] || 'relevance',
+          sortOrder: sortConfig[1] || ''
         },
         sortbyValues: gnSearchSettings.sortbyValues
       });

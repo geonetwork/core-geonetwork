@@ -33,15 +33,13 @@
   goog.require('gn_harvest_controller');
   goog.require('gn_report_controller');
   goog.require('gn_settings_controller');
-  goog.require('gn_standards_controller');
   goog.require('gn_usergroup_controller');
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
        'gn_adminmetadata_controller', 'gn_classification_controller',
-       'gn_harvest_controller', 'gn_standards_controller',
-       'gn_report_controller', 'gn_admin_menu']);
+       'gn_harvest_controller', 'gn_report_controller', 'gn_admin_menu']);
 
 
   var tplFolder = '../../catalog/templates/admin/';
@@ -279,21 +277,12 @@
               }
             }
           }).
-          when('/standards', {
-            templateUrl: tplFolder + 'page-layout.html',
-            controller: 'GnStandardsController',
-            resolve: {
-              permission: function() {
-                authorizationService.$get[0]().check('Editor');
-              }
-            }
-          }).
           when('/reports', {
             templateUrl: tplFolder + 'page-layout.html',
             controller: 'GnReportController',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
@@ -302,7 +291,7 @@
             controller: 'GnReportController',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
@@ -310,7 +299,7 @@
             templateUrl: tplFolder + 'admin.html',
             resolve: {
               permission: function() {
-                authorizationService.$get[0]().check('Administrator');
+                authorizationService.$get[0]().check('UserAdmin');
               }
             }
           }).
@@ -341,13 +330,21 @@
       $scope.getTpl = function(pageMenu) {
         $scope.type = pageMenu.defaultTab;
         $.each(pageMenu.tabs, function(index, value) {
-          if ((angular.isUndefined($routeParams.dashboard) &&
-              value.type === $routeParams.tab) || (
-              angular.isDefined($routeParams.dashboard) &&
-              value.href.indexOf(
-              encodeURIComponent($routeParams.dashboard)) !== -1)
-          ) {
-            $scope.type = $routeParams.tab;
+          var isMatch = false;
+
+          if (angular.isUndefined($routeParams.dashboard)) {
+            // If no $routeParams.tab, check if the option is the default one,
+            // otherwise  compare the option with $routeParams.tab
+            isMatch = ($routeParams.tab === undefined &&
+              value.type === pageMenu.defaultTab) ||
+              (value.type === $routeParams.tab);
+          } else {
+            isMatch = value.href.indexOf(
+              encodeURIComponent($routeParams.dashboard)) !== -1;
+          }
+
+          if (isMatch) {
+            $scope.type = ($routeParams.tab !== undefined)?$routeParams.tab:pageMenu.defaultTab;
             $scope.href = value.href;
           }
         });

@@ -54,7 +54,7 @@ import java.util.List;
  * @author Jose García
  */
 public class RdfOutputManager {
-    private final static int PAGE_SIZE = 5;
+    private int PAGE_SIZE = 10;
 
     private Element thesaurusEl;
 
@@ -62,6 +62,12 @@ public class RdfOutputManager {
         this.thesaurusEl = thesaurusEl;
     }
 
+    public RdfOutputManager(Element thesaurusEl, int pageSize) {
+        this.thesaurusEl = thesaurusEl;
+        PAGE_SIZE = pageSize;
+    	
+    }
+    
     /**
      * Creates an rdf file with all the public metadata from the catalogue that fits the search
      * criteria.
@@ -69,13 +75,32 @@ public class RdfOutputManager {
      * @return Name of the temporal file
      */
     public File createRdfFile(ServiceContext context, RdfSearcher searcher) throws Exception {
+    	try {
+        List<Element> results = searcher.search(context);
+    	return createRdfFile(context,results,1,"");
+    	}
+    	 finally {
+             searcher.close();
+         }
+    }    
+
+    /**
+     * Creates an rdf file with all the public metadata from the catalogue that fits the search
+     * criteria.
+     *
+     * @param context
+     * @param results
+     * @param page
+     * @param pagingInformation paging information
+     * @return
+     * @throws Exception
+     */
+    public File createRdfFile(ServiceContext context, List<Element> results, int page, String pagingInformation) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dm = applicationContext.getBean(DataManager.class);
-        SettingManager sm = applicationContext.getBean(SettingManager.class);
+        //SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         try {
-            List results = searcher.search(context);
-
             Element records = createXsltModel(context);
 
             // Write results intermediate files:
@@ -100,18 +125,17 @@ public class RdfOutputManager {
                     resolve("services").resolve("dcat").resolve("rdf.xsl");
 
                 int size = results.size();
-                int page = 1;
 
                 Log.info(Geonet.GEONETWORK, "DCAT - Processing " + size + " results");
 
                 if (size == 0) {
                     Element recordsRdf = Xml.transform(records, xslPath);
-                    writeCatalogResults(outputCatalogFile, recordsRdf, page);
+                    writeCatalogResults(outputCatalogFile, recordsRdf, page, pagingInformation);
                     writeFileResults(outputRecordsFile, recordsRdf, page);
 
                 } else {
                     for (int i = 0; i < size; i++) {
-                        Element mdInfo = (Element) results.get(i);
+                        Element mdInfo = results.get(i);
 
                         Element info = mdInfo.getChild("info", Edit.NAMESPACE);
                         String id = info.getChildText("id");
@@ -127,7 +151,7 @@ public class RdfOutputManager {
                             // Process the resultset
                             Element recordsRdf = Xml.transform(records, xslPath);
 
-                            writeCatalogResults(outputCatalogFile, recordsRdf, page);
+                            writeCatalogResults(outputCatalogFile, recordsRdf, page, pagingInformation);
 
                             // Write results
                             writeFileResults(outputRecordsFile, recordsRdf, page);
@@ -164,18 +188,18 @@ public class RdfOutputManager {
                 reader1 = new BufferedReader(new InputStreamReader(new FileInputStream(catalogFile), Charset.forName("UTF-8")));
                 IOUtils.copy(reader1, outputRdfFile);
 
-                // Close dcat:Catalog
-                outputRdfFile.write("</dcat:Catalog>");
-                outputRdfFile.write("\n");
-
                 // Append records file
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing catalog records");
                 reader2 = new BufferedReader(new InputStreamReader(new FileInputStream(recordsFile), Charset.forName("UTF-8")));
                 IOUtils.copy(reader2, outputRdfFile);
+                
+                // Close dcat:Catalog
+                outputRdfFile.write("</dcat:Catalog>");
+                outputRdfFile.write("\n");
 
                 // File footer
                 Log.info(Geonet.GEONETWORK, "DCAT - ... Writing file footer");
-                writeFileFooter(outputRdfFile);
+                writeFileFooter(outputRdfFile);                                
             } finally {
                 IOUtils.closeQuietly(outputRdfFile);
                 IOUtils.closeQuietly(reader1);
@@ -189,7 +213,6 @@ public class RdfOutputManager {
             return rdfFile;
 
         } finally {
-            searcher.close();
         }
     }
 
@@ -204,7 +227,7 @@ public class RdfOutputManager {
     /**
      * Writes the catalog results section to a file.
      */
-    private void writeCatalogResults(BufferedWriter output, Element rdf, int page) throws Exception {
+    private void writeCatalogResults(BufferedWriter output, Element rdf, int page, String pagingInformation) throws Exception {
         // First time the catalogFile contains the complete dcat:Catalog section, the following times
         // gets appended the dcat:dataset elements
         if (page > 1) {
@@ -220,7 +243,9 @@ public class RdfOutputManager {
             }
 
         } else {
+        	output.write(pagingInformation);
             Namespace nsDcat = Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#");
+            output.write("\n");
             Element mdDcatCatalog = rdf.getChild("Catalog", nsDcat);
 
             // remove the dcat:Catalog close element, will be added in the final file
@@ -246,8 +271,11 @@ public class RdfOutputManager {
             if (page == 1) {
                 // For first results page, write also the Organisation section that is between Catalog
                 // and CatalogRecords sections (same in all pages)
+            	output.write("<dcat:dataset>");
+                output.write("\n");
                 String result = Xml.getString(mdDcat);
                 output.write(removeNamespaces(result));
+                output.write("</dcat:dataset>");
                 output.write("\n");
             } else if (recordsSectionStarted) {
                 String result = Xml.getString(mdDcat);

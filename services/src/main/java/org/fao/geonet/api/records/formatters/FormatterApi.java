@@ -33,6 +33,7 @@ import io.swagger.annotations.ApiParam;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.xlink.Processor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
@@ -40,17 +41,34 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.records.formatters.cache.*;
+import org.fao.geonet.api.records.formatters.cache.CacheConfig;
+import org.fao.geonet.api.records.formatters.cache.ChangeDateValidator;
+import org.fao.geonet.api.records.formatters.cache.FormatterCache;
+import org.fao.geonet.api.records.formatters.cache.Key;
+import org.fao.geonet.api.records.formatters.cache.NoCacheValidator;
+import org.fao.geonet.api.records.formatters.cache.StoreInfoAndDataLoadResult;
+import org.fao.geonet.api.records.formatters.cache.Validator;
 import org.fao.geonet.api.records.formatters.groovy.ParamValue;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.util.XslUtil;
@@ -64,7 +82,6 @@ import org.jdom.Namespace;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Lazy;
@@ -75,7 +92,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -86,9 +108,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
@@ -167,8 +198,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     }
 
     @RequestMapping(value = {
-        "/api/records/{metadataUuid}/formatters/{formatterId}",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/records/{metadataUuid}/formatters/{formatterId}",
+        "/{portal}/api/" + API.VERSION_0_1 +
             "/records/{metadataUuid}/formatters/{formatterId}"
     },
         method = RequestMethod.GET,
@@ -208,14 +239,24 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(
             value = "mdpath",
             required = false) final String mdPath,
+        @ApiParam(
+            value = "Optional language ISO 3 letters code to override HTTP Accept-language header.",
+            required = false
+        )
+        @RequestParam(
+            value = "language",
+            required = false) final String iso3lang,
         @RequestParam(
             value = "output",
             required = false)
             FormatType formatType,
+        @ApiParam(value = "Download the approved version",
+            required = false, defaultValue = "true")
+        @RequestParam(required = false, defaultValue = "true")
+            boolean approved,
         @ApiIgnore final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
         // TODO :
@@ -235,12 +276,21 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             formatType = FormatType.xml;
         }
 
-        final String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+
+        String language = LanguageUtils.locale2gnCode(locale.getISO3Language());
+        if (StringUtils.isNotEmpty(iso3lang)) {
+            language = LanguageUtils.locale2gnCode(iso3lang);
+        }
+
         final ServiceContext context = createServiceContext(
             language,
             formatType,
             request.getNativeRequest(HttpServletRequest.class));
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        
+        if(approved) {
+        	metadata = context.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
+        }
 
 
         Boolean hideWithheld = true;
@@ -458,14 +508,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
         response.setContentType(formatType.contentType);
-        String filename = "metadata." + metadataUuid + formatType;
+        String filename = "metadata-" + metadataUuid + "." + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
         response.setStatus(HttpServletResponse.SC_OK);
         if (formatType == FormatType.pdf) {
             writerAsPDF(context, response, formattedMetadata, lang);
         } else {
             response.setCharacterEncoding(Constants.ENCODING);
-            response.setContentType("text/html");
+            response.setContentType(formatType.contentType);
             response.setContentLength(formattedMetadata.length);
             response.setHeader("Cache-Control", "no-cache");
             response.getOutputStream().write(formattedMetadata);
@@ -747,7 +797,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
     }
 
-    private class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
+    public class FormatMetadata implements Callable<StoreInfoAndDataLoadResult> {
         private final Key key;
         private final NativeWebRequest request;
         private final ServiceContext serviceContext;

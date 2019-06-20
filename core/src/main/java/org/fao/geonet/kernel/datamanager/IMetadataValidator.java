@@ -1,10 +1,33 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager;
 
 import java.util.List;
 
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataValidation;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -19,16 +42,6 @@ import jeeves.server.context.ServiceContext;
  *
  */
 public interface IMetadataValidator {
-
-    /**
-     * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
-     * @param context
-     * @param force
-     * @throws Exception
-     */
-    public void init(ServiceContext context, Boolean force) throws Exception;
-
     /**
      * Validates metadata against XSD and schematron files related to metadata schema throwing XSDValidationErrorEx if xsd errors or
      * SchematronValidationErrorEx if schematron rules fails.
@@ -44,25 +57,9 @@ public interface IMetadataValidator {
     void setNamespacePrefix(Element md);
 
     /**
-     * Use this validate method for XML documents with dtd.
-     */
-    void validate(String schema, Document doc) throws Exception;
-
-    /**
      * Use this validate method for XML documents with xsd validation.
      */
     void validate(String schema, Element md) throws Exception;
-
-    /**
-     * Validates an xml document with respect to an xml schema described by .xsd file path using supplied error handler.
-     *
-     * @param schema
-     * @param md
-     * @param eh
-     * @return
-     * @throws Exception
-     */
-    Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception;
 
     /**
      * Creates XML schematron report.
@@ -72,12 +69,10 @@ public interface IMetadataValidator {
     /**
      * Used by harvesters that need to validate metadata.
      *
-     * @param schema name of the schema to validate against
-     * @param metadataId metadata id - used to record validation status
-     * @param doc metadata document as JDOM Document not JDOM Element
+     * @param metadata metadata
      * @param lang Language from context
      */
-    boolean doValidate(String schema, String metadataId, Document doc, String lang);
+    boolean doValidate(AbstractMetadata metadata, String lang);
 
     /**
      * Used by the validate embedded service. The validation report is stored in the session.

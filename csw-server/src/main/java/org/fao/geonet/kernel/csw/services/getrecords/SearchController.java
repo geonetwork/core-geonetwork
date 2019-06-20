@@ -43,12 +43,18 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
-import org.jdom.*;
+import org.jdom.Attribute;
+import org.jdom.Comment;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * TODO javadoc.
@@ -127,7 +133,7 @@ public class SearchController {
             // OGC 07-045 :
             // Because for this application profile it is not possible that a query includes more than one
             // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
-            res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
+            res = org.fao.geonet.csw.common.util.Xml.applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
             //
             // apply elementnames
             //
@@ -147,50 +153,6 @@ public class SearchController {
             context.error("Error while getting metadata with id : " + id);
             context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
             throw new NoApplicableCodeEx("Raised exception while getting metadata :" + e);
-        }
-    }
-
-    /**
-     * Applies stylesheet according to ElementSetName and schema.
-     *
-     * @param context        Service context
-     * @param schemaManager  schemamanager
-     * @param schema         schema
-     * @param result         result
-     * @param outputSchema   requested OutputSchema
-     * @param elementSetName requested ElementSetName
-     * @param resultType     requested ResultTYpe
-     * @param id             metadata id
-     * @return metadata
-     * @throws InvalidParameterValueEx hmm
-     */
-    private static Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
-                                               Element result, String outputSchema, ElementSetName elementSetName,
-                                               ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
-        Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
-        Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
-
-        if (!Files.exists(styleSheet)) {
-            throw new InvalidParameterValueEx("OutputSchema",
-                String.format(
-                    "OutputSchema '%s' not supported for metadata with '%s' (%s).\nCorresponding XSL transformation '%s' does not exist for this schema.\nThe record will not be returned in response.",
-                    outputSchema, id, schema, styleSheet.getFileName()));
-        } else {
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("lang", displayLanguage);
-            params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
-
-            try {
-                result = Xml.transform(result, styleSheet, params);
-            } catch (Exception e) {
-                String msg = String.format(
-                    "Error occured while transforming metadata with id '%s' using '%s'.",
-                    id, styleSheet.getFileName());
-                context.error(msg);
-                context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
-                throw new InvalidParameterValueEx("OutputSchema", msg);
-            }
-            return result;
         }
     }
 

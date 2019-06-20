@@ -63,7 +63,7 @@ public final class CookieCsrfTokenRepository implements CsrfTokenRepository {
   public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
     String tokenValue = token == null ? "" : token.getToken();
     Cookie cookie = new Cookie(this.cookieName, tokenValue);
-    cookie.setSecure(request.isSecure());
+    cookie.setSecure(request.getServletContext().getSessionCookieConfig().isSecure());
     if (this.cookiePath != null && !this.cookiePath.isEmpty()) {
       cookie.setPath(this.cookiePath);
     } else {

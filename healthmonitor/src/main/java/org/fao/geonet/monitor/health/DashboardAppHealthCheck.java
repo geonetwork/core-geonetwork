@@ -28,45 +28,56 @@ import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpResponse;
 
 /**
  * Checks to ensure that the Kibana is up and running.
  */
 public class DashboardAppHealthCheck implements HealthCheckFactory {
+
     public HealthCheck create(final ServiceContext context) {
         return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 final GeonetHttpRequestFactory httpRequestFactory = context.getBean(GeonetHttpRequestFactory.class);
                 final SettingManager settingManager = context.getBean(SettingManager.class);
+                final EsSearchManager searchMan = context.getBean(EsSearchManager.class);
+                final String dashboardAppUrl = searchMan.getClient().getDashboardAppUrl();
 
-                ClientHttpResponse httpResponse = null;
-                try {
-                    String url = settingManager.getBaseURL() + "dashboards/api/status";
-                    httpResponse = httpRequestFactory.execute(new HttpGet(url));
+                if (StringUtils.isNotEmpty(dashboardAppUrl)) {
+                    ClientHttpResponse httpResponse = null;
+                    try {
+                        String url = settingManager.getBaseURL() + "dashboards/api/status";
+                        httpResponse = httpRequestFactory.execute(new HttpGet(url));
 
-                    if (httpResponse.getRawStatusCode() == 200) {
-                        return Result.healthy(String.format(
-                            "Dashboard application is running."
-                        ));
-                    } else {
-                        return Result.unhealthy(
-                            "Dashboard application is not available currently. " +
-                                "This component is only required if you use dashboards.");
+                        if (httpResponse.getRawStatusCode() == 200) {
+                            return Result.healthy(String.format(
+                                "Dashboard application is running."
+                            ));
+                        } else {
+                            return Result.unhealthy(
+                                "Dashboard application is not available currently. " +
+                                    "This component is only required if you use dashboards.");
+                        }
+                    } catch (Throwable e) {
+                        return Result.unhealthy(e);
+                    } finally {
+                        if (httpResponse != null) {
+                            httpResponse.close();
+                        }
                     }
-                } catch (Throwable e) {
-                    return Result.unhealthy(e);
-                } finally {
-                    if (httpResponse != null) {
-                        httpResponse.close();
-                    }
+                } else {
+                    return Result.unhealthy(
+                        "Dashboard application is not configured. " +
+                            "Update config.properties to setup Kibana to use this feature.");
                 }
             }
         };

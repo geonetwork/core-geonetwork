@@ -183,18 +183,6 @@ public final class Params {
     /**
      * TODO javadoc.
      */
-    public static final class Status {
-        public static final String UNKNOWN = "0";
-        public static final String DRAFT = "1";
-        public static final String APPROVED = "2";
-        public static final String RETIRED = "3";
-        public static final String SUBMITTED = "4";
-        public static final String REJECTED = "5";
-    }
-
-    /**
-     * TODO javadoc.
-     */
     public static final class Svn {
         public static final String DBURLPROP = "geonet:dburl";
         public static final String OPERATOR = "geonet:operator";

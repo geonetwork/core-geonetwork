@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -119,8 +120,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @Service
 @RequestMapping(
     value = {
-        "/api/registries/vocabularies",
-        "/api/" + API.VERSION_0_1 +
+        "/{portal}/api/registries/vocabularies",
+        "/{portal}/api/" + API.VERSION_0_1 +
             "/registries/vocabularies"
     })
 @Api(
@@ -173,6 +174,10 @@ public class KeywordsApi {
             required = false
         )
             String q,
+        @ApiParam(
+            value = "Query in that language",
+            required = false
+        )
         @RequestParam(
             value = "lang",
             defaultValue = "eng"
@@ -197,7 +202,7 @@ public class KeywordsApi {
         )
             int start,
         @ApiParam(
-                value = "Target langs",
+            value = "Return keyword information in one or more languages",
                 required = false
         )
         @RequestParam(
@@ -438,6 +443,7 @@ public class KeywordsApi {
                 requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
             }
         }
+
         root.addContent(requestParams);
         root.addContent(descKeys);
         root.addContent(gui);
@@ -632,12 +638,16 @@ public class KeywordsApi {
         // Upload RDF file
         Path rdfFile = null;
         String fname = null;
+        File tempDir = null;
 
         if (fileUpload) {
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus file: " + file.getOriginalFilename());
 
-            File convFile = new File(file.getOriginalFilename());
+            tempDir = Files.createTempDirectory("thesaurus").toFile();
+
+            Path tempFilePath = tempDir.toPath().resolve(file.getOriginalFilename());
+            File convFile = tempFilePath.toFile();
             file.transferTo(convFile);
 
             rdfFile = convFile.toPath();
@@ -648,42 +658,48 @@ public class KeywordsApi {
             throw new MissingServletRequestParameterException("Thesaurus source not provided", "file");
         }
 
-        if (StringUtils.isEmpty(fname)) {
-            throw new Exception("File upload from URL or file return null");
-        }
+        try {
+            if (StringUtils.isEmpty(fname)) {
+                throw new Exception("File upload from URL or file return null");
+            }
 
-        long fsize;
-        if (rdfFile != null && Files.exists(rdfFile)) {
-            fsize = Files.size(rdfFile);
-        } else {
-            throw new MissingServletRequestParameterException("Thesaurus file doesn't exist", "file");
-        }
+            long fsize;
+            if (rdfFile != null && Files.exists(rdfFile)) {
+                fsize = Files.size(rdfFile);
+            } else {
+                throw new MissingServletRequestParameterException("Thesaurus file doesn't exist", "file");
+            }
 
-        // -- check that the archive actually has something in it
-        if (fsize == 0) {
-            throw new MissingServletRequestParameterException("Thesaurus file has zero size", "file");
-        }
+            // -- check that the archive actually has something in it
+            if (fsize == 0) {
+                throw new MissingServletRequestParameterException("Thesaurus file has zero size", "file");
+            }
 
-        String extension = FilenameUtils.getExtension(fname);
+            String extension = FilenameUtils.getExtension(fname);
 
-        if (extension.equalsIgnoreCase("rdf") ||
-            extension.equalsIgnoreCase("xml")) {
-            Log.debug(Geonet.THESAURUS, "Uploading thesaurus: " + fname);
+            if (extension.equalsIgnoreCase("rdf") ||
+                extension.equalsIgnoreCase("xml")) {
+                Log.debug(Geonet.THESAURUS, "Uploading thesaurus: " + fname);
 
-            // Rename .xml to .rdf for all thesaurus
-            fname = fname.replace(extension, "rdf");
-            uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
-        } else {
-            Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
-            throw new Exception("Incorrect extension for thesaurus named: "
+                // Rename .xml to .rdf for all thesaurus
+                fname = fname.replace(extension, "rdf");
+                uploadThesaurus(rdfFile, stylesheet, context, fname, type, dir);
+            } else {
+                Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
+                throw new Exception("Incorrect extension for thesaurus named: "
                     + fname);
+            }
+
+            long end = System.currentTimeMillis();
+            long duration = (end - start) / 1000;
+
+            return String.format("Thesaurus '%s' loaded in %d sec.",
+                fname, duration);
+        } finally {
+            if (tempDir != null) {
+                FileUtils.deleteQuietly(tempDir);
+            }
         }
-
-        long end = System.currentTimeMillis();
-        long duration = (end - start) / 1000;
-
-        return String.format("Thesaurus '%s' loaded in %d sec.",
-            fname, duration);
     }
 
 

@@ -70,19 +70,19 @@
   <associatedResources>Associated resources</associatedResources>
 
   <!-- XSD error translation -->
-  <invalidElement>Invalid element. Invalid content was found starting with element:</invalidElement>
-  <onElementOf>One of the following elements</onElementOf>
-  <isExpected>is expected.</isExpected>
-  <isNotComplete>is not complete.</isNotComplete>
-  <elementLocated>Parent element is</elementLocated>
-  <missingElement>Missing element. The content of element:</missingElement>
+  <invalidElement>Invalid content found at element </invalidElement>
+  <onElementOf>One of the following elements </onElementOf>
+  <isExpected> is expected.</isExpected>
+  <isNotComplete> is not complete.</isNotComplete>
+  <elementLocated> Parent element is </elementLocated>
+  <missingElement>Missing element in </missingElement>
   <invalidValue>Invalid or missing value.</invalidValue>
-  <notValidFor>is not a valid value for</notValidFor>
-  <xsdErrorIs>XSD error is:</xsdErrorIs>
-  <inElement>in element</inElement>
-  <enum1>Value</enum1>
-  <enum2>is not valid for the field</enum2>
-  <enum3>List of values is :</enum3>
+  <notValidFor> is not a valid value for </notValidFor>
+  <xsdErrorIs>XSD error is: </xsdErrorIs>
+  <inElement> in element </inElement>
+  <enum1>Value </enum1>
+  <enum2> is not valid for the field </enum2>
+  <enum3>Potential values are: </enum3>
 
   <!-- INSPIRE view labels and help -->
   <url>Online resource</url>
@@ -228,4 +228,15 @@
 
   <sds-section-custodian>Responsible custodian</sds-section-custodian>
   <sds-addOperation>Add Operation</sds-addOperation>
+
+  <trueValue>Yes</trueValue>
+  <falseValue>No</falseValue>
+  <nilValue>Undefined</nilValue>
+  <logo>logo</logo>
+  <overview>overview</overview>
+  <thumbnail>thumbnail</thumbnail>
+  <north>north</north>
+  <east>east</east>
+  <south>south</south>
+  <west>west</west>
 </strings>

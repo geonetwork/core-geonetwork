@@ -61,9 +61,9 @@ public class TemplatesUriLocator implements UriLocator {
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                         if (!Files.isDirectory(file) && file.getFileName().toString().endsWith("html")) {
-                            String fileFolder = file.getParent().toString();
+                            String fileFolder = file.getParent().toUri().toString();
                             String relativeFileFolderPath = fileFolder.substring(fileFolder.indexOf(path));
-                            addFileToTemplateCache(javascript, "../.." + relativeFileFolderPath.replace('\\', '/') + '/' + file.getFileName(), file.toFile());
+                            addFileToTemplateCache(javascript, "../.." + relativeFileFolderPath + file.getFileName(), file.toFile());
                         }
                         return FileVisitResult.CONTINUE;
                     }
@@ -81,17 +81,24 @@ public class TemplatesUriLocator implements UriLocator {
         template = new StringBuilder();
         final Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
         try {
+            
             br = new BufferedReader(reader);
             while ((sCurrentLine = br.readLine()) != null) {
-                template.append(sCurrentLine);
+                template.append(sCurrentLine).append("\n");
             }
 
+            // Build a template in a one line String for the JS templateCache
             String sTemplate = template.toString();
-            sTemplate = sTemplate.replaceAll(">\\s*<", "><");
-            sTemplate = sTemplate.replaceAll("\\s\\s+", " ");
-            sTemplate = sTemplate.replaceAll("\n", "");
-            sTemplate = sTemplate.replace("'", "\\'");
-
+            // Remove all empty content between tags but not new lines
+            sTemplate = sTemplate.replaceAll(">[ \\t\\r\\f]*<", "><"); 
+            // Replace all successions of spaces, tabs ... by a single space
+            sTemplate = sTemplate.replaceAll("\\s\\s+", " "); 
+            // The backslash (\) is an escape character in Javascript
+            sTemplate = sTemplate.replace("\\", "\\\\");
+            // Escape new lines
+            sTemplate = sTemplate.replaceAll("\\n", "\\\\n");
+            // Escape quotes
+            sTemplate = sTemplate.replace("'", "\\'");  
             javascript.append(
                 String.format("$templateCache.put('%s', '%s');",
                     s,

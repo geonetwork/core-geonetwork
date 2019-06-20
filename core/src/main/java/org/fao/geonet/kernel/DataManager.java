@@ -28,23 +28,14 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataType;
@@ -67,18 +58,23 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -91,6 +87,8 @@ import jeeves.server.context.ServiceContext;
  */
 @Deprecated
 public class DataManager {
+
+    private static final Logger LOGGER_DATA_MANAGER = LoggerFactory.getLogger(Geonet.DATA_MANAGER);
 
     @Autowired
     private IMetadataManager metadataManager;
@@ -117,38 +115,18 @@ public class DataManager {
      * @param force Force reindexing all from scratch
      **/
     public void init(ServiceContext context, Boolean force) throws Exception {
-        // FIXME remove all the inits when/if ever autowiring works fine
-        this.metadataManager = context.getBean(IMetadataManager.class);
-        this.metadataManager.init(context, force);
-        this.metadataUtils = context.getBean(IMetadataUtils.class);
-        this.metadataUtils.init(context, force);
-        this.metadataIndexer = context.getBean(IMetadataIndexer.class);
         this.metadataIndexer.init(context, force);
-        this.metadataValidator = context.getBean(IMetadataValidator.class);
-        this.metadataValidator.init(context, force);
-        this.metadataOperations = context.getBean(IMetadataOperations.class);
-        this.metadataOperations.init(context, force);
-        this.metadataStatus = context.getBean(IMetadataStatus.class);
-        this.metadataStatus.init(context, force);
-        this.metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        this.metadataSchemaUtils.init(context, force);
-        this.metadataCategory = context.getBean(IMetadataCategory.class);
-        this.metadataCategory.init(context, force);
-        this.accessManager = context.getBean(AccessManager.class);
-        // remove all the inits when/if ever autowiring works fine
+        this.metadataManager.init(context, force);
+        this.metadataUtils.init(context, force);
 
         // FIXME this shouldn't login automatically ever!
         if (context.getUserSession() == null) {
-            Log.debug(Geonet.DATA_MANAGER, "Automatically login in as Administrator. Who is this? Who is calling this?");
+            LOGGER_DATA_MANAGER.debug( "Automatically login in as Administrator. Who is this? Who is calling this?");
             UserSession session = new UserSession();
             context.setUserSession(session);
             session.loginAs(new User().setUsername("admin").setId(-1).setProfile(Profile.Administrator));
-            try {
-                Log.debug(Geonet.DATA_MANAGER, "Hopefully this is cron job or routinely background task. Who called us?",
+            LOGGER_DATA_MANAGER.debug( "Hopefully this is cron job or routinely background task. Who called us?",
                         new Exception("Dummy Exception to know the stacktrace"));
-            } catch (Exception e) {
-                // Silent. This is just to log the stacktrace here
-            }
         }
     }
 
@@ -221,18 +199,8 @@ public class DataManager {
     }
 
     @Deprecated
-    public void validate(String schema, Document doc) throws Exception {
-        metadataValidator.validate(schema, doc);
-    }
-
-    @Deprecated
     public void validate(String schema, Element md) throws Exception {
         metadataValidator.validate(schema, md);
-    }
-
-    @Deprecated
-    public Element validateInfo(String schema, Element md, ErrorHandler eh) throws Exception {
-        return metadataValidator.validateInfo(schema, md, eh);
     }
 
     @Deprecated
@@ -278,6 +246,11 @@ public class DataManager {
     @Deprecated
     public String extractUUID(String schema, Element md) throws Exception {
         return metadataUtils.extractUUID(schema, md);
+    }
+
+    @Deprecated
+    public String extractDefaultLanguage(String schema, Element md) throws Exception {
+        return metadataUtils.extractDefaultLanguage(schema, md);
     }
 
     @Deprecated
@@ -451,17 +424,6 @@ public class DataManager {
     @Deprecated
     public boolean validate(Element xml) {
         return metadataValidator.validate(xml);
-    }
-
-    @Deprecated
-    public boolean doValidate(String schema, String metadataId, Document doc, String lang) {
-        return metadataValidator.doValidate(schema, metadataId, doc, lang);
-    }
-
-    @Deprecated
-    public Pair<Element, String> doValidate(UserSession session, String schema, String metadataId, Element md, String lang,
-            boolean forEditing) throws Exception {
-        return metadataValidator.doValidate(session, schema, metadataId, md, lang, forEditing);
     }
 
     @Deprecated

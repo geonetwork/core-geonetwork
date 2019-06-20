@@ -91,7 +91,10 @@ The list of possible values are:
 
 - all HTML5 input type or
 
-- an AngularJS directive name.
+- an AngularJS directive name. MUST starts with 'data-' and
+  could end with '-textarea' to create a textarea element.
+  It could end with '-div' if the directive does not apply
+  to the input or textarea but to the div containing it.
 
 
 An element can only have one type defined.
@@ -319,6 +322,11 @@ Element to match for creating the table.
                 </xs:documentation>
               </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="label" type="xs:string" use="optional">
+              <xs:annotation>
+                <xs:documentation>Table header label (from strings.xml), if not defined is used the value of attribute 'for' use the related element label from labels.xml</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
             <xs:sequence>
               <xs:element maxOccurs="1" ref="header"/>
               <xs:element maxOccurs="1" ref="row"/>
@@ -476,6 +484,7 @@ relevant to have parent defined to have more control over the list.
       </xs:attribute>
       <xs:attribute ref="use"/>
       <xs:attribute ref="addDirective"/>
+      <xs:attribute name="xpath" type="xs:string" use="optional"/>
     </xs:complexType>
   </xs:element>
 
@@ -576,6 +585,20 @@ Hide the view from the menu if the attribute is defined. Allows to easily disabl
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="class" type="xs:string">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Define custom CSS class to be set on the form element. This is mainly used
+to set the type of indent:
+
+ * gn-label-above-input: to put label above form input
+ * gn-indent-colored: colored left border on each fieldset
+ * gn-indent-bluescale: blue scale colored left border on each fieldset
+
+See catalog/views/default/less/gn_editor_default.less to add your custom editor styles.
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="upAndDownControlHidden" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
@@ -672,6 +695,23 @@ To include text block use the following:
         <text ref="defaultviewdesc"></text>
         ....
 
+For overview, a simple manager can be used or the general one:
+
+.. code-block:: xml
+
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
+        <directive data-gn-overview-manager=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+
+
+        <!-- General online source manager
+        <directive data-gn-onlinesrc-list=""/>
+        -->
 
 
 ]]>
@@ -889,7 +929,11 @@ to be able:
 Adding a section to a tab
 -------------------------
 
-A section is a group of fields.
+A section is a group of fields. If a name attribute is provided,
+then it will create an HTML fieldset which is collapsible.
+If no name attribute is provided, then it just render the inner elements.
+For example, if you need a tab without a root fieldset, juste create 
+the mandatory section with no name and then the inner elements.
 
 
         ]]></xs:documentation>
@@ -1036,7 +1080,8 @@ Activate the "flat" mode at the tab level to make the form display only existing
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="1" ref="template"/>
+        <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="if">
         <xs:annotation>
@@ -1150,6 +1195,7 @@ displayed based on the XML template snippet field configuration. Default is fals
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute ref="use"/>
     </xs:complexType>
   </xs:element>
 
@@ -1591,7 +1637,7 @@ instead of the text input.
           <xs:restriction base="xs:string">
             <xs:enumeration value="textarea"/>
             <xs:enumeration value="number"/>
-            <xs:enumeration value="gn-date-picker">
+            <xs:enumeration value="data-gn-date-picker">
               <xs:annotation>
                 <xs:documentation>
                   Custom date picker directive which rely on
@@ -1624,9 +1670,42 @@ instead of the text input.
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
+            <xs:enumeration value="data-gn-topiccategory-selector-div">
+              <xs:annotation>
+                <xs:documentation>A directive to render topic category like keywords widget.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-field-duration-div">
+              <xs:annotation>
+                <xs:documentation>A directive to set a complete duration type informations.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-logo-selector">
+              <xs:annotation>
+                <xs:documentation>A directive to select a logo URL.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
             <xs:enumeration value="data-gn-language-picker">
               <xs:annotation>
                 <xs:documentation>An autocompletion list for languages.</xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="data-gn-keyword-picker">
+              <xs:annotation>
+                <xs:documentation><![CDATA[
+An autocompletion list based on a thesaurus.
+
+.. code-block:: xml
+
+                  <for name="gmd:otherConstraints"
+                       use="data-gn-keyword-picker">
+                    <directiveAttributes
+                      data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistOnLineDescriptionCode-OnLineDescriptionCode"
+                      data-display-definition="true"/>
+                  </for>
+
+
+                ]]></xs:documentation>
               </xs:annotation>
             </xs:enumeration>
           </xs:restriction>

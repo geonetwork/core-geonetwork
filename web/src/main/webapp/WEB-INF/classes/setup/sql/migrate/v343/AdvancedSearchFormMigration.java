@@ -44,8 +44,7 @@ import java.util.Map;
  * Adds a new field <code>mods.search.advancedSearchTemplate</code> to <code>ui/config</code> setting to customise
  * the advanced search form using a template.
  */
-public class AdvancedSearchFormMigration extends JsonDatabaseMigration
-    implements DatabaseMigrationTask {
+public class AdvancedSearchFormMigration extends JsonDatabaseMigration {
 
     private final String settingName = "ui/config";
 

@@ -34,13 +34,11 @@ import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
 import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
-import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -75,11 +73,8 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
 
     @Before
     public synchronized void createExtraThesauri() throws Exception {
-        final URL resource = KeywordsSearcherTest.class.getResource(KeywordsSearcherTest.class.getSimpleName() + ".class");
-        Path directory = IO.toPath(resource.toURI()).getParent();
-
-        thesaurusBlah = createThesaurus(directory, "blah");
-        thesaurusFoo = createThesaurus(directory, "foo");
+    	thesaurusBlah = createThesaurus("blah");
+        thesaurusFoo = createThesaurus("foo");
 
         this.thesaurusFinder = new ThesaurusFinder() {
             {
@@ -113,8 +108,8 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
         };
     }
 
-    private Thesaurus createThesaurus(Path directory, String string) throws Exception {
-        Path thesaurusBlahFile = directory.resolve(string + ".rdf");
+    private Thesaurus createThesaurus(String string) throws Exception {
+        Path thesaurusBlahFile = locateThesaurus(string + ".rdf");
         Thesaurus thes = new Thesaurus(isoLangMapper, string + ".rdf", Geonet.CodeList.EXTERNAL, string, thesaurusBlahFile, "http://" +
             string + ""
             + ".com");
@@ -405,6 +400,7 @@ public class KeywordsSearcherTest extends AbstractThesaurusBasedTest {
             .addLang("eng")
             .offset(5)
             .addThesaurus(thesaurus.getKey())
+            .setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC))
             .maxResults(5);
         searcher.search(params.build());
         assertEquals(5, searcher.getNbResults());

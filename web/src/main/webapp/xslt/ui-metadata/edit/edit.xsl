@@ -67,6 +67,8 @@
 
   <xsl:template match="/">
 
+    <xsl:variable name="hasViewClass"
+                  select="exists($viewConfig/@class)"/>
     <xsl:variable name="hasSidePanel"
                   select="exists($viewConfig/sidePanel) and $isTemplate != 's' and $isTemplate != 't'"/>
     <div id="gn-editor-container-{$metadataId}">
@@ -78,8 +80,9 @@
         -->
         <form id="gn-editor-{$metadataId}"
               name="gnEditor" accept-charset="UTF-8" method="POST"
-              novalidate="" class="form-horizontal gn-editor gn-tab-{$tab}" role="form"
-              data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy">
+              novalidate="" class="form-horizontal gn-editor gn-tab-{$tab} {if ($hasViewClass) then concat('gn-editor-config-css ', $viewConfig/@class) else ''}" role="form"
+              data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy"
+              autocomplete="off">
 
           <input type="hidden" id="schema" value="{$schema}"/>
           <input type="hidden" id="template" name="template" value="{$isTemplate}"/>

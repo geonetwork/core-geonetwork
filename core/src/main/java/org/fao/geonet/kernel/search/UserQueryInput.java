@@ -62,6 +62,7 @@ public class UserQueryInput {
      */
     public static final List<String> RESERVED_FIELDS = Arrays.asList(
         SearchParameter.GROUP,
+        SearchParameter.GROUPEDIT,
         Geonet.SearchResult.FAST,
         Geonet.SearchResult.SORT_BY,
         Geonet.SearchResult.SORT_ORDER,

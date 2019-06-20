@@ -20,7 +20,9 @@ var gnHarvestercsw = {
         "capabilitiesUrl" : "http://",
         "rejectDuplicateResource" : false,
         "xslfilter": [],
-        "outputSchema": ""
+        "outputSchema": "",
+        "queryScope": "local",
+        "hopCount": 2
       },
       "content" : {
         "validate" : "NOVALIDATION"
@@ -82,6 +84,8 @@ var gnHarvestercsw = {
       + '    </account>'
       + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'
       + '    <outputSchema>' + h.site.outputSchema + '</outputSchema>'
+      + '    <queryScope>' + h.site.queryScope + '</queryScope>'
+      + '    <hopCount>' + h.site.hopCount + '</hopCount>'
       + '  </site>'
       + gnHarvestercsw.buildResponseCSWSearch($scope)
       + '  <options>'

@@ -1285,7 +1285,7 @@ public class SchemaManager {
             stage = "reading schema-ident file " + idFile;
             Element root = Xml.loadFile(idFile);
             stage = "validating schema-ident file " + idFile;
-            Xml.validate(new Document(root));
+            Xml.validate(root);
 
             final String schemaName = schemasDir.getFileName().toString();
             if (hmSchemas.containsKey(schemaName)) { // exists so ignore it
@@ -1470,6 +1470,7 @@ public class SchemaManager {
 
         mds.setAppMinorVersionSupported(root.getChildText("appMinorVersionSupported", GEONET_SCHEMA_NS));
         mds.setAppMajorVersionSupported(root.getChildText("appMajorVersionSupported", GEONET_SCHEMA_NS));
+        mds.setDependsOn(root.getChildText("depends", GEONET_SCHEMA_NS));
     }
 
     private Map<String, String> getSchemaIdentMultilingualProperty(Element root, String propName) {

@@ -234,7 +234,7 @@
               layer.getSource().getUrl() :
               layer.getSource().getUrls()[0];
 
-          url = removeProxyUrl(url);
+          url = gnGlobalSettings.getNonProxifiedUrl(url);
 
           angular.extend(enc, {
             type: 'WMS',
@@ -282,7 +282,7 @@
             url = url.substring(0, url.lastIndexOf("/"));
           }
 
-          url = removeProxyUrl(url);
+          url = gnGlobalSettings.getNonProxifiedUrl(url);
 
           angular.extend(enc, {
             type: 'XYZ',
@@ -346,13 +346,13 @@
           var layerUrl = layer.get('url');
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
             var mSize = (ol.extent.getWidth(proj.getExtent()) /
-                tileGrid.getTileSize()) /
+                tileGrid.getTileSize(z)) /
                 tileGrid.getResolutions()[z];
                 matrixIds[z] = {
                   identifier: tileGrid.getMatrixIds()[z],
                   resolution: tileGrid.getResolutions()[z],
-                  tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
-                  topLeftCorner: tileGrid.getOrigin(),
+                  tileSize: [tileGrid.getTileSize(z), tileGrid.getTileSize(z)],
+                  topLeftCorner: tileGrid.getOrigin(z),
                   matrixSize: [mSize, mSize]
                 };
           }
@@ -369,7 +369,7 @@
             }
           }
 
-          layerUrl = removeProxyUrl(layerUrl);
+          layerUrl = gnGlobalSettings.getNonProxifiedUrl(layerUrl);
 
           angular.extend(enc, {
             type: 'WMTS',
@@ -547,18 +547,5 @@
 
       return literal;
     };
-
-    // Removes the proxy path and decodes the layer url,
-    // so the layer can be printed with MapFish.
-    // Otherwise Mapfish rejects it, due to relative url.
-    var removeProxyUrl = function (url) {
-      if (url.indexOf(gnGlobalSettings.proxyUrl) > -1) {
-        return decodeURIComponent(
-          url.replace(gnGlobalSettings.proxyUrl, ''));
-      } else {
-        return url;
-      }
-    };
-
   }]);
 })();

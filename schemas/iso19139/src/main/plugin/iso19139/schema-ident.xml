@@ -63,10 +63,10 @@
     non-geographic data. Certain conditional metadata elements might not apply to these other forms
     of data.
   </description>
-  <standardUrl>http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=53798
+  <standardUrl>https://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=53798
   </standardUrl>
-  <schemaLocation>http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd
-                  http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd
+  <schemaLocation>http://www.isotc211.org/2005/gmd https://www.isotc211.org/2005/gmd/gmd.xsd
+                  http://www.isotc211.org/2005/gmx https://www.isotc211.org/2005/gmx/gmx.xsd
                   http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd
   </schemaLocation>
   <autodetect xmlns:gmd="http://www.isotc211.org/2005/gmd"

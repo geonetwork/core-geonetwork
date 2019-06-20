@@ -50,7 +50,23 @@ public interface Store {
      *                     to filter resources eg. *.{png|jpg}
      * @return A list of resources
      */
+	@Deprecated
     List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter) throws Exception;
+
+    /**
+     * Retrieve all resources for a metadata. The list of resources depends on current user
+     * privileges.
+     *
+     *
+     * @param context
+     * @param metadataUuid The metadata UUID
+     * @param sort         Sort by resource name or sharing policy {@link Sort}
+     * @param filter       a {@link java.nio.file.Files#newDirectoryStream(Path)} GLOB expression}
+     *                     to filter resources eg. *.{png|jpg}
+     * @param approved   Return the approved version or not
+     * @return A list of resources
+     */
+    List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved) throws Exception;
 
     /**
      * Retrieve all resources for a metadata having a specific sharing policy
@@ -63,7 +79,21 @@ public interface Store {
      *                                   expression} to filter resources eg. *.{png|jpg}
      * @return A list of resources
      */
+	@Deprecated
     List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter) throws Exception;
+    /**
+     * Retrieve all resources for a metadata having a specific sharing policy
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param filter                     a {@link java.nio.file.Files#newDirectoryStream(Path) GLOB
+     *                                   expression} to filter resources eg. *.{png|jpg}
+     * @param approved   Return the approved version or not
+     * @return A list of resources
+     */
+    List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved) throws Exception;
 
     /**
      * Retrieve a metadata resource path.
@@ -74,7 +104,20 @@ public interface Store {
      * @param resourceId   The resource identifier
      * @return The resource
      */
+	@Deprecated
     Path getResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception;
+
+    /**
+     * Retrieve a metadata resource path.
+     *
+     *
+     * @param context
+     * @param metadataUuid The metadata UUID
+     * @param resourceId   The resource identifier
+     * @param approved   Return the approved version or not
+     * @return The resource
+     */
+    Path getResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
 
     /**
      * Add a new resource from a file.
@@ -86,7 +129,34 @@ public interface Store {
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return The resource description
      */
+	@Deprecated
     MetadataResource putResource(ServiceContext context, String metadataUuid, MultipartFile file, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
+
+    /**
+     * Add a new resource from a file.
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param file                       The resource file
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Return the approved version or not
+     * @return The resource description
+     */
+    MetadataResource putResource(ServiceContext context, String metadataUuid, MultipartFile file, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
+
+    /**
+     * Add a new resource from a local file path.
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param filePath                   The resource local filepath
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Return the approved version or not
+     * @return The resource description
+     */
+    MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
      * Add a new resource from a local file path.
@@ -98,6 +168,7 @@ public interface Store {
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return The resource description
      */
+	@Deprecated
     MetadataResource putResource(ServiceContext context, String metadataUuid, Path filePath, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
 
     /**
@@ -110,7 +181,21 @@ public interface Store {
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      * @return The resource description
      */
+	@Deprecated
     MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
+
+    /**
+     * Add a new resource from a URL.
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param fileUrl                    The resource file URL
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Return the approved version or not
+     * @return The resource description
+     */
+    MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
      * Change the resource sharing policy
@@ -120,7 +205,19 @@ public interface Store {
      * @param resourceId                 The resource identifier
      * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
      */
+	@Deprecated
     MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId, MetadataResourceVisibility metadataResourceVisibility) throws Exception;
+
+    /**
+     * Change the resource sharing policy
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param resourceId                 The resource identifier
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Return the approved version or not
+     */
+    MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
 
     /**
@@ -129,7 +226,17 @@ public interface Store {
      * @param context
      * @param metadataUuid The metadata UUID
      */
+	@Deprecated
     String delResource(ServiceContext context, String metadataUuid) throws Exception;
+
+    /**
+     * Delete all resources for a metadata
+     *
+     * @param context
+     * @param metadataUuid The metadata UUID
+     * @param approved   Return the approved version or not
+     */
+    String delResource(ServiceContext context, String metadataUuid, Boolean approved) throws Exception;
 
     /**
      * Delete a resource from the metadata store
@@ -138,5 +245,15 @@ public interface Store {
      * @param metadataUuid The metadata UUID
      * @param resourceId   The resource identifier
      */
+	@Deprecated
     String delResource(ServiceContext context, String metadataUuid, String resourceId) throws Exception;
+    /**
+     * Delete a resource from the metadata store
+     *
+     * @param context
+     * @param metadataUuid The metadata UUID
+     * @param resourceId   The resource identifier
+     * @param approved   Return the approved version or not
+     */
+    String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
 }

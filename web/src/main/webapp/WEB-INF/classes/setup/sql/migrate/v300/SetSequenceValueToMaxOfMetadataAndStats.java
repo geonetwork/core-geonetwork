@@ -34,7 +34,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigrationTask {
+public class SetSequenceValueToMaxOfMetadataAndStats extends DatabaseMigrationTask {
     @Override
     public void update(Connection connection) throws SQLException {
         Log.debug(Geonet.DB, "SetSequenceValueToMaxOfMetadataAndStats");

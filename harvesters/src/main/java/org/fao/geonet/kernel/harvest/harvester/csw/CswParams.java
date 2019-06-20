@@ -23,15 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,18 +87,10 @@ public class CswParams extends AbstractParams {
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", "");
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", false);
-        queryScope = Util.getParam(site, "queryScope", "off");
+        queryScope = Util.getParam(site, "queryScope", "local");
         hopCount = Util.getParam(site, "hopCount", 2);
         xslfilter = Util.getParam(site, "xslfilter", "");
         outputSchema = Util.getParam(site, "outputSchema", outputSchema);
-
-        try {
-            capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
-        } catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-            // TODO should not swallow
-        }
         icon = Util.getParam(site, "icon", "default.gif");
 
         if (searches != null) {
@@ -128,14 +117,6 @@ public class CswParams extends AbstractParams {
 
         capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
         rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", rejectDuplicateResource);
-
-        try {
-            capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
-        } catch (UnsupportedEncodingException x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-            // TODO should not swallow
-        }
         queryScope = Util.getParam(site, "queryScope", queryScope);
         hopCount = Util.getParam(site, "hopCount", hopCount);
         xslfilter = Util.getParam(site, "xslfilter", "");

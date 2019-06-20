@@ -45,6 +45,8 @@
         <sec:filter-chain pattern="/index/**" filters=""/>
 
         <sec:filter-chain pattern="/dashboards/**" filters=""/>
+        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, adminUserFilter"/>
+
 
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <!-- wroAPI is protected for admin only
@@ -101,7 +103,6 @@
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-        <ref bean="multiNodeAuthenticationFilter"/>
         <ref bean="preAuthenticationFilter"/>
         <ref bean="basicAuthenticationFilter"/>
         <ref bean="formLoginFilter"/>
@@ -115,10 +116,6 @@
   </bean>
   <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
-  <bean id="multiNodeAuthenticationFilter"
-        class="jeeves.config.springutil.MultiNodeAuthenticationFilter">
-    <property name="location" value="${wrongNodeRedirectURL}"/>
-  </bean>
   <bean id="preAuthenticationFilter" class="jeeves.config.springutil.PassthroughFilter"/>
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
@@ -238,7 +235,7 @@
   </bean>
 
   <bean id="defaultAuthenticationEntryPoint"
-        class="jeeves.config.springutil.JeevesNodeAwareLoginUrlEntryPoint">
+        class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
     <constructor-arg name="loginFormUrl" value="${loginForm}"/>
   </bean>
 
@@ -392,4 +389,6 @@
       </set>
     </constructor-arg>
   </bean>
+
+  <bean id="adminUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
 </beans>

@@ -46,7 +46,7 @@
                select="'dataset'"/>
 
 
-    <html>
+    <html ng-app="{$angularModule}" lang="{$lang2chars}" id="ng-app">
       <head>
         <title><xsl:value-of select="$title"/></title>
         <meta charset="utf-8"/>
@@ -81,53 +81,19 @@
               type="application/opensearchdescription+xml"
               title="{$title}"/>
 
-        <xsl:call-template name="css-load"/>
+        <xsl:call-template name="css-load-nojs"/>
+
       </head>
 
-      <body>
+      <body class="gn-nojs">
         <div class="gn-full">
           <xsl:call-template name="header"/>
-          <div class="container">
+          <div class="container" role="main">
             <xsl:copy-of select="$content"/>
           </div>
           <xsl:call-template name="footer"/>
         </div>
 
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="http://code.jquery.com/jquery-1.12.4.min.js"
-                integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-                crossorigin="anonymous">
-          &#160;
-        </script>
-
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-                crossorigin="anonymous">
-          &#160;
-        </script>
-
-        <script type="text/javascript">
-          // attach click to tab
-          $('.nav-tabs-advanced a').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-          });
-          // hide empty tab
-          $('.nav-tabs-advanced a').each(function() {
-
-            var tabLink = $(this).attr('href');
-
-            if (tabLink) {
-              if ($(tabLink).length === 0) {
-                $(this).parent().hide();
-              }
-            }
-          });
-          // show the first tab
-          $('.nav-tabs-advanced a:first').tab('show');
-        </script>
-        <xsl:call-template name="css-load"/>
       </body>
     </html>
   </xsl:template>

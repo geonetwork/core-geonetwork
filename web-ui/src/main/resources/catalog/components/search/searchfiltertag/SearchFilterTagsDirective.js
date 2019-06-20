@@ -10,10 +10,11 @@
   });
 
   module.directive('searchFilterTags',
-      ['$location', 'gnThesaurusService', '$q', '$cacheFactory', '$browser',
-       function($location, gnThesaurusService, $q, $cacheFactory, $browser) {
+      ['$location', 'gnThesaurusService', '$q', '$cacheFactory', '$browser', '$timeout',
+       function($location, gnThesaurusService, $q, $cacheFactory, $browser, $timeout) {
          var cache = $cacheFactory('locationsSearchFilterTags');
          var useLocationParameters = true;
+         var thesaurusKey = 'external.place.regions';
 
 
          var searchInFilters = function(filters, filterKey, filterType) {
@@ -303,7 +304,7 @@
            var defer = $q.defer();
            if (!cache.get(uri)) {
              gnThesaurusService.lookupURI(
-              'external.place.administrativeAreas', uri).then(
+              thesaurusKey, uri).then(
              function(keyword) {
                if (keyword) {
                  var kw = {};
@@ -389,11 +390,16 @@
            'searchFilterTagsTemplate.html',
            scope: {
              privateVar: '@',
-             useLocationParameters: '@'
+             useLocationParameters: '@',
+             thesaurusKey: '@'
            },
            link: function(scope, element, attrs, ngSearchFormCtrl) {
              if (scope.useLocationParameters === 'false') {
                useLocationParameters = false;
+             }
+
+             if (scope.thesaurusKey && scope.thesaurusKey !== '') {
+               thesaurusKey = scope.thesaurusKey;
              }
 
              scope.currentFilters = [];
@@ -401,11 +407,13 @@
                return getSearchParameters(useLocationParameters,
                 $location, ngSearchFormCtrl);
              }, function(newFilters, oldVal, currentScope) {
-               generateCurrentFilters(newFilters,
-                currentScope.currentFilters, ngSearchFormCtrl)
-                .then(function(calculatedFilters) {
-                  scope.currentFilters = calculatedFilters;
-                });
+               $timeout(function () {
+                 generateCurrentFilters(newFilters,
+                   currentScope.currentFilters, ngSearchFormCtrl)
+                   .then(function (calculatedFilters) {
+                     scope.currentFilters = calculatedFilters;
+                   });
+               }, 100);
              }, true);
 
              scope.removeFilter = function(filter) {

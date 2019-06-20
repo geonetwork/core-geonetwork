@@ -111,9 +111,9 @@ public class MetadataStatusId implements Serializable {
     }
 
     /**
-     * Set the user who is responsible for changing the status.
+     * Set the user who changed the status.
      *
-     * @param userId the user who is responsible for changing the status.
+     * @param userId the user who changed the status.
      * @return this id object
      */
     public MetadataStatusId setUserId(int userId) {
@@ -154,4 +154,10 @@ public class MetadataStatusId implements Serializable {
             return false;
         return true;
     }
+
+	@Override
+	public String toString() {
+		return "MetadataStatusId [" + (_changedate != null ? "_changedate=" + _changedate + ", " : "") + "_metadataId="
+				+ _metadataId + ", _statusId=" + _statusId + ", _userId=" + _userId + "]";
+	}
 }

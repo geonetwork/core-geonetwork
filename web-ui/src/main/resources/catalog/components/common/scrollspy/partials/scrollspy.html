@@ -1,20 +1,39 @@
 <div class="visible-lg">
   <div class="btn-toolbar" role="toolbar">
     <!-- TODO: toggle icon when collapsed to fa-caret-square-o-up -->
-    <button class="btn btn-link fa fa-caret-square-o-down"
+    <button class="btn btn-primary btn-round fa fa-bars"
             data-ng-click="toggle()"
             title="{{'toggleScrollSpy' | translate}}"/>
-    <button class="btn btn-link fa fa-arrow-circle-up"
+    <button class="btn btn-primary btn-round fa fa-chevron-up"
             data-ng-click="scrollTo()"
             title="{{'scrollTop' | translate}}"/>
   </div>
   <ul class="nav nav-pills nav-stacked"
-      data-ng-class="isEnabled ? '' : 'hidden'">
-    <li data-ng-repeat="s in spyElems" data-ng-class="s.active ? 'active' : ''">
-      <a href="" data-ng-click="scrollTo(s.id)"> {{s.label}} </a>
-      <ul class="nav">
-        <li data-ng-repeat="ss in s.children" data-ng-class="ss.active ? 'active' : ''">
-          <a href="" data-ng-click="scrollTo(ss.id)">{{ss.label}}</a>
+      data-ng-class="isEnabled ? '' : 'hidden'"
+      role="menu">
+    <button class="close"
+      data-ng-click="toggle()"
+      title="{{'toggleScrollSpy' | translate}}">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <li data-ng-repeat="s in spyElems"
+        data-ng-class="s.active ? 'active' : ''"
+        role="menuitem">
+      <a href=""
+         aria-label="{{s.label}}"
+         data-ng-click="scrollTo(s.id)">
+        {{s.label}}
+      </a>
+      <ul class="nav"
+          role="menu">
+        <li data-ng-repeat="ss in s.children"
+            data-ng-class="ss.active ? 'active' : ''"
+            role="menuitem">
+          <a href=""
+             aria-label="{{ss.label}}"
+             data-ng-click="scrollTo(ss.id)">
+            {{ss.label}}
+          </a>
         </li>
       </ul>
     </li>

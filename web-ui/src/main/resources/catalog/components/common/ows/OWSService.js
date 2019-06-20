@@ -36,6 +36,7 @@
   goog.require('WFS_1_0_0');
   goog.require('WFS_1_1_0');
   goog.require('WFS_2_0');
+  goog.require('WCS_1_1');
   goog.require('XLink_1_0');
 
   var module = angular.module('gn_ows_service', [
@@ -54,16 +55,17 @@
       }
       );
   var context110 = new Jsonix.Context(
-      [XLink_1_0, OWS_1_0_0,
+      [XLink_1_0, OWS_1_1_0, OWS_1_0_0,
        Filter_1_1_0,
        GML_3_1_1,
        SMIL_2_0, SMIL_2_0_Language,
-       WFS_1_1_0],
+       WFS_1_1_0, WCS_1_1],
       {
         namespacePrefixes: {
           'http://www.w3.org/1999/xlink': 'xlink',
           'http://www.opengis.net/ows/1.1': 'ows',
-          'http://www.opengis.net/wfs': 'wfs'
+          'http://www.opengis.net/wfs': 'wfs',
+          'http://www.opengis.net/wcs': 'wcs'
         }
       }
       );
@@ -90,7 +92,7 @@
       function($http, $q, $translate,
                gnUrlUtils, gnGlobalSettings) {
 
-        var displayFileContent = function(data) {
+        var displayFileContent = function(data, withGroupLayer) {
           var parser = new ol.format.WMSCapabilities();
           var result = parser.read(data);
 
@@ -103,6 +105,9 @@
           // Also adjust crs (by inheritance) and url
           var getFlatLayers = function(layer, inheritedCrs) {
             if (angular.isArray(layer)) {
+              if (withGroupLayer && layer.Name) {
+                layers.push(layer);
+              }
               for (var i = 0, len = layer.length; i < len; i++) {
                 getFlatLayers(layer[i], inheritedCrs);
               }
@@ -142,6 +147,18 @@
           //result.contents.Layer = result.contents.layers;
           result.Contents.operationsMetadata = result.OperationsMetadata;
           return result.Contents;
+        };
+
+        var parseWCSCapabilities = function(data) {
+          var version = '1.1.1';
+
+          try {
+            var xml = $.parseXML(data);
+            var xfsCap = unmarshaller110.unmarshalDocument(xml).value;
+            return xfsCap;
+          } catch (e){
+            console.warn(e);
+          }
         };
 
         var parseWFSCapabilities = function(data) {
@@ -202,16 +219,28 @@
           }
         };
 
-        var mergeParams = function(url, Params) {
+        var mergeParams = function(url, Params, excludedParams) {
           //merge URL parameters with indicated ones
           var parts = url.split('?');
+          var combinedParams = {};
           var urlParams = angular.isDefined(parts[1]) ?
               gnUrlUtils.parseKeyValue(parts[1]) : {};
-          for (var p in Params) {
-            urlParams[p] = Params[p];
+
+          for (var p in urlParams) {
+            if (!angular.isArray(excludedParams) ||
+              (excludedParams.findIndex &&
+               excludedParams.findIndex(function(item) {
+                  return p.toLowerCase() === item.toLowerCase();}) === -1)) {
+              combinedParams[p] = urlParams[p];
+            }
           }
-          return gnUrlUtils.append(parts[0], gnUrlUtils.toKeyValue(urlParams));
+          for (var p in Params) {
+            combinedParams[p] = Params[p];
+          }
+
+          return gnUrlUtils.append(parts[0], gnUrlUtils.toKeyValue(combinedParams));
         };
+
         var mergeDefaultParams = function(url, defaultParams) {
           //merge URL parameters with default ones
           var parts = url.split('?');
@@ -229,11 +258,12 @@
           return gnUrlUtils.append(parts[0],
               gnUrlUtils.toKeyValue(defaultParams));
         };
+
         return {
           mergeDefaultParams: mergeDefaultParams,
           mergeParams: mergeParams,
 
-          getWMSCapabilities: function(url) {
+          getWMSCapabilities: function(url, withGroupLayer) {
             var defer = $q.defer();
             if (url) {
               url = mergeDefaultParams(url, {
@@ -244,11 +274,12 @@
               //send request and decode result
               if (true) {
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data) {
                       try {
-                        defer.resolve(displayFileContent(data));
+                        defer.resolve(displayFileContent(data, withGroupLayer));
                       } catch (e) {
                         defer.reject(
                         $translate.instant('failedToParseCapabilities'));
@@ -256,7 +287,8 @@
                     })
                     .error(function(data, status) {
                       defer.reject(
-                      $translate.instant('checkCapabilityUrl',
+                      $translate.instant(
+                        status === 401 ? 'checkCapabilityUrlUnauthorized' : 'checkCapabilityUrl',
                       {url: url, status: status}));
                     });
               }
@@ -278,7 +310,8 @@
               if (gnUrlUtils.isValid(url)) {
 
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data, status, headers, config) {
                       if (data) {
@@ -309,13 +342,48 @@
 
               if (gnUrlUtils.isValid(url)) {
                 $http.get(url, {
-                  cache: true
+                  cache: true,
+                  timeout: 5000
                 })
                     .success(function(data, status, headers, config) {
                       var xfsCap = parseWFSCapabilities(data);
 
                       if (!xfsCap || xfsCap.exception != undefined) {
-                        defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                        defer.reject({msg: $translate.instant('wfsGetCapabilitiesFailed'),
+                          owsExceptionReport: xfsCap});
+                      } else {
+                        defer.resolve(xfsCap);
+                      }
+
+                    })
+                    .error(function(data, status, headers, config) {
+                      defer.reject($translate.instant('wfsGetCapabilitiesFailed'));
+                    });
+              }
+            }
+            return defer.promise;
+          },
+
+          getWCSCapabilities: function(url, version) {
+            var defer = $q.defer();
+            if (url) {
+              defaultVersion = '1.1.0';
+              version = version || defaultVersion;
+              url = mergeDefaultParams(url, {
+                REQUEST: 'GetCapabilities',
+                service: 'WCS',
+                version: version
+              });
+
+              if (gnUrlUtils.isValid(url)) {
+                $http.get(url, {
+                  cache: true
+                })
+                    .success(function(data, status, headers, config) {
+                      var xfsCap = parseWCSCapabilities(data);
+
+                      if (!xfsCap || xfsCap.exception != undefined) {
+                        defer.reject({msg: 'wcsGetCapabilitiesFailed',
                           owsExceptionReport: xfsCap});
                       } else {
                         defer.resolve(xfsCap);
@@ -375,68 +443,82 @@
             return extent;
           },
 
-          getLayerInfoFromCap: function(name, capObj, uuid) {
+          
+          getLayerInfoFromCap: function(layerName, capObj, uuid) {
             var needles = [];
             var layers = capObj.layers || capObj.Layer;
 
-            //non namespaced lowercase name
-            nameNoNamespace = name.split(':')[
-                name.split(':').length - 1].toLowerCase();
+            // Layer name may be a list of comma separated layers
+            layerList = layerName.split(',');
+            layersLoop:
+            for (var j = 0; j < layerList.length; j ++) {
+              var name = layerList[j];
+              //non namespaced lowercase name
+              nameNoNamespace = name.split(':')[
+                  name.split(':').length - 1].toLowerCase();
 
-            for (var i = 0; i < layers.length; i++) {
-              //Add Info for Requests:
-              if (capObj.Request) {
-                layers[i].capRequest = capObj.Request;
-              }
-
-              //check layername
-              var lId = layers[i].Identifier;
-              var capName = layers[i].Name ||
-                  (lId && angular.isArray(lId) ? lId[0] : lId) || '',
-                  capNameNoNamespace;
-              //non namespaced lowercase capabilities name
-              if (capName) {
-                capNameNoNamespace = capName.split(':')[
-                    capName.split(':').length - 1].toLowerCase();
-              }
-
-              //either names match or non namespaced names
-              if (name == capName || nameNoNamespace == capNameNoNamespace) {
-                layers[i].nameToUse = capName;
-                if (capObj.version) {
-                  layers[i].version = capObj.version;
+              capabilityLayers:
+              for (var i = 0; i < layers.length; i++) {
+                //Add Info for Requests:
+                if (capObj.Request) {
+                  layers[i].capRequest = capObj.Request;
                 }
-                return layers[i];
-              }
+                
+                //check layername
+                var lId = layers[i].Identifier;
+                var capName = layers[i].Name ||
+                    (lId && angular.isArray(lId) ? lId[0] : lId) || '',
+                    capNameNoNamespace;
+                //non namespaced lowercase capabilities name
+                if (capName) {
+                  capNameNoNamespace = capName.split(':')[
+                      capName.split(':').length - 1].toLowerCase();
+                }
 
-              //check dataset identifer match
-              if (uuid != null) {
-                if (angular.isArray(layers[i].Identifier)) {
-                  angular.forEach(layers[i].Identifier, function(id) {
-                    if (id == uuid) {
-                      needles.push(layers[i]);
+                //either names match or non namespaced names
+                if (name == capName || nameNoNamespace == capNameNoNamespace) {
+                  layers[i].nameToUse = capName;
+                  if (capObj.version) {
+                    layers[i].version = capObj.version;
+                  }
+                  needles.push(layers[i]);
+                  break capabilityLayers;
+                }
+
+                //check dataset identifer match
+                if (uuid != null) {
+                  if (angular.isArray(layers[i].Identifier)) {
+                    for (var c = 0; c < layers[i].Identifier.length; c++) {
+                      if (layers[i].Identifier[c] == uuid) {
+                        needles.push(layers[i]);
+                        break capabilityLayers;
+                      }
                     }
-                  });
-                }
-              }
-
-              //check uuid from metadata url
-              if (uuid != null) {
-                if (angular.isArray(layers[i].MetadataURL)) {
-                  angular.forEach(layers[i].MetadataURL, function(mdu) {
-                    if (mdu && mdu.OnlineResource &&
+                  }
+                  if (angular.isArray(layers[i].MetadataURL)) {
+                    for (var c = 0; c < layers[i].MetadataURL.length; c++) {
+                      var mdu = layers[i].MetadataURL[c];
+                      if (mdu && mdu.OnlineResource &&
                         mdu.OnlineResource.indexOf(uuid) > 0) {
-                      needles.push(layers[i]);
+                        needles.push(layers[i]);
+                        break capabilityLayers;
+                      }
                     }
-                  });
+                  }
                 }
               }
             }
-
-            //FIXME: allow multiple, remove duplicates
-            if (needles.length > 0) {
+            
+            //FIXME: remove duplicates
+            if (needles.length >= layerList.length) {
               if (capObj.version) {
                 needles[0].version = capObj.version;
+              }
+              // Multiple layers from the same service
+              if (layerName.indexOf(',')) {
+                needles[0].Name = layerName;
+                // Parameters 'styles' and 'layers' should have the same number of values.
+                needles[0].Style = new Array(layerList.length).join(',');
               }
               return needles[0];
             }

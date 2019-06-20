@@ -30,8 +30,8 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -48,7 +48,7 @@ import java.util.Set;
 /**
  * Given a metadata id returns all associated status records. Called by the metadata.status service
  */
-
+@Deprecated
 public class GetStatus implements Service {
     //--------------------------------------------------------------------------
     //---
@@ -87,7 +87,7 @@ public class GetStatus implements Service {
 
         MetadataStatus stats = dataMan.getStatus(iLocalId);
 
-        String status = Params.Status.UNKNOWN;
+        String status = StatusValue.Status.UNKNOWN;
         String userId = "-1"; // no userId
         if (stats != null) {
             status = String.valueOf(stats.getId().getStatusId());

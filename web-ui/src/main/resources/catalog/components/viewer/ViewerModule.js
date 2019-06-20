@@ -33,6 +33,7 @@
   goog.require('gn_heatmap');
   goog.require('gn_index');
   goog.require('gn_layermanager');
+  goog.require('gn_projectionswitcher');
   goog.require('gn_localisation');
   goog.require('gn_measure');
   goog.require('gn_module');
@@ -68,6 +69,7 @@
     'gn_wfs_directive',
     'gn_owscontext',
     'gn_layermanager',
+    'gn_projectionswitcher',
     'gn_baselayerswitcher',
     'gn_measure',
     'gn_draw',

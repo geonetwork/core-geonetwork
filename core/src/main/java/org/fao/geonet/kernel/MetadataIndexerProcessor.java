@@ -47,7 +47,7 @@ package org.fao.geonet.kernel;
  * required to exec the process method
  */
 public abstract class MetadataIndexerProcessor {
-    private DataManager dm;
+    protected DataManager dm;
 
     public MetadataIndexerProcessor(DataManager dm) {
         this.dm = dm;

@@ -196,6 +196,10 @@
       items. Run this suggestion to add all corresponding
       values.
     </msg>
+    <msg id="a" xml:lang="dut">INSPIRE Thema's gevonden met ontbrekende overeenkomstige
+       items. Voer deze suggestie uit om alle overeenkomstige items toe te voegen
+       waarden.
+    </msg>
     <msg id="a" xml:lang="fre">Thèmes INSPIRE et/ou des catégories ont été trouvés avec des
       correspondances manquantes. Lancer ce processus pour ajouter les correspondances.
     </msg>

@@ -522,6 +522,21 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'eng','Approved');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'eng','Retired');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'eng','Submitted');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'eng','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'eng','Record created.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'eng','Record updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'eng','Attachment {{h.currentStatus}} added.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'eng','Attachment {{h.previousStatus}} deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'eng','Owner changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'eng','Group owner changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'eng','Privileges updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'eng','Category changed. Now categories are {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'eng','Validation triggered. Exit status is now {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'eng','Status changed from {{h.previousStatus}} to {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'eng','Record updated by process {{h.currentStatus}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'eng','Record deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'eng','Record imported.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'eng','DOI creation request');
+
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'eng','Preferred records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'eng','Watch list');

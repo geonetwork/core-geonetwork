@@ -24,17 +24,22 @@
 package org.fao.geonet.repository;
 
 
-import org.fao.geonet.domain.*;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.StatusValue;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 
 public class MetadataStatusRepositoryTest extends AbstractSpringDataTest {
 

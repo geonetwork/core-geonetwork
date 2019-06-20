@@ -23,6 +23,9 @@
   -->
   <xsl:param name="portalLink" select="''"/>
 
+  <!-- Define if the formatter output also the record as JSON-LD. -->
+  <xsl:param name="withJsonLd" select="'true'"/>
+
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
@@ -69,4 +72,7 @@
   <!-- Flat mode is defined in the first tab of the view -->
   <xsl:variable name="isFlatMode"
                 select="$viewConfig/tab[1]/@mode = 'flat'"/>
+
+  <!-- Regex for matching image filenames -->
+  <xsl:variable name="imageExtensionsRegex" select="'\.(gif|png|jpg|jpeg|svg)$'"/>
 </xsl:stylesheet>

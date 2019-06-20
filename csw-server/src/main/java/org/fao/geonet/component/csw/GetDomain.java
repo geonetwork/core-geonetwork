@@ -42,9 +42,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
 
-//=============================================================================
 @Component(CatalogService.BEAN_PREFIX + GetDomain.NAME)
 public class GetDomain extends AbstractOperation implements CatalogService {
 
@@ -87,7 +90,6 @@ public class GetDomain extends AbstractOperation implements CatalogService {
             EsSearchManager sm = gc.getBean(EsSearchManager.class);
             throw new NotImplementedException("CSW not implemented in ES");
 
-
 //            IndexAndTaxonomy indexAndTaxonomy = sm.getNewIndexReader(null);
 //            try {
 //                GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
@@ -96,7 +98,7 @@ public class GetDomain extends AbstractOperation implements CatalogService {
 //
 //                // Apply CSW service specific constraint
 //                if (StringUtils.isNotEmpty(cswServiceSpecificConstraint)) {
-//                    Query constraintQuery = CatalogSearcher.getCswServiceSpecificConstraintQuery(cswServiceSpecificConstraint, luceneConfig);
+//                    Query constraintQuery = parseLuceneQuery(cswServiceSpecificConstraint, luceneConfig);
 //
 //                    query = new BooleanQuery();
 //

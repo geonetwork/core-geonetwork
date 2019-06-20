@@ -23,7 +23,7 @@
   -->
 
 <strings>
-  <schematron.title>INSPIRE Validation Rules</schematron.title>
+  <schematron.title>Règles INSPIRE</schematron.title>
   <!-- INSPIRE metadata rules translation / START -->
   <identification>Identification de la ressource</identification>
   <dataIdentification>Identification des données</dataIdentification>
@@ -202,7 +202,7 @@
     <div>Organisation responsable de la ressource trouvée</div>
   </report.M47>
   <alert.M47.info>
-    <div>Le nom et l'email de l'organisation responsable de la ressource sont manquants</div>
+    <div>Le nom de l'organisation et/ou l'email du contact sur la ressource sont manquants</div>
   </alert.M47.info>
   <report.M47.info>
     <div>Le nom et l'email de l'organisation responsable de la ressource sont définis pour :</div>
@@ -219,7 +219,7 @@
     <div>Le rôle de la partie responsable est vide</div>
   </alert.M48.role>
   <alert.M48.info>
-    <div>Le nom et l'email du point de contact des métadonnées sont manquants</div>
+    <div>Le nom de l'organisation et/ou l'email du contact des métadonnées sont manquants</div>
   </alert.M48.info>
   <report.M48.info>
     <div>Le nom et l'email du point de contact des métadonnées sont définis pour :</div>

@@ -366,6 +366,26 @@
             scope.defaultLayout = attrs.layout;
             scope.auto = true;
             scope.activatedOnce = false;
+            
+            scope.layersWithWhiteSpaces = false;
+            
+            scope.$watchCollection(
+                function() {
+                  return scope.map.getLayers().getArray();
+                }, 
+                function(layers) {
+                  scope.layersWithWhiteSpaces = false;
+                  layers.forEach(function(layer) {
+                    if(layer.getSource() 
+                        && layer.getSource() instanceof ol.source.TileWMS
+                        && layer.getSource().getParams()
+                        && layer.getSource().getParams().LAYERS
+                        && layer.getSource().getParams().LAYERS.indexOf(" ") >= 0) {
+                      scope.layersWithWhiteSpaces = true;
+                    }
+                  });
+                }
+            );
 
             // Deactivate only if it has been activated once first
             scope.$watch('printActive', function(isActive, old) {

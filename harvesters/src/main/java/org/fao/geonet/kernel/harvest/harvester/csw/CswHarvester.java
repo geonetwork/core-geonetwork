@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -64,7 +65,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         String id = harvesterSettingsManager.add("harvesting", "node", getType());
 
         storeNode(params, "id:" + id);
-        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
+        Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
 
@@ -94,7 +95,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         //--- we update a copy first because if there is an exception CswParams could be half updated and so it could be
         // in an inconsistent state
 
-        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
+        Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), SourceType.harvester);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 

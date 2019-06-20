@@ -43,19 +43,19 @@ import org.fao.geonet.Util;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.Utils;
@@ -170,7 +170,7 @@ public class DownloadArchive implements Service {
         }
 
         //--- get metadata info
-        AbstractMetadata info = context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata info = context.getBean(IMetadataUtils.class).findOne(id);
 
         // set up zip output stream
         Path zFile = Files.createTempFile(username + "_" + info.getUuid(), ".zip");
@@ -270,7 +270,7 @@ public class DownloadArchive implements Service {
                 //--- export the metadata as a partial mef/zip file and add that to the zip
                 //--- stream FIXME: some refactoring required here to avoid metadata
                 //--- being read yet again(!) from the database by the MEF exporter
-                Path outmef = MEFLib.doExport(context, info.getUuid(), MEFLib.Format.PARTIAL.toString(), false, true, true, true);
+                Path outmef = MEFLib.doExport(context, info.getUuid(), MEFLib.Format.PARTIAL.toString(), false, true, true, true, true);
                 final Path toPath = zipFs.getPath("metadata.zip");
                 Files.copy(outmef, toPath);
             }

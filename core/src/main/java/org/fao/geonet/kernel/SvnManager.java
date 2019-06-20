@@ -44,8 +44,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.Operation;
@@ -54,10 +54,10 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -88,6 +88,8 @@ import jeeves.server.context.ServiceContext;
 import jeeves.transaction.AfterCommitTransactionListener;
 import jeeves.transaction.BeforeRollbackTransactionListener;
 
+import static org.fao.geonet.kernel.setting.Settings.METADATA_VCS;
+
 public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
     private static String username = "geonetwork";
     private static String password = "geonetwork";
@@ -108,6 +110,12 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     public void init() throws Exception {
 
         SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (!_settingManager.getValueAsBool(METADATA_VCS)) {
+            Log.debug(Geonet.SVN_MANAGER, String.format(
+                "VCS is disabled. Change the %s setting and restart the application", METADATA_VCS
+            ));
+            return;
+        }
         DataSource _dataSource = ApplicationContextHolder.get().getBean(DataSource.class);
 
         this._enabled = true;
@@ -689,7 +697,7 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
         // get owner from the database
         Set<Integer> ids = new HashSet<Integer>();
         ids.add(Integer.valueOf(id));
-        AbstractMetadata metadata = this.context.getBean(MetadataRepository.class).findOne(id);
+        AbstractMetadata metadata = this.context.getBean(IMetadataUtils.class).findOne(id);
         User user = this.context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
         // Backwards compatibility.  Format the metadata as XML in same format as previous versions.
         Element xml = new Element("results").addContent(

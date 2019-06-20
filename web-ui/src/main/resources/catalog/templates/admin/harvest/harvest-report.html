@@ -9,10 +9,10 @@
       </div>
 
       <div class="panel-body">
-        <button type="button" class="btn btn-small"
-                data-ng-click="csvReport($event)" data-translate=""
-        >csvExport
-        </button>
+        <div class="navbar">
+        <button type="button" class="btn btn-default"
+                data-ng-click="csvReport($event)" data-translate="">csvExport
+        </button></div>
 
         <table id="harvestReport" class="table table-striped">
           <tr>
@@ -28,11 +28,11 @@
             <td class="gn-break">{{h.site.url || h.site.baseUrl || h.site.capabilitiesUrl ||
               h.site.host}}
             </td>
-            <td class="text-center">{{('harvester-' + h['@type']) | translate}}</td>
-            <td class="text-center">{{h.info.lastRun.length === 0 ? '' : (h.info.lastRun |
+            <td >{{('harvester-' + h['@type']) | translate}}</td>
+            <td>{{h.info.lastRun.length === 0 ? '' : (h.info.lastRun |
               date:'medium')}}
             </td>
-            <td class="text-right">{{h.info.result.total}}</td>
+            <td>{{h.info.result.total}}</td>
           </tr>
         </table>
       </div>

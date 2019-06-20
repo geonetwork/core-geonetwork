@@ -24,6 +24,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -46,7 +47,7 @@ public class SourceRepositoryTest extends AbstractSpringDataTest {
 
         Source source = new Source();
         source.setName("name" + val);
-        source.setLocal(val % 2 == 0);
+        source.setType(SourceType.harvester);
         source.setUuid("uuid" + val);
 
         source.getLabelTranslations().put("eng", "enlabel" + val);

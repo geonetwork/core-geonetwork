@@ -22,15 +22,7 @@
  */
 
 (function() {
-
   goog.provide('gn_related_directive');
-
-
-
-
-
-
-
 
   goog.require('gn_atom');
   goog.require('gn_related_observer_directive');
@@ -48,11 +40,11 @@
    * config.js
    */
   module.service('gnRelatedService', ['$http', '$q', function($http, $q) {
-    this.get = function(uuid, types) {
+    this.get = function(uuidOrId, types) {
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
-        url: '../api/records/' + uuid + '/related?' +
+        url: '../api/records/' + uuidOrId + '/related?' +
             (types ?
             'type=' + types.split('|').join('&type=') :
             ''),
@@ -121,6 +113,8 @@
             },
             require: '?^gnRelatedObserver',
             link: function(scope, element, attrs, controller) {
+              return;
+              // TODOES
               var promise;
               var elem = element[0];
               scope.lang = scope.lang || scope.$parent.lang;
@@ -138,13 +132,13 @@
 
               scope.updateRelations = function() {
                 scope.relations = null;
-                if (scope.uuid) {
+                if (scope.id) {
                   scope.relationFound = false;
                   if (controller) {
                     controller.startGnRelatedRequest(elem);
                   }
                   (promise = gnRelatedService.get(
-                     scope.uuid, scope.types)
+                     scope.id, scope.types)
                   ).then(function(data) {
                        angular.forEach(data, function(value, idx) {
                          if (!value) { return; }
@@ -195,17 +189,17 @@
                 return angular.isFunction(fn);
               };
 
-              scope.isLayerProtocol = gnRelatedService.isLayerProtocol;
+              scope.isLayerProtocol = gnRelatedResources.isLayerProtocol;
 
               scope.config = gnRelatedResources;
 
               scope.$watchCollection('md', function(n, o) {
-                if (n && n !== o || angular.isUndefined(scope.uuid)) {
+                if (n && n !== o || angular.isUndefined(scope.id)) {
                   if (promise && angular.isFunction(promise.abort)) {
                     promise.abort();
                   }
                   if (scope.md != null) {
-                    scope.uuid = scope.md.uuid;
+                    scope.id = scope.md.id;
                   }
                   scope.updateRelations();
                 }

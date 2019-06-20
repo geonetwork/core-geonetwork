@@ -25,6 +25,14 @@ package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
@@ -34,11 +42,13 @@ import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -52,6 +62,7 @@ import java.util.Set;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
 import static org.fao.geonet.kernel.mef.MEFConstants.*;
 
 class MEF2Exporter {
@@ -65,6 +76,20 @@ class MEF2Exporter {
     public static Path doExport(ServiceContext context, Set<String> uuids,
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation) throws Exception {
+    	return doExport(context, uuids, format, skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError, addSchemaLocation, false);
+    }
+    
+    /**
+     * Create a MEF2 file in ZIP format.
+     *
+     * @param uuids  List of records to export.
+     * @param format {@link Format} to export.
+     * @return MEF2 File
+     */
+    public static Path doExport(ServiceContext context, Set<String> uuids,
+                                Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                                boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
+                                boolean approved) throws Exception {
 
         Path file = Files.createTempFile("mef-", ".mef");
         EsSearchManager searchManager = context.getBean(EsSearchManager.class);
@@ -99,15 +124,29 @@ class MEF2Exporter {
             html.addContent(body);
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
-                try {
-                    // TODOES
-                    throw new NotImplementedException("MEF2 not implemented in ES");
+//                final String cleanUUID = cleanForCsv(uuid);
+                // TODOES
+                throw new NotImplementedException("MEF2 not implemented in ES");
+            }
+        }
+//
 //                    IndexSearcher searcher = new IndexSearcher(indexReaderAndTaxonomy.indexReader);
 //                    BooleanQuery query = new BooleanQuery();
-//                    query.add(new BooleanClause(new TermQuery(new Term(UUID, uuid)), BooleanClause.Occur.MUST));
+//
+//                    AbstractMetadata md = context.getBean(IMetadataUtils.class).findOneByUuid(uuid);
+//
+//                    //Here we just care if we need the approved version explicitly.
+//                    //IMetadataUtils already filtered draft for non editors.
+//
+//                    if(approved) {
+//                    	md = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+//                    }
+//                    String id = String.valueOf(md.getId());
+//
+//                    query.add(new BooleanClause(new TermQuery(new Term(LuceneIndexField.ID, id)), BooleanClause.Occur.MUST));
 //                    query.add(new BooleanClause(new TermQuery(new Term(LOCALE, contextLang)), BooleanClause.Occur.SHOULD));
 //                    TopDocs topDocs = searcher.search(query, NoFilterFilter.instance(), 5);
-//                    String mdSchema = null, mdTitle = null, mdAbstract = null, id = null, isHarvested = null;
+//                    String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
 //                    MetadataType mdType = null;
 //
 //                    for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
@@ -122,9 +161,6 @@ class MEF2Exporter {
 //                        if (mdAbstract == null || contextLang.equals(locale)) {
 //                            mdAbstract = doc.get(LuceneIndexField.ABSTRACT);
 //                        }
-//                        if (id == null) {
-//                            id = doc.get(LuceneIndexField.ID);
-//                        }
 //                        if (isHarvested == null) {
 //                            isHarvested = doc.get(Geonet.IndexFieldNames.IS_HARVESTED);
 //                        }
@@ -138,8 +174,8 @@ class MEF2Exporter {
 //                    if (mdType == null) {
 //                        mdType = MetadataType.METADATA;
 //                    }
-//                    csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-//                        append(cleanForCsv(uuid)).append("\";\"").
+//					csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
+//                        append(cleanUUID).append("\";\"").
 //                        append(cleanForCsv(id)).append("\";\"").
 //                        append(mdType.toString()).append("\";\"").
 //                        append(cleanForCsv(isHarvested)).append("\";\"").
@@ -169,7 +205,7 @@ class MEF2Exporter {
 //                        ))
 //                    )));
 //                    csvBuilder.append('"').append(cleanForCsv(mdSchema)).append("\";\"").
-//                    append(cleanForCsv(uuid)).append("\";\"").
+//                    append(cleanUUID).append("\";\"").
 //                    append(cleanForCsv(id)).append("\";\"").
 //                    append(mdType.toString()).append("\";\"").
 //                    append(cleanForCsv(isHarvested)).append("\";\"").
@@ -198,7 +234,7 @@ class MEF2Exporter {
 //                                )))
 //                        ))
 //                    )));
-//                    createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
+//                    createMetadataFolder(context, md, zipFs, skipUUID, stylePath,
 //                    format, resolveXlink, removeXlinkAttribute, addSchemaLocation);                } catch (Throwable t) {
 //                    if (skipError) {
 //                        Log.error(Geonet.MEF, "Error exporting metadata to MEF file: " + uuid1, t);
@@ -208,13 +244,13 @@ class MEF2Exporter {
 //                        }
 //                        throw new RuntimeException(t);
 //                    }
-                } catch (Exception e) {
-
-                }
-            }
-            Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
-            Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
-        }
+//                }
+//                }
+//            }
+//            Files.write(zipFs.getPath("/index.csv"), csvBuilder.toString().getBytes(Constants.CHARSET));
+//            Files.write(zipFs.getPath("/index.html"), Xml.getString(html).getBytes(Constants.CHARSET));
+//        }
+//        return file;
         return file;
     }
 
@@ -237,20 +273,19 @@ class MEF2Exporter {
      * is based on an ISO profil, the stylesheet /convert/to19139.xsl is used to map to ISO. Both
      * files are included in MEF file. Export relevant information according to format parameter.
      *
-     * @param uuid  Metadata record to export
      * @param zipFs Zip file to add new record
      */
     private static void createMetadataFolder(ServiceContext context,
-                                             String uuid, FileSystem zipFs, boolean skipUUID,
+                                             AbstractMetadata metadata, FileSystem zipFs, boolean skipUUID,
                                              Path stylePath, Format format, boolean resolveXlink,
                                              boolean removeXlinkAttribute,
                                              boolean addSchemaLocation) throws Exception {
 
-        final Path metadataRootDir = zipFs.getPath(uuid);
+        final Path metadataRootDir = zipFs.getPath(metadata.getUuid());
         Files.createDirectories(metadataRootDir);
 
         Pair<AbstractMetadata, String> recordAndMetadataForExport =
-            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+            MEFLib.retrieveMetadata(context, metadata, resolveXlink, removeXlinkAttribute, addSchemaLocation);
         AbstractMetadata record = recordAndMetadataForExport.one();
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
@@ -277,7 +312,7 @@ class MEF2Exporter {
         // --- save Feature Catalog
         String ftUUID = getFeatureCatalogID(context, record.getId());
         if (!ftUUID.equals("")) {
-            Pair<AbstractMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute, addSchemaLocation);
+            Pair<AbstractMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, record, resolveXlink, removeXlinkAttribute, addSchemaLocation);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));

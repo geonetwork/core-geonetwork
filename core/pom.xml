@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -135,6 +135,12 @@
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.xmlgraphics</groupId>
+      <artifactId>fop-pdf-images</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.jcs</groupId>
       <artifactId>jcs</artifactId>
@@ -215,7 +221,7 @@
       <artifactId>pcj</artifactId>
     </dependency>
     <dependency>
-      <groupId>batik</groupId>
+      <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
@@ -372,6 +378,10 @@
           <groupId>com.vividsolutions</groupId>
           <artifactId>jts</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.apache.xmlgraphics</groupId>
+          <artifactId>batik-transcoder</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -487,12 +497,12 @@
 
   <build>
     <plugins>
-      <plugin>
+      <!--<plugin>
         <groupId>com.github.alexcojocaru</groupId>
         <artifactId>elasticsearch-maven-plugin</artifactId>
         <version>6.0</version>
         <configuration>
-          <version>6.2.4</version>
+          <version>${es.version}</version>
           <clusterName>test</clusterName>
           <transportPort>9300</transportPort>
           <httpPort>9200</httpPort>
@@ -514,7 +524,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.5</version>

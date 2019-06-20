@@ -29,10 +29,10 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 xmlns:index="java:org.fao.geonet.kernel.search.EsSearchManager"
                 xmlns:daobs="http://daobs.org"
                 xmlns:saxon="http://saxon.sf.net/"
-                xmlns:gn-fn-index="http://geonetwork-opensource.org/xsl/functions/index"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="2.0">
@@ -115,7 +115,6 @@
     <xsl:variable name="isService" as="xs:boolean"
                   select="
                       count(gmd:hierarchyLevel[gmd:MD_ScopeCode/@codeListValue='service']) > 0"/>
-
 
 
     <xsl:message><xsl:value-of select="concat(
@@ -751,8 +750,7 @@
           <xsl:variable name="protocol"
                         select="gmd:protocol/gco:CharacterString/text()"/>
           <xsl:variable name="linkName"
-                        select="replace(gmd:name/gco:CharacterString/text(),
-                                              $doubleQuote, $escapedDoubleQuote)"/>
+                        select="gn-fn-index:json-escape(gmd:name/gco:CharacterString/text())"/>
 
           <linkUrl>
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
@@ -764,11 +762,10 @@
             <xsl:value-of select="gmd:linkage/gmd:URL"/>
           </xsl:element>
           <link type="object">{
-            "protocol":"<xsl:value-of select="gmd:protocol/*/text()"/>",
-            "url":"<xsl:value-of select="gmd:linkage/gmd:URL"/>",
+            "protocol":"<xsl:value-of select="gn-fn-index:json-escape(gmd:protocol/*/text())"/>",
+            "url":"<xsl:value-of select="gn-fn-index:json-escape(gmd:linkage/gmd:URL)"/>",
             "name":"<xsl:value-of select="$linkName"/>",
-            "description":"<xsl:value-of select="replace(gmd:description/gco:CharacterString/text(),
-                                              $doubleQuote, $escapedDoubleQuote)"/>"
+            "description":"<xsl:value-of select="gn-fn-index:json-escape(gmd:description/gco:CharacterString/text())"/>"
             }
             <!--Link object in Angular used to be
             //     name: linkInfos[0],

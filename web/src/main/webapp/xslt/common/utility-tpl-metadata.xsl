@@ -27,6 +27,7 @@
                 version="2.0"
 >
 
+  <xsl:include href="../services/metadata/validate-fn.xsl"/>
 
   <!-- Copy all elements and attributes excluding GeoNetwork elements.
 
@@ -49,10 +50,12 @@
   </xsl:template>
 
   <!-- Remove GeoNetwork info element and children -->
-  <xsl:template mode="gn-element-cleaner" match="gn:info" priority="2"/>
+  <xsl:template mode="gn-element-cleaner"
+                match="gn:info|gn:validationReport|gn:report|gn:schematronVerificationError" priority="2"/>
 
   <!-- Remove Schematron error report element and children -->
-  <xsl:template mode="gn-element-cleaner" match="svrl:*" priority="2"/>
+  <xsl:template mode="gn-element-cleaner"
+                match="svrl:*" priority="2"/>
 
 
   <!-- Combine the context node with the node-to-merge
@@ -117,10 +120,11 @@
 
   <!--
     2 types of errors are added to a record on validation:
-    * XSD
-    <gmd:dateStamp geonet:xsderror="\ncvc-complex-type.2.4.a: Invalid conte
+    * XSD errors are added in the document as validation reports
+    <gmd:dateStamp>
+     <geonet:validationReport message="\ncvc-complex-type.2.4.a: Invalid conte
 
-    * Schematron
+    * Schematron complete report is appended to the document
     <geonet:schematronerrors>
       <geonet:report geonet:rule="schematron-rules-iso">
       ...
@@ -128,70 +132,111 @@
         <svrl:failed-assert ref="#_391" test="$count > 0
           ....
           <svrl:text
+
+    This template collect XSD and schematron errors and return the list
+    of errors related to this element.
     -->
   <xsl:template name="get-errors">
     <xsl:param name="theElement" required="no"/>
 
-    <xsl:variable name="ref" select="concat('#_', gn:element/@ref)"/>
+    <xsl:if test="$showValidationErrors">
+      <xsl:variable name="ref" select="concat('#_', gn:element/@ref)"/>
 
-    <xsl:variable name="listOfErrors">
-      <xsl:if
-        test="@gn:xsderror
-        or */@gn:xsderror
-        or $metadata//svrl:failed-assert[@ref=$ref]">
-
+      <xsl:variable name="listOfErrors">
         <errors>
-          <xsl:choose>
-            <!-- xsd validation -->
-            <xsl:when test="@gn:xsderror">
-              <xsl:choose>
-                <xsl:when test="contains(@gn:xsderror, '\n')">
-                  <xsl:variable name="root" select="/"/>
-                  <!-- DataManager#getXSDXmlReport concat errors in attribute -->
-                  <xsl:for-each select="tokenize(@gn:xsderror, '\\n')">
-                    <xsl:if test=". != ''">
-                      <error>
-                        <xsl:value-of select="."/>
-                        <!--<xsl:copy-of select="concat($root/root/gui/strings/xsdError, ': ',
-                              geonet:parse-xsd-error(., $schema, $labels))"/>-->
-                      </error>
-                    </xsl:if>
-                  </xsl:for-each>
-                </xsl:when>
-                <xsl:otherwise>
-                  <error>
-                    <!-- <xsl:copy-of select="concat(/root/gui/strings/xsdError, ': ',
-                          geonet:parse-xsd-error(@geonet:xsderror, $schema, $labels))"/>-->
-                    <xsl:value-of select="@gn:xsderror"/>
-                  </error>
-                </xsl:otherwise>
-              </xsl:choose>
+          <xsl:for-each select="gn:validationReport|*/gn:validationReport">
+            <error type="xsd">
+              <xsl:value-of select="gn:parse-xsd-error(@gn:message, $schema, $labels, $strings)"/>
+            </error>
+          </xsl:for-each>
 
-            </xsl:when>
-            <!-- some simple elements hide lower elements to remove some
-                        complexity from the display (eg. gco: in iso19139)
-                        so check if they have a schematron/xsderror and move it up
-                        if they do -->
-            <xsl:when test="*/@gn:xsderror">
-              <error>
-                <!--<xsl:copy-of select="concat(/root/gui/strings/xsdError, ': ',
-                      geonet:parse-xsd-error(*/@geonet:xsderror, $schema, $labels))"/>-->
-                <xsl:value-of select="*/@gn:xsderror"></xsl:value-of>
+          <xsl:if test="name()  != 'geonet:child'">
+            <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
+              <error type="{ancestor::svrl:schematron-output/@title}" gravity="{ancestor::gn:report/@gn:required}">
+                <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+                <xsl:copy-of select="svrl:text/*"/>
               </error>
-            </xsl:when>
-            <!-- schematrons -->
-            <xsl:when test="$metadata//svrl:failed-assert[@ref=$ref]">
-              <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$ref]">
-                <error>
-                  <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
-                  <xsl:copy-of select="svrl:text/*"/>
-                </error>
-              </xsl:for-each>
-            </xsl:when>
-          </xsl:choose>
+            </xsl:for-each>
+          </xsl:if>
+
         </errors>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:copy-of select="if (count($listOfErrors//error) > 0) then $listOfErrors else ''"/>
+      </xsl:variable>
+
+      <xsl:call-template name="display-error">
+        <xsl:with-param name="listOfErrors" select="$listOfErrors"/>
+      </xsl:call-template>
+
+    </xsl:if>
   </xsl:template>
+
+  <xsl:template name="get-errors-for-child">
+    <xsl:param name="theElement" required="no"/>
+
+    <xsl:if test="$showValidationErrors">
+      <xsl:variable name="uuid" select="concat('#_', ./@uuid)"/>
+
+      <xsl:variable name="listOfErrors">
+        <errors>
+          <xsl:if test="name() = 'geonet:child'">
+            <xsl:for-each select="$metadata//svrl:failed-assert[@ref=$uuid]">
+              <error type="{ancestor::svrl:schematron-output/@title}" gravity="{ancestor::gn:report/@gn:required}">
+                <xsl:value-of select="preceding-sibling::svrl:active-pattern[1]/@name"/> :
+                <xsl:copy-of select="svrl:text/*"/>
+              </error>
+            </xsl:for-each>
+          </xsl:if>
+
+        </errors>
+      </xsl:variable>
+
+      <xsl:call-template name="display-error">
+        <xsl:with-param name="listOfErrors" select="$listOfErrors"/>
+      </xsl:call-template>
+
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="display-error">
+    <xsl:param name="listOfErrors"/>
+
+    <xsl:if test="count($listOfErrors//error) > 0">
+      <div class="gn-validation-report">
+        <ul class="list-group">
+          <xsl:for-each select="$listOfErrors/errors/error">
+            <xsl:choose>
+              <xsl:when test="@gravity = 'REPORT_ONLY'">
+                <li class="list-group-item text-info">
+                  <div class="row">
+                    <div class="col-xs-10">
+                      <xsl:value-of select="."/>
+                    </div>
+                    <div class="col-xs-2">
+                      <span class="pull-right label label-info">
+                        <xsl:value-of select="@type"/>
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </xsl:when>
+              <xsl:otherwise>
+                <li class="list-group-item text-danger">
+                  <div class="row">
+                    <div class="col-xs-10">
+                      <xsl:value-of select="."/>
+                    </div>
+                    <div class="col-xs-2">
+                      <span class="pull-right label label-danger">
+                        <xsl:value-of select="@type"/>
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+        </ul>
+      </div>
+    </xsl:if>
+  </xsl:template>
+
 </xsl:stylesheet>

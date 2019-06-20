@@ -40,25 +40,32 @@
     '$rootScope',
     '$translate',
     '$q',
+    '$http',
     'gnSearchSettings',
     'gnMetadataActions',
     'gnGlobalSettings',
-    function($scope, $location, $rootScope, $translate, $q,
+    function($scope, $location, $rootScope, $translate, $q, $http,
         gnSearchSettings, gnMetadataActions, gnGlobalSettings) {
-      $scope.onlyMyRecord = {
-        is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
-      };
+
       $scope.isFilterTagsDisplayed =
           gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.defaultSearchObj = {
-        permalink: false,
+        permalink: true,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'e101',
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           isTemplate: ['y', 'n'],
+          resultType: $scope.facetsSummaryType,
+          from: 1,
+          to: 20
+        },
+        defaultParams: {
+          sortBy: 'changeDate',
+          _isTemplate: 'y or n',
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
@@ -66,11 +73,11 @@
       };
       angular.extend($scope.searchObj, $scope.defaultSearchObj);
 
-
-      $scope.toggleOnlyMyRecord = function(callback) {
-        $scope.onlyMyRecord.is ? setOwner() : unsetOwner();
-        callback();
-      };
+      $scope.$watch('onlyMyRecord.is', function(n, o) {
+        if (n !== o) {
+          n ? setOwner() : unsetOwner();
+        }
+      });
 
       var setOwner = function() {
         $scope.searchObj.params['_owner'] = $scope.user.id;
@@ -80,11 +87,19 @@
         delete $scope.searchObj.params['_owner'];
       };
 
-      $scope.$watch('user.id', function(newId) {
-        if (angular.isDefined(newId) && $scope.onlyMyRecord.is) {
+      $scope.$watch('user.id', function(newId, o) {
+        if (newId !== o && angular.isDefined(newId) && $scope.onlyMyRecord.is) {
           setOwner();
         }
       });
+
+
+
+      // Transfert the scope to the popup
+      $scope.getScope = function(currentMd) {
+        $scope.md = currentMd;
+        return $scope;
+      };
 
       $scope.deleteRecord = function(md) {
         var deferred = $q.defer();
@@ -114,9 +129,28 @@
   module.controller('GnEditorBoardController', [
     '$scope',
     '$rootScope',
+    '$route',
     '$location',
     'gnSearchSettings',
-    function($scope, $rootScope, $location, gnSearchSettings) {
+    'gnGlobalSettings',
+    function($scope, $rootScope, $route, $location, gnSearchSettings, gnGlobalSettings) {
+
+      // https://github.com/angular/angular.js/issues/1699#issuecomment-11496428
+      var lastRoute = $route.current;
+      $scope.$on('$locationChangeSuccess', function(event) {
+        // Want to prevent re-loading when going from /board
+        if ($route && $route.current && $route.current.$$route.originalPath === '/board') {
+          $route.current = lastRoute; //Does the actual prevention of routing
+        }
+      });
+
+      $scope.setOnlyMyRecord = function() {
+        $scope.onlyMyRecord = {
+          is: gnGlobalSettings.gnCfg.mods.editor.isUserRecordsOnly
+        };
+      };
+      $scope.setOnlyMyRecord();
+
 
       // Refresh list when privileges are updated
       $scope.$on('PrivilegesUpdated', function(event, data) {

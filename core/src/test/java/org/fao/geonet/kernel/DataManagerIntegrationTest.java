@@ -30,10 +30,24 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -50,6 +64,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
+
 
 /**
  * Tests for the DataManager.
@@ -175,13 +190,13 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         MetadataCategory category = serviceContext.getBean(MetadataCategoryRepository.class).findAll().get(0);
 
         final SourceRepository sourceRepository = serviceContext.getBean(SourceRepository.class);
-        Source source = sourceRepository.save(new Source().setLocal(true).setName("GN").setUuid("sourceuuid"));
+        Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("GN").setUuid("sourceuuid"));
 
         final Element sampleMetadataXml = super.getSampleMetadataXml();
         final AbstractMetadata metadata = new Metadata();
         metadata.setDataAndFixCR(sampleMetadataXml)
             .setUuid(UUID.randomUUID().toString());
-        metadata.getMetadataCategories().add(category);
+        metadata.getCategories().add(category);
         metadata.getDataInfo().setSchemaId("iso19139");
         metadata.getSourceInfo().setSourceId(source.getUuid()).setOwner(1);
 
@@ -190,8 +205,8 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
             principal.getId(), templateMd.getUuid(), MetadataType.METADATA.codeString, true);
 
         AbstractMetadata newMetadata = _metadataRepository.findOne(newMetadataId);
-        assertEquals(1, newMetadata.getMetadataCategories().size());
-        assertEquals(category, newMetadata.getMetadataCategories().iterator().next());
+        assertEquals(1, newMetadata.getCategories().size());
+        assertEquals(category, newMetadata.getCategories().iterator().next());
         assertEqualsText(metadata.getUuid(), newMetadata.getXmlData(false), "gmd:parentIdentifier/gco:CharacterString");
 
     }
@@ -249,7 +264,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(startIndexDocs + (2 * numDocsPerMd), numDocs(searchManager, lang));
         assertEquals(startMdCount + 2, _metadataRepository.count());
 
-        Specification<Metadata> spec = where(MetadataSpecs.hasMetadataId(md1)).or(MetadataSpecs.hasMetadataId(md2));
+        Specification<Metadata> spec = where((Specification<Metadata>)MetadataSpecs.hasMetadataId(md1)).or((Specification<Metadata>)MetadataSpecs.hasMetadataId(md2));
         _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
         assertEquals(startMdCount, _metadataRepository.count());

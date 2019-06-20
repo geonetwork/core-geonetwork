@@ -55,6 +55,7 @@
     <name>gfc:constrainedBy</name>
     <name>gfc:inheritsFrom</name>
     <name>gfc:inheritsTo</name>
+    <name>gco:range</name>
   </fieldsWithFieldset>
 
   <fieldsWithAnchorOption>
@@ -95,6 +96,7 @@
       </tab>
       <flatModeExceptions>
         <for name="gfc:code"/>
+        <for name="gfc:listedValue"/>
       </flatModeExceptions>
     </view>
     <view name="advanced">

@@ -1,7 +1,9 @@
 @import "../../../style/gn_search.less";
 
+@btn-link-disabled-color: #707070;
+@dropdown-link-disabled-color: #707070;
+
 [data-gn-map-field] > [ngeo-map] {
-  //height: 89.9vh;
   border: 1px solid #ccc;
   border-radius: 3px;
   right: 0;
@@ -14,6 +16,9 @@
   .ol-attribution {
     right: auto;
     left: .5em;
+    button {
+      background-color: @brand-primary;
+    }
   }
   .ol-attribution button {
     float: left;
@@ -30,6 +35,9 @@
   .ol-attribution {
     right: auto;
     left: .5em;
+    button {
+      background-color: @brand-primary;
+    }
   }
   .ol-attribution button {
     float: left;
@@ -61,39 +69,76 @@
       }
     }
   }
+  [gn-projection-switcher] {
+    .input-group-addon {
+      width: 7em;
+      border-radius: 0;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      width: 16.5em;
+      border-radius: 0;
+      li {
+        width: calc(~"100% -30px");
+        border-radius: 0;
+        box-shadow: none;
+        cursor: pointer;
+        &.active {
+          font-weight: 500;
+          color: #000;
+        }
+        &:hover {
+          background-color: @dropdown-link-hover-bg;
+        }
+      }
+      li:not(:first-child) {
+        margin-top: -1px;
+      }
+    }
+    .btn {
+      width: 2.5em;
+      border-radius: 0;
+      border-left: 0;
+      &:active, &:focus {
+        background-color: @btn-default-bg;
+        border-color: @btn-default-border;
+      }
+    }
+  }
 }
 
 // minimap on search results
-.gn-toggle {
-  background-color: @brand-primary;
-  color: white !important;
-  -webkit-border-radius: 25px;
-  border-width: 0px;
-  &:hover {
-    background-color: darken(@link-color, 15%);
-    color: white !important;
+.gn-search-map {
+  [ngeo-map] {
+    background: @body-bg;
+    .ol-attribution {
+      li, a {
+        font-size: 10px;
+      }
+    }
   }
 }
-.gn-minimap-toggle {
+.gn-toggle {
+  border: 0;
+  transform: rotate(270deg);
+  margin-right: -15px;
   position: fixed;
-  bottom: 10px;
-  right: 10px;
-  z-index: 999;
-}
-.gn-minimap-button {
   padding: 7px;
   right: 0px;
-  bottom: 52px;
+  bottom: calc(~"@{gn-bottombar-height} + 20px");
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 999;
+  i {
+    transform: rotate(-270deg);
+  }
+  .gn-minimap-text {
+    text-transform: uppercase;
+  }
 }
-.gn-minimap-text {
-  text-decoration: blink;
-  transform: translate(100%) rotate(270deg);
-  transform-origin: left bottom;
-  bottom: 87px;
-  color: @brand-primary;
-  right:0;
-  text-transform: uppercase;
-}
+
 
 gn-wps-process-form {
   .panel-body {
@@ -103,4 +148,16 @@ gn-wps-process-form {
 // drag/zoom box for on the map
 .ol-dragzoom {
   border: 2px solid @brand-primary;
+}
+// attribution
+.ol-attribution {
+  background: #fff !important;
+  button {
+    background-color: @brand-primary;
+  }
+  a {
+    img {
+      display: none;
+    }
+  }
 }

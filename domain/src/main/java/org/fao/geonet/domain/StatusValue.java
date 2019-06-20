@@ -32,6 +32,19 @@ import java.util.Map;
 /**
  * One of the enumerated status options that a metadata can be.
  *
+ * By default a metadata has no status ie. UNKNOWN.
+ *
+ * The first step of the workflow (ie. DRAFT) can be automatically assigned for
+ * record created on a group (
+ * {@link org.fao.geonet.kernel.datamanager.IMetadataStatus#activateWorkflowIfConfigured}
+ *
+ * There is 2 types of status value:
+ * <ul>
+ * <li>One is part of the general workflow (by default)</li>
+ * <li>One is independent task that may be triggered on demand</li>
+ * </ul>
+ *
+ *
  * @author Jesse
  */
 @Entity
@@ -45,12 +58,14 @@ public class StatusValue extends Localized {
     private int _id;
     private String _name;
     private char _reserved = Constants.YN_FALSE;
+    private StatusValueType type = StatusValueType.workflow;
+    private StatusValueNotificationLevel notificationLevel;
     private int displayOrder;
 
     /**
-     * Get the id of the StatusValue object. This is a generated value and as such new instances
-     * should not have this set as it will simply be ignored and could result in reduced
-     * performance.
+     * Get the id of the StatusValue object. This is a generated value and as such
+     * new instances should not have this set as it will simply be ignored and could
+     * result in reduced performance.
      *
      * @return the id of the StatusValue object
      */
@@ -61,9 +76,9 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Set the id of the StatusValue object. This is a generated value and as such new instances
-     * should not have this set as it will simply be ignored and could result in reduced
-     * performance.
+     * Set the id of the StatusValue object. This is a generated value and as such
+     * new instances should not have this set as it will simply be ignored and could
+     * result in reduced performance.
      *
      * @param id the id of the StatusValue object
      */
@@ -91,9 +106,9 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * For backwards compatibility we need the reserved column to be either 'n' or 'y'. This is a
-     * workaround to allow this until future versions of JPA that allow different ways of
-     * controlling how types are mapped to the database.
+     * For backwards compatibility we need the reserved column to be either 'n' or
+     * 'y'. This is a workaround to allow this until future versions of JPA that
+     * allow different ways of controlling how types are mapped to the database.
      */
     @Column(name = "reserved", nullable = false, length = 1)
     protected char getReserved_JpaWorkaround() {
@@ -103,7 +118,8 @@ public class StatusValue extends Localized {
     /**
      * Set the column value.
      *
-     * @param reserved Constants.YN_ENABLED for true or Constants.YN_DISABLED for false.
+     * @param reserved Constants.YN_ENABLED for true or Constants.YN_DISABLED for
+     *                 false.
      */
     protected char setReserved_JpaWorkaround(final char reserved) {
         return _reserved = reserved;
@@ -138,8 +154,9 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Get the order to display this value in the UI. This is just a hint to the ui that provides an
-     * priority/importance of the status value compared to the others.
+     * Get the order to display this value in the UI. This is just a hint to the ui
+     * that provides an priority/importance of the status value compared to the
+     * others.
      *
      * @return the order to display this value in the UI.
      */
@@ -149,12 +166,78 @@ public class StatusValue extends Localized {
     }
 
     /**
-     * Set the order to display this value in the UI. This is just a hint to the ui that provides an
-     * priority/importance of the status value compared to the others.
+     * Set the order to display this value in the UI. This is just a hint to the ui
+     * that provides an priority/importance of the status value compared to the
+     * others.
      *
      * @param displayOrder the order to display this value in the UI
      */
     public void setDisplayOrder(int displayOrder) {
         this.displayOrder = displayOrder;
+    }
+
+    /**
+     * @return the type
+     */
+    @Column(nullable = true, name = "type")
+    @Enumerated(EnumType.STRING)
+    public StatusValueType getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(StatusValueType type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the type
+     */
+    @Column(nullable = true, name = "notificationLevel")
+    @Enumerated(EnumType.STRING)
+    public StatusValueNotificationLevel getNotificationLevel() {
+        return notificationLevel;
+    }
+
+    /**
+     * @param notificationLevel the notificationLevel to set
+     */
+    public void setNotificationLevel(StatusValueNotificationLevel notificationLevel) {
+        this.notificationLevel = notificationLevel;
+    }
+
+    /**
+     * List of predefined status part of the workflow. Those values are the default
+     * one for GeoNetwork and may be modified in the database.
+     */
+    public static final class Status {
+        public static final String UNKNOWN = "0";
+        public static final String DRAFT = "1";
+        public static final String APPROVED = "2";
+        public static final String RETIRED = "3";
+        public static final String SUBMITTED = "4";
+        public static final String REJECTED = "5";
+    }
+
+    /**
+     * List of predefined status part of the events. Those values are the default
+     * one for GeoNetwork and may be modified in the database.
+     */
+    public static final class Events {
+        public static final String RECORDCREATED = "50";
+        public static final String RECORDUPDATED = "51";
+        public static final String ATTACHMENTADDED = "52";
+        public static final String ATTACHMENTDELETED = "53";
+        public static final String RECORDOWNERCHANGE = "54";
+        public static final String RECORDGROUPOWNERCHANGE = "55";
+        public static final String RECORDPRIVILEGESCHANGE = "56";
+        public static final String RECORDCATEGORYCHANGE = "57";
+        public static final String RECORDVALIDATIONTRIGGERED = "58";
+        public static final String RECORDSTATUSCHANGE = "59";
+        public static final String RECORDPROCESSINGCHANGE = "60";
+        public static final String RECORDDELETED = "61";
+        public static final String RECORDIMPORTED = "62";
     }
 }

@@ -51,8 +51,6 @@
           classes: 'btn-success', icon: 'fa-file-text-o'},
         {name: 'classificationSystems', route: '#classification',
           classes: 'btn-info', icon: 'fa-tags'},
-        {name: 'standards', route: '#standards',
-          classes: 'btn-info', icon: 'fa-puzzle-piece'},
         {name: 'usersAndGroups', route: '#organization',
           classes: 'btn-default', icon: 'fa-group'},
         {name: 'settings', route: '#settings',

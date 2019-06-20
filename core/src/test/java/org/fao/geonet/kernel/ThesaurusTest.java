@@ -60,8 +60,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
 
     @Before
     public void prepareEmptyThesaurus() throws ConfigurationException, IOException {
-        Path file = this.thesaurusFile.getParent().resolve(ThesaurusTest.class.getSimpleName() + "_empyt.rdf");
-        Files.deleteIfExists(file);
+        Path file = locateThesaurus(ThesaurusTest.class.getSimpleName() + "_empyt.rdf");
 
         this.writableThesaurus = new Thesaurus(isoLangMapper, file.getFileName().toString(), null, null, Geonet.CodeList.LOCAL,
             file.getFileName().toString(), file, "http://test.com", true);
@@ -71,7 +70,6 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     @After
     public void deleteEmptyThesaurus() throws IOException {
         writableThesaurus.getRepository().shutDown();
-        Files.deleteIfExists(writableThesaurus.getFile());
     }
 
     @SuppressWarnings("deprecation")
@@ -350,6 +348,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     @Test
     public void testIsFreeCode() throws Exception {
         Query<KeywordBean> query = QueryBuilder.keywordQueryBuilder(isoLangMapper, "eng").limit(1).build();
+        assertFalse(query.execute(thesaurus).isEmpty());
         KeywordBean keyword = query.execute(thesaurus).get(0);
 
         assertFalse(thesaurus.isFreeCode(keyword.getNameSpaceCode(), keyword.getRelativeCode()));

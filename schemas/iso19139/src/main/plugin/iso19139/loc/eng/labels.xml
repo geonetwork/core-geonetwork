@@ -112,6 +112,18 @@
     <description>Reference date and event used to describe it (YYYY-MM-DD)</description>
     <_condition>Use obligation/condition from referencing object</_condition>
   </element>
+  <element name="gmd:CI_DateTypeCode">
+    <label>Date type code</label>
+    <description/>
+  </element>
+  <element name="gmd:CI_OnLineFunctionCode">
+    <label>OnLine function code</label>
+    <description/>
+  </element>
+  <element name="gmd:CI_PresentationFormCode">
+    <label>Presentatiewijze code</label>
+    <description/>
+  </element>
   <element name="gmd:CI_OnlineResource" id="396.0">
     <label>OnLine resource</label>
     <description>Information about on-line sources from which the dataset, specification, or
@@ -179,6 +191,12 @@
   <element name="gmd:DQ_DomainConsistency" id="113.0">
     <label>Domain consistency</label>
     <description>Adherence of values to the value domains</description>
+  </element>
+  <element name="gmd:DQ_EvaluationMethodTypeCode">
+    <label>Evaluation method type code</label>
+    <description>type of method for evaluating an identified data quality
+      measure
+    </description>
   </element>
   <element name="gmd:DQ_FormatConsistency" id="114.0">
     <label>Format consistency</label>
@@ -302,6 +320,10 @@
     <label>Aggregate Information</label>
     <description>Aggregate dataset information</description>
   </element>
+  <element name="gmd:MD_DistributionUnits">
+    <label>Distribution Units</label>
+    <description></description>
+  </element>
   <element name="gmd:MD_ApplicationSchemaInformation" id="320.0">
     <description>Information about the application schema used to build the
       dataset
@@ -319,17 +341,36 @@
     </description>
     <label>Browse Graphic</label>
   </element>
-  <element name="gmd:MD_Constraints" id="67.0">
-    <label>Constraints</label>
-    <description>Restrictions on the access and use of a resource or metadata</description>
+  <element name="gmd:MD_CellGeometryCode">
+    <label>Cell geometry code</label>
+    <description>code indicating whether grid data is point or area</description>
   </element>
-  <element name="gmd:MD_CoverageDescription" id="239.0">
-    <label>Coverage description</label>
-    <description>Information about the content of a grid data cell</description>
+  <element name="gmd:MD_CharacterSetCode">
+    <label>Characterset code</label>
+    <description>name of the character coding standard used for the
+      resource
+    </description>
+  </element>
+  <element name="gmd:MD_Constraints">
+    <label>Constraints</label>
+    <description>
+    </description>
+  </element>
+  <element name="gmd:MD_CoverageContentTypeCode">
+    <label>Content type code</label>
+    <description>specific type of information represented in the cell</description>
+  </element>
+  <element name="gmd:MD_CoverageDescription">
+    <label>Coverage Description</label>
+    <description>information about the content of a grid data cell</description>
   </element>
   <element name="gmd:MD_DataIdentification" id="36.0">
     <label>Data identification</label>
     <description>Information required to identify a dataset</description>
+  </element>
+  <element name="gmd:MD_DatatypeCode">
+    <label>Data type code</label>
+    <description>datatype of element or entity</description>
   </element>
   <element name="gmd:MD_DigitalTransferOptions" id="274.0">
     <label>Digital transfer options</label>
@@ -340,6 +381,10 @@
   <element name="gmd:MD_Dimension" id="179.0">
     <label>Dimension</label>
     <description>Axis properties</description>
+  </element>
+  <element name="gmd:MD_DimensionNameTypeCode">
+    <label>Dimension type code</label>
+    <description>name of the dimension</description>
   </element>
   <element name="gmd:MD_Distribution" id="270.0">
     <label>Distribution</label>
@@ -404,9 +449,19 @@
     <label>Image description</label>
     <description>Information about an image's suitability for use</description>
   </element>
+  <element name="gmd:MD_ImagingConditionCode">
+    <label>Imaging Condition Code</label>
+    <description>code which indicates conditions which may affect the
+      image
+    </description>
+  </element>
   <element name="gmd:MD_Keywords" id="52.0">
     <label>Keywords</label>
     <description>Keywords, their type and reference source</description>
+  </element>
+  <element name="gmd:MD_KeywordTypeCode">
+    <label>Keyword Type Code</label>
+    <description>methods used to group similar keywords</description>
   </element>
   <element name="gmd:MD_LegalConstraints" id="69.0">
     <label>Legal constraints</label>
@@ -423,6 +478,14 @@
     <description>Information about the media on which the resource can be
       distributed
     </description>
+  </element>
+  <element name="gmd:MD_MediumFormatCode">
+    <label>Medium format</label>
+    <description>method used to write to the medium</description>
+  </element>
+  <element name="gmd:MD_MediumNameCode">
+    <label>Medium name code</label>
+    <description>name of the medium</description>
   </element>
   <element name="gmd:MD_Metadata" id="1.0">
     <label>Metadata</label>
@@ -989,6 +1052,37 @@
   <element name="gmd:description" id="401.0" context="gmd:CI_OnlineResource">
     <label>Description</label>
     <description>Detailed text description of what the online resource is/does</description>
+        <helper>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3035">ETRS89 / LAEA Europe</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/31370">Belge 1972 / Belgian Lambert 72</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4936">ETRS89-XYZ: 3D Cartesian in ETRS89</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4937">ETRS89-GRS80h: 3D geodetic in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4258">ETRS89-GRS802D: geodetic in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3035">ETRS89-LAEA2D: LAEA projection in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3034">ETRS89-LCC2D: LCC projection in ETRS89 on GRS80</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3038">ETRS89-TM26N2D: TM projection in ETRS89 on GRS80, zone 26N (30°W to 24°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3039">ETRS89-TM27N2D: TM projection in ETRS89 on GRS80, zone 27N (24°W to 18°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3040">ETRS89-TM28N: 2D TM projection in ETRS89 on GRS80, zone 28N (18°W to 12°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3041">ETRS89-TM29N: 2D TM projection in ETRS89 on GRS80, zone 29N (12°W to 6°W)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3042">ETRS89-TM30N: 2D TM projection in ETRS89 on GRS80, zone 30N (6°W to 0°)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3043">ETRS89-TM31N:  2D TM projection in ETRS89 on GRS80, zone 31N (0° to 6°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3044">ETRS89-TM32N: 2D TM projection in ETRS89 on GRS80, zone 32N (6°E to 12°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3045">ETRS89-TM33N: 2D TM projection in ETRS89 on GRS80, zone 33N (12°E to 18°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3046">ETRS89-TM34N: 2D TM projection in ETRS89 on GRS80, zone 34N (18°E to 24°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3047">ETRS89-TM35N: 2D TM projection in ETRS89 on GRS80, zone 35N (24°E to 30°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3048">ETRS89-TM36N: 2D TM projection in ETRS89 on GRS80, zone 36N (30°E to 36°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3049">ETRS89-TM37N: 2D TM projection in ETRS89 on GRS80, zone 37N (36°E to 42°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3050">ETRS89-TM38N: 2D TM projection in ETRS89 on GRS80, zone 38N (42°E to 48°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/3051">ETRS89-TM39N: 2D TM projection in ETRS89 on GRS80, zone 39N (48°E to 54°E)</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/5730">EVRS: Height in EVRS</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/7409">ETRS89-GRS80-EVRS: 3D compound: 2D geodetic in ETRS89 on GRS80, and EVRS height</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/2154">RGF93 / Lambert-93</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/32620">WGS 84 / UTM zone 20N</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/2972">RGFG95 / UTM zone 22N</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/2975">RGR92 / UTM zone 40S</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4467">RGSPM06 / UTM zone 21N</option>
+            <option value="http://www.opengis.net/def/crs/EPSG/0/4471">RGM04 / UTM zone 38S</option>
+        </helper>
   </element>
   <element name="gmd:description" id="541.0" context="gmd:MD_CodeDomain">
     <label>Description</label>
@@ -2214,6 +2308,7 @@
       <option value="FILE:RASTER">GIS RASTER file</option>
       <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
       <option value="WWW:LINK-1.0-http--link" default="">Web address (URL)</option>
+      <option value="DOI">Digital Object Identifier (DOI)</option>
       <option value="WWW:LINK-1.0-http--partners">Partner web address (URL)</option>
       <option value="WWW:LINK-1.0-http--related">Related link (URL)</option>
       <option value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</option>
@@ -2737,13 +2832,10 @@
     <label>Outer boundary</label>
     <description>The outer boundary of a solid.</description>
   </element>
-
   <element name="gml:interior">
     <label>Inner boundary</label>
     <description>The inner boundary of a solid</description>
   </element>
-
-
   <element name="gml:begin">
     <label>Begin</label>
     <description/>
@@ -2751,6 +2843,10 @@
   <element name="gml:end">
     <label>End</label>
     <description/>
+  </element>
+  <element name="gml:unitsSystem">
+    <label>unitsSystem</label>
+    <description></description>
   </element>
   <element name="gml:duration">
     <label>Duration</label>
@@ -2859,7 +2955,33 @@
     <label>Factor</label>
     <description></description>
   </element>
-
+  <element name="years">
+    <label>Years</label>
+    <description/>
+  </element>
+  <element name="zone">
+    <label>Zone</label>
+    <description>Unique identifier for 100,000 metre grid zone</description>
+  </element>
+  <element name="DirectReferenceSystem">
+    <label>Direct projection system (for geographical resources)</label>
+    <description>ReferenceSystem derived / specify that it is a direct
+      reference
+    </description>
+  </element>
+  <element name="InDirectReferenceSystem">
+    <label>Indirect projection system (for non geographical resources)</label>
+    <description>ReferenceSystem derived / specify that it is an indirect
+      reference
+    </description>
+  </element>
+  <element name="srsName">
+    <label>Spatial Reference System Name</label>
+    <description>Name of the Spatial Reference System. By default set to
+      geographic (epsg:4326)
+    </description>
+    <example>urn:x-ogc:def:crs:EPSG:6.6:4326</example>
+  </element>
 
   <element name="srv:SV_ServiceIdentification">
     <label>Service Identification (19119)</label>
@@ -3032,6 +3154,15 @@
     <description>Use this section to define other metadata language (multilingual metadata).
     </description>
   </element>
+  <element name="gmd:LocalisedCharacterString">
+    <label>Localised string</label>
+    <description></description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:localisedString">
+    <label>Localised string</label>
+    <description></description>
+  </element>
   <element name="gmd:describes">
     <label>Describes</label>
     <description>Describes</description>
@@ -3047,6 +3178,10 @@
   <element name="gmd:PT_LocaleContainer">
     <label>PT_LocaleContainer</label>
     <description>PT_LocaleContainer</description>
+  </element>
+  <element name="gmd:responsibleParty">
+    <label>Responsible Party</label>
+    <description></description>
   </element>
   <element name="gmd:featureType">
     <label>Feature type</label>
@@ -3262,7 +3397,7 @@
     </description>
   </element>
   <element name="xlink:href">
-    <label>Link href</label>
+    <label>URL</label>
     <description>Supplies the data that allows an XLink application to find a remote resource (or
       resource fragment) [W3C XLINK]
     </description>
@@ -3295,6 +3430,14 @@
     <label>Field of application</label>
     <description>Field of application</description>
   </element>
+  <element name="gml:catalogSymbol">
+    <label>Catalogue symbol</label>
+    <description></description>
+  </element>
+  <element name="gml:uom">
+    <label>Unit of measure</label>
+    <description></description>
+  </element>
   <element name="gml:axis">
     <label>Axis</label>
   </element>
@@ -3318,6 +3461,14 @@
   </element>
   <element name="gml:remarks">
     <label>Remarks</label>
+  </element>
+  <element name="gml:quantityType">
+    <label>Quantity Type</label>
+    <description></description>
+  </element>
+  <element name="gml:quantityTypeReference">
+    <label>Quantity Type Reference</label>
+    <description></description>
   </element>
   <element name="gml:domainOfValidity">
     <label>Domain of validity</label>
@@ -3352,8 +3503,9 @@
   <element name="gmd:MD_SpatialRepresentationTypeCode">
     <label>Spatial Representation Type</label>
   </element>
-  <element name="gmd:MD_CharacterSetCode">
-    <label>Character Set</label>
+  <element name="gmd:MD_ClassificationCode">
+    <label>Classification code</label>
+    <description>Name of the handling restrictions on the dataset</description>
   </element>
   <element name="gmd:MD_TopologyLevelCode">
     <label>Topology Level</label>
@@ -3387,5 +3539,13 @@
   </element>
   <element name="gco:Scale">
     <label>Scale</label>
+  </element>
+  <element name="gco:lower">
+    <label>Lower cardinality</label>
+    <description>Lower cardinality</description>
+  </element>
+  <element name="gco:upper">
+    <label>Upper cardinality</label>
+    <description>Upper cardinality</description>
   </element>
 </labels>

@@ -364,16 +364,6 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
         return null;
     }
 
-    private boolean validates(String schema, Element md) {
-        try {
-            dataMan.validate(schema, md);
-            return true;
-        } catch (Exception e) {
-            log.info("Validation failed. Error: "+e.getMessage());
-            return false;
-        }
-    }
-
     /**
      * Updates the record on the database. The force parameter allows you to force an update even
      * if the date is not more updated, to make sure transformation and attributes assigned by the
@@ -494,10 +484,10 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
             OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
+            repository.deleteAllByMetadataId(Integer.parseInt(record.id));
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-            metadata.getMetadataCategories().clear();
+            metadata.getCategories().clear();
             addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
             dataMan.flush();

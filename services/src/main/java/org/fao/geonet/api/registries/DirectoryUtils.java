@@ -5,17 +5,30 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.jdom.*;
+import org.jdom.Attribute;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.Text;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by francois on 11/03/16.
@@ -143,7 +156,7 @@ public class DirectoryUtils {
         CollectResults collectResults = new CollectResults(record);
         Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
 
-        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
 
         if (Log.isDebugEnabled(LOGGER)) {
             Log.debug(LOGGER, String.format(

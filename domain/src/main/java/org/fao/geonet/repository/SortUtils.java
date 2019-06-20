@@ -123,4 +123,8 @@ public class SortUtils {
     public static Sort createSort(SingularAttribute<?, ?>... attributes) {
         return new Sort(createPath(attributes));
     }
+
+    public static Sort createSort(Sort.Direction direction, SingularAttribute<?, ?>... attributes) {
+        return new Sort(direction, createPath(attributes));
+    }
 }

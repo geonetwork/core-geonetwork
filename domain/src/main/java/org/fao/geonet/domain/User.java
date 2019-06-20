@@ -211,8 +211,9 @@ public class User extends GeonetEntity implements UserDetails {
      *
      * @param email all the email addresses.
      */
-    protected void setEmailAddresses(Set<String> email) {
+    public User setEmailAddresses(Set<String> email) {
         this._email = email;
+        return this;
     }
 
     /**
@@ -375,7 +376,7 @@ public class User extends GeonetEntity implements UserDetails {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
         final String nodeId = getSecurity().getNodeId();
         if (nodeId != null) {
-            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY + nodeId));
+            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY));
         }
 
         if (_profile != null) {

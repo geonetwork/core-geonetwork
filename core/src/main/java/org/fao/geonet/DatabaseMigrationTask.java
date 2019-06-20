@@ -30,12 +30,20 @@ import java.sql.Statement;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.migration.DatabaseMigrationException;
+import org.springframework.context.ApplicationContext;
 
 /**
  * A task for migrating the database from one version to another
  *
  * @author jeichar
  */
-public interface DatabaseMigrationTask {
-    void update(Connection connection) throws SQLException, DatabaseMigrationException;
+public abstract class DatabaseMigrationTask {
+
+    protected ApplicationContext applicationContext;
+
+    public void setContext(ApplicationContext _applicationContext) {
+        this.applicationContext = _applicationContext;
+    }
+
+    public abstract void update(Connection connection) throws SQLException, DatabaseMigrationException;
 }

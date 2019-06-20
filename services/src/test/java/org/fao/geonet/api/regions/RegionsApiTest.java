@@ -59,7 +59,7 @@ public class RegionsApiTest  extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/regions")
+        this.mockMvc.perform(get("/srv/api/regions")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
@@ -74,7 +74,7 @@ public class RegionsApiTest  extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Retrieve continent regions
-        this.mockMvc.perform(get("/api/regions")
+        this.mockMvc.perform(get("/srv/api/regions")
             .session(this.mockHttpSession)
             .param("categoryId", "http://www.naturalearthdata.com/ne_admin#Continent")
             .accept(MediaType.parseMediaType("application/json")))
@@ -91,7 +91,7 @@ public class RegionsApiTest  extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/api/regions/types")
+        this.mockMvc.perform(get("/srv/api/regions/types")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())

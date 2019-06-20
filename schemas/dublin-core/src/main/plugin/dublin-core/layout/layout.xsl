@@ -137,6 +137,8 @@
     <xsl:variable name="added" select="parent::node()/parent::node()/@gn:addedObj"/>
     <xsl:variable name="container" select="parent::node()/parent::node()"/>
 
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
     <!-- Add view and edit template-->
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="$labelConfig"/>
@@ -144,9 +146,9 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
             <xsl:with-param name="widgetParams"/>-->
-      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
       <!--<xsl:with-param name="attributesSnippet" as="node()"/>-->
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo"
                       select="gn:element"/>
@@ -204,13 +206,15 @@
   <!-- Readonly elements -->
   <xsl:template mode="mode-dublin-core" priority="200" match="dc:identifier|dct:modified">
 
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>

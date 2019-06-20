@@ -51,7 +51,43 @@
     <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
     <for name="gmd:useLimitation" use="textarea"/>
+    <!-- Example configuration to use thesaurus to populate a CharacterString field
+    (including multilingual fields).
 
+    eg. INSPIRE codelist to set use limitation. This will apply to all views in the editor
+    1) Set the CharacterString value with the concept value
+    <for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"/>
+    </for>
+
+    2) Use the concept Identifier in the xlink:href attribute.
+    This will automatically use the appropriate substitute depending on the presence
+    or not of the xlink:href. Either a CharacterString or an Anchor is used.
+    <for name="gmd:useLimitation"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
+    </for>
+
+    3) Use the concept identifier to populate another attribute (not having namespace)
+    <for name="gmd:featureTypes"
+         use="data-gn-keyword-picker">
+      <directiveAttributes data-thesaurus-key="external.theme.httpinspireeceuropaeumetadatacodelistLimitationsOnPublicAccess-LimitationsOnPublicAccess"
+                           data-thesaurus-concept-id-attribute="codeSpace"/>
+    </for>
+    -->
+
+    <!-- Example configuration to use the anchor switcher directive
+    <for name="gmd:code" xpath="/gmd:MD_Metadata/gmd:identifier/gmd:MD_Identifier/gmd:code" use="data-gn-anchor-switcher"/>
+    <for name="gmd:supplementalInformation" use="data-gn-anchor-switcher"/>
+    <for name="gmd:organisationName" use="data-gn-anchor-switcher"/>
+    -->
+
+
+
+    <for name="gts:TM_PeriodDuration" use="data-gn-field-duration-div"/>
+    <for name="gml:duration" use="data-gn-field-duration-div"/>
 
     <for name="gco:Distance" use="number"/>
     <for name="gco:Decimal" use="number"/>
@@ -65,7 +101,7 @@
 
 
     <!-- gmx:FileName/@src attribute -->
-    <for name="src" use="data-gn-logo-selector"/>
+    <for name="gmx:FileName/@src" use="data-gn-logo-selector"/>
 
     <for name="gmd:electronicMailAddress" use="email"/>
 
@@ -164,6 +200,8 @@
         data-insert-modes=""
         data-template-type="report"/>
     </for>
+
+
 
 
     <!-- Example configuration: Add onLine source from subtemplate
@@ -307,6 +345,8 @@
       <name>gmd:domainValue</name>
       <name>gmd:minimumValue</name>
       <name>gmd:maximumValue</name>
+      <name>gmd:dimensionSize</name>
+      <name>gmd:numberOfDimensions</name>
       <name>gmd:densityUnits</name>
       <name>gmd:descriptor</name>
       <name>gmd:denominator</name>
@@ -315,6 +355,7 @@
       <name>gmd:transformationDimensionDescription</name>
       <name>gmd:orientationParameterDescription</name>
       <name>gmd:distance</name>
+      <name>gmd:geometricObjectCount</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
       <name>srv:serviceTypeVersion</name>
@@ -3074,9 +3115,24 @@
 
     </view>
 
+    <!--
+    Customize the editor layout by adding a class attribute
+    <view name="default" class="gn-indent-bluescale gn-label-above-input">-->
     <view name="default">
       <sidePanel>
+        <!-- General online source manager
         <directive data-gn-onlinesrc-list=""/>
+        -->
+
+        <!-- Simple overview manager + online source manger for other types
+        Limit the max number of overviews with data-number-of-overviews="3" attribute.
+        In the full view, editor can access and manage the file store and
+        thumbnail name and description not supported by the overview manager.
+        -->
+        <directive data-gn-overview-manager=""/>
+        <directive data-gn-onlinesrc-list=""
+                   data-types="onlinesrc|parent|dataset|service|source|sibling|associated|fcats"/>
+
         <directive gn-geo-publisher=""
                    data-ng-if="gnCurrentEdit.geoPublisherConfig"
                    data-config="{{gnCurrentEdit.geoPublisherConfig}}"
@@ -3092,6 +3148,7 @@
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
+        <section xpath="/gmd:MD_Metadata/gmd:contentInfo"/>
         <section name="gmd:MD_Metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>

@@ -157,8 +157,8 @@
       <xs:attribute name="editorMode">
         <xs:annotation>
           <xs:documentation>By default, the list of suggestion is displayed in a
-            combo next to the
-            element. The layout may be customized by setting the editorMode.
+            combo next to the element.
+            The layout may be customized by setting the editorMode attribute.
           </xs:documentation>
         </xs:annotation>
         <xs:simpleType>
@@ -166,6 +166,12 @@
             <xs:enumeration value="radio">
               <xs:annotation>
                 <xs:documentation>Simple radio displayed next to each other.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="suggestion">
+              <xs:annotation>
+                <xs:documentation>Suggestion list. Preserve existing value, but does not allow to type value not provided in the list.
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
@@ -199,12 +205,18 @@
         The scope of the expression is defined by a variable named "$p1" whitch is the current node.
 
         For example, to match a metadata on dataset:
-        displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification or
-        $p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']"
+        ```displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification or
+        $p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']"```
 
         and a metadata on service:
-        displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification"
+        ```displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification"```
 
+        or to test a value of the node
+        ```displayIf="gco:CharacterString[contains(., 'temporal resolution: ')]"```
+
+        The result of the displayIf XPath should be one or more nodes.
+        It does not expect a boolean. For example, this does not work
+        ```displayIf="gco:CharacterString/contains(., 'temporal resolution: ')"``` which return true or false.
           ]]>
       </xs:documentation>
     </xs:annotation>

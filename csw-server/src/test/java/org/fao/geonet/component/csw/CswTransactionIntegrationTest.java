@@ -50,9 +50,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.fao.geonet.csw.common.Csw.NAMESPACE_CSW;
-import static org.fao.geonet.csw.common.Csw.NAMESPACE_OGC;
+import static org.fao.geonet.csw.common.Csw.*;
 import static org.junit.Assert.*;
+
 
 /**
  * Test Csw Transaction handling.
@@ -136,6 +136,31 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(1, getUpdatedCount(response, TOTAL_INSERTED));
         assertEquals(1, _metadataUtils.count());
         assertNotNull(_metadataUtils.findOneByUuid(PHOTOGRAPHIC_UUID));
+    }
+
+    @Test
+    public void testInsertResponse() throws Exception {
+        assertEquals(0, _metadataUtils.count());
+
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
+        Element params = createInsertTransactionRequest(metadata);
+        Element response = _transaction.execute(params, serviceContext);
+
+        assertEquals(1, getUpdatedCount(response, TOTAL_INSERTED));
+
+        final Element insertResult = response.getChild("InsertResult", NAMESPACE_CSW);
+        assertNotNull("InsertResult not found", insertResult);
+        final Element briefRecord = insertResult.getChild("BriefRecord", NAMESPACE_CSW);
+        assertNotNull("BriefRecord not found", briefRecord);
+        final Element dcIdentifier = briefRecord.getChild("identifier", NAMESPACE_DC);
+        assertNotNull("dc:identifier not found", dcIdentifier);
+        final Element dcTitle = briefRecord.getChild("title", NAMESPACE_DC);
+        assertNotNull("dc:title not found", dcTitle);
+
+        assertEquals("Bad identifier found", PHOTOGRAPHIC_UUID, dcIdentifier.getText());
     }
 
     @Test

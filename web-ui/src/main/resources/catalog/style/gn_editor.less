@@ -66,7 +66,7 @@ input[type=text], input[type=number], select {
     .fa {
       position: absolute;
       top: 11px;
-      z-index: 100;
+      z-index: 20;
       right: 10px;
       &.fa-spinner {
         right: 25px;
@@ -108,14 +108,14 @@ input[type=text], input[type=number], select {
   padding: 20px 5px;
 }
 
-@media only screen and (max-width: 815px) {
+@media only screen and (max-width: @screen-xs-max) {
   .gn-editor-container {
-    margin-top: 120px;
+    margin-top: 50px;
   }
 }
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 490px) {
   .gn-editor-container {
-    margin-top: 160px;
+    margin-top: 100px;
   }
 }
 
@@ -487,6 +487,7 @@ form.gn-editor {
       padding-right: 0px;
   }
 
+  .gn-required > div.th-inner:after,
   label.gn-required:after, .gn-required > label:after,
   label.gn-mandatory:after, .gn-mandatory > label:after {
       content: "*";
@@ -496,11 +497,31 @@ form.gn-editor {
       color: #a94442;
       font-weight: normal;
   }
+
+  .gn-required > div.th-inner:after{
+    font-size: 2em;
+    margin: -7px 0 0 7px;
+  }
+
+
   .form-horizontal .form-group {
       margin-left: 0px;
       margin-right: 0px;
   }
 
+  /* Multilingual badge positionning when
+  having suggestion or not */
+  [data-gn-multilingual-field] {
+    span.label {
+      position: absolute;
+      right: 15px;
+      line-height: 12px;
+    }
+    .twitter-typeahead span.label {
+      right: 2px;
+      top: 2px;
+    }
+  }
 }
 
 .gn-autocomplete-list {
@@ -536,6 +557,14 @@ form.gn-tab-inspire {
     padding-left: 10px;
     padding-right: 5px;
     // background-color: #fbfcfb;
+    .row > div.col-md-10 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .row > div.col-md-10:hover {
+      white-space: unset;
+    }
     .row > div {
       padding-left: 1px;
       padding-right: 1px;
@@ -554,16 +583,51 @@ form.gn-tab-inspire {
     padding-left: 1px;
     padding-right: 1px;
   }
+  .panel {
+    border: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    box-shadow: none;
+    [data-gn-slide-toggle]:before {
+      margin-left: 0px;
+    }
+    .panel-heading {
+      background: none;
+      padding: 0;
+      border: 0;
+    }
+    .panel-body {
+      padding: 0;
+    }
+  }
   .list-group {
     margin-bottom: 10px;
     .list-group-item {
-      strong {
+      border-left: 4px solid @brand-success;
+      padding-bottom: 5px;
+      .text-bold {
         font-weight: 500;
       }
       p {
         margin-top: 10px;
+        overflow: auto;
+        padding-bottom: 2px;
+      }
+      &.text-danger {
+        border-left: 4px solid @brand-danger;
+        color: @gray-darker;
+      }
+      &.text-info {
+        border-left: 4px solid @brand-info;
+        color: @gray-darker;
       }
     }
+  }
+}
+// margin for a validation block in a date row
+.gn-date {
+  .gn-validation-report {
+    margin-top: 10px;
   }
 }
 .onlinesrc-container, [gn-directory-entry-list-selector] {
@@ -860,6 +924,50 @@ gn-md-type-widget {
     }
   }
 }
+
+
+// md type widget (used only in editor for now)
+gn-draft-validation-widget {
+  display: inline-block;
+  small small {
+    border-radius: 1000px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    margin-bottom: -0.4em;
+    background-color: @gray-light;
+    overflow: hidden;
+
+    &.valid-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+
+    &::after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
+
 .gn-editor-board {
   .table.gn-results-editor td {
     gn-md-type-widget {

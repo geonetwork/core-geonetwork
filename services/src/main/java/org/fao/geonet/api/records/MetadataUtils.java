@@ -47,6 +47,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +64,7 @@ import java.util.*;
  */
 public class MetadataUtils {
     public static final boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+
 
     public static Element getRelated(ServiceContext context, int iId, String uuid,
                                      RelatedItemType[] type,
@@ -334,6 +336,7 @@ public class MetadataUtils {
     }
 
     public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
+    	Log.trace(Geonet.DATA_MANAGER, "Backing up record " + metadata.getId());
         Path outDir = Lib.resource.getRemovedDir(metadata.getId());
         Path outFile;
         try {
@@ -348,7 +351,7 @@ public class MetadataUtils {
 
         Path file = null;
         try {
-            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false);
+            file = MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false, false, true);
             Files.createDirectories(outDir);
             try (InputStream is = IO.newInputStream(file);
                  OutputStream os = Files.newOutputStream(outFile)) {

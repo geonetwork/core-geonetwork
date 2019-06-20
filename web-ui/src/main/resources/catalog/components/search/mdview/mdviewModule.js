@@ -47,9 +47,11 @@
     '$scope', '$http', '$compile', 'gnSearchSettings', 'gnSearchLocation',
     'gnMetadataActions', 'gnAlertService', '$translate', '$location',
     'gnMdView', 'gnMdViewObj', 'gnMdFormatter', 'gnConfig',
+    'gnGlobalSettings', 'gnConfigService',
     function($scope, $http, $compile, gnSearchSettings, gnSearchLocation,
              gnMetadataActions, gnAlertService, $translate, $location,
-             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig) {
+             gnMdView, gnMdViewObj, gnMdFormatter, gnConfig,
+             gnGlobalSettings, gnConfigService) {
 
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
@@ -59,15 +61,21 @@
       $scope.recordIdentifierRequested = gnSearchLocation.uuid;
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
+      $scope.isSocialbarEnabled = gnGlobalSettings.gnCfg.mods.recordview.isSocialbarEnabled;
 
-      statusSystemRating =
-         gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-      if (statusSystemRating == 'advanced') {
-        $scope.isUserFeedbackEnabled = true;
-      }
-      if (statusSystemRating == 'basic') {
-        $scope.isRatingEnabled = true;
-      }
+      gnConfigService.load().then(function(c) {
+        $scope.isRecordHistoryEnabled = gnConfig['system.metadata.history.enabled'];
+
+        var statusSystemRating =
+          gnConfig['system.localrating.enable'];
+
+        if (statusSystemRating == 'advanced') {
+          $scope.isUserFeedbackEnabled = true;
+        }
+        if (statusSystemRating == 'basic') {
+          $scope.isRatingEnabled = true;
+        }
+      });
 
       $scope.search = function(params) {
         $location.path('/search');
@@ -85,7 +93,7 @@
           // Data needs improvements
           // See https://github.com/geonetwork/core-geonetwork/issues/723
           gnAlertService.addAlert({
-            msg: reason.data,
+            msg: reason.data.description,
             type: 'danger'
           });
         });
@@ -115,25 +123,30 @@
       };
 
       $scope.format = function(f) {
+        var showApproved = $scope.mdView.current.record.draft != 'y';
         $scope.usingFormatter = f !== undefined;
         $scope.currentFormatter = f;
-        if (f) {
-          $('#gn-metadata-display').find('*').remove();
+        if (f) {        
+          var gn_metadata_display = $('#gn-metadata-display', $('.gn-md-view:visible'));
+          
+          gn_metadata_display.find('*').remove();
           gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
             $http.get(url, {
               headers: {
                 Accept: 'text/html'
+              },
+              params: {
+                approved : showApproved
               }
             }).then(
                 function(response,status) {
-                  console.log(response.status);
                   if (response.status!=200){
                     $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
                   } else {
                     var snippet = response.data.replace(
                         '<?xml version="1.0" encoding="UTF-8"?>', '');
 
-                    $('#gn-metadata-display').find('*').remove();
+                    gn_metadata_display.find('*').remove();
 
                     $scope.compileScope.$destroy();
 
@@ -141,14 +154,14 @@
                     $scope.compileScope = $scope.$new();
                     var content = $compile(snippet)($scope.compileScope);
 
-                    $('#gn-metadata-display').append(content);
+                    gn_metadata_display.append(content);
 
                     // activate the tabs in the full view
                     $scope.activateTabs();
                 }
               },
             function(data) {
-              $('#gn-metadata-display').append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
+                gn_metadata_display.append("<div class='alert alert-danger top-buffer'>"+$translate.instant("metadataViewLoadError")+"</div>");
             });
           });
         };

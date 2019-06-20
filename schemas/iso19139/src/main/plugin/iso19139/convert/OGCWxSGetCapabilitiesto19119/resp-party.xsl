@@ -142,7 +142,8 @@
     </xsl:if>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <xsl:for-each select="ContactAddress|../wms:ContactInformation|wms:ContactAddress|
+    <xsl:for-each select="ContactAddress|
+              ../wms:ContactInformation/wms:ContactAddress|
               wcs:contactInfo|
               ows:ServiceContact/ows:ContactInfo/ows:Address|
               ows11:ServiceContact/ows11:ContactInfo/ows11:Address|
@@ -229,10 +230,10 @@
       </gmd:country>
     </xsl:for-each>
 
-    <!-- TODO - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <xsl:for-each
-      select="(ContactElectronicMailAddress|wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress|ows2:ElectronicMailAddress)[. != '']">
+      select="(../ContactElectronicMailAddress|../wms:ContactElectronicMailAddress|wcs:address/wcs:electronicMailAddress|ows:ElectronicMailAddress|ows11:ElectronicMailAddress|ows2:ElectronicMailAddress)[. != '']" >
       <gmd:electronicMailAddress>
         <gco:CharacterString>
           <xsl:value-of select="."/>

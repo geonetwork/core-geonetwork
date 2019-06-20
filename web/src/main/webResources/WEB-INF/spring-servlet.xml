@@ -38,6 +38,10 @@
 
   <sec:global-method-security pre-post-annotations="enabled"/>
 
+  <context:property-placeholder location="${app.properties}"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <context:component-scan base-package="org.fao.geonet"/>
 
 
@@ -52,12 +56,12 @@
 
   <bean id="localeResolver"
         class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-    <property name="defaultLocale" value="${language.default}"/>
+    <property name="defaultLocale" value="\${language.default}"/>
   </bean>
 
   <bean id="localeChangeInterceptor"
         class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-    <property name="paramName" value="${language.default}"/>
+    <property name="paramName" value="\${language.default}"/>
   </bean>
   <bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
     <property name="urlPosition" value="0"/>
@@ -90,6 +94,13 @@
       </map>
     </property>
   </bean>
+
+  <!-- Static resources -->
+  <mvc:resources mapping="/catalog/**" location="/catalog/" order="0"/>
+  <mvc:resources mapping="/images/**" location="/images/" order="0"/>
+  <mvc:resources mapping="/map/**" location="/map/" order="0"/>
+  <mvc:resources mapping="/xml/**" location="/xml/" order="0"/>
+  <mvc:resources mapping="/doc/**" location="/doc/" order="0"/>
 
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>

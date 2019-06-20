@@ -67,7 +67,7 @@ public class StrictInspireTest extends AbstractInspireTest {
     @Before
     public void before() {
         super.before();
-        Pair<Element, Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-inspire-strict.disabled.sch"));
+        Pair<Element, Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-inspire-strict.sch"));
         inspire_schematron = compiledResult.one();
         schematronXsl = compiledResult.two();
     }

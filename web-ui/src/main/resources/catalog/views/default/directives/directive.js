@@ -86,8 +86,8 @@
     }
   ]);
 
-  module.directive('gnMdActionsMenu', ['gnMetadataActions',
-    function(gnMetadataActions) {
+  module.directive('gnMdActionsMenu', ['gnMetadataActions', '$http', 'gnConfig',
+    function(gnMetadataActions, $http, gnConfig) {
       return {
         restrict: 'A',
         replace: true,
@@ -96,6 +96,40 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
+
+          scope.tasks = [];
+          scope.hasVisibletasks = false;
+
+          function loadTasks() {
+            return $http.get('../api/status/task', {cache: true}).
+            success(function(data) {
+              scope.tasks = data;
+              scope.getVisibleTasks();
+            });
+          };
+
+          scope.getVisibleTasks = function() {
+            $.each(scope.tasks, function(i,t) {
+              scope.hasVisibletasks = scope.taskConfiguration[t.name].isVisible();
+            });
+          }
+
+          scope.taskConfiguration = {
+            doiCreationTask: {
+              isVisible: function(md) {
+                return gnConfig['system.publication.doi.doienabled'];
+              },
+              isApplicable: function(md) {
+                // TODO: Would be good to return why a task is not applicable as tooltip
+                // TODO: Add has DOI already
+                return md && md.isPublished()
+                  && md.isTemplate === 'n'
+                  && md.isHarvested === 'n';
+              }
+            }
+          };
+
+          loadTasks();
 
           scope.$watch(attrs.gnMdActionsMenu, function(a) {
             scope.md = a;
@@ -152,7 +186,7 @@
               scope.dateFrom = today.clone().startOf('year')
                 .format(scope.format);
             }
-            scope.dateTo = today.add(1, 'day').format(scope.format);
+            scope.dateTo = today.clone().add(1, 'day').format(scope.format);
           };
         }
       };

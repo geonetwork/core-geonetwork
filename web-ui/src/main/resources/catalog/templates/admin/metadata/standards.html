@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">availableStandards</div>
+
+      <div class="panel-body">
+        <div class="list-group">
+          <li class="list-group-item" data-ng-repeat="s in schemas">
+            <h4 class="list-group-item-heading">
+              {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
+            </h4>
+
+            <p> {{s.descriptions[iso2lang] || s.descriptions['en'] || ''}} </p>
+
+            <a data-ng-if="s.standardUrl" data-ng-href="{{s.standardUrl}}" data-translate="">moreStandardInfo</a>
+
+            <ul>
+              <li>
+                <span data-translate="">appMinorVersionSupported</span>
+                {{s.appMinorVersionSupported}}
+              </li>
+              <li>
+                <span data-translate="">appMajorVersionSupported</span>
+                {{s.appMajorVersionSupported}}
+              </li>
+              <li>
+                <span data-translate="">readwriteUUID</span>
+                {{s.readwriteUUID}}
+              </li>
+              <li data-ng-show="s.namespaces">
+                <span data-translate="">namespace</span>
+                <ul>
+                  <li data-ng-repeat="(key, value) in s.namespaces">{{value}}</li>
+                </ul>
+              </li>
+              <li data-ng-show="s.schematronRules">
+                <span data-translate="">schematronRules</span>
+                <ul>
+                  <li data-ng-repeat="value in s.schematronRules">{{value}}</li>
+                </ul>
+              </li>
+            </ul>
+
+            <div class="btn-toolbar hidden">
+              <button type="button" class="btn btn-primary pull-right"
+                      data-ng-click="removeStandard(s.id)"><span class="fa fa-times"></span>
+                {{"removeStandard"|translate}}
+              </button>
+            </div>
+          </li>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div data-gn-need-help="customizing-application/implementing-a-schema-plugin.html"/>
+  </div>
+  <div class="col-lg-4 hidden">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">addOrUpdateStandards</div>
+      <div class="panel-body">
+        <form id="gn-standard-add" action="admin.standards.add@json">
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardName</label>
+            <input type="text" name="schema" class="form-control"/>
+            <p class="help-block" data-translate="">standardLoadHelp</p>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardPath</label>
+            <input type="text" name="fname" class="form-control"/>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardUrl</label>
+            <input type="text" name="url" class="form-control"/>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardRecordUUID</label>
+            <input type="text" name="uuid" class="form-control"/>
+          </div>
+
+          <div class="btn-toolbar">
+            <button type="button" class="btn btn-primary pull-right"
+                    data-ng-click="addStandard('#gn-standard-add', 'add')"
+            ><span class="fa fa-plus"></span> {{"addStandard"|translate}}
+            </button>
+            <button type="button" class="btn btn-primary pull-right"
+                    data-ng-click="updateStandard('#gn-standard-add', 'update')"
+            ><span class="fa fa-save"></span> {{"updateStandard"|translate}}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

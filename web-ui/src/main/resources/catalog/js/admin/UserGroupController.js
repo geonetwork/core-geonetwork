@@ -26,10 +26,12 @@
 
   goog.require('gn_dbtranslation');
   goog.require('gn_multiselect');
+  goog.require('gn_mdtypewidget');
 
   var module = angular.module('gn_usergroup_controller', [
     'gn_dbtranslation',
     'gn_multiselect',
+    'gn_mdtypewidget',
     'blueimp.fileupload']);
 
 
@@ -45,7 +47,7 @@
 
       $scope.searchObj = {
         params: {
-          template: 'y or n',
+          template: 'y or n or s or t',
           sortBy: 'title'
         }
       };
@@ -81,6 +83,7 @@
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
+      $scope.groupusers = null;
 
       // Scope for user
       // List of catalog users
@@ -120,6 +123,7 @@
         var profile = ($scope.user.profile) ?
             '?profile=' + $scope.user.profile : '';
 
+
         $http.get('../api/groups' + profile).
             success(function(data) {
               $scope.groups = data;
@@ -135,16 +139,17 @@
               // in the list and trigger selection.
               // TODO: change route path when selected (issue - controller is
               // reloaded)
-              if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+              if ($routeParams.userOrGroup) {
                 angular.forEach($scope.groups, function(u) {
                   if (u.name === $routeParams.userOrGroup ||
-                      $routeParams.userOrGroupId === u.id.toString()) {
+                      $routeParams.userOrGroup === u.id.toString()) {
                     $scope.selectGroup(u);
                   }
                 });
               }
             });
       }
+
       function loadUsers() {
         $scope.isLoadingUsers = true;
         $http.get('../api/users').success(function(data) {
@@ -156,11 +161,11 @@
         }).then(function() {
           // Search if requested user in location is
           // in the list and trigger user selection.
-          if ($routeParams.userOrGroup || $routeParams.userOrGroupId) {
+          if ($routeParams.userOrGroup) {
             angular.forEach($scope.users, function(u) {
 
               if (u.username === $routeParams.userOrGroup ||
-                  $routeParams.userOrGroupId === u.id.toString()) {
+                  $routeParams.userOrGroup === u.id.toString()) {
                 $scope.selectUser(u);
               }
             });
@@ -168,7 +173,19 @@
         });
       }
 
-
+      /**
+       * Loads the users for a group.
+       *
+       * @param groupId
+       */
+      function loadGroupUsers(groupId) {
+        $http.get('../api/groups/' + groupId + '/users').
+        success(function(data) {
+          $scope.groupusers = data;
+        }).error(function(data) {
+          $scope.groupusers = [];
+        });
+      }
 
       /**
        * Add an new user based on the default
@@ -258,7 +275,7 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           _owner: u.id,
           sortBy: 'title'
         });
@@ -596,7 +613,8 @@
       };
 
       var createOrModifyGroup = function() {
-        if ($scope.groupSelected.defaultCategory === '') {
+        if (($scope.groupSelected.defaultCategory) &&
+            ($scope.groupSelected.defaultCategory.id == null)) {
           $scope.groupSelected.defaultCategory = null;
         }
         $http.put('../api/groups' + (
@@ -641,7 +659,7 @@
 
       $scope.deleteGroup = function(formId) {
         $http.delete('../api/groups/' +
-                $scope.groupSelected.id)
+                $scope.groupSelected.id + '?force=true')
             .success(function(data) {
               $scope.unselectGroup();
               loadGroups();
@@ -672,10 +690,13 @@
 
         // Retrieve records in that group
         $scope.$broadcast('resetSearch', {
-          template: 'y or n',
+          template: 'y or n or s or t',
           group: g.id,
           sortBy: 'title'
         });
+
+        loadGroupUsers($scope.groupSelected.id);
+
         $scope.groupUpdated = false;
 
         $timeout(function() {
@@ -687,8 +708,12 @@
         $scope.groupUpdated = true;
       };
 
-      loadGroups();
-      loadUsers();
+      $scope.$watch('user', function(n, o) {
+        if (n && n.profile) {
+          loadGroups();
+          loadUsers();
+        }
+      });
     }]);
 
   module.filter('loggedUserIsUseradminOrMore', function() {

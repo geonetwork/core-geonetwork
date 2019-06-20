@@ -27,10 +27,24 @@
 
 package org.fao.geonet.kernel;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import static org.fao.geonet.constants.Edit.ChildElem.Attr.NAME;
+import static org.fao.geonet.constants.Edit.ChildElem.Attr.NAMESPACE;
+import static org.fao.geonet.constants.Edit.RootChild.CHILD;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
@@ -39,7 +53,11 @@ import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.schema.*;
+import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.MetadataAttribute;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Xml;
 import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
@@ -51,27 +69,13 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jdom.filter.ElementFilter;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.fao.geonet.constants.Edit.ChildElem.Attr.NAME;
-import static org.fao.geonet.constants.Edit.ChildElem.Attr.NAMESPACE;
-import static org.fao.geonet.constants.Edit.RootChild.CHILD;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class EditLib {
     private static final Logger LOGGER = LoggerFactory.getLogger(Geonet.EDITOR);
@@ -86,8 +90,8 @@ public class EditLib {
     private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
 
     private SchemaManager scm;
-    private Hashtable<String, Integer> htVersions = new Hashtable<String, Integer>(1000);
-
+    private static final Map<String, Integer> htVersions = new ConcurrentHashMap<String, Integer>();
+    
     public EditLib(SchemaManager scm) {
         this.scm = scm;
         htVersions.clear();
@@ -342,8 +346,13 @@ public class EditLib {
                     if (replaceExisting) {
                         @SuppressWarnings("unchecked")
                         List<Element> children = node.getChildren();
-                        for (Element child: children) {
-                            el.addContent((Element) child.clone());
+                        if(children.size() > 0) {
+                            for (Element child: children) {
+                                el.addContent((Element) child.clone());
+                            }
+                        } else {
+                            String textContent = node.getText();
+                            el.addContent(textContent);
                         }
                         List<Attribute> attributes = node.getAttributes();
                         for (Attribute a : attributes) {
@@ -1134,7 +1143,10 @@ public class EditLib {
      * Given an unexpanded tree, creates container elements and their children.
      */
     public void expandElements(String schema, Element md) throws Exception {
-
+        // Do not process GeoNetwork element eg. validation report
+        if (md.getNamespace() == Edit.NAMESPACE) {
+            return;
+        }
         //--- create containers and fill them with elements using a depth first
         //--- search
 

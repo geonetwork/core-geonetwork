@@ -72,8 +72,8 @@ import java.util.Set;
 import static org.fao.geonet.api.ApiParams.*;
 
 @RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/records",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/records"
 })
 @Api(value = API_CLASS_RECORD_TAG,
@@ -148,7 +148,7 @@ public class MetadataIndexApi {
             }
         }
         index = ids.size();
-        new BatchOpsMetadataReindexer(dataManager, ids).process();
+        new BatchOpsMetadataReindexer(dataManager, ids).process(false);
 
         JSONObject res = new JSONObject();
         res.put("success", true);

@@ -1,17 +1,44 @@
+//=============================================================================
+//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
 package org.fao.geonet.kernel.datamanager;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.SimpleMetadata;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.jdom.Element;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,7 +50,7 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Utility interface for records
- * 
+ *
  * @author delawen
  *
  */
@@ -31,7 +58,7 @@ public interface IMetadataUtils {
 
     /**
      * This is a hopefully soon to be deprecated initialization function to replace the @Autowired annotation
-     * 
+     *
      * @param context
      * @param force
      * @throws Exception
@@ -40,7 +67,7 @@ public interface IMetadataUtils {
 
     /**
      * Notify a metadata modification
-     * 
+     *
      * @param md
      * @param metadataId
      * @throws Exception
@@ -49,7 +76,7 @@ public interface IMetadataUtils {
 
     /**
      * Return the uuid of the record with the defined id
-     * 
+     *
      * @param id
      * @return
      * @throws Exception
@@ -64,8 +91,9 @@ public interface IMetadataUtils {
      *
      * Note: Only the metadata record is stored in session. If the editing session upload new documents or thumbnails, those documents will
      * not be cancelled. This needs improvements.
+     * @return id of the record to edit
      */
-    void startEditingSession(ServiceContext context, String id) throws Exception;
+    Integer startEditingSession(ServiceContext context, String id) throws Exception;
 
     /**
      * Rollback to the record in the state it was when the editing session started (See
@@ -88,9 +116,12 @@ public interface IMetadataUtils {
      */
     String extractUUID(String schema, Element md) throws Exception;
 
+
+    String extractDefaultLanguage(String schema, Element md) throws Exception;
+
     /**
      * Extract the last editing date from the record
-     * 
+     *
      * @param schema
      * @param md
      * @return
@@ -100,7 +131,7 @@ public interface IMetadataUtils {
 
     /**
      * Modify the UUID of a record. Uses the proper XSL transformation from the schema
-     * 
+     *
      * @param schema
      * @param uuid
      * @param md
@@ -111,7 +142,7 @@ public interface IMetadataUtils {
 
     /**
      * Returns the summary of the md record
-     * 
+     *
      * @param md
      * @return
      * @throws Exception
@@ -120,7 +151,7 @@ public interface IMetadataUtils {
 
     /**
      * Returns the identifier of the record with uuid uuid
-     * 
+     *
      * @param uuid
      * @return
      * @throws Exception
@@ -129,14 +160,14 @@ public interface IMetadataUtils {
 
     /**
      * Returns the version of the record with identifier id
-     * 
+     *
      * @param id
      * @return
      */
     String getVersion(String id);
 
     /**
-     * 
+     *
      * Returns the version of a metadata, incrementing it if necessary.
      *
      * @param id
@@ -146,7 +177,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as template (or not)
-     * 
+     *
      * @param id
      * @param metadataType
      * @throws Exception
@@ -155,7 +186,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as template (or not)
-     * 
+     *
      * @param id
      * @param metadataType
      * @throws Exception
@@ -164,7 +195,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as harvested
-     * 
+     *
      * @param id
      * @param harvestUuid
      * @throws Exception
@@ -173,7 +204,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as harvested
-     * 
+     *
      * @param id
      * @param harvestUuid
      * @throws Exception
@@ -182,7 +213,7 @@ public interface IMetadataUtils {
 
     /**
      * Mark a record as harvested from the harvestUri
-     * 
+     *
      * @param id
      * @param harvestUuid
      * @throws Exception
@@ -201,7 +232,7 @@ public interface IMetadataUtils {
 
     /**
      * Increases the popularity of the record defined by the id
-     * 
+     *
      * @param srvContext
      * @param id
      * @throws Exception
@@ -244,7 +275,7 @@ public interface IMetadataUtils {
 
     /**
      * Returns the thumbnails associated to the record with id metadataId
-     * 
+     *
      * @param context
      * @param metadataId
      * @return
@@ -254,7 +285,7 @@ public interface IMetadataUtils {
 
     /**
      * Add thumbnail to the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -265,7 +296,7 @@ public interface IMetadataUtils {
 
     /**
      * Remove thumbnail from the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -276,7 +307,7 @@ public interface IMetadataUtils {
 
     /**
      * Add data commons to the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -288,7 +319,7 @@ public interface IMetadataUtils {
 
     /**
      * Add creative commons to the record defined with the id
-     * 
+     *
      * @param context
      * @param id
      * @param small
@@ -300,7 +331,7 @@ public interface IMetadataUtils {
 
     /**
      * Helper function to prevent loop dependency
-     * 
+     *
      * @param metadataManager
      */
     void setMetadataManager(IMetadataManager metadataManager);
@@ -324,7 +355,7 @@ public interface IMetadataUtils {
 
     /**
      * Count how many records are associated to a user
-     * 
+     *
      * @param ownedByUser
      * @return
      */
@@ -332,7 +363,7 @@ public interface IMetadataUtils {
 
     /**
      * Given an identifier, return the record associated to it
-     * 
+     *
      * @param id
      * @return
      */
@@ -340,7 +371,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all the ids of the records that fits the specification
-     * 
+     *
      * @param specs
      * @return
      */
@@ -348,30 +379,41 @@ public interface IMetadataUtils {
 
     /**
      * Count the total number of records available on the platform
-     * 
+     *
      * @return
      */
     public long count();
 
     /**
      * Find the record with the UUID uuid
-     * 
+     *
      * @param firstMetadataId
+     * 
+     * @param uuid
      * @return
      */
-    public AbstractMetadata findOneByUuid(String firstMetadataId);
+    public AbstractMetadata findOneByUuid(String uuid);
+
+
+    /**
+     * Find all records with the UUID uuid
+     * 
+     * @param uuid
+     * @return
+     */
+    public List<? extends AbstractMetadata> findAllByUuid(String uuid);
 
     /**
      * Find the record that fits the specification
-     * 
+     *
      * @param spec
      * @return
      */
-    public AbstractMetadata findOne(Specification<Metadata> spec);
+    public AbstractMetadata findOne(Specification<? extends AbstractMetadata> spec);
 
     /**
      * Find the record that fits the id
-     * 
+     *
      * @param id
      * @return
      */
@@ -388,7 +430,7 @@ public interface IMetadataUtils {
 
     /**
      * Find all the metadata with the identifiers
-     * 
+     *
      * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
      * @param keySet
      * @return
@@ -396,12 +438,22 @@ public interface IMetadataUtils {
     public Iterable<? extends AbstractMetadata> findAll(Set<Integer> keySet);
 
     /**
-     * Returns all entities matching the given {@link Specification}.
+     * Find all the metadata with the identifiers
      * 
+     * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
+     * @param spec
+     * @param order
+     * @return
+     */
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> spec, Sort order);
+
+    /**
+     * Returns all entities matching the given {@link Specification}.
+     *
      * @param spec
      * @return
      */
-    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> hasHarvesterUuid);
+    public List<? extends AbstractMetadata> findAll(Specification<? extends AbstractMetadata> spec);
 
     /**
      * Load only the basic info for a metadata. Used in harvesters, mostly.
@@ -413,7 +465,7 @@ public interface IMetadataUtils {
 
     /**
      * Check if a record with identifier iId exists
-     * 
+     *
      * @param iId
      * @return
      */
@@ -421,7 +473,7 @@ public interface IMetadataUtils {
 
     /**
      * Load all records that satisfy the criteria provided and convert each to XML of the form:
-     * 
+     *
      * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
@@ -437,7 +489,7 @@ public interface IMetadataUtils {
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:
-     * 
+     *
      * <pre>
      *  &lt;entityName&gt;
      *      &lt;property&gt;propertyValue&lt;/property&gt;
@@ -459,7 +511,7 @@ public interface IMetadataUtils {
      * @return an object for performing statistic calculation queries.
      */
     MetadataReportsQueries getMetadataReports();
-    
+
     /**
      * Check if another record exist with that UUID. This is not allowed
      * and would return a DataIntegrityViolationException
@@ -469,4 +521,28 @@ public interface IMetadataUtils {
      * @return      An exception if another record is found, false otherwise
      */
     boolean checkMetadataWithSameUuidExist(String uuid, int id);
+
+    /**
+     * Find the list of Metadata Ids and changes dates for the metadata.
+     * <p>
+     * When constructing sort objects use the MetaModel objects:
+     * <ul>
+     * <li><code>new Sort(Metadata_.id.getName())</code></li>
+     * <li><code>new Sort(Sort.Direction.ASC, Metadata_.id.getName())</code></li>
+     * </ul>
+     * </p>
+     *
+     * @param pageable if non-null then control which subset of the results to return (and how to sort the results).
+     * @return List of &lt;MetadataId, changeDate&gt;
+     */
+    @Nonnull
+    Page<Pair<Integer, ISODate>> findAllIdsAndChangeDates(@Nonnull Pageable pageable);
+
+    /**
+     * Load the source info objects for all the metadata selected by the spec.
+     *
+     * @param spec the specification identifying the metadata of interest
+     * @return a map of metadataId -> SourceInfo
+     */
+    Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec);
 }

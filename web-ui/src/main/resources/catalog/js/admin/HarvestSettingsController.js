@@ -160,9 +160,12 @@
             .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
-                  label: value,
-                  text: $translate.instant('harvester-' + value)
+                  label: value
                 };
+                $translate('harvester-' + value).then(function(translated) {
+                  $scope.harvesterTypes[value].text = translated;
+                });
+
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
                 .done(function(script, textStatus) {
@@ -184,6 +187,11 @@
       $scope.getTplForHarvester = function() {
         // TODO : return view by calling harvester ?
         if ($scope.harvesterSelected) {
+          if ($scope.harvesterSelected.site.ogctype && $scope.harvesterSelected.site.ogctype.match('^(WPS2)') != null){
+            $scope.metadataTemplateType =$translate.instant('process');
+          } else {
+            $scope.metadataTemplateType =$translate.instant('layer');
+          }
           return '../../catalog/templates/admin/' + $scope.pageMenu.folder +
               'type/' + $scope.harvesterSelected['@type'] + '.html';
         } else {

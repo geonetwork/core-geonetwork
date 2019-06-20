@@ -8,7 +8,7 @@
            class="truncate"
            data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
            title="{{member.Title || member.title}}">
-          <i class='fa'
+          <i class='fa fa-fw'
              data-ng-class='::isParentNode ? "fa-folder-o" : ""'></i>
           {{member.Title || member.title}}
           <span data-ng-if="member.Style.length === 1">
@@ -18,13 +18,14 @@
       </div>
       <div class="flex-spacer"></div>
       <div class="flex-col">
-        <div class="gn-layer-actions"             
+        <div class="gn-layer-actions"
              data-ng-if="!isParentNode && member.Style.length > 1">
           <div ngeo-popover
                ngeo-popover-placement="bottom">
             <a ngeo-popover-anchor role="button"
                tabindex="0"
                class="fa fa-paint-brush">
+              <i class="fa fa-fw fa-caret-down"></i>
             </a>
 
             <div ngeo-popover-content>
@@ -36,9 +37,10 @@
       </div>
       <div class="flex-spacer" data-ng-if="member.Style.length > 1"></div>
       <a href=""
+         class="fa fa-fw fa-plus"
          data-ng-click="isParentNode ? toggleNode($event) : addLayer(null, $event)"
-         data-ng-if="!isParentNode" class="btn btn-default btn-xs">
-        <span data-translate="">addToMap</span>
+         data-ng-if="!isParentNode" class="btn btn-default btn-xs"
+         title="{{(isParentNode ? 'showGroupLayers' : 'addToMap') | translate}}">
       </a>
     </div>
   </div>

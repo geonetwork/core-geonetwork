@@ -1,6 +1,6 @@
 <span>
   <button type="button" class="btn btn-default navbar-btn" data-ng-show="!isInspireValidationEnabled"
-    title="{{'validate'|translate}}" data-gn-click-and-spin="validate()">
+    title="{{'validate'|translate}}" data-gn-click-and-spin="save(true, true)">
     <i class="fa fa-check" />&nbsp; <span class="visible-lg" data-translate=""
             title="{{'validate-help' | translate}}">validate</span>
   </button>
@@ -15,7 +15,7 @@
     </button>
     <ul class="dropdown-menu" role="menu">
       <li role="presentation"><a role="menuitem" tabindex="-1"
-        data-gn-click-and-spin="validate()"
+        data-gn-click-and-spin="save(true, true)"
         title="{{'validate-help' | translate}}"> <i class="fa fa-check" />&nbsp;
           <span
             class="visible-lg" data-translate="">validate</span></a></li>

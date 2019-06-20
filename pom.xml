@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>3.7.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -384,7 +384,13 @@
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>fop</artifactId>
-        <version>0.95</version>
+        <version>2.3</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>fop-pdf-images</artifactId>
+        <version>2.3</version>
       </dependency>
 
       <!-- Jetty stuff -->
@@ -444,7 +450,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3.2</version>
+        <version>1.3.3</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -459,12 +465,22 @@
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>xmlgraphics-commons</artifactId>
-        <version>1.3.1</version>
+        <version>2.3</version>
       </dependency>
       <dependency>
         <groupId>avalon-framework</groupId>
         <artifactId>avalon-framework-api</artifactId>
-        <version>4.2.0</version>
+        <version>4.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-javamail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jms</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.avalon.framework</groupId>
@@ -472,19 +488,24 @@
         <version>4.3.1</version>
       </dependency>
       <dependency>
-        <groupId>batik</groupId>
+        <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>batik-ext</artifactId>
-        <version>1.6-1</version>
+        <version>1.10</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>batik-transcoder</artifactId>
+        <version>1.10</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.5</version>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.7.5</version>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
@@ -521,6 +542,12 @@
         <artifactId>xercesImpl</artifactId>
         <version>2.11.0</version>
       </dependency>
+      <dependency>
+        <groupId>xml-apis</groupId>
+        <artifactId>xml-apis</artifactId>
+        <version>1.4.01</version>
+      </dependency>
+
       <!-- Patched XML Resolver 1.2 from apache xml-commons - fixes problems
                  with windows URLs -->
       <dependency>
@@ -783,16 +810,27 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.10</version>
+        <version>4.12</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
-        <version>1.9.5</version>
+        <version>1.10.19</version>
         <scope>test</scope>
       </dependency>
-
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-mockito</artifactId>
+        <version>1.6.4</version>
+        <scope>test</scope>
+      </dependency>
       <dependency>
         <groupId>org.xmlunit</groupId>
         <artifactId>xmlunit-core</artifactId>
@@ -926,6 +964,11 @@
         <artifactId>spring-aspects</artifactId>
         <version>${spring.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.jolokia</groupId>
+        <artifactId>jolokia-core</artifactId>
+        <version>${jolokia.version}</version>
+      </dependency>
       <!-- http://springfox.github.io/springfox/docs/current/ -->
       <dependency>
         <groupId>io.springfox</groupId>
@@ -952,7 +995,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-hibernate4</artifactId>
-        <version>2.7.4</version>
+        <version>2.9.7</version>
       </dependency>
 
       <dependency>
@@ -986,17 +1029,17 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.5.5</version>
+        <version>2.9.8</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>2.5.5</version>
+        <version>2.9.8</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>2.5.5</version>
+        <version>2.9.8</version>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
@@ -1024,6 +1067,12 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
         <version>1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox</artifactId>
+        <version>2.0.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -1150,6 +1199,7 @@
     <module>oaipmh</module>
     <module>events</module>
     <module>core</module>
+    <module>listeners</module>
     <module>schemas</module>
     <module>csw-server</module>
     <module>harvesters</module>
@@ -1157,7 +1207,9 @@
     <module>services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
+    <module>doi</module>
     <module>es</module>
+    <module>release</module>
     <module>workers</module>
     <module>messaging</module>
     <module>estest</module>
@@ -1179,11 +1231,11 @@
         </file>
       </activation>
       <modules>
+	<module>slave</module>
         <module>schemas-test</module>
         <module>web-ui</module>
         <module>web-ui-docs</module>
         <module>web</module>
-        <module>e2e-tests</module>
       </modules>
     </profile>
     <profile>
@@ -1206,6 +1258,7 @@
     <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
     <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
 
+    <application.name>geonetwork</application.name>
     <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
 
@@ -1219,8 +1272,9 @@
     <db.name>gn</db.name>
     <db.username>www-data</db.username>
     <db.password>www-data</db.password>
-    <db.pool.maxActive>10</db.pool.maxActive>
-
+    <db.pool.maxActive>30</db.pool.maxActive>
+    <db.pool.maxIdle>10</db.pool.maxIdle>
+    <db.pool.initialSize>10</db.pool.initialSize>
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->
@@ -1239,14 +1293,19 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>6.4.0</es.version>
-    <es.version.sha512>6f465378a51c487f1f6a84a0843ac1038db60170ee8a5d96874a759f6dbbf2de9f7bcbbf55616f49f28f1098c82f2e585c917267d02b8b1f43627a1984b3da66</es.version.sha512>
+    <es.version>7.1.1</es.version>
+    <es.version.sha512>d2bf8eb211e2b4540571158789908a0f5abfca9fb4005b80cfad65d5ce0d65f5b1d64e273da196097a57685226bbfa35fef96fe954737df8872d1620dd40bf4c</es.version.sha512>
+    <es.platform>linux-x86_64</es.platform>
+    <es.installer.extension>tar.gz</es.installer.extension>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>
-    <es.index.features>features</es.index.features>
-    <es.index.records>records</es.index.records>
-    <es.index.searchlogs>searchlogs</es.index.searchlogs>
+    <es.index.features>gn-features</es.index.features>
+    <es.index.features.type>features</es.index.features.type>
+    <es.index.records>gn-records</es.index.records>
+    <es.index.records.type>records</es.index.records.type>
+    <es.index.searchlogs>gn-searchlogs</es.index.searchlogs>
+    <es.index.searchlogs.type>searchlogs</es.index.searchlogs.type>
 
     <!-- to load spring configurations related to es and camel,
     you should use maven "es" profile (defined in web).
@@ -1257,7 +1316,9 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.sha512>ae0f6ede637bf373e44eb5711b5a07ce726bb72009d792c8e9a16d7eb32b2361cdda556a19c3f5fd50207320e86950217cf5e9a1a06607004d4b7f30d3dbb344</kb.version.sha512>
+    <kb.version.sha512>5b4982951eeb57277239e6c5268a82073cde73d5a2f18171c9a4306cbb2449889002e65374db5eb082ea6c9a6279a166b104ec96481966240eb56b730a7c3220</kb.version.sha512>
+    <kb.platform>linux-x86_64</kb.platform>
+    <kb.installer.extension>tar.gz</kb.installer.extension>
     <kb.port>5601</kb.port>
     <kb.url>http://localhost:${kb.port}</kb.url>
 
@@ -1276,35 +1337,36 @@
     <cors.allowedHosts>*</cors.allowedHosts>
 
 
-    <jetty.version>9.3.9.v20160517</jetty.version>
-
+    <jetty.version>9.4.12.v20180830</jetty.version>
+    <jetty.file>jetty-distribution-9.4.12.v20180830</jetty.file>
+    <jetty.download>https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.12.v20180830/${jetty.file}.tar.gz</jetty.download>
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
     <geotools.version>16.0</geotools.version>
     <pg.version>9.4.1211</pg.version>
 
-    <spring.version>4.2.4.RELEASE</spring.version>
+    <spring.version>4.2.6.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
-
-    <wro.version>1.7.7</wro.version>
-    <wro.debug>false</wro.debug>
+    <wro.version>1.7.9</wro.version>
+    <wro.debug>true</wro.debug>
 
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <print-lib.version>2.1.1</print-lib.version>
+    <print-lib.version>2.1.4</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
     <log4j.version>1.2.17</log4j.version>
     <log4j2.version>2.7</log4j2.version>
-    <slf4j.version>1.7.7</slf4j.version>
+    <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>3.18</xbean.version>
+    <jolokia.version>1.6.0</jolokia.version>
     <httpcomponents.version>4.4.1</httpcomponents.version>
-    <gn.schemas.version>3.5</gn.schemas.version>
+    <gn.schemas.version>3.7</gn.schemas.version>
   </properties>
 </project>

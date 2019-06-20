@@ -17,7 +17,7 @@
              data-ng-class="u.id === userSelected.id ? 'active' : ''"
              data-ng-click="selectUser(u)">
             <img class="img-circle"
-                 ng-src="http://gravatar.com/avatar/{{u.emailAddresses[0] | md5}}?s=18"/>
+                 ng-src="//gravatar.com/avatar/{{(u.emailAddresses[0] | md5) || ''}}?s=18&d=blank"/>
             <span class='badge' data-ng-show="u.enabled === false"
                   data-translate="">disabled</span> {{u.name}} {{u.surname}}
             ({{u.profile | translate}})
@@ -56,18 +56,17 @@
           <button type="button" class="btn btn-default pull-right"
                   data-ng-hide="userSelected.security.authtype == 'LDAP'"
                   data-ng-click="resetPassword(userSelected.id)">
-            <i class="fa fa-lock"></i> <span data-translate=""
+            <i class="fa fa-lock fa-fw"></i> <span data-translate=""
           >resetPassword</span></button>
           <button type="button" class="btn btn-primary pull-right"
                   data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
                   data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
-            <i class="fa fa-save"></i> <span data-translate=""
+            <i class="fa fa-save fa-fw"></i> <span data-translate=""
           >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger"
                   data-ng-disabled="searchResults.count > 0"
-                  data-ng-show="user.isUserAdminOrMore()"
+                  data-ng-show="user.isUserAdminOrMore() && (userSelected.id && userSelected.id >= 0)"
                   data-gn-confirm-click="{{'userDeleteConfirm' | translate}}"
-                  data-ng-hide="!userSelected.id || userSelected.id<0"
                   data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <i class="fa fa-times"></i> <span data-translate=""
           >deleteUser</span></button>
@@ -164,6 +163,7 @@
               <div class="col-sm-9">
                 <input type="email" name="email" class="form-control"
                        data-ng-model="userSelected.emailAddresses[0]" data-ng-required="true"/>
+                <p class="help-block" data-translate="">configureYourAvatar</p>
               </div>
             </div>
             <div class="form-group">

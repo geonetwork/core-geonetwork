@@ -116,6 +116,18 @@
 
           var addGeonames = !attrs['disableGeonames'];
           scope.regionTypes = [];
+         
+          function setDefault() {
+            var defaultThesaurus = attrs['default'];
+            for (t in scope.regionTypes) {
+              if (scope.regionTypes[t].name === defaultThesaurus) {
+                scope.regionType = scope.regionTypes[t];
+                return;
+              }
+            }
+            scope.regionType = scope.regionTypes[0];
+          }
+
           /**
            * Load list on init to fill the dropdown
            */
@@ -127,12 +139,64 @@
                 id: 'geonames'
               });
             }
-            scope.regionType = scope.regionTypes[0];
+            setDefault();
           });
 
           scope.setRegion = function(regionType) {
             scope.regionType = regionType;
           };
+        }
+      };
+    }]);
+
+  module.directive('gnUserPicker', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        scope: {
+          user: '=gnUserPicker'
+        },
+        link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
+          // TODO: Add by profile and by group
+          $http.get('../api/users',
+            {}, {
+              cache: true
+            }).then(function(r) {
+            // var data = data;
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              local: r.data,
+              identify: function(obj) { return obj.username; },
+              limit: 30
+            });
+
+            function sourceWithDefaults(q, sync) {
+              if (q === '') {
+                sync(source.all());
+              } else {
+                source.search(q, sync);
+              }
+            }
+
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              displayKey: 'username',
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum.name + ' ' + datum.surname +
+                         ' (' + datum.profile + ')</p>';
+                }
+              },
+              source: sourceWithDefaults
+            }).on('typeahead:selected', function(event, datum) {
+              scope.user = datum;
+            });
+          });
         }
       };
     }]);
@@ -262,17 +326,28 @@
                           datumTokenizer:
                               Bloodhound.tokenizers.obj.whitespace('name'),
                           queryTokenizer: Bloodhound.tokenizers.whitespace,
-                          local: data,
-                          limit: 30
+                          local: data
                         });
                         source.initialize();
+
+                        function allOrSearchFn(q, sync) {
+                          if (q === '') {
+                            sync(source.all());
+                            // This is the only change needed to get 'ALL'
+                            // items as the defaults
+                          } else {
+                            source.search(q, sync);
+                          }
+                        }
+
                         $(element).typeahead({
                           minLength: 0,
                           highlight: true
                         }, {
                           name: 'countries',
                           displayKey: 'name',
-                          source: source.ttAdapter()
+                          limit: 100,
+                          source: allOrSearchFn
                         }).on('typeahead:selected', function(event, datum) {
                           if (angular.isFunction(scope.onRegionSelect)) {
                             scope.onRegionSelect(datum);
@@ -342,8 +417,8 @@
       };
     }]);
 
-  module.directive('gnHumanizeTime', [
-    function() {
+  module.directive('gnHumanizeTime', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
       return {
         restrict: 'A',
         template: '<span title="{{title}}">{{value}}</span>',
@@ -353,6 +428,7 @@
           fromNow: '@'
         },
         link: function linkFn(scope, element, attr) {
+          var useFromNowSetting = gnGlobalSettings.gnCfg.mods.global.humanizeDates;
           scope.$watch('date', function(originalDate) {
             if (originalDate) {
               // Moment will properly parse YYYY, YYYY-MM,
@@ -370,9 +446,9 @@
                 var formattedDate = scope.format ?
                     date.format(scope.format) :
                     date.toString();
-                scope.value = scope.fromNow !== undefined ?
+                scope.value = scope.fromNow !== undefined && useFromNowSetting ?
                     fromNow : formattedDate;
-                scope.title = scope.fromNow !== undefined ?
+                scope.title = scope.fromNow !== undefined && useFromNowSetting ?
                     formattedDate : fromNow;
               }
             }
@@ -1000,6 +1076,9 @@
         replace: false,
         compile: function compile(tElement, tAttrs) {
           var cacheId = tAttrs.cache ? tAttrs.cache + '.paginator' : '';
+          var getItemsFunctionName = tAttrs.getItemsFunctionName ? tAttrs.getItemsFunctionName: 'pageItems';
+          var firstPageFunctionName = tAttrs.firstPageFunctionName ? tAttrs.firstPageFunctionName: 'firstPage';
+
           return {
             pre: function preLink(scope) {
               scope.pageSizeList = [10, 20, 50, 100];
@@ -1054,12 +1133,12 @@
 
               // ---- Functions available in parent scope -----
 
-              scope.$parent.firstPage = function() {
+              scope.$parent[firstPageFunctionName] = function() {
                 scope.firstPage();
               };
               // Function that returns the reduced items list,
               // to use in ng-repeat
-              scope.$parent.pageItems = function() {
+              scope.$parent[getItemsFunctionName] = function() {
                 if (angular.isArray(scope.items())) {
                   var start = scope.paginator.currentPage *
                       scope.paginator.pageSize;
@@ -1152,8 +1231,8 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
-  module.directive('gnActiveTbItem', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.directive('gnActiveTbItem', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -1162,6 +1241,7 @@
 
           // Replace lang in link
           link = link.replace('{{lang}}', gnLangs.getCurrent());
+          link = link.replace('{{node}}', gnConfig.env.node);
 
           // Insert debug mode between service and route
           if (link.indexOf('#') !== -1) {
@@ -1217,10 +1297,11 @@
         }
       };
     }]);
-  module.filter('signInLink', ['$location', 'gnLangs',
-    function($location, gnLangs) {
+  module.filter('signInLink', ['$location', 'gnLangs', 'gnConfig',
+    function($location, gnLangs, gnConfig) {
       return function(href) {
-        href = href.replace('{{lang}}', gnLangs.getCurrent()) +
+        href = href.replace('{{lang}}', gnLangs.getCurrent())
+                   .replace('{{node}}', gnConfig.env.node) +
             '?redirect=' + encodeURIComponent(window.location.href);
         return href;
       }}
@@ -1441,4 +1522,28 @@
       };
     }
   ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnStringToNumber
+   *
+   * @description
+   * Converts a string with a number value to a number.
+   * To be used for example in input type=number fields
+   * when the model value is stored in a string field.
+   *
+   */
+  module.directive('gnStringToNumber', function() {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function (value) {
+          return '' + value;
+        });
+        ngModel.$formatters.push(function (value) {
+          return parseFloat(value);
+        });
+      }
+    };
+  });
 })();

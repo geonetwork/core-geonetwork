@@ -24,8 +24,8 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -77,7 +77,7 @@ public class SchematronValidator {
             }
         } catch (Throwable e) {
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
             schemaTronXmlOut.addContent(errorReport);
         }
 
@@ -133,13 +133,9 @@ public class SchematronValidator {
             List<SchematronCriteria> criteriaList = criteriaGroup.getCriteria();
             boolean apply = false;
             for (SchematronCriteria criteria : criteriaList) {
-                boolean tmpApply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
-
-                if (!tmpApply) {
-                    apply = false;
+                apply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
+                if (!apply) {
                     break;
-                } else {
-                    apply = true;
                 }
             }
 
@@ -166,10 +162,8 @@ public class SchematronValidator {
         final String ruleId = schematron.getRuleName();
 
         Element report = new Element("report", Edit.NAMESPACE);
-        report.setAttribute("rule", ruleId,
-            Edit.NAMESPACE);
-        report.setAttribute("displayPriority", "" + schematron.getDisplayPriority(),
-            Edit.NAMESPACE);
+        report.setAttribute("rule", ruleId, Edit.NAMESPACE);
+        report.setAttribute("displayPriority", "" + schematron.getDisplayPriority(), Edit.NAMESPACE);
         report.setAttribute("dbident", String.valueOf(schematron.getId()), Edit.NAMESPACE);
         report.setAttribute("required", requirement.toString(), Edit.NAMESPACE);
 
@@ -184,19 +178,12 @@ public class SchematronValidator {
             if (xmlReport != null) {
                 report.addContent(xmlReport);
                 // add results to persistent validation information
-                int firedRules = 0;
                 @SuppressWarnings("unchecked")
                 Iterator<Element> i = xmlReport.getDescendants(new ElementFilter("fired-rule", Geonet.Namespaces.SVRL));
-                while (i.hasNext()) {
-                    i.next();
-                    firedRules++;
-                }
-                int invalidRules = 0;
+                int firedRules = Iterators.size(i);
+
                 i = xmlReport.getDescendants(new ElementFilter("failed-assert", Geonet.Namespaces.SVRL));
-                while (i.hasNext()) {
-                    i.next();
-                    invalidRules++;
-                }
+                int invalidRules = Iterators.size(i);
 
                 if (validations != null) {
                     validations.add(new MetadataValidation().
@@ -213,7 +200,7 @@ public class SchematronValidator {
 
             // If an error occurs that prevents to verify schematron rules, add to show in report
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
             report.addContent(errorReport);
         }
 

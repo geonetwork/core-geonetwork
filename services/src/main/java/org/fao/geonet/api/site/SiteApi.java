@@ -23,7 +23,11 @@
 
 package org.fao.geonet.api.site;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jeeves.component.ProfileManager;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
@@ -40,7 +44,14 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.doi.client.DoiManager;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.SettingDataType;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
 import org.fao.geonet.index.es.EsServerStatusChecker;
@@ -51,6 +62,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -67,7 +79,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.imageio.ImageIO;
@@ -80,7 +97,11 @@ import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
@@ -91,8 +112,8 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
  */
 
 @RequestMapping(value = {
-    "/api/site",
-    "/api/" + API.VERSION_0_1 +
+    "/{portal}/api/site",
+    "/{portal}/api/" + API.VERSION_0_1 +
         "/site"
 })
 @Api(value = API_CLASS_CATALOG_TAG,
@@ -100,6 +121,15 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
 public class SiteApi {
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    NodeInfo node;
+
+    @Autowired
+    SourceRepository sourceRepository;
 
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -119,11 +149,18 @@ public class SiteApi {
                 String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
                 String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
+            } else {
+                pi.setProxyInfo(null, -1, null, null);
             }
+
+            // Update http.proxyHost, http.proxyPort and http.nonProxyHosts
+            Lib.net.setupProxy(settingMan);
         } catch (Exception e) {
             e.printStackTrace();
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
+        DoiManager doiManager = gc.getBean(DoiManager.class);
+        doiManager.loadConfig();
     }
 
     @ApiOperation(
@@ -140,17 +177,29 @@ public class SiteApi {
     @ResponseBody
     public SettingsListResponse get(
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        SettingManager sm = appContext.getBean(SettingManager.class);
-
         SettingsListResponse response = new SettingsListResponse();
-        response.setSettings(sm.getSettings(new String[]{
+        response.setSettings(settingManager.getSettings(new String[]{
             Settings.SYSTEM_SITE_NAME_PATH,
             Settings.SYSTEM_SITE_ORGANIZATION,
             Settings.SYSTEM_SITE_SITE_ID_PATH,
             Settings.SYSTEM_PLATFORM_VERSION,
             Settings.SYSTEM_PLATFORM_SUBVERSION
         }));
+        if (!NodeInfo.DEFAULT_NODE.equals(node.getId())) {
+            Source source = sourceRepository.findOne(node.getId());
+            if (source != null) {
+                final List<Setting> settings = response.getSettings();
+                settings.add(
+                    new Setting().setName(Settings.NODE_DEFAULT)
+                        .setValue("false"));
+                settings.add(
+                    new Setting().setName(Settings.NODE)
+                        .setValue(source.getUuid()));
+                settings.add(
+                    new Setting().setName(Settings.NODE_NAME)
+                        .setValue(source.getName()));
+            }
+        }
         return response;
     }
 
@@ -374,7 +423,7 @@ public class SiteApi {
             final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());
+            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
             sourceRepository.save(newSource);
 
             PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {

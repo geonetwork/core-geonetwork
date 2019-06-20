@@ -23,7 +23,9 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:gn="http://www.fao.org/geonetwork" xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0" extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -42,7 +44,7 @@
     <xsl:param name="evaluatedNode" as="node()"/>
 
     <xsl:variable name="nodeRef" select="$evaluatedNode/gn:element/@ref"/>
-    <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef]"/>
+    <xsl:variable name="node" select="$metadata//*[gn:element/@ref = $nodeRef][not(ancestor::svrl:*)]"/>
 
     <!--<xsl:message>#getOriginalNode ==================</xsl:message>
     <xsl:message><xsl:value-of select="$evaluatedNode/*/gn:element/@ref"/></xsl:message>
@@ -351,19 +353,65 @@
     <xsl:param name="name" as="xs:string"/>
     <!-- The element containing the value eg. gco:Date -->
     <xsl:param name="childName" as="xs:string?"/>
+    <xsl:param name="xpath" as="xs:string?"/>
 
     <xsl:variable name="childType"
                   select="normalize-space($configuration/editor/fields/for[@name = $childName]/@use)"/>
+    <xsl:variable name="childTypeXpath"
+                  select="normalize-space($configuration/editor/fields/for[@name = $childName and @xpath = $xpath]/@use)"/>
     <xsl:variable name="type"
-                  select="normalize-space($configuration/editor/fields/for[@name = $name]/@use)"/>
+                  select="normalize-space($configuration/editor/fields/for[@name = $name and not(@xpath)]/@use)"/>
+    <xsl:variable name="typeXpath"
+                  select="normalize-space($configuration/editor/fields/for[@name = $name and @xpath = $xpath]/@use)"/>
 
     <xsl:value-of
-      select="if ($childType != '')
+      select="if ($childTypeXpath != '')
+      then $childTypeXpath
+      else if ($childType != '')
       then $childType
+      else if ($typeXpath != '')
+      then $typeXpath
       else if ($type != '')
       then $type
       else $defaultFieldType"
     />
+
+  </xsl:function>
+
+  <xsl:function name="gn-fn-metadata:getAttributeFieldType" as="xs:string">
+    <xsl:param name="configuration" as="node()"/>
+    <!-- The container element gmx:fileName/@src-->
+    <xsl:param name="attributeNameWithParent" as="xs:string"/>
+
+    <xsl:variable name="type"
+                  select="normalize-space($configuration/editor/fields/for[@name = $attributeNameWithParent]/@use)"/>
+
+    <xsl:value-of
+      select="if ($type != '')
+      then $type
+      else $defaultFieldType"
+    />
+  </xsl:function>
+
+
+  <!-- Return the directive to use for editing. -->
+  <xsl:function name="gn-fn-metadata:getFieldDirective" as="node()">
+    <xsl:param name="configuration" as="node()"/>
+    <xsl:param name="name" as="xs:string"/>
+
+    <xsl:variable name="type"
+                  select="$configuration/editor/fields/for[@name = $name and starts-with(@use, 'data-')]"/>
+    <xsl:choose>
+      <xsl:when test="$type">
+        <xsl:element name="directive">
+          <xsl:attribute name="data-directive-name" select="$type/@use"/>
+          <xsl:copy-of select="$type/directiveAttributes/@*"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <null/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
 
 
@@ -463,7 +511,8 @@
     <xsl:param name="md" as="node()"/>
     <xsl:param name="withPosition" as="xs:boolean"/>
 
-    <xsl:variable name="node" select="$md/descendant::node()[gn:element/@ref = $nodeRef]"/>
+    <!-- when walking thru expanded document with validation report info, ignore report info avoid ing multiple matches-->
+    <xsl:variable name="node" select="$md/descendant::node()[gn:element/@ref = $nodeRef][not(ancestor::*[name() = 'geonet:report'])]"/>
 
     <xsl:value-of select="gn-fn-metadata:getXPath($node, $withPosition)"/>
   </xsl:function>

@@ -23,15 +23,12 @@
 
 package org.fao.geonet.api.records.rdf;
 
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -48,6 +45,7 @@ import java.util.List;
 public class RdfSearcher {
     private MetaSearcher searcher;
     private Element searchRequest;
+    private long _versionToken = -1;
 
     public RdfSearcher(Element params, ServiceContext context) {
         searchRequest = SearchDefaults.getDefaultSearch(context, params);
@@ -63,20 +61,21 @@ public class RdfSearcher {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         EsSearchManager searchMan = gc.getBean(EsSearchManager.class);
         throw new NotImplementedException("Not implemented in ES");
+//
+//        SearchManager searchMan = gc.getBean(SearchManager.class);
 //        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
 //
 //        ServiceConfig config = new ServiceConfig();
 //
+//
 //        searcher.search(context, searchRequest, config);
 //
-//        Element presentRequest = new Element("request");
-//        presentRequest.addContent(new Element("fast").setText("true"));
-//        presentRequest.addContent(new Element("from").setText("1"));
-//        presentRequest.addContent(new Element("to").setText(searcher.getSize() + ""));
-//        presentRequest.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
-//        presentRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+//        numberMatched = searcher.getSize();
+//        _versionToken = searcher.getVersionToken();
 //
-//        return searcher.present(context, presentRequest, config).getChildren();
+//        searchRequest.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+//
+//        return searcher.present(context, searchRequest, config).getChildren();
     }
 
     public void close() {
@@ -86,4 +85,16 @@ public class RdfSearcher {
             // Ignore exception
         }
     }
+    
+    private int numberMatched;
+    public int getSize() {
+        return numberMatched;
+    }
+    
+    /**
+     * <p> Gets the Lucene version token. Can be used as ETag. </p>
+     */      
+    public long getVersionToken(){
+    	return _versionToken;
+    };    
 }

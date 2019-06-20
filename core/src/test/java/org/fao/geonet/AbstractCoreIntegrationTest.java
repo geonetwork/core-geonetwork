@@ -34,6 +34,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -313,7 +314,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         List<Source> sources = sourceRepository.findAll();
 
         if (sources.isEmpty()) {
-            final Source source = sourceRepository.save(new Source().setLocal(true).setName("localsource").setUuid("uuidOfLocalSorce"));
+            final Source source = sourceRepository.save(new Source().setType(SourceType.portal).setName("localsource").setUuid("uuidOfLocalSource"));
             sources = Lists.newArrayList(source);
         }
 

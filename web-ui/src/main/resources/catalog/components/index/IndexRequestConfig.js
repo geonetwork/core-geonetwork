@@ -29,18 +29,20 @@
   module.factory('gnIndexWfsFilterConfig', ['gnHttp', function(gnHttp) {
 
     return {
-      url: gnHttp.getService('indexproxy'),
+      url: gnHttp.getService('featureindexproxy'),
       docTypeIdField: 'id',
       docIdField: 'featureTypeId',
       idDoc: function(config) {
         this.params = config;
-        return config.wfsUrl + '#' +
-            config.featureTypeName.replace(':', '\\:');
+        return encodeURIComponent(config.wfsUrl + '#' + config.featureTypeName);
+            // config.featureTypeName.replace(':', '\\:');
       },
       facets: true,
       stats: true,
-      excludedFields: ['geom', 'the_geom', 'ms_geometry',
-        'msgeometry', 'id_s', '_version_', 'featuretypeid', 'doctype']
+      excludedFields: [
+        'geom', 'the_geom', 'ms_geometry', 'msgeometry',
+        'bbox_xmin', 'bbox_ymin', 'bbox_xmax', 'bbox_ymax',
+        'id_s', '_version_', 'featuretypeid', 'doctype']
     };
   }]);
 

@@ -38,10 +38,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.cssstyle.service.ICssStyleSettingService;
@@ -69,7 +72,7 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * The Class CssStyleSettingsService.
  */
-@RequestMapping(value = { "/api/customstyle", "/api/" + API.VERSION_0_1 + "/customstyle" })
+@RequestMapping(value = { "/{portal}/api/customstyle", "/{portal}/api/" + API.VERSION_0_1 + "/customstyle" })
 @Api(value = "customstyle", tags = "customstyle", description = "Functionalities for custom styling")
 @Controller("stylesheet")
 public class CssStyleSettingsService {
@@ -85,18 +88,19 @@ public class CssStyleSettingsService {
      */
     @ApiOperation(value = "Saves custom style variables.", notes = "Saves custom style variables.", nickname = "saveCustomStyle")
     @RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    @PreAuthorize("hasRole('Editor')")
+    @PreAuthorize("hasRole('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity saveCssStyle(@ApiIgnore HttpServletRequest request, @ApiIgnore HttpServletResponse response,
+    public ResponseEntity<String> saveCssStyle(@ApiIgnore HttpServletRequest request, @ApiIgnore HttpServletResponse response,
             @ApiParam(name = "gnCssStyle") @RequestBody String jsonVariables) throws Exception {
 
         try {
+            checkJSONFile(jsonVariables);
             final String cleanedVariables = convertFormNamesToLessVariablesNames(jsonVariables);
             saveLessVariablesOnDB(cleanedVariables);
             saveLessVariablesInDataFolder(cleanedVariables);
+            return new ResponseEntity<String>(HttpStatus.CREATED);
 
-            return new ResponseEntity(HttpStatus.CREATED);
         } catch (final Exception e) {
             e.printStackTrace();
             throw e;
@@ -264,6 +268,7 @@ public class CssStyleSettingsService {
         while (iter.hasNext()) {
             final String key = iter.next();
             if (input.getString(key) != null) {
+
                 // For the url is necessary to add quotes
                 if(key.equals("gnBackgroundImage") && input.getString(key) != null && !input.getString(key).startsWith("'")) {
                     output.put(fromCamelToDash(key), "'" + input.getString(key) + "'");
@@ -273,6 +278,40 @@ public class CssStyleSettingsService {
             }
         }
         return output.toString();
+    }
+
+    /**
+     * Check the JSON file and Less variables values.
+     *
+     * @param jsonLessVariables the json less variables
+     * @return true if the file is a valid JSON
+     *  and the properties are correct
+     * @throws JSONException the JSON exception
+     */
+    private void checkJSONFile(String jsonLessVariables) throws JSONException {
+
+        final JSONObject input = new JSONObject(jsonLessVariables);
+        final Iterator<String> iter = input.keys();
+        while (iter.hasNext()) {
+            final String key = iter.next();
+            if (input.getString(key) != null) {
+
+                if(!key.equals("gnBackgroundImage") && !StringUtils.isEmpty(input.getString(key))) {
+                    Pattern pattern = Pattern.compile("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
+                    Matcher matcher = pattern.matcher(input.getString(key));
+                    if (!matcher.matches()) {
+                        throw new JSONException("Invalid color value. It must be in the format #RRGGBB.");
+                    }
+                } else if(key.equals("gnBackgroundImage") && !StringUtils.isEmpty(input.getString(key))) {
+                    Pattern pattern = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+                    Matcher matcher = pattern.matcher(input.getString(key));
+                    if (!matcher.matches()) {
+                        throw new JSONException("Invalid URL in 'gnBackgroundImage' property");
+                    }
+                }
+
+            }
+        }
     }
 
     /**

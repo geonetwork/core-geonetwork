@@ -522,6 +522,21 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'ara','Approved');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'ara','Retired');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'ara','Submitted');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'ara','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'ara','Record created.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'ara','Record updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (52,'ara','Attachment {{h.item1}} added.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (53,'ara','Attachment {{h.item1}} deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (54,'ara','Owner changed from {{h.item1}} to {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (55,'ara','Group owner changed from {{h.item1}} to {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (56,'ara','Privileges updated.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (57,'ara','Category changed. Now categories are {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (58,'ara','Validation triggered. Exit status is now {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (59,'ara','Status changed from {{h.item1}} to {{h.item2}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (60,'ara','Record updated by process {{h.item1}}.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'ara','Record deleted.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'ara','Record imported.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'ara','DOI creation requested.');
+
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'ara','Preferred records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'ara','Watch list');

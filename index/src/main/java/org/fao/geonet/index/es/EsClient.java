@@ -28,6 +28,7 @@ import com.google.gson.JsonObject;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
+import io.searchbox.client.JestResultHandler;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.cluster.Health;
 import io.searchbox.core.Bulk;
@@ -42,7 +43,6 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +60,6 @@ import java.util.Map;
  * Client to connect to Elasticsearch
  */
 public class EsClient implements InitializingBean {
-
     private static EsClient instance;
 
     private JestClient client;
@@ -83,6 +82,17 @@ public class EsClient implements InitializingBean {
     public JestClient getClient() throws Exception {
         return client;
     }
+
+    public String getDashboardAppUrl() {
+        return dashboardAppUrl;
+    }
+
+    public void setDashboardAppUrl(String dashboardAppUrl) {
+        this.dashboardAppUrl = dashboardAppUrl;
+    }
+
+    @Value("${kb.url}")
+    private String dashboardAppUrl;
 
 
     @Override
@@ -167,10 +177,8 @@ public class EsClient implements InitializingBean {
         if (!activated) {
             throw new IOException("Index not yet activated.");
         }
-        boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
-            .defaultIndex(index)
-            .defaultType(index);
+            .defaultIndex(index);
 
         Iterator iterator = docs.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -237,6 +245,15 @@ public class EsClient implements InitializingBean {
     }
 
 
+    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
+        client.executeAsync(bulk.build(), handler);
+
+    }
+
+    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
+        return client.execute(bulk.build());
+    }
+
     public String deleteByQuery(String index, String query) throws Exception {
         if (!activated) {
             return "";
@@ -248,7 +265,6 @@ public class EsClient implements InitializingBean {
 
         DeleteByQuery deleteAll = new DeleteByQuery.Builder(searchQuery)
             .addIndex(index)
-            .addType(index)
             .build();
         final JestResult result = client.execute(deleteAll);
         if (result.isSucceeded()) {
@@ -258,71 +274,19 @@ public class EsClient implements InitializingBean {
                 "Error during removal. Errors is '%s'.", result.getErrorMessage()
             ));
         }
-//
-//        Search search = new Search.TemplateBuilder(searchQuery)
-//            .addIndex(index)
-//            .addIndex(index)
-//            .build();
-//
-//        SearchResult result = client.execute(search);
-//        List<SearchResult.Hit<Object, Void>> hits = result.getHits(Object.class);
-//        for (SearchResult.Hit hit : hits) {
-////            hit.
-//        }
-
-//        Bulk bulk = new Bulk.Builder()
-//            .defaultIndex("twitter")
-//            .defaultType("tweet")
-//            .addAction(new Index.Builder(article1).build())
-//            .addAction(new Index.Builder(article2).build())
-//            .addAction(new Delete.Builder("1").index("twitter").type("tweet").build())
-//            .build();
-//
-//        client.execute(bulk);
-//        SearchResponse scrollResponse = client
-//            .prepareSearch(index)
-//            .setQuery(QueryBuilders.queryStringQuery(query))
-//            .setScroll(new TimeValue(60000))
-//            .setSize(scrollSize)
-//            .execute().actionGet();
-//
-//        BulkRequestBuilder brb = client.prepareBulk();
-//        while (true) {
-//            for (SearchHit hit : scrollResponse.getHits()) {
-//                brb.add(new DeleteRequest(index, hit.getType(), hit.getId()));
-//            }
-//            scrollResponse = client
-//                .prepareSearchScroll(scrollResponse.getScrollId())
-//                .setScroll(new TimeValue(60000))
-//                .execute().actionGet();
-//            if (scrollResponse.getHits().getHits().length == 0) {
-//                break;
-//            }
-//        }
-//
-//        if (brb.numberOfActions() > 0) {
-//            BulkResponse result = brb.execute().actionGet();
-//            if (result.hasFailures()) {
-//                throw new IOException(result.buildFailureMessage());
-//            } else {
-//                return String.format(
-//                    "{\"msg\": \"%d records removed.\"}", brb.numberOfActions());
-//            }
-//        }
     }
 
     /**
      * Analyze a field and a value against the index
      * or query phase and return the first value generated
-     * by the specified filterClass.
-     * <p>
-     * If an exception occured, the field value is returned.
+     * by the specified analyzer. For now mainly used for
+     * synonyms analysis.
      *
-     * TODO: Logger.
-     * </p>
+     * See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-analyze.html
+     *
      * @param fieldValue    The field value to analyze
      *
-     * @return The analyzed string value if found or the field value if not found.
+     * @return The analyzed string value if found or empty text if not found or if an exception occured.
      */
     public static String analyzeField(String collection,
                                       String analyzer,
@@ -333,7 +297,7 @@ public class EsClient implements InitializingBean {
             // Replace , as it is meaningful in synonym map format
             .text(fieldValue.replaceAll(",", ""))
             .build();
-
+        String analyzedValue = "";
         try {
             JestResult result = EsClient.get().getClient().execute(analyze);
 
@@ -346,12 +310,12 @@ public class EsClient implements InitializingBean {
                         return token.get("token").getAsString();
                     }
                 }
-                return fieldValue;
+                return "";
             } else {
-                return fieldValue;
+                return "";
             }
         } catch (Exception ex) {
-            return fieldValue;
+            return "";
         }
     }
 

@@ -65,19 +65,19 @@
 
   <keywordFrom>Mots clés - </keywordFrom>
   <!-- XSD error translation -->
-  <invalidElement>Élément invalide. Contenu invalide pour l'élément :</invalidElement>
-  <onElementOf>Un des éléments suivants</onElementOf>
-  <isExpected>est attendu.</isExpected>
-  <isNotComplete>est incomplet.</isNotComplete>
-  <elementLocated>L'élément parent est</elementLocated>
-  <missingElement>Élément manquant. Le contenu de l'élément</missingElement>
-  <invalidValue>Valeur manquante ou invalide.</invalidValue>
-  <notValidFor>n'est pas une valeur valide pour</notValidFor>
-  <xsdErrorIs>L'erreur est :</xsdErrorIs>
-  <inElement>dont le parent est</inElement>
-  <enum1>La valeur</enum1>
-  <enum2>n'est pas valide pour le champ</enum2>
-  <enum3>Les valeurs possibles sont :</enum3>
+  <invalidElement>Contenu invalide à l'élément </invalidElement>
+  <onElementOf>Un des éléments suivants : </onElementOf>
+  <isExpected> est attendu.</isExpected>
+  <isNotComplete>.</isNotComplete>
+  <elementLocated> L'élément parent est </elementLocated>
+  <missingElement>Élément manquant dans </missingElement>
+  <invalidValue>Valeur manquante ou invalide. </invalidValue>
+  <notValidFor> n'est pas une valeur valide pour </notValidFor>
+  <xsdErrorIs>L'erreur est : </xsdErrorIs>
+  <inElement> contenu dans </inElement>
+  <enum1>La valeur </enum1>
+  <enum2> n'est pas valide pour le champ </enum2>
+  <enum3>Les valeurs possibles sont : </enum3>
 
   <!-- INSPIRE view labels and help -->
   <url>Localisateur de la ressource</url>
@@ -225,4 +225,8 @@
 
   <sds-section-custodian>Responsible custodian</sds-section-custodian>
   <sds-addOperation>Add Operation</sds-addOperation>
+
+  <trueValue>Oui</trueValue>
+  <falseValue>Non</falseValue>
+  <nilValue>Non défini</nilValue>
 </strings>

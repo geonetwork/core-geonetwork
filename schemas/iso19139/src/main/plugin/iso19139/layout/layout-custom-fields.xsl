@@ -42,19 +42,36 @@
 
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19139" priority="2100" match="gmd:fileIdentifier|gmd:dateStamp">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-    <xsl:variable name="labelConfig"
+    <xsl:variable name="fieldLabelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+    <xsl:variable name="labelConfig">
+      <xsl:choose>
+        <xsl:when test="$overrideLabel != ''">
+          <element>
+            <label><xsl:value-of select="$overrideLabel"/></label>
+          </element>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy-of select="$fieldLabelConfig"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="$labelConfig"/>
+                      select="$labelConfig/*"/>
       <xsl:with-param name="value" select="*"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
-      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '', $xpath)"/>
       <xsl:with-param name="name" select="''"/>
       <xsl:with-param name="editInfo" select="*/gn:element"/>
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
@@ -62,7 +79,6 @@
     </xsl:call-template>
 
   </xsl:template>
-
 
   <!-- Measure elements, gco:Distance, gco:Angle, gco:Scale, gco:Length, ... -->
   <xsl:template mode="mode-iso19139" priority="2000" match="*[gco:*/@uom]">
@@ -103,7 +119,7 @@
           (<xsl:value-of select="$labelMeasureType/label"/>)
         </xsl:if>
       </label>
-      <div class="col-sm-9 gn-value nopadding-in-table">
+      <div class="col-sm-9 col-xs-11 gn-value nopadding-in-table">
         <xsl:variable name="elementRef"
                       select="gco:*/gn:element/@ref"/>
         <xsl:variable name="helper"
@@ -118,51 +134,21 @@
               saxon:serialize($helper, 'default-serialize-mode'))"/>
         </textarea>
       </div>
-      <div class="col-sm-1 gn-control">
+      <div class="col-sm-1 col-xs-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
           <xsl:with-param name="editInfo" select="*/gn:element"/>
           <xsl:with-param name="parentEditInfo" select="$refToDelete"/>
         </xsl:call-template>
       </div>
+
+      <div class="col-sm-offset-2 col-sm-9">
+        <xsl:call-template name="get-errors"/>
+      </div>
     </div>
   </xsl:template>
 
 
-  <!-- Duration
 
-       xsd:duration elements use the following format:
-
-       Format: PnYnMnDTnHnMnS
-
-       *  P indicates the period (required)
-       * nY indicates the number of years
-       * nM indicates the number of months
-       * nD indicates the number of days
-       * T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
-       * nH indicates the number of hours
-       * nM indicates the number of minutes
-       * nS indicates the number of seconds
-
-       A custom directive is created.
-  -->
-  <xsl:template mode="mode-iso19139" match="gts:TM_PeriodDuration|gml:duration" priority="200">
-
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-    <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
-
-    <xsl:call-template name="render-element">
-      <xsl:with-param name="label"
-                      select="$labelConfig"/>
-      <xsl:with-param name="value" select="."/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="xpath" select="$xpath"/>
-      <xsl:with-param name="directive" select="'gn-field-duration'"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
-      <xsl:with-param name="parentEditInfo" select="../gn:element"/>
-    </xsl:call-template>
-
-  </xsl:template>
 
   <!-- ===================================================================== -->
   <!-- gml:TimePeriod (format = %Y-%m-%dThh:mm:ss) -->

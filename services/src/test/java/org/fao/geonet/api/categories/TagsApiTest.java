@@ -69,7 +69,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/tags")
+        this.mockMvc.perform(get("/srv/api/tags")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(categories.size())));
@@ -82,7 +82,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(get("/api/tags/" + category.getId())
+        this.mockMvc.perform(get("/srv/api/tags/" + category.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is(category.getName())));
@@ -96,7 +96,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        MvcResult result = this.mockMvc.perform(get("/api/tags/222")
+        MvcResult result = this.mockMvc.perform(get("/srv/api/tags/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andReturn();
@@ -109,7 +109,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/tags/" + category.getId())
+        this.mockMvc.perform(delete("/srv/api/tags/" + category.getId())
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
@@ -121,7 +121,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/tags/222")
+        this.mockMvc.perform(delete("/srv/api/tags/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }
@@ -145,7 +145,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(put("/api/tags")
+        this.mockMvc.perform(put("/srv/api/tags")
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
@@ -173,7 +173,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(put("/api/tags/" + category.getId())
+        this.mockMvc.perform(put("/srv/api/tags/" + category.getId())
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.parseMediaType("application/json")))
@@ -188,7 +188,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        this.mockMvc.perform(delete("/api/tags/222")
+        this.mockMvc.perform(delete("/srv/api/tags/222")
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }

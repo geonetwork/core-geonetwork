@@ -41,7 +41,7 @@ import java.util.Map;
 @Controller("search/facet/config")
 public class FacetsService {
 
-    @RequestMapping(value = "/{lang}/search/facet/config", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{portal}/{lang:[a-z]{3}}/search/facet/config", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public Map<String, List<Object>> getConfig() {
         throw new NotImplementedException("Not implemented in ES");

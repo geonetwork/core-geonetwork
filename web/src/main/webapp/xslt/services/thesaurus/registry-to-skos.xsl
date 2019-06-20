@@ -76,7 +76,11 @@
 
   <xsl:variable name="thesaurusTitles">
     <title thesaurus="GEMET - INSPIRE themes, version 1.0"
-           register="INSPIRE theme register"/>
+           register="INSPIRE theme register"
+           date="2008-06-01"/>
+    <title thesaurus="Classification of spatial data services"
+           register="Classification of spatial data services"
+           date="2008-12-03"/>
   </xsl:variable>
 
   <xsl:variable name="isInspireThemes"
@@ -85,6 +89,8 @@
   <xsl:variable name="thesaurusTitle"
                 select="$thesaurusTitles/title[@register = $registerEnglishTitle]/@thesaurus"/>
 
+  <xsl:variable name="thesaurusDate"
+                select="$thesaurusTitles/title[@register = $registerEnglishTitle]/@date"/>
 
   <xsl:template match="/documents">
 
@@ -111,8 +117,8 @@
         </xsl:choose>
 
 
-        <dcterms:issued><xsl:value-of select="$now"/></dcterms:issued>
-        <dcterms:modified><xsl:value-of select="$now"/></dcterms:modified>
+        <dcterms:issued><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:issued>
+        <dcterms:modified><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:modified>
 
         <!-- Add top concepts for all items with no parent -->
         <xsl:if test="$hasBroaderNarrowerLinks">

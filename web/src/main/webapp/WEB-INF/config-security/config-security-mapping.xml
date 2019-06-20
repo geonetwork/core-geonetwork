@@ -888,7 +888,14 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/atom.search!?.*"
                            access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/atom.search.html!?.*"
+                           access="permitAll"/>
 
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/opensearch/htmlsearch!?.*q=.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/opensearch/OpenSearchDescription.xml!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/describe/service!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/describe/dataset!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/download/dataset!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/atom.predefined.service!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/atom.predefined.dataset!?.*" access="permitAll"/>
 

@@ -10,7 +10,8 @@
   <div
     data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
   </div>
-  <div class="row gn-editor-container">
+  <div class="row gn-editor-container"
+       role="main">
     <div class="modal-backdrop fade in" data-ng-show="gnCurrentEdit.working"></div>
 
     <div class="alert alert-danger" data-ng-if="unsupportedSchema"
@@ -19,8 +20,9 @@
       unsupportedSchemaAlert
     </div>
 
-
-    <div id="gn-editor-container-{{id}}"></div>
+    <div data-ng-class="fluidEditorLayout ? 'container-fluid' : 'container'">
+      <div id="gn-editor-container-{{id}}"></div>
+    </div>
 
   </div>
 </div>
@@ -84,7 +86,4 @@
      data-gn-popup-options="{title:'confirmCloseInvalidTitle', confirmCallback: confirmClose}"
      id="confirm-editor-close">
   <p translate>confirmCloseInvalidMetadata</p>
-</div>
-
-<div data-ng-include="'../../catalog/templates/info.html'">
 </div>

@@ -1,29 +1,55 @@
-<div class="row">
+<div class="row" data-ng-controller="GnSystemSettingsController">
   <div class="col-md-12">
-    <div class="panel panel-default" data-ng-controller="GnSystemSettingsController">
+    <div class="navbar btn-toolbar">
+      <form class="form-inline">
+        <input type="hidden" name="_csrf" value="{{csrf}}"/>
+        <div class="pull-left">
+          <label for="filter-settings" data-translate="">filterSettings</label>
+          <div class="input-group">
+            <span class="input-group-addon"">
+              <i class="fa fa-filter" aria-hidden="true"></i>
+            </span>
+            <input class="form-control"
+                  type="text"
+                  id="filter-settings"
+                  placeholder="{{'filterPlaceHolder' | translate}}"
+                  data-ng-keyup="filterForm($event,'#gn-settings')" />
+            <span class="input-group-btn">
+              <button class="btn btn-default"
+                      type="button"
+                      title="{{'filterReset' | translate}}"
+                      data-ng-click="resetFilter('#gn-settings')">
+                <i class="fa fa-close" aria-hidden="true"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+        <div class="navbar-right">
+          
+          <select ng-change="updateProfile()" class="form-control"
+                  data-ng-model="systemInfo.stagingProfile">
+            <option data-ng-repeat="p in stagingProfiles" value="{{p}}"
+                    ng-selected="p === systemInfo.stagingProfile">{{p | translate}}
+            </option>
+          </select>
+
+          <button type="submit" class="btn btn-primary"
+                  id="gn-btn-settings-save"
+                  data-ng-disabled="!gnSettings.$valid"
+                  data-ng-click="saveSettings('#gn-settings')">
+            <span class="fa fa-save"></span>
+            {{"saveSettings"|translate}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="panel panel-default">
       <div class="gn-scroll-spy" data-gn-scroll-spy="gn-settings-spy-target"
           data-watch="sectionsLevel1" data-depth="1"/>
       <div class="panel-heading">
         <span data-translate="">settings</span>
-        <div class="btn-toolbar">
-          <form class="form-inline pull-right">
-                  <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <select ng-change="updateProfile()" class="form-control"
-                    data-ng-model="systemInfo.stagingProfile">
-              <option data-ng-repeat="p in stagingProfiles" value="{{p}}"
-                      ng-selected="p === systemInfo.stagingProfile">{{p | translate}}
-              </option>
-            </select>
-            &nbsp;
-            <button type="submit" class="btn btn-primary"
-                    id="gn-btn-settings-save"
-                    data-ng-disabled="!gnSettings.$valid"
-                    data-ng-click="saveSettings('#gn-settings')">
-              <span class="fa fa-save"></span>
-              {{"saveSettings"|translate}}
-            </button>
-          </form>
-        </div>
       </div>
       <div class="panel-body">
         <form id="gn-settings" name="gnSettings" class="form-horizontal">
@@ -31,13 +57,14 @@
                     id="gn-settings-spy-target">
             <h1>{{section1.name | translate}}</h1>
             <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'position'"
-                      id="{{section2.name.replace('/', '-')}}">
+                      id="{{section2.name.replace('/', '-')}}"
+                      data-ng-show="section2.name">
               <legend>{{section2.name | translate}}</legend>
               <!-- According to data type -->
               <div data-ng-repeat="s in section2.children | hideLanguages | hideGeoNetworkInternalSettings | orderObjectBy:'position'"
                   data-ng-switch="s.dataType"
                   data-ng-if="s.name != ''">
-                <div data-ng-switch-when="BOOLEAN">
+                <div data-ng-switch-when="BOOLEAN" class="form-group">
                   <label class="col-sm-4 control-label" for="{{s['name']}}"> {{s['name'] |
                     translate}} </label>
                   <div class="col-sm-8">
@@ -259,6 +286,12 @@
                           id="{{s['name']}}"
                           name="{{s.name}}"
                           value="{{s.value}}"/>
+                    <input data-ng-switch-when="system/publication/doi/doipassword"
+                           type="password"
+                           class="form-control"
+                           id="{{s['name']}}"
+                           name="{{s.name}}"
+                           value="{{s.value}}"/>
                     <div data-ng-switch-when="system/feedback/mailServer/host">
                       <div class="input-group">
                         <input type="text" class="form-control"
@@ -321,10 +354,15 @@
                     <input data-ng-switch-default="" type="text" class="form-control"
                           id="{{s['name']}}" name="{{s.name}}" value="{{s.value}}"/>
 
-                    <p class="help-block"
-                      data-ng-show="(s['name'] + '-help' | translate) != (s['name'] + '-help')">
-                      {{s['name'] + '-help' | translate}} </p>
+                    <p class="help-block">
+                      <span
+                        data-ng-show="(s['name'] + '-help' | translate) !== (s['name'] + '-help')"
+                        data-translate="">
+                          {{(s['name'] + '-help')}}
+                      </span>
+                    </p>
                   </div>
+
                 </div>
               </div>
 

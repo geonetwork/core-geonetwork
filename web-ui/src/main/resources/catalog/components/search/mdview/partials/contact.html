@@ -96,7 +96,7 @@
       <i class="fa fa-envelope"></i>
     </div>
     <div class="flex-spacer"></div>
-    <div>
+    <address>
       <div>
         <strong>{{org}}</strong>
       </div>
@@ -119,12 +119,17 @@
               <span data-ng-if="c.email === ''">{{c.name}}
                 <span data-ng-show="c.position">({{c.position}})</span>
               </span>
+              <br>
+              <a href="tel:{{c.phone}}"
+                data-ng-if="c.phone != ''">
+                {{c.phone}}
+              </a>
               <span data-ng-if="!$last">,</span>
             </span>
           </li>
         </ul>
       </div>
-    </div>
+    </address>
   </div>
 
 </div>

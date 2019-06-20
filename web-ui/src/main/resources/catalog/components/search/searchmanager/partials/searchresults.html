@@ -31,7 +31,7 @@
           data-ng-class="isSelected(md) ? 'active' : ''"
           data-ng-click="onClick(md)">
         <div data-ng-if="options.mode == 'title'">
-          <i class="fa gn-icon-{{md.resourceType[0]}}" title="{{md.resourceType[0] | translate}}"/>
+          <gn-md-type-widget metadata="md"></gn-md-type-widget>
           {{md.resourceTitle}}
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">

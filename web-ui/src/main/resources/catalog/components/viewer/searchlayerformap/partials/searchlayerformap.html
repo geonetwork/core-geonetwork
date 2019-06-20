@@ -7,6 +7,7 @@
           class="fa fa-search"/></span>
         <input class="form-control"
                data-ng-change="triggerSearch()"
+               data-ng-focus="triggerSearch()"
                type="text"
                data-ng-model="searchObj.params.any"
                data-ng-model-options="modelOptions"
@@ -28,6 +29,11 @@
     -->
 
 
+    <div data-ng-show="searchResults.count >= 0 && searchResults.records.length === 0"
+         class="alert alert-warning"
+         data-translate="">
+        {{('noRecordFoundWithResourceRegistered' + mode) | translate}}
+    </div>
     <div data-ng-show="searchResults.records.length > 0">
       <div class="pull-right"
            data-gn-pagination="paginationInfo"

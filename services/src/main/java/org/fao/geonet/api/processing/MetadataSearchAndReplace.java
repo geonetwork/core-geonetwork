@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+
 /**
  * Class to apply replacements to a metadata selection.
  *
@@ -152,6 +153,7 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
         // Get metadata title from the index
         // TODOES - Probably use XslUtil for getting field value ?
         throw new NotImplementedException("Not implemented in ES");
+//
 //        String metadataTitle = LuceneSearcher.getMetadataFromIndexById(context.getLanguage(), id, "title");
 //        if (StringUtils.isEmpty(metadataTitle)) metadataTitle = metadataEntity.getUuid();
 //
@@ -224,6 +226,14 @@ public class MetadataSearchAndReplace extends MetadataIndexerProcessor {
 //                        false, true, true,
 //                        context.getLanguage(),
 //                        new ISODate().toString(), true);
+//
+//                    UserSession userSession = context.getUserSession();
+//                    if(userSession != null) {
+//                        XMLOutputter outp = new XMLOutputter();
+//                        String xmlAfter = outp.outputString(processedMetadata);
+//                        String xmlBefore = outp.outputString(md);
+//                        new RecordProcessingChangeEvent(Long.parseLong(id), Integer.parseInt(userSession.getUserId()), xmlBefore, xmlAfter, process).publish(ApplicationContextHolder.get());
+//                    }
 //                }
 //            } catch (Exception e) {
 //                report.addMetadataError(iId, e);

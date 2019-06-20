@@ -122,7 +122,7 @@
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
-        
+
         // -- check if projection is available in ol
         if (!ol.proj.get(projection)){
          console.warn('Projection '+ projection +' is not available, map will be projected in a spherical mercator projection');
@@ -154,7 +154,9 @@
         var loadPromise = map.get('sizePromise');
         if (loadPromise) {
           loadPromise.then(function() {
-            map.getView().fit(extent, map.getSize(), { nearest: true });
+            $timeout(function () {
+              map.getView().fit(extent, map.getSize(), { nearest: true });
+            }, 300);
           })
         }
         else {
@@ -270,10 +272,15 @@
               // WMS layer not in background
               else if (layer.server) {
                 var server = layer.server[0];
+                var currentStyle;
 
                 // load extension content (JSON)
                 if (layer.extension && layer.extension.any) {
                   var extension = JSON.parse(layer.extension.any);
+
+                  if (extension.style) {
+                    currentStyle = {Name: extension.style};
+                  }
 
                   // import saved filters if available
                   if (extension.filters && extension.wfsUrl) {
@@ -305,7 +312,7 @@
                   loadingLayer.displayInLayerManager = true;
 
                   var layerIndex = map.getLayers().push(loadingLayer);
-                  var p = self.createLayer(layer, map, undefined, i);
+                  var p = self.createLayer(layer, map, undefined, i, currentStyle);
                   loadingLayer.set('index', layerIndex);
 
                   (function(idx, loadingLayer) {
@@ -459,14 +466,14 @@
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             version = source.getParams().VERSION;
-            url = source.getUrl();
+            url = gnGlobalSettings.getNonProxifiedUrl(source.getUrl());
           } else if (source instanceof ol.source.TileWMS ||
               source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
-            url = layer.get('url');
+            url = gnGlobalSettings.getNonProxifiedUrl(layer.get('url'));
           } else if (source instanceof ol.source.WMTS) {
             name = '{type=wmts,name=' + layer.get('name') + '}';
-            url = layer.get('urlCap');
+            url = gnGlobalSettings.getNonProxifiedUrl(layer.get('urlCap'));
           } else {
             return;
           }
@@ -511,9 +518,15 @@
             layerParams.server[0].version = version;
           }
 
+
           // apply filters & processes inputs in extension if needed
-          if (filters || processInputs) {
+          if (layer.get('currentStyle') || filters || processInputs) {
             var extension = {};
+
+            if (layer.get('currentStyle')) {
+              extension.style = layer.get('currentStyle').Name;
+            }
+
             if (esObj) {
               var wfsUrl = esObj.config.params.wfsUrl;
               if (wfsUrl) {
@@ -594,7 +607,7 @@
        * dropdown
        * @param {numeric} index of the layer in the tree
        */
-      this.createLayer = function(layer, map, bgIdx, index) {
+      this.createLayer = function(layer, map, bgIdx, index, style) {
 
         var server = layer.server[0];
         var res = server.onlineResource[0];
@@ -640,7 +653,7 @@
           // even when loaded from a context.
           return gnMap.addWmsFromScratch(
               map, res.href, layer.name,
-              createOnly, null, server.version).
+              createOnly, null, server.version, style).
               then(function(olL) {
                 if (olL) {
                   try {

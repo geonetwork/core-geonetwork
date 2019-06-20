@@ -126,45 +126,80 @@
        */
       this.initMdView = function() {
         var that = this;
-        var loadMdView = function() {
+        var loadMdView = function(event, newUrl, oldUrl) {
           gnMdViewObj.loadDetailsFinished = false;
           var uuid = gnSearchLocation.getUuid();
           if (uuid) {
             if (!gnMdViewObj.current.record ||
-                gnMdViewObj.current.record.uuid !== uuid) {
+                gnMdViewObj.current.record.uuid !== uuid ||
+                newUrl !== oldUrl) {
+
+              //Check if we want the draft version
+              var getDraft = window.location.hash.indexOf("/metadraf/") > 0;
+              var foundMd = false;
 
               // Check if the md is in current search
-              if (angular.isArray(gnMdViewObj.records)) {
+              if (angular.isArray(gnMdViewObj.records)
+                        && !getDraft) {
                 for (var i = 0; i < gnMdViewObj.records.length; i++) {
                   var md = gnMdViewObj.records[i];
                   if (md.uuid === uuid) {
+                    foundMd = true;
                     that.feedMd(i, md, gnMdViewObj.records);
-                    return;
                   }
                 }
               }
 
-              // get a new search to pick the md
-              gnMdViewObj.current.record = null;
-              $http.post('../api/search/records/_search', {"query": {
-                  "bool" : {
-                    "must": [{
-                      "term": {"uuid": uuid}},
-                      {"terms": {"isTemplate": ["n", "y"]}
-                      }]
-                  }
-                }}).then(function(r) {
-                if (r.data.hits.total == 1) {
-                  var metadata = [];
-                  metadata.push(new Metadata(r.data.hits.hits[0]._source));
-                  data = {metadata: metadata};
-                  that.feedMd(0, undefined, data.metadata);
-                } else {
-                  gnMdViewObj.loadDetailsFinished = true;
-                }
-              }, function(error) {
-                gnMdViewObj.loadDetailsFinished = true;
-              });
+              if (!foundMd){
+                  // get a new search to pick the md
+                  gnMdViewObj.current.record = null;
+                $http.post('../api/search/records/_search', {"query": {
+                    "bool" : {
+                      "must": [
+                        {"term": {"uuid": uuid}},
+                        {"terms": {"isTemplate": ["n", "y"]}},
+                        {"terms": {"draft": ["n", "y", "e"]}}
+                        ]
+                    }
+                  }}).then(function(data) {
+                    if (r.data.hits.total > 0) {
+                      //If trying to show a draft that is not a draft, correct url:
+                      if(r.data.hits.total == 1 &&
+                          window.location.hash.indexOf("/metadraf/") > 0) {
+                        window.location.hash = 
+                          window.location.hash.replace("/metadraf/", "/metadata/");
+                        //Now the location change event handles this
+                        return;
+                      }
+                      
+                      //If returned more than one, maybe we are looking for the draft
+                      var i = 0;
+                      r.data.hits.hits.forEach(function (md, index) {
+                        if(getDraft
+                            && md._source.draft == 'y') {
+                          //This will only happen if the draft exists
+                          //and the user can see it
+                          i = index;
+                        }
+                      });
+                      
+                      var metadata = [];
+                      metadata.push(new Metadata(r.data.hits.hits[i]._source));
+                      data = {metadata: metadata};
+
+                      //Keep the search results (gnMdViewObj.records)
+                      // that.feedMd(0, undefined, data.metadata);
+                      //and the trace of where in the search result we are
+                      // TODOES: Review
+                      that.feedMd(gnMdViewObj.current.index, 
+                          data.metadata[i], gnMdViewObj.records);
+                    } else {
+                      gnMdViewObj.loadDetailsFinished = true;
+                    }
+                  }, function(error) {
+                    gnMdViewObj.loadDetailsFinished = true;
+                  });
+              }
             } else {
               gnMdViewObj.loadDetailsFinished = true;
             }
@@ -174,7 +209,9 @@
             gnMdViewObj.current.record = null;
           }
         };
-        loadMdView(); // To manage uuid on page loading
+        
+        loadMdView(); 
+        // To manage uuid on page loading
         $rootScope.$on('$locationChangeSuccess', loadMdView);
       };
 

@@ -9,12 +9,36 @@
 .navbar-default {
   background-color: @gn-menubar-background;
   border-color: @gn-menubar-border-color;
+  border-width: 0 0 1px 0;
+  z-index: 100;
   .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
     height: @gn-menubar-height;
     color: @gn-menubar-color;
     &:hover, &:focus {
       color: @gn-menubar-color-hover;
+      background-color: @gn-menubar-background-hover;
     }
+  }
+  .navbar-nav li.dropdown-hover.open:not(.active) > .dropdown-toggle {
+    &:hover, &:focus {
+      background-color: @gn-menubar-background-hover;
+    }
+    
+  }
+  .dropdown-menu {
+    > li {
+      > a {
+        padding: 8px 20px;
+      }
+    }
+    .dropdown-header {
+      color: @gray;
+      cursor: text !important;
+    }
+  }
+  .navbar-nav > .active > a {
+    background-color: @gn-menubar-background-active;
+    color: @gn-menubar-color-active;
   }
   .gn-name.gn-truncate {
     @media (min-width: @screen-lg-min) {
@@ -27,11 +51,172 @@
   .badge.invisible {
     display: none
   }
+  input.ng-invalid, .has-error .form-control {
+    border-color: #f98258;
+    &:focus {
+      box-shadow: none; // inset 0 1px 1px rgba(0,0,0,.075), 0 0 4px rgb(250, 140, 99);
+    }
+  }
+  .gn-user-info {
+    .gn-user-role {
+      color: @gn-menubar-color;
+      &:hover {
+        color: @gn-menubar-color-hover;
+      }
+    }
+  }
+  // more small screen oriented menu options
+  @media (max-width: @screen-xs-max) {
+    .navbar-header {
+      .btn-link {
+        padding: 13px;
+      }
+    }
+    .gn-logo-link {
+      padding: 13px 0 13px 10px;
+    }
+    .navbar-collapse {
+      background-color: #fff;
+      padding-right: 15px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      margin: 0 -20px;
+      box-shadow: 0 2px 0.5px rgba(0, 0, 0, 0.1) !important;
+    }
+    .navbar-nav > li > a, .navbar-nav > .open > a, .navbar-nav > .active > a {
+      background: none;
+    }
+    .gn-clear-xs {
+      clear: both;
+    }
+    .gn-menuheader-xs {
+      margin-top: 5px;
+      padding: 15px 0;
+      height: auto;
+      font-size: 16px;
+      font-weight: 300;
+      clear: both;
+      i {
+        display: none;
+      }
+      &:hover {
+        background: none !important;
+        color: @gray-base;
+      }
+    }
+    .gn-menu-xs {
+      padding: 1px;
+      overflow-y: hidden !important;
+      max-height: none;
+      .clearfix();
+      .gn-separator-xs {
+        display: none;
+      }
+      .gn-menuitem-xs {
+        width: 33%;
+        height: 64px;
+        text-align: center;
+        border: 1px solid @navbar-default-border;
+        background-color: @body-bg;
+        float: left;
+        margin-left: -1px;
+        margin-top: -1px;
+        a {
+          color: @gn-menubar-color;
+          display: block;
+          padding: 7px 20px !important;
+          height: auto;
+          i {
+            font-size: 22px;
+            margin: 3px 0;
+          }
+          span {
+            display: block;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          [data-gnv-layer-indicator] {
+            display: none;
+          }
+          &:hover, &:focus {
+            background-color: @dropdown-link-hover-bg !important;
+          }
+        }
+      }
+    }
+    .username-dropdown {
+      .gn-menuitem-xs {
+        width: 50%;
+        height: 46px !important;
+        border: 1px solid @navbar-default-border;
+        background-color: @body-bg;
+        float: left;
+        margin-left: -1px;
+        margin-top: -1px;
+        min-width: 0;
+        img {
+          display: none;
+        }
+        &:hover {
+          border-color: @navbar-default-border;
+          background-color: @dropdown-link-hover-bg !important;
+        }
+      }
+    }
+    .signin-dropdown {
+      .navbar-form {
+        flex-direction: initial;
+        display: block !important;
+        padding: 0;
+        margin: 0;
+        .clearfix();
+        // username & password input
+        .form-group-sm {
+          width: 84%;
+          float: left;
+          .form-control {
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+          }
+        }
+        // submit button
+        .btn.pull-right {
+          width: 14%;
+          height: 73px;
+          margin-top: -39px;
+        }
+      }
+    }
+    .language-switcher {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @media (min-width: @screen-sm-min) {
+      li.dropdown-hover {
+        &.open:not(.active) > .dropdown-toggle {
+          &:hover, &:focus {
+            background-color: @gn-menubar-background-hover;
+          }
+        }
+      }
+    }
+  }
 
 }
 
 @media (max-width: @grid-float-breakpoint) {
   .navbar-nav {
     margin: 0;
+  }
+}
+
+// nojs styles
+.gn-nojs {
+  .gn-logo {
+    max-height: 28px;
+    margin: -8px 0px;
   }
 }

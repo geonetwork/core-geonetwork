@@ -153,20 +153,28 @@ public class NetLib {
      * Setup proxy for http client
      */
     public void setupProxy(SettingManager sm) {
-        String host = sm.getValue(Settings.SYSTEM_PROXY_HOST);
-        String port = sm.getValue(Settings.SYSTEM_PROXY_PORT);
-        String username = sm.getValue(Settings.SYSTEM_PROXY_USERNAME);
-        String ignoreHostList = sm.getValue(Settings.SYSTEM_PROXY_IGNOREHOSTLIST);
+        boolean useProxy = sm.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
 
-        Properties props = System.getProperties();
-        props.put("http.proxyHost", host);
-        props.put("http.proxyPort", port);
-        props.put("http.nonProxyHosts", ignoreHostList);
+        if (useProxy) {
+            String host = sm.getValue(Settings.SYSTEM_PROXY_HOST);
+            String port = sm.getValue(Settings.SYSTEM_PROXY_PORT);
+            String username = sm.getValue(Settings.SYSTEM_PROXY_USERNAME);
+            String ignoreHostList = sm.getValue(Settings.SYSTEM_PROXY_IGNOREHOSTLIST);
 
-        if (username.trim().length() > 0) {
-            Log.error(Geonet.GEONETWORK, "Proxy credentials cannot be used");
+            Properties props = System.getProperties();
+            props.put("http.proxyHost", host);
+            props.put("http.proxyPort", port);
+            props.put("http.nonProxyHosts", ignoreHostList);
+
+            if (username.trim().length() > 0) {
+                Log.error(Geonet.GEONETWORK, "Proxy credentials cannot be used");
+            }
+        } else {
+            Properties props = System.getProperties();
+            props.put("http.proxyHost", "");
+            props.put("http.proxyPort", "");
+            props.put("http.nonProxyHosts", "");
         }
-
     }
 
     //---------------------------------------------------------------------------

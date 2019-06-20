@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
   </parent>
 
 
@@ -124,6 +124,10 @@
       <artifactId>spring-web</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jolokia</groupId>
+      <artifactId>jolokia-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <scope>compile</scope>
@@ -193,7 +197,7 @@
       <artifactId>pcj</artifactId>
     </dependency>
     <dependency>
-      <groupId>batik</groupId>
+      <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-ext</artifactId>
     </dependency>
     <dependency>
@@ -351,6 +355,17 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>inspire-atom</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>doi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>listeners</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -794,7 +809,7 @@
           <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
           <attachClasses>true</attachClasses>
-          <warName>geonetwork</warName>
+          <warName>${application.name}</warName>
           <webappDirectory>${project.build.directory}/geonetwork</webappDirectory>
         </configuration>
       </plugin>
@@ -805,7 +820,7 @@
           <contextXml>${basedir}/jetty-context.xml</contextXml>
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
           <webApp>
-            <contextPath>/geonetwork</contextPath>
+            <contextPath>/${application.name}</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
               <resourcesAsCSV>
@@ -821,8 +836,11 @@
               <value>5000000</value>
             </systemProperty>
           </systemProperties>
+          <httpConnector>
+            <port>${jetty.port}</port>
+          </httpConnector>
           <stopKey>JETTY_TOP</stopKey>
-          <stopPort>8090</stopPort>
+          <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
       </plugin>
     </plugins>
@@ -895,6 +913,16 @@
       <properties>
         <env>inspire</env>
       </properties>
+    </profile>
+    <profile>
+      <id>slave</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource</groupId>
+          <artifactId>slave</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 

@@ -1,52 +1,48 @@
 <div class="layerTree">
   <form role="form">
     <input type="hidden" name="_csrf" value="{{csrf}}"/>
-    <div class="form-group">
-      <div data-ng-show="catServicesList.length > 0">
-        <div class="dropdown">
-          <button class="btn btn-block btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-            <span data-ng-hide="serviceDesc"
-                  title="{{'chooseAserviceHelp' | translate}}">{{'chooseAservice' | translate}}</span>
-            <span data-ng-show="serviceDesc">{{serviceDesc.title}}</span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="listbox">
-            <li data-ng-repeat="srv in catServicesList">
-              <a href="" data-ng-click="setUrl(srv)"
-                 title="{{srv.desc}}">
-                {{srv.title}} ({{srv.url}}) - {{srv.type}}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <label>
-        <span data-ng-show="catServicesList.length > 0">
-          <span data-translate="">or</span>&nbsp;
-        </span>
-        <span data-translate="" data-translate-values="{type: '{{format.toUpperCase()}}'}">orTypeAServiceUrl</span>
-      </label>
+    <div data-ng-show="catServicesList.length > 0 || servicesList.length > 0">
       <div class="dropdown">
-        <div class="input-group">
-          <input class="form-control" type="text" data-toggle="dropdown"
-                 data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
-                 aria-label="{{format.toUpperCase()}} {{'serviceUrlLabel' | translate }}"
-                 placeholder="{{'serviceUrl' | translate}}"/>
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button" data-ng-click="reset()">
-              <i class="fa fa-close"></i>
-              <span class="sr-only" translate="">reset</span>
-            </button>
-          </span>
-        </div>
-        <ul class="dropdown-menu" role="menu" data-ng-show="servicesList.length > 0">
-          <li data-ng-repeat="srv in servicesList">
+        <button data-ng-attr-id="addServiceChooseAServiceButton-{{format}}" class="btn btn-block btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+          <span data-ng-hide="serviceDesc"
+                title="{{'chooseAserviceHelp' | translate}}">{{'chooseAservice' | translate}}</span>
+          <span data-ng-show="serviceDesc">{{serviceDesc.title}}</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="listbox" aria-labelledby="addServiceChooseAServiceButton-{{format}}">
+          <li data-ng-repeat="srv in servicesList | orderBy: 'name'">
             <a href="" data-ng-click="setUrl(srv)" title="{{srv.url}}">
-              {{srv.name}}
+              {{srv.name}} ({{srv.url}})
+            </a>
+          </li>
+          <li data-ng-repeat="srv in catServicesList | orderBy: 'title'">
+            <a href="" data-ng-click="setUrl(srv)"
+               title="{{srv.desc}} ({{srv.url}}) - {{srv.type}}">
+              {{srv.title}} ({{srv.url}}))
             </a>
           </li>
         </ul>
+      </div>
+    </div>
+
+    <label>
+      <span data-ng-show="catServicesList.length > 0 || servicesList.length > 0">
+        <span data-translate="">or</span>&nbsp;
+      </span>
+      <span data-translate="" data-translate-values="{type: '{{format.toUpperCase()}}'}">orTypeAServiceUrl</span>
+    </label>
+    <div>
+      <div class="input-group">
+        <input class="form-control" type="text"
+               data-ng-model="url" data-ng-change="load()" data-ng-model-options="{debounce:500}"
+               aria-label="{{format.toUpperCase()}} {{'serviceUrlLabel' | translate }}"
+               placeholder="{{'serviceUrl' | translate}}"/>
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" data-ng-click="reset()">
+            <i class="fa fa-close"></i>
+            <span class="sr-only" translate="">reset</span>
+          </button>
+        </span>
       </div>
     </div>
   </form>
