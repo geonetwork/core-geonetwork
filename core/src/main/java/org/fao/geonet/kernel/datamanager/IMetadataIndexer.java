@@ -106,7 +106,7 @@ public interface IMetadataIndexer {
      * @param searchManager
      * @throws Exception
      */
-    void indexMetadata(String metadataId, boolean forceRefreshReaders, ISearchManager searchManager) throws Exception;
+    void indexMetadata(String metadataId, boolean forceRefreshReaders) throws Exception;
 
     /**
      * Start record versioning

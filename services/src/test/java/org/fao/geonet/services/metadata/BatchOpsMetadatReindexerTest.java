@@ -187,7 +187,7 @@ public class BatchOpsMetadatReindexerTest {
                 usedTread.add(Thread.currentThread());
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.eq(true), Mockito.anyObject());
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.eq(true));
         return mockDataMan;
     }
 
@@ -201,7 +201,7 @@ public class BatchOpsMetadatReindexerTest {
                 latch.await();
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.eq(true), Mockito.anyObject());
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.eq(true));
         return mockDataMan;
     }
 
@@ -219,7 +219,7 @@ public class BatchOpsMetadatReindexerTest {
         ArgumentCaptor<Boolean> forceRefreshCaptor = ArgumentCaptor.forClass(Boolean.class);
         ArgumentCaptor<ISearchManager> isearchManagerCaptor = ArgumentCaptor.forClass(ISearchManager.class);
 
-        Mockito.verify(mockDataMan, Mockito.times(4)).indexMetadata(metadataIdCaptor.capture(), forceRefreshCaptor.capture(), isearchManagerCaptor.capture());
+        Mockito.verify(mockDataMan, Mockito.times(4)).indexMetadata(metadataIdCaptor.capture(), forceRefreshCaptor.capture());
         return metadataIdCaptor;
     }
 }

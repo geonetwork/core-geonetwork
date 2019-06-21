@@ -143,7 +143,7 @@ public class MetadataValidateApi {
                     .setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID)
                     .setRequired(true).setNumTests(0).setNumFailures(0);
             this.metadataValidationRepository.save(metadataValidation);
-            dataManager.indexMetadata(("" + metadata.getId()), true, null);
+            dataManager.indexMetadata(("" + metadata.getId()), true);
             new RecordValidationTriggeredEvent(metadata.getId(),
                     ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
                     metadataValidation.getStatus().getCode()).publish(appContext);

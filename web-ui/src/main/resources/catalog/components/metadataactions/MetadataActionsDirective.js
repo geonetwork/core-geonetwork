@@ -56,7 +56,7 @@
         },
         link: function(scope) {
           var user = scope.$parent.user;
-          var metadataId = scope.md.id();
+          var metadataId = scope.md.id;
           var defaultType = 'workflow';
 
           scope.statusType = scope.statusType || defaultType;

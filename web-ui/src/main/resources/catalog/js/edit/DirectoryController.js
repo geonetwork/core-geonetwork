@@ -449,7 +449,7 @@
             'SUB_TEMPLATE')
             .then(function(response) {
               refreshEntriesInfo();
-              return gnMetadataManager.getMdObjById(response.data, 's or t');
+              return gnMetadataManager.getMdObjById(response.data, ['s', 't']);
             })
             .then(function(md) {
               $scope.startEditing(md);
@@ -464,7 +464,7 @@
               }
               refreshEntriesInfo();
               return gnMetadataManager.getMdObjById(e.id,
-              's or t');
+                ['s', 't']);
             })
             .then(function(e) {
               if ($scope.activeEntry) {
@@ -478,7 +478,7 @@
             .then(function() {
               refreshEntriesInfo();
               return gnMetadataManager.getMdObjById(e.id,
-              's or t');
+                ['s', 't']);
             })
             .then(function(e) {
               if ($scope.activeEntry) {

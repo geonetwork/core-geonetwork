@@ -197,7 +197,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         dataMan.flush();
 
         if (indexAfterUpdate == true) {
-            dataMan.indexMetadata(id, true, null);
+            dataMan.indexMetadata(id, true);
         }
     }
 
@@ -248,7 +248,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         dataMan.flush();
 
         if (index) {
-            dataMan.indexMetadata(id, true, null);
+            dataMan.indexMetadata(id, true);
         }
         return id;
     }

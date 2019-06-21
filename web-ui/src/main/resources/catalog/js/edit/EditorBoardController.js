@@ -65,7 +65,7 @@
         },
         defaultParams: {
           sortBy: 'changeDate',
-          _isTemplate: 'y or n',
+          isTemplate: ['y', 'n'],
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20

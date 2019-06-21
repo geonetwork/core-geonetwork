@@ -410,7 +410,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, null);
+        metadataIndexer.indexMetadata(Integer.toString(id), true);
     }
 
     @Override
@@ -427,7 +427,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, null);
+        metadataIndexer.indexMetadata(Integer.toString(id), true);
     }
 
     /**
@@ -742,7 +742,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
             notifyMetadataChange(md, metadataId);
 
             // --- update search criteria
-            metadataIndexer.indexMetadata(metadataId, true, null);
+            metadataIndexer.indexMetadata(metadataId, true);
         }
     }
 

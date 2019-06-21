@@ -97,7 +97,7 @@
                     any: '',
                     internal: true,
                     params: {
-                      _isTemplate: 's',
+                      isTemplate: 's',
                       any: '',
                       from: 1,
                       to: 20,

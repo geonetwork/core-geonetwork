@@ -499,7 +499,7 @@ public class EsSearchManager implements ISearchManager {
                 }
             }
             for(String id : listOfIdsToIndex) {
-                dataMan.indexMetadata(id + "", false, this);
+                dataMan.indexMetadata(id + "", false);
             }
         } else {
             final Specifications<Metadata> metadataSpec =
@@ -509,7 +509,7 @@ public class EsSearchManager implements ISearchManager {
                 Specifications.where(metadataSpec)
             );
             for(Integer id : metadataIds) {
-                dataMan.indexMetadata(id + "", false, this);
+                dataMan.indexMetadata(id + "", false);
             }
         }
         sendDocumentsToIndex();

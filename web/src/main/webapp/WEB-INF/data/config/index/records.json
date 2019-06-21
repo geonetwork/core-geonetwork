@@ -1317,7 +1317,7 @@
       "rating": {
         "type": "short"
       },
-      "status": {
+      "mdStatus": {
         "type": "short"
       },
       "owner": {

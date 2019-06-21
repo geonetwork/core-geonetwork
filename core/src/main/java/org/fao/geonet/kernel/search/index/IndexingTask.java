@@ -71,7 +71,7 @@ public class IndexingTask extends QuartzJobBean {
 
             for (Integer metadataIdentifier : metadataIdentifiers) {
                 try {
-                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false, null);
+                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Indexing task / An error happens indexing the metadata "
                         + metadataIdentifier + ". Error: " + e.getMessage(), e);

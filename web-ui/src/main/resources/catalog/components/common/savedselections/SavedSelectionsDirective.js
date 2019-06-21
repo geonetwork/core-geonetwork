@@ -66,8 +66,8 @@
                 angular.forEach(md.getLinksByType('OGC:WMS'), function(link) {
                   if (gnExternalViewer.isEnabled()) {
                     gnExternalViewer.viewService({
-                      id: md.getId(),
-                      uuid: md.getUuid()
+                      id: md.id,
+                      uuid: md.uuid
                     }, {
                       url: link.url,
                       type: 'wms',

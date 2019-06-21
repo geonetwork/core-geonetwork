@@ -185,7 +185,7 @@ public class MetadataTagApi {
             }
         }
 
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getCategories();
@@ -239,7 +239,7 @@ public class MetadataTagApi {
             }
         }
 
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
         Set<MetadataCategory> after = metadata.getCategories();

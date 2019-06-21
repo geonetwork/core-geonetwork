@@ -56,7 +56,7 @@
         if ($('#batchSearchTemplateY')[0].checked) values.push('y');
         if ($('#batchSearchTemplateN')[0].checked) values.push('n');
         if ($('#batchSearchTemplateS')[0].checked) values.push('s');
-        $scope.searchObj.params._isTemplate = values.join(' or ');
+        $scope.searchObj.params.isTemplate = values.join(' or ');
       };
 
 

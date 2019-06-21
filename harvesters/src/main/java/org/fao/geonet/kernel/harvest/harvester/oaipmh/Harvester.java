@@ -368,7 +368,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01, null);
+        dataMan.indexMetadata(id, Math.random() < 0.01);
         result.addedMetadata++;
     }
 
@@ -501,7 +501,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             addCategories(metadata, params.getCategories(), localCateg, context,log, null, true);
 
             dataMan.flush();
-            dataMan.indexMetadata(id, Math.random() < 0.01, null);
+            dataMan.indexMetadata(id, Math.random() < 0.01);
             result.updatedMetadata++;
         }
     }

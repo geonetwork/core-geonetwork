@@ -180,8 +180,9 @@
 
               $scope.id = $routeParams.id;
 
-              gnCurrentEdit.metadata = new Metadata(r.data.hits.hits[0]._source);
+              gnCurrentEdit.metadata = new Metadata(r.data.hits.hits[0]);
               $scope.mdSchema = gnCurrentEdit.metadata.schema;
+              gnCurrentEdit.schema = $scope.mdSchema;
               $scope.mdCategories = {values: []};
               var categories = gnCurrentEdit.metadata.category;
               if (categories) {
@@ -195,9 +196,6 @@
               $scope.groupOwner = gnCurrentEdit.metadata.groupOwner;
               $scope.mdTitle = gnCurrentEdit.metadata.resourceTitle;
 
-              // Get the schema configuration for the current record
-              gnCurrentEdit.metadata = new Metadata(data.metadata[0]);
-              gnCurrentEdit.schema = $scope.mdSchema;
               $scope.redirectUrl = $location.search()['redirectUrl'];
 
               if ($scope.metadataFound) {

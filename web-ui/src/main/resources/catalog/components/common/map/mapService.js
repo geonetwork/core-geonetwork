@@ -1350,7 +1350,7 @@
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                    name, capObj, md && md.getUuid && md.uuid),
+                    name, capObj, md && md.uuid),
                     olL;
 
                 if (!capL) {

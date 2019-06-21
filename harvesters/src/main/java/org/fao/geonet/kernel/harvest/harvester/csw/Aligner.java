@@ -318,7 +318,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-        metadataIndexer.indexMetadata(id, true, null);
+        metadataIndexer.indexMetadata(id, true);
         result.addedMetadata++;
     }
 
@@ -339,7 +339,7 @@ public class Aligner extends BaseAligner<CswParams> {
             } else {
                 log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 if (updatingLocalMetadata(ri, id, force)) {
-                    metadataIndexer.indexMetadata(id, true, null);
+                    metadataIndexer.indexMetadata(id, true);
                     result.updatedMetadata++;
                 }
             }

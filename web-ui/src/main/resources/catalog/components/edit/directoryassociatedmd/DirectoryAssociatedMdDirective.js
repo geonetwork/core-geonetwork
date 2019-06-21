@@ -47,7 +47,7 @@
           function($scope, gnGlobalSettings) {
             $scope.searchObj = {
               params: {
-                _isTemplate: 'y or n',
+                isTemplate: 'y or n',
                 any: '',
                 sortBy: 'title',
                 _xlink: '*'

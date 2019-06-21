@@ -36,7 +36,7 @@
         link: function(scope) {
           gnSearchManagerService.gnSearch({
             uuid: scope.metadata.uuid,
-            _isTemplate: 'y or n',
+            isTemplate: 'y or n',
             draft: 'y'
           }).then(function(data) {
             var i = 0;

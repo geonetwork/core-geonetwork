@@ -188,7 +188,7 @@
               scope.hasMoreRecords = false;
 
               scope.getSuggestions = function(val) {
-                return gnSearchManagerService.search('q?fast=index&_content_type=json&_isTemplate=y or n&title=' + (val || '*')).then(function(res) {
+                return gnSearchManagerService.search('q?isTemplate=y or n&title=' + (val || '*')).then(function(res) {
                   var listOfTitles = [];
                   angular.forEach(res.metadata, function(value, key) {
                     listOfTitles.push({id: value.id, title: value.title});

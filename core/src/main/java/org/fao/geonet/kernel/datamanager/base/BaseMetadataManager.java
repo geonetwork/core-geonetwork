@@ -633,7 +633,7 @@ public class BaseMetadataManager implements IMetadataManager {
         metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (index) {
-            metadataIndexer.indexMetadata(stringId, forceRefreshReaders, null);
+            metadataIndexer.indexMetadata(stringId, forceRefreshReaders);
         }
 
         if (notifyChange) {
@@ -798,13 +798,13 @@ public class BaseMetadataManager implements IMetadataManager {
         } finally {
             if (index) {
                 // --- update search criteria
-                metadataIndexer.indexMetadata(metadataId, true, null);
+                metadataIndexer.indexMetadata(metadataId, true);
             }
         }
 
         if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             if (!index) {
-                metadataIndexer.indexMetadata(metadataId, true, null);
+                metadataIndexer.indexMetadata(metadataId, true);
             }
 //			TODOES
 //            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);

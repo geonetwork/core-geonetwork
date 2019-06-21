@@ -482,10 +482,9 @@
 
              var url = gnUrlUtils.append('q?_content_type=json',
               gnUrlUtils.toKeyValue(angular.extend({
-               _isTemplate: 'n',
+               isTemplate: 'n',
                any: '*QUERY*',
-               sortBy: 'title',
-               fast: 'index'
+               sortBy: 'title'
              }, params)
               )
              );
@@ -585,13 +584,12 @@
 
              var url = gnUrlUtils.append('q@json',
               gnUrlUtils.toKeyValue({
-                _isTemplate: 's',
+                isTemplate: 's',
                 any: '*QUERY*',
                 _root: 'gmd:CI_ResponsibleParty',
                 sortBy: 'title',
                 sortOrder: 'reverse',
-                resultType: 'subtemplates',
-                fast: 'index'
+                resultType: 'subtemplates'
               })
              );
              var parseResponse = function(data) {
@@ -739,7 +737,7 @@
               element.addClass('disabled');
               icon.addClass('hidden');
               spinner = element.
-                  prepend('<i class="fa fa-spinner fa-spin"></i>');
+                  prepend('<i class="fa fa-fw fa-spinner fa-spin"></i>');
             };
             var done = function() {
               running = false;

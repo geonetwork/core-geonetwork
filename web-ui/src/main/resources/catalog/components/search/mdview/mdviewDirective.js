@@ -227,9 +227,9 @@
                 return _.groupBy(resources,
                   function(contact) {
                     if (contact.email) {
-                      return contact.org + '#' + contact.email;
+                      return contact.organisation + '#' + contact.email;
                     } else {
-                      return contact.org + '#' + contact.name;
+                      return contact.organisation + '#' + contact.individual;
                     }
                   });
               };
@@ -278,7 +278,7 @@
                  */
                 scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
                   function(contact) {
-                    return contact.org;
+                    return contact.organisation;
                   });
 
                 for (var key in scope.mdContactsByOrgRole) {

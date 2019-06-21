@@ -127,14 +127,14 @@ public class BaseMetadataStatus implements IMetadataStatus {
     @Deprecated
     public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, null);
+        metadataIndexer.indexMetadata(Integer.toString(id), true);
         return statusObject;
     }
 
     @Override
     public MetadataStatus setStatusExt(MetadataStatus metatatStatus) throws Exception {
         metadataStatusRepository.save(metatatStatus);
-        metadataIndexer.indexMetadata(metatatStatus.getId().getMetadataId() + "", true, null);
+        metadataIndexer.indexMetadata(metatatStatus.getId().getMetadataId() + "", true);
         return metatatStatus;
     }
 

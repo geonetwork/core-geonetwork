@@ -283,10 +283,32 @@ public class EsClient implements InitializingBean {
      * synonyms analysis.
      *
      * See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-analyze.html
-     *
+     *{
+     *   "tokens" : [
+     *     {
+     *       "token" : "area management/restriction/regulation zones and reporting units",
+     *       "start_offset" : 0,
+     *       "end_offset" : 64,
+     *       "type" : "word",
+     *       "position" : 0
+     *     }
+     *   ]
+     * }
+     * or when a synonym is found
+     * {
+     *   "tokens" : [
+     *     {
+     *       "token" : "elevation",
+     *       "start_offset" : 0,
+     *       "end_offset" : 8,
+     *       "type" : "SYNONYM",
+     *       "position" : 0
+     *     }
+     *   ]
+     * }
      * @param fieldValue    The field value to analyze
      *
-     * @return The analyzed string value if found or empty text if not found or if an exception occured.
+     * @return The analyzed string value if found or empty text if not found or if an exception occurred.
      */
     public static String analyzeField(String collection,
                                       String analyzer,

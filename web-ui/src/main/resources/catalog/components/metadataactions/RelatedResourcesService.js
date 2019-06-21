@@ -108,8 +108,8 @@
             // if an external viewer is defined, use it here
             if (gnExternalViewer.isEnabled()) {
               gnExternalViewer.viewService({
-                id: md ? md.getId() : null,
-                uuid: md ? md.getUuid() : null
+                id: md ? md.id : null,
+                uuid: md ? md.uuid : null
               }, {
                 type: 'wfs',
                 url: url,

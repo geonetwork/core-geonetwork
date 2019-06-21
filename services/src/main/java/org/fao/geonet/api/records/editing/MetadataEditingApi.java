@@ -162,26 +162,26 @@ public class MetadataEditingApi {
             //Maybe we are redirected to another metadata?
             if(id2 != metadata.getId()) {
                 
-            	StringBuilder sb = new StringBuilder("?");
-            	
-            	Enumeration<String> parameters = request.getParameterNames();
-            	
-            	//As this editor will redirect, make sure there is something to go 
-            	// back that makes sense and prevent a loop:
-            	boolean hasPreviousURL = false;
-            	
-            	while(parameters.hasMoreElements()) {
-            		String key = parameters.nextElement();
-            		sb.append(key + "=" + request.getParameter(key) + "%26");
-            		if(key.equalsIgnoreCase("redirectUrl")) {
-            			hasPreviousURL = true;
-            		}
-            	}
-            	
-            	if(!hasPreviousURL) {
-            		sb.append("redirectUrl=catalog.edit");
-            	}
-            	
+                StringBuilder sb = new StringBuilder("?");
+                
+                Enumeration<String> parameters = request.getParameterNames();
+                
+                //As this editor will redirect, make sure there is something to go 
+                // back that makes sense and prevent a loop:
+                boolean hasPreviousURL = false;
+                
+                while(parameters.hasMoreElements()) {
+                    String key = parameters.nextElement();
+                    sb.append(key + "=" + request.getParameter(key) + "%26");
+                    if(key.equalsIgnoreCase("redirectUrl")) {
+                        hasPreviousURL = true;
+                    }
+                }
+                
+                if(!hasPreviousURL) {
+                    sb.append("redirectUrl=catalog.edit");
+                }
+                
                 Element el = new Element("script");
                 el.setText("window.location.hash = decodeURIComponent(\"#/metadata/" + id2 + sb.toString() + "\")");
                 return el;
@@ -274,7 +274,7 @@ public class MetadataEditingApi {
             HttpSession httpSession
         ) throws Exception {
 
-		Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
+        Log.trace(Geonet.DATA_MANAGER, "Saving metadata editing with UUID " + metadataUuid);
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         AjaxEditUtils ajaxEditUtils = new AjaxEditUtils(context);
@@ -285,7 +285,7 @@ public class MetadataEditingApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         IMetadataValidator validator = applicationContext.getBean(IMetadataValidator.class);
         String id = String.valueOf(metadata.getId());
-		Log.trace(Geonet.DATA_MANAGER, " > ID of the record to edit: " + id);
+        Log.trace(Geonet.DATA_MANAGER, " > ID of the record to edit: " + id);
         String isTemplate = allRequestParams.get(Params.TEMPLATE);
 //        boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 //        boolean forget = config.getValue(Params.FORGET, "no").equals("yes");
@@ -303,23 +303,23 @@ public class MetadataEditingApi {
         }
 
         if(Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
-        	Log.trace(Geonet.DATA_MANAGER, " > Setting type of record " 
-        					+ MetadataType.lookup(isTemplate));
+            Log.trace(Geonet.DATA_MANAGER, " > Setting type of record " 
+                            + MetadataType.lookup(isTemplate));
         }
         int iLocalId = Integer.parseInt(id);
-    	Log.trace(Geonet.DATA_MANAGER, " > Id is " + iLocalId);
+        Log.trace(Geonet.DATA_MANAGER, " > Id is " + iLocalId);
         dataMan.setTemplateExt(iLocalId, MetadataType.lookup(isTemplate));
 
         //--- use StatusActionsFactory and StatusActions class to possibly
         //--- change status as a result of this edit (use onEdit method)
-    	Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
+        Log.trace(Geonet.DATA_MANAGER, " > Trigger status actions based on this edit");
         StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
         StatusActions sa = saf.createStatusActions(context);
         sa.onEdit(iLocalId, minor);
         Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
 
         if (StringUtils.isNotEmpty(data)) {
-    		Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
+            Log.trace(Geonet.DATA_MANAGER, " > Updating metadata through data manager");
             Element md = Xml.loadString(data, false);
             String changeDate = null;
             boolean updateDateStamp = !minor;
@@ -334,7 +334,7 @@ public class MetadataEditingApi {
             String xmlAfter = outp.outputString(md);
             new RecordUpdatedEvent(Long.parseLong(id), session.getUserIdAsInt(), xmlBefore, xmlAfter).publish(applicationContext);
         } else {
-    		Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
+            Log.trace(Geonet.DATA_MANAGER, " > Updating contents");
             ajaxEditUtils.updateContent(params, false, true);
 
             Element afterMetadata = dataMan.getMetadata(context, String.valueOf(metadata.getId()), false, false, false);
@@ -361,7 +361,7 @@ public class MetadataEditingApi {
             return null;
         }
         if (terminate) {
-    		Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
+            Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
             SettingManager sm = context.getBean(SettingManager.class);
 
             boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
@@ -402,8 +402,8 @@ public class MetadataEditingApi {
             }
 
             if (reindex) {
-        		Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
-                dataMan.indexMetadata(id, true, null);
+                Log.trace(Geonet.DATA_MANAGER, " > Reindexing record");
+                dataMan.indexMetadata(id, true);
             }
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);

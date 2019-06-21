@@ -329,14 +329,12 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, false, null);
+            indexMetadata(metadataId, true);
         }
-
-        searchManager.forceIndexChanges();
     }
 
     @Override
-    public void indexMetadata(final String metadataId, boolean forceRefreshReaders, ISearchManager searchManager)
+    public void indexMetadata(final String metadataId, final boolean forceRefreshReaders)
         throws Exception {
         waitLoopLock.lock();
         try {
@@ -554,8 +552,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             //To inject extra fields from BaseMetadataIndexer inherited beans
             addExtraFields(fullMd, moreFields);
 
-            searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root,
-                forceRefreshReaders);
+            searchManager.index(schemaManager.getSchemaDir(schema), md, metadataId, moreFields, metadataType, root, forceRefreshReaders);
 
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId

@@ -331,7 +331,7 @@ public class MetadataWorkflowApi {
         sa.onStatusChange(listOfStatusChange);
 
         //--- reindex metadata
-        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true);
     }
 
 

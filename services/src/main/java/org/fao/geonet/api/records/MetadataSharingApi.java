@@ -239,7 +239,7 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), request);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
     }
 
 
@@ -403,7 +403,7 @@ public class MetadataSharingApi {
 
         if (!hasValidation) {
             validator.doValidate(metadata, context.getLanguage());
-            dm.indexMetadata(metadata.getId() + "", true, null);
+            dm.indexMetadata(metadata.getId() + "", true);
         }
 
         boolean isInvalid =
@@ -563,7 +563,7 @@ public class MetadataSharingApi {
 
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
         metadataManager.save(metadata);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
         new RecordGroupOwnerChangeEvent(metadata.getId(), ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),ObjectJSONUtils.convertObjectInJsonObject(group, RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
     }
@@ -772,7 +772,7 @@ public class MetadataSharingApi {
                 report, dataManager, accessManager, metadataRepository,
                 serviceContext, listOfUpdatedRecords, metadataUuid, session, approved);
             dataManager.flush();
-            dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
+            dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
 
         } catch (Exception exception) {
             report.addError(exception);

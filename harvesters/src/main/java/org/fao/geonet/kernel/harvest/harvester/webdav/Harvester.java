@@ -329,7 +329,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, true, null);
+        dataMan.indexMetadata(id, true);
         result.addedMetadata++;
     }
 
@@ -492,7 +492,7 @@ class Harvester extends BaseAligner<WebDavParams> implements IHarvester<HarvestR
 
             dataMan.flush();
 
-            dataMan.indexMetadata(record.id, true, null);
+            dataMan.indexMetadata(record.id, true);
         }
     }
 

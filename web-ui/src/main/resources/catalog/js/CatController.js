@@ -652,27 +652,22 @@ goog.require('gn_alert');
           isConnected: function() {
             return !this.isAnonymous();
           },
+          // The md provide the information about
+          // if the current user can edit records or not
+          // based on record operation allowed. See edit property.
           canEditRecord: function(md) {
             if (!md || this.isAnonymous()) {
               return false;
             }
 
-            // The md provide the information about
-            // if the current user can edit records or not.
-            var editable = angular.isDefined(md) &&
-                angular.isDefined(md) &&
-                angular.isDefined(md.edit) &&
-                md.edit == 'true';
-
-
             // A second filter is for harvested record
             // if the catalogue admin defined that those
             // records could be harvested.
-            if (md.isHarvested === 'y') {
+            if (md.isHarvested == true) {
               return gnConfig['system.harvester.enableEditing'] === true &&
-                  editable;
+                md.edit;
             }
-            return editable;
+            return md.edit;
           }
         };
         // Build is<ProfileName> and is<ProfileName>OrMore functions

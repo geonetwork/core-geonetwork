@@ -22,7 +22,7 @@
       </div>
       <div class="col-md-9">
         <div class="gn-md-title">
-          <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected"
+          <input gn-selection-md type="checkbox" ng-model="md.selected"
                  aria-label="{{'clickToSelect' | translate}}"
                  ng-change="change()"/>
           <div class="pull-right gn-md-category"
@@ -70,7 +70,7 @@
             data-ng-click="openRecord($index, md, searchResults.records)"
             dd-text-collapse dd-text-collapse-max-length="350"
             dd-text-collapse-text="{{md.resourceAbstract}}"></p>
-          <address ng-if="md.getContacts().resource">{{::md.getContacts().resource}}</address>
+          <address ng-if="md.allContacts.resource">{{::md.allContacts.resource}}</address>
         </div>
 
         <div class="row gn-md-links">

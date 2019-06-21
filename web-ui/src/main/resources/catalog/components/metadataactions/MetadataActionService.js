@@ -427,16 +427,5 @@
           });
         });
       };
-
-      /**
-       * Format a CRS description object for rendering
-       * @param {Object} crsDetails expected keys: code, codeSpace, name
-       */
-      this.formatCrs = function(crsDetails) {
-        var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ':') +
-            crsDetails.code;
-        if (crsDetails.name) return crsDetails.name + ' (' + crs + ')';
-        else return crs;
-      };
     }]);
 })();

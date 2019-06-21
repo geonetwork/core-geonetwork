@@ -73,7 +73,6 @@
           links: md.getLinksByType('LINK'),
           downloads: md.getLinksByType('DOWNLOAD'),
           layers: md.getLinksByType('OGC', 'kml'),
-          contacts: md.getContacts(),
           overviews: md.getThumbnails() ? md.getThumbnails().list : undefined
         });
 
@@ -186,7 +185,7 @@
                       });
                       
                       var metadata = [];
-                      metadata.push(new Metadata(r.data.hits.hits[i]._source));
+                      metadata.push(new Metadata(r.data.hits.hits[i]));
                       data = {metadata: metadata};
 
                       //Keep the search results (gnMdViewObj.records)

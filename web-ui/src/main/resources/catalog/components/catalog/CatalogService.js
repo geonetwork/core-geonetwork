@@ -223,16 +223,27 @@
          * @description
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
-         * @param {string} uuid of the metadata
-         * @param {string} isTemplate optional isTemplate value (s, t...)
-         * @return {HttpPromise} of the $http get
+         * @param {string} uuid or id of the metadata
+         * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
+         * @return {HttpPromise} of the $http post
          */
         getMdObjByUuid: function(uuid, isTemplate) {
-          return $http.get('qi?_uuid=' + uuid + '' +
-              '&fast=index&_content_type=json&buildSummary=false' +
-              (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
-              then(function(resp) {
-                return new Metadata(resp.data.metadata);
+          return $http.post('../api/search/records/_search', {"query": {
+              "bool" : {
+                "must": [
+                  {"multi_match": {
+                      "query": uuid,
+                      "fields": ['id', 'uuid']}},
+                  {"terms": {"isTemplate": isTemplate !== undefined ? isTemplate : ['n']}},
+                  {"terms": {"draft": ["n", "y", "e"]}}
+                ]
+              }
+            }}).then(function(r) {
+              if (r.data.hits.total.value > 0) {
+                return new Metadata(r.data.hits.hits[0]);
+              } else {
+                console.warn("Record with UUID/ID " + uuid + " not found.")
+              }
               });
         },
 
@@ -245,16 +256,11 @@
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
          * @param {string} id of the metadata
-         * @param {string} isTemplate optional isTemplate value (s, t...)
-         * @return {HttpPromise} of the $http get
+         * @param {array} isTemplate optional isTemplate value (y, n, s, t...)
+         * @return {HttpPromise} of the $http post
          */
         getMdObjById: function(id, isTemplate) {
-          return $http.get('q?_id=' + id + '' +
-              '&fast=index&_content_type=json&buildSummary=false' +
-              (isTemplate !== undefined ? '&_isTemplate=' + isTemplate : '')).
-              then(function(resp) {
-                return new Metadata(resp.data.metadata);
-              });
+          return this.getMdObjByUuid(id, isTemplate);
         },
 
         /**
@@ -550,7 +556,27 @@
     var langSuffix = "_lang";
 
     function Metadata(k) {
-      $.extend(true, this, k);
+      // Move _source properties to the root.
+      var source = k._source;
+      delete k._source;
+      $.extend(true, this, k, source);
+
+
+      // TODOES Check if we can define in ES which fields
+      // to always return as an array.
+      var listOfArrayFields = ['topicCat', 'category', 'keyword', 'resourceCredit',
+        'resolutionScaleDenominator', 'resolutionDistance', 'extentDescription', 'geom',
+        'inspireTheme', 'inspireTheme_syn', 'inspireAnnex',
+        'status', 'status_text', 'coordinateSystem', 'identifier', 'responsibleParty',
+        'mdLanguage', 'resourceLanguage', 'resourceIdentifier',
+        'MD_LegalConstraintsOtherConstraints', 'MD_LegalConstraintsUseLimitation',
+        'MD_SecurityConstraintsUseLimitation',
+        'MD_ConstraintsUseLimitation',
+        'type', 'link', 'crsDetails', 'format', 'otherLanguage',
+        'creationDateForResource', 'publicationDateForResource', 'revisionDateForResource',
+        'contact', 'contactForResource'];
+
+
 
       // Populate translation for all multilingual fields.
       // Multilingual fields are composed of one field without _lang suffix
@@ -558,40 +584,42 @@
       // Set the default field value to the UI language if exist.
       var listOfTranslatedField = {};
       var record = this;
-      $.each( this, function(key, value) {
-        // alert( key + ": " + value );
+      $.each(this, function(key, value) {
         var fieldName = key.split(langSuffix)[0];
-        if (listOfTranslatedField[fieldName] !== true) {
-          if (key.indexOf(langSuffix) !== -1) {
-            this[fieldName] = record.translate(fieldName);
-            listOfTranslatedField[fieldName] = true;
-          }
+        if (key.indexOf(langSuffix) !== -1 &&
+          angular.isUndefined(listOfTranslatedField[fieldName])) {
+          record[fieldName] = record.translate(fieldName);
+          listOfTranslatedField[fieldName] = true;
         }
       });
 
-      // TODOES Check if we can define in ES which fields
-      // to always return as an array.
-      var listOfArrayFields = ['topicCat', 'category', 'keyword',
-        'securityConstraints', 'resourceConstraints', 'legalConstraints',
-        'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
-        'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails', 'format',
-        'creationDate', 'publicationDate', 'revisionDate'];
-
-      // TODOES This should be defined as object in ES
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
-
 
       // See below; probably not necessary
-      var record = this;
       this.linksCache = [];
+
+      // Codelist as array
+      $.each(this, function(key, value) {
+        // All codelist are an array
+        if (key.indexOf('codelist_') === 0 && !angular.isArray(record[key])) {
+          record[key] = [record[key]];
+        }
+      });
+
+      // Convert all fields declared as array
+      // as an array even if only one value.
       $.each(listOfArrayFields, function(idx) {
         var field = listOfArrayFields[idx];
-        if (angular.isDefined(record[field]) &&
+        if ((angular.isDefined(record[field])) &&
             !angular.isArray(record[field])) {
           record[field] = [record[field]];
         }
       });
+
+
+
+      // TODOES This should be defined as object in ES
+      var listOfJsonFields = ['crsDetails'];
+
       // Note: this step does not seem to be necessary; TODO: remove or refactor
       $.each(listOfJsonFields, function(idx) {
         var fieldName = listOfJsonFields[idx];
@@ -621,6 +649,7 @@
         }
       }.bind(this));
 
+      this.getAllContacts();
       // Create a structure that reflects the transferOption/onlinesrc tree
       // var links = [];
       // angular.forEach(this.link, function(link) {
@@ -653,8 +682,8 @@
     Metadata.prototype = {
       translate: function(fieldName) {
         var translation = this[fieldName + '_lang' + gnLangs.current];
-        
-	if (translation) {
+
+        if (translation) {
           return translation;
         } else if (this[fieldName]) {
           return this[fieldName];
@@ -662,12 +691,12 @@
           console.warn(fieldName + ' is not defined in this record.');
         }
       },
-      getUuid: function() {
-        return this.uuid || this._source.uuid;
-      },
-      getId: function() {
-        return this.id;
-      },
+      // getUuid: function() {
+      //   return this.uuid || this._source.uuid;
+      // },
+      // getId: function() {
+      //   return this.id;
+      // },
       isPublished: function() {
         return this.isPublishedToAll === 'true';
       },
@@ -789,58 +818,14 @@
        * @return {{metadata: Array, resource: Array}}
        */
       getAllContacts: function() {
-
-        this.allContacts = {"metadata":[],"resource":[]};
-
-        if (angular.isArray(this.contact)){
-          this.allContacts.metadata=this.contact;
-        } else {
-          this.allContacts.metadata=[this.contact];
+        this.allContacts = {metadata:[], resource:[]};
+        if (this.contact && this.contact.length > 0){
+          this.allContacts.metadata = this.contact;
         }
-
-        if (angular.isArray(this.contactForResource)){
-          this.allContacts.resource=this.contactForResource;
-        } else {
-          this.allContacts.resource=[this.contactForResource];
+        if (this.contactForResource && this.contactForResource.length > 0){
+          this.allContacts.resource = this.contactForResource;
         }
         return this.allContacts;
-      },
-      /**
-       * Deprecated. Use getAllContacts instead
-       */
-      getContacts: function() {
-        var ret = {};
-        if (angular.isArray(this.responsibleParty)) {
-          for (var i = 0; i < this.responsibleParty.length; i++) {
-            var s = this.responsibleParty[i].split('|');
-            if (s[1] === 'resource') {
-              ret.resource = s[2];
-            } else if (s[1] === 'metadata') {
-              ret.metadata = s[2];
-            }
-          }
-        }
-        return ret;
-      },
-      getBoxAsPolygon: function(i) {
-        // Polygon((4.6810%2045.9170,5.0670%2045.9170,5.0670%2045.5500,4.6810%2045.5500,4.6810%2045.9170))
-        var bboxes = [];
-        if (this.geoBox[i]) {
-          var coords = this.geoBox[i].split('|');
-          return 'Polygon((' +
-              coords[0] + ' ' +
-              coords[1] + ',' +
-              coords[2] + ' ' +
-              coords[1] + ',' +
-              coords[2] + ' ' +
-              coords[3] + ',' +
-              coords[0] + ' ' +
-              coords[3] + ',' +
-              coords[0] + ' ' +
-              coords[1] + '))';
-        } else {
-          return null;
-        }
       },
       getOwnername: function() {
         if (this.userinfo) {

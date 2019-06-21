@@ -661,13 +661,13 @@ public final class Geonet {
         public static final String OP_PREFIX = "_op";
         public static final String GROUP_PUBLISHED = "_groupPublished";
         public static final String CAT = "_cat";
-        public static final String STATUS = "_status";
-        public static final String STATUS_CHANGE_DATE = "_statusChangeDate";
+        public static final String STATUS = "mdStatus";
+        public static final String STATUS_CHANGE_DATE = "mdStatusChangeDate";
         public static final String VALID = "_valid";
         public static final String ID = "_id";
         public static final String ANY = "any";
         public static final String LOCALE = "locale";
-		public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
+        public static final String IS_PUBLISHED_TO_ALL = "_isPublishedToAll";
         public static final String FEEDBACKCOUNT = "feedbackCount";
         public static final String DRAFT = "draft";
     }

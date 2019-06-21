@@ -186,7 +186,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
             for (int i = beginIndex; i < beginIndex + count; i++) {
                 boolean doIndex = beginIndex + count - 1 == i;
                 try {
-                    dm.indexMetadata(ids[i] + "", doIndex, null);
+                    dm.indexMetadata(ids[i] + "", doIndex);
                     processed.incrementAndGet();
                 } catch (Exception e) {
                     inError.incrementAndGet();

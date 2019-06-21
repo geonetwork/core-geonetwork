@@ -151,7 +151,7 @@ public class Aligner extends AbstractAligner<GeonetParams> {
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(id, true, null);
+                    dataMan.indexMetadata(id, true);
                 }
             }
         }

@@ -205,7 +205,7 @@
         // make sure we have a hits object if ES did not give back anything
         data.hits = data.hits || { hits: [], total: 0 };
         var records = data.hits.hits.map(function(r) {
-          return new Metadata(r._source);
+          return new Metadata(r);
         });
         $scope.searchResults.records = records;
         $scope.searchResults.count = data.hits.total.value;
@@ -270,7 +270,7 @@
       if (params.any) params.any = params.any + '*';
       else params.any = '*';
 
-      params._isTemplate = 's';
+      params.isTemplate = 's';
       params._root = element;
       params.from = '1';
       params.to = '20';

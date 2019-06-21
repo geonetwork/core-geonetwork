@@ -849,7 +849,7 @@ public class MetadataInsertDeleteApi {
             });
         }
 
-        dataManager.indexMetadata(id.get(0), true, null);
+        dataManager.indexMetadata(id.get(0), true);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
 }

@@ -1055,7 +1055,7 @@
       <dependency>
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
-        <version>5.3.3</version>
+        <version>${jest.version}</version>
       </dependency>
       <dependency>
         <groupId>org.elasticsearch.client</groupId>
@@ -1294,6 +1294,7 @@
     <jetty.stop.port>8090</jetty.stop.port>
 
     <es.version>7.1.1</es.version>
+    <jest.version>6.3.1</jest.version>
     <es.version.sha512>d2bf8eb211e2b4540571158789908a0f5abfca9fb4005b80cfad65d5ce0d65f5b1d64e273da196097a57685226bbfa35fef96fe954737df8872d1620dd40bf4c</es.version.sha512>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
