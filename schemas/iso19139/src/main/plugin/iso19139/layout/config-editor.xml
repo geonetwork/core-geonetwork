@@ -798,7 +798,7 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"
                  use="data-gn-keyword-picker">
             <directiveAttributes
-              data-thesaurus-key="external.theme.codelist_use_limitation"
+              data-thesaurus-key="local.theme.codelist_use_limitation"
               data-display-definition="true"
               data-thesaurus-concept-id-attribute="xlinkCOLONhref"/>
           </field>
