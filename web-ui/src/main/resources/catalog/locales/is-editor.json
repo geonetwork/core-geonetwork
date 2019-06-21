@@ -249,6 +249,8 @@
     "saveMetadataError": "Villa kom upp þegar lýsigögn voru vistuð. Þú skalt endurhlaða ritilinn ",
     "saveMetadataSuccess": "Allar breytingar vistaðar.",
     "saveMetadata": "Vista lýsigögn",
+    "saveDraft": "Save draft",
+    "draftCanNoBeATemplateOrMinorEdit": "A draft cannot be a template and cannot use minor edit mode.",
     "saveTemplate": "Vista sniðmát",
     "saveAsMetadata": "Vista sem lýsigögn",
     "saveAsTemplate": "Vista sem sniðmát",
@@ -334,6 +336,7 @@
     "moreSpecificConcept": "Enn sérhæfðari hugtök",
     "associatedConcept": "Tengd hugtök",
     "xsd": "Skema fullgilding",
+    "youAreNotMemberOfAnyGroup": "You are not editor of any groups, so you can't create new records. Ask the catalogue administrator to set your role to editor in at least one group.",
     "linkToXmlTab": "Hægt er að laga einhverjar villur með því að nota <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor.</a>",
     "directoryManagerSubtitle": "Þessi skjár leyfir þér að breyta skráarfærslum eins og tengiliðum, gagnasniðum, o.s.frv. ásamt því að stjórna sniðmátum. ",
     "directoryManagerSubtitleImport": "Sláðu hér inn fullt XML innihald færslu til að flytja inn í gagnagrunninn. ",
@@ -382,5 +385,7 @@
     "accessManager": "Aðgangsréttindi",
     "accessManagerTitle": "Aðgangsréttindi eftir skrám",
     "accessManagerChooseGroups": "Veldu einn eða fleiri hópa",
-    "accessManagerChooseOperations": "Veldu eina eða fleiri aðgerðartegundir"
+    "accessManagerChooseOperations": "Veldu eina eða fleiri aðgerðartegundir",
+    "status-no-status": "Workflow not active",
+    "draft": "Working copy"
 }

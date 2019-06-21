@@ -249,6 +249,8 @@
     "saveMetadataError": "Errore durante il salvataggio dei metadati. Dovresti ricaricare l'editor.",
     "saveMetadataSuccess": "Tutte le modifiche salvate",
     "saveMetadata": "Salva i metadati",
+    "saveDraft": "Save draft",
+    "draftCanNoBeATemplateOrMinorEdit": "A draft cannot be a template and cannot use minor edit mode.",
     "saveTemplate": "Salva modello",
     "saveAsMetadata": "Salva come metadati",
     "saveAsTemplate": "Salva come modello",
@@ -334,6 +336,7 @@
     "moreSpecificConcept": "Concetti più specifici",
     "associatedConcept": "Concetti associati",
     "xsd": "Validazione schema",
+    "youAreNotMemberOfAnyGroup": "You are not editor of any groups, so you can't create new records. Ask the catalogue administrator to set your role to editor in at least one group.",
     "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "Questa schermata consente di modificare le voci della rubrica come contatti, formati, ecc. gestione dei modelli inclusa.",
     "directoryManagerSubtitleImport": "Inserisci qui il contenuto XML completo di una voce per importarlo nel database.",
@@ -382,5 +385,7 @@
     "accessManager": "Access rights",
     "accessManagerTitle": "Access rights by records",
     "accessManagerChooseGroups": "Choose one or more groups",
-    "accessManagerChooseOperations": "Choose one or more operation types"
+    "accessManagerChooseOperations": "Choose one or more operation types",
+    "status-no-status": "Workflow not active",
+    "draft": "Working copy"
 }

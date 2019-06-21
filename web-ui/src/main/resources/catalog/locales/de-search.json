@@ -50,6 +50,8 @@
     "refresh": "Aktualisieren",
     "mapLegend": "Legende",
     "kmlFile": "{{layer}} (KML)",
+    "noRecordFoundWithResourceRegistered": "No record found with one or more WMS layers registered.",
+    "noRecordFoundWithResourceRegisteredmap": "No record found with one or more maps registered.",
     "tmsLinkDetails": "Dieser Datensatz wird im View Service (TMS) veröffentlicht, der unter <a href='{{url}}' target='_blank'>{{url}}</a> mit dem Bezeichner <strong>{{layer}}</strong> verfügbar ist.",
     "wmsLinkDetails": "Dieser Datensatz ist im Darstellungsdienst (WMS) unter <a href='{{url}}' target='_blank'>{{url}}</a> mit dem Layernamen <strong>{{layer}}</strong> veröffentlicht.",
     "wmsServiceLinkDetails": "Dieser Datensatz ist im Darstellungsdienst (WMS) unter <a href='{{url}}' target='_blank'>{{url}}</a> veröffentlicht.",
@@ -488,5 +490,7 @@
     "userSearchUpdateUrl": "Aktualisierung",
     "userSearchFeaturedDisplayInHomePage": "Homepage",
     "userSearchUpdated": "Suche gespeichert",
-    "userSearchUpdatedError": "Fehler beim Speichern der Suche"
+    "userSearchUpdatedError": "Fehler beim Speichern der Suche",
+    "seeDraft": "This record has a working copy version. Click here to see it.",
+    "seeNoDraft": "This record has an approved and published version. Click here to see it."
 }

@@ -249,6 +249,8 @@
     "saveMetadataError": "Pri ukladaní metaúdajov došlo k chybe. Je potrebné opätovne načítať editor.",
     "saveMetadataSuccess": "Všetky zmeny uložené.",
     "saveMetadata": "Uložiť metaúdaje",
+    "saveDraft": "Save draft",
+    "draftCanNoBeATemplateOrMinorEdit": "A draft cannot be a template and cannot use minor edit mode.",
     "saveTemplate": "Uložiť šablónu",
     "saveAsMetadata": "Uložiť ako metaúdaje",
     "saveAsTemplate": "Uložiť ako šablónu",
@@ -334,6 +336,7 @@
     "moreSpecificConcept": "Viac špecifických konceptov",
     "associatedConcept": "Pridružené koncepty",
     "xsd": "Validačná schéma",
+    "youAreNotMemberOfAnyGroup": "You are not editor of any groups, so you can't create new records. Ask the catalogue administrator to set your role to editor in at least one group.",
     "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}?tab=xml\">XML editor</a>.",
     "directoryManagerSubtitle": "This screen allows you to edit directory entries such as contacts, formats, etc. including template management.",
     "directoryManagerSubtitleImport": "Enter here the full XML content of an entry to import it to the database.",
@@ -382,5 +385,7 @@
     "accessManager": "Access rights",
     "accessManagerTitle": "Access rights by records",
     "accessManagerChooseGroups": "Choose one or more groups",
-    "accessManagerChooseOperations": "Choose one or more operation types"
+    "accessManagerChooseOperations": "Choose one or more operation types",
+    "status-no-status": "Workflow not active",
+    "draft": "Working copy"
 }

@@ -249,6 +249,8 @@
     "saveMetadataError": "Erreur lors de la sauvegarde. Vous devriez recharger la page.",
     "saveMetadataSuccess": "Tous les changements ont été sauvegardés.",
     "saveMetadata": "Enregistrer la fiche",
+    "saveDraft": "Sauver le brouillon",
+    "draftCanNoBeATemplateOrMinorEdit": "Un brouillon ne peut pas être un modèle ou utiliser le mode édition mineure.",
     "saveTemplate": "Enregistrer le modèle",
     "saveAsMetadata": "Enregistrer en tant que fiche",
     "saveAsTemplate": "Enregistrer en tant que modèle de saisie",
@@ -334,6 +336,7 @@
     "moreSpecificConcept": "Concepts plus spécifiques",
     "associatedConcept": "Concepts associés",
     "xsd": "Encodage",
+    "youAreNotMemberOfAnyGroup": "Vous n'étes pas éditeur dans un groupe. Vous ne pourvez donc pas créer de nouvelle fiche. Demander à l'administrateur du catalogue de vous mettre éditeur dans au moins un groupe.",
     "linkToXmlTab": "Certaines erreurs peuvent être corrigées en utilisant <a href=\"#/metadata/{{metadataId}}?tab=xml\">la vue XML </a>.",
     "directoryManagerSubtitle": "Ce menu vous permet de gérer des éléments réutilisables tel que des contacts, formats, etc. Ces éléments peuvent être construits à partir de gabarits.",
     "directoryManagerSubtitleImport": "Entrez ici le contenu complet en XML d'un élément réutilisable afin de l'importer dans la base de donnée.",
@@ -382,5 +385,7 @@
     "accessManager": "Droits d'accès",
     "accessManagerTitle": "Droits d'accès par fiche",
     "accessManagerChooseGroups": "Sélectionner un ou plusieurs groupes",
-    "accessManagerChooseOperations": "Sélectionner un ou plusieurs types d'opération"
+    "accessManagerChooseOperations": "Sélectionner un ou plusieurs types d'opération",
+    "status-no-status": "Cycle de vie désactivé",
+    "draft": "Brouillon"
 }

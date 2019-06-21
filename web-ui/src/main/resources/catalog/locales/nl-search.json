@@ -50,6 +50,8 @@
     "refresh": "Verversen",
     "mapLegend": "Legenda",
     "kmlFile": "{{layer}} (KML)",
+    "noRecordFoundWithResourceRegistered": "No record found with one or more WMS layers registered.",
+    "noRecordFoundWithResourceRegisteredmap": "No record found with one or more maps registered.",
     "tmsLinkDetails": "Deze dataset is gepubliceerd in de view service (WMTS) <a href='{{url}}' target='_blank'>{{url}}</a> met identificatie <strong>{{layer}}</strong>.",
     "wmsLinkDetails": "De laag '<strong>{{layer}}</strong>' is/zijn gepubliceerd in de Web Map Service <a href='{{url}}' target='_blank'>{{url}}</a>. Lees meer over het <a href='http://pdok-ngr.readthedocs.io/services.html#web-map-service-wms' target='_blank'>WMS protocol</a>.\",\n ",
     "wmsServiceLinkDetails": "Web Map Service <a href='{{url}}' target='_blank'>{{url}}</a>. Lees meer over het <a href='http://pdok-ngr.readthedocs.io/services.html#web-map-service-wms' target='_blank'>WMS protocol</a>.\",\n ",
@@ -488,5 +490,7 @@
     "userSearchUpdateUrl": "update",
     "userSearchFeaturedDisplayInHomePage": "Home pagina",
     "userSearchUpdated": "User search saved",
-    "userSearchUpdatedError": "Error saving user search"
+    "userSearchUpdatedError": "Error saving user search",
+    "seeDraft": "This record has a working copy version. Click here to see it.",
+    "seeNoDraft": "This record has an approved and published version. Click here to see it."
 }
