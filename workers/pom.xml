@@ -37,7 +37,9 @@
 
   <modules>
     <module>wfsfeature-harvester</module>
+    <module>camelPeriodicProducer</module>
   </modules>
+
   <dependencies>
 
     <!--Camel-->

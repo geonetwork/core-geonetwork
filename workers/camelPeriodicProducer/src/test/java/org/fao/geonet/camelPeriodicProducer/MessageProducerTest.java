@@ -1,0 +1,150 @@
+package org.fao.geonet.camelPeriodicProducer;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.component.quartz2.QuartzComponent;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"/camel-test-config.xml"})
+public class MessageProducerTest {
+
+    private static final String EVERY_SIX_SECOND = "/6 * * ? * * *";
+    private static final String EVERY_THREE_SECOND = "/3 * * ? * * *";
+    private static final String EVERY_SECOND = "* * * ? * * *";
+
+    @Autowired
+    private TestCamelNetwork testCamelNetwork;
+
+    private  QuartzComponent quartzComponent;
+
+    @Before
+    public void init() throws Exception {
+        quartzComponent = new QuartzComponent(testCamelNetwork.getContext());
+        quartzComponent.start();
+    }
+
+    @Test
+    public void registerAndStart() throws Exception {
+        testCamelNetwork.getContext().start();
+        MessageProducerFactory toTest = new MessageProducerFactory();
+        toTest.routeBuilder = testCamelNetwork;
+        toTest.quartzComponent = quartzComponent;
+
+        TestMessage testMessage = new TestMessage("testMsg1");
+        MessageProducer<TestMessage> messageProducer1 = new MessageProducer<>();
+        messageProducer1.setId(1L);
+        messageProducer1.setTarget(testCamelNetwork.getMessageConsumer().getUri());
+        messageProducer1.setMessage(testMessage);
+        messageProducer1.setCronExpession(EVERY_THREE_SECOND);
+        toTest.registerAndStart(messageProducer1);
+
+        TestMessage testMessage2 = new TestMessage("testMsg2");
+        MessageProducer<TestMessage> messageProducer2 = new MessageProducer<>();
+        messageProducer2.setId(2L);
+        messageProducer2.setTarget(testCamelNetwork.getMessageConsumer().getUri());
+        messageProducer2.setMessage(testMessage2);
+        messageProducer2.setCronExpession(EVERY_SIX_SECOND);
+        toTest.registerAndStart(messageProducer2);
+
+        List<String> received = testCamelNetwork.getMessageConsumer().waitFive();
+        Map<String, Long> result = received.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        assertEquals(2, result.size());
+        assertTrue(result.get("testMsg1") - result.get("testMsg2") > 0);
+
+        messageProducer2.setCronExpession(EVERY_SECOND);
+        toTest.reschedule(messageProducer2);
+        testCamelNetwork.getMessageConsumer().reset();
+        received = testCamelNetwork.getMessageConsumer().waitFive();
+
+        result = received.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        assertEquals(2, result.size());
+        assertTrue(result.get("testMsg2") - result.get("testMsg1") > 0);
+
+        messageProducer1.setCronExpession(EVERY_SECOND);
+        messageProducer1.setMessage(new TestMessage("testMsg3"));
+        toTest.changeMessageAndReschedule(messageProducer1);
+        toTest.reschedule(messageProducer1);
+
+        testCamelNetwork.getMessageConsumer().reset();
+        received = testCamelNetwork.getMessageConsumer().waitFive();
+        result = received.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        assertEquals(2, result.size());
+        assertTrue(result.containsKey("testMsg3"));
+
+        toTest.destroy(1L);
+        toTest.destroy(2L);
+
+        testCamelNetwork.getMessageConsumer().reset();
+        Thread.sleep(2000);
+        assertEquals(0, testCamelNetwork.getMessageConsumer().receivedContent.size());
+    }
+
+
+    private class TestMessage  implements Serializable {
+
+        private String content;
+
+        public TestMessage(String content) {
+            this.content = content;
+        }
+
+        public String getContent() {
+            return content;
+        }
+    }
+
+    static public class MessageConsumer {
+
+        private Integer count = 0;
+        private CompletableFuture<List<String>> future = new CompletableFuture();
+        private String uri;
+
+        private List<String> receivedContent = new ArrayList();
+
+        public MessageConsumer(String uri) {
+            this.uri = uri;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public void consume(Exchange exchange) {
+            TestMessage msg = (TestMessage) exchange.getProperty("configuration");
+            receivedContent.add(msg.getContent());
+            count++;
+            if (count > 4) {
+                future.complete(receivedContent);
+            }
+        }
+
+        public List<String> waitFive() throws InterruptedException, ExecutionException, TimeoutException {
+            return future.get(25, TimeUnit.SECONDS);
+        }
+
+        public void reset() {
+            count = 0;
+            receivedContent = new ArrayList();
+            future = new CompletableFuture();
+        }
+    }
+}
