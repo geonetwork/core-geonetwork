@@ -267,9 +267,11 @@
                */
               scope.isInSearch = function(value) {
                 var p = scope.searchObj.params[scope.facetConfig.key];
-                if (angular.isString(p)) {
-                  p = [p];
-                }
+                // SEXTANT SPECIFIC
+                // if (angular.isString(p)) {
+                //   p = [p];
+                // }
+                // END SEXTANT SPECIFIC
                 return p && p.indexOf(value) >= 0;
                 //return scope.searchObj.params[scope.facetConfig.key] &&
                 //    scope.searchObj.params[scope.facetConfig.key]
@@ -287,31 +289,32 @@
                 // SEXTANT SPECIFIC
                 // this is used to prevent updating the facet after the new search
                 scope.lastClicked = true;
-                // END SEXTANT SPECIFIC
+
+                // SEXTANT SPECIFIC
+                // Behaviour modified to have all param values joined in a string
+                // and not in an array
 
                 // null, undefined or ''
                 if (!search) {
-                  scope.searchObj.params[key] = [value];
+                  scope.searchObj.params[key] = value;
                 }
                 else {
-                  if (angular.isArray(search)) {
-                    var idx = search.indexOf(value);
-                    if (idx < 0) {
-                      search.push(value);
-                    }
-                    else {
-                      search.splice(idx, 1);
-                    }
+                  if(search.indexOf(value) > -1) {
+                    scope.searchObj.params[key] = search.replace(new RegExp(value, 'g'), '');
                   }
                   else {
-                    if(search == value) {
-                      scope.searchObj.params[key] = undefined;
-                    }
-                    else {
-                      scope.searchObj.params[key] = [search].concat([value]);
-                    }
+                    scope.searchObj.params[key] += ' or ' + value;
                   }
                 }
+
+                // cleanup excess of 'or' clauses
+                var joined = scope.searchObj.params[key].split(' or ');
+                scope.searchObj.params[key] = joined.filter(function (v) {
+                  return v;
+                }).join(' or ');
+
+                // END SEXTANT SPECIFIC
+
                 scope.$emit('resetSearch', scope.searchObj.params);
                 e.preventDefault();
               };
