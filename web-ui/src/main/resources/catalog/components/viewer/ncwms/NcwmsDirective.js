@@ -178,7 +178,7 @@
               );
 
               // scale range
-              if (layer.get('advancedMetadata').units) {
+              if (layerMetadata.units) {
                 scope.colorRange = {
                   step: 1,
                   min: layerMetadata.scaleRange[0],
@@ -186,7 +186,7 @@
                 };
 
                 // oceanotron: range was fetched before
-                if (scope.isLayerOceanotron()) {
+                if (scope.isLayerOceanotron() && scope.layer.get('oceanotronScaleRange')) {
                   scope.colorRange.min = scope.layer.get('oceanotronScaleRange')[0];
                   scope.colorRange.max = scope.layer.get('oceanotronScaleRange')[1];
                 }
