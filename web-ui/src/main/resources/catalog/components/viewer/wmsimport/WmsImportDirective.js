@@ -418,10 +418,8 @@
         scope: {
           collection: '='
         },
-        template: "<ul class='list-group'><li data-ng-show='collection.length > 10' >" +
-            "<input class='form-control' data-ng-model-options='{debounce: 200}' data-ng-model='layerSearchText'/>" +
-            "</li>" +
-            "<gn-cap-tree-elt ng-repeat='member in collection | filter:layerSearchText' member='member'>" +
+        template: "<ul class='list-group'><gn-cap-tree-elt " +
+          "ng-repeat='member in collection' member='member'>" +
             '</gn-cap-tree-elt></ul>'
       };
     }]);
