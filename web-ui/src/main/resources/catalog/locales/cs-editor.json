@@ -249,6 +249,8 @@
     "saveMetadataError": "Při ukládání metadat došlo k chybě. Je třeba opětovně načíst editor.",
     "saveMetadataSuccess": "Všechny změny uloženy.",
     "saveMetadata": "Uložit metadata",
+    "saveDraft": "Save draft",
+    "draftCanNoBeATemplateOrMinorEdit": "A draft cannot be a template and cannot use minor edit mode.",
     "saveTemplate": "Uložit šablonu",
     "saveAsMetadata": "Uložit jako metadata",
     "saveAsTemplate": "Uložit jako šablonu",
@@ -334,6 +336,7 @@
     "moreSpecificConcept": "Konkrétnější koncepty",
     "associatedConcept": "Přidružené koncepty",
     "xsd": "Validace schématu",
+    "youAreNotMemberOfAnyGroup": "You are not editor of any groups, so you can't create new records. Ask the catalogue administrator to set your role to editor in at least one group.",
     "linkToXmlTab": "Některé typy chyb lze opravit pomocí <a href=\"#/metadata/{{metadataId}}?tab=xml\">editoru XML</a>.",
     "directoryManagerSubtitle": "Tato obrazovka umožňuje upravovat položky adresáře, například kontakty, formáty atd. Včetně správy šablon.",
     "directoryManagerSubtitleImport": "Zadejte zde úplný obsah XML položky, kterou chcete importovat do databáze.",
@@ -382,5 +385,7 @@
     "accessManager": "Přístupová práva",
     "accessManagerTitle": "Přístupová práva podle záznamů",
     "accessManagerChooseGroups": "Vyberte jednu nebo více skupin",
-    "accessManagerChooseOperations": "Vyberte jeden nebo více typů operací"
+    "accessManagerChooseOperations": "Vyberte jeden nebo více typů operací",
+    "status-no-status": "Workflow not active",
+    "draft": "Working copy"
 }
