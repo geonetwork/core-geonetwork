@@ -83,8 +83,9 @@
             }
             if ($scope.format == 'wms') {
               var layer =
-                  gnMap.addWmsToMapFromCap($scope.map, getCapLayer, style);
+                  gnMap.createOlWMSFromCap($scope.map, getCapLayer, null, style);
               gnMap.feedLayerMd(layer);
+              gnViewerSettings.getPreAddLayerPromise(layer).then($scope.map.addLayer(layer));
               return layer;
             } else if ($scope.format == 'wfs') {
               var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer,
