@@ -834,7 +834,8 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             metadata.getSourceInfo().
                 setSourceId(params.getUuid()).
                 setOwner(Integer.parseInt(
-                        StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId()));
+                        StringUtils.isNotEmpty(params.getOwnerIdUser()) && StringUtils.isNumeric(params.getOwnerIdUser()) ?
+                            params.getOwnerIdUser() : params.getOwnerId()));
             metadata.getHarvestInfo().
                 setHarvested(true).
                 setUuid(params.getUuid()).

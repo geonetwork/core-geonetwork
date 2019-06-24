@@ -133,7 +133,7 @@
       <document>
         <!--<xsl:value-of select="saxon:serialize(., 'default-serialize-mode')"/>-->
       </document>
-      <xsl:copy-of select="gn-fn-index:add-field('uuid', $identifier)"/>
+
       <xsl:copy-of select="gn-fn-index:add-field('metadataIdentifier', $identifier)"/>
 
       <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
