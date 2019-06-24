@@ -52,11 +52,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -100,18 +100,26 @@ public class EsHTTPProxy {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public void handlePOSTMetadata(
+        @RequestParam(defaultValue = SelectionManager.SELECTION_METADATA)
+        String bucket,
         @PathVariable String endPoint,
-        HttpServletRequest request,
-        HttpServletResponse response) throws Exception {
+        @ApiIgnore
+            HttpSession httpSession,
+        @ApiIgnore
+            HttpServletRequest request,
+        @ApiIgnore
+            HttpServletResponse response) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         // Retrieve request body with ElasticSearch query and parse JSON
         String body = IOUtils.toString(request.getReader());
-        call(context, request, response, endPoint, body);
+        call(context, httpSession, request, response, endPoint, body, bucket);
     }
 
-    public void call(ServiceContext context, HttpServletRequest request, HttpServletResponse response, String endPoint, String body) throws Exception {
+    public void call(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
+                     HttpServletResponse response,
+                     String endPoint, String body, String selectionBucket) throws Exception {
         final String url = client.getServerUrl() + "/" + defaultIndex + "/" + endPoint + "?";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode nodeQuery = objectMapper.readTree(body);
@@ -120,7 +128,7 @@ public class EsHTTPProxy {
 
         String requestBody = nodeQuery.toString();
 
-        handleRequest(context, request, response, url, requestBody, true);
+        handleRequest(context, httpSession, request, response, url, requestBody, true, selectionBucket);
     }
 
 
@@ -185,9 +193,9 @@ public class EsHTTPProxy {
         return "documentType:" + type;
     }
 
-    private void handleRequest(ServiceContext context, HttpServletRequest request,
+    private void handleRequest(ServiceContext context, HttpSession httpSession, HttpServletRequest request,
                                HttpServletResponse response, String sUrl,
-                               String requestBody, boolean addPermissions) throws Exception {
+                               String requestBody, boolean addPermissions, String selectionBucket) throws Exception {
         try {
             URL url = new URL(sUrl);
 
@@ -273,7 +281,7 @@ public class EsHTTPProxy {
                     if (!addPermissions) {
                         IOUtils.copy(streamFromServer, streamToClient);
                     } else {
-                        addUserInfoToJson(context, streamFromServer, streamToClient);
+                        addUserInfoToJson(context, httpSession, streamFromServer, streamToClient, selectionBucket);
                     }
 
                     streamToClient.flush();
@@ -297,13 +305,12 @@ public class EsHTTPProxy {
         }
     }
 
-    private void addUserInfoToJson(ServiceContext context, InputStream streamFromServer, OutputStream streamToClient) throws Exception {
+    private void addUserInfoToJson(ServiceContext context, HttpSession httpSession, InputStream streamFromServer, OutputStream streamToClient, String bucket) throws Exception {
         JsonParser parser = JsonStreamUtils.jsonFactory.createParser(streamFromServer);
         JsonGenerator generator = JsonStreamUtils.jsonFactory.createGenerator(streamToClient);
         parser.nextToken();  //Go to the first token
 
-        final SelectionManager manager = SelectionManager.getManager(context.getUserSession());
-        final Set<String> selections = manager.getSelection(SelectionManager.SELECTION_METADATA);
+        final Set<String> selections = SelectionManager.getManager(ApiUtils.getUserSession(httpSession)).getSelection(bucket);
 
         JsonStreamUtils.addInfoToDocs(parser, generator, doc -> {
             addUserInfo(doc, context);
@@ -322,9 +329,13 @@ public class EsHTTPProxy {
         final JsonNode sub = node.get(name);
         return sub != null ? sub.asText() : null;
     }
+    private static String getSourceString(ObjectNode node, String name) {
+        final JsonNode sub = node.get("_source").get(name);
+        return sub != null ? sub.asText() : null;
+    }
 
     private static void addSelectionInfo(ObjectNode doc, Set<String> selections) {
-        final String uuid = getString(doc, Geonet.IndexFieldNames.UUID);
+        final String uuid = getSourceString(doc, Geonet.IndexFieldNames.UUID);
         doc.put(Edit.Info.Elem.SELECTED, selections.contains(uuid));
     }
 

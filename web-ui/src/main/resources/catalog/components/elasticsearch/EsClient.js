@@ -39,8 +39,8 @@
       return ES_API_URL + service;
     };
 
-    this.search = function(params) {
-      return callApi('_search', params).then(
+    this.search = function(params, selectionBucket) {
+      return callApi('_search', params, selectionBucket).then(
         function(response) {
           return gnESFacet.getUIModel(response, params);
         }
@@ -69,8 +69,8 @@
       );
     };
 
-    function callApi(service, params) {
-      return $http.post(ES_API_URL + service, params);
+    function callApi(service, params, selectionBucket) {
+      return $http.post(ES_API_URL + service + (selectionBucket ? '?bucket=' + selectionBucket : ''), params);
     }
 
   }]);

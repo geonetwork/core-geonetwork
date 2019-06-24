@@ -87,7 +87,7 @@
                       "min_term_freq" : 1,
                       "max_query_terms" : 12
                     }},
-                    {"terms": {"isTemplate": ["n"]}}
+                    {"terms": {"isTemplate": ["n"]}} // TODO: We may want to use it for subtemplate
                 ]}
               }
             }).then(function (r) {

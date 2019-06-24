@@ -186,13 +186,11 @@
             gnFacetService.getParamsFromFacets($scope.currentFacets));
       }
 
-      params.bucket = $scope.searchResults.selectionBucket || 'metadata';
-
       var finalParams = angular.extend(params, hiddenParams);
       $scope.finalParams = finalParams;
 
       var esParams = gnESService.convertLuceneParams(finalParams);
-      gnESClient.search(esParams).then(function(data) {
+      gnESClient.search(esParams, $scope.searchResults.selectionBucket || 'metadata').then(function(data) {
         // data is not an object: this is an error
         if (typeof data !== 'object') {
           gnAlertService.addAlert({

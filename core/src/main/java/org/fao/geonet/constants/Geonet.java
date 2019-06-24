@@ -641,12 +641,12 @@ public final class Geonet {
         public static final String HASXLINKS = "_hasxlinks";
         public static final String XLINK = "_xlink";
         public static final String ROOT = "_root";
-        public static final String SCHEMA = "_schema";
+        public static final String SCHEMA = "schema";
         public static final String DATABASE_CREATE_DATE = "_createDate";
         public static final String DATABASE_CHANGE_DATE = "_changeDate";
         public static final String SOURCE = "_source";
-        public static final String IS_TEMPLATE = "_isTemplate";
-        public static final String UUID = "_uuid";
+        public static final String IS_TEMPLATE = "isTemplate";
+        public static final String UUID = "uuid";
         public static final String IS_HARVESTED = "_isHarvested";
         public static final String OWNER = "_owner";
         public static final String DUMMY = "_dummy";
