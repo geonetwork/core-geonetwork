@@ -34,22 +34,24 @@ the Elastic instance is available and if index does not exist.
 
 
 ```
-curl -X PUT http://localhost:9200/gn-records -H "Content-Type:application/json"  -d @config/records.json
-curl -X PUT http://localhost:9200/gn-features -H "Content-Type:application/json" -d @config/features.json
-curl -X PUT http://localhost:9200/gn-searchlogs -H "Content-Type:application/json"  -d @config/searchlogs.json
+IDX_PREFIX=gn
+curl -X PUT http://localhost:9200/$IDX_PREFIX-records -H "Content-Type:application/json"  -d @../web/src/main/webapp/WEB-INF/data/config/index/records.json
+curl -X PUT http://localhost:9200/$IDX_PREFIX-features -H "Content-Type:application/json" -d @../web/src/main/webapp/WEB-INF/data/config/index/features.json
+curl -X PUT http://localhost:9200/$IDX_PREFIX-searchlogs -H "Content-Type:application/json"  -d @../web/src/main/webapp/WEB-INF/data/config/index/searchlogs.json
 ```
 
 To delete your index:
 
 ```
-curl -X DELETE http://localhost:9200/gn-records
-curl -X DELETE http://localhost:9200/gn-features
-curl -X DELETE http://localhost:9200/gn-searchlogs
+IDX_PREFIX=gn
+curl -X DELETE http://localhost:9200/$IDX_PREFIX-records
+curl -X DELETE http://localhost:9200/$IDX_PREFIX-features
+curl -X DELETE http://localhost:9200/$IDX_PREFIX-searchlogs
 ```
 
 
 
 ### Production use
 
-Configure ES to start on server startup.
+Configure ES to start on server startup. It is recommended to protect `gn-records` index from the Internet access.
 
