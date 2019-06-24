@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 
@@ -42,6 +43,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.index.es.EsClient;
@@ -165,28 +167,52 @@ public class EsHTTPProxy {
         }
     }
 
+
+    /**
+     * Privileges filter only allows
+     * * op0 (ie. view operation) contains one of the ids of your groups
+     */
+    private static final String filterTemplate = " {\n" +
+        "       \t\"query_string\": {\n" +
+        "       \t\t\"query\": \"%s\"\n" +
+        "       \t}\n" +
+        "}";
+
+    /**
+     * Add search privilege criteria to a query.
+     */
     private String buildQueryFilter(ServiceContext context, String type) throws Exception {
-        String filterTemplate = " {\n" +
-            "       \t\"query_string\": {\n" +
-            "       \t\t\"default_field\": \"op%d\",\n" +
-            "       \t\t\"query\": \"(%s) AND %s\"\n" +
-            "       \t}\n" +
-            "}";
-
-        final int viewId = ReservedOperation.view.getId();
-
+        // https://github.com/geonetwork/core-geonetwork/blob/master/core/src/main/java/org/fao/geonet/kernel/search/LuceneQueryBuilder.java#L1000
         // TODOES buildPortalFilter
-        return String.format(filterTemplate, viewId, buildPermissionsFilter(context), buildDocTypeFilter(type));
+        return String.format(filterTemplate,
+            buildPermissionsFilter(context));
 
     }
 
 
     private String buildPermissionsFilter(ServiceContext context) throws Exception {
-        Set<Integer> groups = accessManager.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
-        final String ids = groups.stream().map(Object::toString)
-           .collect(Collectors.joining("\\\" OR \\\"", "\\\"", "\\\""));
+        final UserSession userSession = context.getUserSession();
 
-        return ids;
+        // If admin you can see all
+        if (Profile.Administrator.equals(userSession.getProfile())) {
+            return "*";
+        } else {
+            // op0 (ie. view operation) contains one of the ids of your groups
+            Set<Integer> groups = accessManager.getUserGroups(userSession, context.getIpAddress(), false);
+            final String ids = groups.stream().map(Object::toString)
+                .collect(Collectors.joining(" OR "));
+            String operationFilter = String.format("op%d:(%s)", ReservedOperation.view.getId(), ids);
+
+
+            String ownerFilter = "";
+            if (userSession.getUserIdAsInt() > 0) {
+                // OR you are owner
+                ownerFilter = String.format("owner:%d");
+                // OR member of groupOwner
+                // TODOES
+            }
+            return String.format("%s %s", operationFilter, ownerFilter).trim();
+        }
     }
 
     private String buildDocTypeFilter(String type) {
