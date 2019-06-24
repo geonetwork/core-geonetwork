@@ -33,23 +33,13 @@
     this.configs = gnGlobalSettings.gnCfg.mods.search.facetConfig;
 
     this.addFacets = function(esParams, type) {
-      esParams.aggregations = this.getParamsFromConfig(type);
+      esParams.aggregations = this.getAggregationFromConfig(type);
     };
 
-    this.getParamsFromConfig = function(typeOrConfig) {
-      var config = typeof typeOrConfig === 'string' ?
+    this.getAggregationFromConfig = function(typeOrConfig) {
+      var aggs = typeof typeOrConfig === 'string' ?
         this.configs[typeOrConfig] : typeOrConfig;
 
-      var aggs = {};
-
-      config.forEach(function(facet) {
-        aggs[facet.field] = {
-          terms: {
-            field: facet.field,
-            size: facet.size || DEFAULT_SIZE
-          }
-        };
-      });
       return aggs;
     };
 

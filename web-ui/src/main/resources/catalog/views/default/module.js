@@ -265,7 +265,7 @@
 
       var params = {
         size: 100,
-        aggregations: gnESFacet.getParamsFromConfig(themesFacets)
+        aggregations: gnESFacet.getAggregationFromConfig(themesFacets)
       };
 
       gnESClient.search(params).then(function(response) {

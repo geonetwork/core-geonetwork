@@ -106,34 +106,46 @@ goog.require('gn_alert');
           },
           'facetTabField': '',
           'facetConfig': {
-            'mainsearch': [
-              {
-                field: 'resourceType'
+            'mainsearch': {
+              'codelist_spatialRepresentationType': {
+                'terms': {
+                  'field': 'codelist_spatialRepresentationType',
+                  'size': 10
+                }
               },
-              {
-                field: 'creationYearForResource',
-                labels: {
-                  eng: 'Published',
-                  fre: 'Publication'
-                },
-                size: 5
+              'creationYearForResource': {
+                'terms': {
+                  'field': 'creationYearForResource',
+                  'size': 5
+                }
               },
-              {
-                field: 'tag',
-                size: 15
+              'tag': {
+                'terms': {
+                  'field': 'tag',
+                  'size': 15
+                }
               },
-              {
-                field: 'codelist_spatialRepresentationType'
+              'resourceType': {
+                'terms': {
+                  'field': 'resourceType',
+                  'size': 10
+                }
               }
-            ],
-            'adminsearch': [
-              {
-                field: 'resourceType'
+            },
+            'adminsearch': {
+              'tag': {
+                'terms': {
+                  'field': 'tag',
+                  'size': 15
+                }
               },
-              {
-                field: 'tag'
+              'resourceType': {
+                'terms': {
+                  'field': 'resourceType',
+                  'size': 10
+                }
               }
-            ]
+            }
           },
           'filters': {},
           'sortbyValues': [{
