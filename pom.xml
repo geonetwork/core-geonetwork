@@ -691,8 +691,8 @@
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
-        <artifactId>gt-wfs</artifactId>
-        <version>${geotools.legacy.version}</version>
+        <artifactId>gt-wfs-ng</artifactId>
+        <version>${geotools.version}</version>
       </dependency>
       <dependency>
         <groupId>org.geotools</groupId>
@@ -1377,8 +1377,7 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>20.0</geotools.version>
-    <geotools.legacy.version>16.5</geotools.legacy.version>
+    <geotools.version>20.4</geotools.version>
     <pg.version>9.4.1211</pg.version>
 
     <lucene.version>4.9.0</lucene.version>
